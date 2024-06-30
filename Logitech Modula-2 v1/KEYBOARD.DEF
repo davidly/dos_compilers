@@ -1,0 +1,30 @@
+DEFINITION MODULE Keyboard;
+(*
+            Default driver for terminal input.
+
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+[Private module of the Modula-2 system]
+*)
+
+EXPORT QUALIFIED Read, KeyPressed;
+
+PROCEDURE Read (VAR ch: CHAR);
+(*- Read a character from the keyboard.
+out:    ch
+
+If necessary, Read waits for a character to be entered.
+Characters that have been entered are returned immediately,
+with no editing or buffering.
+
+- CTRL-C terminates the current program
+- ASCII.cr is transformed into System.EOL
+*)
+
+PROCEDURE KeyPressed (): BOOLEAN;
+(*- Test if a character is available from the keyboard.
+*)
+
+END Keyboard.
+

@@ -1,0 +1,41 @@
+DEFINITION MODULE MathLib0;
+(*
+        Real Math Functions
+
+
+From the book 'Programming in Modula-2' by Prof. N. Wirth.
+*)
+
+
+EXPORT QUALIFIED sqrt, exp, ln, sin, cos, arctan, real, entier;
+
+
+PROCEDURE sqrt(x: REAL): REAL;
+(* x must be positive *)
+
+PROCEDURE exp(x: REAL): REAL;
+(* returns e^x where e = 2.71828.. *)
+
+PROCEDURE ln(x: REAL): REAL;
+(* returns natural logarithm with base e = 2.71828.. of x *) 
+(* x must be positive and not zero                        *)
+
+PROCEDURE sin(x: REAL): REAL;
+(* returns sin(x) where x is given in radians *)
+
+PROCEDURE cos(x: REAL): REAL;
+(* returns cos(x) where x is given in radians *)
+
+PROCEDURE arctan(x: REAL): REAL;
+(* returns arctan(x) in radians *)
+
+PROCEDURE real(x: INTEGER): REAL;
+(* type conversion from INTEGER to REAL *)
+
+PROCEDURE entier(x: REAL): INTEGER;
+(* returns the integral part of x.               *)
+(* If this cannot be represented in an INTEGER,  *)
+(* the result is undefined.                      *)
+
+END MathLib0.
+

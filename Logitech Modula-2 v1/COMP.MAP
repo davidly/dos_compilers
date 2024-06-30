@@ -1,0 +1,61 @@
+Modula-2/86 Linker V1.0 - (c) 1983 Logitech
+
+Output file name: a:comp.LOD
+
+++ Program map (13 modules included in this layer):
+   Modules are listed in order of module code execution.
+
++ MOD= System                    KEY= A78702280DFC  FILE= A:System.LNK
+                                 CODE= 05B1  DATA= 07EF
+                                 PROC-TABLE= 0002
++ MOD= Keyboard                  KEY= A787026FE9FC  FILE= A:Keyboard.LNK
+                                 CODE= 0594  DATA= 07E6
+                                 PROC-TABLE= 0002
++ MOD= Display                   KEY= A6ED00811F68  FILE= C:\m2lib\lnk\Display.LNK
+                                 CODE= 058C  DATA= 07E6
+                                 PROC-TABLE= 0002
++ MOD= Termbase                  KEY= A787024FACBC  FILE= A:Termbase.LNK
+                                 CODE= 0551  DATA= 07DF
+                                 PROC-TABLE= 0002
++ MOD= ASCII                     KEY= A6ED007F8F20  FILE= C:\m2lib\lnk\ASCII.LNK
+                                 CODE= 054F  DATA= 07DF
+                                 PROC-TABLE= 0002
++ MOD= Terminal                  KEY= A02101346662  FILE= A:Terminal.LNK
+                                 CODE= 052D  DATA= 07DE
+                                 PROC-TABLE= 0002
++ MOD= ProgMessage               KEY= A7880049D782  FILE= C:\m2lib\lnk\ProgMess.LNK
+                                 CODE= 04ED  DATA= 07DE
+                                 PROC-TABLE= 01CC
++ MOD= DiskFiles                 KEY= A02102DCA83E  FILE= A:DiskFile.LNK
+                                 CODE= 03A2  DATA= 0620
+                                 PROC-TABLE= 0006
++ MOD= FileSystem                KEY= A02102D58DCC  FILE= A:FileSyst.LNK
+                                 CODE= 022C  DATA= 0607
+                                 PROC-TABLE= 0007
++ MOD= Storage                   KEY= A6ED00830B7C  FILE= C:\m2lib\lnk\Storage.LNK
+                                 CODE= 01AD  DATA= 0606
+                                 PROC-TABLE= 0002
++ MOD= Program                   KEY= A021002B9F06  FILE= A:Program.LNK
+                                 CODE= 0062  DATA= 0600
+                                 PROC-TABLE= 0002
++ MOD= DiskDirectory             KEY= A02102DE2F80  FILE= A:DiskDire.LNK
+                                 CODE= 0041  DATA= 0600
+                                 PROC-TABLE= 0002
++ MOD= Comint                    KEY= A6ED008351F4  FILE= a:comp.LNK
+                                 CODE= 0000  DATA= 05F8
+                                 PROC-TABLE= 004E
+
+++ Base (0 modules assumed to be in base layers):
+
+
+
+Length of code (in paragraphs): 05F8
+Length of data (in paragraphs): 0207
+     KEY= A02102DE2F80  FILE= A:DiskDire.LNK
+                                 CODE= 0041  DATA= 060B
+                                 PROC-TABLE= 0002
++ MOD= Comint                    KEY= A6ED008351F4  FILE= a:comp.LNK
+                                 CODE= 0000  DATA= 0603
+                                 PROC-TABLE= 004E
+
+++ Base (0 m

@@ -1,0 +1,201 @@
+DEFINITION MODULE System;
+(*
+        Additional system-dependent facilities
+
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+
+
+  This module may be seen as an extension of the standard
+  pseudo-module SYSTEM.
+*)
+
+
+FROM SYSTEM IMPORT ADDRESS, PROCESS;
+
+EXPORT QUALIFIED
+    EOL,
+    Status, Terminate,
+    ProcessDescriptor, ProcessPtr, curProcess,
+    targetSystem,
+    SetTime, GetTime, Time,
+    TermProcedure, CallTermProc, InitProcedure, CallInitProc,
+    RTSCall,
+    RegAX,    RegBX,
+    RegCX,    RegDX,
+    RegSI,    RegDI,
+    RegES,    RegDS,
+    RegCS,    RegSS,
+    RegBP,    RegSP;
+
+
+CONST
+    EOL = 36C;
+    (* This constant defines the internal name of the
+       End-Of-Line character. Using this constant has the
+       advantage, that only one character is used to
+       specify line ends (as opposed to CR/LF).
+       The standard I/O modules interpret this character
+       and transform it into the End-Of-Line (sequence of)
+       code(s) required by the device they support. See
+       definition modules of 'Terminal' and 'FileSystem'.
+     *)
+
+TYPE
+    Status = (normal, warned,
+                (* no dump produced for these two cases *)
+              stopped, asserted, halted,
+              caseerr, stackovf, heapovf,
+              functionerr, addressoverflow, realoverflow,
+              cardinaloverflow, integeroverflow, rangeerr,
+              dividebyzero, coroutineend,
+              loaderr, callerr, programnotfound, modulenotfound,
+              incompatiblemodule, filestructureerr,
+              illegalinstr, RTSfunctionerr, interrupterr);
+
+    (* This type defines the possible values for a program's
+       status. The meaning of these values can be printed to
+       the terminal by means of ProgMessage.WriteStatus .
+    *)
+
+
+PROCEDURE Terminate (st: Status);
+(*- Terminate the current (sub) program.
+in:     st      terminating status.
+
+If the value of 'st' is different from 'normal' or 'warned',
+memory is dumped on the disk file MEMORY.PMD, which can be used
+for subsequent debugging.  The value of 'st' will be returned
+to the caller of the terminating program by means of the parameter
+'st' of the procedure 'Program.Call'.
+
+This procedure never returns to the caller.
+*)
+
+
+TYPE
+    ProcessDescriptor = RECORD
+                          AX, BX, CX, DX, SP, BP, SI, DI : CARDINAL;
+                          DS, SS, ES, CS, IP : CARDINAL;
+                          flags : BITSET;
+                          status : Status;
+                          programId, auxId, sharedId : CARDINAL;
+                          fatherProcess : PROCESS;
+                          stackLimit :    CARDINAL;
+                          interruptMask : BITSET;
+                          retStack :      CARDINAL;
+                          progEndStack :  ADDRESS;
+                          intVector :     CARDINAL;
+                          oldISR, interruptedProcess : ADDRESS;
+                          heapBase, heapTop : ADDRESS;
+                          modTable : ADDRESS;
+                        END;
+
+
+TYPE
+    ProcessPtr = POINTER TO ProcessDescriptor;
+
+
+VAR
+    curProcess: ProcessPtr;
+    (* Points at any moment to the current process's workspace.
+       This variable is 'read-only' and must not be used in
+       application programs.
+       WARNING: improper use of this variable may cause unpredictable
+       =======  behaviour of the system.
+    *)
+
+
+CONST
+    targetSystem = 0; (* first implementation *)
+    (* May be used to check compatibility of file or programs with the
+       present system.
+    *)
+
+
+
+TYPE Time = RECORD day, minute, millisec: CARDINAL; END;
+    (* 'day' is : Bits 0..4 = day of month (1..31),
+                  Bits 5..8 = month of the year (1..12),
+                  Bits 9..15 = year - 1900.
+       'minute' is hour * 60 + minutes.
+       'millisec' is second * 1000 + milliseconds,
+                     starting with 0 at every minute.
+    *)
+
+PROCEDURE GetTime (VAR curTime: Time);
+(*- Return the current date and time.
+out:    curTime         record containing date and time.
+
+On systems which do not keep date or time, 'GetTime'
+returns a pseudo-random number.
+*)
+
+PROCEDURE SetTime (curTime: Time);
+(*- Set the current date and time.
+in:     curTime         record containing date and time.
+
+On systems which do not keep date or time, this call has no effect.
+*)
+
+
+
+PROCEDURE TermProcedure (p: PROC);
+(*- Declare a termination routine.
+in:     p       termination procedure.
+
+The procedure 'p' will be called upon termination of the current
+program or subprogram.
+Typical use is for drivers, which have to release resources
+used by the terminating program.
+Up to 20 termination routines can be installed.
+*)
+
+PROCEDURE CallTermProc;
+(*- Call all termination procedures for the current program.
+
+Calls all procedures declared with 'TermProcedure' in the current
+program.  'CallTermProc' is automatically called at the termination
+of a program or subprogram.
+*)
+
+PROCEDURE InitProcedure (p: PROC);
+(*- Declare an initialization routine.
+in:     p       initialization procedure.
+
+Analoguous to 'TermProcedure', but for routines that have
+to be called before execution of a program.
+Up to 20 initialization routines can be installed.
+*)
+
+PROCEDURE CallInitProc;
+(*- Call all initialization procedures for the current program.
+
+Analoguous to 'CallTermProc'.
+*)
+
+
+CONST
+    RTSCall = 228;
+    (* Interrupt vector for general entry of RTS (for
+       Run-Time Support). The RTS is a resident assembly
+       program, providing the basic support for running
+       Modula-2 programs.
+    *)
+
+CONST
+    (* Define the processor's registers, which may be
+       used as parameters for the standard procedures
+       SETREG and GETREG (except that SP, BP, CS, SS
+       may not be used with SETREG).
+    *)
+    RegAX = 0;    RegCX = 1;
+    RegDX = 2;    RegBX = 3;
+    RegSP = 4;    RegBP = 5;
+    RegSI = 6;    RegDI = 7;
+    RegES = 8;    RegCS = 9;
+    RegSS = 10;   RegDS = 11;
+
+END System.
+

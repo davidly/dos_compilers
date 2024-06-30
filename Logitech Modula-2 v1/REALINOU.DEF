@@ -1,0 +1,41 @@
+DEFINITION MODULE RealInOut;
+(*
+        Terminal input/output of REAL values
+
+
+From the book 'Programming in Modula-2' by Prof. N. Wirth.
+*)
+
+EXPORT QUALIFIED ReadReal, WriteReal, WriteRealOct, Done;
+
+VAR Done: BOOLEAN;
+
+PROCEDURE ReadReal(VAR x: REAL);
+(*- Read a REAL from the terminal.
+out:    x       the number read.
+
+The syntax accepted is:
+["+"|"-"] digit {digit} ["." digit {digit}] ["E"["+"|"-"] digit [digit]]
+
+If a number is found, Done is set to TRUE (otherwise FALSE).
+At most 7 digits are significant, leading zeros not
+counting.  Maximum exponent is 38. Input terminates
+with a blank or any control character.  DEL may be used
+for backspacing.
+*)
+
+PROCEDURE WriteReal(x: REAL; n: CARDINAL);
+(*- Write a REAL to the terminal, right-justified.
+in:     x       number to write,
+        n       minimum field width.
+
+If fewer than n characters are needed to represent x, leading
+blanks are output.
+*)
+
+PROCEDURE WriteRealOct(x: REAL);
+(*- Write a REAL to terminal, in octal form with exponent and mantissa.
+*)
+
+END RealInOut.
+

@@ -1,0 +1,89 @@
+DEFINITION MODULE Program;
+(*
+        Sub-program loading and execution
+
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+
+
+  Under Modula-2/86, programs can be divided into
+  sub-programs (we call them 'programs') which are
+  loaded upon request.
+
+  These programs are executed like procedures:
+   - they have only one entry-point (body of
+     program's main module).
+   - after termination, their data do not exist any
+     longer. In the case of programs the code also
+     disappears and will be reloaded from disk upon
+     the next activation.
+   - programs may themselves activate other programs.
+
+*)
+
+
+FROM System IMPORT Status;
+
+EXPORT QUALIFIED  Call, GetErrorInfo;
+
+
+PROCEDURE GetErrorInfo (VAR msg: ARRAY OF CHAR);
+(*- Obtain more information about a load error.
+out:    msg     a string related to the last error.
+
+After Call (below) has returned a Status value of
+'modulenotfound' and 'incompatiblemodules', GetErrorInfo
+will return the name of the offending module. (length is up
+to 24 characters). It returns an empty string in all other
+cases.
+*)
+
+PROCEDURE Call (programName: ARRAY OF CHAR; shared: BOOLEAN;
+                VAR st: Status);
+(*- Load and execute a (sub) program.
+in:     programName     file specification for the program,
+        shared          whether to share resources,
+out:    st              terminating status of the subprogram.
+
+The file whose name is given in 'programName' is opened
+loaded, and started.  There is no default device or file type:
+these must be supplied by the caller.  The file must contain a
+linked, relocatable program.
+
+The load address is defined by the default allocation schema,
+in which programs are loaded on top of stack and a new stack is
+created for execution of the new program.
+
+If 'shared' = TRUE then all sharable resources allocated by
+the called program are owned by the calling program (or
+possibly the caller of the caller...).  Shared resources are
+not released upon termination of the new program.
+
+Upon termination of the program, its memory is freed and the
+old stack is established.  All the resources used by a
+terminating program are released, if they are not shared and
+if they have not been released explicitly by the program
+(files, heap, etc).
+
+Any value of 'st' other than 'normal' indicates an abnormal
+termination of the subprogram.  In some cases GetErrorInfo (above)
+will provide additional details.
+
+                        - Cautions -
+
+In case of abnormal termination, Call does NOT print any kind
+of error message.
+
+Do not assign a procedure in the current program to a procedure
+variable which could still exist after the current program
+terminates (for example, a variable in a shared resource or in
+the calling program).  When the current program terminates,
+all procedures in it must be considered to cease to exist.
+
+The loader in this module is not reentrant. This means that
+interrupt processes must not load overlays!
+*)
+
+END Program.
+

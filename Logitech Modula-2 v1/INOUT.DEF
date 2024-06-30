@@ -1,0 +1,158 @@
+DEFINITION MODULE InOut;
+(*
+        Standard high-level formatted input/output
+
+
+From the book 'Programming in Modula-2' by Prof. N. Wirth.
+*)
+
+
+FROM SYSTEM IMPORT WORD;
+FROM FileSystem IMPORT File;
+EXPORT QUALIFIED EOL, Done, in, out, termCH,
+                 OpenInput, OpenOutput, CloseInput, CloseOutput,
+                 Read, ReadString, ReadInt, ReadCard, ReadWrd,
+                 Write, WriteLn, WriteString, WriteInt, WriteCard,
+                 WriteOct, WriteHex, WriteWrd;
+
+CONST EOL = 36C;
+
+VAR Done:  BOOLEAN;
+      (* Done is set by several procedures, TRUE if the
+       * operation was successful, FALSE otherwise. *)
+    termCH:  CHAR;
+      (* terminating character from ReadString, ReadInt, ReadCard. *)
+    in, out: File;
+      (* The currently open input and output files, respectively.
+       * Use for exceptional cases only. *)
+
+PROCEDURE OpenInput(defext: ARRAY OF CHAR);
+(*- Accept a file name from the terminal and open it for input.
+in:     defext  default filetype or 'extension'.
+
+If the file name that is read ends with '.', then 'defext' is
+appended to the file name.
+If OpenInput succeeds, Done = TRUE and subsequent input is
+taken from the file until CloseInput is called.
+*)
+
+PROCEDURE OpenOutput(defext: ARRAY OF CHAR);
+(*- Accept a file name from the terminal and open it for output.
+in:     defext  default filetype or 'extension'.
+
+If the file name ends in '.', 'defext' is appended.
+If OpenOutput succeeds, Done = TRUE and subsequent output is written
+to the file until CloseOutput is called.
+*)
+
+PROCEDURE CloseInput;
+(*- Close current input file and revert to terminal for input.
+*)
+
+PROCEDURE CloseOutput;
+(*- Close current output file and revert to terminal for output.
+*)
+
+PROCEDURE Read(VAR ch: CHAR);
+(*- Read the next character from the current input.
+out:    ch      the character read.  (EOL for end-of-line.)
+
+Done = TRUE unless the input is at end of file.
+*)
+
+PROCEDURE ReadString(VAR s: ARRAY OF CHAR);
+(*- Read a string from the current input.
+out:    s       the string that was read, excluding terminator.
+
+Leading blanks are accepted and thrown away, then characters
+are read into 's' until a blank or control character is entered.
+ReadString truncates the input string if it is too long for 's'.
+The terminating character is left in 'termCH'.
+If input is from the terminal, BS and DEL are allowed for editing.
+*)
+
+PROCEDURE ReadInt(VAR x: INTEGER);
+(*- Read an INTEGER representation from the current input.
+out:    x       the value read.
+
+ReadInt is like ReadString, but the string is converted to an
+INTEGER value if possible, using the syntax: ["+"|"-"] digit { digit }.
+Done = TRUE if some conversion took place.
+*)
+
+PROCEDURE ReadCard(VAR x: CARDINAL);
+(*- Read an unsigned decimal number from the current input.
+out:    x       the value read.
+
+ReadCard is like ReadInt, but the syntax is: digit { digit }.
+*)
+
+PROCEDURE ReadWrd(VAR w: WORD);
+(*- Read a WORD value from the current input.
+out:    w       the value read.
+
+Done is TRUE if a WORD was read successfully.
+(A WORD cannot be read from the terminal.)
+Note that the meaning of WORD is system-dependent.
+*)
+
+PROCEDURE Write(ch: CHAR);
+(*- Write a character to the current output.
+in:     ch      character to write.
+*)
+
+PROCEDURE WriteLn;    (*terminate line*)
+(*- Write a new-line sequence to the current output.
+*)
+
+PROCEDURE WriteString(s: ARRAY OF CHAR);
+(*- Write a string to the current output.
+in:     s       string to write.
+*)
+
+PROCEDURE WriteInt(x: INTEGER; n: CARDINAL);
+(*- Write an integer in right-justified decimal format.
+in:     x       value to be output,
+        n       minimum field width.
+
+The decimal representation of 'x' (including '-' if x is negative)
+is output, using at least n characters (but more if needed).
+Leading blanks are output if necessary.
+*)
+
+PROCEDURE WriteCard(x,n: CARDINAL);
+(*- Output a CARDINAL in decimal format.
+in:     x       value to be output,
+        n       minimum field width.
+
+The decimal representation of the value 'x' is output, using
+at least n characters (but more if needed).  Leading blanks are
+output if necessary.
+*)
+
+PROCEDURE WriteOct(x,n: CARDINAL);
+(*- Output a CARDINAL in octal format.
+in:     x       value to be output,
+        n       minimum field width.
+[see WriteCard above]
+*)
+
+PROCEDURE WriteHex(x,n: CARDINAL);
+(*- Output a CARDINAL in hexadecimal format.
+in:     x       value to be output,
+        n       minimum field width.
+
+Four uppercase hex digits are written, with leading blanks if
+n > 4.
+*)
+
+PROCEDURE WriteWrd(w: WORD);
+(*- Output a WORD
+in:     w       WORD value to be output.
+
+Note that the meaning of WORD is system-dependent, and that
+WORDs cannot be written to the terminal.
+*)
+
+END InOut.
+
