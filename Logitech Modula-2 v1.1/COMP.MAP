@@ -1,0 +1,58 @@
+Modula-2/86 Linker,  DOS 8086, Rel. 1.10, Nov 84, 
+
+Output file name: E:comp.LOD
+
+++ Program map (11 modules included in this layer):
+   Modules are listed in order of module code execution.
+
++ MODULE = ASCII                     KEY= A9110434E3EE
+  FILE= E:ASCII.LNK
+  CODE-SEG= 053A  DATA-SEG= 056F
+   PROC-TABLE= 0002
++ MODULE = System                    KEY= A91104246A54
+  FILE= E:System.LNK
+  CODE-SEG= 04FF  DATA-SEG= 055E
+   PROC-TABLE= 0002
++ MODULE = Keyboard                  KEY= A9110433A5D2
+  FILE= E:Keyboard.LNK
+  CODE-SEG= 04CD  DATA-SEG= 0555
+   PROC-TABLE= 0002
++ MODULE = Display                   KEY= A911043455B4
+  FILE= E:Display.LNK
+  CODE-SEG= 04C5  DATA-SEG= 0555
+   PROC-TABLE= 0002
++ MODULE = Termbase                  KEY= A91104381612
+  FILE= E:Termbase.LNK
+  CODE-SEG= 0489  DATA-SEG= 054E
+   PROC-TABLE= 0002
++ MODULE = Terminal                  KEY= A91104323CC8
+  FILE= E:Terminal.LNK
+  CODE-SEG= 0467  DATA-SEG= 054D
+   PROC-TABLE= 0002
++ MODULE = ProgMessage               KEY= A91104983B1A
+  FILE= E:ProgMess.LNK
+  CODE-SEG= 0427  DATA-SEG= 054D
+   PROC-TABLE= 01CC
++ MODULE = Storage                   KEY= A9110435A460
+  FILE= E:Storage.LNK
+  CODE-SEG= 0345  DATA-SEG= 054C
+   PROC-TABLE= 0002
++ MODULE = Program                   KEY= A911049712DE
+  FILE= E:Program.LNK
+  CODE-SEG= 01EF  DATA-SEG= 0548
+   PROC-TABLE= 0002
++ MODULE = CompFile                  KEY= A91104CC43A8
+  FILE= E:CompFile.LNK
+  CODE-SEG= 0041  DATA-SEG= 0544
+   PROC-TABLE= 018C
++ MODULE = Comint                    KEY= A6ED008351F4
+  FILE= E:comp.LNK
+  CODE-SEG= 0000  DATA-SEG= 053C
+   PROC-TABLE= 004E
+
+++ Base (0 modules assumed to be in base layers):
+
+
+Length of code (in paragraphs): 053C
+Length of data (in paragraphs): 0033
+

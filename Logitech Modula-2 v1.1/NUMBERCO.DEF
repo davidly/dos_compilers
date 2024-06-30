@@ -1,0 +1,122 @@
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE NumberConversion;
+(*
+   Conversion between numbers and strings
+
+The routines that convert a string to a number:
+   - skip leading blanks,
+   - accept always a '+' sign and for integers
+     also a '-' sign,
+   - skip blanks between sign and number.
+Done is TRUE if the conversion is successful.
+
+The routines that convert a number to a string:
+   - if the string is too small the number is truncated
+   - if the number has less digits than width, leading
+     blanks are added
+*)
+
+
+EXPORT QUALIFIED
+   MaxBase, BASE,
+   StringToCard, StringToInt, StringToNum,
+   CardToString, IntToString, NumToString;
+
+
+CONST MaxBase = 16;
+
+
+TYPE BASE = [2..MaxBase];
+
+  
+PROCEDURE StringToCard(str: ARRAY OF CHAR;
+                       VAR num: CARDINAL;
+                       VAR done: BOOLEAN);
+(*
+- Convert a string to a CARDINAL number.
+
+in:    str    string to convert 
+
+out:   num    converted number
+       done    TRUE if successful conversion,
+               FALSE if number out of range,
+               or contents of string non numeric.
+*)
+
+
+PROCEDURE StringToInt(str: ARRAY OF CHAR;
+                      VAR num: INTEGER;
+                      VAR done: BOOLEAN);
+(*
+- Convert a string to an INTEGER number.
+
+in:    str    string to convert 
+
+out:   num    converted number
+       done    TRUE if successful conversion,
+               FALSE if  number out of range,
+               or contents of string non numeric.
+*)
+
+
+PROCEDURE StringToNum(str: ARRAY OF CHAR;
+                      base: BASE;
+                      VAR num: CARDINAL;
+                      VAR done: BOOLEAN);
+(*
+- Convert a string to a CARDINAL number.
+
+in:   str    string to convert 
+      base   the base of the number represented in
+             the string
+
+out:  num    converted number
+      done   TRUE if successful conversion,
+             FALSE  or number out of range,
+             or contents of string not within base.
+*)
+
+
+PROCEDURE CardToString(num: CARDINAL;
+                       VAR str: ARRAY OF CHAR;
+                       width: CARDINAL);
+(*
+- Convert a CARDINAL number to a string.
+
+in:   num    number to convert
+      width  width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+PROCEDURE IntToString(num: INTEGER;
+                      VAR str: ARRAY OF CHAR;
+                      width: CARDINAL);
+(*
+- Convert an INTEGER number to a string.
+
+in:   num    number to convert
+      width  width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+PROCEDURE NumToString(num: CARDINAL;
+                      base: BASE;
+                      VAR str: ARRAY OF CHAR;
+                      width: CARDINAL);
+(*
+- Convert a number to the string representation in the specified base.
+
+in:   num    number to convert
+      base    the base of conversion
+      width    width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+END NumberConversion.
+

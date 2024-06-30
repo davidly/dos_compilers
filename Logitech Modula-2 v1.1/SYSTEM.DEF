@@ -1,0 +1,233 @@
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE System;
+(*
+   Additional system-dependent facilities
+
+This module may be seen as an extension of the standard
+pseudo-module SYSTEM.
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+FROM SYSTEM IMPORT ADDRESS, PROCESS;
+
+EXPORT QUALIFIED
+   Status, Terminate,
+   ProcessDescriptor, ProcessPtr, curProcess,
+   TermProcedure, CallTermProc,
+   InitProcedure, CallInitProc,
+
+   (* The following constants define the processor's
+      registers. These constants are exported here for
+      reasons of compatibility with older versions and
+      they should not be used any more. Instead, the
+      corresponding constants (AX, BX, etc) from the
+      pseudo-module SYSTEM should be used.
+   *)
+   RegAX, RegBX, RegCX, RegDX, RegSI, RegDI,
+   RegES, RegDS, RegCS, RegSS, RegBP, RegSP;
+
+
+TYPE
+   Status =
+      (normal, warned,
+       (*
+        - considered non-fatal; no dump is produced for
+          these two cases
+       *)
+       stopped, asserted, halted,
+       caseerr, stackovf, heapovf,
+       functionerr, addressoverflow,
+       realoverflow, realunderflow, badoperand,
+       cardinaloverflow, integeroverflow,
+       rangeerr, dividebyzero,
+       coroutineend,
+       loaderr, callerr, programnotfound,
+       modulenotfound, incompatiblemodule, filestructureerr,
+       illegalinstr, RTSfunctionerr,
+       interrupterr);
+   (*
+   - This type defines the possible values for a program's
+     status. The meaning of these values can be printed to
+     the terminal by means of ProgMessage.WriteStatus .
+   *)
+
+
+PROCEDURE Terminate (st: Status);
+(*
+- Terminate the current (sub) program.
+
+in:     st      terminating status.
+
+If the value of 'st' is different from 'normal' or
+'warned', memory is dumped on the disk file MEMORY.PMD,
+which can be used for subsequent debugging. The value of
+'st' will be returned to the caller of the terminating
+program by means of the parameter 'st' of the procedure
+'Program.Call'.
+
+This procedure never returns to the caller.
+*)
+
+
+TYPE
+   ProcessDescriptor =
+      RECORD
+	AX, BX, CX, DX	: CARDINAL;
+	SP, BP, SI, DI	: CARDINAL;
+	DS, SS, ES, CS	: CARDINAL;
+	IP		: CARDINAL;
+	flags		: BITSET;
+        (*
+        - all the above fileds denote the values of the
+          processor's registers for the process
+        *)
+	status		: Status;
+        (*- status of the process *)
+        programId     : CARDINAL; 
+        (*
+        - identifier of the current program, incremented
+          for every layer of overlay.
+        *)
+	auxId		: CARDINAL;
+        (*- currently not used *)
+	sharedId	: CARDINAL;
+        (*
+        - program identifier of the last overlay layer,
+          which was called with parameter 'shared' = FALSE
+          (see module 'Program').
+        *)
+	fatherProcess	: PROCESS;
+        (*
+        - process which created this process (by means
+          of NEWPROCESS)
+        *)
+	unused		: CARDINAL;
+        (*- currently not used *)
+	interruptMask	: BITSET;
+        (*
+        - priority mask effective while this process is
+          running. The mask register of the interrupt
+          controller is set to the logical OR of this
+          priority mask and of the device mask kept by
+          the Modula-2 system.
+        *)
+	debugStatus	: CARDINAL;
+        (*- auxiliary status field used for the debugger *)
+	progEndStack	: ADDRESS;
+        (*
+        - value of (SS,SP), used by the system for
+          aborting a program.
+        *)
+	intVector	: CARDINAL;
+        (*
+        - interrupt vector used by this process if it is
+          an interrupt service routine.
+        *)
+	oldISR		: ADDRESS;
+        (*
+        - old value of interrupt vector if process is
+          interrupt service routine.
+        *)
+	interruptedProcess : ADDRESS;
+        (*- used by IOTRANSFER *)
+	heapBase	: ADDRESS;
+        (*
+        - address of heap base, with the header of the
+          free-list.
+        *)
+	heapTop		: ADDRESS;
+        (*
+        - address of first free byte after the last
+          allocated area on the heap.
+        *)
+	modTable	: ADDRESS;
+        (*
+        - points to the last element in a list with
+          module descriptors.
+        *)
+      END;
+
+
+TYPE
+   ProcessPtr = POINTER TO POINTER TO ProcessDescriptor;
+
+
+VAR
+   curProcess: ProcessPtr;
+   (*
+   - Points to a pointer, which in turn points at any
+     moment to the workspace of the current process's.
+     This variable is 'read-only' and should not be used
+     in application programs.
+
+   WARNING: Improper use of this variable may cause
+   unpredictable behaviour of the system.
+   *)
+
+
+PROCEDURE TermProcedure (p: PROC);
+(*
+- Declare a termination routine.
+
+in:     p       termination procedure.
+
+The procedure 'p' will be called upon termination of the
+currentprogram or subprogram. Typical use is for drivers,
+which have to release resources used by the terminating
+program. Up to 20 termination routines can be installed.
+*)
+
+
+PROCEDURE CallTermProc;
+(*
+- Call all termination procedures for the current
+  program.
+
+Calls all procedures declared with 'TermProcedure' in the
+current program. 'CallTermProc' is automatically called
+at the termination of a program or subprogram.
+*)
+
+
+PROCEDURE InitProcedure (p: PROC);
+(*
+- Declare an initialization routine.
+
+in:     p       initialization procedure.
+
+Analoguous to 'TermProcedure', but for routines that have
+to be called before execution of a program.
+Up to 20 initialization routines can be installed.
+*)
+
+
+PROCEDURE CallInitProc;
+(*
+- Call all initialization procedures for the current
+  program.
+
+Analoguous to 'CallTermProc'.
+*)
+
+
+CONST
+   RegAX = 0; RegCX = 1; RegDX =  2; RegBX =  3;
+   RegSP = 4; RegBP = 5; RegSI =  6; RegDI =  7;
+   RegES = 8; RegCS = 9; RegSS = 10; RegDS = 11;
+   (*
+   - These constants define the processor's registers.
+     They are declared here for reasons of compatibility
+     with older versions and they should not be used any
+     more. Instead, the corresponding constants (AX, BX,
+     etc) from the pseudo-module SYSTEM should be used.
+     They may be used as parameters for the standard
+     procedures SETREG and GETREG (except that SP, BP,
+     CS, SS may not be used with SETREG).
+   *)
+
+
+END System.
+

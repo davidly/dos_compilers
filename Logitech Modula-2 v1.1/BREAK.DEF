@@ -1,0 +1,71 @@
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Break;
+(*
+   Handling of the ctrl-break interrupt
+
+This module provides an interrupt handler for the
+ctrl-break interrupt 1BH of MS-DOS and PC-DOS. It
+installs a default break handler, which stops the
+execution of the current program with 'Terminate(stopped)'
+(see module 'System'). This produces a memory dump of the
+stopped program. A program may install its own break
+handler, and it can enable or disable the break handler
+which is currently installed.
+*)
+
+
+EXPORT QUALIFIED
+   EnableBreak, DisableBreak, InstallBreak, UnInstallBreak;
+
+
+PROCEDURE EnableBreak;
+(*
+- Enable the activation of the current break handler
+
+If a ctrl-break is detected, the currently installed break
+handler will be called.
+*)
+
+
+PROCEDURE DisableBreak;
+(*
+- Disable the activation of the current break handler
+
+If a ctrl-break is detected, no action takes place. The
+ctrl-break is ignored.
+*)
+
+
+PROCEDURE InstallBreak (BreakProc: PROC );
+(*
+- Install a break handler
+
+in:   BreakProc   break procedure to be called upon
+                  crtl-break
+
+A program can install its own break handler. Module
+'Break' maintains a stack of break procedures. The break
+procedure on top of the stack (i.e. the one which was
+installed most recently) will be called upon the
+occurence of a ctrl-break. The default break handler
+which is installed initially terminates the program with
+a call to 'System.Terminate(stopped)'.
+
+Up to four user defined break procedure may be installed
+at the same time.
+*)
+
+
+PROCEDURE UnInstallBreak;
+(*
+- Uninstall the current break handler
+
+Removes the break procedure which is currently on top of
+the stack. So the last installed break procedure will be
+deactivated, and the one installed previously becomes
+active again.
+*)
+
+
+END Break.
+

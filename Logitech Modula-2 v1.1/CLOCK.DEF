@@ -1,0 +1,49 @@
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Clock;
+(*
+   Access to the system's date and time
+*)
+
+
+EXPORT QUALIFIED
+   SetTime, GetTime, Time;
+
+
+TYPE
+   Time = RECORD day, minute, millisec: CARDINAL; END;
+   (*
+   - date and time of day
+
+   'day' is : Bits 0..4 = day of month (1..31),
+              Bits 5..8 = month of the year (1..12),
+              Bits 9..15 = year - 1900.
+   'minute' is hour * 60 + minutes.
+   'millisec' is second * 1000 + milliseconds,
+              starting with 0 at every minute.
+   *)
+
+
+PROCEDURE GetTime (VAR curTime: Time);
+(*
+- Return the current date and time.
+
+out:    curTime         record containing date and time.
+
+On systems which do not keep date or time, 'GetTime'
+returns a pseudo-random number.
+*)
+
+
+PROCEDURE SetTime (curTime: Time);
+(*
+- Set the current date and time.
+
+in:     curTime         record containing date and time.
+
+On systems which do not keep date or time, this call has
+no effect.
+*)
+
+
+END Clock.
+

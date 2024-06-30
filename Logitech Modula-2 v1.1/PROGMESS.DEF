@@ -1,0 +1,25 @@
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE ProgMessage;
+(*
+   Write program status message to the terminal
+*)
+
+
+FROM System IMPORT Status;
+
+EXPORT QUALIFIED WriteStatus;
+
+
+PROCEDURE WriteStatus (st: Status);
+(*
+- Write a short description of a program status on the
+  terminal.
+
+in:     st      a Status, as returned by Program.Call
+
+The message may be up to 32 characters long.
+*)
+
+
+END ProgMessage.
+
