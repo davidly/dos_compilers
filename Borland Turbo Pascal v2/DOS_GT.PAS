@@ -1,29 +1,27 @@
-program outchar;
-
 type
   regpack = record
             ax,bx,cx,dx,bp,si,di,ds,es,flags: integer;
             end;
 
-procedure oc( var c : char );
+procedure get_time( var tt : timetype );
 var
   recpack:        regpack;
   ah,al,ch,cl,dh: byte;
 
 begin
-  ah := $8;
+  ah := $2c;
   with recpack do
   begin
     ax := ah shl 8 + al;
-    dh := 87; {c;}
   end;
   intr( $21, recpack );
-
+  with recpack do
+  begin
+    tt.h := cx shr 8;
+    tt.m := cx mod 256;
+    tt.s := dx shr 8;
+    tt.l := dx mod 256;
+  end;
 end;
 
-var c : char;
-begin { outchar }
-  c := 'W';
-  oc( c );
-end. { outchar }
-
+

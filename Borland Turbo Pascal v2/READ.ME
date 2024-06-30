@@ -1,0 +1,26 @@
+                   RUN-TIME ERRORS IN OVERLAYS
+                   ---------------------------
+
+
+     Run-time  errors occurring in overlays are found  as  usual,
+and  an  address  is issued by the error  handling  system.  This
+address,  however,  is  an address within the overlay  area,  and
+there  is no way of knowing which overlay subprogram was actually
+active when the error occurred.
+     Run-time  errors  in overlays can therefore  not  always  be
+readily  found  with  the Options menu's  'Find  run-time  error'
+facility.  What 'Find run-time error' will point out is the first
+occurrence of code at the specified address. This, of course, may
+be  the place of the error,  but the error may as well occur in a
+subsequent subprogram within the same overlay group.
+     This  it not a serious limitation,  however,  as the type of
+error  and  the way it occurs most often will indicate to you  in
+which subprogram the error happened.  The way to locate the error
+precisely is then to place the suspected subprogram as the  first
+subprogram of the overlay group.  'Find run-time error' will then
+work.
+     THE BEST THING TO DO IS NOT TO PLACE SUBPROGRAMS IN OVERLAYS
+UNTIL THEY HAVE BEEN FULLY DEBUGGED!
+
+
+
