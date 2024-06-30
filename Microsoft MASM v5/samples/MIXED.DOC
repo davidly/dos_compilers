@@ -1,0 +1,272 @@
+		      Mixed-Language Source Files
+
+This directory contains	mixed-language example programs	and macros.
+
+The following source files are the sample programs from	Chapter	6,
+"Assembly-to-High-Level Interface," of the Mixed-Language Programming
+Guide:
+
+   BA.ASM	    Assembly module to be called from BASIC
+   CA.ASM	    Assembly module to be called from C
+   FA.ASM	    Assembly module to be called from FORTRAN
+   PA.ASM	    Assembly module to be called from Pascal
+
+   BAMAIN.BAS	    BASIC main program that calls assembly module
+   CAMAIN.C	    C main program that	calls assembly module
+   FAMAIN.FOR	    FORTRAN main program that calls assembly module
+   PAMAIN.PAS	    Pascal main	program	that calls assembly module
+
+In addition, the directory contains the	following files:
+
+   MIXED.INC	    Macros for simplifying assembly routines intended
+		    to be called from high-level languages.
+   POWER2.ASM	    Macro version of assembly module that can be called
+		    from BASIC,	C, FORTRAN, or Pascal.
+
+			 Mixed-Language	Macros
+
+MIXED.INC contains macros for defining high-level-language routines.
+It can create functions	for Microsoft C, FORTRAN, or Pascal, and for
+future versions	of Microsoft BASIC. It can also	create subprograms
+for BASIC, subroutines for FORTRAN, or procedures for Pascal.
+
+	Note: Some BASIC examples use functions	and the	DECLARE
+	statement. These features are not available in versions	of
+	Microsoft BASIC	available at release time. They	will work
+	if you rewrite functions as subprograms. Functions and
+	DECLARE	statements will	be supported in	future versions	of
+	Microsoft BASIC	compilers.
+
+The following macros are provided:
+
+       Macro	      Purpose
+
+       setModel	      Sets memory model	passed from a DOS command line
+       hProc	      Initializes a procedure
+       hLocal	      Initializes local	variables
+       hRet	      Returns from a procedure
+       hEndp	      Terminates a procedure
+
+       ifFP	      Assembles	statement if the memory	model uses far data
+       FP	      Provides ES override if the memory model uses far	data
+       pLes	      Loads data (through ES for far data)
+       pLds	      Loads data (through DS for far data)
+
+Other internal macros in MIXED.INC are used by these macros, but can
+be ignored by the user.
+			Macro Syntax
+
+The calling convention used in the macros depends on whether the
+symbol "cLang" is defined. If "cLang" is defined, the C	calling
+convention is used. Otherwise, the calling convention used by
+BASIC, FORTRAN,	and Pascal is used.
+
+Macro names and	arguments are case insensitive.	The macros and
+their syntax are described below:
+
+setModel
+
+  Sets the memory model	to small, medium, compact, large, or huge.
+  This macro is	an alternative to the .MODEL directive.	It enables
+  you to pass a	memory model from the MASM command line. For
+  example, you can use
+
+      setModel
+
+  as the first code in your source file	and supply the memory model
+  with the /D option as	shown below:
+
+      MASM /Dmodel=medium source;
+
+
+hProc  <name [NEAR|FAR]> [,<USES reglist>] [,arg[:type]	[,arg[:type]]]...
+
+  Initializes a	procedure by pushing BP	and saving SP in BP. The
+  macro	also handles the following tasks:
+
+    1. Declares	the procedure name public in the format	of the language
+       ("doTask" is declared as "_doTask" for the C compiler).
+
+    2. Gives the procedure the type NEAR or FAR	if specified, or the
+       default type for	the memory model (NEAR for small and compact
+       models or FAR for medium, large,	and huge models). If type is
+       specified, the name and type must be enclosed in	angle brackets.
+
+    3. Saves and restores specified registers. The keyword USES	must
+       be given	as a parameter followed	by the registers. USES and
+       the registers must be enclosed in angle brackets.
+
+    4. Assigns names and types to stack	parameters. The	type for
+       parameters can be BYTE, WORD, DWORD, FWORD, QWORD, TWORD, or
+       PTR. If no type is given, WORD is assumed. PTR type means
+       that the	parameter is a pointer.	It's size is variable
+       depending on the	size of	the memory model. Pointers are
+       assumed to point	to data, so the	size is	NEAR for small and
+       medium models or	FAR for	compact, large,	and huge models.
+
+  For example,
+
+      hProc   <doTask FAR>, <USES si di>, count:BYTE, array:PTR, number
+
+  defines the FAR procedure "doTask" with byte parameter "count",
+  pointer paramter "array", and	word parameter "number". The SI	and
+  DI registers are saved.
+
+hLocal	var[:type] [,var[:type]]...
+
+  Saves	space on the stack for local variables and assign them
+  variables names. For example,
+
+      hLocal   work,temp:DWORD
+
+  allocates "work" as a	temporary word variable	and "temp" as a
+  temporary doubleword variable.
+
+
+hRet
+
+  Returns from a procedure. SP is restored from	BP if local variables
+  have been used. BP is	popped.	A RET instruction is given in
+  the format appropriate for the memory	model and calling
+  convention.
+
+
+hEndp
+
+  Ends a procedure. Note that a	procedure may have several return
+  points, but only one end point.
+
+
+ifFP  statement
+
+  Assembles the	statement if the memory	model uses far data. This
+  macro	can be used to push segment registers or take other
+  action that is only required for far data. For example,
+
+      ifFP     push  ds
+
+  pushes the DS	register in compact, large, and	huge memory
+  models, but has no effect in small and medium	models.
+
+
+FPoperand
+
+  Gives	an ES override if the memory model uses	far data. In
+  models that use near data, FP	is null. For example,
+
+      mov      ax,FP[bx]
+
+  assembles as
+
+      mov      ax,es:[bx]
+
+  in compact, large, and huge memory models, but as
+
+      mov      ax,[bx]
+
+  in small and medium models.
+
+pLes  register,address
+pLds  register,address
+
+  Loads	a pointer from the specified address to	the specified
+  register. If the memory model	uses far data, the segment
+  portion of the address will be moved into ES or DS, depending
+  on the macro used. For example,
+
+      pLes    bx,arg1
+
+  is assembled as
+
+      les     bx,arg1
+
+  in compact, large, and huge memory models, but as
+
+      mov     bx,arg1
+
+  in small and medium models.
+
+			     Notes
+
+The macros in MIXED.INC	have several limitations:
+
+  1. The memory	model must be set at the start of the source
+     file before any mixed-language macros are used. The model
+     can be set	with the .MODEL	directive or with the "setModel"
+     macro. For	example, start with
+
+	    INCLUDE   mix.inc
+	    .MODEL    small
+
+     or	with
+
+     model  EQU	      <small>	   ; Or	pass small from	command	line
+	    INCLUDE   mix.inc
+	    setModel
+
+     The mixed-language	macros only work with simplified segment
+     directives. You cannot use	them with full segment definitions.
+
+  2. If	the C calling convention is used, the symbol "cLang"
+     must be defined before the	start of a procedure. For
+     example, define the symbol	in the source file with	the line
+
+	    cLang   =	1
+
+     or	from the command line with the option
+
+	    /DcLang
+
+  3. The macros	do not automatically handle 80386 features such
+     as	32-bit pointers.
+
+  4. All limitations and techniques described the Mixed-Language
+     Programming Guide apply. For instance, you	must save and
+     restore the DS, SS, DI, and SI registers if your module
+     modifies them. Return values should be passed back	by
+     placing them in AL, AX, or	DX:AX before returning.
+
+  5. FORTRAN and Pascal	require	that the address for certain
+     return values (such as real numbers or arrays) be passed as
+     the last argument.	The macros do not handle this situation,
+     so	the programmer must handle it specifically. An example
+     is	shown below:
+
+	    hProc FuncFORTRAN,Arg1,Arg2,RetPoint
+	    .
+	    .
+	    .
+	    mov	    RetPoint,bx	  ; Assume BX contains a pointer
+				  ;   to return	value
+	    Return
+
+  6. The convenience of	using the macros in MIXED.INC has a cost
+     in	slower assembly	time.
+
+			    Examples
+
+The file POWER2.ASM contains a sample assembly module that is
+equivalent to the sample modules in BA.ASM, CA.ASM, FA.ASM, and
+PA.ASM.	POWER2.ASM uses	the macros in MIXED.INC	and can	be
+assembled from the command-line	for any	language or memory
+model. The module can be linked	with the high-level-language
+modules	created	from BAMAIN.BAS, CAMAIN.C, FAMAIN.FOR, or
+PAMAIN.PAS. The	command	lines for default memory models	are
+shown below for	each language:
+
+BASIC -	CodeView symbolic data and medium model
+
+  MASM /ZI /Dmodel=medium power2;
+
+C - Case sensitive, CodeView symbolic data, small model, and "cLang" defined
+
+  MASM /Mx /Zi /Dmodel=small /DcLang power2;
+
+FORTRAN	- CodeView symbolic data and large model
+
+  MASM /ZI /Dmodel=large power2;
+
+Pascal - CodeView symbolic data	and large model
+
+  MASM /ZI /Dmodel=large power2;
+

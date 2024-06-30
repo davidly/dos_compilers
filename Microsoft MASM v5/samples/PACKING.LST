@@ -1,0 +1,34 @@
+The following documentation pieces are provided	with the Macro
+Assembler:
+
+  Macro	Assembler Programmer's Guide
+  Macro	Assembler Reference
+  CodeView and Utilities Guide
+  Mixed-Language Programming Guide
+  CodeView Keyboard Templates
+      Old-style	keyboard
+      New-style	keyboard
+
+The following files are	provided with the Macro	Assembler:
+
+Disk 1 Root	    Disk 1 \MIXED	 Disk 2	Root
+
+  WHAT.ASM	      BA.ASM		   PAGER.ASM
+  RUNME.BAT	      CA.ASM		   SHOW.ASM
+  SETUP.BAT	      FA.ASM		   DEMO.BAT
+  SETUP2.BAT	      PA.ASM		   RUNME.BAT
+  README.DOC	      POWER2.ASM	   E_AUTO.CV
+  CREF.EXE	      BAMAIN.BAS	   M_AUTO.CV
+  ERROUT.EXE	      CAMAIN.C		   Q_AUTO.CV
+  EXEMOD.EXE	      FAMAIN.FOR	   U_AUTO.CV
+  LIB.EXE	      PAMAIN.PAS	   W_AUTO.CV
+  LINK.EXE	      MIXED.DOC		   CV.HLP
+  MAKE.EXE	      MIXED.INC		   CV.EXE
+  MASM.EXE				   EXEPACK.EXE
+  SETENV.EXE				   SHOW.EXE
+  SHOW.EXE				   WHAT.EXE
+  WHAT.EXE				   MACRO.DOC
+  PACKING.LST				   BIOS.INC
+  \MIXED				   DOS.INC
+					   MOUSE.SYS
+
