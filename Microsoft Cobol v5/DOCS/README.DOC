@@ -1,0 +1,539 @@
+  		    	  README.DOC
+
+	    	Microsoft(R) COBOL, Version 5.0
+	    (C) Copyright Microsoft Corporation, 1993
+
+
+  This document contains essential information for version 5.0
+  of the Microsoft COBOL Professional Development System for 
+  MS-DOS(R) and Microsoft(R) Windows.  The information in this 
+  document is more up-to-date than the printed documentation.
+
+  See the DOCUPDT.DOC file for information on printed documentation 
+  corrections (located in the \COBOL\DOCS sub-directory). 
+
+========================< CONTENTS >=================================
+
+  This file contains information on product usage and 
+  restrictions organized as follows: 
+
+	NEW FEATURES
+
+	INSTALLATION
+
+	PROGRAMMER'S WORKBENCH
+
+	COMPILER AND LINKER
+
+	ANIMATOR
+
+	CODEVIEW
+
+	SAMPLE PROGRAMS
+
+	MISCELLANEOUS
+
+
+===================================================================
+  NEW FEATURES
+  ============
+
+  Improved Support for Microsoft Windows 3.x
+  -------------------------------------------
+	o  Shared run-time system (COBLIB) is now supported under
+	   Windows 3.x.  The run-time system is provided as COBLIB.DLW.
+      
+  	o  Because the COBOL compiler uses COBLIB itself, this means 
+	   that the compiler, Animator, etc., will be able to run as 
+	   Windows applications, making use of extended memory. 
+ 
+ 	o  QuickWin support is now provided in a DLL. This means that
+           	   dynamically called sub-programs can now make use of all
+           	   COBOL screen handling techniques.
+
+	o  COBOL 5.0 provides support for interoperability with
+	   Microsoft Visual Basic 2.0 for Windows. You can write
+	   Visual Basic Graphical User Interfaces and call COBOL DLL's.
+	   For additional information, see the COBOL Programming for 
+	   Windows book, Chapter 4 "Building Visual Basic 
+	   Applications."
+ 
+ 
+  Animator Improvements
+  ---------------------
+	o  Ability to monitor many data items. Each item is displayed 
+	   in its own window on the screen.
+ 
+	o  The "Watch" statement. This effectively performs a Step command,
+	   but also displays the contents of all data items used in the
+	   COBOL statement before and after execution of the Step. This saves
+	   the user from having to manually query the data items used in the
+	   statement.
+ 
+	o  Set a breakpoint on a data-item, so that if the contents of the
+	   data-item changes, execution of the program will stop on the
+	   statement that changes the data-item.
+ 
+	o  Set a breakpoint on a COBOL statement and specify several lines
+	   of code to be executed when the breakpoint is encountered (allows
+	   temporary patching of the code - the source file is not changed).
+ 
+	o  A "base" Animator is also provided for low memory situations 
+	   (ANIMBASE.EXE).
+ 
+ 
+  PANELS Character Window Tool
+  ----------------------------
+	PANELS allows applications to create multiple windows on 
+	character mode screens. Support is also provided to allow 
+	ACCEPT/DISPLAY statements to be sent to the different Windows.
+	This allows easier development of pull-down menus, pop-up 
+	windows, etc. on character mode screens.
+ 
+ 
+  Extfh/BTrieve Interface
+  -----------------------
+	New modules are being provided to allow programs that use standard
+	COBOL file handling syntax to access BTrieve files. Another module
+	is provided to allow programs that make calls to BTrieve to access
+	indexed-sequential files created using the standard COBOL file
+	handler (EXTFH). 
+ 
+  COBOL Syntax Enhancements
+  -------------------------
+	There have been various COBOL syntax enhancements, mostly based 
+	on the CODASYL Journal of Development, including:
+ 
+	o  EVALUATE statement extended
+	o  PERFORM UNTIL EXIT
+	o  SET condition-name TO FALSE
+	o  READ WITH WAIT
+	o  READ WITH IGNORE LOCK
+	o  ACCEPT/DISPLAY WITH UPPER/LOWER
+	o  "C" and "R" accepted as currency signs
+	o  VALUE clause extended to include "LENGTH OF identifier",
+	o  "ADDRESS OF identifier" and AND'ing and OR'ing of numbers
+	   (used for programming for GUI environments).
+ 
+  Mainframe Compatibility Enhancements
+  ------------------------------------
+	o  Support for the DOS/VS COBOL dialect.
+	o  Mainframe compatible arithmetic. A new directive has been added
+                   to provide mainframe compatible results in arithmetic statements.
+                   The difference is in the way intermediate results are stored 
+	    during arithmetic statements.
+	o  Mainframe file status codes are now supported.
+	o  Obtain record length information for FILE SECTION records via
+           	    negative subscripting (a common mainframe technique).
+	o  Improved support for OSVS perform behavior.
+ 
+ 
+  Western National Language Standards Supported
+  ---------------------------------------------
+	The "NLS" compiler directive has been provided to indicate that a
+	program should use a specified language/territory/codepage. The
+	program then uses the appropriate characters and collating sequences
+	for currency signs, decimal and thousands separator and comparisons.
+ 
+  Performance Improvements
+  ------------------------
+	There have been improvements in the speed and size of the code
+	output by the compiler. The main performance improvements
+	come from the following:
+
+	o  Better use of 80x86 registers, leading to a general
+	     20% improvement in computational operations.
+	o  Speed of access to linkage section has been doubled 
+	     in programs with greater than 64K of data.
+	o  Improvement in CALL performance.
+	o  40% speed improvement in accessing tables greater than 64K.
+	o  Improvement in SEARCH performance.
+	o  Improvements in file-handling performance.
+	o  Use of the XM DOS Extender can improve performance of 
+	     larger programs.
+
+ 
+  Other Enhancements
+  ------------------
+	o  The compiler can now output assembler listings in a form that
+                   can be input to MASM if required.
+	o  Environment variables can be set up in a text file, therefore 
+	    reducing the amount of DOS environment space that is needed. 
+	    The variables can be read and written by COBOL programs.
+
+  New Call-by-Name Routines
+  -------------------------
+       o  CBL_EXIT_PROC
+       o  CBL_SUBSYSTEM
+       o  CBL_COPY_FILE
+       o  CBL_GET_SCR_LINE_DRAW
+       o  CBL_GET_OS_INFO
+       o  PC_FIND_DRIVES
+
+  XM DOS Extender
+  ------------
+	o  Enable your applications to exceed the 640K DOS memory limit.
+	o  Enables up to 16MB of extended memory to be made available to 
+	   your application.
+	o  Supports VCPI, DPMI and XMS protocols.
+	o  No need to modify your programs, simply recompile and relink.
+
+  Updated Windows 3.1 components
+  ------------------------------
+	o  Image Editor:  
+	   With Image Editor (IMAGEDIT.EXE), you can create graphical 
+	   images to represent files, windows, cursors, and other 
+	   objects in your Windows applications.
+	o  Dialog Editor:  
+	   With Dialog Editor (DLGEDIT.EXE), you can visually design and 
+	   test a dialog box on your screen instead of programmatically 
+	   using DIALOG statements in your resource-definition file.
+	o  Font Editor:  
+	   With Font Editor (FONTEDIT.EXE), you can modify existing 
+	   fonts to create new fonts for your applications.
+	o  Resource Compiler:  
+	   With Resource Compiler (RC.EXE) you can compile your Windows 
+	   resource files and resource-definition files for inclusion 
+	   in Windows .EXE's and .DLL's.
+
+  Codeview 4.05 Debugger
+  ----------------------
+	Supports debugging of mixed language DOS applications including 
+	Cobol, C, and MASM.
+
+
+===================================================================
+  INSTALLATION
+  ============
+
+  Installing HIMEM.SYS
+  --------------------
+	For best results, LINK requires HIMEM.SYS (which is supplied
+	with COBOL 5.0 but not installed by Setup). If HIMEM.SYS 
+	(or some other memory manager) is not already installed on 
+	your computer, follow these instructions:
+
+	1.	Verify that HIMEM.SYS is located in the \COBOL\BIN
+		directory and that \COBOL\BIN is included in the
+		PATH statement in your AUTOEXEC.BAT file.
+
+	2.	Add this statement to your CONFIG.SYS file:
+	
+		DEVICE = C:\COBOL\BIN\HIMEM.SYS
+
+		The DEVICE command for HIMEM.SYS enables the use of 
+		extended memory. Therefore, this command must appear 
+		in your CONFIG.SYS file before any commands that 
+		start device drivers, or programs that use extended 
+		memory such as EMM386.EXE.
+
+  Path Length
+  -----------
+	For best results, install the default \COBOL directories.
+	If you choose other installation directory paths, choose
+	paths of reasonable length.  Some directory paths are added
+	to the PATH statement in your AUTOEXEC.BAT, which is limited
+	to 128 characters.  
+
+  Path Statement Characters
+  -------------------------
+	Do not use invalid path characters, such as:
+
+		<  >  *  "  '
+
+	in the Setup utility. 
+
+  Source and Target Drive Specification
+  -------------------------------------
+	Do not specify invalid drives when prompted for the
+	installation source drive or destination drive in the 
+	Setup utility.
+
+  Using NEW-VARS.BAT
+  ------------------
+	After the initial installation of COBOL 5.0, any subsequent
+	installations will create a new NEW-VARS.BAT.  This may
+	delete needed statements from the original file.  If you
+	re-install COBOL 5.0, make a backup of NEW-VARS.BAT to
+	merge with the new file.
+
+
+===================================================================
+  PROGRAMMER'S WORKBENCH
+  ======================
+
+  Segmented Programs
+  ------------------
+	Segmented COBOL programs cannot be run from PWB.
+
+  Using Library Routines (call-by-name) for Mouse
+  -----------------------------------------------
+	Do NOT use the mouse support Library Routine CBL_TERM_MOUSE 
+	under PWB for builds using Shared Runtime System (this call 
+	is handled by the runtime system).  Use of this call under PWB 
+	may cause your system to hang.
+
+  Windows .DLL Projects
+  ---------------------
+	If you debug a Windows .DLL project, to change from the 
+	debug build options to the release build options, do the 
+	following:
+
+	1. Close the debug project you are working on.
+	2. Choose "Use Release Option" from the Build Options dialog
+	     box.
+	3. Create a new project (.MAK file) for the Windows .DLL
+	     using the release options.
+
+
+===================================================================
+  COMPILER AND LINKER
+  ===================
+
+  ANSI Standard for String Literals
+  ---------------------------------
+	The ANSI Standard for string literals rule is enforced 
+	in COBOL version 5.0. COBOL versions 4.5 and earlier 
+	did not enforce this rule. For this reason, programs 
+	compiled with earlier versions of COBOL that do not 
+	conform to this rule may produce a syntax error. 
+
+	For more information and the exact wording of this 
+	ANSI rule, see the "Continuation of Lines" section in
+	the COBOL Language Reference book Chapter 2, page 77.
+
+  By-Value Parameter Passing in CALL Statements
+  ---------------------------------------------
+	Dynamically linked COBOL programs cannot pass parameters by
+	value, only by reference.  Statically linked COBOL 
+	Programs can pass parameters either way. 
+
+  Sequential File Data Compression 
+  --------------------------------
+	To compress data in a sequential file, you must compile
+	using the CALLFH directive.
+
+  Using WINDOWS.78 in a COBOL Program
+  -----------------------------------
+	When WINDOWS.78 is used in a COBOL program, the directive 
+	REMOVE(IGNORE) must be used to avoid a compiler error.  
+
+	For an example of how to use the REMOVE(IGNORE) directive,
+	refer to SYSMETS.CBL--a sample program located in the
+	\COBOL\SAMPLES\WINDOWS directory.
+
+
+===================================================================
+  ANIMATOR
+  ========
+
+  Animating Sub-Programs
+  -------------------------
+	To animate a program which is called by another program, 
+	you must compile using the PARAMCOUNTCHECK directive.  
+	For more information, Refer to System Reference, 
+	Appendix D (Directives of Compiler), page 578.
+
+  Using Animator From PWB
+  -----------------------
+	If you receive a 198 error while animating under PWB, this is probably
+	caused by insufficient system memory needed to load your program and
+	Animator.  The best solution to this is to ensure Animator has access to
+	extended memory by checking the "USE XM for COMPILE and ANIMATE"
+	check box on the COBOL Compiler options screen in PWB.
+
+	The program can also be animated from the command line.  
+	In a very large program, or when using certain animator 
+	functions, ANIMBASE may have to be used in place of ANIMATOR.
+
+  Using the Cobol Compiler Icon with the ANIM directive
+  -----------------------------------------------------
+	1.  Click on the Cobol Compiler icon
+
+	2.  Type the filename and ANIM directive as you would 
+	    at the command line. When the compile finishes 
+	    successfully, LINK is executed automatically.
+  
+	3.  Make LINK the active window to allow LINK to process.  
+
+	4.  Select the OK button from the Application Terminated
+	    dialog box.
+
+
+===================================================================
+  CODEVIEW
+  ========
+
+  Arithmetic Data Types
+  ---------------------
+	Comp-1, Comp-2, and External Floating Point Data Items are 
+	not supported.
+
+  Array Subscripts
+  ----------------
+	Index names are not supported as subscripts.
+
+  Conditional Breakpoints
+  -----------------------
+	When a breakpoint expression is entered that contains
+	blanks, the expression must be quoted or parenthesized.
+	For instance, to use
+
+		a + 1
+
+	as a breakpoint expression, enter
+
+		bp ?(a + 1)
+	or
+		bp ?"a + 1"
+
+	The BP= Command (Break on change) will only accept
+	single data items, such as:
+
+		bp= b(1)
+		bp= x
+
+	Multiple-term expressions are not allowed. For example:
+
+		bp= (a + b)
+		bp= (a + 1)
+		bp= (a * 5 + x(2))
+
+	Indexed data items are allowed, but only if the index 
+	is a literal:
+
+		bp= q(5)
+		bp= a(1)
+
+  CVPACK Configuration
+  --------------------
+	Codeview uses CVPACK.EXE.  There are two possible versions of
+	CVPACK which can be installed for use with COBOL 5.0: 
+
+		CVPACKX.@XE and CVPACK.@XE.
+
+	CVPACKX.@XE takes advantage of extended memory. CVPACK.@XE is 
+	strictly for Real Mode use when an extended memory manager
+	is NOT present.  One of these files will be installed as CVPACK.EXE,
+	depending upon installation options that you choose. 
+
+	During Setup, on the CVPACK Configuration screen, if you 
+	choose "yes" to use the extended version of CVPACK, CVPACKX.@XE 
+	is installed as CVPACK.EXE, and CVPACK.@XE is installed as 
+	CVPACKR.EXE.  If you choose "no",  CVPACK.@XE is installed as
+	CVPACK.EXE, and CVPACKX.@XE is installed as CVPACKX.EXE.
+
+  Double-Quoted Integers
+  ----------------------
+	Double-quoted integers used in relational operations,
+	such as:
+
+		"5" = 5
+
+	are not recognized.
+
+  Numeric Literals
+  ----------------
+	Leading zeroes are required in decimals.  For instance, 0.01 
+	is accepted as a valid numeric literal; .01 is not.
+
+  Radix Settings
+  --------------
+	If n16 is set, and a data item consists completely of
+	hex digits, the item will not be read as a symbol, but
+	as a hex number.  For instance, the conditional breakpoint
+		bp ?a
+	will treat "a" as the number 10.
+
+  Registers Window Flag
+  ---------------------
+	PL and NC flags are not supported in the registers window.
+
+  Reserved Words
+  --------------
+	The following are CodeView reserved words, and may not be
+	used as identifiers anywhere in programs which are to be
+	debugged:
+		main
+		winmain
+		entgqq
+		_main
+
+
+===================================================================
+  SAMPLE PROGRAMS
+  ===============
+
+  MOUSMENU.CBL Program
+  --------------------
+	The sample file C:\cobol\samples\mousmenu.cbl should be run 
+	in a full-screen DOS box in Windows. The mouse will not 
+	function correctly in a windowed DOS box.
+
+
+====================================================================
+  MISCELLANEOUS
+  =============
+
+  386 Minimum Requirement
+  -----------------------
+	An 80386 or higher processor is recommended for the
+	following utilities:
+
+	PWB		Microsoft Programmer's WorkBench
+	CV		Microsoft CodeView
+	LINK		Microsoft Segmented Executable Linker
+	EXEHDR	Microsoft EXE File Header Utility
+	IMPLIB		Microsoft Import Library Manager
+	LIB		Microsoft Library Manager
+	NMAKE	Microsoft Program Maintenance Utility
+	HELPMAKE	Microsoft Help File Maintenance Utility
+	BSCMAKE	Microsoft Browser Database Maintenance Utility
+	SBRPACK	Microsoft Browse Information Compactor
+	CVPACK	Microsoft Debugging Information Compactor
+	RM		Microsoft File Removal Utility
+	UNDEL		Microsoft File Undelete Utility
+	EXP		Microsoft File Expunge Utility
+	WX/WXSRVR	Microsoft WX/WXServer Utility
+
+  BTrieve
+  -------
+	When using BTrieve to access information on a server, 
+	if the current working drive is not mapped to the server 
+	that you are using, the file specification must include 
+	the server path (drive letter).
+
+	For example: If the current working drive is C and the
+	server drive is F, then the "select" statement on page
+	133 of the System Reference would look like this:
+
+		select testfile-1 assign to "f:\test-1.dat"
+
+  Conversion Utilities
+  --------------------
+	TABX, Convert3, and Convert5 are to be used only to
+	convert files from another dialect, and will not
+	run if EMM386 is installed.
+
+  H2CPY
+  -----
+	Do not use H2CPY on WINDOWS.H.  The WINDOWS.78 and 
+	WINDOWS.CPY files are provided in \cobol\samples\windows as correct
+	conversions of WINDOWS.H.
+
+  Microsoft C 7.0
+  ---------------
+	Mixed-Language programming using Microsoft C/C++ 7.0 and 
+	COBOL 5.0 is possible. However, floating point data types 
+	can only be used in one or the other language; not both.  
+	This restriction avoids link errors caused by conflicts in 
+	the C and COBOL floating point support libraries.
+
+  User-Created Libraries
+  ----------------------
+	Libraries created using LIB.EXE cannot be used in the
+	"lib" field of a LINK command unless the calling programs
+	were compiled with the LITLINK compiler directive.
+	If LITLINK is not used, the user-created libraries should
+	be placed in the .OBJ field of the LINK command in order
+	to be linked statically.

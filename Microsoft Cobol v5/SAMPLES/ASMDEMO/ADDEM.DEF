@@ -1,0 +1,4 @@
+; module definition file for ADDEM under OS/2
+LIBRARY INITINSTANCE    ; ADIS is a DLL
+CODE LOADONCALL         ; load when needed
+EXPORTS ADDEM @1        ; entry is ADDEM

@@ -1,0 +1,666 @@
+
+ 
+		    	   DOCUPDT.DOC File
+
+	 Documentation Update Notes for the Microsoft(R) COBOL
+		  Professional Development System
+			   Version 5.0
+
+		(C) Copyright Microsoft Corporation, 1993
+		(C) Copyright Micro Focus Ltd., 1993
+
+
+	This document contains essential printed documentation updates
+	for version 5.0 of the Microsoft COBOL Professional Development 
+	System for MS-DOS(R) and Microsoft(R) Windows.  The information 
+	iin this document is more up-to-date than the printed documentation.
+
+============================< CONTENTS >==================================
+
+		INTRODUCTION
+
+		GENERAL CHANGES
+
+		DOCUMENTATION CORRECTIONS
+
+			Getting Started
+			COBOL Programming for Windows
+			Compatibility Guide
+			Environment and Tools
+			Language Reference
+			System Reference
+			User Guide
+
+ =========================================================================
+   INTRODUCTION
+   ============
+	These Documentation Update Notes detail known problems in 
+	and additions to your COBOL manuals. You may want to mark 
+	the changes in your manuals.
+
+
+=========================================================================
+  GENERAL CHANGES
+  ===============
+
+	Throughout the documentation, the term "text window" can be 
+	interchanged with the term "default window".
+
+=========================================================================
+  DOCUMENTATION CORRECTIONS
+  =========================
+
+  Getting Started
+  ---------------
+	Chapter 3 (Configuring Your System)
+	o  Page 17
+	   In the "Understanding Memory Requirements" section, 
+	   replace the sentence that begins "To run CodeView,
+	   LINK, or CVPACK ..." with the following:
+
+		"To run CodeView or CVPACK, you need one of the
+		following memory managers:"
+
+	o  Page 17
+	   After the bulleted list at the top of the page, add
+	   this paragraph:
+
+		"To run LINK or a COBOL program in MS-DOS (without
+		Windows running) you need a DPMI or VCPI memory
+		manager."
+
+  COBOL Programming for Windows
+  -----------------------------
+	Chapter 4 (Building Visual Basic Applications)
+	o  Page 32
+	   Do not pass parameters from Visual Basic to COBOL 
+	   DLLs by value. 
+
+  Compatibility Guide
+  -------------------
+	Chapter 9 (Running convert3)
+       	o  Page 79 
+	   Add the following option to the list in the section "File
+       	   Details":
+
+            5. The conversion of COMP-6 items to VS-COMP. This can be either
+               Y, in which case behavior is as described in the section
+               "COMP-6/COMPUTATIONAL-6 Data" in the chapter "Converting
+               RM\COBOL Data Files", or N, in which case COMP-6 items are
+               not converted to VS-COMP. The default setting is Y.
+
+    	o  Page 93 
+	   Add the following new parameter to the list in the section
+           "The Parameter File":
+
+           COMP6-COMP
+
+    	o  Page 86 
+	   Add the following after the section "The Run Parameter":
+
+           The COMP6-COMP Parameter
+           ------------------------
+           The COMP6-COMP parameter allows you to specify whether or not
+           to convert COMP-6 items to VS-COMP. The parameter has the
+           following format:
+
+               COMP6-COMP Y/N
+
+           where:
+
+           Y       gives behavior as described in the section
+                   "COMP-6/COMPUTATIONAL-6 Data" in the chapter "Converting
+                   RM\COBOL Data Files"
+
+           N       means COMP-6 items are not converted to VS-COMP.
+
+           The default is Y.
+
+  Environment and Tools
+  ---------------------
+	Chapter 5 (Advanced PWB Techniques)
+	o  Page 82
+	   In the "Using Regular Expressions" section, after the 
+	   second paragraph, add this note:
+
+		Note:  When using regular expressions in the PWB
+		Find or Replace dialog boxes, you must select the 
+		Regular Expression check box.
+
+	o  Page 86
+	   Under the procedure heading "> To create a batch file 
+	   that copies the COBOL files to a subdirectory:", in 
+	   step number 4, change the regular expression:
+
+		^\([^ ]+\)[ ]+\([^ ]+\).*
+
+	   to look like this:
+
+		\([^ #]+\)[# ]+\([^ #]+\).*$
+
+	   The pound signs (#) represent the key combination:
+
+		Ctrl-P, Tab
+
+	   which will appear as a diamond in PWB.
+
+	Chapter 8 (Getting Started with CodeView)
+	o  Page 304
+	   In the example on this page, replace the two EVAL example
+	   statements with the following:
+
+		Eval:C:\C700\DLL\EEDICAN.DLL .C .ABC .ASM .H .CPP
+		Eval:C:\COBOL\BIN\EEDLCOB.DLL .CBL .CPY .CBI .COB
+
+	Chapter 10 (Using Expressions in CodeView)
+	o  Page 349
+	   In the "Conditional expression" bulleted item, change
+	   this phrase "...linked by a relationship operator." to:
+
+		"...linked by a relational operator."
+
+	Chapter 11 (CodeView Reference)
+	o  Page 386
+	   Add the following sentence to the description of the 
+	   [=]<expression> parameter in the R(Register) command:
+	
+		The <expression> must result in a non-edited
+		numeric value.
+
+	o  Page 386
+	   Add the following paragraph to the end of the 
+	   "Description" section of the R(Register) command:
+
+		If the <expression> is relational and its result is
+		TRUE, the value 1 is moved into the register. If the
+		<expression> is false, a 0 is moved.
+
+	o  Page 389
+	   In the table for the X(Examine Symbols) command, only the 
+	   M & P scopes are relevant to COBOL. The other scopes
+	   do not apply because of the nature of the COBOL language. 
+
+  Language Reference
+  ------------------
+	Volume 1, Chapter 2 (COBOL Concepts)
+	o  Page 77
+	   Under the "Continuation of Lines" section in the second
+	   paragraph, the last sentence says:
+
+		 "Area A of a continuation line must be blank."
+
+	   This ANSI '85 restriction is NOT enforced by COBOL 5.0.
+
+	Volume 1, Chapter 3 (The Nucleus)
+	o  Page 265
+	   Add the following as General Rule 5 of the ENTRY statement:
+
+		The BY REFERENCE and BY VALUE phrases are transitive
+		across the parameters which follow them until another
+		BY REFERENCE or BY VALUE phrase is encountered.
+
+		If no BY REFERENCE or BY VALUE phrase is specified
+		prior to the first parameter, the BY REFERENCE phrase
+		is assumed.
+
+	o  Page 277
+	   Replace syntax rule 9 of the EXIT statement with the
+	   following:
+
+		Data-name-1 must be specified in the Working Storage
+	        Section.
+
+
+  System Reference
+  ----------------
+	Chapter 2 (ADIS)
+	o  Pages 40 and 41
+	   In the example that starts at the end of page 40
+	   and continues to the top of page 41, change the
+	   following:
+
+	   Change:	move "a" to first-data-key
+	   to:		move "A" to first-data-key
+
+	   Change:	display "a pressed"
+	   to:		display "A pressed"
+
+	   Change:	display "b pressed"
+	   to:		display "B pressed"
+
+	   Change:	display "z pressed"
+	   to:		display "Z pressed"
+
+	Chapter 4 (Animator)
+	o  Page 77
+	   At the top of the page, in the first full paragraph,
+	   delete this sentence:
+
+		For information on compiling and linking
+		Windows-based applications for debugging with
+		Animator, refer to the COBOL Programming for
+		Windows.
+
+ 	Chapter 5 (COBOL File Handling)
+	o  Page 128
+	   In the section "File Compression", before the subheading
+	   "Key Compression" insert an extra paragraph:
+
+           	The final $SET DATACOMPRESS and $SET KEYCOMPRESS 
+		statements in a source file set the type of data 
+		and key compression used for all files in that 
+		program, unless subsequent settings are explicitly
+           	stated for each file.
+
+	o  Page 129 
+	   In the section "Data Compression", 2nd paragraph, delete
+	   the sentence:
+
+           	However, since variable-structure files take more 
+		space than fixed structure files, there are certain 
+		cases in which a bigger file may result.
+
+
+	o  Page 130
+	   In the first line of the example program at the top of
+	   the page, change "$set datacompress" to:
+
+		 "$set datacompress"1" CALLFH"
+
+	o  Page 131 
+	   In the section "The XFH2BTR Call Converter", replace the
+	   sentence that begins "The XFH2BTR call converter is 
+	   compatible with ..." with the following text:
+
+           	The XFH2BTR call converter is compatible with 
+		versions of Btrieve 5.10 and above on the following 
+		platforms:
+
+	o  Page 132 
+	   In the section "The XFH2BTR Call Converter", after the
+	   paragraph that starts "When the converter needs to 
+	   call ....." and ends "...with Extended Memory Manager (XM)."
+	   add the following:
+
+           	Note:  You can call the module _BTRV direct from 
+		a COBOL program using the same parameters that are 
+		used in Btrieve API calls. However, the "key buffer" 
+		parameter must be at least 255 bytes long.
+
+	o  Page 133
+	   In the section "The Filetype Compiler Directive." 
+	   When using Btrieve to access information on a server, 
+	   if the current working drive is not mapped to the server 
+	   that you are using, the file specification must include 
+	   the server path (drive letter).
+
+	   For example: If the current working drive is C and the
+	   server drive is F, then the "select" statement on page
+	   133 of the System Reference would look like this:
+
+		select testfile-1 assign to "f:\test-1.dat"
+
+   	Chapter 7 (Compiler)
+	o  Page 166
+	   In the section "Redirection of Compiler Output", add the
+           following:
+
+		You cannot redirect compiler output under Windows 
+		environments.
+
+    	o  Page 167 
+	   In the section "Error Codes Returned by the Compiler", add
+	   the following.
+
+           	The compiler cannot be invoked from within a batch 
+		file under Windows; therefore, ERRORLEVEL information 
+		cannot be retrieved.
+
+	Chapter 9 (H2CPY)
+	o  Page 184
+	   Do not use H2CPY on WINDOWS.H.  The WINDOWS.78 and
+	   WINDOWS.CPY files are provided in \cobol\samples\windows 
+	   as correct conversions of WINDOWS.H.
+
+    	o  Page 184 
+	   Add the following new H2CPY options:
+
+           /16     Specifies a 16-bit run-time system and causes INT data
+                   items to be translated to:
+
+                       PIC S9(sz) COMP-5
+
+                   where:
+
+                   sz  is a level 78 item defined at the top of the
+                       resultant COPY-files. The following conditional
+                       compilation construct is used, thereby making the
+                       value of sz 4.
+
+                       $IF 32BIT DEFINED
+                         78 SZ               VALUE 9.
+                       $ELSE
+                         78 SZ               VALUE 4.
+                       $END
+
+                   You can change this conditional compilation construct if
+                   you want to change the value of sz.
+
+                   If this option (or the /32 option) is not explicitly
+                   specified, then by default H2CPY translates INT data
+                   items to PIC S9(4) COMP-5.
+
+                   When the multiple-files option (/M) is used in
+                   conjunction with this option, all files, apart from the
+                   .78 file, will contain the conditional compilation
+                   construct at the top of the file.
+
+    	o  Page 185 
+	   Insert the following immediately before the section
+	   "Converting C Statements":
+
+	   Split78
+	   -------
+
+	   Having run H2CPY against a C header file containing just #define
+           statements, you can split that file into a set of separate files
+           using split78. Each of the output files contains all the level
+           78-items pertaining to a particular prefix.
+
+           Split78 is invoked from the command line as follows:
+
+               split78 <inputfile>
+
+           where:
+
+           <inputfile>  is a COBOL COPY-file containing only 78-level
+           items.
+
+           Split78 creates output files with name <prefix>.78 where <prefix>
+           is the prefix (up to the first hyphen) used on the name of a
+           78-level items. Every item with the same prefix is placed into
+           the COPY-file with that prefix as its name.
+
+           When you run split78, if an output file already exists, new items
+           are simply added to the end of it. Hence, if you run split78
+           twice on the same copy file, each output file will contain
+           duplicate 78-level items. To avoid accidents, split78 will ask
+           you to confirm that no .78 files exist in the current directory
+           when you invoke it."
+
+   	Chapter 10 (Integrated Preprocessor)
+    	o  Page 206 
+ 	   In the section "Specification of the Example
+       	   Preprocessors", replace the bullet that begins "CPY is 
+	   treated by the preprocessor..." with the following:
+
+           CPY is converted to COPY, and thus expanded by the Checker. 
+	   COPY is expanded by the preprocessor.
+
+	Chapter 12 (Library Routines)
+    	o  Page 223 
+	   Add the following paragraphs before the Note:
+
+           To guarantee portability of programs using CBL_ routines, you
+           must ensure that the routine names are coded in upper case in
+           your program. Calls to all other routines must be coded as
+           documented - this will generally be in upper case, but there are
+           some case-sensitive exceptions
+
+    	o  Page 223-224 
+	   In the table indicating the portability of call-by-name 
+	   routines, delete the asterisk (*) from the LCOBOL 
+           column in the entries for the following routines:
+
+        	-  CBL_COPY_FILE
+        	-  CBL_LOCATE_FILE
+
+	o  Page 230
+	   Do NOT use the mouse support Library Routine 
+	   CBL_TERM_MOUSE under PWB for builds using Shared Runtime 
+	   System (this call is handled by the runtime system).  
+	   Use of this call under PWB may cause your system to hang..
+
+	o  Page 235
+	   The parameter list for the call-by-name function 
+	   CBL_ALLOC_MEM is incorrect and should include the 
+	   parameter RETURNING status-code. If this parameter is  
+	   not used, the special register RETURN-CODE contains 
+	   the return value. 
+
+    	o  Page 236 
+	   Add the following for CBL_ALLOC_MEM:
+
+           	The CBL_ALLOC_MEM routine is limited to allocating 
+		memory up to 65531 bytes.
+
+	o  Page 244
+	   In the CBL_EXIT_PROC section, under the "Parameters:" 
+	   heading in the second column, change "USAGE PROCEDURE
+	   POINTER" to:
+
+		"USAGE PROCEDURE-POINTER"
+
+    	o  Page 249 
+	   In the description of the CBL_GET_OS_INFO routine, change
+           the definition of the parameter-size variable from:
+
+           	parameter-size      PIC X(2) COMP-X VALUE 13.
+
+       	   to:
+
+           	parameter-size      PIC X(2) COMP-X VALUE 14.
+
+	o  Page 307
+	   In the routine CALL x"A7", replace the word "SACE"
+	   in this sentence:
+
+		DISPLAY SACE UPON CRT clears the screen ...
+
+	   with the word "SPACE".
+
+
+	Chapter 14 (Linking and Library Management)
+	o  Page 322
+	   The library "CBLWINAP" is referred to twice on this
+	   page, with reference to Windows applications that 
+	   perform floating point operations.  This should 
+	   read "CBLWINAF."
+
+    	o  Page 335 
+	   Add the following new section
+
+   	   COBOL Object Modules and Libraries
+       	   ----------------------------------
+       	   It is possible to create libraries that contain COBOL 
+	   programs; that is, COBOL .OBJ files. If you use 
+	   libraries that contain COBOL programs, then all calls 
+	   to those programs within the library must be static 
+	   linked. It is not possible to use the soft or dynamic 
+	   linking methods described earlier in this chapter. Thus, 
+	   you cannot put into a library any run-time system support 
+	   modules which are dynamically called by the RTS 
+	   (such as ADIS or EXTFH).
+
+	Chapter 20 (XM)
+	o  Page 445
+	   In the last sentence of the first paragraph in the 
+	   "Overview" section, change "To use XM you need at
+	   least 1.5 megabytes (1.5 MB) of memory." to:
+
+		"To use XM you need at least 1.5 megabytes
+		(1.5 MB) of extended memory."
+
+	o  Page 448
+	   In the "Operation" section, at the end of the second
+	   paragraph, add this note:
+
+		Note: When running in a Windows DOS box, XM gets
+		memory from the DPMI host and consequently does not
+		use XMS memory. For this reason, BIOS/clone-specific
+		issues are not relevant when running XM in a 
+		Windows DOS box.
+
+	Appendix D (Directives for Compiler)
+	o  Page 523
+	   Add this sentence to the CALLFH directive description:
+
+		Also used to get a program to make calls to a
+		converter such as XFH2BTR or other file handlers.
+
+    	o  Make the following minor changes to the existing descriptions 
+	   of directives:
+
+       	   PAGE   CHANGE
+           ----   ---------------------------------------------------------
+           513    the default for the ADV directive is NOADV.
+           537    DETECTLOCK can be spelled with a hyphen, thus: DETECT-LOCK
+           552    HIDEMESSAGE can be spelled with a hyphen, thus: HIDE-MESSAGE
+           561    the default for the LISTWIDTH directive is LISTWIDTH "80"
+           596    SETTING directive can be spelled as SETTINGS
+           611    WARNING can be spelled as WARNINGS
+           612    WRITELOCK can be spelled with a hyphen, thus: WRITE-LOCK
+
+    	o  Page 554 
+	   In the description of the IBMCOMP directive, remove the
+           paragraph that begins "When you query a data item ...".
+
+    	o  Page 554 
+	   In the description of the IBMCOMP directive, replace each
+           occurrence of "USAGE COMP" with "USAGE COMP or USAGE COMP-5".
+
+    	o  Page 560 
+	   Change the $SET entry for the LIST directive from:
+
+           	Initial
+
+       	   to:
+
+           	None (for LIST "" and LIST "file-name")
+           	Any (for LIST and NOLIST)
+
+    	o  Page 588 
+	   Add the following text to the description of the REGPARM
+           directive:
+
+           	The BP register is saved over calls, thereby better 
+		emulating other COBOL compilers' call conventions.
+ 
+    	o  Page 598 
+	   Add the following text to the description of the
+           SIGNCOMPARE directive:
+
+           	Comparisons with COMP-3 items with illegal sign nibbles 
+		(such as those produced by redefining the item) are allowed.
+
+    	o  Page 611 
+	   In the description of the VSC2 directive, change the line
+           describing the effect of specifying integer as 3 from:
+
+            	3  VS COBOL II release 3.x (when compiled with its CMPR2
+               	directive)
+
+       	   to:
+
+            	3  VS COBOL II release 3.x (when compiled with its NOCMPR2
+               	directive)
+
+    	o  Page 611 
+	   In the description of the VSC2 directive, add the
+       	   following to the list of possible values for integer:
+
+            	4  Synonymous with VSC2"3"
+
+    	o  Page 613 
+	   Replace the existing description of XOPEN with the
+       	   following:
+
+           	XOPEN
+
+           Specifies that words reserved under the X/Open definition of
+           COBOL are to be treated as reserved words.
+
+           Syntax:
+
+            >>-------------------XOPEN---"level"----------------><
+                |    |  |                             |
+                --/--   ---------XOPEN-----------------
+                          |    |
+                          --NO--
+
+           Parameters:
+
+           level                Must be 3 or 4. The level of X/Open
+                                definition COBOL to be compatible with.
+
+           Default:      NOXOPEN
+
+           Phase:        Syntax check
+
+           $SET:         Initial
+
+           The possible values of level are:
+
+              3    Compatible with X/Open Portability Guide 1988 (XPG-3)
+              4    Compatible with X/Open CAE Specification (XPG-4)
+
+           Specifying XOPEN with no parameter is the same as specifying
+           XOPEN "4". Note that XPG-4 specifies options for several
+           environments. If available, the options available are as follows:
+
+            o  Single Byte Internationalization Support is enabled using the
+               NLS directive
+
+           See also NLS directive.
+
+
+  User Guide
+  ----------
+	Chapter 2 (Developing COBOL Applications)
+	o  Page 20
+	   In the "Examples" section, change "XM MYPROG.EXE, NEWPROG"
+	   to:
+
+		"XB MYPROG.EXE, NEWPROG"
+
+   	Chapter 6 (Interfacing and Mixed Language Programming)
+       	o  Page 75 
+	   Add the following additional bullet to the end of the
+           section which begins with the sentence "Microsoft C
+	   version 6.0, C/C++ version 7.0, and Fortran V5.1 are 
+	   all compatible ...":
+
+           	When calling a nonCOBOL subprogram using an 
+		entry-point name starting with an underscore (_) 
+		the actual name must be coded as part of the 
+		call so that the compiler can determine the 
+		type of program being called and create the 
+		correct code. Consequently, you cannot use such 
+		a name in a procedure-pointer.
+
+		For example you can code:
+
+			procedure division.
+			call "_CPROG"
+
+		but you cannot code:
+
+			01  func    usage procedure-pointer.
+			procedure division.
+			set func to entry "_CPROG"
+			call func.
+
+    	o  Page 78 
+	   Add the following restriction.
+
+           The following Microsoft C graphics library routines are
+           incompatible with this COBOL system and should not be called.
+
+            -  _outtext
+            -  _outmem
+            -  _floodfill
+            -  any routine that uses floodfill where you specify
+               the _GFILLINTERIOR option, namely _ellipse and _pie
+
+
+

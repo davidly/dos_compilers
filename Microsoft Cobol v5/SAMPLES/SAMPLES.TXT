@@ -1,0 +1,398 @@
+
+		    Notes on COBOL Sample Programs
+		  (c) Copyright Microsoft Corp. 1993
+
+  The following file contains information which describes how to
+compile and link from the MS-DOS command line the sample programs found in
+the \cobol\samples directory and its sub-directories.	In most cases,
+there is one way to compile and several ways to link.  When a
+description is for more than one file, the generic file name foo.cbl
+is used in the examples and should be replaced with the desired file
+name when actually compiling and linking.
+
+======================================================================
+GENERAL SAMPLES
+See System Reference, Chapter 14, Linking and Library Management
+
+\cobol\samples\diophant.cbl
+\cobol\samples\nested.cbl
+\cobol\samples\printesc.cbl
+\cobol\samples\report.cbl
+\cobol\samples\logoper.cbl
+\cobol\samples\spltjoin.cbl
+\cobol\samples\status.cbl
+
+Compile:
+  cobol foo;
+
+Link:
+ Static-linked run-time system .exe:
+   link foo,,,lcobol+cobapi/nod;
+   link diophant,,,lcobol+cobapi/nod/st:8192;
+
+ Shared run-time system .exe:
+   link foo,,,coblib+cobapi;
+
+ Static-linked run-time system QuickWin:
+   link foo+cblwina,,,lcoboldw+lcobol+libw/nod;
+
+ Shared run-time system QuickWin:
+   link foo+cblwina,,,coblibw+coblib+libw/nod;
+
+======================================================================
+SAMPLES USING ADIS (EXTENDED ACCEPT/DISPLAY STATEMENTS)
+See System Reference, Chapter 2, ADIS
+
+\cobol\samples\admouse.cbl
+\cobol\samples\calc.cbl
+\cobol\samples\declare.cbl
+\cobol\samples\expand.cbl
+\cobol\samples\keybmenu.cbl
+\cobol\samples\mousmenu.cbl
+\cobol\samples\popup.cbl
+\cobol\samples\smplaccp.cbl
+\cobol\samples\ticbug.cbl
+\cobol\samples\tictac.cbl
+
+Compile:
+  cobol foo;
+
+Link:
+ Static-linked run-time system .exe:
+   link foo+adis+adisinit+adiskey,,,lcobol+cobapi/nod;
+
+ Shared run-time system .exe:
+   link foo+adis+adisinit+adiskey,,,coblib+cobapi;
+
+ Static-linked run-time system QuickWin:
+   link foo+cblwina+adis+adisinit+adiskey,,,lcoboldw+lcobol+
+  libw/nod;
+
+ Shared run-time system QuickWin:
+   link foo+cblwina+adis+adisinit+adiskey,,,coblibw+coblib+
+  libw/nod;
+
+======================================================================
+SAMPLE USING ADIS WITH ADISDYNA (DYNAMIC ATTRIBUTE FEATURE)
+
+\cobol\samples\sscntrl.cbl
+
+Compile:
+  cobol sscntrl;
+
+Link:
+ Static-linked run-time system .exe:
+   link sscntrl+adis+adisinit+adiskey+adisdyna,,,lcobol+
+  cobapi/nod;
+
+ Shared run-time system .exe:
+   link sscntrl+adis+adisinit+adiskey+adisdyna,,,coblib+
+  cobapi;
+
+ Static-linked run-time system QuickWin:
+   link sscntrl+cblwina+adis+adisinit+adiskey+adisdyna,,,lcoboldw+
+  lcobol+libw/nod;
+
+ Shared run-time system QuickWin:
+   link sscntrl+cblwina+adis+adisinit+adiskey+adisdyna,,,coblibw+
+  coblib+libw/nod;
+
+======================================================================
+SAMPLES USING ADIS WITH INTRINSIC FUNCTIONS
+See System Reference, Chapter 14, Linking and Library Management, page
+323, and Language Reference, Chapter 4, Intrinsic Function Module
+
+\cobol\samples\functest.cbl
+\cobol\samples\funkey.cbl
+
+Compile:
+  cobol foo;
+
+Link:
+ Static-linked run-time system .exe:
+   link foo+adis+adisinit+adiskey+cobintfn,,,lcobol+cobapi/nod;
+
+ Shared run-time system .exe:
+   link foo+adis+adisinit+adiskey+cobintfn,,,coblib+cobapi;
+
+ Static-linked run-time system QuickWin:
+   link foo+cblwinaf+adis+adisinit+adiskey+cobintfn,,,lcoboldw+
+  lcobol+libw/nod;
+
+ Shared run-time system QuickWin:
+   link foo+cblwinaf+adis+adisinit+adiskey+cobintfn,,,coblibw+
+  coblib+libw/nod;
+
+======================================================================
+SAMPLE USING ADIS/INTRINSIC FUNTIONS WITH FLOATING POINT
+See System Reference, Chapter 14, Linking and Library Management, page
+317
+
+\cobol\samples\intrins.cbl
+
+Compile:
+  cobol intirins;
+
+Link:
+ Static-linked run-time system .exe:
+   link intrins+adis+adisinit+adiskey+cobintfn,,,lcobol+cobapi+
+  cobfp87d/nod;
+
+ Shared run-time system .exe:
+   link intrins+adis+adisinit+adiskey+cobintfn,,,coblib+cobapi+
+  cobfp87d;
+
+ Static-linked run-time system QuickWin:
+   link intrins+cblwinaf+adis+adisinit+adiskey+cobintfn,,,lcoboldw+
+  lcobol+libw+cobfp87w/nod;
+
+ Shared run-time system QuickWin:
+   link intrins+cblwinaf+adis+adisinit+adiskey+cobintfn,,,coblibw+
+  coblib+libw+cobfp87w/nod;
+
+======================================================================
+SAMPLE USING ADIS/ADISDYNA/INTRINSIC FUNTIONS/FLOATING POINT
+
+\cobol\samples\calendar.cbl
+
+Compile:
+  cobol calendar;
+
+Link:
+ Static-linked run-time system .exe:
+   link calendar+adis+adisinit+adiskey+adisdyna+cobintfn,,,lcobol+
+  cobapi+cobfp87d/nod;
+
+ Shared run-time system .exe:
+   link calendar+adis+adisinit+adiskey+adisdyna+cobintfn,,,coblib+
+  cobapi+cobfp87d;
+
+ Static-linked run-time system QuickWin:
+   link calendar+cblwinaf+adis+adisinit+adiskey+adisdyna+cobintfn,,,
+  lcoboldw+lcobol+libw+cobfp87w/nod;
+
+ Shared run-time system QuickWin:
+   link calendar+cblwinaf+adis+adisinit+adiskey+adisdyna+cobintfn,,,
+  coblibw+coblib+libw+cobfp87w/nod;
+
+======================================================================
+SAMPLES USING PANELS
+See System Reference, Chapter 16, PANELS
+
+\cobol\samples\panels\panelex1.cbl
+\cobol\samples\panels\panbordr.cbl
+\cobol\samples\panels\pandemo.cbl
+
+Compile:
+  cobol foo;
+
+Link:
+ Static-linked run-time system .exe:
+   link foo+panels,,,lcobol+cobapi+cobfp87d/nod;
+
+ Shared run-time system .exe:
+   link foo+panels,,,coblib+cobapi+cobfp87d;
+
+ Static-linked run-time system QuickWin:
+   link foo+panels+cblwina,,,lcoboldw+lcobol+libw+cobfp87w/nod;
+
+ Shared run-time system QuickWin:
+   link foo+panels+cblwina,,,coblibw+coblib+libw+cobfp87w/nod;
+
+======================================================================
+SAMPLES USING PANELS WITH ADIS
+See System Reference, Chapter 16, PANELS, page 378
+
+\cobol\samples\panels\panbigsc.cbl
+\cobol\samples\panels\pantutor.cbl
+\cobol\samples\panels\panelex2.cbl
+
+Compile:
+  cobol foo;
+
+Link:
+ Static-linked run-time system .exe:
+   link foo+adis+adisinit+adiskey+panels,,,lcobol+cobapi+
+  cobfp87d/nod;
+
+ Shared run-time system .exe:
+   link foo+cblwina+adis+adisinit+adiskey+panels,,,coblib+cobapi+
+  cobfp87d;
+
+ Static-linked run-time system QuickWin:
+   link foo+cblwina+adis+adisinit+adiskey+panels,,,lcoboldw+lcobol+
+  libw+cobfp87w/nod;
+
+ Shared run-time system QuickWin:
+   link foo+cblwina+adis+adisinit+adiskey+panels,,,coblibw+coblib+
+  libw+cobfp87w/nod;
+
+======================================================================
+SAMPLE OF MULTI-PROGRAM SOURCE
+See comments in sample case.cbl
+
+\cobol\samples\case.cbl
+
+Compile:
+  cobol case;
+
+Link:
+ Static-linked run-time system .exe:
+   link case+caseconv+adis+adisinit+adiskey,,,lcobol+cobapi/nod;
+
+ Shared run-time system .exe:
+   link case+caseconv+adis+adisinit+adiskey,,,coblib+cobapi;
+
+ Static-linked run-time system QuickWin:
+   link case+cblwina+caseconv+adis+adisinit+adiskey,,,lcoboldw+
+  lcobol+libw/nod;
+
+ Shared run-time system QuickWin:
+   link case+cblwina+caseconv+adis+adisinit+adiskey,,,coblibw+
+  coblib+libw/nod;
+
+======================================================================
+SAMPLE USING EXTERNAL FILE HANDLER
+See System Reference, Chapter 14, Linking and Library Management, page
+323
+
+\cobol\samples\extfile.cbl
+
+Compile:
+  cobol extfile;
+
+Link:
+ Static-linked run-time system .exe:
+   link extfile+extfh+externl+writefil+readfile,,,lcobol+
+  cobapi/nod;
+
+ Shared run-time system .exe:
+   link extfile+extfh+externl+writefil+readfile,,,coblib+
+  cobapi;
+
+ Static-linked run-time system QuickWin:
+   link extfile+cblwina+extfh+externl+writefil+readfile,,,lcoboldw+
+  lcobol+libw/nod;
+
+ Shared run-time system QuickWin:
+   link extfile+cblwina+extfh+externl+writefil+readfile,,,coblibw+
+  coblib+libw/nod;
+
+======================================================================
+SAMPLES USING MULTI-USER ENVIRONMENT
+See User Guide, Chapter 7, Multi-user File Handling
+
+\cobol\samples\mudemo\mudemo.cbl
+\cobol\samples\mudemo\stockin.CBL
+\cobol\samples\mudemo\stockioa.CBL
+\cobol\samples\mudemo\stockiom.CBL
+\cobol\samples\mudemo\stockout.CBL
+
+Compile:
+  cobol stockin;
+  cobol stockioa;
+  cobol stockiom;
+  cobol stockout;
+  cobol mudemo;
+
+Link:
+ Static-linked run-time system .exe:
+   link mudemo+adis+adisinit+adiskey+extfh+stockioa+stockout+
+  stockiom+stockin,,,lcobol+cobapi/nod;
+
+ Shared run-time system .exe:
+   link mudemo+adis+adisinit+adiskey+extfh+stockioa+stockout+
+  stockiom+stockin,,,coblib+cobapi;
+
+ Static-linked run-time system QuickWin:
+   link mudemo+cblwina+adis+adisinit+adiskey+extfh+stockioa+
+  stockout+stockiom+stockin,,,lcoboldw+lcobol+libw/nod;
+
+ Shared run-time system QuickWin:
+   link mudemo+cblwina+adis+adisinit+adiskey+extfh+stockioa+
+  stockout+stockiom+stockin,,,coblibw+coblib+libw/nod;
+
+======================================================================
+ANIMATOR SAMPLES
+See System Reference, Chapter 4, Animator
+
+\cobol\samples\tstcomp.cbl
+\cobol\samples\tstdebug.cbl
+
+Compile (and automatic static-link):
+  cobol foo anim;
+
+To run:
+  animate foo
+
+======================================================================
+INTEGRATED PREPROCESSOR SAMPLES
+See System Reference, Chapter 10, Integrated Preprocessors
+
+\cobol\samples\preproc\preproc.cbl
+\cobol\samples\preproc\preprox.cbl
+\cobol\samples\preproc\asmcobol.cbl
+\cobol\samples\preproc\working.cbl
+
+======================================================================
+PROGRAMMER WORKBENCH (PWB) SAMPLES
+See Environment and Tools, Chapter 2, Quick Start, and Chapter 3,
+Managing Multimodule Programs.
+
+\cobol\samples\pwbtutor\pentot2.cbl
+\cobol\samples\pwbtutor\emplmain.cbl
+\cobol\samples\pwbtutor\emplhlth.cbl
+
+======================================================================
+MIXED LANGUAGE SAMPLE USING MASM (Microsoft Assembler)
+See User Guide, Chapter 6, Interfacing and Mixed-Language Programming
+
+\cobol\samples\asmdemo\add.cbl
+
+Compile:
+  cobol add litlink;
+
+Link:
+ Static-linked run-time system .exe:
+   link add+addem,,,lcobol+cobapi/nod;
+
+======================================================================
+VISUAL BASIC SAMPLES
+To use Visual Basic with Cobol, see Programming for Windows, Chapter
+4, and the \cobol\samples\vbdemo directory.
+
+======================================================================
+WINDOWS API SAMPLES
+See Programming for Windows
+
+\cobol\samples\windows\compress.cbl
+\cobol\samples\windows\sysmets.cbl
+\cobol\samples\windows\wincalc.cbl
+\cobol\samples\windows\winhello.cbl
+
+Compile:
+  cobol foo target(286) deffile deffiletype"windows" nodll;
+
+Link:
+ Static-linked run-time system Windows API:
+   link foo+cblwina,,,lcobolw+lcobol+libw/nod/noe;
+
+ Shared run-time system Windows API:
+   link foo+cblwina,,,coblibw+coblib+libw/nod/noe;
+
+======================================================================
+WINDOWS API CALLING WINDOWS DLL SAMPLE
+See Programming for Windows, Chapter 2, and windll.bat
+
+\cobol\samples\windows\winmain.cbl
+\cobol\samples\windows\cobdll.cbl
+
+Compile:
+  cobol winmain target(286) deffile deffiletype"windows" nodll;
+  cobol cobdll target(286) deffile deffiletype"windows" dll;
+
+Explicitly Link:
+  link winmain+cblwina,winmain.exe,,lcobolw+lcobol+libw,
+ winmain.def/nod/noe;
+  link cobdll+cblwinl+libinit,cobdll.dll,,lcobolw+lcobol+libw,
+ cobdll.def/nod/noe;

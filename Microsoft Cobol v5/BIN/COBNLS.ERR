@@ -1,0 +1,78 @@
+$ ***********************************************************************
+$ *									*
+$ *   Example NLS message file						*
+$ *									*
+$ *   Format as described in XPG4					*
+$ *	(C printf with %1$s %2$s ordering extension)			*
+$ *									*
+$ *   DOS/OS2 RTS restricts insertion to %c (single character) and	*
+$ *		  %s (character string), for the moment 		*
+$ *	      (may consider adding %d %x etc later if necessary)	*
+$ *									*
+$ ***********************************************************************
+$
+$ lines beginning with a dollar followed by a space are treated as comment lines
+$
+$ message set 101 = RTS message set
+$set 101 : RTS messages
+$
+$ define " as quote character
+$quote "
+$
+$  The following control characters can be embedded in the message
+$
+$   \ 		continue to next line
+$   \n		newline
+$   \t		tab
+$   \r		carriage return
+$   \\		backslash
+$   \ddd	bit pattern
+$
+$
+$ lines describing a message should begin with the message number, then a space,
+$ and then the text of the message itself in quotes
+$
+$ message number 01 : description prefix
+1 "Description : "
+$ message number 02 : dongle not present message
+2 "Security Key not installed"
+$ message number 03 : file error message
+3 "Error accessing file : "
+$ message number 04 : +K4 press any key message
+4 "Press any key to continue..."
+$ message number 05 : OS/2 RTE already kept message
+5 "RTE already kept"
+$ message number 06 : OS/2 kept RTE not found message
+6 "Kept RTE not found"
+$ message number 07 : DOS unkeep message
+7 "Please use 'UNKEEP.COM' for now"
+$ message number 08 : sleep message
+8 "Type "EXIT" to resume COBOL"
+$ message number 09 : stopping message
+9 "User terminated run"
+$
+$
+$ message broken in one place -
+$ use a %s to indicate where text should be inserted
+$ message number 10 : load failure message
+10 "Load failure (%s) on file "
+$
+$ message broken in two places - uses %1$s ordering extension
+$ message number 11 : library prompt message - must be less than 81 chars
+11 "Please put disk containing %1$s in drive %2$c and press <cr> (Esc to cancel)"
+$
+$ messages broken in three places - similar to the above
+$ message number 12 : final error message
+12 " Segment %1$s : Error %2$s at COBOL PC %3$s"
+$ message number 13 : multi-reel file prompt message
+13 "PLEASE LOAD VOLUME %1$s OF FILE %2$s FOR %3$s \
+\r\nENTER NEW DEVICE (IF REQUIRED) AND <CR> WHEN READY\r\n"
+$
+$ interactive messages - must be less than 80 chars
+$ message number 14 : DOS only - printer not available - Cancel, Retry, Ignore
+14 "Printer not available - 1=Cancel, 2=Retry or 3=Ignore ?"
+$ message number 15 : DOS only	- Disk error on drive * - Abort etc
+15 "Disk error on drive %c: - 1=Fail, 2=Stop, 3=Break, 4=Retry or 5=Ignore ?"
+$
+$ message number 16 : failed codepage switch
+16 "The attempt to switch to codepage %s failed. Continuing .."

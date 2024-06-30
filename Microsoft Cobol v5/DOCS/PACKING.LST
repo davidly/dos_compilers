@@ -1,0 +1,695 @@
+
+       Microsoft COBOL Professional Development System, Version 5.0
+
+                        Product Contents Checklist
+
+               (C) Copyright Microsoft Corporation, 1993
+
+
+   Contents
+   --------
+           Introduction
+           Documentation
+           Diskettes
+           Description of Components
+           Description of Files
+
+
+   Introduction
+   ------------
+   This document describes the contents of the Microsoft COBOL package,
+   including documentation, diskettes and diskette contents.
+
+
+   Documentation
+   -------------
+   The following documentation pieces are provided with the COBOL software
+   package.
+
+       Getting Started
+       Language Reference (Volumes 1 and 2)
+       Error Messages
+       Compatibility Guide
+       COBOL System Reference
+       Environment and Tools
+       COBOL Programming for Windows
+
+   The following additional documents appear as ASCII text files on the
+   diskettes.
+
+       PACKING.LST    - List of documents and files included in this package.
+       README.DOC     - Essential information for this release.
+       DOCUPDT.DOC    - Documentation update notes for this release.
+       CBL-CMPT.DOC   - Lists differences between Microsoft COBOL 5.0 and
+                        earlier releases.
+       SAMPLES.TXT    - Descriptions of how to compile and link sample 
+			programs in the \COBOL\SAMPLES directory.
+
+   These can be viewed from within SETUP, the installation program, or using
+   the operating system command, TYPE, or any ASCII text file editor or
+   listing utility.
+
+
+
+   Diskettes
+   ---------
+   Your COBOL software package includes a set of either High density 5.25"
+   diskettes or High density 3.5" diskettes. Low density 3.5" diskettes are
+   available on request.
+   
+   The contents of each disk are listed below for each disk format. Note that
+   files with an "@" character at the start of the extension are compressed
+   and require PKUNZIP to load them. In general, the name of the compressed
+   file is the same as the uncompressed file except that the first character 
+   of the extension is replaced by "@".
+
+
+
+    High density 5.25 inch disk layout
+
+      Disk  1 / SETUP
+        ADDWPROG.EXE    CBL-CMPT.DOC    CHECK.@BR       COBLIB.@LE
+        COBOL.INI       DOCUPDT.@OC     GENERATE.@BR    HELPADCF.@BR
+        PACKING.LST     PKUNZIP.EXE     README.DOC
+        SETUP.EXE       UTILS.@BR
+
+
+      Disk  2
+        ADISCF.@BR      ADISCF.@XE      ADISCTRL.@      ANIMATE.@XE
+        ANIMATOR.@BR    ANIMBASE.@BR    ANIMBASE.@XE    ANIMRTNS.@XE
+        ANIMUSER.@LE    ANIMUSER.@XE    CCI.@XE         COBCLI.@BR
+        COBFP87.@LE     COBFP87.@LW     COBIFN.@LW      COBNLS.@LW
+        COBNLS.@RR      COBOL.@XE       GENATT.@LE      GENATT.@LW
+        H2CPY.@XE       HELP.@BR        HELPNAME.@BR    HYHELP.@BR
+        HYHELP.@NF      INFO.@NF        KEYBCF.@XE      MFEXTMAP.@LE
+        MFEXTMAP.@LW    MSHIF.@XE       NAME.@BR        OLR.@NF
+        PANELS.@BJ      PANLINK.@PY     REBUILD.@XE     SCREENS.@BR
+        SCREENS.@XE     SPLIT78.@XE     XANIMATE.@XE    XB.@XE
+        XCOBOL.@XE      XM.@XE          XMCLONES.@OC    _BTRV.@LW
+        _BTRV.@XE       _SORT.@LW
+
+
+      Disk  3
+        ADIS.@BJ        BTR2XFH.@BJ     CBLDC001.@BJ    CBLSSEG.@LL
+        CBLWIN.@LL      CBLWIN31.@LW    CBLWINA.OBJ     CBLWINAF.@BJ
+        CBLWINB.OBJ     CBLWINL.OBJ     CNVCOMP6.@BJ    COBAPI.@IB
+        COBFP87D.@IB    COBFP87W.@IB    COBINTFN.@BJ    COBLIB.@IB
+        COBLIB.@LW      COBLIBW.@IB     COBNLSMG.@BJ    COBW.@IB
+        CONVERT3.@XE    CONVERT5.@XE    DBTRV.@BJ       DWSKEL.DEF
+        EXTERNL.@BJ     EXTFH.@BJ       EXTFHW.@EF      EXTSM.@BJ
+        FHREDIR.@BJ     HOSTSTAT.@BJ    LATLANG.@BJ     LCOBOL.@IB
+        LCOBOLDW.@IB    LCOBOLW.@IB     LIBINIT.OBJ     MCS.@BJ
+        MCSETUP.@XE     MISC.@EM        MSLANG.@BJ      PANELS.@EM
+        PCINST.@LL      REFORM5.@XE     RMSTAT.@BJ      RTSBIN.@SM
+        RTSCALL.@BJ     SQL.@BJ         TABX.@XE        WBTRV.@BJ
+        WINDOWS.@EM     WINSTF.@BJ      WINSTF.@IB      WINSTF.DEF
+        XFH2BTR.@BJ     XFHNAME.@BJ     _CLASS.@BJ      _CODESET.@BJ
+
+
+      Disk  4
+        ASM.@EM         COBOL.@LP       COBOL2.HLP      IMAGEDIT.@LP
+        MUDEMO.@EM      PREPROC.@EM     PWBTUTOR.@EM    SAMPLES.@XT
+        TICTAC.@EM      VBCOB.@EM
+
+
+      Disk  5
+        CV.@CO          CV.@XE          DLGEDIT.@XE     EMD1D1.@LL
+        PWB.@LP         QH.@LP          TOOLS.@RE       UTILS.@LP
+
+
+      Disk  6
+        ADVISOR.@LP     CV4.@LP         CVPACK.@XE      CVPACKX.@XE
+        EXEHDR.@XE      HIMEM.@YS       ILINK.@XE       LIB.@XE
+        LINK.@LP        LINK.@XE        MOUSE.@OM       MSD.@XE
+        MSD.@XT         NMAKE.@XE       PWBC.@XT        PWBCOBOL.@XT
+        PWBMASM.@XT     PWBRMAKE.@XE    QH.@XE          SBR-LOAD.@NT
+        SBRPACK.@XE     WX.@XE          WXSRVR.@XE
+
+
+      Disk  7
+        ATRM1111.@NT    BSCMAKE.@XE     BSCMAKEV.@XE    DLGEDIT.@LP
+        EED1CAN.@LL     EED1COB.@LL     EXP.@XE         FONTEDIT.@LP
+        FONTEDIT.@XE    HELPMAKE.@XE    IMAGEDIT.@XE    IMPLIB.@XE
+        LIBENTRY.@BJ    LIBW.@IB        LRFMERGE.@XE    PWB.@XE
+        PWBBASIC.@XT    PWBFORT.@XT     PWBHELP.@XT     PWBROWSE.@XT
+        PWBUTILS.@XT    RC.@XE          RCPP.@RR        RCPP.@XE
+        RM.@XE          SAMPLE.@NI      SHD1.@LL        TLD1LOC.@LL
+        UNDEL.@XE       VGASYS.@NT      VMB.@86         WINDOWS.@
+        WINSTUB.@XE
+
+
+    High density 3.5 inch disk layout
+
+      Disk  1 / SETUP
+        ADDWPROG.EXE    ANIMATOR.@BR    CBL-CMPT.DOC    CHECK.@BR
+        COBCLI.@BR      COBLIB.@LE      COBOL.INI       DOCUPDT.@OC
+        GENERATE.@BR    H2CPY.@XE       HELPADCF.@BR
+        NAME.@BR        PACKING.LST     PKUNZIP.EXE     README.DOC
+        SETUP.EXE       SPLIT78.@XE     UTILS.@BR       XANIMATE.@XE
+        XCOBOL.@XE
+
+
+      Disk  2
+        ADIS.@BJ        ADISCF.@BR      ADISCF.@XE      ADISCTRL.@
+        ANIMATE.@XE     ANIMBASE.@BR    ANIMBASE.@XE    ANIMRTNS.@XE
+        ANIMUSER.@LE    ANIMUSER.@XE    CBLSSEG.@LL     CBLWIN.@LL
+        CBLWIN31.@LW    CCI.@XE         CNVCOMP6.@BJ    COBFP87.@LE
+        COBFP87.@LW     COBFP87D.@IB    COBFP87W.@IB    COBIFN.@LW
+        COBLIB.@IB      COBLIB.@LW      COBNLS.@LW      COBNLS.@RR
+        COBOL.@XE       COBW.@IB        CONVERT3.@XE    CONVERT5.@XE
+        EXTFH.@BJ       EXTFHW.@EF      GENATT.@LE      GENATT.@LW
+        HELP.@BR        HELPNAME.@BR    HYHELP.@BR      HYHELP.@NF
+        INFO.@NF        KEYBCF.@XE      LCOBOL.@IB      MCS.@BJ
+        MCSETUP.@XE     MFEXTMAP.@LE    MFEXTMAP.@LW    MSHIF.@XE
+        OLR.@NF         PANELS.@BJ      PANLINK.@PY     PCINST.@LL
+        REBUILD.@XE     REFORM5.@XE     SCREENS.@BR     SCREENS.@XE
+        TABX.@XE        XB.@XE          XM.@XE          XMCLONES.@OC
+        _BTRV.@LW       _BTRV.@XE       _SORT.@LW
+
+
+      Disk  3
+        ASM.@EM         BTR2XFH.@BJ     CBLDC001.@BJ    CBLWINA.OBJ
+        CBLWINAF.@BJ    CBLWINB.OBJ     CBLWINL.OBJ     COBAPI.@IB
+        COBINTFN.@BJ    COBLIBW.@IB     COBNLSMG.@BJ    COBOL.@LP
+        COBOL2.HLP      DBTRV.@BJ       DWSKEL.DEF      EXTERNL.@BJ
+        EXTSM.@BJ       FHREDIR.@BJ     HOSTSTAT.@BJ    IMAGEDIT.@LP
+        LATLANG.@BJ     LCOBOLDW.@IB    LCOBOLW.@IB     LIBINIT.OBJ
+        MISC.@EM        MSLANG.@BJ      MUDEMO.@EM      PANELS.@EM
+        PREPROC.@EM     PWBTUTOR.@EM    RMSTAT.@BJ      RTSBIN.@SM
+        RTSCALL.@BJ     SAMPLES.@XT     SQL.@BJ         TICTAC.@EM
+        VBCOB.@EM       WBTRV.@BJ       WINDOWS.@EM     WINSTF.@BJ
+        WINSTF.@IB      WINSTF.DEF      XFH2BTR.@BJ     XFHNAME.@BJ
+        _CLASS.@BJ      _CODESET.@BJ
+
+
+      Disk  4
+        ADVISOR.@LP     CV.@CO          CV.@XE          CV4.@LP
+        DLGEDIT.@XE     EMD1D1.@LL      EXEHDR.@XE      HIMEM.@YS
+        MOUSE.@OM       PWB.@LP         PWBCOBOL.@XT    PWBMASM.@XT
+        PWBRMAKE.@XE    QH.@LP          QH.@XE          SBR-LOAD.@NT
+        SBRPACK.@XE     TOOLS.@RE       UTILS.@LP       WX.@XE
+        WXSRVR.@XE
+
+
+      Disk  5
+        BSCMAKE.@XE     BSCMAKEV.@XE    CVPACK.@XE      CVPACKX.@XE
+        EED1CAN.@LL     EED1COB.@LL     EXP.@XE         ILINK.@XE
+        LIB.@XE         LIBENTRY.@BJ    LINK.@LP        LINK.@XE
+        LRFMERGE.@XE    MSD.@XE         MSD.@XT         NMAKE.@XE
+        PWB.@XE         PWBC.@XT        RC.@XE          RCPP.@RR
+        RCPP.@XE        SHD1.@LL        TLD1LOC.@LL     WINSTUB.@XE
+
+
+      Disk  6
+        ATRM1111.@NT    DLGEDIT.@LP     FONTEDIT.@LP    FONTEDIT.@XE
+        HELPMAKE.@XE    IMAGEDIT.@XE    IMPLIB.@XE      LIBW.@IB
+        PWBBASIC.@XT    PWBFORT.@XT     PWBHELP.@XT     PWBROWSE.@XT
+        PWBUTILS.@XT    RM.@XE          SAMPLE.@NI      UNDEL.@XE
+        VGASYS.@NT      VMB.@86         WINDOWS.@
+
+    Low density 3.5 inch disk layout
+
+      Disk  1 / SETUP
+        ADDWPROG.EXE    CBL-CMPT.DOC    CHECK.@BR       COBLIB.@LE
+        COBOL.INI       DOCUPDT.@OC     HELPADCF.@BR    PACKING.LST
+        PKUNZIP.EXE     README.DOC      SETUP.EXE
+
+
+      Disk  2
+        ANIMATOR.@BR    COBCLI.@BR      GENERATE.@BR    H2CPY.@XE
+        NAME.@BR        SPLIT78.@XE     UTILS.@BR       XANIMATE.@XE
+        XCOBOL.@XE
+
+
+      Disk  3
+        ADISCF.@BR      ADISCF.@XE      ADISCTRL.@      ANIMATE.@XE
+        ANIMBASE.@BR    ANIMBASE.@XE    ANIMRTNS.@XE    ANIMUSER.@LE
+        ANIMUSER.@XE    CCI.@XE         COBFP87.@LE     COBFP87.@LW
+        COBIFN.@LW      COBNLS.@LW      COBNLS.@RR      COBOL.@XE
+        GENATT.@LE      GENATT.@LW      HELP.@BR        HELPNAME.@BR
+        HYHELP.@BR      HYHELP.@NF      KEYBCF.@XE      MFEXTMAP.@LE
+        MFEXTMAP.@LW    OLR.@NF         PANLINK.@PY     REBUILD.@XE
+        SCREENS.@BR     SCREENS.@XE     XB.@XE          XM.@XE
+        XMCLONES.@OC    _BTRV.@LW       _BTRV.@XE       _SORT.@LW
+
+
+      Disk  4
+        ADIS.@BJ        CBLSSEG.@LL     CBLWIN.@LL      CBLWIN31.@LW
+        CNVCOMP6.@BJ    COBFP87D.@IB    COBFP87W.@IB    COBLIB.@IB
+        COBLIB.@LW      COBW.@IB        CONVERT3.@XE    CONVERT5.@XE
+        EXTFH.@BJ       EXTFHW.@EF      INFO.@NF        LCOBOL.@IB
+        MCS.@BJ         MCSETUP.@XE     MSHIF.@XE       PANELS.@BJ
+        PCINST.@LL      REFORM5.@XE     TABX.@XE
+
+
+      Disk  5
+        ASM.@EM         BTR2XFH.@BJ     CBLDC001.@BJ    CBLWINA.OBJ
+        CBLWINAF.@BJ    CBLWINB.OBJ     CBLWINL.OBJ     COBAPI.@IB
+        COBINTFN.@BJ    COBLIBW.@IB     COBNLSMG.@BJ    DBTRV.@BJ
+        DWSKEL.DEF      EXTERNL.@BJ     EXTSM.@BJ       FHREDIR.@BJ
+        HOSTSTAT.@BJ    LATLANG.@BJ     LCOBOLDW.@IB    LCOBOLW.@IB
+        LIBINIT.OBJ     MISC.@EM        MSLANG.@BJ
+        MUDEMO.@EM      PANELS.@EM      PREPROC.@EM     PWBTUTOR.@EM
+        RMSTAT.@BJ      RTSBIN.@SM      RTSCALL.@BJ     SAMPLES.@XT
+        SQL.@BJ         TICTAC.@EM      VBCOB.@EM       WBTRV.@BJ
+        WINDOWS.@EM     WINSTF.@BJ      WINSTF.@IB      WINSTF.DEF
+        XFH2BTR.@BJ     XFHNAME.@BJ     _CLASS.@BJ      _CODESET.@BJ
+
+
+      Disk  6
+        COBOL.@LP       COBOL2.HLP
+
+
+      Disk  7
+        CV.@CO          CV.@XE          DLGEDIT.@XE     EMD1D1.@LL
+        EXEHDR.@XE      HIMEM.@YS       MOUSE.@OM       PWBCOBOL.@XT
+        PWBMASM.@XT     PWBRMAKE.@XE    QH.@LP          SBR-LOAD.@NT
+        SBRPACK.@XE     TOOLS.@RE       UTILS.@LP       WX.@XE
+        WXSRVR.@XE
+
+
+      Disk  8
+        ADVISOR.@LP     CV4.@LP         PWB.@LP         QH.@XE
+
+
+      Disk  9
+        CVPACK.@XE      CVPACKX.@XE     ILINK.@XE       LIB.@XE
+        LINK.@LP        LINK.@XE        MSD.@XE         MSD.@XT
+        NMAKE.@XE       PWBC.@XT
+
+
+      Disk 10
+        BSCMAKE.@XE     BSCMAKEV.@XE    EED1CAN.@LL     EED1COB.@LL
+        EXP.@XE         LIBENTRY.@BJ    LRFMERGE.@XE    PWB.@XE
+        RC.@XE          RCPP.@RR        RCPP.@XE        SHD1.@LL
+        TLD1LOC.@LL     WINSTUB.@XE
+
+
+      Disk 11
+        ATRM1111.@NT    DLGEDIT.@LP     FONTEDIT.@LP    FONTEDIT.@XE
+        HELPMAKE.@XE    IMAGEDIT.@LP    IMAGEDIT.@XE    IMPLIB.@XE
+        LIBW.@IB        PWBBASIC.@XT    PWBFORT.@XT     PWBHELP.@XT
+        PWBROWSE.@XT    PWBUTILS.@XT    RM.@XE          SAMPLE.@NI
+        UNDEL.@XE       VGASYS.@NT      VMB.@86         WINDOWS.@
+
+
+
+   Description of Components
+   -------------------------
+   The Microsoft COBOL 5.0 package contains the following software
+   components:
+
+   COBOL Optimizing Compiler - compiles COBOL source code into OBJ files.
+
+   Animator Testing Tool     - interactive full screen testing, learning and
+                               debugging tool. Includes Cooperative
+                               Animation facility to animate programs in
+                               different sessions/machines.
+
+   Linking Support           - Linker, libraries and system programs to
+                               create stand alone EXE files for DOS and 
+			       Windows from the OBJs created by the compiler.
+
+   COBOL Communications      - Preparation and run-time support for MCS.
+   Module Support
+
+   Mixed Language Facility   - Extra tools, and documentation to aid in
+                               linking COBOL programs with programs of other
+                               languages.
+
+   PANELS                    - Callable module allowing windowing to be
+                               built into an application.
+
+   Screen Painter            - SCREENS Screen Painter.
+
+   Screen/Keyboard           - Tools to allow configuration of the extended
+   Configuration Tools         ACCEPT/DISPLAY system program, ADIS.
+
+   SETUP Installation        - Utility to allow efficient installation of
+   Utility                     this product.
+
+   Indexed File              - REBUILD file management utility.
+   Maintenance Tool
+                             
+   Demonstration Programs    - Programs that demonstrate some of the
+                               facilities in this package, and batch streams
+                               to compile, link and run, or animate them.
+
+   MF Compatibility Tools    - File conversion utility to aid in converting
+                               Micro Focus COBOL systems to compile and
+                               run with this system.
+
+   MS Compatibility Tools    - Compatibility documentation and file
+                               conversion utility to aid in converting
+                               Microsoft COBOL v2.2 systems to compile and
+                               run with this system.
+
+   RM Compatibility Tools    - Compatibility documentation and file
+                               conversion utility to aid in converting
+                               RM/COBOL applications to compile and run
+                               with this system.
+
+   DG Compatibility Tools    - Compatibility documentation and file
+                               conversion utility to aid in converting DG
+                               ICOBOL applications to compile and run with
+                               this system.
+
+   Utilities                 - LINK, LIB, NMAKE, etc.
+
+   Programmer's WorkBench    - Integrated development environment.
+
+   CodeView                  - CodeView Version 4.05 allowing
+                               native code debugging of COBOL programs
+                               and mixed COBOL/C debugging.
+
+   Windows 3.0 Support       - Libraries and tools needed to develop
+                               Microsoft Windows 3.0 and higher applications.
+
+
+   Description of Files
+   --------------------
+   The files included on the release disks are briefly described below.
+
+   Executable files on the disks are one of the following types:
+
+
+ADDWPROG.EXE              Adds program groups to Program Manager
+ADIS.@BJ     ADIS.OBJ     ADIS-ACCEPT/DISPLAY support
+             ADISDYNA.OBJ ADIS-ACCEPT/DISPLAY support
+             ADISINIT.OBJ ADIS-ACCEPT/DISPLAY support
+             ADISKEY.OBJ  ADIS-ACCEPT/DISPLAY support
+ADISCF.@BR   ADISCF.LBR   ADISCF/KEYBCF run-time support
+ADISCF.@XE   ADISCF.EXE   ADIS configuration utility
+ADISCTRL.@   ADISCTRL     (ADISCTRL.@) ADIS configuration file
+ADVISOR.@LP  ADVISOR.HLP  Help for Microsoft Advisor
+ANIMATE.@XE  ANIMATE.EXE  Animator debugger program
+ANIMATOR.@BR ANIMATOR.LBR Animator - additional programs
+ANIMBASE.@BR ANIMBASE.LBR Low memory Animator
+ANIMBASE.@XE ANIMBASE.EXE Animator support file
+ANIMRTNS.@XE ANIMRTNS.EXE Animator support file
+ANIMUSER.@LE ANIMUSER.DLE Animator support file
+ANIMUSER.@XE ANIMUSER.EXE Cooperative animation
+ASM.@EM      ADD.CBL      Sample showing assembler called from COBOL
+             ADDEM.ASM
+             ADDEM.DEF
+             ADDEM.OBJ
+ATRM1111.@NT ATRM1111.FNT
+BSCMAKE.@XE  BSCMAKE.EXE  Browse database creation utility
+BSCMAKEV.@XE BSCMAKEV.EXE
+BTR2XFH.@BJ  BTR2XFH.OBJ  File handling support file
+CBL-CMPT.DOC              Compatibility with earlier releases
+CBLDC001.@BJ CBLDC001.OBJ Data compression module
+CBLSSEG.@LL  CBLSSEG.DLL  Support DLL used by all COBOL Windows programs
+CBLWIN.@LL   CBLWIN.DLL   COBOL Windows runtime support
+CBLWIN31.@LW CBLWIN31.DLW COBOL Windows runtime support
+CBLWINA.OBJ               Startup module for EXE's under Windows
+CBLWINAF.@BJ CBLWINAF.OBJ Startup module for use with Floating Point
+CBLWINB.OBJ               Startup module for batch programs under Windows
+CBLWINL.OBJ               Startup module for Dynamic Link Libraries
+CCI.@XE      CCIIPX.DLW   Remote animation support
+             CCIIPX.EXE   Remote animation support
+             CCIIPX2.EXE  Remote animation support
+             CCINETB.DLW  Remote animation support
+             CCINETB.EXE  Remote animation support
+CHECK.@BR    CHECK.LBR    Compiler/Animator modules
+CNVCOMP6.@BJ CNVCOMP6.OBJ Subroutine used with RM data file conversion
+COBAPI.@IB   COBAPI.LIB   COBOL link support routines
+COBCLI.@BR   COBCLI.LBR   Compiler/Animator Command Line Interpreter
+COBFP87.@LE  COBFP87.DLE  Floating Point runtime support
+COBFP87.@LW  COBFP87.DLW  Floating Point runtime support
+COBFP87D.@IB COBFP87D.LIB Floating Point linking support
+COBFP87W.@IB COBFP87W.LIB Floating point linking support
+COBIFN.@LW   COBIFN.DLW   Intrinsic functions runtime support
+COBINTFN.@BJ COBINTFN.OBJ Intrinsic functions linking support
+COBLIB.@IB   COBLIB.LIB   COBOL link support routines - shared run-time
+COBLIB.@LE   COBLIB.DLE   Shared run-time for DOS
+COBLIB.@LW   COBLIB.DLW   Shared runtime for Windows
+COBLIBW.@IB  COBLIBW.LIB  Shared runtime linking support
+COBNLS.@LW   COBNLS.DLW   NLS runtime support
+COBNLS.@RR   COBNLS.ERR   NLS error message file
+COBNLSMG.@BJ COBNLSMG.OBJ NLS support file
+COBOL.@LP    COBOL.HLP    Help on the COBOL language
+COBOL.@XE    COBOL.EXE    Compiler
+COBOL.INI                 Script for installation
+COBOL2.HLP                Help on COBOL language
+COBW.@IB     COBW.LIB     Windows Linking support for COBOL
+CONVERT3.@XE CONVERT3.EXE Generates programs to convert RM/COBOL data files
+CONVERT5.@XE CONVERT5.EXE Generates program to convert Data General data files
+CV.@CO       CV.ICO       MS-DOS CodeView Icon
+CV.@XE       CV.EXE       CodeView debugger for MS-DOS (version 4.05)
+CV4.@LP      CV4.HLP      Help for CodeView 4.05
+CVPACK.@XE   CVPACK.EXE   DOS CV4 information optimization utility. Installed
+                          as CVPACK.EXE or CVPACKR.EXE. See README.DOC for an
+                          explanation.
+CVPACKX.@XE  CVPACKX.EXE  DOS CV4 information optimization utility. Installed
+                          as CVPACK.EXE or CVPACKX.EXE. See README.DOC for an
+                          explanation. 
+DBTRV.@BJ    DBTRV.OBJ    Filehandling support
+DLGEDIT.@LP  DLGEDIT.HLP  MS Windows 3.1 Dialogue Editor Help
+DLGEDIT.@XE  DLGEDIT.EXE  MS Windows 3.1 Dialogue Editor program
+DWSKEL.DEF                .DEF file for QuickWin applications
+EED1CAN.@LL  EED1CAN.DLL  Expression evaluator for MS-DOS C/MASM
+EED1COB.@LL  EED1COB.DLL  Expression evaluator for MS-DOS COBOL
+EMD1D1.@LL   EMD1D1.DLL   Execution model for MS-DOS to MS-DOS
+EXEHDR.@XE   EXEHDR.EXE   Display/modify executable file headers
+EXP.@XE      EXP.EXE      Remove files from DELETED directory
+EXTERNL.@BJ  EXTERNL.OBJ  External data handler
+EXTFH.@BJ    EXTFH.OBJ    Indexed and External file handler
+EXTFHW.@EF   EXTFHW.DEF   DEF file to create EXTFH.DLL for Windows
+EXTSM.@BJ    EXTSM.OBJ    External Sort module
+FONTEDIT.@LP FONTEDIT.HLP MS Windows 3.1 Font Editor Help
+FONTEDIT.@XE FONTEDIT.EXE MS Windows 3.1 Font Editor program
+GENATT.@LE   GENATT.DLE   Generic attributes runtime support
+GENATT.@LW   GENATT.DLW   Generic attributes runtime support
+GENERATE.@BR GENERATE.LBR Compiler - code generation
+H2CPY.@XE    H2CPY.EXE    Converter for C Header files to COBOL
+HELP.@BR     HELP.LBR     Animator Help screens
+HELPADCF.@BR HELPADCF.LBR ADIS configuration utility - Help screens
+HELPMAKE.@XE HELPMAKE.EXE Help File Maintenance Utility
+HELPNAME.@BR HELPNAME.LBR Screen Painter support
+HIMEM.@YS    HIMEM.SYS    Microsoft XMS Manager
+HOSTSTAT.@BJ HOSTSTAT.OBJ Alternative filestatus support
+HYHELP.@BR   HYHELP.LBR   Help engine for HNF files
+HYHELP.@NF   HYHELP.HNF   Help on HNF files
+ILINK.@XE    ILINK.EXE    Incremental Linker
+IMAGEDIT.@LP IMAGEDIT.HLP MS Windows 3.1 Image Editor Help
+IMAGEDIT.@XE IMAGEDIT.EXE MS Windows 3.1 Image Editor program
+IMPLIB.@XE   IMPLIB.EXE   Import library creation utility
+INFO.@NF     INFO.HNF     COBOL language Help
+KEYBCF.@XE   KEYBCF.EXE   Keyboard configuration utility
+LATLANG.@BJ  LINITC31.ASM Lattice(R) C v3.1
+             LINITC31.OBJ
+             LINITC32.ASM Lattice C v3.2
+             LINITC32.OBJ
+             LINITIO.C    I/O module required for linking to Lattice C
+             LINITIO.OBJ
+LCOBOL.@IB   LCOBOL.LIB   COBOL link support routines - static linked
+LCOBOLDW.@IB LCOBOLDW.LIB Static runtime linking support for QuickWin
+LCOBOLW.@IB  LCOBOLW.LIB  Static runtime linking support for Windows API
+LIB.@XE      LIB.EXE      Library maintenance utility
+LIBENTRY.@BJ LIBENTRY.OBJ Needed for Windows DLLs
+LIBINIT.OBJ               Dynamic library linking support
+LIBW.@IB     LIBW.LIB     Link library for Windows applications
+LINK.@LP     LINK.HLP     Help for Linker
+LINK.@XE     LINK.EXE     Segmented executable Linker
+LRFMERGE.@XE LRFMERGE.EXE Used by PWB to merge two linker response files
+MCS.@BJ      MCS.OBJ      Communications module
+MCSETUP.@XE  MCSETUP.EXE  Communication setup
+MFEXTMAP.@LE MFEXTMAP.DLE External file mapper
+MFEXTMAP.@LW MFEXTMAP.DLW External file mapper
+MISC.@EM     ADMOUSE.CBL  Demonstrates the use of mouse and ADIS
+             CALC.CBL
+             CALENDAR.CBL
+             CASE.CBL     Converts the case of COBOL source programs
+             CUSTOMER.DAT
+             DECLARE.CBL  DECLARATIVES
+             DIOPHANT.CBL Recursion
+             EXPAND.CBL   Clever expanding ACCEPT
+             EXTFILE.CBL  EXTERNAL FILES
+             FUNCTEST.CBL
+             FUNKEY.CBL
+             INTRINS.CBL
+             KEYBMENU.CBL
+             LOGOPER.CBL  Demonstrates the logical call-by-name routines
+             MOUSMENU.CBL
+             NESTED.CBL   Nested programs
+             POPUP.CBL    Screen handling demo
+             PRINTESC.CBL Printer escape codes
+             REPORT.CBL   Report Writer
+	     SAMPLES.TXT  ASCII text file with compile/link information
+             SHELL.BAT
+             SMPLACCP.CBL
+             SPLTJOIN.CBL
+             SSCNTRL.CBL  Screen Section dynamic attributes using CONTROL
+             STATUS.CBL   File status handling
+             TSTCOMP.CBL
+MOUSE.@OM    MOUSE.COM    Mouse Driver
+MSD.@XE      MSD.EXE      Configuration reporter
+MSD.@XT      MSD.TXT      Configuration reporter doc
+MSHIF.@XE    MSHIF.EXE    Access to MS style Help files from other Engines
+MSLANG.@BJ   C6DOSIF.OBJ  Microsoft C 6.0 - C initialization for MS-DOS
+             C6DOSLB.OBJ  Microsoft C 6.0 - C initialization for MS-DOS
+             C7DOSIF.OBJ  Microsoft C 7.0 - C initialization for MS-DOS
+             C7DOSLB.OBJ  Microsoft C 7.0 - C initialization for MS-DOS
+             MFC6INTF.OBJ Microsoft C 6.0 - COBOL interface
+             MFC6INTW.OBJ Microsoft C 6.0 - initialization for WIN
+             MFC7INTF.OBJ Microsoft C 7.0 - COBOL interface
+             MINITC.ASM   Microsoft C 5.0 and 4.0
+             MINITC.OBJ
+             MINITF.ASM   Microsoft FORTRAN
+             MINITF.OBJ
+             MINITP.ASM   Microsoft Pascal
+             MINITP.OBJ
+MUDEMO.@EM   MUDEMO.CBL   Sample program
+             STOCKIN.CBL  Sample Program
+             STOCKIOA.CBL Sample Program
+             STOCKIOM.CBL Sample Program
+             STOCKOUT.CBL Multi-user file handling
+NAME.@BR     NAME.LBR     Screen Painter support
+NMAKE.@XE    NMAKE.EXE    Program maintenance utility
+OLR.@NF      OLR.HNF      Help on HNF format files
+PACKING.LST               List of documents and files included in 
+			  this package
+PANELS.@BJ   PANELS.OBJ   Panels linking support
+PANELS.@EM   DEMOBUFF.CPY Panels sample programs
+             DEMOCONT.CPY
+             DEMOHELP.CPY
+             DEMOMENU.CPY
+             DEMOMISC.CPY
+             DEMOMSG.CPY
+             PANBIGSC.CBL
+             PANBORDR.CBL
+             PANCONT.CPY
+             PANDEMO.CBL
+             PANELEX1.CBL
+             PANELEX2.CBL
+             PANLINK.CPY
+             PANTUTOR.CBL
+PCINST.@LL   PCINST.DLL
+PKUNZIP.EXE               Unzipping processor  (Bound)
+PREPROC.@EM  ASMCOBOL.CBL Preprocessor sample program
+             PREPROC.CBL
+             PREPROX.CBL
+             WORKING.CBL
+PWB.@LP      PWB.HLP      Help for MS-DOS Programmer's WorkBench
+PWB.@XE      PWB.EXE      MS-DOS Programmer's Workbench
+             PWB.ICO      ICON for PWB
+             PWB.PIF      PIF File for PWB
+PWBBASIC.@XT PWBBASIC.XXT BASIC extension for PWB
+PWBC.@XT     PWBC.XXT     C extension for PWB
+PWBCOBOL.@XT PWBCOBOL.MXT COBOL extension for PWB
+PWBFORT.@XT  PWBFORT.XXT  FORTRAN extension for PWB
+PWBHELP.@XT  PWBHELP.MXT  Help extension for PWB
+PWBMASM.@XT  PWBMASM.XXT  MASM extension for PWB
+PWBRMAKE.@XE PWBRMAKE.EXE BSCMAKE compatibility driver
+PWBROWSE.@XT PWBROWSE.MXT Browser extension for PWB
+PWBTUTOR.@EM EMPL.DAT     Files for the PWB tutorial
+             EMPLHLTH.CBL
+             EMPLMAIN.CBL
+             EMPLMAIN.TXT
+             EMPLMN.MAK
+             HEALTH.DAT
+             PENTOT2.CBL
+             SALARY.DAT
+PWBUTILS.@XT PWBUTILS.MXT Utilities for PWB
+QH.@LP       QH.HLP       Help for the Microsoft QuickHelp program
+QH.@XE       QH.EXE       MS-DOS QuickHelp program
+             QH.ICO       QuickHelp Icon
+RC.@XE       RC.EXE       MS Windows 3.1 Resource Compiler
+RCPP.@RR     RCPP.ERR
+RCPP.@XE     RCPP.EXE
+README.DOC                Essential information about this version
+REBUILD.@XE  REBUILD.EXE  File Management Utility - MS file conversion
+REFORM5.@XE  REFORM5.EXE  Reformatter for DG Interactive COBOL source program
+RM.@XE       RM.EXE       File deletion utility
+RMSTAT.@BJ   RMSTAT.OBJ   Alternate file status support
+RTSBIN.@SM   RTSBIN.ASM   Emulation of .BIN file handling
+RTSCALL.@BJ  RTSCALL.OBJ  Emulation of .BIN file handling
+SAMPLE.@NI   SAMPLE.INI   Sample TOOLS.INI file for PWB
+SBR-LOAD.@NT SBR-LOAD.GNT Compiler support for browser
+SBRPACK.@XE  SBRPACK.EXE  Browse information utility
+SCREENS.@BR  SCREENS.LBR  Screen Painter support
+SCREENS.@XE  SCREENS.EXE  Screen Painter
+SETUP.EXE                 Installation utility (Bound)
+SHD1.@LL     SHD1.DLL     Symbol handler for MS-DOS
+SPLIT78.@XE  SPLIT78.EXE  Splits large files containing level 78s into
+                          smaller files.
+SQL.@BJ      SQLINIM.OBJ
+             SQLINIT.OBJ
+TABX.@XE     TABX.EXE     Utility to expand tabs in a source file
+TICTAC.@EM   TICBUG.CBL   Other products support material
+             TICTAC.CBL   Tac-Tac-Toe sample
+             TSTDEBUG.CBL ANSI Debug
+             TTDEMO.BAT   Demonstration batch stream
+TLD1LOC.@LL  TLD1LOC.DLL  Local transport layer for MS-DOS
+TOOLS.@RE    TOOLS.PRE    Sample TOOLS.INI file
+UNDEL.@XE    UNDEL.EXE    Undelete (restore) file utility
+UTILS.@BR    UTILS.LBR    Compiler/Animator run-time support
+UTILS.@LP    UTILS.HLP    Help for utilities
+VBCOB.@EM    ADDREC.FRM   Visual Basic calling COBOL sample
+             BROWSE.FRM
+             CREATE.FRM
+             PASS_PAR.FRM
+             VBCOB.BAS
+             VBCOB.CBL
+             VBCOB.DEF
+             VBCOB.DLL
+             VBCOB.EXE
+             VBCOB.MAK
+             VBCOBDLL.BAT
+             VBRUN100.DLL
+VGASYS.@NT   VGASYS.FNT
+VMB.@86      VMB.386      Windows spawn driver
+WBTRV.@BJ    WBTRV.OBJ
+WINDOWS.@    WINDOWS.H
+WINDOWS.@EM  COBDLL.DLL   Windows API DLL sample
+	     COMPRESS.CBL Sample Program
+             COMPRESS.DEF Sample Program
+             SYSMETS.CBL  Displays system metrics
+             SYSMETS.CPY
+             SYSMETS.DEF
+             SYSMETS.MAK
+             WINCALC.CBL  Simple calculator program
+             WINCALC.CUR
+             WINCALC.DEF
+             WINCALC.DLG
+             WINCALC.ICO
+             WINCALC.RC
+             WINCALC.RES
+             WINDOWS.78   Windows header files converted into COBOL
+             WINDOWS.CPY
+             WINHELLO.CBL Sample - Windows 'Hello world' program
+             WINHELLO.DEF
+	     WINDLL.BAT
+	     WINMAIN.CBL  Windows API calling DLL
+WINSTF.@BJ   WINSTF.OBJ
+WINSTF.@IB   WINSTF.LIB
+WINSTF.DEF
+WINSTUB.@XE  WINSTUB.EXE  Needed for Windows applications
+WX.@XE       WX.EXE       WX/WXSRVR utility runs a Windows program from a
+WXSRVR.@XE   WXSRVR.EXE   DOS prompt within Windows
+XANIMATE.@XE XANIMATE.EXE DOS extended Animator
+XB.@XE       XB.EXE       DOS extended EXE Builder
+XCOBOL.@XE   XCOBOL.EXE   DOS extended compiler
+XFH2BTR.@BJ  XFH2BTR.OBJ  filehandling support
+XFHNAME.@BJ  XFHNAME.OBJ  filehandling support
+XM.@XE       XM.EXE       Dos Extender
+XMCLONES.@OC XMCLONES.DOC How to run XM on different clones
+_BTRV.@LW    _BTRV.DLW    filehandling support
+_BTRV.@XE    _BTRV.EXE    filehandling support
+_CLASS.@BJ   _CLASS.OBJ   Support for user defined CLASS
+_CODESET.@BJ _CODESET.OBJ Support for CODE-SET syntax
+_SORT.@LW    _SORT.DLW    Sort runtime support
+
+
+
+
+ ===========================================================================
+ Microsoft and CodeView are registered trademarks and Windows is a trademark 
+ of Microsoft Corporation.
+ Micro Focus is a registered trademark of Micro Focus Limited.
+ Micro Focus COBOL/2 is a trademark of Micro Focus Limited.
+ Lattice is a registered trademark of Lattice Incorporated.
+ Ryan-McFarland and RM/COBOL are registered trademarks of Ryan-McFarland
+ Corporation.
+ ===========================================================================

@@ -1,0 +1,1064 @@
+ 
+		    	   XMCLOMES.DOC File
+
+	 	Update Notes for the Microsoft(R) COBOL
+		   Professional Development System
+			   Version 5.0
+
+		(C) Copyright Microsoft Corporation, 1993
+		(C) Copyright Micro Focus Ltd., 1993
+
+		    	Release Candidate
+
+	This document contains essential printed documentation information
+	for the Release Candidate version of the Microsoft COBOL 
+	Professional Development System for MS-DOS(R) and Microsoft(R) 
+	Windows.  The information in this document is more
+	up-to-date than the printed documentation.
+
+=========================================================================
+                       USING XM WITH IBM COMPATIBLES
+                       =============================
+
+
+   This document should be regarded as a supplement to the chapter XM in
+   your COBOL System Reference. It lists the IBM and IBM-compatible personal
+   computers and BIOS families that XM has been tested with successfully
+   It contains a list of steps you should follow before running on a clone
+   (except when you are running exclusively from a Windows DOS Box).
+   A quick reference table is also included to identify whether
+   your machine, or one similar, has been found to work successfully
+   with XM.
+
+
+   TABLE OF CONTENTS
+   =================
+       INTRODUCTION
+       COMPUTERS RECOGNIZED BY XM
+       BIOS'S RECOGNIZED BY XM
+       XM PREPARATION CHECKLIST
+       XM COMPATIBILITY TABLE
+
+
+   INTRODUCTION
+   ============
+   XM is hardware and BIOS dependent, so it must be set up to recognize the
+   BIOS of a clone machine before you will be able to use it. On
+   initialization, XM first tries to recognize particular machine types for
+   which it has been adapted; failing that it looks for particular BIOS
+   identifications. If XM recognizes the BIOS but does not recognize the
+   specific machine type, it assumes that the machine is similar to some
+   other machine that uses that manufacturer's BIOS.
+
+   If XM applies any default switch settings upon recognizing the machine or
+   BIOS, these are noted here. Where information is available, this document
+   includes a note of the BIOS date and any other relevant comments.
+
+   Please note, when running in a Windows DOS Box, XM gets memory from 
+   the DPMI host and consequently does not use XMS memory. For this
+   reason, BIOS/clone-specific issues are not relevent when running XM in a
+   Windows DOS Box.
+
+
+   COMPUTERS RECOGNIZED BY XM
+   ==========================
+   This section lists the IBM and IBM-compatible personal computers that XM
+   has been tested with successfully.
+
+   ACER 910-12
+
+       default switch settings : none
+       +JQR necessary
+
+   ACER 1100-386
+
+       default switch settings : none
+       +JQR necessary
+
+   ACER 1120SX
+
+       default switch settings : none
+       /P1 +JKQR necessary
+
+   ACS ET 286
+
+       default switch settings : none
+
+   ALR Flexcache 80386
+
+       default switch settings : none
+       -JK necessary
+
+   AMI (Motherboard) 486/33
+
+       default switch settings : none
+       /P1 plus IBMCACHE (or other VCPI/DPMI compatible environment) needed
+
+   AST Bravo 486
+
+       default switch settings : none
+       /P1 +JKQR necessary
+
+   AST Premium 286
+
+       default switch settings : none
+       /D switch necessary for frequent mode transitions.
+
+   AST C-386
+
+       default switch settings : none
+       /P1 or /P6 necessary
+
+   AT&T 6310 WGS
+
+       default switch settings : none
+
+   AT&T 6312 WGS
+
+       Olivetti BIOS version 2.16 dated 9/23/87
+       default switch settings : none
+       /D switch necessary for frequent mode transitions.
+
+   AT&T 6320
+
+       default switch settings : none
+       +JKQR necessary
+
+   AT&T 6386 WGS
+
+       default switch settings : none
+       +JKQR necessary
+
+   AT&T XP 1076
+
+       default switch settings : none
+
+   AT&T 386SX
+
+       default switch settings : none
+       +JKQR /D5000 necessary
+
+   BAC 386SX
+
+       default switch settings : none
+       /P1 +QR necessary
+
+   Citus DT-386
+
+       default switch settings : none
+       /P1 necessary
+
+   Commodore 386
+
+       default switch settings : none
+       /P1 necessary
+
+   Compaq Deskpro 286
+
+       BIOS dated 05/15/86, C800 and E000 segments empty
+       default switch settings : none
+
+   Compaq portable model III (286)
+
+       default switch settings : none
+       +KR necessary if 3270 program installed and running
+
+   Compaq 386
+
+       default switch settings : none
+
+   Compaq 486
+
+       default switch settings : none
+       /D3000 necessary
+
+   Compuadd 386
+
+       default switch settings : none
+       /R9 /I +JKQR necessary
+
+   Computerland BC286
+
+       Award BIOS dated 04/30/87
+       default switch settings : none
+
+   Daly DC 386
+
+       default switch settings : none
+       +JR necessary
+
+   DEC Station 320
+
+       default switch settings : none
+       /P6 +KR necessary
+
+   Dell System 300
+
+       Phoenix 80386 BIOS version 1.10 dated 01/15/88
+       default switch settings : none
+       /D switch necessary for frequent mode transitions.
+
+   DTK DTK-386
+
+       default switch settings : none
+       /P6 necessary
+
+   Elonex AT
+
+       default switch settings : none
+
+       Note: This machine can be set to run at 8 or 10 MHz, but on early
+             versions the reinitialization code in the ROM BIOS forces the
+             speed down to 8 MHz. Since this is a 286 machine, XM invokes
+             this code on every transition from protected to real mode, the
+             effect of which is that XM always switches the machine 8 MHz
+             mode. Running OS/2 on this machine has the same effect. Late
+             versions overcome this problem.
+
+   ErgoData Ergo 386
+
+       default switch settings : none
+
+   Everex System 1800
+
+       default switch settings : none
+       /R9 necessary
+
+   Five Star 286-10
+
+       default switch settings : none
+       /M1024 necessary
+
+   Gateway 386
+
+       default switch settings : none
+       /P1 necessary
+
+   Grid Desktop Micro Channel 386-20
+
+       default switch settings : none
+       /B1024 necessary
+
+   Honeywell Bull 286
+
+       default switch settings : none
+       /P4 +I necessary
+
+   Hewlett Packard Vectra RS20
+
+       default switch settings : none
+       /P1 necessary
+
+   IBM PC/AT submodel 0
+
+       BIOS dated 01/10/84
+       default switch settings : none
+
+   IBM PC/AT submodel 1
+
+       BIOS dated 11/15/85
+       default switch settings : none
+
+   IBM PC/AT with Intel Inboard/386
+
+       default switch settings : none
+
+   IBM PC/XT with Sota MotherCard 5.0
+
+       default switch settings : none
+
+   IBM PS/2 model 30 286
+
+       BIOS dated 08/25/88
+       default switch settings : +JKQR
+
+   IBM PS/2 models 50,60
+
+       default switch settings : +JKQR
+
+       Note:  These switch settings are not always necessary.
+
+   IBM PS/2 models 70, P70, P75, 80
+
+       default switch settings : +JKQR
+
+       Note:  These switch settings are not always necessary.
+
+   IBM XT/286
+
+       default switch settings : none
+
+   ICL DRS M55 386SX
+
+       default switch settings : none
+       /P1 necessary
+
+   Memorex/Telex 1280 (286)
+
+       default switch settings : none
+       /D500 necessary
+
+   Memorex/Telex 7045 (286)
+
+       default switch settings : none
+       /M1024 +JKQR necessary
+
+   NEC APC IV
+
+       default switch settings : none
+       /D switch necessary for frequent mode transitions.
+
+   NCR 7052 Model 2000
+
+       NCR BIOS 4.6 dated 05/02/88
+       default switch settings : +QRM
+
+   Northgate (33mhz 386)
+
+       default switch settings : none
+       /P6 /D1000 necessary
+
+   Northgate Elegance  (25mhz 386)
+
+       default switch settings : none
+       /P1 necessary
+
+   Positive PC 386/33
+
+       default switch settings : none
+       /P1 necessary
+
+   Samsung S 550
+
+       default switch settings : none
+
+   Tandon PC/A
+
+       default switch settings : none
+
+   Tandon Target Plus
+
+       BIOS version 2.212.1T dated 02/26/88
+       default switch settings : none
+
+       Notes:
+
+       o  If you use the +J switch, avoid the Shft/Ctrl/Sysreq facility; it
+           will lock the machine.  This is due to an anomaly in the Tandon
+           BIOS where Int 15 (AX=8500) is issued before, rather than after,
+           sending EOI.
+
+       o  The /D switch is needed for some applications. Max mode transition
+          frequency is about 660 per second; thus round-trip mode
+          transitions should be separated by at least 3 milliseconds.
+
+   Tandy 4000
+
+       default switch settings : none
+
+   Tandy 5000
+
+       default switch settings : none
+       /B1024 necessary
+
+   Tangent 386
+
+       default switch settings : none
+       +JO necessary
+
+   Toshiba 1600
+
+       default switch settings : none
+       /R9 necessary
+
+   Toshiba T3100
+
+       default switch settings : none
+
+   Toshiba T3200 286
+
+       default switch settings : none
+       /P7 necessary
+
+   Toshiba T5100
+
+       Award BIOS V2.00P dated 01/05/88
+       default switch settings : none
+
+   Toshiba T5200C
+
+       default switch settings : none
+       /P6 +JKQRI /D1000 necessary
+
+   Wang PC 380
+
+       default switch settings : none
+       /D switch necessary for frequent mode transitions.
+
+       Notes:
+
+       o  Shft/Ctrl/Sysreq does not work.
+
+       o  NMI problem on scroll: the COBOL Run-Time System, when about to
+          scroll the checker output screen, may write to an I/O port that
+          causes a non-maskable interrupt in protected mode.  It does this
+          if it believes that the screen needs protection against snow. If
+          you are using a screen (for example, EGA) which does not need this
+          protection, you can avoid the NMI by forcing the RTS to omit snow
+          protection using the run-time switch +S2, as follows:
+
+              SET COBSW=+S2
+
+   Wyse 386
+
+       default switch settings: none
+       /P1 -Q necessary
+
+   Zaus 386
+
+       default switch settings: none
+       +j and removal of the ANSI.SYS driver necessary
+
+   Zenith ZBV3629GK  (25mhz 386)
+
+       default switch settings: none
+       /P6 /M256 necessary
+
+   Zenith Z-248
+
+       default switch settings: none
+       /P7 necessary
+
+    Zenith Data Systems 2618
+
+       BIOS dated 08/20/86
+       default switch settings: none
+
+   Zenith SuperSport 286
+
+       default switch settings: none
+       /P7 necessary
+
+
+   BIOS TYPES RECOGNIZED BY XM
+   ===========================
+   This section lists the BIOS families that XM been tested
+   with successfully.
+
+   American Megatrends Inc.
+
+       default switch settings: none
+
+       Note:  XM is adapted for an early version of this BIOS, which pops
+              the DS and ES registers in an uncommon order when returning
+              from Int 15h function 87h (Block Move).
+
+   Award Software Inc.
+
+       default switch settings: +JQR
+
+   Phoenix Software Associates.
+
+       default switch settings: none
+
+
+   XM PREPARATION CHECKLIST
+   ========================
+   This section lists the steps you should take before attempting to run
+   XM on a clone machine.   Full details on performing these steps are
+   contained in the XM documentation in the COBOL System Reference. A
+   summary is provided here for quick reference.
+
+   1.  Determine the amount of extended memory
+
+       XM requires at least 1.5 Mb of extended memory in order to run. To
+       determine the amount of extended memory on your machine, enter
+       following command line:
+
+           XM +X
+
+       Then at the prompt, enter:
+
+           M,0
+
+       (Note: This is the letter M followed by a comma and the number 0)
+       The following information is displayed on the screen:
+
+           zzzzzz free size yyyyyyy
+
+       'yyyyyyy' is the amount of installed extended memory in hexadecimal.
+
+   2.  Determine your machine BIOS type
+
+       To  established which type of machine XM thinks it is running on type
+       "XM +P2" followed by return your screen will look like this:
+
+           C:\>XM +P2
+           Machine nnnn
+	   XM V1.4.x - The Micro Focus DOS ExtendeR Copyright (C) 1987, 1992
+							  Micro Focus Ltd
+	   URN AHUPA/ZZO/00000
+           XM - Program not found
+
+       where nnnn is the machine BIOS type, with the last two digits
+       identifying the machine as follows:
+
+           ff             plain PC
+           fe             PC XT
+           fd             PC jr
+           fc             PC AT & PS/2 models 50,60
+           fb             PC XT (256/640 system board)
+           fa             PS/2 Model 30
+           f9             PC Convertible
+           f8             PS/2 Model 80
+           01             Compaq/386 (03 COMPAQ)
+           02             Award Software Inc.
+           03             AMI
+           04             Phoenix Software Associates Ltd.
+           05             Tandon
+           06             Generic AT/386
+           07             Compaq/286 (01COMPAQ)
+           08             Toshiba T5100
+           09             Phoenix 286
+           0A             Olivetti 286
+           0B             Zenith 286
+           0C             Phillips 3202
+           0D             Sota Mothercard 5.0
+           0E             NCR
+
+       XM has sufficient information about the IBM industry standard BIOS to
+       work without any problems. However, clone machines' BIOS is normally
+       modified from the standard and hence may need to use switches to
+       correctly identify its BIOS to XM.
+
+       Having established the machine ID, you can then determine which, if
+       any, of the /P switches may be necessary.
+
+       There are no hard and fast rules for determining which /P switch will
+       work for a particular clone machine. It is simply a matter of trial
+       and error until you find a switch that works for your machine.
+
+       Past experience has shown that the machine ID generally corresponds
+       to the /P switch required. So, if your machine ID is 01 through 07,
+       you should try the corresponding /P1 through /P7 switches.
+
+       Similarly, machine IDs ff through f8 are generally 286 machines,
+       which generally respond to the switches /P2, /P4 or /P9.
+
+       For 386 machines, switches /P1 or /P6 have been found to work.
+
+       You may also wish to refer to the following list, which indicates
+       switches that have been used successfully with particular types of
+       machine BIOS. Don't limit yourself to these suggestions, though; if
+       you are not successful with these, continue to experiment until you
+       find one that does work.
+
+           /P1 is generally for Compaq 386 machines
+
+           /P2 is for Award BIOS machines
+
+           /P3 is for older AMI BIOS versions, pre 1990
+
+           /P4 is for Phoenix BIOS machines
+
+           /P5 is for a Tandon BIOS, or the AMI BIOS dated August 30,1990
+
+           /P6 is a generic switch for 386 machines
+
+           /P7 is a generic switch for Compaq 286 or similar machines
+
+       N.B. These switches are NOT always necessary.
+
+       XM switches can be set either on the command line or in the XM
+       environment variable as documented in the XM chapter in the COBOL
+       System Reference. Some examples are provided here.
+
+       Example:
+
+       You can set XM switches and invoke COBOL from the command
+       line as follows:
+
+	   "XM /P1 +JR COBOL"
+
+       or, you can specify these settings in the environment variable:
+
+           "SET XM=/P1+JR"
+
+       and then invoke COBOL from the command line, which picks up and uses the
+       XM variable from the environment. The settings in the environment
+       variable can be added to or overridden by typing extra parameters for
+       XM on the command line.
+
+   3.  Check your keyboard configuration
+
+       If you can successfully use XM and invoke the Editor, the next step
+       is to check that the keyboard works correctly. Very often the "
+       character may appear as @. In order to correct this, the +J switch
+       should be used. This switch forces the keyboard configuration that
+       was present when the machine was booted up. Note that this will work
+       only if your AUTOEXEC.BAT file contains a KEYB command.
+
+   4.  Check your operating system configuration
+
+       It is assumed that no devices or TSR's are loaded at this time. If
+       this is not the case, then strip your config.sys and autoexec.bat
+       down to basics. You should then reboot the machine set to use DOS and
+       COBOL only.
+
+       Example:
+
+           Config.sys
+           ----------
+           shell=c:\dos\command.com /e:1024 /p
+	   buffers=30
+	   files=100
+
+
+           Autoexec.bat
+           ------------
+	   SET COBDIR=C:\COBOL\BIN
+	   SET COBHNF=C:\COBOL\HELP
+	   SET INCLUDE=C:\COBOL\SOURCE
+	   SET HELPFILES=C:\COBOL\HELP
+	   SET LIB=C:\COBOL\LIB
+	   PATH C:\;C:\DOS;C:\COBOL\BIN
+	   SET INIT=C:\COBOL\INIT
+
+
+       When you are satisfied that this basic configuration allows you to
+       use XM, then add back network and any other devices and TSRs.
+
+       Note that if you are using XM when attached to a network, the +R
+       switch MUST be used. This will prevent the workstation from hanging.
+
+
+   XM COMPATIBILITY TABLE
+   ======================
+   The following table lists the Make, Model, BIOS type and default switches
+   applied for XM. Try the switches suggested for your machine, or one
+   similar, to see if they solve any problems you may have encountered
+   trying to run XM. If you still have trouble after following the
+   suggestions in this document, please see your Environment and Tools book
+   on how to contact Support.
+
+       KEY:
+
+       Sptd  =	Supported by Microsoft
+       Runs  =  Customers experience shows XM working with these switches
+       NoRun =  Customers experience shows XM does not work on this machine
+
+
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄ*
+   Make   Model     ³ Bios Type     ³Switches/Options/Notes³Status
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ACER 	    ³		    ³			   ³
+	  910-12    ³ AWARD 3.01B   ³+JQR		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  1100-386  ³ AWARD 3.0383  ³+JKQ		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ACS		    ³		    ³			   ³
+	  ET 286    ³ ACS 3.1	    ³			   ³ Runs
+		    ³ ACS 3.1	    ³			   ³ Runs
+		    ³ ACS 3.1	    ³			   ³ Runs
+		    ³ ACS 3.5	    ³			   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ALR		    ³		    ³			   ³
+    Flexcache 20386 ³ Phoenix 386   ³-JK		   ³ Runs
+		    ³ ROM/BIOS	    ³			   ³
+		    ³ Plus 1.1.0 01 ³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   AST		    ³		    ³			   ³
+	Premium 286 ³		    ³			   ³
+		    ³ - 	    ³/D 		   ³ Sptd
+		    ³ Phoenix 3.03  ³6, 8 or 10 Mhz with   ³ Runs
+		    ³		    ³or without zero	   ³
+		    ³		    ³wait states	   ³
+		    ³ Award v1.1    ³/M1024		   ³ Runs
+		    ³ AST 1.1 (Award³/M1024		   ³ Runs
+		    ³ Phoenix 3.03  ³			   ³ Runs
+		    ³ AST 1.1 (Award³/A1		   ³ Runs
+		    ³ AST 1.1	    ³/D  /A1		   ³ Runs
+		    ³		    ³default switch	   ³ Runs
+		    ³		    ³settings		   ³ Runs
+		    ³		    ³/D 		   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  386	    ³ - 	    ³-Q /P1  at 20Mhz	   ³ Runs
+		    ³ v 1.2	    ³/P1		   ³ Runs
+		    ³		    ³EGA or Monochrome	   ³ Runs
+		    ³		    ³AST-sold VGA board    ³ NoRun
+		    ³ v 1.3 AST BIOS³			   ³ NoRun
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   AT&T 	    ³		    ³			   ³
+	   6310 WGS ³ - 	    ³			   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+		    ³		    ³			   ³
+	   6312 WGS ³ Olivetti 2.16 ³/D 		   ³ Sptd
+		    ³ (9/87)	    ³			   ³
+		    ³ Olivetti 2.16 ³/D 		   ³ Sptd
+		    ³ (9/23/87)     ³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	   6320     ³ - 	    ³ JKQR		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	   6386 WGS ³ - 	    ³+JKQR		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	   386	    ³ - 	    ³+Q 		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	   XP 1076  ³ - 	    ³			   ³ Sptd
+		    ³		    ³			   ³ Sptd
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   BAC		    ³		    ³			   ³
+	   386 SX   ³ Award	    ³/P1 +QR		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   COMMODORE	    ³		    ³			   ³
+	  386	    ³ Phoenix 1.0.0C³/P1 at 16Mhz	   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   COMPAQ	    ³		    ³			   ³
+	  Model 20  ³		    ³+RI /P6		   ³ Runs
+	  386	    ³		    ³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  286	    ³		    ³+JQR (/D)		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  Deskpro   ³ 5/15/86	    ³			   ³ Sptd
+	  286	    ³ C800&E000     ³			   ³
+		    ³ segments empty³			   ³
+		    ³ updated BIOS  ³/M1024		   ³ Runs
+		    ³ 5/15/86	    ³			   ³ Sptd
+		    ³ C800&E000     ³			   ³
+		    ³ segments empty³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  Deskpro   ³		    ³+KJ		   ³ Runs
+	  SX 386    ³		    ³with IRMA		   ³
+		    ³		    ³with Attachmate	   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  386	    ³		    ³at 8Mhz		   ³ Sptd
+		    ³		    ³at 16Mhz		   ³ Sptd
+		    ³		    ³			   ³ Sptd
+	  (Deskpro) ³ 9/4/86 rev F  ³at 16Mhz, +R	   ³ Sptd
+		    ³		    ³use /P1 or /P6	   ³
+		    ³		    ³at 25Mhz /P6 +RQ	   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	 PortableII ³		    ³/M1024		   ³ Runs
+	 PortableII ³		    ³			   ³ Runs
+	 (286)	    ³		    ³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	 PortableIII³		    ³occasionally need	   ³ Sptd
+	 (286)	    ³		    ³+JKQR		   ³
+		    ³		    ³occasionally need	   ³ Sptd
+		    ³		    ³+JKQR		   ³
+		    ³		    ³Color Graphics	   ³
+		    ³		    ³Adaptor		   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	 PortableIII³		    ³+KR		   ³
+	 (w/3270 WP)³		    ³only with WP	   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   COMPUTERLAND     ³		    ³			   ³
+	  BC286     ³ AWARD 4/30/87 ³			   ³ Sptd
+		    ³ AWARD 4/30/87 ³			   ³ Sptd
+		    ³		    ³			   ³ Sptd
+		    ³ AWARD 4/30/87 ³			   ³ Sptd
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   DEC	  Station   ³ Phoenix	    ³/P6 +K+R		   ³ Runs
+	  320	    ³ 1.04.02	    ³			   ³
+		    ³		    ³ Notes: 386max SUN    ³
+		    ³		    ³ Server Sun 4 model   ³
+		    ³		    ³ 330 using Sun NFS    ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   DELL 	    ³		    ³			   ³
+	  286-12    ³ early BIOS    ³			   ³ NoRun
+		    ³		    ³			   ³
+		    ³ Dell A00-04   ³			   ³ Run
+		    ³		    ³			   ³
+	  System 300³ Phoenix 80386 ³ /D		   ³ Sptd
+		    ³ v1.10 01	    ³			   ³
+		    ³ 1/15/88	    ³			   ³
+		    ³		    ³			   ³
+		    ³ Phoenix 80386 ³ /D		   ³ Sptd
+		    ³ v1.10 01	    ³			   ³
+		    ³ 1/15/88	    ³			   ³
+		    ³		    ³			   ³
+	  PC Limited³		    ³			   ³ Run
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   DTK		    ³		    ³			   ³
+	  DTK-386   ³ DTK v4.25     ³ /P6		   ³ Run
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ELONEX	    ³		    ³			   ³
+	  PC-286-S  ³ ERSO PC-400   ³			   ³ Run
+	  (AT)	    ³ v 1.52	    ³			   ³
+		    ³		    ³			   ³
+		    ³ v1.53	    ³ (switches to 8Mhz)   ³ Sptd
+		    ³		    ³			   ³
+		    ³ v1.57	    ³ (works at 10Mhz)	   ³ Sptd
+		    ³		    ³			   ³
+		    ³		    ³			   ³ Sptd
+		    ³		    ³			   ³
+   Notes:
+   This machine can be set to run at 8 or 10Mhz, but on early versions the
+   reinitialization code in the ROM Bios forces the speed down to 8Mhz;
+   since this is a 286 machine, XM invokes this code on every transition
+   from protected to real mode, and the effect is that XM always switches
+   the machine into 8Mhz mode. Running OS/2 on this machine has the same
+   effect. Later versions overcome this problem.
+
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   EPSON	    ³		    ³			   ³
+	  Equity 3+ ³ no BIOS date  ³DOS 3.2		   ³ NoRun
+	  (AT clone)³		    ³DOS 3.3		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ERGODATA	    ³		    ³			   ³
+	  ERGO 386  ³ Phoenix 80386 ³-			   ³ Runs
+		    ³ V1.00 00	    ³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   EVEREX	    ³		    ³			   ³
+	 System 1800³ - 	    ³/R9		   ³ Runs
+	  (AT clone)³		    ³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   FIVE STAR	    ³		    ³			   ³
+	  286-10    ³ AWARD	    ³/M1024		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   Gateway	    ³		    ³			   ³
+	  386	    ³ AMI v4 1.01   ³/P1		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   HONEYWELL	    ³		    ³			   ³
+	  Bull 286  ³ - 	    ³(/I or +I) /P4	   ³ Runs
+   Notes:
+   Has Honeywell name but is an NCR810, a 286 machine with CGA display card;
+   640K dual processor with 6 and 8 Mhz using Intel 2meg extended board.
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   HP Vectra 386    ³		    ³			   ³
+	  RS20	    ³ Phoenix	    ³/M1024 at 20Mhz	   ³ Runs
+		    ³ ROM C0201     ³			   ³
+		    ³ RAM C0101     ³			   ³
+		    ³		    ³/P1		   ³
+		    ³		    ³at 8, 10, & 20Mhz	   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   IBM		    ³		    ³			   ³
+	  AT w/Intel³ - 	    ³Device driver	   ³ Sptd
+	  Inboard386³		    ³ILIM386 must not	   ³
+		    ³		    ³be in config.sys	   ³
+		    ³ - 	    ³			   ³ Sptd
+		    ³		    ³			   ³
+		    ³ Upgraded BIOS ³/P1		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PC/AT     ³ 1/10/84	    ³			   ³ Sptd
+	  submodel 0³ 1/10/84	    ³Color Graphics	   ³ Sptd
+		    ³ 8/12/86	    ³Hercules Graphics	   ³ Sptd
+		    ³ 1/10/84	    ³			   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PC/AT     ³ 11/15/85	    ³			   ³ Sptd
+	  submodel 1³ 1.57	    ³			   ³ Sptd
+		    ³ 11/15/85	    ³			   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+   IBM		    ³	    Model:  PS/2s		   ³
+
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PS/2	    ³		    ³			   ³ Runs
+	  model 30  ³ 8/25/88	    ³+JKQR		   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PS/2	    ³		    ³+JKQR (not always)    ³ Sptd
+	  model 50  ³ - 	    ³+JKQR (not always)    ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PS/2	    ³ - 	    ³			   ³ Runs
+	  Model 50Z ³		    ³			   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PS/2	    ³		    ³+JKQR		   ³ Sptd
+	  model 60  ³ 2/13/87	    ³with EGA		   ³ Sptd
+		    ³		    ³+JKQR		   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PS/2	    ³		    ³			   ³ Runs
+	  Model 70  ³		    ³			   ³
+	  and P70   ³		    ³			   ³
+   Notes:
+   4/90 - have a new BIOS (October 1989) which can cause problems. Sometimes
+   switches can help, but it depends on how the machine is configured.
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PS/2	    ³ 3/30/87	    ³+JKQR (not always)    ³ Sptd
+	  Model 80  ³ Standard BIOS ³			   ³ Sptd
+		    ³ 3/30/87	    ³+JKQR (not always)    ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+   IBM                     Model:  PS/2 model nn with Workstation
+                                                  Control Program Installed
+   Notes:
+   XM will work in conjunction with the workstation control program in dft
+   mode on all IBM machines except PS/2 mod 80, 70, and the 3270 PC.
+   The following configuration is required:
+    o  One 2m xma board (configured as expanded memory to be used by the
+       workstation control program)
+    o  One extended memory board (IBM part no. fc3006) used by XM
+    o  Switch settings +BKR and /M384  NOTE: the workstation control program
+       uses part of extended memory; hence the /M switch.
+   IBM has a patch to HLLAPI that prevents XM from working correctly when
+   the workstation control program is installed.
+
+      8/17/88	    ³		    ³+BJ /M384		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  XT/286    ³		    ³			   ³ Sptd
+		    ³ 12/8/86	    ³			   ³ Sptd
+		    ³		    ³			   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  XT with   ³ Ä 	    ³			   ³ Runs
+	  SOTA	    ³		    ³			   ³ Runs
+	  Mothercard³		    ³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  3270 AT   ³ 1/10/84	    ³ v3.10 DOS 	   ³Erratic
+	  w/Control ³ (original     ³			   ³
+	  Program   ³	      model)³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ICL		    ³		    ³			   ³
+	  N45	    ³ Award	    ³/P4		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  M55 386SX ³ Award	    ³/P1		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   LASER	    ³		    ³			   ³
+	  386	    ³ AMI (April 90)³/P1 +J		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   LOCLAND	    ³		    ³			   ³
+	  486	    ³ - 	    ³/P1 +JK with Microid  ³ Runs
+		    ³		    ³Microid motherboard   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   MEMOREX	    ³		    ³			   ³
+	  1280 (286)³ Memorex ROM   ³/D500 gets rid of	   ³ Runs
+		    ³ Bios 2.14     ³slow cursor movement  ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  7045 (286)³ Phoenix 3.07  ³+JKQR /M1024	   ³ Runs
+		    ³		    ³Micron EMS AboveBoard ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  7065	    ³ - 	    ³			   ³ NoRun
+   Notes:                                                             ³
+   640K base memory and 1024K extended memory, XM can only access 470K
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  7186	    ³ Phoenix 3.07  ³Everex RAM 3000 board ³ NoRun
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   NCR		    ³		    ³			   ³
+	  PC	    ³ - 	    ³at 8Mhz with EGA card ³ Runs
+		    ³		    ³switchable 8 & 10Mhz  ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  7052	    ³ NCR Bios 4.6  ³+QRM		   ³ Sptd
+	  Model 2000³ dated 5/2/88  ³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   NEC		    ³		    ³			   ³
+	  Powermate ³ Phoenix 386   ³at 8Mhz		   ³ Runs
+	  386/20    ³ Plus  1.10 04 ³at 16Mhz		   ³ NoRun
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  APC IV    ³		    ³/D 		   ³ Sptd
+		    ³		    ³/D 		   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PC/AT     ³ Phoenix	    ³			   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   NORTHGATE	    ³		    ³			   ³
+	  Elegance  ³ AMI 2/25/89   ³/P1		   ³ Runs
+	  25Mhz 386 ³		    ³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  33Mhz 386 ³		    ³/P6 /D1000 	   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   OAK		    ³		    ³			   ³
+	  486	    ³ AMI	    ³/P6		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   OPUS 	    ³		    ³			   ³
+	  PC V Turbo³ - 	    ³at 8Mhz		   ³ Runs
+		    ³ - 	    ³at 10Mhz  (hangs)	   ³ NoRun
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   SAMSUNG	    ³		    ³			   ³
+	  S 550     ³ AWARD	    ³			   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   TANDON	    ³		    ³			   ³
+	  PC	    ³		    ³+R 		   ³ Runs
+		    ³		    ³			   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  PC/A	    ³		    ³			   ³ Sptd
+		    ³		    ³			   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	 Target Plus³ V2.212.1T     ³			   ³ Sptd
+		    ³ dated 02/26/88³			   ³
+		    ³ V2.212.1T     ³			   ³ Sptd
+		    ³ dated 02/26/88³			   ³
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	 Target Plus³ Tandon 386    ³/P4 +RJ		   ³ Runs
+	 (Data Pacs)³		    ³			   ³
+		    ³		    ³			   ³
+   Notes:
+   If +J switch is used avoid the SHFT/CTRL/SYSREQ facility, which will lock
+   the machine.
+   Due to an anomaly in the Tandon Bios where Int 15 (AX=8500) is issued
+   before rather than after sending EOI.
+   /D option needed for some applications. Max mode transition frequency is
+   about 660 per second, thus round-trip mode transitions should be
+   separated by at least 3 milliseconds.
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   TANDY	    ³		    ³			   ³
+	  4000	    ³		    ³at 16Mhz		   ³ Runs
+	  (386 AT)  ³		    ³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   TOSHIBA	    ³		    ³			   ³
+	  1600	    ³		    ³/R9		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  T5100(386)³ AWARD 2.00P   ³			   ³ Sptd
+		    ³ 1/5/88	    ³			   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  T5200(386)³		    ³/P1 +J		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   TRUST	    ³		    ³			   ³
+	  386 DX    ³ AMI	    ³/P1 /D1000 +JKQR	   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   TULIP	    ³		    ³			   ³
+	  486E	    ³ - 	    ³/P5		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   UNISYS	    ³		    ³			   ³
+	  PW2-500-20³ - 	    ³/P6 +J		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  800 486   ³ AMI	    ³/P6 +J		   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   WANG 	    ³		    ³			   ³
+	  PC 380    ³		    ³/D 		   ³ Sptd
+		    ³		    ³/D 		   ³ Sptd
+   Notes:
+   Shft/Ctrl/Sysreq does not work.
+   NMI problem on scroll: the COBOL Run-time System, when about to scroll
+   the compiler	output screen, may write to an I/O port that causes a
+   non-maskable interrupt in protected mode. It does this if it believes
+   that the screen needs protection against snow. If you are using a screen
+   (for example, VGA) which does not need this protection, you can avoid the
+   NMI by forcing the Run-Time System to omit snow protection using the
+   run-time switch +S2, as follows:
+
+       SET COBSW=+S2
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  386	    ³ - 	    ³/P6 /D1000 +KJ	   ³ Runs
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   WYSE 	    ³		    ³			   ³
+	  386	    ³ Phoenix 386   ³-Q /P1		   ³ Runs
+		    ³ v3.52	    ³Genoa Super VGA bios  ³
+		    ³		    ³1.1 (5100 board)	   ³
+		    ³		    ³I/O support card	   ³
+		    ³		    ³v1.02 at 8 or 16Mhz   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ZAUS 	    ³		    ³			   ³
+	  386	    ³ - 	    ³+J (see note)	   ³ Runs
+   Notes:
+   2/90 if XM is run, the keyboard becomes reconfigured by actually swapping
+   most of the keys on the keyboard. To overcome this problem, you must
+   first remove the ANSI.SYS driver and then use the +J switch.
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄ*
+   ZENITH	    ³		    ³			   ³
+	  ZBV3629GK ³ Zenith v2.8b  ³/P6 /M256		   ³  Runs
+	  386 25Mhz ³		    ³			   ³
+   Notes:
+   The /M256 is needed because this machine has a built in memory area that
+   can be used as either Expanded or Extended memory, depending on how the
+   machine is set up. However, XM doesn't like that area as it is not, by
+   hardware default, Extended memory. Because of this, the "Not Enough
+   Extended Memory" error message is given. This memory is apparently
+   addressed at the 1 megabyte address. The /M256 tells XM to skip over this
+   configurable area.
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	  Z-248     ³		    ³/P7		   ³ Runs
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	Data Systems³ Bios 08/20/86 ³			   ³ Sptd
+	 2618	    ³		    ³			   ³ Sptd
+   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄ
+	SuperSport  ³		    ³/P7		   ³ Runs
+	286	    ³		    ³			   ³
+   *ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄ*
+
+
+   =========================================================================
+   

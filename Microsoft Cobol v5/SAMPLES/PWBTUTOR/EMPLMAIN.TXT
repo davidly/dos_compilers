@@ -1,0 +1,44 @@
+# << User_supplied_information >>
+ 
+# Example 'user section' for PWB project makefiles,
+# used in the PWB Tutorial.
+#
+# NOTE: This is not an standalone makefile.
+#       Append this file to makefiles created by PWB.
+#
+# This user section adds a new target to build a project
+# listing that shows the build type, options, and a list
+# of files in the project.
+#
+ 
+!IFNDEF PROJ
+!ERROR Not a standalone makefile.
+!ENDIF
+ 
+!IF $(DEBUG)
+BUILD_TYPE = debug
+!ELSE
+BUILD_TYPE = release
+!ENDIF
+ 
+# Project files and information-list target
+#
+$(PROJ).lst : $(PROJFILE)
+    @echo <<$(PROJ).lst : Project File List
+Project Name: $(PROJ)
+Build Type:        $(BUILD_TYPE)
+Program Arguments: $(RUNFLAGS)
+Project Files
+    $(FILES: =^
+    )
+COBOL Compiler Options
+    Global:  $(COBFLAGS_G)
+    Debug:   $(COBFLAGS_D)
+    Release: $(COBFLAGS_R)
+Link Options
+    Global:  $(LFLAGS_G)
+    Debug:   $(LFLAGS_D)
+    Release: $(LFLAGS_R)
+    Debug   Libraries: $(LLIBS_D)
+    Release Libraries: $(LLIBS_R)
+<<KEEP

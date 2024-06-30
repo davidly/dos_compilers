@@ -1,0 +1,228 @@
+[pwb pwb-main]
+;
+; To use any of these examples, remove the leading semicolon and include
+; the example in your TOOLS.INI file.
+;
+; Example Programmer's WorkBench macros
+;
+; undotoggle
+; Toggling undo. Repeatedly executing this macro undoes and redoes the most
+; recent editing change.
+;
+;    undotoggle:=meta undo +> undo
+;    undotoggle:ctrl+bksp
+;
+;   Default colors.
+;
+; The following are the color settings that the PWB uses by default. On
+; some hardware configurations, PWB may incorrectly identify your
+; monochrome video as color (or vice-versa). If the PWB screen looks
+; wrong, try using the color set appropriate for your hardware
+
+; Colors for a Color system
+;
+[pwb-color]
+;
+     color:      background 07
+     color:      hilitectrl 07
+     color:          greyed 78
+     color:         enabled 70
+     color:        disabled 78
+     color:           alert 70
+     color:       dialogbox 70
+     color:      pushbutton 70
+     color:      buttondown 07
+     color:         listbox 70
+     color:       scrollbar 70
+     color:        elevator 07
+     color:         menubox 70
+     color:            menu 70
+     color:    menuselected 07
+     color:      menuhilite 7f
+     color:   menuhilitesel 0f
+     color:   itemhilitesel 0f
+     color:     dialogaccel 7f
+     color:  dialogaccelbor 7f
+     color:          shadow 08
+     color:            text 17
+     color:       highlight 1f
+     color:            info 3f
+     color:       selection 71
+     color:          border 07
+     color:          status 7f
+     color:         scratch 07
+     color:        builderr 4f
+     color:         desktop 80
+     color:   pwbwindowtext 17
+     color: pwbwindowborder 07
+     color:         message 70
+     color:        location 70
+
+;
+; Colors for a Monochrome system
+;
+[pwb-mono]
+;
+     color:      background 07
+     color:      hilitectrl 07
+     color:          greyed 70
+     color:         enabled 70
+     color:        disabled 70
+     color:           alert 70
+     color:       dialogbox 70
+     color:      pushbutton 70
+     color:      buttondown 07
+     color:         listbox 70
+     color:       scrollbar 70
+     color:        elevator 07
+     color:         menubox 70
+     color:            menu 70
+     color:    menuselected 07
+     color:      menuhilite 7f
+     color:   menuhilitesel 0f
+     color:   itemhilitesel 0f
+     color:     dialogaccel 7f
+     color:  dialogaccelbor 7f
+     color:          shadow 07
+     color:            text 07
+     color:       highlight 0f
+     color:            info 70
+     color:       selection 70
+     color:          border 07
+     color:          status 70
+     color:         scratch 07
+     color:        builderr 70
+     color:         desktop 00
+     color:   pwbwindowtext 07
+     color: pwbwindowborder 07
+     color:         message 70
+     color:        location 70
+
+;
+;   Default keys.
+;
+; The following are the key assignments that the PWB uses by default.
+;
+[pwb-keys]
+;
+     arg:                 Alt+A
+     assign:              Alt+=
+     backtab:             Shift+Tab
+     begfile:             Ctrl+Home
+     begline:             Home
+     cancel:              Esc
+     cdelete:             Ctrl+G
+     compile:             Ctrl+F3
+     copy:                Ctrl+Ins
+     copy:                Shift+Num*
+     delete:              Shift+Del
+     delete:              Shift+Num-
+     down:                Ctrl+X
+     down:                Down
+     emacscdel:           Bksp
+     emacscdel:           Shift+Bksp
+     emacsnewl:           Enter
+     emacsnewl:           NumEnter
+     endfile:             Ctrl+End
+     endline:             End
+     execute:             F7
+     exit:                F8
+     home:                Goto
+     initialize:          Shift+F8
+     insertmode:          Ctrl+V
+     insertmode:          Ins
+     lastselect:          Ctrl+U
+     lasttext:            Ctrl+O
+     ldelete:             Ctrl+Y
+     left:                Ctrl+S
+     left:                Left
+     linsert:             Ctrl+N
+     mark:                Ctrl+M
+     meta:                F9
+     mlines:              Ctrl+Up
+     mlines:              Ctrl+W
+     mpage:               Ctrl+R
+     mpage:               Pgup
+     msearch:             F4
+     mword:               Ctrl+A
+     mword:               Ctrl+Left
+     newline:             Shift+Enter
+     newline:             Shift+NumEnter
+     openfile:            F10
+     paste:               Shift+Ins
+     paste:               Shift+Num+
+     pbal:                Ctrl+[
+     plines:              Ctrl+Down
+     plines:              Ctrl+Z
+     ppage:               Ctrl+C
+     ppage:               Pgdn
+     psearch:             F3
+     pwbhelpnext:         Ctrl+F1
+     pwbrowsenext:        Ctrl+Num+
+     pwbrowseprev:        Ctrl+Num-
+     pword:               Ctrl+F
+     pword:               Ctrl+Right
+     qreplace:            Ctrl+\
+     quote:               Ctrl+P
+     record:              Shift+Ctrl+R
+     refresh:             Shift+F7
+     replace:             Ctrl+L
+     right:               Ctrl+D
+     right:               Right
+     select:              Shift+Ctrl+End
+     select:              Shift+Ctrl+Home
+     select:              Shift+Ctrl+Left
+     select:              Shift+Ctrl+Pgdn
+     select:              Shift+Ctrl+Pgup
+     select:              Shift+Ctrl+Right
+     select:              Shift+Down
+     select:              Shift+End
+     select:              Shift+Home
+     select:              Shift+Left
+     select:              Shift+Pgdn
+     select:              Shift+Pgup
+     select:              Shift+Right
+     select:              Shift+Up
+     selwindow:           F6
+     setfile:             F2
+     sethelp:             Shift+Ctrl+S
+     setwindow:           Ctrl+]
+     shell:               Shift+F9
+     sinsert:             Ctrl+J
+     tab:                 Tab
+     tell:                Ctrl+T
+     undo:                Alt+Bksp
+     undo:                Shift+Ctrl+Bksp
+     up:                  Ctrl+E
+     up:                  Up
+     winstyle:            Ctrl+F6
+     _pwbarrange:         Alt+F5
+     _pwbcascade:         F5
+     _pwbclear:           Del
+     _pwbclear:           Shift+Num/
+     _pwbclose:           Ctrl+F4
+     _pwbhelp_back:       Alt+F1
+     _pwbhelp_contents:   Shift+F1
+     _pwbhelp_context:    F1
+     _pwbmaximize:        Ctrl+F10
+     _pwbminimize:        Ctrl+F9
+     _pwbmove:            Ctrl+F7
+     _pwbnextlogmatch:    Shift+Ctrl+F3
+     _pwbnextmsg:         Shift+F3
+     _pwbpreviouslogmatch:Shift+Ctrl+F4
+     _pwbprevmsg:         Shift+F4
+     _pwbprevwindow:      Shift+F6
+     _pwbquit:            Alt+F4
+     _pwbresize:          Ctrl+F8
+     _pwbrestore:         Ctrl+F5
+     _pwbsavefile:        Shift+F2
+     _pwbtile:            Shift+F5
+     _pwbwindow1:         Alt+1
+     _pwbwindow2:         Alt+2
+     _pwbwindow3:         Alt+3
+     _pwbwindow4:         Alt+4
+     _pwbwindow5:         Alt+5
+     _pwbwindow6:         Alt+6
+     _pwbwindow7:         Alt+7
+     _pwbwindow8:         Alt+8
+     _pwbwindow9:         Alt+9

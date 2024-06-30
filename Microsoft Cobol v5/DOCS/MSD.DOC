@@ -1,0 +1,217 @@
+                 MICROSOFT DIAGNOSTICS (MSD) UTILITY
+                 ===================================
+
+ --------------------------------------------------------------------
+| INFORMATION PROVIDED IN THIS DOCUMENT AND ANY SOFTWARE THAT MAY    |
+| ACCOMPANY THIS DOCUMENT (collectively referred to as an            |
+| Application Note) IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY      |
+| KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO    |
+| THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A     |
+| PARTICULAR PURPOSE. The user assumes the entire risk as to the     |
+| accuracy and the use of this Application Note. This Application    |
+| Note may be copied and distributed subject to the following        |
+| conditions: 1) All text must be copied without modification and    |
+| all pages must be included; 2) If software is included, all files  |
+| on the disk(s) must be copied without modification (the DOS        |
+| utility DISKCOPY is appropriate for this purpose); 3) All          |
+| components of this Application Note must be distributed together;  |
+| and 4) This Application Note may not be distributed for profit.    |
+|                                                                    |
+| Copyright 1990 Microsoft Corporation. All Rights Reserved.         |
+| Microsoft and the Microsoft logo are registered trademarks of      |
+| Microsoft Corporation.                                             |
+ --------------------------------------------------------------------
+
+The Microsoft Diagnostics (MSD) utility is designed to assist
+Microsoft customers and Product Support Services (PSS) technicians in
+identifying system configuration information such as the BIOS and
+video card type and manufacturer, processor(s) installed, I/O port
+status, operating system version, environment settings, hardware
+devices attached, and additional software running concurrently with
+MSD. This utility is used when Microsoft PSS needs information to
+diagnose and solve problems with Microsoft products.
+
+
+INSTALLATION
+============
+
+Hard Disk System
+----------------
+
+To install MSD on a hard disk system, do the following:
+
+1. Place the enclosed disk in drive A.
+
+2. At the DOS prompt, type the following and press the ENTER key
+
+      copy a:\msd.exe <pathname>
+
+   where <pathname> is the location of your root directory. For
+   example, type the following and press the ENTER key:
+
+      copy a:\msd.exe c:\
+
+Dual Floppy Disk System
+-----------------------
+
+To install MSD on a dual floppy disk system, do the following:
+
+1. Place your DOS boot disk (system disk) in drive A and the enclosed
+   Microsoft Diagnostics (MSD) Utility disk in drive B.
+
+2. At the DOS prompt, type the following and press the ENTER key:
+
+      copy b:\msd.exe a:
+
+
+USING THE MICROSOFT DIAGNOSTICS UTILITY
+=======================================
+
+The MSD utility (MSD.EXE) runs in DOS and in a Windows DOS Box. To
+start MSD, do the following:
+
+1. At the DOS prompt, change to the root directory (where you
+   installed MSD.EXE).
+
+2. Type "msd" (without the quotation marks) and press the ENTER key.
+   (For monochrome, black-and-white, and LCD screens, type "msd /b"
+   and press ENTER.)
+
+3. The program presents an introduction screen. To continue, press any
+   key.
+
+MSD then presents a Main Menu screen split into two sections. The
+upper section presents a summary of information that the utility has
+gathered from your system. For additional information on any category,
+move the highlight bar (using the arrow keys) to any category and
+press the ENTER key. A dialog box appears that presents detailed
+information for that category. You can quickly choose any category by
+pressing the ALT key and the highlighted letter corresponding to the
+category you want. Return to the Main Menu screen by pressing the ESC
+key.
+
+The following is a brief explanation of the categories in the first
+section:
+
+     Category           Description
+     --------           -----------
+     
+     BIOS               Displays the BIOS manufacturer, date, version,
+                        and type
+     
+     Processor          Displays the processor type and math
+                        coprocessor, if installed
+     
+     Memory             Displays a map of physical memory from 768K to
+                        1 MB and information concerning the
+                        configuration of RAM and ROM in your computer
+                        system
+     
+     Video              Shows your video card's manufacturer and
+                        model, BIOS version, memory, and current video
+                        mode
+     
+     Network            Detects whether a network is MS-NET or
+                        compatible, or Novell
+     
+     Mouse              Shows the DOS mouse driver version number,
+                        mouse type, and other information concerning
+                        the mouse
+     
+     Game Adapter       Dynamically displays game card status for up
+                        to two game devices or joysticks
+     
+     CD-ROM             Displays the Microsoft CD-ROM Extensions
+                        (MSCDEX.EXE) version number and drive letter
+     
+     Operating System   Displays the operating system version number
+                        and path from which MSD was run
+     
+     Parallel Ports     Dynamically displays the status of installed
+                        parallel ports and their port addresses
+     
+     Serial Ports       Dynamically displays the status of active
+                        serial ports and their current configurations
+     
+     Disk Drives        Scans all local and logical drives and
+                        displays the total and available bytes
+     
+     IRQ Status         Shows the current hardware interrupt, IRQ,
+                        status
+     
+     Environment        Displays environment variables
+     
+     AUTOEXEC.BAT       Lists the AUTOEXEC.BAT file
+     
+     CONFIG.SYS         Lists the CONFIG.SYS file
+
+The lower section of the MSD screen includes additional functions you
+can use with your system, as follows:
+
+     Function           Description
+     --------           -----------
+     
+     Resident Programs  Displays the names of programs loaded in RAM
+                        at the time MSD was executed, their locations,
+                        and their sizes; programs may be loaded into
+                        multiple segments of RAM and have multiple
+                        entries in the table
+     
+     Device Table       Displays software and hardware device drivers
+                        installed; these include default devices, such
+                        as COM1 or LPT1, and user-installed devices
+                        loaded from the CONFIG.SYS file, such as
+                        HIMEM.SYS or EMM386.SYS
+     
+     Printer Test       Prints a page to test the connection between
+                        the computer and either a TTY or PostScript-
+                        type printer
+     
+     Generate Report    Prints a "faxable" report to a normal TTY
+                        printer or to a file
+     
+     File Viewer        Views text files by entering the path and
+                        filename
+     
+     Memory Browser     Searches selected ROM and RAM areas for search
+                        strings such as "Copyright" and "Version"
+     
+     About              Displays MSD version number and copyright
+                        information
+     
+     Exit               Exits MSD
+
+
+USES FOR THE MICROSOFT DIAGNOSTICS UTILITY
+==========================================
+
+The Microsoft Diagnostics utility is designed to be used in one of
+three ways:
+
+1. Over the telephone, you can report the information MSD displays to
+   the Microsoft PSS technician assisting you in solving the problem
+   you are experiencing.
+
+2. You can fax or mail Microsoft PSS a report generated by MSD. The
+   Generate Reports feature will print the information to any TTY
+   printer. Be sure to send the report to the attention of the
+   technician assisting you.
+
+   The mailing address is below. Microsoft's fax number is
+   (206) 883-8101. Include the following attention line on the fax
+   cover sheet:
+   
+      ATTN: PSS, <technician's name, building, group>
+
+3. You can send us a report file generated by MSD. The Generate
+   Reports feature will print a configuration report to a file. You
+   can copy this file to a floppy disk and send it to the technician
+   helping you or send the file electronically by modem.
+
+   Microsoft's mailing address is as follows:
+      
+      ATTN: Product Support Services
+      <Technician's name, building, group>
+      Microsoft Corp.
+      One Microsoft Way
+      Redmond, WA 98052-6399
