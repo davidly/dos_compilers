@@ -1,0 +1,139 @@
+=,1,7,4,11,1,14,1
+0,0,17,79,0,Compatibility Issues,F
+
+As   you  will  see  from  the  BetterBASIC  tutorial,  we  have  designed
+BetterBASIC to provide  a  whole  new  range  of  structured  and  modular
+programming concepts ON TOP OF a Microsoft-like root level.
+
+The question is now: How compatible is BetterBASIC, and what are the major
+differences ?
+
+Some of the incompatibilities arise from the structure of BetterBASIC
+itself, other are caused by BetterBASIC offering very much "cleaner"
+solutions to some of Microsoft BASIC's "kludgy" mechanisms.
+
+
+!		      Here are the major differemces:
+
+%
+==
+0,0,23,79,0,,C
+=,7,1,14,7,1,14,0
+0,0,15,60,0,String Size Declarations,F
+
+In  Microsoft  BASIC,  if  a  string  is assigned a value
+longer than its current size, the old  storage  space  is
+discarded and a new space allocated for that string.
+
+In  BetterBASIC  strings  are of fixed size and cannot be
+assigned values beyond the declared size.  You must think
+ahead and plan the size of text string varaibles.
+
+%
+2,4,17,64,0,The DEF FN Statement,F
+
+BetterBASIC  supports  TRUE  named  Functions,  with  any
+number of arguments  and  Local  Variables.   BetterBASIC
+Functions can contain any number of lines of code.
+
+			 - and -
+
+!	 BetterBASIC functions can be RECURSIVE
+
+This  capability  is far superior to the one-liner DEF FN
+statement in Microsoft BASIC.
+%
+4,8,19,68,0,GET - PUT - MKI$ - CVI -FIELD etc.,F
+
+These statements are not supported in BetterBASIC.
+
+Instead,  BetterBASIC  provides  very  much easier to use
+data types and statements to  achieve  the  same  result.
+BetterBASIC   allows  you  to  define  structured  RECORD
+Variables, with properly named FIELDS.
+
+RECORD  Variables (and other data types, for that matter)
+can be read from and written to disk using  BetterBASIC's
+'READ RECORD' and 'WRITE RECORD' statements.
+
+%
+6,12,21,72,0,Other Differences,F
+
+!			  DATA
+BetterBASIC requires quotes around strings.
+
+!			DEFtype
+
+Use BetterBASIC's INTEGER, REAL, STRING declarations.
+
+!		 BLOAD, BSAVE, DEF USR
+
+Use  BetterBASIC's  CODE  command  which  provides a much
+simpler  way  to  load   and   call   Assembly   Language
+procedures.
+%
+8,16,23,76,0,Other Differences,F
+
+!			  DRAW
+The A, T and X commands are not supported.
+
+!		      FOR ... NEXT
+BetterBASIC  does  not  require a variable after the
+NEXT.
+!			  INPUT
+To  suppress  the  question mark which is normally issued
+you must enter a null string prompt "".   On  error,  the
+input  statement will not not be retried unless a "?"  is
+placed immediately after the INPUT keyword.
+%
+=,7,1,14,7,1,14,0
+0,0,15,60,0,Other Differences,F
+
+!			  MERGE
+Use BetterBASIC's LOAD command.
+
+!		ON COM - ON KEY - ON PLAY
+
+These   statements   vector   to   designated   INTERRUPT
+PROCEDURES instead of Line Numbers.
+
+%
+2,4,17,64,0,Other Differences,F
+
+!			  SAVE
+This command saves the program in binary format. Use LIST
+ALL to save a BetterBASIC program in ASCII format.
+
+!			 WINDOW
+The BetterBASIC WINDOW function returns the number of the
+currently active window. There is no statement which
+performs the same function as Microsoft BASIC's WINDOW
+statement.
+
+!			 SCREEN
+BetterBASIC supports only a single diplay page
+%
+4,8,19,68,0,NOT SUPPORTED,F
+
+!       The following statements are not supported:
+
+
+CDBL		CONT		CSGN
+MOTOR		PEN		STICK
+TRON		TROFF		VIEW
+
+%
+=,11,0,0,14,1,0,0
+6,10,18,66,0,,F
+
+
+====================================================
+
+We  suggest  that you use this BetterBASIC sample to
+explore  any  differences  which  may   affect   any
+programs that you wish to convert to BetterBASIC.
+
+====================================================
+#
+
+

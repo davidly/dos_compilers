@@ -1,0 +1,38 @@
+10 DEFINT A-Z
+20 DIM FLAGS(8191)
+30 PRINT "Only 1 Iteration"
+40 COUNT=0
+50 FOR I=0 TO 8190
+60 FLAGS(I)=1
+70 NEXT
+80 FOR I=0 TO 8190
+90 IF FLAGS(I) =0 THEN GOTO 170
+100 PRIME=I+I+3
+110 K=I+PRIME
+120 WHILE K <= 8190
+130 FLAGS(K)=0
+140 K=K+PRIME
+150 WEND
+160 COUNT=COUNT+1
+170 NEXT
+180 PRINT COUNT;" primes"
+
+
+INTEGER: Count,Prime,K,I
+INTEGER ARRAY(8191): Flags
+CONSTANT: Siz=8190
+   10 PRINT "Only 1 Iteration"
+   20 CLEAR(Flags,Count)
+   30 FOR I=0 TO Siz
+   40   DO IF NOT(Flags(I))
+   50     Prime=I+I+3
+   60     K=I+Prime
+   70     WHILE K <= Siz DO
+   80       Flags(K)=-1
+   90       K=K+Prime
+  100     REPEAT
+  110     Count=Count+1
+  120   END DO
+  130 NEXT
+  140 PRINT Count;" primes"
+

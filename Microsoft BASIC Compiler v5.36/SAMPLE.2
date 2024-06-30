@@ -1,0 +1,330 @@
+==
+0,0,23,79,0,,C
+=,7,1,14,12,0,1,7
+3,10,16,69,0,The BetterBASIC Tutorial,F
+
+    The BetterBASIC tutorial consists of two parts.
+
+Part  1 provides a series of descriptions of BetterBASIC
+which you should  read  the  first  time  you  use  this
+tutorial.
+
+Part  2  consists of interactive, hands-on lessons which
+let you explore some of  the  more  unique  features  of
+BetterBASIC
+
+!		Use [Esc] to skip Part 1
+%
+=,7,1,15,15,4,12,0
+0,0,20,75,0,The PASCAL Dilemma,F
+
+Finally there is an answer to the BASIC programmer's PASCAL-dilemma: To
+throw away years of experience in BASIC and learn PASCAL (or MODULA 2 or
+C), or to stay with the aging, virtually obsolete BASIC you are now
+using.  The answer is:
+			      BetterBASIC
+
+BetterBASIC,  a  revolutionary  Programming  System from Summit Software
+Technology  Inc.   has  been  specifically  designed  to   offer   BASIC
+programmers  all  of the most useful features of PASCAL, MODULA 2 and C,
+without the painful un-learning  and  re-learning  processes  associated
+with these non-interactive languages.
+
+The base-level of BetterBASIC has been carefully modeled after Microsoft
+BASIC, the de-facto industry standard of the microcomputer industry.  At
+this  level,  you  can use BetterBASIC as though you were using your old
+and primitive BASIC.
+%
+=,0,7,1,12,0,0,3
+3,4,23,79,0,BetterBASIC Solves the PASCAL Dilemma,F
+
+Now,  for  the first time, BetterBASIC offers existing BASIC programmers
+the following up-to-date programming language features:
+
+!		* RECORD and POINTER Data Types
+!		* BLOCK STRUCTURE
+!		* PROCEDURES and FUNCTIONS
+!		* ARGUMENT VALIDATION
+!		* OPTIONAL ARGUMENTS
+!		* LOCAL VARIABLES
+!		* LOCAL LINE NUMBERS
+!		* RECURSION
+!		* SEPARATELY COMPILED MODULES
+!		* LANGUAGE EXTENDABILITY (Make your own BASIC!!)
+!		* CLEAN ASSEMBLY LANGUAGE INTERFACE
+!		* BUILT-IN LINKER
+!		* BUILT-IN CROSS REFERENCE UTILITY
+%
+==
+0,0,23,79,0,,C
+=,1,7,0,7,0,14,1
+0,20,15,79,0,NEW DATA TYPES,F
+
+!    BetterBASIC supports the following Data Types:
+
+	* BYTE, INTEGER
+	* REAL, Variable Precision Decimal
+	  High Speed Binary Math,
+          or 8087 format
+	* STRING to 32767 characters in length
+	* RECORD containing FIELDS of any type
+	* N-dimensional ARRAYS of any type
+	* ARRAYS of ARRAYS
+	* POINTER of any type
+%
+=,0,7,0,12,7,15,0
+5,25,13,74,0,BYTE,F
+
+
+    Small integer in the range 0 ... 255
+
+%
+5,25,13,74,0,INTEGER,F
+
+
+   Integer in the range -32768 ... +32767
+
+%
+5,25,13,74,0,REAL,F
+
+	   Decimal Math Package:
+
+	    Number in the range
+	 0.1E-254 to 9.9999...E+253
+      From 6 to 24 digits of accuracy
+%
+5,25,13,74,0,REAL,F
+
+      High Speed Binary Math Package:
+
+      Much higher speed but less accuracy
+	than Decimal Math Package:
+
+       6-1/2 or 14 digits of precision
+%
+5,25,13,74,0,REAL,F
+
+	   8087 Math Package:
+
+       8087 format and numeric range
+
+       6-1/2 or 14 digits of precision
+%
+5,25,13,74,0,STRING,F
+
+BetterBASIC  can  handle strings up to 32767
+characters in length.  New string processing
+instructions   are   provided    for    case
+conversion,  text  insert and delete, and so
+on.
+%
+5,25,13,74,0,RECORD VARIABLES,F
+
+A  Record  Variable is a variable containing
+other variables which can  be  of  any  type
+including  even  ARRAYS,  other  RECORDS  or
+POINTERS to other Records.
+%
+5,25,13,74,0,ARRAYS,F
+
+BetterBASIC supports N-dimensional arrays of
+all data types, including arrays of records
+and arrays of arrays.
+
+%
+5,25,13,74,0,POINTERS,F
+
+BetterBASIC also provides POINTER variables.
+A  pointer  is  a  named variable of a given
+type which can be SET to point to any  other
+variable  of the same type.  Pointers are of
+great value in STRING and RECORD processing.
+
+%
+=,1,7,0,7,0,14,1
+2,15,17,74,0,BLOCK STRUCTURE,F
+
+BetterBASIC   Block   Structures   have  the  following
+properties:
+
+	* Automatic indenting of program list-
+	  ing for greatly improved readability.
+!	* Protects against use of GOTO into or
+!	  out of a Block Structure. 
+	* Each Block Structure can define an
+	  error handler.
+
+%
+4,10,19,69,0,BetterBASIC Block Structure Statements,F
+
+	* FOR ... NEXT
+	* DO n TIMES ... REPEAT {IF cond}
+	* DO ... END DO
+	* DO ... REPEAT {IF cond}
+	* DO IF cond ... END DO
+	* DO IF cond ... REPEAT {IF cond}
+	* DO UNTIL cond ... REPEAT
+	* WHILE cond DO ... REPEAT
+	* EXIT
+	* EXIT n LEVELS 
+
+%
+0,0,0,0,1,,N
+!		     Some examples:
+%
+=,0,7,0,12,7,15,0
+7,15,17,64,0,DO n TIMES,F
+
+
+  10 DO 6 TIMES
+  20   PRINT "REPEATS SIX TIMES"
+  30 REPEAT
+%
+7,15,17,64,0,DO ... REPEAT IF,F
+
+
+  10 DO
+  20   INPUT "Type a number: " X
+  30 REPEAT IF X<0
+%
+7,15,17,64,0,DO IF ... END DO,F
+
+  10 INPUT "Type a number: " X
+  20 DO IF X<0
+  30   PRINT "Illegal Value"
+  40   X=0
+  50 END DO
+%
+7,15,17,64,0,DO UNTIL,F
+
+
+  10 DO UNTIL A$<>""
+  20   A$=INKEY$
+  30 REPEAT
+%
+7,15,17,64,0,WHILE ... DO,F
+
+
+  10 WHILE X>0 AND Y<0 DO
+  20   INPUT X,Y
+  30 REPEAT
+%
+=,1,7,0,7,0,14,1
+6,5,21,64,0,PROCEDURES & FUNCTIONS,F
+
+A BetterBASIC Procedure is a complete named sub-program
+which  exists  in  its  own  private  workspace.   Each
+Procedure has its own private line  numbers  and  local
+variables.    Procedures   are   called  by  name,  and
+arguments passed to the  Procedure  are  validated  for
+type  and  quantity.   A  Procedure may access external
+(shared) variables.
+
+A BetterBASIC Function is much like a Procedure, except
+that  it  has  a  TYPE  (integer,  real  or string) and
+returns a value of that type.
+%
+8,0,23,59,0,ARGUMENT PROCESSING,F
+
+Procedures  and  Functions  generally specify arguments
+(parameters) which must be passed at the  time  of  the
+Procedure/Function  call.  In BetterBASIC arguments can
+be required or optional, with specified option values.
+
+BetterBASIC  also  allows  the  creation  of  so-called
+Procedure Families, which  share  a  single  name,  but
+which    can   have   completely   different   argument
+requirements.
+
+Procedures and Functions of the same name can coexist.
+%
+0,20,15,79,0,LOCAL VARIABLES,F
+
+Each  Procedure  and  Function has its own set of local
+(private) variables which cannot  be  accessed  by  any
+other  Procedure  or Function.  This guarantees that an
+error in  one  Procedure  cannot  cause  an  unexpected
+side-effect error in another.
+
+Procedures  and  Functions  can  also  declare EXTERNAL
+variables, a feature which allow several Procedures and
+Functions to share variables.
+
+%
+2,15,17,74,0,SEPARATELY COMPILED MODULES,F
+
+Using  BetterBASIC  you  can  create  software  Modules
+containing  useful  Procedures  and  Functions.    When
+completed  and  debugged, these Modules can be saved on
+disk for future use.   Entering  the  name  of  such  a
+Module  in a BetterBASIC Configuration File, will cause
+the  Module  to  be  loaded  into  memory  as  part  of
+BetterBASIC.   All  Procedures and Functions which were
+declared as PUBLIC within the Module become  accessible
+to any BetterBASIC program.
+
+%
+4,10,19,69,0,LANGUAGE EXTENDABILITY,F
+
+Procedures and Functions created by the user and stored
+in  a  BetterBASIC  Module  can  be  used to extend the
+BetterBASIC language.   If  your  application  programs
+call  for  repeated  use  of  a  set  of  Functions  or
+Procedures,  you  can   create   these   Functions   or
+Procedures   in   BetterBASIC  and,  using  the  Module
+concept,  make  these  Procedures   and   Functions   a
+permanent part of your BetterBASIC.
+
+With  this  capability,  OEM's  can  create  their own
+support for special  I/O  devices  such  as  graphics,
+mice, digitizers and so on.
+%
+6,5,21,64,0,ASSEMBLY LANGUAGE INTERFACE,F
+
+BetterBASIC  provides  an exceptional clean and easy to
+use  interface  to  procedures  written   in   Assembly
+Language.    Using   the  Assembly  Language  utilities
+availabale  for  your   computer   (ASM,MASM,LINK   and
+EXE2BIN),  the creation of Assembly Language procedures
+is  a  strightforward  matter.   Once   created,   such
+procedures  become  an integral part of your program or
+module.
+
+Assembly  Language  procedures are called by name, and
+arguments passed to the procedures are  validated  for
+type and quantity.
+%
+8,0,23,59,0,BUILT-IN UTILITIES,F
+
+
+BetterBASIC includes the following built-in utility
+programs:
+
+		1. Screen editor
+
+		2. Module Linker
+
+		3. Cross Reference Lister.
+%
+0,0,23,79,0,The BetterBASIC Tutorial,F
+
+To  illustrate  some  of  the new features of BetterBASIC, Summit Software
+Technology has designed  the  following  simple  tutorial.   The  tutorial
+consists of a number of lessons which will be displayed in a Lesson Window
+at  the  right hand side of the display screen.  The left hand side of the
+display is a Work-Area Window where you are free to use BetterBASIC in the
+normal way.  We suggest that you try each of  the  examples  given  before
+continuing with the next lesson.
+
+		The PC's function keys are used as follows:
+
+	   	    F1 : Display the NEXT lesson
+
+		    F2 : Display the PREVIOUS lesson
+
+		    F10: Exit the tutor
+
+!In  the  future  you  may  use  the  [Esc]  key  to  skip these introductory
+!explanations and go directly to the lessons.
+#
+

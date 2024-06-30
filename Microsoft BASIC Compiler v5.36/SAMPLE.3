@@ -1,0 +1,396 @@
+.1
+This window will show examples of
+BetterBASIC features which are not
+available in any BASIC which you may
+be used to.
+
+Please try each program example on
+the computer by entering the sample
+program as shown.  Use LIST and EDIT
+to display and change your program,
+and NEW or SCRATCH to delete an
+existing program from memory.
+
+
+
+!  Strike F1 for the first lesson.
+
+%
+.2
+First let us explore some of the
+BetterBASIC Block Structures and the
+properties of Block Structures.
+
+Enter the following program:
+
+!  10 FOR X=1 TO 16
+!  20 PRINT BIN$(X),HEX$(X)
+!  30 GOTO 10
+!  40 NEXT
+
+Use the LIST command to list the
+program.  Note the automatic
+indentation.  Try the RUN command.
+You will see that BetterBASIC will
+not execute programs with GOTO's
+into or out of a Block Structure.
+
+Use 'DELETE 30' to remove the
+offending line.
+
+!	    Now try RUN
+%
+.3
+You will have noted that BetterBASIC
+lists the variables used and their
+type at the head of the program.  As
+your program grows in size, you will
+find this a very useful overview of
+the variables you are using in a
+program.
+
+This listing will contain the names
+and types of only those variables
+actually referenced in the program.
+Variables which have been declared
+but not referenced will not be
+listed.
+
+To list the program without the data
+declarations use the command 'LIST-'
+
+BetterBASIC has a built-in Cross
+Reference Lister.  Try the command
+'XREF' which will list all lines in
+which each variable is used.
+%
+.4
+Let  us modify our program by adding
+the following program lines:
+
+!   5 DO 3 TIMES
+!  50 REPEAT
+
+List the program, it should now look
+like this:
+
+!   5 DO 3 TIMES
+!  10   FOR X=1 TO 16
+!  20     PRINT BIN$(X),HEX$(X)
+!  40   NEXT
+!  50 REPEAT
+
+Note that nested Block Structures
+are indented multiple levels.  This
+greatly enhances the readability of
+block structured programs.
+
+!  Use RUN to execute the program.
+
+%
+.5
+Next let us create a BetterBASIC
+Procedure to beep the PC's speaker.
+Let us call this procedure 'Bell'.
+Create a WORKSPACE for this
+procedure by typing the Declaration:
+
+!  PROCEDURE: Bell
+
+Observe what happens.  The status-
+line at the bottom of the screen
+informs us that we are now inside
+procedure Bell's workspace.
+
+Try the 'LIST' command.  Nothing is
+listed!!  What happened to our
+program?  It is still there, but in
+its own workspace called MAIN.  The
+display and keyboard is now attached
+to Bell's workspace which is empty.
+Commands like EDIT and LIST always
+operate in the current workspace.
+%
+.6
+Enter the following program line:
+
+!  10 PRINT CHR$(7);
+
+ASCII character 7 is the BELL
+character.  When output to the
+screen this character beeps the PC's
+speaker.
+
+Note  that  we  used  line number 10
+even though we already had a line 10
+in the MAIN program.  Each Procedure
+(and Function) workspace has its own
+set of line numbers.  Return to  the
+MAIN  program's workspace by issuing
+the command:
+
+!  MAIN
+
+Use  the  LIST  command  to  satisfy
+yourself that we are now in the MAIN
+program's workspace.
+%
+.7
+Add the following statement to the
+MAIN program:
+
+!  8 Bell
+
+Note that the BetterBASIC compiler
+accepts the word 'Bell' as though
+this was a normal BetterBASIC
+keyword. LIST your program, it
+should look like this:
+
+!   5 DO 3 TIMES
+!   8   Bell
+!  10   FOR X=1 TO 16
+!  20     PRINT BIN$(X),HEX$(X)
+!  40   NEXT
+!  50 REPEAT
+
+Note that we called Bell by just
+using its name (no CALL is used).
+
+!Use RUN to execute the program.
+%
+.8
+Procedures are, of course, rarely as
+simple as the one-liner we just
+created.  In general, Procedures
+consist of many program lines (as
+many as you need), and also in
+general require parameters or
+ARGUMENTS to be passed along as
+information to the procedure.
+
+Let us design a Procedure to print
+an asterisk a given number of
+positions from the left hand side of
+the screen.  First declare the
+procedure:
+
+!  PROCEDURE: Plot
+
+Observe that the Status Line changes
+to indicate the new workspace.
+%
+.9
+We wish to pass a parameter to Plot
+which gives the position of the
+asterisk. We declare this parameter
+as follows:
+
+!  INT ARG: X
+
+This declaration does two separate
+jobs. It informs the BetterBASIC
+compiler that an integer number is
+required as an argument when Plot is
+called, and it also gives the Plot
+Procedure a means of accessing the
+actual value passed as the value of
+'X'. Now enter Plot's program:
+
+!  10 DO X TIMES
+!  20   PRINT " ";
+!  30 REPEAT
+!  40 PRINT "*"
+
+!Use the command MAIN to exit Plot.
+%
+.10
+Now modify the MAIN program by
+entering the program line:
+
+!  20 Plot X
+
+Use LIST to verify that your program
+now is as follows:
+
+!   5 DO 3 TIMES
+!   8   Bell
+!  10   FOR X=1 TO 16
+!  20     Plot X
+!  40   NEXT
+!  50 REPEAT
+
+Use RUN to execute the program. Does
+the program do what you expected ?
+
+!See how we use the Procedure Plot in
+!exactly the same way that we use
+!ordinary BetterBASIC keywords.
+%
+.11
+!       BetterBASIC FUNCTIONS
+
+BetterBASIC Functions are created in
+much the same way as Procedures.
+Procedures perform actions;
+Functions may perform actions, but
+always return as VALUE.
+
+BetterBASIC supports three types of
+Function:
+
+!         INTEGER Function
+!	   REAL Function
+!	  STRING Function
+
+Like Procedures, Functions can be
+very simple, or arbitrarily complex.
+Like Procedures, Functions can
+specify from none to many ARGUMENTS
+which must be passed when using the
+Function.
+%
+.12
+Let us create a simple Function
+named Double, which simply returns a
+value which is the argument
+multiplied by 2.  Let us also assume
+that we wish to report an error if
+the argument is negative. First
+declare the Function:
+
+!  REAL FUNCTION: Double
+
+This creates a workspace for the
+Function (Check the Status Line).
+The program for this function is:
+
+!  REAL ARG:X
+!  10 IF X<0 THEN ERROR 555
+!  20 RESULT=X*2
+
+Note that the LAST statement is the
+RESULT statement. This is a
+requirement in Functions.
+!Use MAIN to exit from Double.
+%
+.13
+First try some immediate mode
+statements:
+
+!  PRINT Double(12.33)
+!  PRINT Double(.023)
+!  PRINT Double(1+Double(23.7))
+
+As  you  can see, function calls can
+be nested.  Try the following:
+
+!  PRINT Double(1-1.23)
+
+Note the way BetterBASIC notifies
+you of errors. Not only do you get
+an error code and a line number,
+BetterBASIC also informs you of the
+origin of the error.
+
+This is important. Without this
+information it would be difficult to
+locate the source of the error.
+%
+.14
+Next modify the MAIN program as
+follows:
+
+!  20 Plot Double(X)
+
+Again, the BetterBASIC compiler
+accepts 'Double' as though it was a
+standard BetterBASIC function.
+
+The program should now LIST like
+this:
+
+!   5 DO 3 TIMES
+!   8   Bell
+!  10   FOR X=1 TO 16
+!  20     Plot Double(X)
+!  40   NEXT
+!  50 REPEAT
+
+!	 RUN the program.
+%
+.15
+!	  Program Listing.
+
+So far, we have listed each
+individual program workspace using
+the LIST command. To list all
+workspaces we use the following
+command:
+
+!  LIST ALL
+
+Try it. See how all the procedures
+and functions are listed. To list
+just the names of the workspaces you
+can use:
+
+!  LIST PROCS
+
+Here, the word 'PROCS' refers to
+both Procedures and Functions
+%
+.16
+Next we will show you how to create
+a BetterBASIC MODULE.  To create
+such a Module, a BetterBASIC program
+which has been created interactively
+must first be saved and re-compiled
+to allow the compiler to pass
+necessary information to the Module
+Linker.
+
+!	  Saving Programs
+
+This sample version of BetterBASIC
+does not allow programs to be SAVEd
+to disk.
+
+%
+.17
+You can, however use the 'LIST ALL'
+command to save a listing of your
+program, which can be recompiled
+using the 'LOAD' command.
+
+Issue the following command:
+
+!  LIST ALL "foo"
+
+Now   clear  memory  by  typing  the
+following command: (The screen will
+blank, and after a few seconds you
+will be back to this lesson!!).
+
+! SCRATCH
+
+%
+.18
+We hope that these lessons have
+given you an idea of the power and
+flexibility of BetterBASIC.  At this
+time you should probably print out
+the manual which came on your sample
+disk.  It's the file called READ.ME. 
+This manual will explain further
+about how to combine procedures and
+functions like the ones you just
+created into Modules.  Also you can
+read about the different data types
+such as Record Variables which can
+be used for random file I/O.
+
+!    HAPPY PROGRAMMING......
+%
+#
+
