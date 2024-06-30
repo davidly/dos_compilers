@@ -1,0 +1,15 @@
+MODULE OVERLAY1;
+
+VAR
+  I : EXTERNAL INTEGER; (* LOCATED IN THE ROOT *)
+  
+PROCEDURE OVL1; (* ONE OF POSSIBLY MANY PROCEDURES IN THIS MODULE *)
+BEGIN
+  WRITELN('In overlay area 1, Overlay number =',I)
+END;
+
+MODEND.
+
+
+
+

@@ -1,0 +1,120 @@
+(* AS OF 03/12/82 *)
+(* This program ia a sample PASCAL MT+86 program. It makes your  *)
+(* computed function as a pocket calculator. To use this program  *) 
+(* simply compile it, link it with TRANCEND.R86, FPREALS.R86 and  *)
+(* PASLIB.  The compiler control command is: *)
+(*    MT+86 CALC *)
+(* The linker command is: *)
+(*    LINKMT CALC,TRANCEND,FPREALS,PASLIB/S *)
+(* To execute enter: *)
+(*    CALC  *)
+ 
+ 
+
+PROGRAM CALCULATE;
+
+CONST
+  RCONST = -2.5;
+  RCONST1= 65535.5;
+
+VAR R1,R2,TEMP:REAL;
+    X : ARRAY [1..2] OF REAL;
+    CH1,OP:CHAR;
+
+
+
+FUNCTION SUBREAL(R1,R2:REAL) : REAL;
+
+BEGIN
+  SUBREAL := R1 - R2
+END;
+
+
+
+PROCEDURE ADDREAL(VAR R1:REAL; R2:REAL);
+BEGIN
+  R1 := R1  +  R2
+END;
+
+PROCEDURE TF(B:BOOLEAN);
+BEGIN
+  IF B THEN
+    WRITELN('TRUE')
+  ELSE
+    WRITELN('FALSE')
+END;
+
+PROCEDURE CALC;
+BEGIN
+    CASE OP OF
+      'S': WRITELN(SIN(R1));
+      'C': WRITELN(COS(R1));
+      'A': WRITELN(ARCTAN(R1));
+      'L': WRITELN(LN(R1));
+      'E': WRITELN(EXP(R1));  
+      '+': BEGIN ADDREAL(X[1],X[2]); WRITELN(X[1]:10:4) END;
+      '-': WRITELN(SUBREAL(X[1],X[2]):10:2);
+      '*': WRITELN(R1 * R2);
+      '/': WRITELN(R1 / R2);
+      'M': WRITELN(-R1);
+      '=': TF(R1 = R2);
+      'N': TF(R1 <> R2);
+      '$': WRITELN(SQRT(R1):10:3,SQRT(R2):10:3);
+      '<': TF(R1 < R2);
+      '>': TF(R1 > R2);
+      'Z': TF(R1 <= R2);
+      'G': TF(R1 >=R2);
+      '1': WRITELN(SQR(R1),' ',SQR(R2));
+      '2': WRITELN(R1 + 1);
+      '3': WRITELN(1+R1);
+      '4': WRITELN(TRUNC(R1));
+      '5': WRITELN(ROUND(R1));
+      '6': WRITELN(RCONST);
+      '7': WRITELN(RCONST1);
+      '8': BEGIN R1 := -2.234; X[1] := 3.456; WRITELN(R1,' ',X[1]); END;
+
+    END;
+END; (* CALCULATOR *)
+
+PROCEDURE MENU;
+BEGIN
+      WRITE('S:SIN   ');
+      WRITE('C:COS   ');
+      WRITE('A:ARCTAN   ');
+      WRITE('L:LN   ');
+      WRITE('E:EXP   ');
+      WRITE('1:SQR   ');
+      WRITELN('$:SQRT  ');
+      WRITELN('+, -, *, / ARITHMETIC OPERATORS');
+      WRITELN('M:NEGATE');
+      WRITE('= : EQUAL   ');
+      WRITELN('N : NOT EQUAL');
+      WRITE('<:LESS THAN   ');
+      WRITELN('>:GREATER THAN ');
+      WRITELN('Z:LESS THAN OR EQUAL TO');
+      WRITELN('G:GREATER THAN OR EQUAL TO');
+      WRITE('4:TRUNC   ');
+      WRITELN('5:ROUND');
+END;
+
+BEGIN (* MAIN PROGRAM *)
+  REPEAT
+    WRITE('ENTER FIRST OPERAND? ');
+    READ(R1);
+    X[1] := R1;
+    WRITELN('R1=',R1); WRITELN;
+    WRITE('ENTER SECOND OPERAND? ');
+    READ(R2);
+    X[2] := R2;
+    WRITELN('R2=',R2); WRITELN;
+    WRITELN('ENTER OPERATOR:');
+    MENU;
+    WRITE('? ');
+    READ(OP);
+    WRITELN;
+    CALC;
+    WRITELN('Type <ESCAPE> to stop. Any other characer to repeat.');
+    READ(CH1);
+  UNTIL CH1 = CHR(27)
+END.
+

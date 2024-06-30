@@ -1,0 +1,859 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    ****************************
+                    * R E L E A S E  N O T E S *
+                    ****************************
+
+
+                      Pascal/MT+  Version 3.1.1
+
+
+                    For The IBM Personal Computer
+                  Disk Operating System Version 1.1
+
+
+               Copyright (c) 1983 by Digital Research
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+
+        These release notes pertain to both the software  and
+        the   documentation  set  for  the  Digital  Research
+        product:
+
+
+                             Pascal/MT+
+
+                    For the IBM Personal Computer
+
+             Disk Operating System Version 1.1 (IBMDOS)
+
+
+        They provide the most current information regarding:
+
+           o changes to the software, or bugs that have  been
+             identified since the product was released.
+
+           o errors or omissions  in  the  documentation  set
+             that  could not be corrected because of the lead
+             time needed for production and printing.
+
+
+
+        Note:  These release notes  have  been  formatted  so
+        that you can print them on your own printer, cut them
+        to size (6 1/2 x 8 1/2), and then place them  in  the
+        back of your manuals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1-2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                        RUNNING UNDER IBMDOS
+
+
+        Under IBMDOS, the space available for  the  transient
+        program  area  is  not as large as under CP/M-86.  If
+        your system has a total memory size of 150K or  less,
+        the  compiler  will  have a smaller symbol table, and
+        the linker will have both a smaller symbol table  and
+        code buffer.  Both programs have messages that inform
+        you of the size of their respective tables. No  other
+        programs are affected.
+
+
+        Note: Under IBMDOS, the utility programs NM and SZ do
+        not accept ambiguous filenames as they do under CP/M-
+        86.  Only one name is allowed, and it must be unique.
+        For example,
+
+          FPREALS.R86 is valid
+          FPREALS.*   is invalid
+             ????.R86 is invalid
+
+
+             SOFTWARE CHANGES FROM THE PREVIOUS VERSION
+
+
+        There are four new functions in the run-time library,
+        PASLIB:  @SETDATE,  @SETTIME, @GETDATE, AND @GETTIME.
+        These functions set and access the  system  date  and
+        time. The  SET  functions  return  a  completion code
+        exactly as it is set  by  IBMDOS.   Please  see  your
+        systems  manual  for  return  code  values  and legal
+        values for each parameter.
+
+        To use these functions, declare each as  an  EXTERNAL
+        PROCEDURE with the following syntax:
+
+          @GETTIME(HOUR,MINUTE,SECOND,HUND : INTEGER);
+          @GETDATE(MONTH,DAY,YEAR : INTEGER);
+          @SETTIME(HOUR,MINUTE,SECOND,HUND : INTEGER) : INTEGER;
+          @SETDATE(MONTH,DAY,YEAR : INTEGER) : INTEGER;
+
+
+                                1-3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                            SOFTWARE BUGS
+
+
+
+        The following software bugs have been  identified  in
+        the current release (3.1.1):
+
+
+           o There are errors in allocating array bounds  for
+             conformant  arrays  of  two  or more dimensions.
+             One-dimensional    conformant    arrays     work
+             correctly.
+
+             Solution: There is  no  fix  available  at  this
+             time.  Work is in progress, and the problem will
+             be fixed by the next release.
+
+           o Sometimes,   expressions   used   as   procedure
+             parameters  do  not result in the correct values
+             being passed to the procedure.
+
+             Solution:  First  assign  the   value   of   the
+             expression  to  a  variable,  and  then pass the
+             variable to the procedure.
+
+           o When using the OUT function, the port number and
+             the value are inadvertently swapped.
+
+             Solution: Use OUT as follows:
+
+                    OUT[(value to put out)] := PORT number
+
+           o After the compiler reports  a  syntax  error  it
+             asks   if   you   want  to  continue  or  abort.
+             Occasionally, attempting to continue  will  hang
+             the system and require a reboot.
+
+             Solution: If  this  error  occurs,  correct  the
+             reported   syntax  error  before  attempting  to
+             recompile. This error will be corrected  in  the
+             next release.
+
+
+                                1-4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+
+           o Some  users  have  reported  an  incompatibality
+             between  some  CP/M-86  implementations  and the
+             IBMDOS version.  IBMDOS V1.1 does not  interpret
+             ANSI  standard  escape  sequences. Consequently,
+             programs that attempt  to  handle  displays  via
+             escape  sequences  for  cursor  control will not
+             execute properly.
+
+             Solution: There is  no  fix  available  at  this
+             time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1-5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                        DOCUMENTATION ERRATA
+
+
+
+        The following are errors in the  Pascal/MT+  Language
+        Reference Manual (February 1983 edition):
+
+
+        Page 3-3.   Change WORD(x) to WRD(x)
+
+        Page 6-2.   Change the third paragraph to read:
+
+                    "The data type for a function must  be  a
+                    simple  type.  Put  the type name after a
+                    colon at the end of the function heading.
+
+        Page 6-8.   In Table 6-1, change the Returns type for
+                    the  Function  ABS  from REAL to "same as
+                    NUM".
+
+        Page 6-10.  In Table 6-1, the Function @HERR  returns
+                    a BOOLEAN type, and the the Function ADDR
+                    returns a POINTER not  an  INTEGER  type.
+                    Also  change  FUNCTION  @RLS to PROCEDURE
+                    @RLS.
+
+        Page 6-12.  Change the first sentence in  the  second
+                    paragraph to read:
+
+                    "You can use ADDR to  reference  external
+                    variables."
+
+        Page 6-13.  Change the example to ARCTAN(1) = 0.78539
+
+        Page 6-19.  Change the first sentence in  the  second
+                    paragraph to read:
+
+                    "CLOSEDEL closes and deletes files  after
+                    use."  In the last paragraph, change File
+                    Control Blocks (FCBs) to File Information
+                    Blocks (FIBs).
+
+
+                                1-6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+
+        Page 6-68.  Change the fifth paragraph to read:
+
+                    "WRITE  and  WRITELN  treat  strings   as
+                    arrays  of characters.  They do not write
+                    the length byte to TEXT files."
+
+        Page 7-2.  In the second paragraph, change F2  to  F3
+                    in:
+
+                        F2^ := 45;
+
+                    puts the integer value 45 in  the  buffer
+                    of the file variable F2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1-7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+        The  following   are   errors   in   the   Pascal/MT+
+        Programmer's Guide for the IBM Personal Computer Disk
+        Operating System (April 1983 edition):
+
+
+        Page 1-5.   Delete the following files from Table  1-
+                    2.  They  are  NOT  distributed  with the
+                    product:
+
+                      o CONCAT.EXE
+                      o 8087.I86
+                      o 87XOP.I86
+                      o 87TRS.I86
+                      o 87REALS.BLD
+
+        Page 1-6.   The second paragraph states you  can  use
+                    the  distribution disks just as they are.
+                    This  is  not  true;  they   are   write-
+                    protected.   You   must  copy  them  onto
+                    backup disks.
+
+        Page 2-3.  Change the first paragraph to read:
+
+                    "During Phase 0, When the compiler  finds
+                    a  syntax  error,  it  displays  the line
+                    containing the error.  If you  are  using
+                    the  MTERRS.TXT  file,  the compiler also
+                    displays an error  description.   In  all
+                    other  Phases,  if  you are not using the
+                    MTERRS.TXT file, or you have a  nonsyntax
+                    error,  the  compiler  displays  the line
+                    number  and   an   error   identification
+                    number."
+
+        Page 2-15.  Table  2-5   is   incomplete.   Add   the
+                    following Linker error messages:
+
+                    Unable to open input file: xxxxxxxx
+
+                    Explanation: The linker cannot  find  the
+                    specified input file.
+
+
+                                1-8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+
+                    Incompatible relocatable file format
+
+                    Explanation:  Either  the  R86  file   is
+                    corrupted  or  it  has  a  format that is
+                    incompatible with the format expected  by
+                    LINK/MT+86.
+
+                    Initialization of DSEG not allowed
+
+                    Explanation: The linker has encountered a
+                    DB or DW instruction in the Data segment.
+
+                    Undefined symbol: xxxxxxxxx
+
+                    Explanation:  The  specified  symbol   is
+                    referenced but not defined in the module.
+
+        Page 3-8.   The  explanation  of  the  /O  option  is
+                    incorrect.  Change as follows:
+
+                    "/O:n tells the linker that the  previous
+                    file  is  a  SYM  file  and that n is the
+                    overlay number, in hexadecimal.  You must
+                    specify  the  overlay filename and number
+                    in the link command line.  This option is
+                    for overlays only."
+
+        Page 3-10.  Change the command line  for  linking  an
+                    overlay to:
+
+        LINKMT <prog.00n>=<sym file>/O:,<modules|libraries>/P:mmmm/X:ssss
+
+
+        Page 3-11.  Change section 3.2.5  to  3.2.6.   Insert
+                    section 3.2.5 as follows:
+
+                    3.2.5  Overlay Symbol Table
+
+                    LINKMT creates a symbol table at the  end
+                    of  the  code  segment  for  each overlay
+
+
+                                1-9
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                    module.  This symbol table  can  be  very
+                    large because it includes all the symbols
+                    in the overlay and  the  root.   However,
+                    not  all  the entries in the symbol table
+                    are required by the overlay.  The overlay
+                    requires  only  those entries called from
+                    the root or another overlay.   Therefore,
+                    after  linking  each  overlay module, you
+                    should use the STRIP  utility  to  reduce
+                    the size of the symbol table.
+
+                    Note: LINKMT provides  the  size  of  the
+                    code  segment  which does not include the
+                    symbol table for overlay modules.   Thus,
+                    the  total  code  size  required  for  an
+                    overlay module will be much  larger  than
+                    the  size  given  by LINKMT if you do not
+                    use STRIP.
+
+                    To use STRIP, enter the command
+
+                       A>strip
+
+
+                    Once invoked, STRIP asks for the name  of
+                    the  file  to  strip, the location of the
+                    symbol table (the same number  used  with
+                    the   P   parameter  when  you  link  the
+                    overlay), and  the  name  of  each  entry
+                    point  you  want  to retain in the symbol
+                    table.  You must enter the  entry  points
+                    in reverse order of their declaration.
+
+                    STRIP searches the symbol table  for  the
+                    first  entry point and deletes all others
+                    it encounters until it finds the  correct
+                    one.  STRIP  then  requests another entry
+                    point and continues.  When the  last  one
+                    is  found,  you enter a dummy entry point
+                    such as ZZZ and then STRIP  continues  to
+                    delete  the  other entries until it finds
+
+
+                                1-10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                    the end to the table.
+
+                    After  deleting  all  the  unused   entry
+                    points,  STRIP  lists the remaining entry
+                    points and asks if it should replace  the
+                    original   version   with   the  stripped
+                    version.  You must answer with  "YESDOIT"
+                    to   replace   the  original.  Any  other
+                    response terminates STRIP  and  does  not
+                    change the original.
+
+
+        Page 3-13.  The example  command  lines  for  linking
+                    overlays  1  and  2  are incorrect.  They
+                    should be:
+
+        A>LINKMT DEMOPROG.001=DEMOPROG/O.1,MOD1,PASLIB,/S/P:4000/L
+
+        A>LINKMT DEMOPROG.002=DEMOPROG/O.2,MOD2,PASLIB,/S/P:4000/L
+
+
+        Page 3-14.  Insert the following before paragraph 6:
+
+                    "To chain from one EXE file  to  another,
+                    you must perform the following steps:
+
+                      1) Using the linker, determine the code
+                         size of the largest program you want
+                         to chain to.
+
+                      2) Round the value of the code size  to
+                         the  nearest  multiple  of 512 bytes
+                         (200H), and then add 512 bytes.
+
+                      3) Use this new value for the code size
+                         of the root program, unless the root
+                         is already larger.
+
+        Page 3-14.  Add  the   following   to   paragraph   6
+                    concerning shared variables:
+
+
+
+                                1-11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                    "You must also rewrite the initialization
+                    routine  in  PASLIB  because it zeros out
+                    the  data  area.   Change  @INI3.I86   to
+                    reflect the size of the common area.  For
+                    example,
+
+                      SUB CX, 100H + common area size
+                      MOV DI, 100H +    "     "   "
+
+
+        Page 4-7.  Delete the third paragraph, and insert the
+                    following:
+
+                    "Floating-point real numbers are returned
+                    in the DX, CX, BX, and AX registers.  BCD
+                    reals are returned in DI, DX, CX, BX, and
+                    AX.  The  high-order  byte  is  in DX (or
+                    DI), and the low-order is always in AX."
+
+        Page 4-14.  In the paragraph under  Listing  4-6  add
+                    the sentence:
+
+                    "An  extra  eight  bytes   of   code   is
+                    generated  here,  but the amount can vary
+                    depending  on  the  number  and  type  of
+                    parameters.   There   is   no   empirical
+                    formula   for   determining   the   extra
+                    amount."
+
+        Page 4-18.  Add the following to the  explanation  of
+                    MEMAVAIL:
+
+                    "FULLHEAP.R86 has been extended  to  make
+                    available up to 1 megabyte of heap space.
+                    MEMAVAIL and MAXAVAIL both return INTEGER
+                    values, so if you are using more than 32K
+                    of heap space, you must declare  them  as
+                    follows:
+
+
+
+
+
+                                1-12
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Pascal/MT+                              Release Notes
+
+
+                      EXTERNAL FUNCTION LMEMAVAIL : LONGINT;
+                      EXTERNAL FUNCTION LMAXAVAIL : LONGINT;
+
+                    These functions are both in PASLIB.
+
+        Page 5-1.   The first paragraph in Section 5.1 refers
+                    to  the  Intel  publication named "MCS-86
+                    Macro   Assembly    Language    Reference
+                    Manual."   This  manual  is  no longer in
+                    print,  but  has  been  replaced  by  the
+                    "ASM86  Language  Reference Manual".  The
+                    Intel order number for this new manual is
+                    121703-002.
+
+        Page 5-3.   In Table 5-1, add the  following  to  the
+                    explanation of the Pd option:
+
+                    Unlike the similar MT86 compiler  option,
+                    P does not send output to the printer.
+
+        Page 5-9.   In Table 5-3,  320  bytes  should  be  32
+                    bytes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1-13
+
+
+

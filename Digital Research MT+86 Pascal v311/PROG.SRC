@@ -1,0 +1,34 @@
+PROGRAM DEMO_PROG;
+
+VAR
+  I : INTEGER;  (* TO BE ACCESSED BY THE OVERLAYS *)
+  CH: CHAR;
+
+EXTERNAL [1] PROCEDURE OVL1; (* COULD HAVE HAD PARAMETERS *)
+
+EXTERNAL [2] PROCEDURE OVL2; (* ALSO COULD HAVE HAD PARAMETERS *)
+
+(* EITHER COULD ALSO HAVE BEEN A FUNCTION IF DESIRED *)
+
+BEGIN
+  REPEAT
+    WRITE('Enter character, A/B/Q: ');
+    READ(CH);
+    CASE CH OF
+      'A','a' : BEGIN
+                  I := 1;    (* TO DEMONSTRATE ACCESS OF GLOBALS *)
+                  OVL1       (* FROM AN OVERLAY *)
+                END;
+
+      'B','b' : BEGIN
+                  I := 2;
+                  OVL2
+                END
+    ELSE
+      IF NOT(CH IN ['Q','q'])THEN
+        WRITELN('Enter only A or B')
+    END (* CASE *)
+  UNTIL CH IN ['Q','q'];
+  WRITELN('End of program')
+END.
+

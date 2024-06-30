@@ -1,0 +1,96 @@
+
+
+     If you wish to use MT+86 programs in a stand-alone mode, you
+ must rewrite @RNC, @WNC, GET and PUT. Skeletons for these routines
+ are provided below.
+
+Copyright 1982 by Digital Research, Inc.
+
+(*$I FIBDEF.LIB*)
+TYPE
+  PTR = ^BYTE;
+var
+  @lfb : external ^fib;
+  @SYSIN : EXTERNAL PTR;
+  @SYSOU : EXTERNAL PTR;
+
+EXTERNAL PROCEDURE @PUTCH(CH:CHAR);
+EXTERNAL FUNCTION  @GETCH : CHAR;
+EXTERNAL PROCEDURE @RNB;
+EXTERNAL PROCEDURE @WNB;
+
+FUNCTION @RNC:CHAR;
+(* this function returns the first character in the file buffer. *)
+(* It is used for TEXT and File of Char input. *)
+BEGIN
+  IF @LFB^.OPTION > FRANDOM THEN  (* DON'T GIVE BUFFER, BUT READ DIRECTLY *)
+                                  (* IF CONSOLE/TERMINAL FILE             *)
+    BEGIN
+      GET(@LFB^,@LFB^.BUFLEN);   (* fill input buffer *)
+      @RNC := @LFB^.FBUFFER[0]   (* return window variable *)
+    END
+  ELSE
+    BEGIN
+      @RNC := @LFB^.FBUFFER[0];         (* @RNC := F^ *)
+      GET(@LFB^,@LFB^.BUFLEN);          (* GET(F)     *)
+    END
+END;
+
+PROCEDURE @WNC(CH:CHAR);
+(* The oposite of RNC *)
+BEGIN
+      @LFB^.FBUFFER[0] := CH;           (* F^ := CH *)
+      PUT(@LFB^,@LFB^.BUFLEN)           (* PUT(F)   *)
+END;
+
+PROCEDURE GET(VAR F:FIB; SZ:INTEGER);
+(* This routine fills the buffer in the FIB and checks for *)
+(* EOF and EOLN. @RNB must be written by the user. IOSIZE  *)
+(* is the window size in bytes *)
+VAR
+  IS_EOLN : BOOLEAN;
+BEGIN
+  F.FEOLN := FALSE;     (* DEFAULT IS THAT WE RESET IT *)
+
+  @LFB := ADDR(F);
+  IF F.FEOF THEN
+    BEGIN
+      F.FEOLN := TRUE;
+      EXIT
+    END;
+
+  @RNB;                 (* GO READ FROM THE FILE/CONSOLE *)
+                        (* into f.fbuffer *)
+  IF F.FTEXT THEN       (* TEXT FILE, EOLN/EOF MUST BE SET *)
+    BEGIN
+      F.FEOF := (F.FBUFFER[0] = CHR($1A)) OR (F.FEOF);
+      IS_EOLN := (F.FBUFFER[0] = CHR($0D)); (* $0D for rmx/udi/cpm *)
+      IF (IS_EOLN) OR (F.FEOF) THEN
+        F.FEOLN := TRUE;
+
+      IF (IS_EOLN) AND (F.OPTION = FRDWR) THEN (* GOBBLE LF *)
+        @RNB;
+
+      IF F.FEOF OR F.FEOLN THEN
+        F.FBUFFER[0] := ' ';
+    END
+END;
+
+PROCEDURE PUT(VAR F:FIB; SZ:INTEGER);
+BEGIN
+  @LFB := ADDR(F);
+  @WNB                          (* GO WRITE BUFFER OUT *)
+END;
+
+
+
+     Sample routines for @RNB and @WNB can be found in IOMOD.
+
+
+     Licensed users are granted the right to use these skeleton
+routines.
+
+Pascal/MT+86 is a trademark of Digital Research. Inc.
+All information Presented Here Is Proprietary to Digital Research.
+
+

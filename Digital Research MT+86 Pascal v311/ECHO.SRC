@@ -1,0 +1,17 @@
+program echo;
+
+type
+  pstrg = ^string;
+  
+var
+  p : pstrg;
+  
+external function @cmd : pstrg;
+
+begin (* echo *)
+
+  p := @cmd;
+  writeln(p^)
+end.
+
+:

@@ -1,0 +1,22 @@
+<parm> = (<name> or <num>) +/- <num>
+<num>  = <int> or $ <hexnum> or $<hexnum>:<hexnum>
+<name> = <varname> or <procname> : <varname>
+
+Display commands:
+D? <parm> where ? is as follows
+I - INTEGER   C - CHAR      L - BOOLEAN   R - REAL
+B - BYTE      W - WORD      S - STRING    X - EXTENDED
+V - var by name
+VN - display ALL variable names
+PN - display procnames
+VN <procname> - display all var names associated with this proc
+SB <procname> - Set breakpoint
+RB <procname> - Remove breakpoint
+E+    Entry/Exit display on
+E-    Entry/Exit display off
+BE    Begin exec at start of user prog
+GO    Continue exec from breakpont
+TR     Exec one Pascal statement and return
+SE <parm> SEt <parm>
+T<num> Trace <num> Pascal statements and return
+

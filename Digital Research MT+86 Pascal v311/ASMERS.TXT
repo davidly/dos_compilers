@@ -1,0 +1,124 @@
+101  Non-identifier in column 1
+102  Label identifier preceding colon has been declared before
+103  Only DD, DW, and DB allowed within a structure definition
+104  Segment identifier declared before
+105  Too many nested segments
+106  Group identifier declared before
+107  Proc identifier declared before
+108  Illegal symbol in proc directive
+109  Structure identifier declared before
+110  No symbol may follow STRUC
+111  identifier on ENDS does not match the corresponding SEGMENT command
+112  More ENDS commands than Segment commands
+113  identifier on RECORD previously defined
+114  identifer on DB previously defined
+115  Group directive must have an identifier
+116  PROC directive must have an identifier
+117  STRUC directive must have an identifier
+118  LABEL directive must have an identifier
+119  Label identifier on LABEL statement has been declared before 
+120  EXTRN directive must not have a label
+121  EXTRN directive must be followed by list of "id : type" pairs
+122  identifier in EXTRN list declared previously
+123  identifier must be follow by ":" in EXTRN list
+124  type in EXTRN list must be ABS, BYTE, WORD, DWORD, NEAR, or FAR
+125  type after LABEL must be BYTE, WORD, DWORD, NEAR, or FAR
+126  Bad token in SEGMENT directive
+127  EQU statements must have a label
+128  Label on EQU statement previously defined
+129  Improper matching of SEGMENT, ENDS pairs
+130  Program name must be a unique identifier
+131  NAME directive has only one argument
+132  Token following INCLUDE must be a string
+133  Include file name must end the INCLUDE directive
+134  Nexted include files are not allowed
+135  Argument to IF must be an equated symbol
+136  Mismatch of IF, ELSE, ENDIF directives
+137  Extra tokens following IF, ELSE, or ENDIF
+138  End of file encountered
+139  Only one program name may be declared
+140  Label type must end the LABEL statement
+141  Name directive can not have a label
+201  This opcode must have no operands
+202  Assume requires a segment register name
+203  Segment register in assume must be followed by ":"
+204  Segment name, group name, SEG expression or NOTHING required
+205  SEG operator in assume must be followed by an identifier
+206  SEG operator in assume must be followed by a variable or label
+207  Identifier must follow ":" in assume list
+208  Comma expected in assume list
+209  Only one operand allowed with this opcode
+210  Two operands required with this opcode
+211  Only two operands allowed with this opcode
+212  Index expression not closed with right bracket
+213  PTR expected
+214  override symbol must be group or segment
+215  ":" expected
+216  no fundamental value may start this way
+217  Right bracket expected
+218  Invalid symbol for dot operator
+219  Right paren expected
+220  Inproper argument to length operator
+221  Improper argument to size operator
+222  Improper argument to width operator
+223  Improper argument to mask operator
+224  Improper argument to offset operator
+225  Improper argument to seg operator
+226  Improper argument to type operator
+227  THIS must be followed by BYTE, WORD, DWORD, NEAR, or FAR
+228  Index register encountered outside brackets
+229  Nested indexing not allowed
+230  Bad operands to addition operator
+231  More than one base in expression
+232  More than one index in expression
+233  Bad operands to subtraction operator
+234  Index registers may not be subtracted
+235  Relative labels in subtraction must have the same base
+236  Relative number in subtraction must be offsets of the same base
+237  Invalid id in expression
+238  Invalid symbol type in type operator
+239  Low and high are invalid for relocatable segment bases
+240  Operands must be non-indexed, absolute numbers to this operator
+241  Operand types not compatable with this opcode
+242  Nested procedures not allowed
+243  ENDP not preceded by PROC
+244  At expression must be an absolute number
+245  List elements in PUBLIC must be identifiers
+246  List elements in PUBLIC must be seperated by a comma
+247  DUP factor in DB, DW, and DD must be an absolute number
+248  Expressions in list for DB, DW, and DD must be seperated by a comma
+249  DUP must be followed by a parenthesized expression list
+250  Bad expression in DUP list
+251  Relocatable bytes are not allowed
+252  Only CODE or DATA relative references are allowed
+253  Can not generate code for group overrides
+254  Can not generate code for this relocatable number
+255  No segment register assumed for this segment
+256  Operand must be accessable through ES for this opcode
+257  Improper call to Modrm_formal
+258  Incompatable operans to relation operator
+259  Argument to OFFSET operator must be a variable or label
+260  Relative byte out of range (not short)
+261  CS may not be popped
+262  Too many expressions to DB, DW, or DD
+263  Can not generate code for a relocatable segment base
+264  Can not generate code for relocatable bytes or segment bases
+265  Relocatables must be CODE or DATA relative
+266  External references must be from the CODE segment
+267  Publics must reside in the CODE or DATA segment
+268  Publics must be labels, variables, or procedures
+269  Externals must reside in the CODE or DATA segment
+270  Externals must only be referenced from the CODE segment
+271  EQU's must be defined before being used.
+272  Literal strings within expression may not be longer than 2 characters
+273  Illegal token in opcode field
+274  END statement may not have a label
+275  END may only be followed by one code label
+276  ORG accepts only one expression as an argument
+277  Expression to ORG must be completely previously defined
+279  Expression following DUP must be within parenthesis
+300  Phase 2 location of label does not match phase 3 location
+400  Illegal character in text
+401  Illegal digit in number
+402  Numbers may not terminate with '$'
+403  Strings may not be greater than one line long

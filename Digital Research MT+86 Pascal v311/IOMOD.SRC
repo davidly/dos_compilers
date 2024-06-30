@@ -1,0 +1,487 @@
+(*  VERSION 0019 *)
+(* Release 3.0 - April 1, 1982 - MGL *)
+
+(* 06/08/81 *)
+(* 08/11/81 *)
+(* 12/01/81 FIXED @RNB TO SET IOSIZE *)
+(* 01/14/82 FIXED @CLOSE TO FLUSH BUFFER IF BUFIDX = SIZEOF(SECTOR) *)
+(* 03/07/82 ADDED maxfcbs and list device i/o, also blockw sets foption *)
+(* 03/11/82 Added code to handle multi extent files in block i/o *)
+(* 03/12/82 Split block i/o out into a separate file "blkio.src" *)
+(* 03/17/82 Added RDR: and PUN: devices *)
+
+(*$S+*)
+
+MODULE IOMODULE;
+
+(* INTERFACE TO CP/M-86 FOR PASCAL/MT+86 *)
+
+(*$I FIBDEF.LIB*)
+const
+  maxfcbs = 9;
+
+TYPE
+  FPTR = ^FIB;
+  FCBLK = PACKED ARRAY [0..36] OF CHAR;
+  SECTOR = PACKED ARRAY [0..127] OF CHAR;
+  DUMMY = PACKED ARRAY[0..0] OF CHAR;
+  PTR = ^DUMMY;
+
+  FCBREC = RECORD
+             ACTIVE : BOOLEAN;
+             FCB    : FCBLK;
+             BUFIDX : INTEGER;
+             BUFFER : SECTOR;
+             ENDFILE: BOOLEAN
+           END;
+
+  PTRIX = RECORD
+            CASE BOOLEAN OF
+                TRUE : (LO_VAL:INTEGER;
+                        HI_VAL:INTEGER);
+                FALSE: (P:PTR)
+          END;
+
+
+VAR
+  @LFB : FPTR;
+  RESULTI : INTEGER;
+
+
+@FCBS : ARRAY [0..maxfcbs] OF FCBREC; 
+(* ALLOWS 10 SIMULTANEOUSLY OPEN FILES *)
+(* THE CONSOLE TAKES TWO FILE SLOTS *)
+(* FOR CON: AS INPUT AND CON: AS OUTPUT *)
+
+EXTERNAL FUNCTION @BDOS86(FUNC:INTEGER; PARM:PTR):BYTE;
+EXTERNAL FUNCTION @BDOS86A(FUNC:INTEGER; FIRST,SECOND:INTEGER):BYTE;
+(* @BDOS86A WILL RESOLVE TO @BDOS86 AT LINK TIME BUT USE DIFFERENT PARMS *)
+EXTERNAL PROCEDURE @BDOSX(FUNC:INTEGER; CH:CHAR);
+EXTERNAL PROCEDURE @CHN(P:PTR);
+EXTERNAL PROCEDURE @HLT;
+
+(*$E-*)
+FUNCTION GET_AN_FCB:INTEGER;
+VAR
+  I : INTEGER;
+BEGIN
+  I := 0;
+  WHILE I <= maxfcbs+1 DO
+    BEGIN
+      IF NOT(@FCBS[I].ACTIVE) THEN (* WE FOUND ONE! *)
+        BEGIN
+          GET_AN_FCB := I;
+          @FCBS[I].ACTIVE := TRUE;
+          EXIT
+        END
+      ELSE
+        I := I + 1
+    END;
+  I := -1;
+  WRITELN('FCB Table Exhausted!');
+  @HLT;
+END;
+
+PROCEDURE FREE_AN_FCB(FCBNUM:INTEGER);
+BEGIN
+  @FCBS[FCBNUM].ACTIVE := FALSE
+END;
+
+PROCEDURE PUTSECTOR(I:INTEGER);
+BEGIN
+  RESULTI := @BDOS86(26,ADDR(@FCBS[I].BUFFER));
+  RESULTI := @BDOS86(21,ADDR(@FCBS[I].FCB));
+END;
+
+FUNCTION  GETSECTOR(I:INTEGER):BOOLEAN;
+BEGIN
+  GETSECTOR := TRUE;    (* FALSE MEANS EOF *)
+  RESULTI := @BDOS86(26,ADDR(@FCBS[I].BUFFER));
+  RESULTI := @BDOS86(20,ADDR(@FCBS[I].FCB));
+  IF RESULTI <> 0 THEN
+    GETSECTOR := FALSE;
+END;
+
+
+
+FUNCTION @SPN(VAR F:FIB):BOOLEAN;
+BEGIN
+  @SPN := FALSE;
+  IF F.FNAME = 'CON:' THEN
+    BEGIN
+      F.OPTION := FCONIO;
+      @SPN := TRUE
+    END
+  ELSE
+    IF F.FNAME = 'LST:' THEN
+      BEGIN
+        F.OPTION := FLSTOUT;
+        @SPN := TRUE
+      END
+    ELSE
+      IF (F.FNAME = 'KBD:') OR (F.FNAME = 'TRM:') THEN
+        BEGIN
+          F.OPTION := FTRMIO;
+          @SPN := TRUE
+        END
+      ELSE
+        IF (F.FNAME = 'RDR:') OR (F.FNAME = 'PUN:') THEN
+          BEGIN
+            F.OPTION := FAUXIO;
+            @SPN := TRUE
+          END
+END;
+
+FUNCTION @NOK(VAR S:STRING):BOOLEAN;
+VAR
+  I : INTEGER;
+  ST: SET OF CHAR;
+BEGIN
+  @NOK := FALSE;
+  ST := [' '..CHR($7E)];
+  IF (LENGTH(S) > 14) OR (LENGTH(S) < 1) THEN
+    EXIT;
+
+  FOR I := 1 TO LENGTH(S) DO
+    IF NOT(S[I] IN ST) THEN
+      EXIT;
+  @NOK := TRUE
+END;
+
+
+FUNCTION UPPERCASE(CH:CHAR):CHAR;
+BEGIN
+  IF (CH >= 'a') AND (CH <= 'z') THEN
+    CH := CHR(CH & $DF);
+  UPPERCASE := CH
+END;
+
+
+
+(*$E+*)
+PROCEDURE @PARSE(VAR F:FCBLK;VAR S:STRING);
+VAR
+  DISK : CHAR;
+  NAME : PACKED ARRAY [1..8] OF CHAR;
+  EXT  : PACKED ARRAY [1..3] OF CHAR;
+  I,J,MAX: INTEGER;
+
+BEGIN
+  (* PARSE CP/M FILE NAME *)
+
+  WHILE (LENGTH(S) <> 0) AND (S[1] = ' ') DO
+    DELETE(S,1,1);              (* REMOVE LEADING BLANKS *)
+
+  IF LENGTH(S) <> 0 THEN
+    BEGIN
+      DISK := '@';      (* DEFAULT *)
+      NAME := '        ';
+      EXT  := '   ';
+
+      IF S[2] = ':' THEN
+        BEGIN
+          I := 3;
+          DISK := UPPERCASE(S[1])
+        END
+      ELSE
+        I := 1;
+      MAX := I + 8;
+      J := 1;
+
+      WHILE (NOT(S[I] IN ['.',':'])) AND (I < MAX) 
+             AND (I <= LENGTH(S)) DO
+        BEGIN
+          NAME[J] := UPPERCASE(S[I]);
+          J := J + 1;
+          I := I + 1
+        END; (* WHILE *)
+
+      IF (S[I] = '.') AND (I <= LENGTH(S)) THEN
+        BEGIN
+          I := I + 1;
+          J := 1;
+          WHILE (J < 4) AND (I <= LENGTH(S)) DO
+            BEGIN
+              EXT[J] := UPPERCASE(S[I]);
+              J := J + 1;
+              I := I + 1
+            END (* WHILE *)
+        END; (* IF *)
+
+      FILLCHAR(F,SIZEOF(FCBLK)-18,CHR(0));
+      F[0] := CHR(ORD(DISK) - ORD('@'));
+      MOVE(NAME,F[1],8);
+      MOVE(EXT,F[9],3);
+    END (* IF *)
+  
+END;
+
+
+
+PROCEDURE @INI2;        (* INIT @FCBS *)
+BEGIN
+  FILLCHAR(@FCBS,SIZEOF(@FCBS),CHR(0))
+END;
+
+
+FUNCTION @OPEN(VAR F:FIB; MODE:INTEGER):INTEGER;
+
+(* NOTE: THIS CODE IS DEPENDENT UPON THE FACT THAT THE FIRST FIELD *)
+(* OF THE FIB DEFINITION IS FNAME! *)
+
+VAR
+  I : INTEGER;
+BEGIN
+  I := GET_AN_FCB;
+  @OPEN := I;
+  IF I <> -1 THEN
+    BEGIN
+      FILLCHAR(@FCBS[I].FCB,36,CHR(0));
+      @PARSE(@FCBS[I].FCB,F.FNAME);
+      IF NOT @NOK(F.FNAME) THEN
+        BEGIN
+          @OPEN := -1;
+          RESULTI := 255;
+          FREE_AN_FCB(I);       (* DONT NEED FCB IF BAD NAME *)
+          EXIT
+        END;
+
+      IF @SPN(F) THEN
+        BEGIN
+          RESULTI := 0;
+          @FCBS[I].FCB[0] := CHR($FF); {MARK SPECIAL FILE}
+          {FREE_AN_FCB(I);       (* DONT NEED AN FCB ON SPECIAL FILES *)}
+          {since on 1/16/82 we implemented i/o redirection }
+          {special files now need an fcb allocated to them! }
+          EXIT
+        END;
+
+      RESULTI := @BDOS86(15,ADDR(@FCBS[I].FCB));
+      IF RESULTI = 255 THEN
+        BEGIN
+          @OPEN := -1;
+          FREE_AN_FCB(I);       (* DONT NEED FCB IF NOT FOUND *)
+        END
+      ELSE
+        BEGIN
+          @FCBS[I].BUFIDX := SIZEOF(SECTOR);
+          @FCBS[I].ENDFILE:= FALSE
+        END
+    END
+  ELSE
+    RESULTI := 255
+END; (* @OPEN *)
+
+FUNCTION @CREAT(VAR F:FIB; MODE:INTEGER):INTEGER;
+VAR
+  I : INTEGER;
+BEGIN
+  I := GET_AN_FCB;
+  @CREAT := I;
+  IF I <> -1 THEN
+    BEGIN
+      FILLCHAR(@FCBS[I].FCB,36,CHR(0));
+      @PARSE(@FCBS[I].FCB,F.FNAME);
+      IF NOT @NOK(F.FNAME) THEN
+        BEGIN
+          @CREAT := -1;
+          RESULTI := 255;
+          FREE_AN_FCB(I);       (* DONT NEED FCB IF BAD NAME *)
+          EXIT
+        END;
+
+      IF @SPN(F) THEN
+        BEGIN
+          RESULTI := 0;
+          @FCBS[I].FCB[0] := CHR($FF); {MARK SPECIAL FILE}
+          {FREE_AN_FCB(I);       (* DONT NEED AN FCB ON SPECIAL FILES *)}
+          {since on 1/16/82 we implemented i/o redirection }
+          {special files now need an fcb allocated to them! }
+          EXIT
+        END;
+
+      RESULTI := @BDOS86(19,ADDR(@FCBS[I].FCB)); (* DELETE ANY OLD ONES *)
+      RESULTI := @BDOS86(22,ADDR(@FCBS[I].FCB)); (* AND CREATE A NEW ONE *)
+      IF RESULTI = 255 THEN
+        BEGIN
+          @CREAT := -1;
+          FREE_AN_FCB(I);       (* DONT NEED FCB IF ERROR *)
+        END;
+      @FCBS[I].BUFIDX := 0;
+    END
+  ELSE
+    RESULTI := 255
+END; (* @CREAT *)
+
+
+FUNCTION @UNLINK(VAR F:FIB):INTEGER;
+BEGIN
+  IF F.SYSID = 0 THEN (* WE MUST ALLOCATE AN FCB FIRST *)
+    F.SYSID := @OPEN(F,2);
+  IF F.SYSID <> -1 THEN (* VALID FILE *)
+    BEGIN
+      IF F.OPTION <= FRANDOM THEN (* IT IS A DISK FILE *)
+        RESULTI := @BDOS86(19,ADDR(@FCBS[F.SYSID].FCB));
+      @UNLINK := 0;
+      FREE_AN_FCB(F.SYSID)
+    END;
+END;
+
+PROCEDURE @CLOSE(I:INTEGER; an_infile:boolean);
+VAR
+  J : INTEGER;
+BEGIN
+  if (not an_infile) and (@FCBS[I].FCB[0] <> CHR($FF)) then
+    begin (* check to see if stuff to flush *)
+      IF (@FCBS[I].BUFIDX <> 0) THEN
+        BEGIN
+          IF  (@FCBS[I].BUFIDX <> SIZEOF(SECTOR)) THEN
+          (* STILL SPACE LEFT TO FILL WITH CTRL/Z'S *)
+            WITH @FCBS[I] DO
+              FILLCHAR(BUFFER[BUFIDX],SIZEOF(SECTOR)-BUFIDX,CHR($1A));
+          PUTSECTOR(I)  (* ALWAYS OUTPUT BUFFER IF IDX <> 0 *)
+        END;
+      RESULTI := @BDOS86(16,ADDR(@FCBS[I].FCB))
+    end;
+  FREE_AN_FCB(I); (* WE ALWAYS DO THIS! *)
+END;
+
+PROCEDURE @SFB(P:FPTR);
+BEGIN
+  @LFB := P
+END;
+
+(*$E-*)
+FUNCTION GETBYTE(I:INTEGER; VAR ENDFIL : BOOLEAN):BYTE;
+BEGIN
+  WITH @FCBS[I] DO
+    BEGIN
+      IF BUFIDX >= SIZEOF(SECTOR) THEN (* GOT TO GO READ SOME DATA *)
+        BEGIN
+          ENDFIL := NOT GETSECTOR(I);
+          BUFIDX := 0
+        END;
+      GETBYTE := BUFFER[BUFIDX];
+      BUFIDX := BUFIDX + 1
+    END
+END;
+
+PROCEDURE PUTBYTE(B:BYTE; I:INTEGER);
+BEGIN
+  WITH @FCBS[I] DO
+    BEGIN
+      IF BUFIDX >= SIZEOF(SECTOR) THEN
+        BEGIN
+          PUTSECTOR(I);
+          BUFIDX := 0
+        END;
+      BUFFER[BUFIDX] := B;
+      BUFIDX := BUFIDX + 1
+    END
+END;
+
+(*$E+*)
+PROCEDURE @RNB;
+VAR
+  I : INTEGER;
+  J : INTEGER;
+  CH: CHAR;
+  ENDFILE:BOOLEAN;
+BEGIN
+  RESULTI := 0;
+  IF @LFB^.OPTION = FCONIO THEN (* READ CONSOLE NOT A DISK FILE *)
+    BEGIN
+      CH := @BDOS86(1,ADDR(I)); (* SECOND PARM IS A DUMMY *)
+      IF CH = CHR(8) THEN
+        BEGIN
+          @BDOSX(2,' ');
+          @BDOSX(2,CHR(8))
+        END
+      ELSE
+        IF CH = CHR($0D) THEN
+          @BDOSX(2,CHR($0A));
+      @LFB^.FBUFFER[0] := CH;
+      @LFB^.FEOF := (CH = CHR($1A));
+      EXIT
+    END;
+
+  IF @LFB^.OPTION = FTRMIO THEN
+    BEGIN
+      CH := @BDOS86A(6,$FFFF,$FFFF);
+      @LFB^.FBUFFER[0] := CH;
+      EXIT
+    END;
+
+  IF @LFB^.OPTION = FAUXIO THEN
+    BEGIN
+      CH := @BDOS86(3,ADDR(I));
+      @LFB^.FBUFFER[0] := CH;
+      EXIT
+    END;
+
+
+  (* ELSE NON-CONSOLE, READ USING GETBYTE *)
+
+  I := @LFB^.SYSID;
+  ENDFILE := @LFB^.FEOF;
+  J := 1;
+  WHILE (J <= @LFB^.BUFLEN) AND (NOT ENDFILE) DO
+    BEGIN
+      WITH @LFB^ DO
+        FBUFFER[J-1] := GETBYTE(I,ENDFILE);
+      J := J + 1
+    END;
+  @LFB^.FEOF := ENDFILE;
+  @LFB^.IOSIZE := J-1;  (* THIS IS SO GNB CAN TELL THE DIFFERENCE *)
+                        (* BETWEEN A PARTIALLY FULL BUFFER AND    *)
+                        (* TRUE EOF                               *)
+END;
+
+PROCEDURE @WNB;
+VAR
+  I : INTEGER;
+  J : INTEGER;
+  CH: CHAR;
+BEGIN
+  RESULTI := 0;
+  IF @LFB^.OPTION = FCONIO THEN (* WRITE TO THE CONSOLE *)
+    BEGIN
+      @BDOSX(2,@LFB^.FBUFFER[0]);
+      EXIT
+    END;
+
+  IF @LFB^.OPTION = FTRMIO THEN (* USE FUNCTION 6 *)
+    BEGIN
+      @BDOSX(6,@LFB^.FBUFFER[0]);
+      EXIT
+    END;
+    
+  if @lfb^.option = flstout then (* use function 5 *)
+    begin
+      @bdosx(5,@lfb^.fbuffer[0]);
+      exit
+    end;
+
+  if @lfb^.option = fauxio then (* use function 4 *)
+    begin
+      @bdosx(4,@lfb^.fbuffer[0]);
+      exit
+    end;
+
+  (* ELSE NON-CONSOLE, WRITE USING PUTBYTE *)
+  I := @LFB^.SYSID;
+  FOR J := 1 TO @LFB^.BUFLEN DO
+    WITH @LFB^ DO
+      PUTBYTE(FBUFFER[J-1],I);
+  @LFB^.BUFIDX := 0; (* SO CLOSE ON A WNB FILE WORKS PROPERLY *)
+END;
+
+
+PROCEDURE CHAIN(VAR F:FIB; SZ:INTEGER);
+BEGIN
+  @CHN(ADDR(@FCBS[F.SYSID].FCB))
+END;
+
+
+MODEND.
+ 

@@ -1,0 +1,26 @@
+(*  VERSION 0001 *)
+(*  DATE 03/17/82*)
+
+(* definition of file info block for unix/udi *)
+
+type
+ fibpaoc = packed array [0..0] of char;
+ fib =  record
+          fname : string[37];                           (*    0 *)
+          dummy, (* to align everything on word boundary *)
+          option: (notopen,fwrite,frdwr,frandom,        (*   38 *)
+                   fconio,ftrmio,flstout,fauxio)
+          buflen: integer;                              (*   40 *)
+          bufidx: integer;                              (*   42 *)
+          iosize: integer;                              (*   44 *)
+          feoln,                                        (*   47 *)
+          feof  : boolean;                              (*   46 *)
+          fbufadr:^fibpaoc;                             (*   48 *)
+          nosectrs,                                     (*   53 *)
+          ftext : boolean;                              (*   52 *)
+          sysid: integer; (*fileid on unix, conn for udi     54 *)
+          fbuffer: fibpaoc                              (*   56 *)
+        end;
+
+
+.

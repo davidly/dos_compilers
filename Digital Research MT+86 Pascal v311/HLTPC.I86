@@ -1,0 +1,29 @@
+        NAME    HLT
+        ASSUME  CS:CODE,DS:DATA
+
+DATA    SEGMENT PUBLIC
+DATA    ENDS
+
+CODE    SEGMENT PUBLIC
+;
+;       @HLT FOR PCDOS ... ALSO INCLUDES @BDOS
+;
+;       MODIFIED 12-11-81 BY MGL TO SAVE/RESTORE BP AROUND A SYSTEM CALL
+;
+
+        PUBLIC  @HLT
+	EXTRN	JTABLE:NEAR	;DEFINED IN PCINT.I86
+
+@HLT    PROC    NEAR
+	xor	ax,ax	;zero AX
+	mov	si,ax
+        jmp	jtable
+@HLT    ENDP
+;
+;       NEVER RETURNS
+;
+
+CODE    ENDS
+
+        END
+
