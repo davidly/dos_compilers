@@ -42,5 +42,6 @@ On Linux or MacOS copy m.bat to m.sh, change % to $, use dos2unix to remove CR/L
 
 If you're running Linux or MacOS and see perplexing compilation errors, it could be your source files don't have cr/lf line separators. Use unix2dos to add them; nearly all these compilers require them. Some compilers require a ^Z / 0x1a at the end of files. CB86 is an example. Again, if you see build errors this may be the problem.
 
-Here are runtimes for the benchmarks in milliseconds for a 4Mhz Z80 as emulated by [NTVDM](https://github.com/davidly/ntvdm)
+Here are runtimes for the benchmarks in milliseconds for a 4.77Mhz 8086 (not 8088) as emulated by [NTVDM](https://github.com/davidly/ntvdm)
+
 ![runtimes](https://github.com/davidly/dos_compilers/assets/1497921/b096de83-81d8-4c8c-8f1a-39f697c2c472)
