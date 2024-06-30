@@ -1,0 +1,139 @@
+;	FLIP.A  --	code to flip the screen. This version for the PC.
+
+VIDEO		equ	10h
+
+	dseg
+	public	flipok_
+flipok_	db	1			;flag to say flip is supported
+
+screen_save 	dw	0
+screen_at 	dw	0
+screen_len 	dw	0
+curmode		db	0
+curpage		db	0
+curloc		dw	0
+addr_6845	dw	3D4H
+
+
+	cseg
+	public	scr_clr_
+
+;	FLIPINIT  --	initilize for flipping the screen.
+;		paragraphs needed for screen image = flipinit();
+
+	public	flipinit_
+flipinit_:
+	push	bp
+	mov	screen_save,ds
+	mov	ah,15
+	int	VIDEO
+	cmp	al,7			;monocrome ?
+	jz	monoinit
+	mov	screen_at,0b800h	;16k screen at b800
+	mov	screen_len,1024*8
+	mov	ax,1024			;paragraphs needed to save
+	pop	bp
+	ret
+
+monoinit:
+	mov	addr_6845,03b4h		;base of 6845
+	mov	screen_at,0b000h	;4k screen at b000
+	mov	screen_len,1024*2
+	mov	ax,256			;paras needed to save
+	pop	bp
+	ret
+
+
+
+
+
+;	SCR_SAVE  --	save the screen. use screen_at.
+
+	public	scr_save_
+scr_save_:
+	push	bp
+	mov	bp,sp
+	mov	ah,15
+	int	VIDEO
+	mov	curmode,al
+	mov	curpage,bh
+	mov	ah,3
+	int	VIDEO
+	mov	curloc,dx
+
+	call	disable_video
+	push	ds
+	mov	es,screen_save		;save the screen
+	mov	cx,screen_len
+	mov	ds,screen_at		;from here
+	xor	si,si
+	mov	di,si
+	cld
+rep	movsw
+	pop	ds
+	call	enable_video
+	mov	al,curmode
+	cmp	al,7			;dont set monocrome mode
+	jz	clear_only
+	cmp	al,3
+	jz	clear_only
+	mov	ah,0
+	mov	al,3
+	int	VIDEO
+	jmp	saved
+clear_only:
+	call	scr_clr_
+saved:	pop	bp
+	ret
+
+
+;	SCR_REST  --	restore the screen. use screen_at.
+
+	public	scr_rest_
+scr_rest_:
+	push	bp
+	mov	bp,sp
+	mov	al,curmode
+	cmp	al,7
+	jz	dorest
+	mov	ah,0
+	int	VIDEO			;restore the mode
+dorest:
+	call	disable_video
+	push	ds
+	mov	es,screen_at		;restore the screen
+	mov	cx,screen_len
+	mov	ds,screen_save		;to here
+	xor	si,si
+	mov	di,si
+	cld
+rep	movsw
+	pop	ds
+	call	enable_video
+	mov	ah,5
+	mov	al,curpage
+	int	VIDEO
+	mov	ah,2
+	mov	bh,curpage
+	mov	dx,curloc
+	int	VIDEO
+	pop	bp
+	ret
+
+disable_video:				; turn the screen refresh off
+		mov	dx,addr_6845
+		add	dx,4
+		mov	al,25H
+		out	dx,al		; disable video
+		ret
+
+enable_video:				; set crt mode
+		mov	dx,addr_6845
+		add	dx,4
+		mov	bx,40H
+		mov	es,bx
+		mov	al,es:[65H]	; crt_mode_set
+		out	dx,al		; restore video
+		ret
+
+

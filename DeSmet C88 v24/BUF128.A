@@ -1,0 +1,159 @@
+;
+; buf128:  a 128 character type-ahead buffer for the IBM-PC
+;
+; This program works by intercepting the calls to the BIOS
+; interrupt routines at 9 for the keystroke interrupts and
+; 16H for the program requests
+; Everything is kept in CS.
+;
+; Caution: buf128 must be linked with the -A option, e.g.
+; BIND B:BUF128 -A
+
+		cseg
+		public	main_,key_int,request,buffer,head,tail
+
+KEYINT:		equ	24H		; int 9 vector offset
+REQINT:		equ	58H		; int 16H vector offset
+B_HEAD:		equ	1AH		; offset to BUFFER_HEAD
+B_TAIL:		equ	1CH		; offset to BUFFER_TAIL
+KB_FLAG:	equ	17H		; offset to KB_FLAG
+
+main_:		jmp	init_code
+;
+buffer:		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		dw	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+head:		dw	buffer
+tail:		dw	buffer
+
+;
+; the keystroke interrupt routine.  Interrcept the key interrupt, run
+; it through the standard key input routine, and remove it from the buffer.
+;
+
+key_int:
+		cli
+		pushf			; simulate an interrupt
+;
+; long call to F000:E987
+;
+		db	9AH
+		dw	0E987H
+		dw	0F000H
+;
+		push	bx
+		push	es
+		mov	bx,40H		; BIOS data segment
+		mov	es,bx
+		mov	bx, es:[B_HEAD]	; pointer to datum
+		cmp	bx, es:[B_TAIL]	; test for character
+		je	k_esbx
+		mov	es:[B_TAIL], bx	; clear the buffer
+		mov	bx, es:[bx]
+		push	si
+		mov	si, cs:tail
+		push	si		; save tail value
+		add	si,2		; test for full
+		cmp	si, offset buffer+256
+		jb	k_over1
+		mov	si, offset buffer
+k_over1:
+		cmp	si, cs:head
+		pop	si
+		je	k_siesbx	; jump if buffer full
+		mov	cs:[si], bx	; store the character
+		add	si,2
+		cmp	si, offset buffer+256
+		jb	k_over2
+		mov	si, offset buffer
+k_over2:
+		mov	cs:tail, si
+k_siesbx:
+		pop	si
+k_esbx:
+		pop	es		; no character, return
+		pop	bx
+		iret
+
+;
+; The request interrupt routine.
+;
+; simulate the BIOS routine
+;	ah = 0	read next char
+;	ah = 1	set Z flag on character status, ZF=1 if no char
+;		ZF=0 and AX = char if char ready
+;	ah = 2	shift status
+
+
+request:
+		sti
+		or	ah,ah
+		jz	do_read
+		dec	ah
+		jz	do_stat
+		dec	ah
+		jz	do_shift
+		iret
+
+do_read:				; return the next character
+		sti
+		nop
+		cli
+		mov	ax,cs:head
+		cmp	ax,cs:tail
+		je	do_read		; loop until a character
+		push	bx
+		mov	bx,ax
+		mov	ax, cs:[bx]	; ax gets the character
+		add	bx,2
+		cmp	bx, offset buffer+256
+		jb	r_over
+		mov	bx, offset buffer
+r_over:
+		cmp	bx, cs:tail
+		mov	cs:head, bx	; new head
+		pop	bx
+		iret
+
+do_stat:				; return key status
+		cli
+		push	bx
+		mov	bx,cs:head
+		cmp	bx,cs:tail
+		mov	ax,cs:[bx]
+		pop	bx
+		sti
+		lret	2		; throw out the flags
+
+do_shift:
+		push	es
+		mov	ax,40H		; BIOS data segment
+		mov	es,ax
+		mov	al, es:[KB_FLAG]
+		pop	es
+		iret
+		
+init_code:	cli			; turn off interrupts for now
+		mov	ax,0
+		mov	es,ax		; segment base for vectors
+		mov	es:[KEYINT], offset key_int
+		mov	es:[KEYINT+2], cs
+		mov	es:[REQINT], offset request
+		mov	es:[REQINT+2], cs
+		mov	cs:head, offset buffer
+		mov	cs:tail, offset buffer
+		sti
+		mov	ds:byte[1], 27H	; change PCB terminate to resident
+		push	ds
+		mov	dx,0
+		push	dx
+		mov	dx, offset init_code+100H
+		lret			; long return to the int 27H
+		end
+
