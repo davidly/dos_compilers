@@ -1,0 +1,307 @@
+{.HE}
+{.L-}
+  *****************************************************************
+  *                                                               *
+  *           Print this document in the following way:           *
+  *                                                               *
+  *           1. Exit Turbo Pascal                                *
+  *           2. Activate the TLIST program                       *
+  *           3. Answer ERROR.DOC and press <RETURN>              *
+  *           4. Press <RETURN> to question about Options.        *
+  *                                                               *
+  *                                                               *
+  *  If you want to change the left margin use the directive:     *
+  *  PO (Page Offset E.g. PO8) (the dot must be in column one).   *
+  *                                                               *
+  *  You may also use the PL directive to set Page Length        *
+  *                                                               *
+  *****************************************************************
+{.L+}
+{.PO8}
+{.PL66}
+
+
+
+
+
+
+
+
+
+
+
+               Addendum to TURBO REFERENCE MANUAL
+                         IBM-PC Version
+                          November 1983
+
+
+
+
+
+
+
+
+
+
+
+
+
+          (C) Copyright 1983 Borland International Inc.
+{.HEAddendum to the TURBO Pascal Reference Manual        page: #  \First printing November 1983 }
+{.PA}
+
+-----------------------------------------------------------------
+                      GET STARTED RIGHT NOW
+-----------------------------------------------------------------
+
+  1. Make a copy of the distribution disk to a fresh system disk.
+  2. Start TURBO. Press Y for Yes. (Include error messages)
+
+
+  If you have 128K RAM or less do the following:
+
+  3. Press M for Main file
+  4. Answer: CALCMAIN and press RETURN
+  5. Press R for Run
+
+
+  If you have more than 128K RAM do the following:
+
+  3. Press R for Run
+  4. Answer: CALC and press RETURN
+
+
+The compiler will now compile the file CALC.PAS. The object code
+is placed directly in memory for immediate execution.
+
+
+To  make a COM file do the following:
+
+   1. select O for Options
+   2. Press C for Com file
+   3. Press Q to Quit the Options menu
+   4. Now press C for Compile.
+
+{.PA}
+
+-----------------------------------------------------------------
+                 FILES ON THE DISTRIBUTION DISK
+-----------------------------------------------------------------
+
+
+
+
+----------------------------------------------------------------
+!    THE FILE YOU MUST HAVE TO DEVELOP AND COMPILE PROGRAMS    !
+----------------------------------------------------------------
+! TURBO.COM         Compiler and  Editor                       !
+----------------------------------------------------------------
+
+
+----------------------------------------------------------------
+!             OPTIONAL FILES WHEN DEVELOPING PROGRAMS          !
+----------------------------------------------------------------
+! TURBOMSG.OVR      Error messages (You may omit this file)    !
+! TLIST.COM         Program lister (You may omit this file)    !
+----------------------------------------------------------------
+
+
+----------------------------------------------------------------
+!          FILES YOU ONLY NEED WHEN YOU INSTALL TURBO          !
+----------------------------------------------------------------
+! TINST.COM              Installation program                  !
+! TINSTMSG.OVR           Message file for TINST                !
+---------------------------------------------------------------
+
+You  only need these files if you want to modify the editor  com-
+mands  or, if for any reason, you do not want TURBO to select the
+default display on your PC.
+
+
+-----------------------------------------------------------------
+!                FILES WITH DEMONSTRATION PROGRAMS              !
+-----------------------------------------------------------------
+! CALCMAIN.PAS            Root demo program demonstating include!
+! CALC.PAS                MicroCalc (spread sheet demo program) !
+! CALC.HLP                On-line manual for MicroCalc          !
+! CALCDEMO.MCS            Example spread sheet definition       !
+-----------------------------------------------------------------
+
+{.PA}
+
+-----------------------------------------------------------------
+                          INSTALLATION
+-----------------------------------------------------------------
+
+
+First of all, INSTALLATION IS USUALLY NOT NECESSARY. When you
+start TURBO, the default display mode will automatically be
+selected. This depends on ther type of board in your PC
+(monochrome, color, or b/w graphics).
+
+You may, however, use TINST to  force TURBO to use another display
+mode, provided, of course, that the relevant hardware is installed.
+
+Invoke TINST and select Screen installation. Instead of the
+screen selection menu shown on page 229, you will have the
+following menu:
+
+-----------------------------------------------------------------
+
+     0) Default display mode
+     1) Monochrome display
+     2) Color display 80x25
+     3) Color display 40x25
+     4) B/w display   80x25
+     5) B/w display   40x25
+
+Which display? (Enter no. or ^X to exit)
+
+-----------------------------------------------------------------
+
+You may now select the desired display mode which will then be
+used when you invoke TURBO.
+
+
+{.PA}
+
+----------------------------------------------------------------
+                   CORRECTIONS TO THE MANUAL:
+----------------------------------------------------------------
+
+
+PAGE 66
+
+Examples of string comparisons:
+
+   'A' < 'B'        is TRUE
+   'A' > 'b'        is FALSE
+
+
+PAGE 126
+
+The Init procedure should be CRTinit, and the Exit procedure
+should be CRTexit.
+
+
+PAGE 213
+
+The X compiler directive is valid for the CP/M-80 implementation
+only.
+
+
+PAGE 193 / 197
+
+The parameter for function calls should be defined as follows:
+
+  RegPack = record
+              ax,bx,cx,dx,bp,si,di,ds,es,flags: Integer;
+            end;
+
+
+
+
+
+{.PA}
+
+---------------------------------------------------------------
+          MURPHY DELETED THE FOLLOWING FROM THE MANUAL:
+---------------------------------------------------------------
+
+
+Procedure Halt;
+
+This procedure will stop execution of the Turbo pascal program
+and return to the point where the program was activated .
+
+
+Function UpCase(Ch: Char): Char;
+
+This  function returns the uppercase equivalent of the  parameter
+Ch.  Example:  if  C1  has the value 'a' then UpCase(C1) has  the
+value 'A'.
+
+
+Function Chr(I: IExpr): Char;
+
+This function returns the character with the ASCII value I.
+Example: Chr(65) has the value 'A'.
+
+
+Procedure Intr(InterruptNumber: IConstant; var Result: RecPack);
+
+This  procedure initializes the registers and flags as  specified
+in  the  parameter "RecPack" and then makes a software  interrupt
+corresponding to the parameter "InterruptNumber" which must be  a
+constant.  When the interrupt service routine returns control  to
+your  program "RegPack" will contain any returned values form the
+service routine.
+
+{.PA}
+
+-----------------------------------------------------------------
+              LIST OF COMMON QUESTIONS AND ANSWERS
+-----------------------------------------------------------------
+
+Q: How do I use the system?
+A: Please read the manual.
+
+Q: Is TURBO an interpreter like UCSD?
+A: No, it generates ultra-fast machine code.
+
+Q: Do I need TURBO to run programs developed in TURBO pascal?
+A: No make a .COM or .CMD file.
+
+Q: How many lines of code can the compiler handle.
+A: No limit (The object code however cannot excede 64 KB)
+
+Q: How many significant digits does TURBO support in floating
+   point?
+A: 11.
+
+Q: Why do I get garbage on the screen when starting the TURBO
+   editor.
+A: You have not installed TURBO for your system.
+
+Q: What do I do when I run out of space using the editor?
+A: Split your source code (see manual $I directive.)
+
+Q: What do I do when I run out of space while compiling?
+A: Use the $I directive and/or generate a .COM or .CMD file.
+
+Q: How do I make a .COM or .CMD file?
+A: Type O from the main menu then type C.
+
+Q: What do I do when the compiler generates too much code?
+A: Read the appendicies about compiler switches and .CHN files.
+
+{.PA}
+
+----------------------------------------------------------------
+                 A special note to IBM-PC users:
+----------------------------------------------------------------
+
+Notice that TURBO makes it easy to do cursor  addressing,  delete
+line, insert line etc. through built in procedures.
+
+We have also made it easier for you to use the editing and
+function keys in your programs:
+
+
+    --------------------------------------------------------
+    Edit Key         Returns        Function Key     Returns
+    --------------------------------------------------------
+    Home             <ESC> G        F1               <ESC> ;
+    Arrow Up         <ESC> H        F2               <ESC> <
+    PgUp             <ESC> I        F3               <ESC> =
+    Arrow Left       <ESC> K        F4               <ESC> >
+    Arrow Right      <ESC> M        F5               <ESC> ?
+    End              <ESC> O        F6               <ESC> @
+    Arrow Down       <ESC> P        F7               <ESC> A
+    PgDn             <ESC> Q        F8               <ESC> B
+    Ins              <ESC> R        F9               <ESC> C
+    Del              <ESC> S        F10              <ESC> D
+    --------------------------------------------------------
+
+
+

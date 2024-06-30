@@ -1,0 +1,105 @@
+program TimeDifference;
+
+type
+timetype = record h, m, s, l : integer; end;
+
+regpack = record
+          ax,bx,cx,dx,bp,si,di,ds,es,flags: integer;
+          end;
+
+var
+  ta, tb, tdiff: timetype;
+  i, j, x: integer;
+  sh, sm, ss, sl: string[2];
+
+procedure time_difference( var tStart, tEnd, tDiff : timetype );
+begin
+    if ( tEnd.l >= tStart.l ) then
+      tDiff.l := tEnd.l - tStart.l
+    else
+    begin
+      tDiff.l := 100 + tEnd.l - tStart.l;
+      tStart.s := tStart.s + 1;
+    end;
+
+    if ( tEnd.s >= tStart.s ) then
+      tDiff.s := tEnd.s - tStart.s
+    else
+    begin
+      tDiff.s := 60 + tEnd.s - tStart.s;
+      tStart.m := tStart.m + 1;
+    end;
+
+    if ( tend.m >= tStart.m ) then
+      tDiff.m := tEnd.m - tStart.m
+    else
+    begin
+      tDiff.m := 60 + tEnd.m - tStart.m;
+      tStart.h := tStart.h + 1;
+    end;
+    if ( tEnd.h >= tStart.h ) then
+      tDiff.h := tEnd.h - tStart.h
+    else
+      tDiff.h := 12 - tEnd.h - tStart.h;
+end;
+
+procedure get_time( var tt : timetype );
+var
+  recpack:          regpack;             {assign record}
+  ah,al,ch,cl,dh:   byte;
+
+begin
+  ah := $2c;                             {initialize correct registers}
+  with recpack do
+  begin
+    ax := ah shl 8 + al;
+  end;
+  intr($21,recpack);                     {call interrupt}
+  with recpack do
+  begin
+    tt.h := cx shr 8;
+    tt.m := cx mod 256;
+    tt.s := dx shr 8;
+    tt.l := dx mod 256;
+  end;
+end;
+
+procedure print_time( var t: timetype );
+
+var sval : string[2];
+
+begin
+    if ( t.h < 10 ) then write( '0' );
+    write( t.h, ':' );
+    if ( t.m < 10 ) then write( '0' );
+    write( t.m, ':' );
+    if ( t.s < 10 ) then write( '0' );
+    write( t.s, '.' );
+    if ( t.l < 10 ) then write( '0' );
+    write( t.l );
+end;
+
+begin
+  get_time( ta );
+
+  write( 'start time: ' );
+  print_time( ta );
+  writeln;
+
+  for j := 1 to 300 do
+    for i := 1 to 30000 do
+       x := i * 4 * 4 + x;
+
+  get_time( tb );
+  write( 'end time: ' );
+  print_time( tb );
+  writeln;
+
+  time_difference( ta, tb, tdiff );
+  write( 'difference: ' );
+  print_time( tdiff );
+  writeln;
+
+  writeln( 'done' );
+end.
+

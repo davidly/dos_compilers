@@ -1,0 +1,65 @@
+1                  TURBO Pascal installation menu.
+2           Choose installation item from the following:
+
+3 [S]creen installation   |   [C]ommand installation   |   e[X]it
+
+4                        Enter S, C, or X: 
+10 Duplicate definition. Error occurred between question
+11 Commands starting with the same letter must have the same length.
+   Error occurred between question
+12 The total maximum length of commands are execeeded
+13  -> 
+
+14 CURSOR MOVEMENTS:
+
+20  Character left  
+21    Alternative   
+22  Character right 
+23  Word left       
+24  Word right      
+25  Line up         
+26  Line down       
+27  Page up         
+28  Page down       
+29  To top of file  
+30  To end of file  
+31  To left on line 
+32  To right on line
+33  To last position
+
+15 INSERT & DELETE:
+
+34  Insert mode on/off           
+35  Insert line                  
+36  Delete line                  
+37  Delete to end of line        
+38  Delete right word            
+39  Delete character under cursor
+40  Delete left character        
+41    Alternative                
+
+16 BLOCK COMMANDS:               
+
+42  Begin block         
+43  End block           
+44  Mark single word    
+45  Copy block          
+46  Move block          
+47  Delete block        
+48  Read block from file
+49  Write block to file 
+
+17 MISC. EDITING COMMANDS:  
+
+50  End edit                
+51  Tab                     
+52  Auto tab on/off         
+53  Restore line            
+54  Find                    
+55  Find & replace          
+56  Repeat last find        
+57  Control character prefix
+101 Nothing
+200 Choose one of the following displays
+201 Which display? (Enter no. or ^X to exit): 
+
