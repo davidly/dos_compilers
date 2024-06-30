@@ -1,0 +1,33 @@
+/*****************************************************/
+/* This program evaluates a polynomial expression    */
+/* using FLOAT BINARY data.                          */
+/*****************************************************/
+fltpoly: 
+    procedure options(main);
+
+    %replace
+        true  by '1'b;
+    declare 
+        (x,y,z) float binary(24);
+
+    do while(true);
+       put skip(2) list('Type x,y,z: ');
+       get list(x,y,z);
+
+       if x=0 & y=0 & z=0 then
+          stop;
+
+       put skip list('       2');
+       put skip list('      x  + 2y + z =',P(x,y,z));
+    end;
+
+    P:
+      procedure (x,y,z) returns (float binary(24));
+      declare 
+            (x,y,z) float binary;
+      return (x * x + 2 * y + z);
+    end P;
+
+end fltpoly;
+
+

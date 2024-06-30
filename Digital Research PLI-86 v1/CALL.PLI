@@ -1,0 +1,35 @@
+call:
+    procedure options(main);
+    declare 
+       f(3) entry(float) returns(float) variable,
+       a entry(float) returns(float); */ entry constant */
+    declare 
+       i fixed, x float;
+
+    f(1) = a;
+    f(2) = b;
+    f(3) = c;
+
+    do i = 1 to 3;
+       put skip list('Type x ');
+       get list(x);
+       put list('f(',i,')=',f(i)(x));
+    end;
+    stop;
+
+    b:
+      procedure(x) returns(float); /* internal procedure */
+      declare x float;
+      return (2*x + 1);
+    end b;
+
+    c:
+      procedure(x) returns(float); /* internal procedure */
+      declare x float;
+      return(sin(x));
+    end c;
+
+
+end call;
+
+

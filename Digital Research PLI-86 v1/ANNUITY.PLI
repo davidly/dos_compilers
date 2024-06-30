@@ -1,0 +1,83 @@
+/******************************************************/
+/* This program computes either the present value(PV),*/
+/* the payment(PMT), or the number of periods in an   */
+/* annuity.                                           */
+/******************************************************/
+annuity:
+    procedure options(main);
+    %replace
+       clear by '^z',
+       true  by '1'b;
+    declare 
+       PMT fixed decimal(7,2),
+       PV  fixed decimal(9,2),
+       IP  fixed decimal(6,6),
+       x   float binary,
+       yi  float binary,
+       i   float binary,
+       n   fixed;
+  
+    declare 
+       ftc entry(float binary(24)) 
+           returns(character(17) varying);
+  
+    put list (clear,'^i^iO R D I N A R Y   A N N U I T Y');
+    put skip(2) list
+    ('^iEnter Known Values, or 0, on Each Iteration');
+  
+    on error
+       begin;
+         put skip list('^iInvalid Data, Re-enter');
+         goto retry;
+       end;
+  
+    retry:
+    do while (true);
+       put skip(3) list('^iPresent Value ');
+       get list(PV);
+       put list('^iPayment       ');
+       get list(PMT);
+       put list('^iInterest Rate ');
+       get list(yi);
+       i = yi / 1200;
+       put list('^iPay Periods   ');
+       get list(n);
+  
+       if PV = 0 | PMT = 0 then
+          x = 1 - 1/(1+i)**n;
+  
+       /******************************/
+       /* compute the present value  */
+       /******************************/
+       if PV = 0 then
+          do;
+            PV = PMT * dec(ftc(x/i),15,6);
+            put edit('^iPresent Value is ',PV)
+                    (a,p'$$$,$$$,$$$V.99');
+          end;
+  
+       /******************************/         
+       /*    compute the payment     */
+       /******************************/
+        if PMT = 0 then
+           do;
+             PMT = PV * dec(ftc(i/x),15,8);
+             put edit('^iPayment is ',PMT)
+                     (a,p'$$,$$$,$$$V.99');
+           end;
+  
+       /*****************************/
+       /* compute number of periods */
+       /*****************************/
+       if n = 0 then
+          do;
+            IP = ftc(i);
+            x = char(PV * IP / PMT);
+            n = ceil ( - log(1-x)/log(1+i) );
+            put edit('^i',n,' Pay Periods')
+                    (a,p'ZZZ9',a);
+          end;
+    end;
+  
+end annuity;
+

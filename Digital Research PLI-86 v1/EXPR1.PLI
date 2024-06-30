@@ -1,0 +1,70 @@
+/******************************************************/
+/* This program evaluates an arithmetic expression    */
+/* using recursion.  It contains two procedures. GNT  */
+/* obtains the input expression consisting of separate*/
+/* tokens, and EXP which performs the recursive       */
+/* evaluation of the tokens in the input line.        */
+/******************************************************/
+expression:
+    procedure options(main);
+    declare 
+       sysin file,
+       value float,
+       token character(10) varying;
+
+    on endfile(sysin)
+       stop;
+
+    on error(1) /* conversion or signal */
+       begin;
+         put skip list('Invalid Input at ',token);
+         get skip;
+         goto restart;
+       end;
+
+    restart:
+
+        do while('1'b);
+           put skip(3) list('Type expression: ');
+           value = exp();
+           put skip list('Value is:',value);
+        end;
+
+    gnt:
+       procedure; 
+       get list(token);
+    end gnt;
+
+    exp:
+       procedure returns(float binary) recursive;
+       declare x float binary;
+       call gnt();
+       if token = '(' then
+          do;
+            x  = exp();
+            call gnt();
+            if token = '+' then
+               x = x + exp();
+            else
+            if token = '-' then
+               x = x - exp();
+            else
+            if token = '*' then
+               x = x * exp();
+            else
+            if token = '/' then
+               x = x / exp();
+            else
+            signal error(1);
+            call gnt();
+            if token ^= ')' then
+               signal error(1);
+          end;
+       else
+          x = token;
+       return(x);
+    end exp;
+
+end expression;
+
+

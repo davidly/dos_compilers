@@ -1,0 +1,54 @@
+/******************************************************/
+/* This program reads a sentence and reverses it.     */
+/******************************************************/
+reverse:
+    procedure options(main);
+    declare 
+        sentence pointer,
+        1 wordnode based (sentence),
+          2 word character(30) varying,
+          2 next pointer;
+
+    do while('1'b);
+       call read_it();
+       if sentence = null then
+          stop;
+       call write_it();
+    end;
+
+    read_it:
+        procedure; 
+        declare 
+          newword character(30) varying,
+          newnode pointer; 
+        sentence = null;
+        put skip list('What''s up? ');
+        do while('1'b);
+           get list(newword);
+           if newword = '.' then
+              return;
+           allocate wordnode set (newnode);
+           newnode->next = sentence;
+           sentence      = newnode;
+           word          = newword;
+        end;
+    end read_it;
+
+    write_it:
+        procedure;
+        declare 
+          p pointer; 
+        put skip list('Actually, ');
+        do while (sentence ^= null);
+           put list(word);
+           p = sentence;
+           sentence = next;
+           free p->wordnode;
+        end;
+        put list('.');
+        put skip;
+    end write_it;
+
+end reverse;
+
+

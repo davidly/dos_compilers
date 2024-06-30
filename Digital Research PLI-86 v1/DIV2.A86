@@ -1,0 +1,51 @@
+;	Routine to divide single precision float value by 2
+
+	cseg
+	public	div2
+	extrn	?signal:near
+
+;	entry:
+;		p1 -> fixed(7) power of two
+;		p2 -> floating point number
+;	exit:
+;		p1 -> (unchanged)
+;		p2 -> p2 / (2**p1)
+
+div2:			;BX = .low(.p1)
+	mov	si,[bx]		;SI = .p1
+	mov	bx,2[bx]	;BX = .p2
+	lods	al		;AL = p1 (power of 2)
+
+;	AL = power of 2, BX = .low byte of fp num
+
+	cmp	byte ptr 3[bx],0  ;p2 already zero?
+	jz	done		;exit if so
+
+dby2:			;divide by two
+	test	al,al		;counted power of 2 to zero?
+	jz	done		;return if so
+	dec	al		;count power of two down
+	sub	word ptr 2[bx],80h	;count exponent down
+	test	word ptr 2[bx],7f80h	;test for underflow
+	jnz	dby2		;loop again if no underflow
+
+;	Underflow occurred, signal underflow condition
+
+	mov	bx,offset siglst;signal parameter list
+	call	?signal		;signal underflow
+done:	ret			;normally, no return
+
+	dseg
+siglst	dw	offset sigcod	;address of signal code
+	dw	offset sigsub	;address of subcode
+	dw	offset sigfil	;address of file code
+	dw	offset sigaux	;address of aux message
+;	end of parameter vector, start of params
+sigcod	db	3		;03 = underflow
+sigsub	db	128		;arbitrary subcode for id
+sigfil	dw	0000		;no associated file name
+sigaux	dw	offset undmsg	;0000 if no aux message
+undmsg	db	32,'Underflow in Divide by Two',0
+
+	end
+

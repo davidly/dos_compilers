@@ -1,0 +1,42 @@
+/******************************************************/
+/* This program produces a schedule of loan payments  */
+/* using the following algorithm: if P = loan payment,*/
+/* i = interest, and PMT is the monthly payment then  */
+/* P = (P + (i*P) - PMT.                              */
+/******************************************************/
+loan1:
+    procedure options(main);
+    declare 
+    m   fixed binary,
+    y   fixed binary,
+    P   fixed decimal(11,2),
+    PMT fixed decimal(6,2),
+    i   fixed decimal(4,2);
+  
+    do while('1'b);
+       put skip list('Principal ');
+       get list(P);
+       put list('Interest  ');
+       get list(i);
+       put list('Payment   ');
+       get list(PMT);
+       m = 0;
+       y = 0;
+       do while (P > 0);
+          if mod(m,12) = 0 then
+             do;
+               y = y + 1;
+               put skip list('Year',y);
+             end;
+          m = m + 1;
+          put skip list(m,P);
+          P = P + round( i * P / 1200, 2);
+          if P < PMT 
+             then PMT = P;
+          put list(PMT);
+          P = P - PMT;
+       end;
+    end;
+  
+end loan1;
+

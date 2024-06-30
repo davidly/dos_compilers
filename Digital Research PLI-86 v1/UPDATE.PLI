@@ -1,0 +1,67 @@
+/******************************************************/
+/* This program allows you to retrieve and update     */
+/* individual records in an employee data base using  */
+/* a keyed file.                                      */
+/******************************************************/
+update:
+    procedure options(main);
+    declare 
+        1 employee static,
+          2 name     character(30) varying,
+          2 address, 
+            3 street character(30) varying,
+            3 city   character(10) varying,
+            3 state  character(12) varying,
+            3 zip    fixed decimal(5),
+          2 age      fixed decimal(3),
+          2 wage     fixed decimal(5,2),
+          2 hours    fixed decimal(5,1);
+    
+    declare
+        1 keylist (100),
+          2 keyname character(30) varying,
+          2 keyval  fixed binary;
+
+    declare
+        (i, endlist) fixed,
+        eolist bit(1) static initial('0'b),
+        matchname character(30) varying,
+        (emp, keys) file;
+
+    open file(emp) update direct environment(f(128))
+         title ('$1.EMP');
+
+    open file(keys) stream environment(b(4000)) 
+         title('$1.key');
+
+    do i = 1 to 100 while(^eolist);
+       get file(keys) list(keyname(i),keyval(i));
+       eolist = keyname(i) = 'EOF';
+    end;
+
+    do while('1'b);
+       put skip list('Employee: ');
+       get list(matchname);
+       if matchname = 'EOF' then
+          stop;
+       do i = 1 to 100;
+          if matchname = keyname(i) then
+             do;
+               read file(emp) into(employee)
+                    key(keyval(i));
+               put skip list('Address: ',
+                   street, city, state, zip);
+               put skip list('         ');
+               get list(street, city, state, zip);
+               put list('Hours:',hours,': ');
+               get list(hours);
+               write file(emp) from (employee)
+                     keyfrom(keyval(i));
+             end;
+       end;
+    end;
+
+end update;
+
+
+

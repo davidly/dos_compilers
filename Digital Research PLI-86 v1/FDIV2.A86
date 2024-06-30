@@ -1,0 +1,60 @@
+;		Division by power of two (function)
+
+	cseg
+	public	fdiv2
+	extrn	?signal:near
+
+;	entry:
+;		p1 -> fixed(7) power of two
+;		p2 -> floating point number
+;	exit:
+;		p1 -> (unchanged)
+;		p2 -> (unchanged)
+;	stack:	p2 / (2 ** p1)
+
+fdiv2:			;BX = .low(.p1)
+	mov	si,[bx]		;SI = .p1
+	lods	al		;AL = p1 (power of 2)
+	mov	bx,2[bx]	;BX = .p2
+
+;	AL = power of 2, BX = .low byte of fp num
+
+	mov	dx,[bx]		;DX = low and middle mantissa
+	mov	cx,2[bx]	;CL = high mantissa, CH = exponent
+	test	cx,7f80h	;exponent zero?
+	jz	fdret		;to return from float div
+
+dby2:			;divide by two
+	test	al,al		;counted power of 2 to zero?
+	jz	fdret		;return if so
+	dec	al		;count power of two down
+	sub	cx,80h		;count exponent down
+	test	cx,7f80h	;test for underflow
+	jnz	dby2		;loop again if no underflow
+
+;	Underflow occurred, signal underflow condition
+
+	mov	bx,offset siglst;signal parameter list
+	call	?signal		;signal underflow
+	sub	cx,cx		;clear result to zero for default return
+	mov	dx,cx
+
+fdret:	pop	bx		;recall return address
+	push	cx		;save high order fp num
+	push	dx		;save low order fp num
+	jmp	bx		;return to calling routine
+
+	dseg
+siglst	dw	offset sigcod	;address of signal code
+	dw	offset sigsub	;address of subcode
+	dw	offset sigfil	;address of file code
+	dw	offset sigaux	;address of aux message
+;	end of parameter vector, start of params
+sigcod	db	3		;03 = underflow
+sigsub	db	128		;arbitrary subcode for id
+sigfil	dw	0000		;no associated file name
+sigaux	dw	offset undmsg	;0000 if no aux message
+undmsg	db	32,'Underflow in Divide by Two',0
+
+	end
+

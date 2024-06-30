@@ -1,0 +1,41 @@
+sample:
+      procedure options(main); 
+      declare
+         c character(10) varying,
+         i fixed binary(15);
+
+      do;  
+        put skip list('Input: ');
+        get list(c);
+        c = upper(c); /* function reference */
+        put skip list('Output: ',c);
+      end;
+  
+      begin;  
+      declare
+         c float binary(24);
+
+         put skip list('Input: ');
+         get list(c);
+         call output(c); /* subroutine invocation */
+      end;
+  
+      upper:  
+           procedure(c) returns(character(10) varying);
+           declare
+              c character(10) varying;
+
+           return(translate(c,'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                             'abcdefghijklmnopqrstuvwxyz'));
+      end upper;
+  
+      output:  
+            procedure(c);
+            declare
+               c float binary(24);
+
+            put skip edit(c) (column(20),e(10,2));
+      end output;
+  
+end sample;
+

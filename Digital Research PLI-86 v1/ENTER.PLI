@@ -1,0 +1,62 @@
+/******************************************************/
+/* This program constructs a data base of employee    */
+/* records using a structure declaration.             */
+/******************************************************/
+
+enter:
+    procedure options(main);
+    %replace
+        true  by '1'b,
+        false by '0'b;
+
+    declare 
+       1 employee static,
+         2 name     character(30) varying,
+         2 address,
+           3 street character(30) varying,
+           3 city   character(10) varying,
+           3 state  character(12) varying,
+           3 zip    fixed decimal(5),
+         2 age      fixed decimal(3),
+         2 wage     fixed decimal(5,2),
+         2 hours    fixed decimal(5,1);
+
+    declare 
+       1 default static,
+         2 street character(30) varying
+           initial('(no street)'),
+         2 city   character(10) varying
+           initial('(no city)'),
+         2 state  character(12)  varying
+           initial('(no state)'),
+         2 zip    fixed decimal(5)
+           initial(00000);
+    declare 
+       emp file;
+
+    open file(emp) keyed output environment(f(128),b(8000))
+         title ('$1.EMP');
+
+    do while(true);
+       put list('Employee: ');
+       get list(name);
+       if name = 'EOF' then
+          do;
+            call write_it();
+            stop;
+          end;
+       address = default;
+       put list ('  Age, Wage: ');
+       get list (age,wage);
+       hours = 0;
+       call write_it();
+    end;
+
+    write_it:
+         procedure;
+         write file(emp) from(employee);
+    end write_it;
+
+end enter;
+
+

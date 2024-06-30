@@ -1,0 +1,56 @@
+/******************************************************/
+/* This program reads a name and address data file    */
+/* and displays the information on request.           */
+/******************************************************/
+retrieve:
+    procedure options(main);
+
+%include 'record.dcl';
+%replace
+    true  by '1'b,
+    false by '0'b;
+
+    declare
+        (sysprint, input) file, 
+        filename character(14) varying,
+        (lower, upper) character(30) varying,
+        eofile bit(1);
+
+    open file(sysprint) print title('$con');
+    put list('Name and Address Retrieval, File Name: ');
+    get list(filename);
+
+    do while(true);
+       lower = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+       upper = 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+       put skip(2) list('Type Lower, Upper Bounds: ');
+       get list(lower,upper);
+       if lower = 'EOF' then
+          stop;
+
+       open file(input) stream input environment(b(1024))
+                title(filename);
+       eofile = false;
+       do while (^eofile);
+          get file(input) list(name);
+          eofile = (name = 'EOF');
+          if ^eofile then
+             do;
+               get file(input)
+               list(addr,city,state,zip,phone);
+               if name >= lower & name <= upper then
+                  do;
+                    put page skip(3)list(name);
+                    put skip list(addr);
+                    put skip list(city,state);
+                    put skip list(zip);
+                    put skip list(phone);
+                  end;
+             end;
+       end;
+       close file(input);
+    end;
+
+end retrieve;
+
+

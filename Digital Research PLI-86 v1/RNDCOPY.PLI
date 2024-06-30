@@ -1,0 +1,254 @@
+diocopy: procedure options(main);
+
+/*****************************************************************************
+*                                                                            *
+*          I B M   D O S   D i r e c t   F u n c t i o n   C a l l s         *
+*                                                                            *
+******************************************************************************
+******************************************************************************
+*                                                                            *
+* This program tests many of the IBM DOS direct function calls.  The tests   *
+* are not particularly complicated, but they do serve as examples for using  *
+* direct DOS function calls from PL/I-86.                                    *
+*                                                                            *
+******************************************************************************
+*                                                                            *
+*  NOTE!  YOU SHOULD STUDY THE IBM DOS DOCUMENTATION FOR MORE COMPLETE       *
+*         INFORMATION BEFORE USING ANY OF THESE FUNCTIONS IN YOUR PROGRAMS.  *
+*                                                                            *
+*                                                                            *
+******************************************************************************
+*   To use this program, enter the command:                                  *
+*                                                                            *
+*     A>rndcopy filename.typ newname.typ                                     *
+*****************************************************************************/
+
+/* DIOMOD.DCL contains the declarations for the DOS functions */
+%include 'diomod.dcl';
+
+%replace
+	true   by '1'b,
+	false  by '0'b,
+	buffer_size by 64;   /* word size of 128 byte buffer */
+
+declare
+	(tempsrc,tempdest) char(14) var,
+	d_space(37)        bit(8),
+	eofile             bit(1),
+	ret_code           fixed(7),
+	(i,m,num_buffs)    fixed(15),
+	memory (0:0)       bit(16) based(memptr());
+
+declare  /* source file FCB */
+	srcfcb_ptr ptr,
+	1 source_file based(srcfcb_ptr),
+		2 drive           fixed(7),
+		2 name            character(8),
+		2 type            character(3),
+		2 current_block   bit(16),
+		2 record_size     bit(16),
+		2 file_size(2)    bit(16),
+		2 date            bit(16),
+		2 reserved(10)    bit(8),
+		2 current_rec     bit(8),
+		2 rand_rec_no(2)  bit(16);
+
+declare  /* destination file FCB */
+	destfcb_ptr pointer,
+	1 dest_file based(destfcb_ptr),
+		2 drive           fixed(7),
+		2 name            character(8),
+		2 type            character(3),
+		2 current_block   bit(16),
+		2 record_size     bit(16),
+		2 file_size(2)    bit(16),
+		2 date            bit(16),
+		2 reserved(10)    bit(8),
+		2 current_rec     bit(8),
+		2 rand_rec_no(2)  bit(16);
+
+/****************************************************************************/
+/*                         M a i n   P r o g r a m                          */
+/****************************************************************************/
+
+/* initialize source file FCB */
+srcfcb_ptr = dfcb0();
+destfcb_ptr = addr(d_space);  /* set up destination FCB out in memory */
+
+/* set drives to be default; may be changed by OPEN */
+source_file.drive = 0;
+dest_file.drive = 0;
+
+/* get the file names */
+call get_names(tempsrc,tempdest);
+
+/* split up name & type; make sure they're the right length, padded with
+   trailing blanks if necessary */
+i = index(tempsrc,'.');
+source_file.name = substr(tempsrc,1,i-1) || '        ';
+source_file.name = substr(source_file.name,1,8);
+source_file.type = substr(tempsrc,i+1) || '   ';
+source_file.type = substr(source_file.type,1,3);
+/* do the same for the destination name */
+i = index(tempdest,'.');
+
+/* the following PUT EDIT statements are needed to make the register
+   allocator work right */
+
+PUT SKIP EDIT('1.DEST_FILE.NAME=',DEST_FILE.NAME,'<--') (A,A,A);
+dest_file.name = substr(tempdest,1,i-1) || '        ';
+PUT SKIP EDIT('2.DEST_FILE.NAME=',DEST_FILE.NAME,'<--') (A,A,A);
+dest_file.name = substr(dest_file.name,1,8);
+PUT SKIP EDIT('3.DEST_FILE.NAME=',DEST_FILE.NAME,'<--') (A,A,A);
+dest_file.type = substr(tempdest,i+1,3) || '   ';
+PUT SKIP EDIT('1.DEST_FILE.TYPE=',DEST_FILE.TYPE,'<--') (A,A,A);
+dest_file.type = substr(dest_file.type,1,3);
+PUT SKIP EDIT('2.DEST_FILE.TYPE=',DEST_FILE.TYPE,'<--') (A,A,A);
+
+/* open the source file, if possible */
+if open(addr(source_file)) = -1 then do;
+	put skip list('No Source File');
+	call reboot();
+end;
+
+/* create the destination file */
+if make(destfcb_ptr) = -1 then do;
+	put skip list('No Directory Space');
+	call reboot();
+end;
+
+/* figure out how many buffers to use */
+num_buffs = divide(memwds(),buffer_size,15);
+if num_buffs = 0 then do;
+	put skip list('No Memory Available for Buffer Space');
+	call reboot();
+end;
+
+/* now do the read */
+eofile = false;
+do while (^eofile);
+	m = 0;
+	/* fill buffers */
+	do i = 0 repeat (i+1) while(i < num_buffs);
+		call setdma(addr(memory(m)));
+		m = m + buffer_size;
+		if rdran(addr(source_file)) ^= 0 then do;
+			eofile = true;
+			/* truncate buffer */
+			num_buffs = i;
+		end;
+		/* increment the random record field */
+		if source_file.rand_rec_no(1) = 'FFFF'b4 then do;
+			source_file.rand_rec_no(2) =
+				add(source_file.rand_rec_no(2),'0001'b4);
+			source_file.rand_rec_no(1) = '0000'b4;
+		end;
+		source_file.rand_rec_no(1) =
+			add(source_file.rand_rec_no(1),'0001'b4);
+	end;
+	m = 0;
+	/* write buffers */
+	do i = 0 to num_buffs - 1;
+		call setdma(addr(memory(m)));
+		m = m + buffer_size;
+		if wrran(destfcb_ptr) ^= 0 then do;
+			put skip list('Disk Full');
+			call reboot();
+		end;
+		/* increment the random record field */
+		if dest_file.rand_rec_no(1) = 'FFFF'b4 then do;
+			dest_file.rand_rec_no(2) =
+				add(dest_file.rand_rec_no(2),'0001'b4);
+			dest_file.rand_rec_no(1) = '0000'b4;
+		end;
+		dest_file.rand_rec_no(1) =
+			add(dest_file.rand_rec_no(1),'0001'b4);
+	end;
+end;
+
+/* close destination file */
+if close(destfcb_ptr) = -1 then do;
+	put skip list('Disk is Read Only');
+	call reboot();
+end;
+
+/* all done! */
+put skip list('File Copied');
+call reboot();
+
+/****************************************************************************/
+/*                           S u b r o u t i n e s                          */
+/****************************************************************************/
+get_names: procedure(src,dest);
+/* get the filenames from the command line */
+	declare
+		(src,dest) char(14) var,  /* file names */
+		buffptr pointer,
+		cmdline char(127) var based(buffptr),
+		indx fixed;
+	buffptr = dbuff();
+	/* delete any leading blanks */
+	do while(substr(cmdline,1,1) = ' ');
+		cmdline = substr(cmdline,2);
+	end;
+	/* find the break between the two filenames */
+	indx = index(cmdline,' ');
+
+/* the next statement is needed to make the register allocator work
+   right */
+
+PUT SKIP LIST('INDX=',INDX);
+	/* get the source filename */
+	src = substr(cmdline,1,indx-1);
+	cmdline = substr(cmdline,indx+1);
+	/* delete any intervening blanks */
+	do while(substr(cmdline,1,1) = ' ');
+		cmdline = substr(cmdline,2);
+	end;
+	/* put the rest of the command line in destination filename */
+	dest = substr(cmdline,1,14);
+end get_names;
+
+/****************************************************************************/
+/*          U n s i g n e d   A r i t h m e t i c   F u n c t i o n s       */
+/****************************************************************************/
+add: procedure((x),(y)) returns(bit(16));
+	/* 16 bit unsigned add */
+	declare
+		(x,y,z) bit(16),
+		(xp,yp,zp) ptr,
+		su bit(16),
+		sv bit(16),
+		sw bit(16),
+		u fixed bin(15) based(xp),
+		v fixed bin(15) based(yp),
+		w fixed bin(15) based(zp);
+	xp = addr(x);
+	yp = addr(y);
+	zp = addr(z);
+	/* get sign bits of u and v */
+	su = x & '8000'b4;
+	sv = y & '8000'b4;
+	/* zero sign bits of x and y */
+	x = x & '7FFF'b4;
+	y = y & '7FFF'b4;
+	w = u + v;
+	sw = z & '8000'b4;
+	/* get sign bit of z */
+	z = z & '7FFF'b4;
+	/* XOR of su, sv, sw */
+	sw = xor(xor(su,sv),sw);
+	/* put in sign bit of z */
+	z = z | sw;
+	return(z);
+end add;
+
+xor: procedure(x,y) returns(bit(16));
+	/* 16 bit logical exclusive or */
+	declare
+		(x,y) bit(16);
+	return(bool(x,y,'0110'b));
+end xor;
+
+end diocopy;
+

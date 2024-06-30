@@ -1,0 +1,199 @@
+
+
+
+
+
+
+
+      ***********************************************************************
+      ***********************************************************************
+      ***********************                         ***********************
+      ***********************  PL/I-86  Release 1.0   ***********************
+      ***********************      For use with       ***********************
+      *********  The IBM Personal Computer Disk Operating System  ***********
+      **************************  Version 1.1  ******************************
+      ***********************************************************************
+      ***********************************************************************
+      ***********                                                ************
+      ********                     Release Notes                    *********
+      *******                                                        ********
+      ***********************************************************************
+      ***********************************************************************
+      ***********************************************************************
+      *******                                                         *******
+      *******          Copyright (c) 1983 by Digital Research         *******
+      *******                                                         *******
+      *******       CP/M-86 is a trademark of Digital Research.       *******
+      *******       PL/I-86 is a trademark of Digital Research.       *******
+      ******* IBM is a tradename of International Business Machines.  *******
+      ***********************************************************************
+      ***********************************************************************
+      ***********************************************************************
+      ***********************************************************************
+      *****                                                             *****
+      *****  These release notes provide the most current information   *****
+      *****  regarding both the software and the documentation set for  *****
+      *****  for the Digital Research product, PL/I-86.                 *****
+      *****                                                             *****
+      ***********************************************************************
+      ***********************************************************************
+      ***********************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                       1
+
+
+
+      ***********************************************************************
+      *************************  SOFTWARE  NOTES ****************************
+      ***********************************************************************
+
+
+      DOS
+
+      IBM Personal Computer DOS V1.1 does not interpret ANSI standard  escape
+      sequences.  Consequently,  programs that attempt to handle displays via
+      escape sequences for cursor control will not run properly.
+
+
+      PL/I-86 R1.0
+
+      The following features are described in  the  PL/I  Language  Reference
+      Manual, but are NOT implemented in PL/I-86 R1.0 running under DOS:
+
+         o Double-precision FLOAT BINARY data
+
+         o File password protection in the ENVIRONMENT option
+
+         o File and  record  locking  using  the  built-in  LOCK  and  UNLOCK
+           functions.
+
+         o The error messages emitted by the compiler during Pass 1 and  Pass
+           2  are  the same error messages used in PL/I-86 R1.0 running under
+           CP/M-86.  Appendix E.2 states that there are new error messages in
+           Pass  1  and  Pass  2.  The new error messages will be included in
+           Release 1.1.
+
+
+      RASM-86 R1.0
+
+      The following features are  described  in  the  Programmer's  Utilities
+      Guide, but are NOT implemented in RASM-86 R1.0 running under DOS:
+
+         o Release 1.0 does not implement  the  Stack,  Local,  and  Absolute
+           combine types (see Section 3.2.3).
+
+         o Release 1.0 does not implement user-defined class  names  (Section
+           3.2.4).
+
+
+      LINK-86 R1.0
+
+      The following features are  described  in  the  Programmer's  Utilities
+      Guide, but are NOT implemented in LINK-86 R1.0 running under DOS:
+
+         o Release 1.0 does not  implement  the  Class,  Group,  Origin,  and
+           Segment command-line options (Sections 7.7.1 and 7.7.3).
+
+         o The general-purpose overlay manager OVLMGR.OBJ is not included  in
+           R1.0.   The   PL/I-86  Run-time  Subroutine  Library  (PLILIB.L86)
+           includes an overlay manager.
+
+
+      Note: The features that are not included in R1.0 have no impact on  the
+      PL/I-86 programmer.  They will be implemented in future versions.
+
+
+
+
+                                       2
+
+
+
+      ***********************************************************************
+      ***************************  SOFTWARE BUGS  ***************************
+      ***********************************************************************
+
+
+      The following are known software bugs in  PL/I-86  R1.0  running  under
+      DOS:
+
+         o An array reference such as
+
+                  A(constant-expression) = constant;
+
+           gives a compilation error.  You can program around this using  the
+           following mechanism:
+
+                  i = constant-expression;
+                  A(i) = constant;
+
+
+         o A CALL  statement  cannot  contain  a  null  argument  list.   For
+           example,
+
+                  CALL A();
+
+           You can program around this by always using
+
+                  CALL A;
+
+
+         o There is an incorrect string assignment if the  right-hand  string
+           overlaps  the  left-hand  string.  The  example  in  the  Language
+           Reference Manual, page 6-7 is correct; the compiler is not.
+
+         o The RANK built-in function doesn't accept SUBSTR as  an  argument.
+           For example, RANK(SUBSTR(C,1,1)) causes a compilation error.
+
+         o A statement in column 1 following a simple DO statement  causes  a
+           compilation error.
+
+         o At run-time, end-of-file is not noticed if the  column  descriptor
+           in  the  format  specifies  a  location past the actual end of the
+           file.
+
+         o Static, initialized data with  odd-numbered  byte  boundaries  can
+           sometimes overwrite storage reserved for the File Parameter Block,
+           thereby causing OPEN errors.  For example,
+
+                  declare x fixed binary(7) static initial(0);
+
+           You can program around this by declaring the data with the  STATIC
+           and  EXTERNAL  attributes,  or  by using a declaration that forces
+           storage on  a  word  (double-byte)  boundary,  for  example  FIXED
+           BINARY(15).   Omitting  the  INITIAL  attribute  also  solves  the
+           problem.
+
+
+      Digital Research is in the process of fixing these software  bugs,  and
+      will either furnish field patches through Technical Support, or issue a
+      new version.
+
+
+
+                                       3
+
+

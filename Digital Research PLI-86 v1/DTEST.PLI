@@ -1,0 +1,20 @@
+/******************************************************/
+/* This program tests an assembly language routine to */ 
+/* do floating point division.                        */
+/******************************************************/
+dtest:
+     procedure options(main);
+     declare 
+       div2 entry(fixed(7),float),
+       i fixed(7),
+       f float;
+
+     do i = 0 by 1;
+        f = 100;
+        call div2(i,f);
+        put skip list('100 / 2 **',i,'=',f);
+     end;
+
+end dtest;
+
+

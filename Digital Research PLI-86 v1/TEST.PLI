@@ -1,0 +1,35 @@
+/***************************************************/ 
+/* This program computes the largest of three      */
+/* FLOAT BINARY numbers x, y, and z                */   
+/***************************************************/
+test:
+    procedure options(main);
+    declare 
+       (a,b,c) float binary;
+
+    put list ('Type Three Numbers: ');
+    get list (a,b,c);
+    put list ('The Largest Value is',max3(a,b,c));
+
+    /* this procedure computes the largest of x, y, and z */
+    max3: 
+        procedure(x,y,z) returns(float binary);
+        declare 
+           (x,y,z,max) float binary;
+
+        if x > y then
+           if x > z then
+              max = x;
+           else
+              max = z;
+        else
+           if y > z then
+              max = y;
+           else
+              max = z;
+        return(max);
+    end max3;
+
+end test;
+
+

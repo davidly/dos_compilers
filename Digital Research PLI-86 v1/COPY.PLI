@@ -1,0 +1,24 @@
+/*****************************************************/
+/* This program copies one file to another using     */
+/* buffered I/O.                                     */
+/*****************************************************/
+copy:
+    procedure options(main);
+    declare
+       (input_file,output_file) file;
+
+    open file (input_file) stream 
+         environment(b(8192)) title('$1.$1');
+
+    open file (output_file) stream output 
+         environment(b(8192)) title('$2.$2');
+    declare
+       buff character(254) varying;
+
+    do while('1'b);
+       read  file (input_file)  into (buff);
+       write file (output_file) from (buff);
+    end;
+end copy;
+
+

@@ -1,0 +1,24 @@
+/******************************************************/
+/* This program evaluates the Factorial function (n!) */
+/* using recursion and FLOAT BINARY data.             */
+/******************************************************/
+ffact:
+     procedure options(main);
+     declare 
+        i fixed;
+     do i = 0 repeat(i+1);
+        put skip list('Factorial(',i,')=',factorial(i));
+     end;
+     stop;
+
+     factorial:
+          procedure(i) returns(float) recursive;
+          declare 
+             i fixed;
+          if i = 0 then return (1);
+          return (i * factorial(i-1));
+     end factorial;
+
+end ffact;
+
+

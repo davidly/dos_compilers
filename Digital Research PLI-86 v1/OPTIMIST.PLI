@@ -1,0 +1,49 @@
+/******************************************************/
+/* This program demonstrates PL/I character string    */
+/* processing by turning a negative sentence into a   */
+/* positive one.                                      */
+/******************************************************/
+optimist:
+    procedure options(main);
+    %replace
+        true   by '1'b,
+        false  by '0'b,
+        nwords by 5;
+    declare
+        negative (1:nwords) character(8) varying static initial
+            (' never',' none',' nothing',' not',' no'),
+        positive (1:nwords) character(10) varying static initial
+            (' always',' all',' something','',' some'),
+        upper character(28) static initial
+            ('ABCDEFGHIJKLMNOPQRSTUVWXYZ. '),
+        lower character(28) static initial
+            ('abcdefghijklmnopqrstuvwxyz. '),
+        sent character(254) varying,
+        word character(32)  varying,
+        (i,j) fixed;
+
+    do while(true);
+       put skip list('What''s up? ');
+       sent = ' ';
+       do while
+          (substr(sent,length(sent)) ^= '.');
+          get list (word);
+          sent = sent !! ' ' !! word;
+       end;
+       sent = translate(sent,lower,upper);
+       if verify(sent,lower) ^= 0 then
+          sent = ' that''s an interesting idea.';
+       do i = 1 to nwords;
+          j = index(sent,negative(i));
+          if j ^= 0 then
+             sent = substr(sent,1,j-1) !!
+          positive(i) !!
+          substr(sent,j+length(negative(i)));
+       end;
+       put list('Actually,'!!sent);
+       put skip;
+    end;
+
+end optimist;
+
+

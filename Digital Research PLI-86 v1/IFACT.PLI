@@ -1,0 +1,20 @@
+/******************************************************/
+/* This program evaluates the Factorial function (n!) */
+/* using iteration.                                   */
+/******************************************************/
+ifact:
+     procedure options(main);
+     declare 
+        (i, n, F) fixed;
+
+     do i = 0 by 1;
+        F = 1;
+        do n = i to 1 by -1;
+           F = n * F;
+        end;
+        put edit('factorial(',i,')=',F)
+            (skip, a,f(2), a, f(7));
+     end;
+end ifact;
+
+

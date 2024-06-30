@@ -1,0 +1,65 @@
+/******************************************************/
+/* This program is the main module in a program that  */
+/* performs matrix inversion.  It calls the entry     */
+/* constant INVERT which does the actual inversion.   */
+/******************************************************/
+maininvt: 
+    procedure options(main);
+    %replace
+        true   by '1'b,
+        false  by '0'b;
+    %include 'matsize.lib';
+
+    declare
+         mat(maxrow,maxcol) float binary(24),
+         (i,j,n,m) fixed(6),
+         var character (26) static initial
+         ('abcdefghijklmnopqrstuvwxyz'),
+         invert entry
+         ((maxrow,maxcol) float(24), fixed(6), fixed(6));
+
+    put list('Solution of Simultaneous Equations');
+    do while(true);
+       put skip(2) list('Type rows, columns: ');
+       get list(n);
+       if n = 0 then
+          stop;
+
+       get list(m);
+       if n > maxrow ! m > maxcol then
+          put skip list('Matrix is Too Large');
+       else
+          do;
+            put skip list('Type Matrix of Coefficients');
+            put skip;
+            do i = 1 to n;
+               put list('Row',i,':');
+               get list((mat(i,j) do j = 1 to n));
+            end;
+
+            put skip list('Type Solution Vectors');
+            put skip;
+            do j = n + 1 to m;
+               put list('Variable',substr(var,j-n,1),':');
+               get list((mat(i,j) do i = 1 to n));
+            end;
+
+            call invert(mat,n,m);
+            put skip(2) list('Solutions:');
+            do i = 1 to n;
+               put skip list(substr(var,i,1),'=');
+               put edit((mat(i,j) do j = 1 to m-n))
+                       (f(8,2));
+            end;
+
+            put skip(2) list('Inverse Matrix is');
+            do i = 1 to n;
+               put skip edit((mat(i,j) do j = m-n+1 to m))
+                            (x(3),6f(8,2),skip);
+            end;
+          end;
+    end;
+
+end maininvt; 
+
+

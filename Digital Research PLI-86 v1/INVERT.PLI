@@ -1,0 +1,30 @@
+/******************************************************/
+/* This is an external procedure called by MAININVT.  */
+/******************************************************/
+invert:
+    procedure (a,r,c);
+    %include 'matsize.lib';
+    declare 
+        (d, a(maxrow,maxcol)) float binary(24),
+        (i,j,k,l,r,c) fixed binary(6);
+    do i = 1 to r;
+       d = a(i,1);
+       do j = 1 to c - 1;
+          a(i,j) = a(i,j+1)/d;
+       end;
+       a(i,c) = 1/d;
+       do k = 1 to r;
+          if k ^= i then
+             do;
+               d = a(k,1);
+               do l = 1 to c - 1;
+                  a(k,l) = a(k,l+1) - a(i,l) * d;
+               end;
+               a(k,c) = - a(i,c) * d;
+             end;
+       end;
+    end;
+
+end invert;
+
+

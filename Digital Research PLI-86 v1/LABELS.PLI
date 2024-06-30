@@ -1,0 +1,45 @@
+/******************************************************/
+/* This is a non-functional program.  Its purpose is  */
+/* to illustrate the concept of label constants and   */
+/* variables.                                         */
+/******************************************************/
+Labels:
+      procedure options(main);
+      declare 
+	i fixed,
+	(x, y, z(3)) label;
+      x = lab1;
+      y = x;
+
+      goto lab1;
+      goto x;
+      goto y;
+
+      call P(lab2);
+
+      do i = 1 to 3;
+         z(i) = c(i);
+      end;
+
+      i = 2;
+      goto z(i);
+      goto c(i);
+
+      c(1):;
+      c(2):;
+      c(3):;
+
+      lab1:;
+      lab2:;
+
+      P:
+        procedure (g);
+        declare 
+	  g label;
+        goto g;
+      end P;
+
+end Labels;
+
+
+

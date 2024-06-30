@@ -1,0 +1,40 @@
+/*
+    PL/I implementation of BYTE magazine's sieve benchmark
+*/
+
+sieve:
+    proc options( main );
+    %replace
+        size by 8190,
+        false by '0'b,
+        true by '1'b;
+
+    dcl
+        flags( 0:8191 ) bit(1),
+        ( i, prime, k, count, iter ) fixed;
+
+    put list( '10 iterations');
+
+    do iter = 1 to 10;
+        count = 0;
+
+        do i = 0 to size;
+            flags( i ) = true;
+        end;
+
+        do i = 0 to size;
+            if flags( i ) then do;
+                prime = i + i + 3;
+                k = i + prime;
+                do while ( k <= size );
+                    flags( k ) = false;
+                    k = k + prime;
+                end;
+
+                count = count + 1;
+            end;
+        end;
+    end;
+
+    put skip list( count, 'primes' );
+end sieve;

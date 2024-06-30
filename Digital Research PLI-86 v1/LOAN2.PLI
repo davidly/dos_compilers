@@ -1,0 +1,221 @@
+/*****************************************************/
+/* This program computes a schedule of loan payments */
+/* using an elaborate analysis and display format.   */
+/* It contains five internal procedures: DISPLAY,    */
+/* SUMMARY, CURRENT_YEAR, HEADER, and LINE.          */
+/*****************************************************/
+loan2: 
+    procedure options(main);
+    %replace
+       true   by '1'b,
+       false  by '0'b,
+       clear  by '^z';
+
+    declare 
+       end bit(1),
+       m   fixed binary,
+       sm  fixed binary,
+       y   fixed binary,
+       sy  fixed binary,
+       fm  fixed binary,
+       dl  fixed binary,
+       P   fixed decimal(10,2),
+       PV  fixed decimal(10,2),
+       PP  fixed decimal(10,2),
+       PL  fixed decimal(10,2),
+       PMT fixed decimal(10,2),
+       PMV fixed decimal(10,2),
+       INT fixed decimal(10,2),
+       YIN fixed decimal(10,2),
+       IP  fixed decimal(10,2),
+       yi  fixed decimal(4,2),
+       i   fixed decimal(4,2),
+       INF fixed decimal(4,3),
+       ci  fixed decimal(15,14),
+       fi  fixed decimal(7,5),
+       ir  fixed decimal(4,2);
+
+    declare 
+       name character(14) varying static initial('$con'),
+       output file;
+
+    put list(clear,'^i^iS U M M A R Y   O F   P A Y M E N T S');
+
+    on undefinedfile(output)
+       begin;
+         put skip list('^i^icannot write to',name);
+         goto open_output;
+       end;
+
+    open_output:
+    put skip(2) list('^i^iOutput File Name ');
+    get list(name);
+    if name = '$con' then
+       open file(output) title('$con') print pagesize(0);
+    else
+       open file(output) title(name) print;
+
+    on error
+       begin;
+         put skip list('^i^iBad Input Data, Retry');
+         goto retry;
+       end;
+
+    retry:
+    do while(true);
+       put skip(2) list('^i^iPrincipal      ');
+       get list(PV);
+       P = PV;
+       put list('^i^iInterest       ');
+       get list(yi);
+       i = yi;
+       put list('^i^iPayment        ');
+       get list(PMV);
+       PMT = PMV;
+       put list('^i^i%Inflation     ');
+       get list(ir);
+       fi = 1 + ir/1200;
+       ci = 1.00;
+       put list('^i^iStarting Month ');
+       get list(sm);
+       put list('^i^iStarting Year  ');
+       get list(sy);
+       put list('^i^iFiscal Month   ');
+       get list(fm);
+       put edit('^i^iDisplay Level  ',
+                '^i^iYr Results : 0 ',
+                '^i^iYr Interest: 1 ',
+                '^i^iAll Values : 2 ')
+           (skip,a);
+       get list(dl);
+       if dl < 0 | dl > 2 then
+          signal error;
+       m = sm;
+       y = sy;
+       IP = 0;
+       PP = 0;
+       YIN = 0;
+       if name ^= '' then
+          put file(output) page;
+       call header();
+       do while (P > 0);
+          end = false;
+          INT = round ( i * P / 1200, 2 );
+          IP  = IP + INT;
+          PL  = P;
+          P   = P  + INT;
+          if P < PMT then
+             PMT = P;
+             P   = P - PMT;
+             PP  = PP + (PL - P);
+             INF = ci;
+             ci = ci / fi;
+          if P = 0 | dl > 1 | m = fm then
+             do;
+               put file(output) skip
+                   edit('|',100*m+y) (a,p'99/99');
+               call display(PL * INF, INT * INF,
+               PMT * INF, PP * INF, IP * INF);
+             end;
+          if m = fm & dl > 0 then
+             call summary();
+             m = m + 1;
+          if m > 12 then
+             do;
+               m = 1;
+               y = y + 1;
+               if y > 99 then
+                  y = 0;
+             end;
+       end;
+       if dl = 0 then
+          call line();
+       else
+       if ^end then
+          call summary();
+    end retry;
+/****************************************************/
+/* This procedure performs the output of the actual */
+/* parameters passed to it by the main part of the  */
+/* program.                                         */
+/****************************************************/
+display:
+   procedure(a,b,c,d,e);
+   declare
+      (a,b,c,d,e) fixed decimal(10,2);
+
+   put file (output) edit
+       ('|',a,'|',b,'|',c,'|',d,'|',e,'|')
+       (a,2(2(p'$zz,zzz,zz9v.99',a),
+       p'$zzz,zz9.v99',a));
+end display;
+
+/*************************************************/
+/* This procedure computes the summary of yearly */
+/* interest.                                     */
+/*************************************************/
+summary:
+   procedure;
+   end = true;
+   call current_year(IP-YIN);
+   YIN = IP;
+end summary;
+
+/****************************************************/
+/* This procedure computes the interest paid during */
+/* current year.                                    */
+/****************************************************/
+current_year:
+   procedure(I);
+   declare 
+      yp fixed binary,
+      I fixed decimal(10,2);
+   yp = y;
+   if fm < 12 then
+      yp = yp - 1;
+   call line();
+   put skip file(output) edit
+       ('|','Interest Paid During ''',yp,'-''',y,' is ',I,'|')
+       (a,x(15),2(a,p'99'),a,p'$$$,$$$,$$9V.99',x(16),a);
+   call line();
+end current_year;
+
+/******************************************************/
+/* This procedure defines and prints out an elaborate */
+/* header format.                                     */
+/******************************************************/
+header:
+   procedure;
+   put file(output) list(clear);
+   call line();
+   put file(output) skip edit
+       ('|','L O A N   P A Y M E N T   S U M M A R Y','|')
+       (a,x(19));
+   call line();
+   put file(output) skip edit
+       ('|','Interest Rate',yi,'%','Inflation Rate',ir,'%','|')
+       (a,x(15),2(a,p'b99v.99',a,x(6)),x(9),a);
+   call line();
+   put file(output) skip edit
+       ('|Date |','  Principal   |','Plus  Interest|','  Payment  |',
+            'Principal Paid|','Interest Paid |') (a);
+   call line();
+end header;
+
+/*******************************************************/
+/* This procedure prints out a series of dashed lines. */
+/*******************************************************/
+line:
+   procedure;
+   declare 
+      i fixed bin;
+   put file(output) skip edit
+       ('-------','------------',
+       ('---------------' do i = 1 to 4)) (a);
+end line;
+
+
+end loan2;
+
+
+

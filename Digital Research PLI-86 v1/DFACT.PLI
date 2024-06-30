@@ -1,0 +1,26 @@
+/******************************************************/
+/* This program evaluates the Factorial function (n!) */
+/* using recursion and FIXED DECIMAL data.            */
+/******************************************************/
+dfact:
+     procedure options(main);
+     declare 
+        i fixed;
+     do i = 0 repeat(i+1);
+        put skip list('Factorial(',i,')=',factorial(i));
+     end;
+     stop;
+
+     factorial:
+          procedure(i) returns(fixed decimal(15,0)) 
+                       recursive;
+          declare 
+             i fixed;
+
+          if i = 0 then return (1);
+          return (decimal(i,15) * factorial(i-1));
+     end factorial;
+
+end dfact;
+
+

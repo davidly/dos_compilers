@@ -1,0 +1,6 @@
+a:
+  procedure(x) returns (float); /* external procedure */
+  declare x float;
+  return (x/2);
+end a;
+

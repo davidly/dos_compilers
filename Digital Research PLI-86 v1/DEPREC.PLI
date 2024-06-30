@@ -1,0 +1,298 @@
+/*******************************************************/
+/* This program calculates three kinds of depreciation */
+/* schedules: straight_line, sum_of_the_years, and     */
+/* double_declining.                                   */
+/*******************************************************/
+depreciate:
+    procedure options(main);
+    %replace
+       clear_screen by '^z',
+       indent   by 15,
+       ITC_rate by .1,
+       bonus_rate by .1,
+       bonus_max  by 2000;
+
+    declare
+       selling_price  decimal(8,2),
+       adjusted_price decimal(8,2),
+       residual_value decimal(8,2),
+       year_value decimal(8,2),
+       depreciation_value decimal(8,2),
+       total_depreciation decimal(8,2),
+       book_value decimal(8,2),
+       tax_rate decimal(3,2),
+       sales_tax decimal(8,2),
+       tax_bracket decimal(2),
+       FYD decimal(8,2),
+       ITC decimal(8,2),
+       bonus_dep decimal(8,2),
+       months_remaining decimal(2),
+       new character(4),
+       factor decimal(2,1),
+       years decimal(2),
+       year_sum decimal(3),
+       current_year decimal(2),
+       select_sched character(1);
+
+    declare
+       copy_to_list character(4),
+       output file variable,
+       (sysprint, list) file;
+
+    declare
+       schedules character(3) static initial ('syd'),
+       schedule (0:3) entry variable;
+
+    schedule (0) = error;
+    schedule (1) = straight_line;
+    schedule (2) = sum_of_years;
+    schedule (3) = double_declining;
+
+    open file (sysprint) stream print pagesize(0)
+              title ('$con');
+
+    do while('1'b);
+       put list(clear_screen,'^i^i^iDepreciation Schedule');
+       put skip(3) list('^i^iSelling  Price? ');
+       get list(selling_price);
+       put list('^i^iResidual Value? ');
+       get list(residual_value);
+       put list('^i^iSales Tax (%)?  ');
+       get list(tax_rate);
+       put list('^i^iTax Bracket(%)? ');
+       get list(tax_bracket);
+       put list('^i^iProRate Months? ');
+       get list(months_remaining);
+       put list('^i^iHow Many Years? ');
+       get list(years);
+       put list('^i^iNew? (yes/no)   ');
+       get list(new);
+       put edit('^i^iSchedule:',
+                '^i^iStraight   (s)',
+                '^i^iSum-of-Yrs (y)',
+                '^i^iDouble Dec (d)? ') (a,skip);
+       get list(select_sched);
+       put list('^i^iList? (yes/no)  ');
+       get list(copy_to_list);
+       if copy_to_list = 'yes' then
+          open file(list) stream print title('$lst');
+       factor = 1.5;
+       if new = 'yes' then
+          factor = 2.0;
+       sales_tax = decimal(selling_price*tax_rate,12,2)/100+.005;
+       if new = 'yes' | selling_price <= 100000.00 then
+          ITC = selling_price * ITC_rate;
+       else
+          ITC = 100000 * ITC_rate;
+       bonus_dep = selling_price * bonus_rate;
+       if bonus_dep > bonus_max then
+          bonus_dep = bonus_max;
+       put list(clear_screen);
+       call display(sysprint);
+       if copy_to_list = 'yes' then
+          call display(list);
+       put skip list('^i^i^i   Type RETURN to Continue');
+       get skip(2);
+    end;
+
+/******************************************************/
+/* This procedure displays the various depreciation   */
+/* schedules.  It calls the appropriate schedule with */
+/* an index into an array of entry  constants.        */
+/******************************************************/
+display:
+    procedure(f);
+    declare
+      f file;
+    output = f;
+    call schedule (index (schedules,select_sched));
+end display;
+
+/********************************************/
+/* This is a global error recovery routine. */
+/********************************************/
+error:
+    procedure;
+    put file (output) edit('Invalid Schedule - Enter s, y, or d')
+             (page,column(indent),x(8),a);
+    call line();
+end error;
+
+/*******************************************************/
+/* This procedure computes straight_line depreciation. */
+/*******************************************************/
+straight_line:
+    procedure;
+    adjusted_price = selling_price - bonus_dep;
+    put file (output) edit('S T R A I G H T   L I N E')
+             (page,column(indent),x(14),a);
+    call header();
+    depreciation_value = adjusted_price - residual_value;
+    book_value = adjusted_price;
+    total_depreciation = 0;
+    do current_year = 1 to years;
+       year_value = decimal(depreciation_value/years,8,2) + .005;
+       if current_year = 1 then
+          do;
+            year_value = year_value * months_remaining / 12;
+            FYD = year_value;
+          end;
+       depreciation_value = depreciation_value - year_value;
+       total_depreciation = total_depreciation + year_value;
+       book_value = adjusted_price - total_depreciation;
+       call print_line();
+    end;
+    call summary();
+end straight_line;
+
+/*************************************************/ 
+/* This procedure computes depreciation based on */
+/* the sum_of_the_years.                         */
+/*************************************************/
+sum_of_years:
+    procedure;
+    adjusted_price = selling_price - bonus_dep;
+    put file (output) edit('S U M   O F   T H E   Y E A R S')
+             (page,column(indent),x(11),a);
+    call header();
+    depreciation_value = adjusted_price - residual_value;
+    book_value = adjusted_price;
+    total_depreciation = 0;
+    year_sum = 0;
+    do current_year = 1 to years;
+       year_sum = year_sum + current_year;
+    end;
+
+    do current_year = 1 to years;
+       year_value = decimal(depreciation_value *
+       (years - current_year + 1),12,2)/ year_sum + .005;
+       if current_year = 1 then
+          do;
+            year_value = year_value * months_remaining / 12;
+            FYD = year_value;
+          end;
+       depreciation_value = depreciation_value - year_value;
+       total_depreciation = total_depreciation + year_value;
+       book_value = adjusted_price - total_depreciation;
+       call print_line();
+    end;
+    call summary();
+end sum_of_years;
+
+/********************************************/ 
+/* This procedure computes double_declining */
+/* depreciation.                            */
+/********************************************/
+double_declining:
+    procedure;
+    adjusted_price = selling_price - bonus_dep;
+    put file (output) edit('D O U B L E    D E C L I N I N G')
+             (page,column(indent),x(10),a);
+    call header();
+    depreciation_value = adjusted_price - residual_value;
+    book_value = adjusted_price;
+    total_depreciation = 0;
+    do current_year = 1 to years
+       while (depreciation_value > 0);
+       year_value = decimal(book_value/years,8,2) * factor+.005;
+       if current_year = 1 then
+          do;
+            year_value = year_value * months_remaining / 12;
+            FYD = year_value;
+          end;
+       if year_value > depreciation_value then
+          year_value = depreciation_value;
+       depreciation_value = depreciation_value - year_value;
+       total_depreciation = total_depreciation + year_value;
+       book_value = adjusted_price - total_depreciation;
+       call print_line();
+    end;
+    call summary();
+end double_declining;
+
+/**************************************************/
+/* This procedure prints an output header record. */
+/**************************************************/
+header:
+    procedure;
+    declare 
+       new_or_used character(5);
+
+    if new = 'yes' then
+       new_or_used = ' New';
+    else
+       new_or_used = ' Used';
+    put file (output) edit(
+    '--------------------------------------------------',
+    '|',selling_price+sales_tax,new_or_used,
+     residual_value,' Residual Value|',
+    '|',months_remaining,' Months Left ',
+        tax_rate,'% Tax',tax_bracket,'% Tax Bracket|')
+    (2(skip,column(indent),a),
+    2(p'B$$,$$$,$$9.V99',a),
+    skip,column(indent),a,x(5),f(2),a,2(x(2),p'B99',a));
+
+    put file (output) edit(
+    '--------------------------------------------------',
+    '| Y | Depreciation | Depreciation |  Book Value  |',
+    '| r |   For Year   |  Remaining   |              |',
+    '--------------------------------------------------')
+    (skip,column(indent),a);
+end header;
+
+/*******************************************/ 
+/* This procedure prints the current line. */
+/*******************************************/
+print_line:
+    procedure;
+    put file (output) edit(
+        '|',current_year,
+        ' |',year_value,
+        ' |',depreciation_value,
+        ' |',book_value,' |')
+        (skip,column(indent),a,f(2),4(a,p'$z,zzz,zz9v.99'));
+end print_line;
+
+/***************************************************/ 
+/* This procedure prints the summary of values for */
+/* each type of depreciation schedule.             */
+/***************************************************/
+summary:
+    procedure;
+    declare
+       adj_ITC decimal(8,2),
+       total decimal(8,2),
+       direct decimal(8,2);
+
+    call line();
+    adj_ITC = ITC * 100 / tax_bracket;
+    total = FYD + sales_tax + adj_ITC + bonus_dep;
+    direct = total * tax_bracket / 100;
+    put file (output) edit(
+    '|      First Year Reduction in Taxable Income    |',
+    '--------------------------------------------------',
+    '|      Depreciation              ' ,FYD,        '|',
+    '|      Sales Tax                 ' ,sales_tax,  '|',
+    '|      ITC (Adjusted)            ' ,adj_ITC,    '|',
+    '|      Bonus Depreciation        ' ,bonus_dep,  '|',
+    '|                                -------------   |',
+    '|      Total for First Year      ' ,total,      '|',
+    '|      Direct Reduction in Tax   ' ,direct,     '|')
+    (2(skip,column(indent),a),2(4(skip,column(indent),a,
+    p'$z,zzz,zz9v.99',x(3),a),skip,column(indent),a));
+    call line();
+end summary;
+
+/*******************************************/ 
+/* This procedure prints a line of dashes. */
+/*******************************************/
+line:
+    procedure;
+    put file (output) edit(
+    '--------------------------------------------------')
+    (skip,column(indent),a);
+end line;
+
+
+end depreciate;
+

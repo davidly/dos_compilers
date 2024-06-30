@@ -1,0 +1,351 @@
+/*
+    PL/I version of an app that proves you can't win at tic-tac-toe if the opponent is competent.
+    Written for Digital Research PL/I-86 version 1.0 for MS-DOS
+    To build (first build PL/I's ms-dos system call wrappers in pcdio.a86)
+        ntvdm rasm86 pcdio
+        ntvdm pli %1
+        ntvdm link86 %1,pcdio.obj
+*/
+
+ttt:
+
+proc options( main );
+    %include 'diomod.dcl';
+    %replace
+        ScoreWin by 6,
+        ScoreTie by 5,
+        ScoreLose by 4,
+        ScoreMax by 9,
+        ScoreMin by 2,
+        pieceX by 1,
+        pieceO by 2,
+        pieceBlank by 0,
+        DefaultIterations by 1;
+
+    dcl board(9) binary(7);
+    dcl movecount binary;
+    dcl ( x, iterations, tstart, tend ) binary;
+    dcl funcs(9) entry variable returns( binary(7) );
+    dcl thefunc entry variable returns( binary(7) );
+
+    funcs( 0 ) = func0;
+    funcs( 1 ) = func1;
+    funcs( 2 ) = func2;
+    funcs( 3 ) = func3;
+    funcs( 4 ) = func4;
+    funcs( 5 ) = func5;
+    funcs( 6 ) = func6;
+    funcs( 7 ) = func7;
+    funcs( 8 ) = func8;
+
+    iterations = readcommandtail();
+    if 0 = iterations then
+        iterations = DefaultIterations;
+
+    tstart = getticks();
+
+    do x = 1 to iterations;
+        movecount = 0;
+        call findsolution( 0 );
+        call findsolution( 1 );
+        call findsolution( 4 );
+    end;
+
+    tend = getticks();
+
+    put skip list( 'moves:                  ', movecount );
+    put skip list( 'iterations:             ', iterations );
+    put skip list( 'hundredths of a second: ', tend - tstart );
+    stop;
+
+findsolution: proc( move );
+    dcl move binary(7);
+    dcl result binary(7);
+
+    board( move ) = pieceX;
+    result = minmax( ScoreMin, ScoreMax, 0, move );
+    board( move ) = pieceBlank;
+end findsolution;
+
+minmax: proc( alpha, beta, depth, move ) returns ( binary(7) ) recursive;
+    dcl (alpha, beta, depth, move) binary(7);
+    dcl (value, score, pieceMove, p, m) binary(7);
+
+    movecount = movecount + 1;
+
+    if depth >= 4 then do;
+        /*p = winner();*/
+        /*p  = winner2( move );*/
+
+        thefunc = funcs( move );  /* can't invoke the function via the array directly due to a compiler bug */
+        p = thefunc();
+
+        if pieceBlank ^= p then do;
+            if pieceX = p then return ( ScoreWin );
+            return ( ScoreLose );
+        end;
+
+        if 8 = depth then return ( ScoreTie );
+    end;
+
+    if pieceO = board( move ) then do;
+        value = ScoreMin;
+        pieceMove = pieceX;
+    end;
+    else do;
+        value = ScoreMax;
+        pieceMove = pieceO;
+    end;
+
+    do m = 0 to 8;
+        if pieceBlank = board( m ) then do;
+            board( m ) = pieceMove;
+            score = minmax( alpha, beta, depth + 1, m );
+            board( m ) = pieceBlank;
+    
+            if pieceX = pieceMove then do;
+                /* put skip list ( 'odd depth, score: ', score ); */
+                if ScoreWin = score then return ( ScoreWin );
+                if score > value then do;
+                    /* put skip list ( 'score > value, alpha and beta ', score, value, alpha, beta ); */
+                    if score >= beta then return ( score );
+                    value = score;
+                    if value > alpha then alpha = value;
+                end;
+            end;
+            else do;
+                /* put skip list ( 'even depth, score: ', score ); */
+                if ScoreLose = score then return ( ScoreLose );
+                if score < value then do;
+                    /* put skip list ( 'score < value, alpha and beta ', score, value, alpha, beta ); */
+                    if score <= alpha then return ( score );
+                    value = score;
+                    if value < beta then beta = value;
+                end;
+            end;
+        end;
+    end;
+
+    return ( value );
+end minmax;
+
+winner: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 0 );
+    if pieceBlank ^= p then do;
+        if p = board(1) & p = board(2) then return ( p );
+        if p = board(3) & p = board(6) then return ( p );
+    end;
+    
+    p = board(3);
+    if PieceBlank ^= p & p = board(4) & p = board(5) then return ( p );
+
+    p = board(6);
+    if PieceBlank ^= p & p = board(7) & p = board(8) then return ( p );
+
+    p = board(1);
+    if PieceBlank ^= p & p = board(4) & p = board(7) then return ( p );
+
+    p = board(2);
+    if PieceBlank ^= p & p = board(5) & p = board(8) then return ( p );
+
+    p = board(4);
+    if pieceBlank ^= p then do;
+        if p = board(0) & p = board(8) then return ( p );
+        if p = board(2) & p = board(6) then return ( p );
+    end;
+
+    return ( pieceBlank );
+end winner;
+
+winner2: proc( m ) returns ( binary(7) );
+    dcl m binary(7);
+    dcl v binary(7);
+    
+    v = board( m );
+
+    /* the 'if' expressions below can't be combined or the DOS version of
+       PL/I generates bad code. */
+  
+    go to q( m );
+    q(0):
+        if ( v = board(1) & v = board(2) ) then return ( v );
+        if ( v = board(3) & v = board(6) ) then return ( v );
+        if ( v = board(4) & v = board(8) ) then return ( v );
+        return ( pieceBlank );
+/* this generates bad code from PL/I-86 Compiler Version 1.0 Digital Research, Inc.
+        if ( ( ( v = board(1) ) & ( v = board(2) ) |
+             ( ( v = board(3) ) & ( v = board(6) ) |
+             ( ( v = board(4) ) & ( v = board(8) ) ) ) then return ( v );
+        return ( pieceBlank );
+*/
+    q(1):
+        if ( v = board(0) & v = board(2) ) then return ( v );
+        if ( v = board(4) & v = board(7) ) then return ( v );
+        return ( pieceBlank );
+    q(2):
+        if ( v = board(0) & v = board(1) ) then return ( v );
+        if ( v = board(5) & v = board(8) ) then return ( v );
+        if ( v = board(4) & v = board(6) ) then return ( v );
+        return ( pieceBlank );
+    q(3):
+        if ( v = board(4) & v = board(5) ) then return ( v );
+        if ( v = board(0) & v = board(6) ) then return ( v );
+        return ( pieceBlank );
+    q(4):
+        if ( v = board(0) & v = board(8) ) then return ( v );
+        if ( v = board(2) & v = board(6) ) then return ( v );
+        if ( v = board(1) & v = board(7) ) then return ( v );
+        if ( v = board(3) & v = board(5) ) then return ( v );
+        return ( pieceBlank );
+    q(5):
+        if ( v = board(3) & v = board(4) ) then return ( v );
+        if ( v = board(2) & v = board(8) ) then return ( v );
+        return ( pieceBlank );
+    q(6):
+        if ( v = board(7) & v = board(8) ) then return ( v );
+        if ( v = board(0) & v = board(3) ) then return ( v );
+        if ( v = board(4) & v = board(2) ) then return ( v );
+        return ( pieceBlank );
+    q(7):
+        if ( v = board(6) & v = board(8) ) then return ( v );
+        if ( v = board(1) & v = board(4) ) then return ( v );
+        return ( pieceBlank );
+    q(8):
+        if ( v = board(6) & v = board(7) ) then return ( v );
+        if ( v = board(2) & v = board(5) ) then return ( v );
+        if ( v = board(0) & v = board(4) ) then return ( v );
+        return ( pieceBlank );
+    endq:
+
+    return ( pieceBlank );
+end winner2;
+
+func0: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 0 );
+    if ( p = board( 1 ) & p = board( 2 ) ) then return( p );
+    if ( p = board( 3 ) & p = board( 6 ) ) then return( p );
+    if ( p = board( 4 ) & p = board( 8 ) ) then return( p );
+
+    return( 0 );
+end func0;
+
+func1: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 1 );
+    if ( p = board( 0 ) & p = board( 2 ) ) then return( p );
+    if ( p = board( 4 ) & p = board( 7 ) ) then return( p );
+
+    return( 0 );
+end func1;
+
+func2: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 2 );
+    if ( p = board( 0 ) & p = board( 1 ) ) then return( p );
+    if ( p = board( 5 ) & p = board( 8 ) ) then return( p );
+    if ( p = board( 4 ) & p = board( 6 ) ) then return( p );
+
+    return( 0 );
+end func2;
+
+func3: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 3 );
+    if ( p = board( 4 ) & p = board( 5 ) ) then return( p );
+    if ( p = board( 0 ) & p = board( 6 ) ) then return( p );
+
+    return( 0 );
+end func3;
+
+func4: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 4 );
+    if ( p = board( 0 ) & p = board( 8 ) ) then return( p );
+    if ( p = board( 2 ) & p = board( 6 ) ) then return( p );
+    if ( p = board( 1 ) & p = board( 7 ) ) then return( p );
+    if ( p = board( 3 ) & p = board( 5 ) ) then return( p );
+
+    return( 0 );
+end func4;
+
+func5: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 5 );
+    if ( p = board( 3 ) & p = board( 4 ) ) then return( p );
+    if ( p = board( 2 ) & p = board( 8 ) ) then return( p );
+
+    return( 0 );
+end func5;
+
+func6: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 6 );
+    if ( p = board( 7 ) & p = board( 8 ) ) then return( p );
+    if ( p = board( 0 ) & p = board( 3 ) ) then return( p );
+    if ( p = board( 4 ) & p = board( 2 ) ) then return( p );
+
+    return( 0 );
+end func6;
+
+func7: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 7 );
+    if ( p = board( 6 ) & p = board( 8 ) ) then return( p );
+    if ( p = board( 1 ) & p = board( 4 ) ) then return( p );
+
+    return( 0 );
+end func7;
+
+func8: proc returns ( binary(7) );
+    dcl p binary(7);
+
+    p = board( 8 );
+    if ( p = board( 6 ) & p = board( 7 ) ) then return( p );
+    if ( p = board( 2 ) & p = board( 5 ) ) then return( p );
+    if ( p = board( 0 ) & p = board( 4 ) ) then return( p );
+
+    return( 0 );
+end func8;
+
+readcommandtail: proc returns ( binary );
+    dcl dbuff_ptr pointer,
+        command character(127) varying based ( dbuff_ptr );
+    dcl memory (0:256) bit(8) based( dbuff_ptr );
+    dcl ( r, v, x ) binary;
+
+    r = 0;
+
+    dbuff_ptr = dbuff();
+    /*put edit ('Command Tail: ',command) (a);*/
+
+    /* command tail is bytes with length, space, and the command-line arguments */
+
+    if 0 ^= memory( 0 ) then do;
+        do x = 2 to 10;
+            v = memory( x );
+            if v < 48 | v > 57 then return ( r );
+            r = ( r * 10 ) + v - 48;
+        end;
+    end;
+
+    return ( r );
+end readcommandtail;
+
+getticks: proc returns ( binary );
+    dcl ( hour, minute, second, fraction ) binary(7);
+    call gettime( addr(hour), addr(minute), addr(second), addr(fraction) );
+    return ( minute * 60 * 100 + second * 100 + fraction );
+end getticks;
+
+end ttt;

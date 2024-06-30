@@ -1,0 +1,81 @@
+/******************************************************/
+/* This program copies a STREAM file on disk to a     */
+/* PRINT file, and formats the output with a page     */
+/* header, and line numbers.                          */
+/******************************************************/
+copy: procedure options(main);
+
+      declare
+        (sysin, sourcefile, printfile) file,
+        (pagesize, pagewidth, spaces, linenumber) fixed, 
+        (line character(14), buff character(254)) varying;
+
+      put list('^z    File to Print Copy Program');
+
+      on endfile(sysin)
+         go to typeover;
+
+      typeover:
+         put skip(5) list('How Many Lines Per Page?   ');
+         get list(pagesize);
+
+         put skip list('How Many Column Positions? ');
+         get skip list(pagewidth);
+
+      on error(1)
+         begin;
+           put list('Invalid Number, Type Integer');
+           go to getnumber;
+         end;
+      getnumber:
+         put skip list('Line Spacing (1=Single)?   ');
+         get skip list(spaces);
+         revert error(1);
+
+      put skip list('Destination  Device/File:  ');
+      get skip list(line);
+
+      open file(printfile) print pagesize(pagesize)
+           linesize(pagewidth) title(line);
+
+      on undefinedfile(sourcefile)
+         begin;
+           put skip list('"',line,'" isn''t a Valid Name');
+           go to retry;
+         end;
+      retry:
+         put skip list('Source File to Print?      ');
+         get list(line);
+         open file(sourcefile) stream  environment(b(8000)) 
+              title(line);
+      on endfile(sourcefile)
+         begin;
+           put file(printfile) page;
+           stop;
+         end;
+
+      on endfile(printfile)
+         begin;
+           put skip list('^g^g^g^g Disk is Full');
+           stop;
+         end;
+
+      on endpage(printfile)
+         begin;
+           put file(printfile) page skip(2)
+               list('PAGE',pageno(printfile));
+           put file(printfile) skip(4);
+         end;
+
+      signal endpage(printfile);
+      do linenumber = 1 repeat(linenumber + 1);
+         get file (sourcefile) edit(buff) (a);
+         put file (printfile) 
+             edit(linenumber,'|',buff) (f(5),x(1),a(2),a);
+         put file (printfile) skip(spaces);
+      end;
+
+end copy;
+
+
+

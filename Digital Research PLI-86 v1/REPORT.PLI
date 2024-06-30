@@ -1,0 +1,55 @@
+/******************************************************/
+/* This program reads an employee data base and       */
+/* prints a list of paychecks.                        */
+/******************************************************/
+report:
+    procedure options(main);
+    declare
+       1 employee static,
+         2 name     character(30) varying,
+         2 address,
+           3 street character(30) varying,
+           3 city   character(10) varying,
+           3 state  character(12) varying,
+           3 zip    fixed decimal(5),
+         2 age      fixed decimal(3),
+         2 wage     fixed decimal(5,2),
+         2 hours    fixed decimal(5,1);
+
+    declare
+       i fixed,
+       dashes character(15) static initial
+              ('$--------------'),
+       buff character(20) varying, 
+       (grosspay, withhold) fixed decimal(7,2),
+       (repfile, empfile) file;
+
+    open file(empfile) keyed environment(f(128),b(4000))
+         title ('$1.EMP');
+    open file(repfile) stream print environment(b(2000)) 
+         title('$2.$2');
+
+    put list('Set Top of Forms, Press Return');
+    get skip;
+
+    do while('1'b);
+       read file(empfile) into(employee);
+       if name = 'EOF' then
+          stop;
+       put file(repfile) skip(2);
+       buff = '[' !! name !! ']^m^j';
+       write file(repfile) from (buff);
+       grosspay = wage * hours;
+       withhold = grosspay * .15;
+       buff = grosspay - withhold;
+       do i = 1 to 15
+          while (substr(buff,i,1) = ' ');
+       end;
+       i = i - 1;
+       substr(buff,1,i) = substr(dashes,1,i);
+       write file (repfile) from(buff);
+    end;
+
+end report;
+
+

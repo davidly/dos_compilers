@@ -1,0 +1,35 @@
+/*****************************************************/
+/* This program tests the TOTWDS, MAXWDS, and ALLWDS */
+/* functions from the Run-time Subroutine Library.   */
+/*****************************************************/
+alltst:
+    procedure options(main);
+    declare 
+       totwds returns(fixed(15)),
+       maxwds returns(fixed(15)),
+       allwds entry(fixed(15)) returns(pointer);
+
+    declare 
+       allreq fixed(15),
+       memptr ptr,
+       meminx fixed(15),
+       memory (0:0) bit(16) based(memptr);
+
+    do while('1'b);
+       put edit (totwds(),' Total Words Available',
+                 maxwds(),' Maximum Segment Size',
+                 'Allocation Size? ') (2(skip,f(6),a),skip,a);
+       get list(allreq);
+       memptr = allwds(allreq);
+       put edit('Allocated',allreq,' Words at ',unspec(memptr))
+               (skip,a,f(6),a,b4);
+
+       /* clear memory as example */
+       do meminx = 0 to allreq-1;
+          memory(meminx) = '0000'b4;
+       end;
+    end;
+
+end alltst;
+
+

@@ -1,0 +1,33 @@
+/******************************************************/
+/* This program reads an employee record file and     */
+/* creates another file of keys to access the records.*/
+/******************************************************/
+
+keyfile:
+    procedure options(main);
+    declare
+       1 employee static,
+         2 name character(30) varying;
+
+    declare
+       (input, keys) file,
+       k fixed;
+
+    open file(input) keyed environment(f(128),b(10000)) 
+         title('$1.emp'); 
+
+    open file(keys) stream output
+         linesize (60) title('$1.key');
+
+    do while('1');
+       read file(input) into(employee) keyto(k);
+       put skip list(k,name);
+       put file(keys) list(name,k);
+       if name = 'EOF' then
+          stop;
+    end;
+
+end keyfile;
+
+ 
+

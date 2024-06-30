@@ -1,0 +1,49 @@
+/*****************************************************/
+/* This program creates a name and address file. The */
+/* data structure for each record is in the %INCLUDE */
+/* file RECORD.DCL.                                  */
+/*****************************************************/
+create:
+      procedure options(main);
+
+%include 'record.dcl';
+%replace
+  true by '1'b,
+  false by '0'b;
+
+    declare 
+       output file,
+       filename character(14) varying,
+       eofile bit(1) static initial(false);
+
+    put list ('Name and Address Creation Program, File Name: ');
+    get list (filename);
+
+    open file(output) stream output title(filename);
+
+    do while (^eofile);
+       put skip(3) list('Name: ');
+       get list(name);
+       eofile = (name = 'EOF');
+       if ^eofile then
+          do;
+       /* write prompt strings to console */
+            put list('Address: ');
+            get list(addr);
+            put list('City, State, Zip: ');
+            get list(city, state, zip);
+            put list('Phone: ');
+            get list(phone);
+
+       /* data in memory, write to output file */
+            put file(output)
+                list(name,addr,city,state,zip,phone);
+            put file(output) skip;
+          end;
+    end;
+    put file(output) skip list('EOF');
+    put file(output) skip;
+
+end create;
+
+

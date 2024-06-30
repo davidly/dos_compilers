@@ -1,0 +1,45 @@
+/************************************************/ 
+/* This program tests the STKSIZ function while */
+/* evaluating a RECURSIVE procedure.            */
+/************************************************/
+ack:
+    procedure options(main,stack(2000));
+    declare 
+       (m,n) fixed,
+       (maxm,maxn) fixed,
+       ncalls decimal(6),
+       (curstack, stacksize) fixed,
+       stksiz entry returns(fixed);
+
+    put skip list('Type max m,n: ');
+    get list(maxm,maxn);
+    do m = 0 to maxm;
+       do n = 0 to maxn;
+          ncalls    = 0;
+          curstack  = 0;
+          stacksize = 0;
+          put edit('Ack(',m,',',n,')=',ackermann(m,n),
+              ncalls,' Calls,',stacksize,' Stack Bytes')
+              (skip,a,2(f(2),a),f(6),f(7),a,f(4),a);
+       end;
+    end;
+    stop;
+
+    ackermann:
+       procedure(m,n) returns(fixed) recursive;
+
+       declare 
+         (m,n) fixed;
+       ncalls = ncalls + 1;
+       curstack = stksiz();
+       if curstack > stacksize then
+          stacksize = curstack;
+       if m = 0 then
+          return(n+1);
+       if n = 0 then
+          return(ackermann(m-1,1));
+       return(ackermann(m-1,ackermann(m,n-1)));
+    end ackermann;
+
+    end ack;
+

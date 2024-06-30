@@ -1,0 +1,15 @@
+demo:
+    procedure options(main);
+
+    declare
+          name character(20) varying;
+
+
+    put skip(2) list('PLEASE ENTER YOUR FIRST NAME: ');
+    get list(name);
+    put skip(2) list('HELLO '||name||',  WELCOME TO PL/I');
+
+end demo;
+
+
+

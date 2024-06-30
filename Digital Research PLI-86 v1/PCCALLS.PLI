@@ -1,0 +1,616 @@
+diotest: procedure options(main);
+
+/*****************************************************************************
+*                                                                            *
+*          I B M   D O S   D i r e c t   F u n c t i o n   C a l l s         *
+*                                                                            *
+******************************************************************************
+*                                                                            *
+* This program tests many of the IBM DOS functions. The tests are not        *
+* particularly complicated, and may be considered as examples for using      *
+* direct DOS function calls with PL/I-86.                                    *
+*                                                                            *
+*****************************************************************************/
+/*                                                                           *
+* IT IS STRONGLY RECOMMENDED THAT YOU STUDY THE IBM DOS MANUAL FOR COMPLETE  *
+* INFORMATION REGARDING THESE FUNCTIONS.                                     *
+*                                                                            *
+*****************************************************************************/
+
+/* DIOMOD.DCL contains the declarations for the DOS functions */
+%include 'diomod.dcl';
+
+%replace true by '1'b, false by '0'b;
+
+declare /* various miscellaneous variables */
+	(action,ret_code) 	fixed(7),
+	(i,j) 		  	fixed,
+	fname_ptr	  	pointer,
+	flag		  	bit,
+	ptr_val		  	bit(16),
+	(c,inp)		  	char(1),
+	(newname,oldname) 	char(14) var,
+	fname 			char(14) based(fname_ptr),
+	(space1(37),space2(37))	bit(8),
+	v		  	char(127) var;
+
+declare /* command line buffer */
+	1 inbuff static,
+		2 maxsize bit(8) initial('80'b4),
+		2 inchars character(127) varying;
+
+declare /* fixed location values */
+	memptrv pointer,
+	memsizv fixed,
+	(fcb1_ptr, dbuff_ptr) pointer,
+	command character(127) varying based (dbuff_ptr);
+
+declare /* Standard File Control Block (FCB) */
+	fcb_ptr pointer,
+	1 std_fcb based(fcb_ptr),
+		2 drive           fixed(7),
+		2 name            character(8),
+		2 type            character(3),
+		2 current_block   bit(16),
+		2 record_size     bit(16),
+		2 file_size(2)    bit(16),
+		2 date            bit(16),
+		2 reserved(10)    bit(8),
+		2 current_rec     bit(8),
+		2 rand_rec_no(2)  bit(16);
+
+declare /* FCB used with #17, #18 SEAR & SEARN */
+	srch_fcb_ptr pointer,
+	1 srch_fcb based(srch_fcb_ptr),
+		2 drive           fixed(7),
+		2 name            character(8),
+		2 type            character(3),
+		2 current_block   bit(16),
+		2 record_size     bit(16),
+		2 file_size(2)    bit(16),
+		2 date            bit(16),
+		2 reserved(10)    bit(8),
+		2 current_rec     bit(8),
+		2 rand_rec_no(2)  bit(16);
+
+declare  /* FCB used in RENAME (#23) */
+	modfcb_ptr pointer,
+	1 modified_fcb based(modfcb_ptr),        /* offset:*/
+		2 drive           fixed(7),      /* 0      */
+		2 name            character(8),  /* 1-8    */
+		2 type            character(3),  /* 9-11   */
+		2 space(5)        bit(8),        /* 12-16  */
+		2 new_name        char(8),       /* 17-24  */
+		2 new_type        char(3),       /* 25-27  */
+		2 more_space(9)   bit(8);        /* 28-36  */
+
+/*****************************************************************************
+*                           M a i n   P r o g r a m                          *
+*****************************************************************************/
+
+put skip list('************************************************************
+******************');
+put skip list('*                                                           
+                 *');
+put skip list('*          I B M   D O S   D i r e c t   F u n c t i o n  
+ C a l l s         *');
+put skip list('*                                                           
+                 *');
+put skip list('*************************************************************
+*****************');
+put skip(2);
+
+/*****************************************************************************/
+/*** Fixed Location Tests: MEMPTR, MEMSIZ, MEMWDS, DFCB0, DFCB1, DBUFF     ***/
+/*****************************************************************************/
+if do_test('Test Fixed Location Values') then do;
+	memptrv = memptr();
+	memsizv = memsiz();
+	fcb_ptr  = dfcb0();
+	fcb1_ptr = dfcb1();
+	dbuff_ptr = dbuff();
+
+	put edit ('Command Tail: ',command) (a);
+	put edit ('First Default File:',std_fcb.name,'.',std_fcb.type)
+		 (skip,4a);
+	put edit ('First Default FCB: ',unspec(fcb_ptr),
+		  'Second Default FCB: ',unspec(fcb1_ptr),
+		  'Default Buffer: ',unspec(dbuff_ptr),
+		  'Base of Free Memory: ',unspec(memptrv),
+		  'Memory Size in bytes: ',unspec(memsizv),
+		  'Memory Size in words: ',memwds())
+		  (5(skip,a,b4),skip,a,f(6));
+end;
+
+/*****************************************************************************/
+/*** #0 REBOOT                                                             ***/
+/*****************************************************************************/
+if do_test('Test Reboot (#0)') then call reboot();
+
+/*****************************************************************************/
+/* #1 RDCON, #2 WRCON                                                        */
+/*****************************************************************************/
+if do_test('Test Read & Write Console (#1,#2)') then do;
+	put list('Type Input, End with "$" ');
+	v = '';
+	flag = true;
+	do while(flag);
+		c = rdcon();
+		if c ^= '$' then v = v || c;
+		else flag = false;
+	end;
+	put skip list('You Typed:');
+	do i = 1 to length(v);
+		call wrcon(substr(v,i,1));
+	end;
+end;
+
+/*****************************************************************************/
+/* #3, #4  RDRDR, WRPUN                                                      */
+/*****************************************************************************/
+/* THESE FUNCTIONS HAVE NOT BEEN TESTED.                                     */
+
+/*****************************************************************************/
+/* #5 WRLST                                                                  */
+/*****************************************************************************/
+if do_test('Test Write List Device (#5)') then do;
+	v = 'This is a test of IBM DOS function 5: Printer Output';
+	put list('Turn on Printer....');
+	do i = 1 to length(v);
+		call wrlst(substr(v,i,1));
+	end;
+end;
+
+/*****************************************************************************/
+/* #6 Direct I/O, CONOUT, CONINP                                             */
+/*****************************************************************************/
+if do_test('Test Direct I/O (#6)') then do;
+	put skip list('This test will get and print characters one at a time');
+	put skip list('using direct input and output.');
+	put list ('Type Line, End with "$"');
+	flag = true;
+	do while (flag);
+		loop: c = coninp();
+		if rank(c) = 0 then goto loop;
+		if c ^= '$' then call conout(c);
+		else flag = false;
+	end;
+end;
+
+/*****************************************************************************/
+/* #7 DIN1, #8 DIN2 Direct Input                                             */
+/*****************************************************************************/
+if do_test('Test Direct Input Without Echo (#7,#8)') then do;
+	v = '';
+	/* function 7: */
+	put skip list(
+		'NOTE: Input will NOT print on screen for these 2 functions.');
+	put skip list(
+		'Function #9 Print String will be used to display the input.');
+	put skip list('Function #7: Type a string, end with "$":');
+	put skip;
+	flag = true;
+	do while(flag);
+		c = din1();
+		v = v || c;
+		if c = '$' then flag = false;
+	end;
+	put skip list('You Typed: ');
+	call wrstr(inc_ptr(addr(v)));
+	v = '';
+	/* function 8: */
+	put skip list('Function #8: Type a string, end with "$":');
+	flag = true;
+	do while(flag);
+		c = din1();
+		v = v || c;
+		if c = '$' then flag = false;
+	end;
+	put skip list('You Typed: ');
+	call wrstr(inc_ptr(addr(v)));
+end;
+
+/*****************************************************************************/
+/* #9 Print String WRSTR                                                     */
+/*****************************************************************************/
+if do_test('Test Print String (#9)') then do;
+	v = 'This is a test of IBM DOS function 9: Print String.$';
+	call wrstr(inc_ptr(addr(v)));
+end;
+
+/*****************************************************************************/
+/* #10 Buffered Read RDBUF                                                   */
+/*****************************************************************************/
+if do_test('Test Buffered Keyboard Input (#10)') then do;
+	put skip list('Type Line, End With <CR>');
+	put skip;
+	call rdbuf(addr(inbuff));
+	put skip list('You Typed: ',inchars);
+end;
+
+/*****************************************************************************/
+/* #11 Console BREAK                                                         */
+/*****************************************************************************/
+if do_test('Test Keyboard Status Check (#11)') then do;
+	put skip list('Press any key to continue');
+	ret_code = 0;
+	do while(ret_code = 0);
+		ret_code = break();
+	end;
+end;
+
+/*****************************************************************************/
+/* #12a CLRKB1 Clear Keyboard & Invoke Input Funtion                         */
+/*****************************************************************************/
+if do_test('Test Clear Keyboard & Invoke Input Function (#12a)') then do;
+	put skip list('This function clears the keyboard buffer and');
+	put list(' invokes a keyboard input routine,');
+	put skip list('in this case, function 1.');
+	put skip list('Enter Text, end with <CR>');
+	c = ' ';
+	v = '';
+	flag = true;
+	do while(flag);
+		c = clrkb1(1);
+		if (rank(c) = 13 | rank(c) = 10) then flag = false;
+		else v = v || c;
+	end;
+	put skip list('You Typed: ',v);
+end;
+
+/*****************************************************************************/
+/* #12b CLRKB2 Clear Keyboard & Invoke Input Function #2                     */
+/*****************************************************************************/
+if do_test('Test Clear Keyboard & Invoke Input Function (#12b)') then do;
+	put skip list('This version of function #12 clears the keyboard');
+	put list('buffer and invokes keyboard input routine function 10.');
+	put skip list('Enter Text, end with <CR>');
+	call clrkb2(10,addr(inbuff));
+	put skip list('You Typed: ',inchars);
+end;
+
+/*****************************************************************************/
+/* #13 Disk System RESET                                                     */
+/*****************************************************************************/
+if do_test('Test Disk System Reset (#13)') then do;
+	call reset();
+	put skip list('Disk System has been reset.');
+end;
+
+/*****************************************************************************/
+/* #14 Disk SELECT                                                           */
+/*****************************************************************************/
+if do_test('Test Select Disk Function (#14)') then do;
+	put skip list('Select Disk Number (0 or 1): ');
+	get list(i);
+	j = select(i);
+	put skip list('Number of drives:',j);
+end;
+
+/*****************************************************************************/
+/* #15, #16  OPEN, CLOSE                                                     */
+/*****************************************************************************/
+/* These functions are tested in PCSEQ.PLI, PCRND.PLI, PCRNDBL.PLI           */
+
+/*****************************************************************************/
+/* #17, #18  SEAR, SEARN                                                     */
+/*****************************************************************************/
+if do_test('Test Search First/Search Next (#17,#18)') then do;
+	do i = 1 to 37;
+		space1(i) = '00'b4;
+		space2(i) = '00'b4;
+	end;
+	fcb_ptr = dbuff();            /* set up default FCB */
+	srch_fcb_ptr = addr(space1);  /* set up search FCB out in memory */
+	srch_fcb.drive = 0;           /* default drive */
+	srch_fcb.name = '????????';   /* wildcard name */
+	srch_fcb.type = '???';        /* wildcard type */
+	/* find the first entry in the directory */
+	ret_code = sear(srch_fcb_ptr);
+	if ret_code = -1 then do;
+		put skip list('No Files Found');
+		call reboot();
+	end;
+	/* search through directory, printing names */
+	do while(ret_code >= 0);
+		put skip edit(std_fcb.name,'.',std_fcb.type) (a,a,a);
+		ret_code = searn(srch_fcb_ptr);
+	end;
+	put skip list('End of Directory');
+end;
+
+/*****************************************************************************/
+/*** #19 DELETE (& #41 PARSFN)                                             ***/
+/*****************************************************************************/
+/* This test also uses PARSFN, function #41. */
+do i = 1 to 37;
+	space1(i) = '00'b4;
+	space2(i) = '00'b4;
+end;
+fcb_ptr = addr(space1);
+if do_test('Test Delete File') then do;
+	put skip list('Enter Name of File to DELETE: ');
+	get edit(fname) (a);
+	/* use PARSFN to put the filename in the FCB */
+	ret_code = parsfn(addr(fname_ptr),addr(fcb_ptr),action);
+	if ret_code ^= 0 then do;
+		put skip list('Error- PARSFN returned ',ret_code);
+		call reboot();
+	end;
+	/* FCB is now ready for DELETE */
+	ret_code = delete(addr(std_fcb));
+	if ret_code ^= 0 then do;
+		put skip list('Error- DELETE returned ',ret_code);
+		call reboot();
+	end;
+end;
+
+/*****************************************************************************/
+/* #20, #21, #22  RDSEQ, WRSEQ, MAKE                                         */
+/*****************************************************************************/
+/* These functions are tested in PCSEQ.PLI, PCRND.PLI, PCRNDBL.PLI           */
+
+/*****************************************************************************/
+/* #23 RENAME                                                                */
+/*****************************************************************************/
+do i = 1 to 37;
+	space1(i) = '00'b4;
+	space2(i) = '00'b4;
+end;
+modfcb_ptr = addr(space2);
+if do_test('Test Rename File') then do;
+	put skip list('Enter OLD File Name: ');
+	get edit(oldname) (a);
+	put skip list('Enter NEW File Name: ');
+	get edit(newname) (a);
+	/* split up name & type; make sure they're the right length, padded
+	   with trailing blanks if necessary */
+	i = index(oldname,'.');
+	modified_fcb.name = substr(oldname,1,i-1) || '        ';
+	modified_fcb.name = substr(modified_fcb.name,1,8);
+	modified_fcb.type = substr(oldname,i+1) || '   ';
+	modified_fcb.type = substr(modified_fcb.type,1,3);
+	/* do the same for the new name */
+	i = index(newname,'.');
+	modified_fcb.new_name = substr(newname,1,i-1) || '        ';
+	modified_fcb.new_name = substr(modified_fcb.new_name,1,8);
+	modified_fcb.new_type = substr(newname,i+1,3) || '   ';
+	modified_fcb.new_type = substr(modified_fcb.new_type,1,3);
+	/* FCB is set up; do the call */
+	ret_code = rename(addr(modified_fcb));
+	if ret_code ^= 0 then do;
+		put skip list('Error- RENAME returned ',ret_code);
+		call reboot();
+	end;
+end;
+
+/*****************************************************************************/
+/* #24  NOT USED in IBM DOS                                                  */
+/*****************************************************************************/
+
+/*****************************************************************************/
+/* #25 CURDSK                                                                */
+/*****************************************************************************/
+if do_test('Test Current Disk Function (#25)') then do;
+	put skip list ('Current Disk: ',curdsk());
+end;
+
+/*****************************************************************************/
+/* #26  SETDMA                                                               */
+/*****************************************************************************/
+/* This functions is tested in PCSEQ.PLI, PCRND.PLI, PCRNDBL.PLI             */
+
+/*****************************************************************************/
+/* #27 File Allocation Table ALLTBL                                          */
+/*****************************************************************************/
+if do_test('Test Allocation Table Address (#27)') then do;
+	declare fat(512) bit(1),
+		(num_units,num_recs,sec_size) fixed;
+	call alltbl(addr(fat),addr(num_units),addr(num_recs),addr(sec_size));
+	put skip list('File Allocation Table Information:');
+	put skip edit('Table Location: ',unspec(fat)) (a,b4(4));
+	put skip edit('Number of Allocation Units: ',num_units) (a,f(6));
+	put skip edit('Number of Records per Allocation Unit: ',num_recs)
+		     (a,f(6));
+	put skip edit('Physical Sector Size: ',sec_size) (a,f(6));
+end;
+
+/*****************************************************************************/
+/* #28-#32  NOT USED in IBM DOS                                              */
+/*****************************************************************************/
+
+/*****************************************************************************/
+/* #33, #34  RDRAN, WRRAN                                                    */
+/*****************************************************************************/
+/* These functions are tested in PCRND.PLI                                   */
+
+/*****************************************************************************/
+/* #35  FILSIZ                                                               */
+/*****************************************************************************/
+if do_test('Test File Size Function (#35)') then do;
+	do i = 1 to 37;
+		space1(i) = '00'b4;
+		space2(i) = '00'b4;
+	end;
+	fcb_ptr = addr(space1);
+	put skip list('Enter Name of File: ');
+	get edit(fname) (a);
+	/* use PARSFN to put the filename in the FCB */
+	action = 1;
+	ret_code = parsfn(addr(fname_ptr),addr(fcb_ptr),action);
+	if ret_code ^= 0 then do;
+		put skip list('Error- PARSFN returned ',ret_code);
+		call reboot();
+	end;
+	ret_code = filsiz(addr(std_fcb));
+	if ret_code ^= 0 then do;
+		put skip list('SIZE error');
+		call reboot();
+	end;
+	/* file size in records is in random record field */
+	put skip list('File Size = ');
+	put edit(std_fcb.rand_rec_no(2),' ',std_fcb.rand_rec_no(1))
+		(b4(4),a,b4(4));
+	put edit(' hex records.') (a);
+end;
+
+/*****************************************************************************/
+/* #36  SETREC                                                               */
+/*****************************************************************************/
+/* This function is used in PCRNDBL.PLI                                      */
+
+/*****************************************************************************/
+/* #37  Set Interrupt Vector                                                 */
+/*****************************************************************************/
+/* THIS FUNCTION IS NOT IMPLEMENTED                                          */
+
+/*****************************************************************************/
+/* #38  NEWSEG                                                               */
+/*****************************************************************************/
+/* THIS FUNCTION HAS NOT BEEN TESTED. It is not usable with PL/I-86          */
+
+/*****************************************************************************/
+/* #39, #40  BLOCKRD, BLOCKWR                                                */
+/*****************************************************************************/
+/* These functions are used in PCRNDBL.PLI                                   */
+
+/*****************************************************************************/
+/* #41 PARSFN                                                                */
+/*****************************************************************************/
+/* See #19 DELETE and #35 FILSIZ, above */
+
+/*****************************************************************************/
+/* #42 Get Date GETDATE, #43 Set Date SETDATE                                */
+/*****************************************************************************/
+if do_test('Test Set/Get Date Functions (#42,#43)') then do;
+	declare year fixed(15),
+		(month,day) fixed(7);
+	put skip list('Enter MONTH (1-12): ');
+	get list(month);
+	put skip list('Enter DAY (1-31): ');
+	get list(day);
+	put skip list('Enter YEAR (1980-2099): ');
+	get list(year);
+	ret_code = setdate(year,month,day);
+	if ret_code ^= 0 then put skip list('ERROR- Date NOT set');
+	else do;
+		put skip list('Date is now set to ');
+		call getdate(addr(year),addr(month),addr(day));
+		put edit(month,'/',day,' ',year) (f(2),a,f(2),a,f(4));
+	end;
+end;
+
+/*****************************************************************************/
+/* #44 Get Time GETTIME, #45 Set Time SETTIME                                */
+/*****************************************************************************/
+if do_test('Test Set/Get Time Function (#44,#45)') then do;
+	declare	(hour,minute,second,fraction) fixed(7);
+	put skip list('Enter HOUR: ');
+	get list(hour);
+	put skip list('Enter MINUTE: ');
+	get list(minute);
+	second = 0;
+	fraction = 0;
+	put skip list('Press <ENTER> to set time ==>');
+	get edit(inp) (a);
+	ret_code = settime(hour,minute,second,fraction);
+	if ret_code ^= 0 then put skip list('ERROR- time NOT set');
+	else do;
+		call gettime(addr(hour),addr(minute),addr(second),addr(fraction));
+		put skip list('The time is now ');
+		put edit(hour,':',minute,':',second,'.',fraction)
+			(f(2),a,f(2),a,f(2),a,f(2));
+	end;
+end;
+
+/*****************************************************************************/
+/* #46 Set/Reset Verify Switch SETVER                                        */
+/*****************************************************************************/
+if do_test('Test Set/Reset Verify Switch Function (#46)') then do;
+	/* turn on verify */
+	call setver(1);
+	put skip list('Verify is now on');
+	/* turn it back off */
+	call setver(2);
+	put skip list('Verify is now off');
+end;
+
+put skip list('End of Direct DOS Calls Test');
+call reboot();
+
+/*****************************************************************************
+*                            P r o c e d u r e s                             *
+*****************************************************************************/
+
+/*****************************************************************************/
+/* Input function- used to decide whether or not to do a test                */
+/*****************************************************************************/
+do_test: procedure(msg) returns(bit(1));
+	declare
+		msg char(254) var,
+		inval char(1);
+	put skip;
+	put skip edit(msg,' (Y/N)? ') (a,a);
+	get list(inval);
+	if translate(inval,'Y','y') = 'Y' then return(true);
+	else return(false);
+end;
+
+inc_ptr: procedure(old_ptr) returns(pointer);
+/* This procedure is used to increment a pointer by 1. This has the effect
+   of skipping over 1 byte in memory. Varying length strings are preceded 
+   by a length byte, so when using direct DOS functions to print strings,
+   this byte must be skipped. */
+	declare
+		(new_ptr,old_ptr) pointer,
+		ptr_val bit(16);
+	ptr_val = unspec(old_ptr);        /* get a 16-bit value for pointer */
+	ptr_val = add(ptr_val,'0001'b4);  /* add 1 to value */
+	unspec(new_ptr) = ptr_val;        /* turn it back into a pointer */
+	return(new_ptr);
+end inc_ptr;
+
+/*****************************************************************************
+*          U n s i g n e d   A r i t h m e t i c   P r o c e d u r e s       *
+*****************************************************************************/
+
+add: procedure((x),(y)) returns(bit(16));
+	/* 16 bit unsigned add */
+	declare
+		(x,y,z) bit(16),
+		(xp,yp,zp) ptr,
+		su bit(16),
+		sv bit(16),
+		sw bit(16),
+		u fixed bin(15) based(xp),
+		v fixed bin(15) based(yp),
+		w fixed bin(15) based(zp);
+	xp = addr(x);
+	yp = addr(y);
+	zp = addr(z);
+	/* get sign bits of u and v */
+	su = x & '8000'b4;
+	sv = y & '8000'b4;
+	/* zero sign bits of x and y */
+	x = x & '7FFF'b4;
+	y = y & '7FFF'b4;
+	w = u + v;
+	sw = z & '8000'b4;
+	/* get sign bit of z */
+	z = z & '7FFF'b4;
+	/* XOR of su, sv, sw */
+	sw = xor(xor(su,sv),sw);
+	/* put in sign bit of z */
+	z = z | sw;
+	return(z);
+end add;
+
+xor: procedure(x,y) returns(bit(16));
+	/* 16 bit logical exclusive or */
+	declare
+		(x,y) bit(16);
+	return(bool(x,y,'0110'b));
+end xor;
+
+end diotest;
+

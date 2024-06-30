@@ -1,0 +1,33 @@
+e:
+    proc options( main );
+    %replace
+        DIGITS by 200;
+
+    dcl a( 200 ) fixed;
+    dcl ( high, n, x ) fixed;
+
+    high = DIGITS;
+    x = 0;
+
+    n = high - 1;
+    do while ( n > 0 );
+        a( n ) = 1;
+        n = n - 1;
+    end;
+
+    a( 1 ) = 2;
+    a( 0 ) = 0;
+
+    do while ( high > 9 );
+        high = high - 1;
+        n = high;
+        do while ( 0 ^= n );
+            a( n ) = mod( x, n );
+            x = 10 * a( n - 1 ) + x / n;
+            n = n - 1;
+        end;
+        put list( x );
+    end;
+
+    put skip list( 'done' );
+end e;

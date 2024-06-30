@@ -1,0 +1,33 @@
+/*****************************************************/
+/* This program evaluates a polynomial expression    */
+/* using FIXED DECIMAL data.                         */
+/*****************************************************/
+decpoly:
+    procedure options(main);
+
+    %replace
+        true  by '1'b;
+    declare 
+        (x,y,z) fixed decimal(15,4);
+
+    do while(true);
+       put skip(2) list('Type x,y,z: ');
+       get list(x,y,z);
+
+       if x=0 & y=0 & z=0 then
+          stop;
+
+       put skip list('       2');
+       put skip list('      x  + 2y + z =',P(x,y,z));
+    end;
+
+    P:
+      procedure (x,y,z) returns (fixed decimal(15,4));
+      declare 
+            (x,y,z) fixed decimal(15,4);
+      return (x * x + 2 * y + z);
+    end P;
+
+end decpoly;
+
+

@@ -1,0 +1,651 @@
+;******************************************************************************
+;*                                                                            *
+;*                                 P C D I O                                  *
+;*                                                                            *
+;*     D i r e c t   I B M    D O S    C a l l s   F r o m   P L / I - 8 6    *
+;*                                                                            *
+;******************************************************************************
+
+DSEG
+extrn	?begin:word	;beginning of free list
+
+CSEG
+public	dfcb0	;return address of default fcb 0
+public	dfcb1	;return address of default fcb 1
+public	dbuff	;return address of default buffer
+
+public	memptr	;return pointer to base of free memory
+public	memsiz	;return size of memory in bytes
+public	memwds	;return size of memory in words
+
+public	reboot	;program terminate (reboot) (#0)
+public	rdcon	;keyboard input (#1)
+public	wrcon	;display output (#2)
+public	rdrdr	;auxiliary input (#3)
+public	wrpun	;auxiliary output (#4)
+public	wrlst	;printer output (#5)
+public	coninp	;direct console input (#6a)
+public	conout	;direct console output (#6b)
+public	din1	;direct console input w/o echo (#7)
+public	din2	;console input w/o echo (#8)
+public	wrstr	;print string (#9)
+public	rdbuf	;buffered keyboard input (#10)
+public	break	;check keyboard status (#11)
+public	clrkb1	;clear keyboard buffer & invoke fcn 1,6,7, or 8 (#12a)
+public	clrkb2	;clear keyboard buffer & invoke fcn 10 (#12b)
+public	reset	;disk reset (#13)
+public	select	;select disk (#14)
+public	open	;open file (#15)
+public	close	;close file (#16)
+public	sear	;search for first entry (#17)
+public	searn	;search for next entry (#18)
+public	delete	;delete file (#19)
+public	rdseq	;sequential read (#20)
+public	wrseq	;sequential write (#21)
+public	make	;create file (#22)
+public	rename	;rename file (#23)
+		;not used (#24)
+public	curdsk	;current disk (#25)
+public	setdma	;set disk transfer address (#26)
+public	alltbl	;allocation table address (#27)
+		;not used (#28-32)
+public	rdran	;random read (#33)
+public	wrran	;random write (#34)
+public	filsiz	;file size (#35)
+public	setrec	;set random record field (#36)
+;public	setint	;set interrupt vector (#37) NOT IMPLEMENTED
+public	newseg	;create new program segment (#38)
+public	blockrd	;random block read (#39)
+public	blockwr	;random block write (#40)
+public	parsfn	;parse filename (#41)
+public	getdate	;get date (#42)
+public	setdate	;set date (#43)
+public	gettime	;get time (#44)
+public	settime	;set time (#45)
+public	setver	;set/reset verify switch (#46)
+
+;******************************************************************************
+;*      F u n c t i o n   N u m b e r s   &   O t h e r   E q u a t e s       *
+;******************************************************************************
+rdkeyf	equ	1	;keyboard input (#1)
+writc	equ	2	;display output (#2)
+rdauxf	equ	3	;auxiliary input (#3)
+wrauxf	equ	4	;auxiliary output (#4)
+prtf	equ	5	;printer output (#5)
+diof	equ	6	;direct console I/O (#6)
+din1f	equ	7	;direct console input w/o echo (#7)
+din2f	equ	8	;console input w/o echo (#8)
+printf	equ	9	;print string (#9)
+rdbufr	equ	10	;buffered keyboard input (#10)
+statf	equ	11	;check keyboard status (#11)
+clrbuff	equ	12	;clear keyboard buffer (#12)
+resetf	equ	13	;disk reset (#13)
+seldf	equ	14	;select disk (#14)
+openf	equ	15	;open file (#15)
+closef	equ	16	;close file (#16)
+serchf	equ	17	;search for first entry (#17)
+serchn	equ	18	;search for next entry (#18)
+deletf	equ	19	;delete file (#19)
+readf	equ	20	;sequential read (#20)
+writf	equ	21	;sequential write (#21)
+makef	equ	22	;create file (#22)
+renamf	equ	23	;rename file (#23)
+cdiskf	equ	25	;current disk (#25)
+setdtf	equ	26	;set disk transfer address (#26)
+getalf	equ	27	;allocation table address (#27)
+rdranf	equ	33	;random read (#33)
+wrranf	equ	34	;random write (#34)
+filszf	equ	35	;file size (#35)
+setrcf	equ	36	;set random record field (#36)
+setintf	equ	37	;set interrupt vector (#37)
+newsgf	equ	38	;create new program segment (#38)
+blkrdf	equ	39	;random block read (#39)
+blkwrf	equ	40	;random block write (#40)
+parsf	equ	41	;parse filename (#41)
+gdatef	equ	42	;get date (#42)
+sdatef	equ	43	;set date (#43)
+gtimef	equ	44	;get time (#44)
+stimef	equ	45	;set time (#45)
+setverf	equ	46	;set/reset verify switch (#46)
+
+;******************************************************************************
+;*                                                                            *
+;*               G e n e r a l   P u r p o s e   R o u t i n e s              *
+;*                                                                            *
+;******************************************************************************
+
+?pcdos:	;the call to IBM DOS
+	int	21h		;DOS interrupt number
+	ret
+
+getp1:	;get single byte parameter to register DL
+	mov	bx,[bx]		;BX = pointer to char
+	mov	dl,[bx]		;to register DL
+	ret
+
+getp2:	;get single word value to DX
+getp2i:	;(equivalent to getp2)
+	mov	bx,[bx]
+	mov	dx,[bx]
+	ret
+
+;******************************************************************************
+;*                                                                            *
+;*                  T h e   I B M   D O S   R o u t i n e s                   *
+;*                                                                            *
+;******************************************************************************
+
+;******************************************************************************
+;* M E M P T R                                                                *
+;******************************************************************************
+memptr:	;return pointer to base of free storage
+	mov	bx,?begin
+	ret
+
+;******************************************************************************
+;* M E M S I Z                                                                *
+;******************************************************************************
+memsiz:	;return size of free memory in bytes
+	mov	bx,word ptr .6	;top of available memory
+	sub	bx,?begin	;subtract beginning of free storage
+	ret
+
+;******************************************************************************
+;* M E M W D S                                                                *
+;******************************************************************************
+memwds:	;return size of free memory in words
+	call	memsiz		;BX = size in bytes
+	shr	bx,1		;BX = size in words
+	ret			;with words in BX
+
+;******************************************************************************
+;* D F C B 0                                                                  *
+;******************************************************************************
+dfcb0:	;return address of default fcb 0
+	mov	bx,5ch
+	ret
+
+;******************************************************************************
+;* D F C B 1                                                                  *
+;******************************************************************************
+dfcb1:	;return address of default fcb 1
+	mov	bx,6ch
+	ret
+
+;******************************************************************************
+;* D B U F F                                                                  *
+;******************************************************************************
+dbuff:	;return address of default buffer
+	mov	bx,80h
+	ret
+
+;******************************************************************************
+;* REBOOT  #0                                                                *
+;******************************************************************************
+reboot:	;system reboot (#0)
+	;Location 40h in the base page has the INT 20h needed to
+	;reboot. This routine sets up an offset of 0 with that
+	;segment and jumps to it, executing the INT 20.
+	mov	word ptr .3eh,0		;set up an offset of zero...
+	jmpf	dword ptr .3eh		;jump to it
+
+;******************************************************************************
+;* R D C O N  #1                                                              *
+;******************************************************************************
+rdcon:	;read console character (#1)
+	;return character value to stack
+	mov	ah,rdkeyf	;function number
+	jmps	chrin		;common code to read char
+
+;******************************************************************************
+;* W R C O N  #2                                                              *
+;******************************************************************************
+wrcon:	;write console character(#2)
+	mov	ah,writc	;console write function
+	jmps	chrout		;to write the character
+
+;******************************************************************************
+;* R D R D R  #3                                                              *
+;******************************************************************************
+rdrdr:	;read reader character (#3)
+	mov	ah,rdauxf	;reader function
+chrin:
+	;common code for character input
+	call	?pcdos		;value returned to AL
+chrin2:	pop	bx		;return address
+	mov	ah,al		;char to AH
+	push	ax		;character to stack
+	inc	sp		;delete garbage byte
+	mov	al,1		;character length is 1
+	jmp	bx		;back to calling routine
+
+;******************************************************************************
+;* W R P U N  #4                                                              *
+;******************************************************************************
+wrpun:	;write punch character (#4)
+	mov	ah,wrauxf	;punch output function
+	jmps	chrout		;common code to write chr
+
+;******************************************************************************
+;* W R L S T  #5                                                              *
+;******************************************************************************
+wrlst:	;write list character (#5)
+	mov	ah,prtf		;list output function
+chrout:
+	;common code to write character
+	call	getp1		;output char to register DL
+	jmp	?pcdos		;to write and return
+
+;******************************************************************************
+;* C O N I N P  #6A                                                           *
+;******************************************************************************
+coninp:	;perform console input, char returned in stack (#6a)
+	;returns a zero if no char is ready.
+	mov	ah,diof
+	mov	dl,0ffh
+	call	?pcdos		;value returned to AL
+	jnz	chrin2		;if a char ready,send it back
+	mov	al,0		;otherwise, return a 0
+	jmp	chrin2		;use common input-return code
+
+;******************************************************************************
+;* C O N O U T  #6B                                                           *
+;******************************************************************************
+conout:	;direct console output (#6b)
+	call	getp1		;get parameter to DL
+	mov	ah,diof		;direct console I/O
+	jmp	?pcdos
+
+;******************************************************************************
+;* D I N 1  #7                                                                *
+;******************************************************************************
+din1:	;direct console input without echo (#7)
+	mov	ah,din1f
+	jmps	chrin		;value returned to AL
+
+;******************************************************************************
+;* D I N 2  #8                                                                *
+;******************************************************************************
+din2:	;console input without echo (#8)
+	mov	ah,din2f
+	jmps	chrin		;return through DOS
+
+;******************************************************************************
+;* W R S T R  #9                                                              *
+;******************************************************************************
+wrstr:	;write string (#9)
+	call	getp2		;get parameter value to DX
+	mov	ah,printf	;print string function
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* R D B U F  #10                                                             *
+;******************************************************************************
+rdbuf:	;read console buffer (#10)
+	call	getp2i		;DX = pointer to buff
+	mov	ah,rdbufr	;read console function
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* B R E A K  #11                                                             *
+;******************************************************************************
+break:	;check keyboard status (#11)
+	;returns FFh if char ready at keyboard, 0 otherwise
+	mov	ah,statf
+	jmp	?pcdos		;return thru DOS
+
+;******************************************************************************
+;* C L R K B 1  #12A                                                          *
+;******************************************************************************
+clrkb1:	;clear keyboard buffer & invoke input fcn 1,6,7,8 (#12a)
+;NOTE: this function does NOT check to make sure only functions
+;1,6,7,8 are used, as PCDOS will when the call is made.
+	call	getp1		;get function number...
+	mov	al,dl		;...to AL
+	mov	ah,clrbuff	;function number
+;fcns 1,7,8 can be done by same code; 6 is different
+	cmp	al,1		;fcn 1?
+	jz	chrin		;yes, go do it
+	cmp	al,7		;fcn 7?
+	jz	chrin		;do it
+	cmp	al,8		;fcn 8?
+	jz	chrin		;do it
+;must be function 6
+	mov	dl,0ffh
+	call	?pcdos		;value returned to AL
+	jnz	chrin2		;if a char ready,send it back
+	mov	al,0		;otherwise, return a 0
+	jmp	chrin2		;use common input-return code
+
+;******************************************************************************
+;* C L R K B 2  #12B                                                          *
+;******************************************************************************
+clrkb2:	;clear keyboard buffer & invoke input fcn 10 (#12b)
+;this routine is different from the above in that function 10
+;requires a pointer to an input buffer.
+	mov	si,[bx]		;get ptr to 1st parm (fcn#)
+	mov	ax,[si]		;fcn# to AL
+	mov	si,2[bx]	;ptr to 2nd parm (input buffer pointer)
+	mov	dx,[si]		;pointer to input buffer to DX
+	mov	ah,clrbuff	;function number
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* R E S E T  #13                                                             *
+;******************************************************************************
+reset:	;reset disk system (#13)
+	mov	ah,resetf
+	jmp	?pcdos
+
+;******************************************************************************
+;* S E L E C T  #14                                                           *
+;******************************************************************************
+select:	;select disk (#14)
+	call	getp1		;disk number to DL
+	mov	ah,seldf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* O P E N  #15                                                               *
+;******************************************************************************
+open:	;open file (#15)
+	call	getp2i		;fcb address to DX
+	mov	ah,openf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* C L O S E  #16                                                             *
+;******************************************************************************
+close:	;close file (#16)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,closef
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* S E A R  #17                                                               *
+;******************************************************************************
+sear:	;search for file (#17)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,serchf
+	jmp	?pcdos
+
+;******************************************************************************
+;* S E A R N  #18                                                             *
+;******************************************************************************
+searn:	;search for next (#18)
+	call	getp2		;get pointer to FCB
+	mov	ah,serchn	;search next function
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* D E L E T E  #19                                                           *
+;******************************************************************************
+delete:	;delete file (#19)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,deletf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* R D S E Q  #20                                                             *
+;******************************************************************************
+rdseq:	;sequential read (#20)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,readf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* W R S E Q  #21                                                             *
+;******************************************************************************
+wrseq:	;sequential write (#21)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,writf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* M A K E  #22                                                               *
+;******************************************************************************
+make:	;create file (#22)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,makef
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* R E N A M E  #23                                                           *
+;******************************************************************************
+rename:	;rename file (#23)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,renamf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* C U R D S K  #25                                                           *
+;******************************************************************************
+curdsk:	;return current disk number (#25)
+	mov	ah,cdiskf
+	jmp	?pcdos		;return value in AL
+
+;******************************************************************************
+;* S E T D M A   #26                                                          *
+;******************************************************************************
+setdma:	;set DMA address (#26)
+	call	getp2		;dma address to DX
+	mov	ah,setdtf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* A L L T B L  #27                                                           *
+;******************************************************************************
+alltbl:	;return address of allocation table (#27)
+;first get pointer to FAT to set up destination
+	mov	si,[bx]		;get pointer to 1st parm
+	mov	di,[si]		;get offset into DI...
+	push	ds		;get segment into ES...
+	pop	es		;now destination is set
+;now do the call to PCDOS
+	push	bx		;save current BX (will be overwritten)
+	push	ds		;save current DS (will be overwritten)
+	mov	ah,getalf	;function number
+	call	?pcdos		;do it
+;set up the source
+	mov	bp,ds		;move DS value to BP
+	mov	si,bx		;SI gets offset, DS already contains segment
+;move the FAT
+	push	cx		;save CX for later
+	mov	cx,512		;number of bytes to move (size of FAT)
+	rep	movsb		;move it
+;table is moved, now send back other info
+	pop	cx		;get back former CX
+	pop	ds		;get back former DS
+	pop	bx		;and the old BX
+	mov	si,2[bx]	;get pointer to 2nd parm
+	mov	si,[si]		;get parm
+	mov	[si],dx		;put no. of alloc units in 2nd parm
+	mov	si,4[bx]	;get pointer to 3rd parm
+	mov	si,[si]		;get parm
+	mov	[si],al		;put #recs/alloc unit in 3rd parm
+	mov	si,6[bx]	;get pointer to 4th parm
+	mov	si,[si]		;get parm
+	mov	[si],cx		;put size of phys. sect. in 4th parm
+	ret			;done!
+
+;******************************************************************************
+;* R D R A N  #33                                                             *
+;******************************************************************************
+rdran:	;random read (#33)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,rdranf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* W R R A N  #34                                                             *
+;******************************************************************************
+wrran:	;random write (#34)
+	call	getp2i		;FCB pointer to DX
+	mov	ah,wrranf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* F I L S I Z  #35                                                           *
+;******************************************************************************
+filsiz:	;compute file size (#35)
+	call	getp2		;FCB pointer to DX
+	mov	ah,filszf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* S E T R E C  #36                                                           *
+;******************************************************************************
+setrec:	;set random record position (#36)
+	call	getp2		;FCB pointer to DX
+	mov	ah,setrcf
+	jmp	?pcdos		;return through DOS
+
+;******************************************************************************
+;* S E T I N T  #37                                                           *
+;******************************************************************************
+;setint:	;set interrupt vector (#37)
+	;NOT IMPLEMENTED
+
+;******************************************************************************
+;* N E W S E G  #38                                                           *
+;******************************************************************************
+newseg:	;create new program segment (#38)
+; WARNING: This procedure has NOT been tested. Use it at your own risk!
+	call	getp2		;get segment where new prog will start
+	mov	ah,newsgf	;function number
+	jmp	?pcdos		;return thru DOS
+
+;******************************************************************************
+;* B L O C K R D  #39                                                         *
+;******************************************************************************
+blockrd:	; Random Block Read (#39)
+	;call blockrd(fcbptr,count,actualptr,retptr)
+	mov	si,[bx]		;get pointer to 1st parm (FCB ptr)
+	mov	dx,[si]		;put pointer to FCB in DX
+	mov	si,2[bx]	;get pointer to 2nd parm (count)
+	mov	cx,[si]		;move count to CX
+	mov	AH,blkrdf	;random block read function number
+	call	?pcdos		;do it
+	mov	si,4[bx]	;get pointer to 3rd parm (actual count)
+	mov	si,[si]		;
+	mov	[si],cx		;put actual count in 3rd parm
+	mov	si,6[bx]	;get pointer to 4th parm (return code)
+	mov	si,[si]		;
+	mov	[si],al		;put return code in 4th parm
+	ret			;done!
+
+;******************************************************************************
+;* B L O C K W R  #40                                                         *
+;******************************************************************************
+blockwr:	;random block write (#40)
+	;call blockwr(fcbptr,count,actualptr,retptr)
+	mov	si,[bx]		;get pointer to 1st parm (FCB ptr)
+	mov	dx,[si]		;put pointer to FCB in DX
+	mov	si,2[bx]	;get pointer to 2nd parm (count)
+	mov	cx,[si]		;move count to CX
+	mov	AH,blkwrf	;block write function number
+	call	?pcdos		;do it
+	mov	si,4[bx]	;get pointer to 3rd parm (actual count)
+	mov	si,[si]		;
+	mov	[si],cx		;put actual count in 3rd parm
+	mov	si,6[bx]	;get pointer to 4th parm (return code)
+	mov	si,[si]		;
+	mov	[si],al		;put return code in 4th parm
+	ret			;done!
+
+;******************************************************************************
+;* P A R S F N  #41                                                           *
+;******************************************************************************
+parsfn:	;parse file name (#41)
+	;this function will update the two pointers passed in and return a code
+	;ret_code = PARSFN(addr(comptr),addr(fcbptr),action)
+	mov	si,[bx]		;
+	mov	si,[si]		;get ptr to ptr to command line...
+	mov	si,[si]		;now get ptr to command line in SI
+	mov	di,4[bx]	;get 3rd parm
+	mov	al,[di]		;move it to AL
+	mov	di,2[bx]	;get 2nd parameter...
+	mov	di,[di]		;...pointer to pointer to  new FCB...
+	mov	di,[di]		;...and pointer to new FCB in DI
+	push	ds		;copy current DS...
+	pop	es		;...to ES
+	mov	ah,parsf	;function number
+	jmp	?pcdos		;do it, return through PCDOS
+
+;******************************************************************************
+;* G E T D A T E  #42                                                         *
+;******************************************************************************
+getdate:	;get date (#42)
+	mov	ah,gdatef	;function number
+	call	?pcdos		;do it
+	mov	si,[bx]		;get pointer to 1st parm (yr)
+	mov	si,[si]		;
+	mov	[si],cx		;store year
+	mov	si,2[bx]	;get pointer to 2nd parm (mo)
+	mov	si,[si]		;
+	mov	[si],dh		;store month
+	mov	si,4[bx]	;get pointer to 3rd parm (day)
+	mov	si,[si]		;
+	mov	[si],dl		;store day
+	ret
+
+;******************************************************************************
+;* S E T D A T E  #43                                                         *
+;******************************************************************************
+setdate:	;set date (#43)
+	mov	si,[bx]		;get pointer to 1st parm (yr)
+	mov	cx,[si]		;put year in CX
+	mov	si,2[bx]	;get pointer to 2nd parm (mo)
+	mov	dh,[si]		;put month in DH
+	mov	si,4[bx]	;get pointer to 3rd parm (day)
+	mov	dl,[si]		;put day in DL
+	mov	ah,sdatef	;function number
+	jmp	?pcdos		;return thru DOS
+
+;******************************************************************************
+;* G E T T I M E  #44                                                         *
+;******************************************************************************
+gettime:	;get time (#44)
+	mov	ah,gtimef	;function number
+	call	?pcdos		;do it
+	mov	si,[bx]		;get pointer to 1st parm (hrs)
+	mov	si,[si]		;
+	mov	[si],ch		;store hours
+	mov	si,2[bx]	;get pointer to 2nd parm (min)
+	mov	si,[si]		;
+	mov	[si],cl		;store minutes
+	mov	si,4[bx]	;get pointer to 3rd parm (sec)
+	mov	si,[si]		;
+	mov	[si],dh		;store seconds
+	mov	si,6[bx]	;get pointer to 4th parm (1/100 sec)
+	mov	si,[si]		;
+	mov	[si],dl		;store 1/100 sec.
+	ret
+
+;******************************************************************************
+;* S E T T I M E  #45                                                         *
+;******************************************************************************
+settime:	;set time (#45)
+	mov	si,[bx]		;get pointer to 1st parm (hrs)
+	mov	ch,[si]		;put hours in CH
+	mov	si,2[bx]	;get pointer to 2nd parm (min)
+	mov	cl,[si]		;put minutes in CL
+	mov	si,4[bx]	;get pointer to 3rd parm (sec)
+	mov	dh,[si]		;put seconds in DH
+	mov	si,6[bx]	;get pointer to 4th parm (1/100 sec)
+	mov	dl,[si]		;put 1/100 sec in DL
+	mov	ah,stimef	;function number
+	jmp	?pcdos		;return thru DOS
+
+;******************************************************************************
+;* S E T V E R  #46                                                           *
+;******************************************************************************
+setver:	;set/reset verify switch (#46)
+	call	getp1		;get parm...
+	mov	al,dl		;to AL
+	mov	dl,0		;DL must be zero for call
+	mov	ah,setverf	;function number
+	jmp	?pcdos		;return thru DOS
+
+end
+

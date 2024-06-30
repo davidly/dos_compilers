@@ -1,0 +1,51 @@
+/******************************************************/
+/* This program tests the procedure called GNT, which */
+/* is a free-field scanner (parser) that reads a line */
+/* of input and breaks it into individual parts.      */
+/******************************************************/
+fscan:
+    procedure options(main);
+    %replace
+        true by '1'b;
+    declare 
+        token character(80) varying
+        static initial('');
+
+    gnt:
+        procedure;
+        declare 
+            i fixed,
+            line character(80) varying
+            static initial('');
+
+        line = substr(line,length(token)+1);
+        do while(true);
+           if line = '' then
+              get edit(line) (a);
+           i = verify(line,' ');
+           if i = 0 then
+              line = '';
+           else
+           do;
+             line = substr(line,i);
+             i = verify(line,'0123456789.');
+             if i = 0 then
+                token = line;
+             else
+             if i = 1 then
+                token = substr(line,1,1);
+             else
+                token = substr(line,1,i-1);
+             return;
+           end;
+        end;
+    end gnt;
+
+    do while(true);
+       call gnt;
+       put edit(''''!!token!!'''') (x(1),a);
+    end;
+
+end fscan;
+
+
