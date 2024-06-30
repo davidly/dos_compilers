@@ -1,0 +1,852 @@
+------------------------------------------------------------------
+|								 |
+|								 |
+|								 |
+|								 |
+|           ================================================     |
+|	    |						   |	 |	
+|	    |						   |	 |
+|           |      *****  CBASIC Compiler  CB86  *****     |     |
+|           |                                              |     |
+|	    |        with GSX-86 Graphics Extensions	   |	 |
+|	    |						   |	 |
+|	    |	      for the IBM Personal Computer	   |	 |
+|           |             Disk Operating System		   |	 |
+|           |						   |     |
+|           |                ---------------		   |     |
+|           |						   |     |
+|           |		   READ.ME File Notes		   |     |
+|	    |						   |	 |
+|	    |		     (File #2 of 2)		   |	 |
+|           |						   |     |
+|           |		    - January 1984 -		   |     |
+|           |						   |     |
+|           |		  Digital Research Inc.		   |     |
+|           |		      P.O. Box 579		   |     |
+|           |		Pacific Grove, CA  93950	   |     |
+|           |						   |     |
+|           ================================================     |
+|								 |
+|								 |
+|								 |
+|         This file describes enhancements and  modifications    |
+|         made to the Digital Research CBASIC Compiler - CB86	 |
+|         with GSX-86 Graphics Extensions.  Changes described	 |
+|	  in this file apply to GSX-86 software  Version 1.0,	 |
+|	  the  "GSX-86  User's Guide  for  the  IBM  Personal	 |
+|	  Computer  Disk  Operating  System"   First Edition:	 |
+|	  August 1983,  and  the  "CBASIC  Compiler  Language	 |
+|	  Graphics Guide"  First Edition  May 1983.		 |
+|								 |
+|         You can print  the information in this file on your    |
+|         line  printer  using  8 by 11 inch  paper  with the    |
+|         printer set to 6 lines per inch.   You can trim the    |
+|         pages along the dotted  lines and place  the  pages    |
+|         in your product documentation binder.   NOTE:  This    |
+|	  file contains TABS which must be expanded.		 |
+|								 |
+|								 |
+|								 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|								 |
+|			   TABLE of CONTENTS			 |
+|	======================================================	 |
+|								 |
+|	GSX-86 SOFTWARE NOTES  . . . . . . . . . . . . Page  1	 |
+|	CBASIC GRAPHICS GUIDE NOTES  . . . . . . . . . Page  3	 |
+|	CBASIC GRAPHICS EXTENSION ERROR MESSAGES . . . Page  5	 |
+|	GSX-86 USER'S GUIDE NOTES  . . . . . . . . . . Page  8	 |
+|	THE GSX-86 PROGRAMMER'S TOOL KIT . . . . . . . Page  9	 |
+|	 Language Binding Software and Documentation . Page 10	 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |	
+|                              Page i.				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|                                                                |
+|                                                                |
+|		         GSX-86 SOFTWARE NOTES		 	 |
+|	      ===========================================	 |
+|								 |
+|     o To use GSX-86,  you  must  have  Version 1.1  or  later	 |
+|	versions of IBM Personal Computer DOS.			 |
+|								 |
+|     o The file GRAPHICS.EXE, described in your GSX-86 User's	 |
+|	Guide on page 3-1, has been replaced on  your  product	 |
+|	disk with  the  file  GSX.EXE.    Use GSX.EXE with the	 |
+|	following command to install GSX-86:  A>GSX		 |
+|								 |
+|     o The following table defines  the  six  monitor  driver	 |
+|       files for the IBM Personal Computer.   Each driver  is	 |
+|	described  in  detail  following  this  table.    This	 |
+|	information replaces monitor  driver  descriptions  in   |
+|	Section 4 of the GSX-86 User's Guide.			 |
+|								 |
+|	 Monitor       Filename		     Support		 |
+|	------------------------------------------------------	 |
+|	Monochrome   IBMMM1P1.SYS   IBM Color/Graphics Monitor	 |
+|				    Adaptor Card in monochrome   |
+|				    mode and PC Mouse by Mouse	 |
+|				    Systems.	 		 |
+|								 |
+|		     IBMMMSP1.SYS   IBM Color/Graphics Monitor	 |
+|				    Adaptor Card in monochrome	 |
+|				    mode and Microsoft Mouse.	 |
+|								 |
+|		     IBMHM1P1.SYS   Hercules   Graphics   Card	 |
+|				    with  PC  Mouse  by  Mouse	 |
+|				    Systems.			 |
+|								 |
+|		     IBMHMSP1.SYS   Hercules Graphics Card and	 |
+|				    Microsoft Mouse.		 |
+|								 |
+|	Color        IBMCM1P1.SYS   IBM Color/Graphics Monitor	 |
+|				    Adaptor Card in color mode	 |
+|				    and  PC  mouse   by  Mouse	 |
+|				    Systems.			 |
+|								 |
+|		     IBMCMSP1.SYS   IBM Color/Graphics Monitor	 |
+|				    Adaptor Card and Microsoft	 |
+|				    Mouse.			 |
+|								 |	
+|                             Page 1				 |
+|	                                                         |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|	All drivers described here  accept keyboard characters	 |
+|	and do not require a mouse for proper operation.   You	 |
+|	can use the arrow keys to position the graphics cursor.	 |
+|								 |
+|								 |
+|	IBMMM1P1.SYS  This  driver  supports  the  IBM   Color	 |
+|		      Adaptor Card in monochrome mode  with or	 |
+|		      without the  PC Mouse by  Mouse Systems.	 |
+|								 |
+|		      To use  the  PC  Mouse,  connect  it  to	 |
+|       	      comm 1  (one of two RS-232 ports on your	 |
+|		      IBM  Personal  Computer).    The  driver	 |
+|		      initializes  comm 1  for the appropriate	 |
+|       	      baud rate, parity, stop bits,  and other	 |
+|		      communications protocol necessary to use	 |
+|		      the PC Mouse.  If you use  comm 1 with a	 |
+|		      printer, plotter, or modem  after  using	 |
+|		      it with a PC Mouse, reset communications	 |
+|       	      protocol for that particular device.	 |
+|								 |
+|	IBMMMSP1.SYS  This  driver  supports  the   IBM  Color	 |
+|		      Adaptor Card in monochrome mode  with or	 |
+|		      without the Microsoft Mouse.		 |
+|								 |
+|       IBMHM1P1.SYS  This   driver   supports   the  Hercules	 |
+|		      Graphics Card  with  or  without  the PC	 |
+|		      Mouse by Mouse Systems.			 |
+|       							 |
+|		      To use  the  PC  Mouse,  connect  it  to	 |
+|		      comm 1  (one of two RS-232 ports on your	 |
+|		      IBM  Personal  Computer).    The  driver	 |
+|		      initializes  comm 1  for the appropriate	 |
+|       	      baud rate, parity, stop bits,  and other	 |
+|		      communications protocol necessary to use	 |
+|		      the PC Mouse.  If you use  comm 1 with a	 |
+|		      printer, plotter, or modem  after  using	 |
+|		      it with a PC Mouse, reset communications	 |
+|       	      protocol for that particular device.	 |
+|								 |
+|	IBMHMSP1.SYS  This  driver   supports   the   Hercules	 |
+|		      Graphics   Card   with  or  without  the	 |
+|		      Microsoft Mouse.				 |
+|								 |
+|                               Page 2			 	 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|	IBMCM1P1.SYS  This   driver   supports   the  Hercules	 |
+|		      Graphics Card  with  or  without  the PC	 |
+|		      Mouse by Mouse Systems.			 |
+|								 |
+|		      To use  the  PC  Mouse,  connect  it  to	 |
+|		      comm 1  (one of two RS-232 ports on your	 |
+|		      IBM  Personal  Computer).    The  driver	 |
+|		      initializes  comm 1  for the appropriate	 |
+|		      baud rate, parity, stop bits,  and other	 |
+|		      communications protocol necessary to use	 |
+|		      the PC Mouse.  If you use  comm 1 with a	 |
+|		      printer, plotter, or modem  after  using	 |
+|		      it with a PC Mouse, reset communications	 |
+|		      protocol for that particular device.	 |
+|								 |
+|	IBMCMSP1.SYS  This  driver   supports   the IBM  Color	 |
+|		      Adaptor  Card  in  color  mode  with  or	 |
+|		      without the Microsoft Mouse.		 |
+|       							 |
+|     o The DEMOGRAF program on your  product  disk  has  been	 |
+|	modified.   Therefore,  the  listing  of  DEMOGRAF  in	 |
+|	Appendix A  of the  CBASIC Compiler Graphics Guide  is	 |
+|	inaccurate.  DEMOGRAF.BAS contains the improved source	 |
+|	code.							 |
+|								 |
+|								 |
+|		      CBASIC GRAPHICS GUIDE NOTES		 |
+|	======================================================	 |
+|								 |
+|	The following issues  apply  to  the  "CBASIC Compiler	 |
+|	Language Graphics Guide"  First Edition: May 1983.	 |
+|       							 |
+|	1. Add the following statement to the  graphics cursor	 |
+|	   explanation on page 1-7.				 |
+|								 |
+|	>> The term  "cursor"  refers  to  the  current  print	 |
+|	   position  for  non-graphics  output.  The  graphics	 |
+|	   cursor  only  displays   during  execution  of  the	 |
+|	   GRAPHIC INPUT statement.  The  cursor  position  at	 |
+|	   the time the GRAPHIC INPUT  statement executes,  is 	 |
+|	   determined by the current  position  of  the  beam.	 |
+|	   The position to which you move  the graphics cursor	 |
+|	   has no effect on the position of the beam.		 |
+|								 |
+|                             Page 3				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|	2. The file GRAPHICS.EXE,  described  in  your  GSX-86	 |
+|	   User's Guide on page 3-1, has been replaced on your	 |
+|	   product  disk  with the file GSX.EXE.   Replace all	 |
+|	   references to GRAPHICS.CMD on pages  2-2 and 2-3 in	 |
+|	   the Graphics Guide with GSX.EXE.			 |
+|								 |
+|	3. Page 3-4 -- The  boundaries   of  the   device  are	 |
+|	   initially  set  to  (1,1)  upon  execution  of  the	 |
+|	   GRAPHIC OPEN statement.				 |
+|								 |
+|	4. Replace the explanation of the  CLEAR statement  on	 |
+|	   page 3-10 with the following explanation.		 |
+|								 |
+|	 > The CLEAR statement clears the screen,  and returns	 |
+|	   the graphics cursor and beam to position (0,0). <	 |
+|								 |
+|	5. Page 3-25 -- The default LINE STYLE value is 1.	 |
+|								 |
+|	6. Page 3-30 -- The default MARKER TYPE value is 1.	 |
+|								 |
+|	7. Page 3-40 -- The beam and  graphics cursor position	 |
+|	   are initially set to  (0,0)  when  a  GRAPHIC  OPEN	 |
+|	   statement is	executed.				 |
+|								 |
+|	8. Page 3-44 -- The default TEXT ANGLE is 0 radians.	 |
+|								 |
+|	9. Page 3-47 -- The VIEWPORT bounds are  initially set	 |
+|	   to  0,1,0,1   upon   execution  of  a  GRAPHIC OPEN	 |
+|	   statement.						 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |	
+|                              Page 4				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|               CBASIC GRAPHICS EXTENSION ERROR MESSAGES	 |
+|       ======================================================	 |
+|                                                                |
+|       The  following  error  messages  indicate  compilation	 |
+|       errors that can occur during compilation of a graphics	 |
+|	statement in a program.   Compilation continues  after	 |
+|	the error is recorded.	Errors 180 to 240 are reserved	 |
+|	for use with the CBASIC Compiler graphics extension.	 |
+|                                                                |
+|                                                                |
+|       Error   Meaning                                          |
+|                                                                |
+|       180     A  left parenthesis is missing.    A  left       |
+|               parenthesis is inserted.                         |
+|                                                                |
+|       181     A right parenthesis is missing.   A  right       |
+|		parenthesis  is inserted.                        |
+|                                                                |
+|       182     A comma is  missing  in a  PLOT statement.       |
+|               A  comma  is inserted.                           |
+|                                                                |
+|       183     The keyword  STYLE is missing in a  SET or       |
+|               ASK  statement.  STYLE is inserted.              |
+|                                                                |
+|	184     A comma is missing  in a SET statement.  A       |
+|		comma is inserted.				 |
+|								 |
+|       185     The keyword HEIGHT is missing in a  SET or       |
+|               ASK  CHARACTER  statement.      HEIGHT  is       |
+|               inserted.                                        |
+|                                                                |
+|       186     The keyword ANGLE is  missing in a  SET or       |
+|               ASK TEXT statement.    ANGLE  is inserted.       |
+|                                                                |
+|       187     A comma is missing in a SET or  ASK WINDOW       |
+|               statement. A comma is inserted.                  |
+|								 |
+|       188     A  comma  is  missing  in  a  SET  or  ASK	 |
+|               VIEWPORT statement.   A comma is inserted.	 |
+|								 |
+|       189     The  keyword  PAGE  is  missing  in a  SET	 |
+|               statement.   PAGE  is inserted.			 |
+|								 |
+|								 |
+|			       Page 5				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|       190     Not  used.					 |
+|                                                                |
+|       191     The keyword  COUNT  is  missing  in a  ASK	 |
+|               STYLE statement.   COUNT is inserted.		 |
+|								 |
+|       192     A  comma  is missing in an  ASK statement.	 |
+|               A comma  is inserted.				 |
+|								 |
+|	193     Not used.					 |
+|								 |
+|       194     Not used.					 |
+|								 |
+|       195     The  keyword  COUNT is  missing in  a  SET	 |
+|               COLOR  statement.   COLOR is inserted.		 |
+|								 |
+|       196     Not used.					 |
+|								 |
+|       197     Not used.					 |
+|								 |
+|       198     Not used.					 |
+|								 |
+|       199     Not used.					 |
+|								 |
+|	200     Not used.					 |
+|								 |
+|	201     Not used.					 |
+|								 |
+|	202  	Not used.					 |
+|								 |
+|       203  A  comma  is missing in an GRAPHIC statement.	 |
+|            A comma is inserted.				 |
+|								 |
+|       204  The keyword following GRAPHIC is  unexpected.	 |
+|            INPUT is inserted.					 |
+|								 |
+|       205  A left parenthesis  is  missing  in a GRAPHIC	 |
+|            statement.  A left parenthesis is inserted.	 |
+|								 |
+|       206  A right parenthesis is missing  in a  GRAPHIC	 |
+|            statement.  A right parenthesis is inserted.	 |
+|								 |
+|								 |
+|								 |
+|			       Page 6				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |	
+|	207  A  colon  is missing in a GRAPHIC  statement.	 |
+|	     A colon is inserted.				 |
+|								 |
+|       208  The variable in an  ASK  statement is of type	 |
+|            real  or  string.    An  integer  variable is	 |
+|            required.						 |
+|								 |
+|       209  The  variable  in an ASK statement is of type	 |
+|            integer  or  string.    A  real  variable  is	 |
+|            required.						 |
+|								 |
+|       210  The variable in an  ASK  statement is of type	 |
+|            integer  or  real.    A  string  variable  is	 |
+|            required.						 |
+|								 |
+|       211  Not used.						 |
+|								 |
+|       212  Not used.						 |
+|								 |
+|       213  Not used.						 |
+|								 |
+|       214  Not used.						 |
+|								 |
+|       215  Not used.						 |
+|								 |
+|       216  A  comma  is missing  in a GRAPHIC statement.	 |
+|            A comma is inserted.				 |
+|								 |
+|	217  The  variable  in a MAT statement is  of type	 |
+|	     integer  or  string.    A  real  variable  is	 |
+|	     required.						 |
+|								 |
+|	218  Not used.						 |
+|								 |
+|	219  Not used.						 |
+|								 |
+|	220  Not used.						 |
+|								 |
+|	221  The  keyword  following  MAT  is   unexpected.	 |
+|	     FILL is inserted.					 |
+|								 |
+|								 |
+|								 |
+|			        Page 7				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|	222  A colon is missing in a MAT statement. A colon	 |
+|	     is inserted.					 |
+|								 |
+|       223  An identifier is missing in  a  MAT  statement.	 |
+|            An identifier is inserted.				 |
+|								 |
+|       224  A comma is  missing  in  a  MAT  statement.  A	 |
+|            comma is inserted.					 |
+|								 |
+|								 |
+|		      GSX-86 USER'S GUIDE NOTES		 	 |
+|	======================================================	 |
+|								 |
+|	The following issues apply to the "GSX-86 User's Guide	 |
+|	for the IBM Personal Computer  Disk Operating System."	 |
+|	First Edition: August 1983.				 |
+|								 |
+|	1. Page 4-19 indicates that the  "monitors support 182	 |
+|	   marker sizes and 5  marker  types."    This  GSX-86	 |
+|	   implementation supports only 1  marker  size  and 5   |
+|	   marker types.					 |
+|								 |
+|	2. Page 4-20 indicates that the  "IBM PC  supports 182	 |
+|	   character  sizes".     This  GSX-86  implementation	 |
+|	   supports only one character size.			 |
+|								 |
+|	3. Page 4-22 indicates that you can  "move the graphic	 |
+|	   cursor in 45 degree angles by pressing the 7, 9, 1,	 |
+|	   and  3 keys  on  the  numeric  keypad."    In  this	 |
+|	   implementation  of  GSX-86,  the  7 key  homes  the	 |
+|	   graphic cursor  to position (0,0).   The other keys	 |
+|	   terminate GRAPHIC INPUT.				 |
+|								 |
+|	4. Page 4-22 indicates that "pressing the insert (INS)	 |
+|	   key changes the  distance  between  large and small	 |
+|	   movements."  In this implementation of GSX-86,  the	 |
+|	   SHIFT and NUM LOCK keys toggle  between  large  and	 |
+|	   small increment graphics cursor movement.		 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|                               Page 8				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|                   THE GSX-86 PROGRAMMER'S TOOL KIT		 |
+|	======================================================	 |
+|								 |
+|	Graphics command keywords  incorporated  into the CB86	 |
+|	programming language  are  somewhat  limited  for  the	 |
+|	commercial  software  developer.   Therefore,  if  you	 |
+|	require additional  graphics flexability, consider the   |
+|	GSX-86 Programmer's Tool Kit  available  from  Digital	 |
+|	Research.						 |
+|								 |
+|	The  GSX-86  Tool  Kit   provides  monitor drivers and	 |
+|	language binding software for  the  CP/M-86  operating	 |
+|	system as  well  as  IBM  Personal  Computer  DOS.  Of	 |
+|	primary interest to  the  commercial  programmer,  the	 |
+|	Tool Kit includes a licensing agreement enabling legal	 |
+|       redistribution of the  GSX-86  product  configured for	 |
+|	your IBM Personal Computer applications programs.	 |
+|								 |
+|	The following list defines the contents of the  GSX-86	 |
+|	Programmer's Tool Kit.					 |
+|								 |
+|        GSX-86 Programmer's Tool Kit  Software/Documentation	 |
+|	------------------------------------------------------	 |
+|								 |
+|     o GSX-86 V1.0 for DOS  (5 1/4" DS/DD)			 |
+|								 |
+|	Monitor Drivers:					 |
+|	- IBM Color/Graphics Monitor Adaptor Card		 |
+|		(monochrome graphics mode)		 	 |
+|	- IBM Color/Graphics Monitor Adaptor Card		 |
+|		(monochrome graphics mode/mouse support)	 |
+|	- IBM Color/Graphics Monitor Adaptor Card		 |
+|       	(color graphics mode)				 |
+|       - IBM Color/Graphics Monitor Adaptor Card		 |
+|       	(color graphics mode/mouse support)		 |
+|	- Hercules Graphics Card  				 |
+|		(monochrome graphics mode)			 |
+|	- Hercules Graphics Card				 |
+|		(monochrome graphics mode/mouse support)	 |
+|								 |
+|	Peripheral Device Drivers:				 |
+|	- Includes all drivers that are provided in the latest	 |
+|	  version of GSX-86 for IBM Personal Computer DOS.	 |
+|								 |
+|                              Page 9				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|     o GSX-86 V1.0 for CP/M-86  (5 1/4" DS/DD)			 |
+|								 |
+|	Monitor Drivers:					 |
+|	- IBM Color/Graphics Monitor Adaptor Card		 |
+|		(monochrome graphics mode)		 	 |
+|	- IBM Color/Graphics Monitor Adaptor Card		 |
+|		(monochrome graphics mode/mouse support)	 |
+|	- IBM Color/Graphics Monitor Adaptor Card		 |
+|       	(color graphics mode)				 |
+|       - IBM Color/Graphics Monitor Adaptor Card		 |
+|       	(color graphics mode/mouse support)		 |
+|	- Hercules Graphics Card  				 |
+|		(monochrome graphics mode)			 |
+|	- Hercules Graphics Card				 |
+|		(monochrome graphics mode/mouse support)	 |
+|								 |
+|	Peripheral Devices Drivers:				 |
+|	- Includes all drivers that are provided in the latest	 |
+|	  version  of   GSX-86   for  the  CP/M-86  family  of	 |
+|	  operating systems.					 |
+|								 |
+|     o GSX-86 User's Guide  (CP/M-86)  V1.2			 |
+|								 |
+|     o GSX-86 User's Guide  (DOS)  V1.0			 |
+|								 |
+|     o GSX-86 Programmer's Guide  (Generic)  V1.2		 |
+|								 |
+|								 |
+|             Language Binding Software and Documentation	 |
+|	------------------------------------------------------	 |
+|								 |
+|     o GSX-86 Language Binding Disk (DOS)  (5 1/4" DS/DD)	 |
+|								 |
+|	- CBASIC Compiler (CB86)				 |
+|	- Pascal/MT+86						 |
+|       - PL/I-86						 |
+|	- Digital Research C (Small Memory Model)		 |
+|	- Digital Research C (Large Memory Model)		 |
+|	- Digital Research FORTRAN-77 (Small Memory Model)	 |
+|	- Digital Research FORTRAN-77 (Large Memory Model)	 |
+|								 |
+|								 |
+|                              Page 10				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|     o GSX-86 Language Binding Disk (CP/M-86)  (5 1/4" DS/DD)	 |
+|								 |     
+|	- CBASIC Compiler (CB86)				 |
+|	- Pascal/MT-86						 |
+|       - PL/I-86						 |
+|       - Digital Research C (Small Memory Model)		 |
+|       - Digital Research C (Large Memory Model)		 |
+|       - Digital Research FORTRAN-77 (Small Memory Model)	 |
+|       - Digital Research FORTRAN-77 (Large Memory Model)	 |
+|     								 |
+|     o GSX-86 Programmer's Reference Language Guide (Generic)	 |
+|     								 |
+|     								 |
+|                        Demonstration Software			 |
+|	------------------------------------------------------	 |
+|     								 |
+|     o GSX-86 Demonstration Disk  (CP/M-86)  (5 1/4" DS/DD)	 |
+|								 |
+|     o GSX-86 Demonstration Disk  (DOS)  (5 1/4" DS/DD)	 |
+|     								 |
+|     								 |
+|                        Licensing Information			 |
+|	------------------------------------------------------	 |
+|								 |     
+|     o Single User License					 |
+|								 |
+|     o Redistribution License					 |
+|     								 |
+|								 |
+|								 |
+|                              VVVVVVV				 |
+|                               VVVVV				 |
+|                                VVV				 |
+|			   	  V				 |
+|								 |
+|                        END OF READ.ME FILE			 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|                               Page 11				 |
+|								 |
+------------------------------------------------------------------
+

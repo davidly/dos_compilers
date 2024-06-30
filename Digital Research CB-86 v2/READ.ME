@@ -1,0 +1,643 @@
+  ----------------------------------------------------------------
+  |								 |
+  |								 |
+  |								 |
+  |								 |
+  |         ================================================     |
+  |	    |						   |	 |	
+  |	    |						   |	 |
+  |         |     *****  CBASIC Compiler  (CB86)  *****    |     |
+  |         |                                              |     |
+  |	    |	      for the IBM Personal Computer	   |	 |
+  |         |             Disk Operating System		   |	 |
+  |         |                                              |     |
+  |         |                ---------------               |     |
+  |         |                                              |     |
+  |         |               READ.ME File Notes             |     |
+  |         |                                              |     |
+  |         |                 - June 1983 -                |     |
+  |         |                                              |     |
+  |         |             Digital Research Inc.            |     |
+  |         |                 P.O. Box 579                 |     |
+  |         |           Pacific Grove, CA  93950           |     |
+  |         |                                              |     |
+  |         ================================================     |
+  |								 |
+  |								 |
+  |								 |
+  |       This file presents enhancements  and  modifications    |
+  |       made to CBASIC Compiler  software and documentation.   |
+  |       Changes  described  in  this  file  apply to CBASIC    |
+  |       Compiler (CB86) Version 2.0  and supercede existing    |
+  |       product documentation.                                 |
+  |								 |
+  |       You can print  the information in this file on your    |
+  |       line  printer  using  8 by 11 inch  paper  with the    |
+  |       printer set to 6 lines per inch.   You can trim the    |
+  |       pages along the dotted  lines and place  the  pages    |
+  |       in your product documentation binder.                  |
+  |								 |
+  |								 |
+  |								 |
+  |								 |
+  |								 |
+  |								 |
+  |								 |
+  |								 |	
+  |								 |
+  |								 |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes         June 1983 |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                         Table of Contents                    |
+  |         ================================================     |
+  |                                                              |
+  |	    Escape Sequences and Function Keys  . . . . .  1	 |
+  |         CHAIN Statement . . . . . . . . . . . . . . .  2     |
+  |         DATE$ Function (NEW!) . . . . . . . . . . . .  3     |
+  |         TIME$ Function (NEW!) . . . . . . . . . . . .  4     |
+  |         Graphics Extension Error Messages (NEW!)  . .  5     |
+  |                                                              |
+  |         ================================================     |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                i.                            |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes         		 |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                        Escape Sequences			 |
+  |	    ================================================	 |
+  |								 |
+  |       IBM  Personal  Computer  DOS  Version 1.1  does not	 |
+  |       interpret    ANSI    standard   escape   sequences. 	 |
+  |       Therefore, programs that attempt to  handle  screen 	 |
+  |       displays using escape sequences for cursor  control	 |
+  |       do not execute properly.				 |
+  |       							 |
+  |        							 |
+  |                          Function Keys			 |
+  |         ================================================	 |
+  |								 |
+  |       This release of  CBASIC Compiler  does  not support	 |
+  |       the function keys  on  the  IBM  Personal  Computer	 |
+  |	  keyboard.    When  you  press  a  function  key,  a	 |
+  |	  two-character sequence  consisting  of a zero and a	 |
+  |	  second  character is sent to the computer.   CBASIC	 |
+  |	  Compiler  does  not   detect   the   leading  zero.	 |
+  |	  Therefore, any  use  of  a function key in a CBASIC	 |
+  |	  program will fail.  Function keys  are  interpreted	 |
+  |	  as regular keys within a CBASIC program.		 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |           							 |
+  |								 |
+  |	      							 |
+  |           							 |
+  |           							 |
+  |     							 |
+  |								 |
+  |								 |
+  |	  	 						 |
+  |								 |
+  |								 |
+  |                             Page 1				 |
+  |								 |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes   CHAIN Statement |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                        CHAIN Statement                       |
+  |         ===============================================      |
+  |                                                              |
+  |       The CHAIN  statement  loads  another  program  into    |
+  |       memory and starts execution.                           |
+  |                                                              |
+  |                                                              |
+  |       Syntax:  CHAIN <filespec>                              |
+  |                                                              |
+  |                                                              |
+  |       Explanation: The CHAIN statement can load two types    |
+  |       of programs - an overlay program  generated  by the    |
+  |       linker, or a  directly executable file.   CHAIN can    |
+  |       load files generated by languages other than CBASIC.   |
+  |       However,  before  you chain to an overlay file, the    |
+  |       linker  must  create  that  overlay  and  the  root    |
+  |       program at the same time.                              |
+  |                                                              |
+  |       The filespec can be a string expression, a variable,   |
+  |       or a constant.                                         |
+  |                                                              |
+  |       When a program chains to a second program, all open    |
+  |       files in  the  original  program are closed and all    |
+  |       data   is   reinitialized   to  0.     Refer to the    |
+  |       Programming Guide for more information  on chaining    |
+  |       modules and programs.                                  |
+  |                                                              |
+  |                                                              |
+  |       Examples:  CHAIN "B:AVERAGES"                          |
+  |                                                              |
+  |                  CHAIN NEW.PROG$                             |
+  |                                                              |
+  |                  TOTALS$ = "ACCOUNTS.OVL"                    |
+  |                                                              |
+  |                  CHAIN CDRIVE$ + TOTAL$                      |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                            Page 2                            |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes    DATE$ Function |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                         DATE$ Function                       |
+  |         ===============================================      |
+  |                                                              |
+  |       The DATE$ function returns a string indicating the     |
+  |       current year,  month,  and  day  set  through  the     |
+  |       operating system.                                      |
+  |                                                              |
+  |                                                              |
+  |       Syntax:  a$ = DATE$                                    |
+  |                                                              |
+  |                                                              |
+  |       Explanation:  DATE$ returns a six character string     |
+  |       in the form YYMMDD.   YY is the last two digits of     |
+  |       a year reference, such as 84 for 1984.   MM is one     |
+  |       of  twelve  digit  combinations  representing  the     |
+  |       month  such as 02 for February or 11 for November.     |
+  |       DD  is  one  of   thirty-one   digit  combinations     |
+  |       representing the day of the month. The string that     |
+  |       DATE$ returns is undefined if the operating system     |
+  |       is set to a date later than  December 31, 1999  or     |
+  |       earlier than January 1, 1978.                          |
+  |                                                              |
+  |       If your operating system does not support time and     |
+  |       date functions,  the CBASIC DATE$ function returns     |
+  |       a string consisting of six blanks.   Refer to your     |
+  |       operating system manuals to see if  your operating     |
+  |       system supports time and date functions.               |
+  |                                                              |
+  |                                                              |
+  |       Example:  CURRDATE$ = DATE$                            |
+  |                 PRINT "Today's date is: "; CURRDATE$         |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                            Page 3                            |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes    TIME$ Function |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                          TIME$ Function                      |
+  |         ================================================     |
+  |                                                              |
+  |       The TIME$ function returns a string  indicating the    |
+  |       current time of day.                                   |
+  |                                                              |
+  |                                                              |
+  |       Syntax:  a$ = TIME$                                    |
+  |                                                              |
+  |                                                              |
+  |       Explanation:  TIME$ returns  a six character string    |
+  |       of  the  form  HHMMSS.   HH  is  one  of  24  digit    |
+  |       combinations  representing the hour, such as 06 for    |
+  |       6:00 AM  or  15  for  3:00 PM.   MM is one of sixty    |
+  |       digit combinations representing the minute.   SS is    |
+  |       one  of  sixty  digit combinations representing the    |
+  |       second.                                                |
+  |                                                              |
+  |       If your operating system does not support  time and    |
+  |       date functions, the CBASIC TIME$ function returns a    |
+  |       string consisting  of  six  blanks.   Refer to your    |
+  |       operating system manuals  to  see if your operating    |
+  |       system supports time and date functions.               |
+  |                                                              |
+  |                                                              |
+  |       Example:  CURRTIME$ = TIME$                            |
+  |                 PRINT "The current time is: "; CURRTIME$     |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                             Page 4                           |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes   Graphics Errors |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                Graphics Extension Error Messages             |
+  |         ================================================     |
+  |                                                              |
+  |       The following error messages indicate compilation      |
+  |       errors  that  can  occur  during compilation of a      |
+  |       graphics  statement  in  a program.   Compilation      |
+  |       continues after the error is recorded.                 |
+  |                                                              |
+  |       Error  numbers  180  through  240  inclusive  are      |
+  |       reserved for use with the CBASIC Compiler              |
+  |       graphics extention.                                    |
+  |                                                              |
+  |                                                              |
+  |       Error   Meaning                                        |
+  |                                                              |
+  |       180     A  left parenthesis is missing.    A  left     |
+  |               parenthesis is inserted.                       |
+  |                                                              |
+  |       181     A right parenthesis is missing.   A  right     |
+  |               parenthesis  is inserted.                      |
+  |                                                              |
+  |       182     A comma is  missing  in a  PLOT statement.     |
+  |               A  comma  is inserted.                         |
+  |                                                              |
+  |       183     The keyword  STYLE is missing in a  SET or     |
+  |               ASK  statement.  STYLE is inserted.            |
+  |                                                              |
+  |       184     A comma is missing  in a SET statement.  A     |
+  |               comma is inserted.                             |
+  |                                                              |
+  |       185     The keyword HEIGHT is missing in a  SET or     |
+  |               ASK  CHARACTER  statement.      HEIGHT  is     |
+  |               inserted.                                      |
+  |                                                              |
+  |       186     The keyword ANGLE is  missing in a  SET or     |
+  |               ASK TEXT statement.    ANGLE  is inserted.     |
+  |                                                              |
+  |       187     A comma is missing in a SET or  ASK WINDOW     |
+  |               statement. A comma is inserted.                |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                             Page 5                           |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes   Graphics Errors |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |       188     A  comma  is  missing  in  a  SET  or  ASK     |
+  |               VIEWPORT statement.   A comma is inserted.     |
+  |                                                              |
+  |       189     The  keyword  PAGE  is  missing  in a  SET     |
+  |               statement.   PAGE  is inserted.                |
+  |                                                              |
+  |       190     Not used.					 |
+  |                                                              |
+  |       191     The keyword  COUNT  is  missing  in a  ASK     |
+  |               STYLE statement.   COUNT is inserted.          |
+  |                                                              |
+  |       192     A  comma  is missing in an  ASK statement.     |
+  |               A comma  is inserted.                          |
+  |                                                              |
+  |       193     Not used.                                      |
+  |                                                              |
+  |       194     Not used.                                      |
+  |                                                              |
+  |       195     The  keyword  COUNT is  missing in  a  SET     |
+  |               COLOR  statement.   COLOR is inserted.         |
+  |                                                              |
+  |       196     Not used.                                      |
+  |                                                              |
+  |       197     Not used.                                      |
+  |                                                              |
+  |       198     Not used.                                      |
+  |                                                              |
+  |       199     Not used.					 |
+  |                                                              |
+  |       200     Not used.					 |
+  |                                                              |
+  |       201     Not used.					 |
+  |                                                              |
+  |       202  	  Not used.					 |
+  |								 |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |								 |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                             Page 6                           |
+  |                                                              |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes   Graphics Errors |
+  |								 |
+  |								 |	
+  |								 |
+  |       203  A  comma  is missing in an GRAPHIC statement.     |
+  |            A comma is inserted.                              |
+  |								 |
+  |       204  The keyword following GRAPHIC is  unexpected.     |
+  |            INPUT is inserted.                                |
+  |								 |
+  |       205  A left parenthesis  is  missing  in a GRAPHIC     |
+  |            statement.  A left parenthesis is inserted.       |
+  |								 |
+  |       206  A right parenthesis is missing  in a  GRAPHIC     |
+  |            statement.  A right parenthesis is inserted.      |
+  |								 |
+  |       207  A  colon  is missing in a GRAPHIC  statement.     |
+  |            A colon is inserted.                              |
+  |								 |
+  |       208  The variable in an  ASK  statement is of type     |
+  |            real  or  string.    An  integer  variable is     |
+  |            required.                                         |
+  |								 |
+  |       209  The  variable  in an ASK statement is of type     |
+  |            integer  or  string.    A  real  variable  is     |
+  |            required.                                         |
+  |								 |
+  |       210  The variable in an  ASK  statement is of type     |
+  |            integer  or  real.    A  string  variable  is     |
+  |            required.                                         |
+  |								 |
+  |       211  Not used.					 |
+  |								 |
+  |       212  Not used.					 |
+  |								 |
+  |       213  Not used.                                         |
+  |								 |
+  |       214  Not used.                                         |
+  |								 |
+  |       215  Not used.                                         |
+  |                                                              |
+  |								 |
+  |								 |
+  |								 |	
+  |								 |
+  |								 |
+  |                             Page 7				 |
+  |								 |
+  ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ----------------------------------------------------------------
+  |  CBASIC Compiler (CB86) READ.ME File Notes   Graphics Errors |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |       216  A  comma  is missing  in a GRAPHIC statement.     |
+  |            A comma is inserted.                              |
+  |                                                              |
+  |       217  The  variable  in a MAT statement is  of type     |
+  |            integer  or  string.    A  real  variable  is     |
+  |            required.                                         |
+  |                                                              |
+  |       218  Not used.                                         |
+  |                                                              |
+  |       219  Not used.                                         |
+  |                                                              |
+  |       220  Not used.                                         |
+  |                                                              |
+  |       221  The  keyword  following  MAT  is   unexpected.    |
+  |            FILL is inserted.                                 |
+  |                                                              |
+  |       222  A colon is missing in a MAT statement. A colon    |
+  |            is inserted.                                      |
+  |                                                              |
+  |       223  An identifier is missing in  a  MAT  statement.   |
+  |            An identifier is inserted.                        |
+  |                                                              |
+  |       224  A comma is  missing  in  a  MAT  statement.  A    |
+  |            comma is inserted.                                |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                                                              |
+  |                             VVVVVVV                          |
+  |                              VVVVV                           |
+  |                               VVV                            |
+  |                               VVV                            |
+  |                               VVV                            |
+  |                              VVVVV                           |
+  |                               VVV                            |
+  |                                V                             |
+  |                                                              |
+  |                       END OF READ.ME FILE                    |
+  |                                                              |
+  |								 |	
+  |								 |
+  |								 |
+  |                             Page 8				 |
+  |								 |
+  ----------------------------------------------------------------
+

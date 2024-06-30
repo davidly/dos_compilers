@@ -1,0 +1,1052 @@
+------------------------------------------------------------------
+|								 |
+|								 |
+|								 |
+|								 |
+|           ================================================     |
+|	    |						   |	 |	
+|	    |						   |	 |
+|           |      *****  CBASIC Compiler  CB86  *****     |     |
+|           |                                              |     |
+|	    |        with GSX-86 Graphics Extensions	   |	 |
+|	    |						   |	 |
+|	    |	      for the IBM Personal Computer	   |	 |
+|           |             Disk Operating System		   |	 |
+|           |						   |     |
+|           |                ---------------		   |     |
+|           |						   |     |
+|           |		   READ.ME File Notes		   |     |
+|	    |						   |	 |
+|	    |		     (File #1 of 2)		   |	 |
+|           |						   |     |
+|           |		    - January 1984 -		   |     |
+|           |						   |     |
+|           |		  Digital Research Inc.		   |     |
+|           |		      P.O. Box 579		   |     |
+|           |		Pacific Grove, CA  93950	   |     |
+|           |						   |     |
+|           ================================================     |
+|								 |
+|								 |
+|								 |
+|         This file describes enhancements and  modifications    |
+|         made to the Digital Research CBASIC Compiler - CB86	 |
+|         with GSX-86 Graphics Extensions.  Changes described	 |
+|	  in this file apply to  CB86  software  Version 2.1,	 |
+|	  the "CBASIC  Compiler  Language  Reference  Manual"	 |
+|	  Third  Edition:  December 1982,   and  the  "CBASIC	 |
+|	  Compiler (CB86)  Programmer's  Guide  for  the  IBM	 |
+|	  Personal  Computer  Disk  Operating  System"  First	 |
+|	  Edition  August 1983.					 |
+|								 |
+|         You can print  the information in this file on your    |
+|         line  printer  using  8 by 11 inch  paper  with the    |
+|         printer set to 6 lines per inch.   You can trim the    |
+|         pages along the dotted  lines and place  the  pages    |
+|         in your product documentation binder.   NOTE:  This    |
+|	  file contains TABS which must be expanded.		 |
+|								 |
+|								 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|			   TABLE of CONTENTS			 |
+|	======================================================	 |
+|								 |
+|	COMPILER BUG FIXES  . . . . . . . . . . . . .  Page  1	 |
+|	COMPILER EXCEPTIONS AND WORK-AROUNDS  . . . .  Page  1	 |
+|	COMPILER ENHANCEMENTS . . . . . . . . . . . .  Page  3	 |
+|	LANGUAGE REFERENCE MANUAL NOTES . . . . . . .  Page  4	 |
+|	PROGRAMMING GUIDE NOTES . . . . . . . . . . .  Page  8	 |
+|	CB86 CURSOR CONTROL FUNCTIONS . . . . . . . .  Page  9	 |
+|	LINK86 ENHANCEMENTS . . . . . . . . . . . . .  Page 14	 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |	
+|                              Page i.				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|                                                                |
+|                                                                |
+|			  COMPILER BUG FIXES			 |
+|	======================================================	 |
+|								 |
+|	The following bugs have been fixed in CB86 with GSX-86	 |
+|	Graphics Extensions  Version 2.1.			 |
+|								 |
+|       1. The CLEAR statement did  not  "home"  the  graphics	 |
+|	   cursor or beam to position (0,0).			 |
+|								 |
+|	2. The ASK COLOR statement always returned the value 1.	 |
+|								 |
+|	3. The maximum array size for the MAT FILL, MAT MARKER,	 |
+|	   and MAT PLOT statements was 73 rather than 72.	 |
+|								 |
+|       4. Loading  a  new  graphics  driver  caused  a  stack	 |
+|	   overflow.						 |
+|								 |
+|	5. Multiple-line functions using 15 parameters did not	 |
+|	   work properly.					 |
+|								 |
+|								 |
+|	         COMPILER EXCEPTIONS AND WORK-AROUNDS		 |
+|	======================================================	 |
+|								 |
+|	1. FATAL COMPILER ERROR 210  occurs  or  the  compiler	 |
+|	   hangs when you use  hexadecimal  constants  between	 |
+|	   0FA00 and 0FAFF inclusive.				 |
+|	   WORK AROUND -- Use an equivalent decimal value.	 |
+|								 |
+|	2. FATAL COMPILER ERROR 215  occurs if  you  omit  the	 |
+|	   colon  between  a   PRINT   statement  and  a  GOTO	 |
+|	   statement on the same  line  or  on a  continuation	 |
+|	   line using a backslash.				 |
+|								 |
+|	3. FATAL COMPILER ERROR 215  occurs  when  you  use  a	 |
+|	   label identifier as  a  variable  identifier  in  a	 |
+|	   PRINT USING statement.  For example:			 |
+|								 |
+|	   ABLE:  PRINT						 |
+|	   ABLE = 100.0 : PRINT USING "###.##" ; ABLE		 |
+|								 |	
+|								 |
+|								 |
+|                             Page 1				 |
+|	                                                         |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|	4. The compiler does not report   an  error  when  the	 |
+|	   prompt in an  INPUT  LINE  statement  is  a  string	 |
+|	   expression.  This causes  a run-time system  memory	 |
+|	   dump and the system hangs.				 |
+|								 |
+|	5. FATAL COMPILER ERROR 103 occurs if you  place  more	 |
+|	   than 255 user-defined functions in a single module.	 |
+|								 |
+|	6. You cannot specify the N option  after  the  %DEBUG	 |
+|	   compiler directive in the source code.		 |
+|	   WORK-AROUND -- Use the N  option  in  the  compiler	 |
+|	   command line.					 |
+|								 |
+|	7. FATAL COMPILER ERROR 214 occurs when a  file  print	 |
+|	   statement ends with a comma and backslash.		 |
+|								 |
+|	8. When branching to  an  IF  END  statement  from  an	 |
+|	   assignment statement,  the address returned on  the	 |
+|          stack is incorrect  if  that  assignment  statement	 |
+|	   assigns the result of the GET function  to an array	 |
+|	   element.						 |
+|          WORK-AROUND  --  Assign  the  result   of  the  GET	 |
+|	   function to a temporary variable.  Then, assign the	 |
+|	   temporary variable to the array element.		 |
+|								 |
+|	9. The PRINT  USING  statement  outputs  an  incorrect	 |
+|	   exponential value when the value  is  negative  and	 |
+|	   when the format field  does  not  contain  a  digit	 |
+|	   position  that  preceeds  the decimal  point.   For	 |
+|	   example:  PRINT USING ".####^"; -1.234		 |
+|								 |
+|      10. A value of zero returns when you raise a  number to	 |
+|	   a power of zero using a real variable as either the	 |
+|	   base or exponent.					 |
+|	   WORK-AROUND -- Pre-test for this condition.		 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|                               Page 2			 	 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|			 COMPILER ENHANCEMENTS			 |
+|	======================================================	 |
+|								 |
+|	1. A new execution error  "ZW" indicates the following	 |
+|	conditions.						 |
+|								 |
+|	-- A BOUNDS statement height  or  width  argument  has	 |
+|	   been set to a value less than 1.0E-05, greater than	 |
+|	   1.0, or neither argument has been set to 1.0.	 |
+|	-- The  left/right or upper/lower bounds  arguments of	 |
+|	   a VIEWPORT or WINDOW  statement have  been  set  to	 |
+|	   values that differ by less than 1.0E-05.		 |
+|       -- The left, right, lower, or upper bound  argument of	 |
+|	   a VIEWPORT statement  has been set to a  value less	 |
+|	   than 0 or greater than 1.0				 |
+|								 |
+|	2. The BEAM and CLIP statements accept string constant	 |
+|	   arguments in upper- and lower-case.    For example:	 |
+|	   "ON", "OFF", "on", "off"				 |
+|								 |
+|	3. The MAT FILL, MAT MARKER,  and MAT PLOT  statements	 |
+|	   stop at element 71 when the maximum array subscript	 |
+|	   argument value exceeds 71.				 |
+|								 |
+|	4. A new execution error "GX" indicates that a GRAPHIC	 |
+|	   OPEN was attempted without GSX-86 installed.		 |
+|								 |
+|	5. A  new  execution  error  "PO"   indicates  polygon	 |
+|	   coordinate overflow.  The clipping process computes	 |
+|	   any additional coordinates required to plot a given	 |
+|          polygon within the current window.   Therefore, the	 |
+|          MAT FILL statement with CLIP set to "ON" can result	 |
+|          in more  than  72  coordinates producing  execution	 |
+|	   error "PO".						 |
+|								 |
+|       6. Coordinates   for   the   JUSTIFY   statement   are	 |
+|	   restricted from  (0,0) to (1,1).    If  either  the	 |
+|	   vertical or horizontal coordinate evaluates to less	 |
+|	   than 0, it is set to zero.   If  either  coordinate	 |
+|	   evaluates to greater than 1.0, it is set to 1.0.	 |
+|								 |
+|								 |
+|                             Page 3				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|		   LANGUAGE REFERENCE MANUAL NOTES		 |
+|	======================================================	 |
+|								 |
+|	The following issues  apply  to  the  "CBASIC Compiler	 |
+|	Language Reference Manual"    Third Edition:  December	 |
+|	1983.							 |
+|								 |
+|	1. Section 4.3 -- A user-defined function that returns	 |
+|	   a string constant cannot be referenced twice within	 |
+|	   the same expression.  For example:			 |
+|								 |
+|	   DEF   FNA$						 |
+|                FNA$ = A$ + B$					 |
+|	   FEND							 |
+|	   PRINT FNA$ + FNA$    <---- incorrect			 |
+|								 |
+|	2. The  following  list  of   CBASIC   reserved  words	 |
+|	   replaces Appendix A in the CBASIC Compiler Language	 |
+|	   Reference Manual.					 |
+|								 |
+|	   ABS           COMMON         EXP           INT%       |
+|	   AND	         CONCHAR%       EXTERNAL      INTEGER    |
+|          ANGLE         CONSOLE        FEND	      JUSTIFY    |
+|	   AS	         CONSTAT%       FILL	      LE         |
+|	   ASC	         COS            FLOAT         LEFT$      |
+|	   ASK	         COUNT	        FOR           LEN        |
+|	   AT	         CREATE         FRE           LET        |
+|	   ATTACH        DATA	        GE            LINE	 |
+|	   ATN	         DATE$	        GET           LOCK 	 |
+|	   BEAM	         DEF	        GO            LOCKED	 |
+|	   BOUNDS        DELETE         GOSUB         LOG	 |
+|	   BUFF	         DETACH         GOTO          LPRINTER	 |
+|	   CALL	         DEVICE         GRAPHIC       LT	 |
+|          CHAIN         DIM	        GT            MARKER	 |
+|          CHARACTER     ELSE	        HEIGHT        MAT	 |
+|          CHR$	         END	        IF	      MATCH	 |
+|	   CLEAR         ERR	        INITIALIZE    MFRE	 |
+|	   CLIP	         ERRL	        INKEY	      MID$	 |
+|          CLOSE         ERROR	        INP           MOD	 |
+|	   COLOR         ERRX	        INPUT	      MODE	 |
+|	   COMMAND$      EQ	        INT	      NE	 |
+|								 |
+|                             Page 4				 |
+|								 |
+------------------------------------------------------------------
+
+        
+         
+
+   
+
+  
+     
+
+
+     
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|	   NEXT		 REAL		STOP	      VAL	 |
+|	   NOT     	 RECL		STR$	      VARPTR	 |
+|	   ON		 RECS		STRING	      VIEWPORT	 |
+|	   OPEN		 REM		STRING$	      WEND	 |
+|	   OR		 REMARK		STYLE	      WHILE	 |
+|	   OUT		 RENAME		SUB	      WIDTH	 |
+|	   PEEK		 RESTORE	TAB	      WINDOW	 |
+|	   PLOT		 RETURN		TAN	      XOR	 |
+|	   POKE		 RIGHT$		TEXT			 |
+|	   POS		 RND		THEN			 |
+|	   POSITION	 SADD		TIME$	      %CHAIN	 |
+|	   PRINT	 SET		TO	      %DEBUG	 |
+|          PUBLIC	 SGN		TYPE	      %EJECT	 |
+|	   PUT		 SHIFT		UCASE$	      %INCLUDE	 |
+|	   RANDOMIZE	 SIN		UNLOCK	      %LIST	 |
+|	   READ		 SQR		UNLOCKED      %NOLIST	 |
+|	   READONLY	 STEP		USING         %PAGE	 |
+|								 |
+|								 |
+|								 |
+|       3. Add the following statement to the  description  of	 |
+|	   the CHAIN statement on  page  21  of  the  Language	 |
+|	   Reference Manual.					 |
+|								 |
+|       >> When a program chains to a second program, all open   |
+|          files in the original program  are  closed  and all   |
+|          non-common data is reinitialized  to 0. <<		 |
+|								 |
+|								 |       
+|								 |
+|	4. The following  two pages  contain  descriptions  of	 |
+|	   the DATE$ and TIME$ functions.  You can  add  these	 |
+|	   descriptions   to   Section  3   of  your  Language	 |
+|          Reference Manual.					 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|                             Page 5				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|                                                                |
+|                                                                |
+|                                                                |
+|       DATE$ Function			 			 |
+|       							 |
+|                                                                |
+|       The DATE$ function returns  a  string  indicating  the   |
+|       current  year,  month,  and  day   set   through   the   |
+|       operating system.                                        |
+|                                                                |
+|                                                                |
+|       Syntax:  a$ = DATE$                                      |
+|                                                                |
+|                                                                |
+|       Explanation:  DATE$ returns  a  six  character  string   |
+|       in the form YYMMDD.   YY is  the  last  two  digits of   |
+|       a year reference, such as 84  for 1984.    MM  is  one   |
+|       of   twelve   digit   combinations   representing  the   |
+|       month  such as 02 for February  or  11  for  November.   |
+|       DD   is   one   of   thirty-one   digit   combinations   |
+|       representing the day of the month.   The  string  that   |
+|       DATE$ returns is undefined  if  the  operating  system   |
+|       is set to a date later than    December 31,  1999   or   |
+|       earlier than January 1, 1978.                            |
+|                                                                |
+|       If your operating system  does  not  support time  and   |
+|       date functions,  the  CBASIC  DATE$  function  returns   |
+|       a string  consisting of six blanks.    Refer  to  your   |
+|       operating system  manuals  to  see if  your  operating   |
+|       system supports time and date functions.                 |
+|								 |
+|                                                                |
+|       Example:  CURRDATE$ = DATE$                              |
+|                 PRINT "Today's date is: "; CURRDATE$           |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                              Page 6                            |
+|                                                                |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|                                                                |
+|                                                                |
+|                                                                |
+|       TIME$ Function						 |
+|								 |
+|                                                                |
+|       The TIME$ function  returns a string   indicating  the   |
+|       current time of day.                                     |
+|                                                                |
+|                                                                |
+|       Syntax:  a$ = TIME$                                      |
+|                                                                |
+|                                                                |
+|       Explanation:  TIME$ returns  a  six  character  string   |
+|       of  the  form  HHMMSS.    HH  is   one  of   24  digit   |
+|       combinations  representing the hour,  such  as  06 for   |
+|       6:00 AM  or  15  for  3:00 PM.    MM is one  of  sixty   |
+|       digit combinations representing  the minute.    SS  is   |
+|       one  of  sixty  digit  combinations  representing  the	 |
+|       second.                                                  |
+|                                                                |
+|       If your operating system does  not  support  time  and   |
+|	date functions, the CBASIC  TIME$  function returns  a   |
+|       string  consisting  of  six  blanks.   Refer  to  your   |
+|       operating system  manuals  to  see if  your  operating   |
+|       system supports time and date functions.                 |
+|                                                                |
+|                                                                |
+|       Example:  CURRTIME$ = TIME$                              |
+|                 PRINT "The current time is: "; CURRTIME$       |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|								 |
+|								 |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                                                                |
+|                              Page 7                            |
+|                                                                |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|		       PROGRAMMING GUIDE NOTES			 |
+|       ======================================================   |
+|	The following issues apply to  the   "CBASIC  Compiler	 |
+|	(CB86) Language Programming Guide for the IBM Personal	 |
+|	Computer Disk Operating System". First Edition: August	 |
+|	1983.							 |
+|								 |
+|	1. The description of the L toggle  on  page 2-9  does	 |
+|	   not mention the default length value of 66.		 |
+|								 |
+|	2. The description of the U toggle  on  page 2-9  does	 |
+|	   not mention that variable names local to a multiple-	 |
+|	   line  function  are  NOT   reported  as  explicitly	 |
+|	   undeclared.						 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|			       Page 8				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|                                                                |
+|                                                                |
+|		    CB86 CURSOR CONTROL FUNCTIONS		 |
+|	=====================================================	 |
+|	The following files on your  CB86 product disk enable	 |
+|	you to make calls to ROM-based functions that control	 |
+|	direct  cursor   positioning  in  the   IBM  Personal	 |
+|	Computer.						 |
+|								 |
+|         PCSCRN.BAS        VIDEOIBM.A86       DEMOSCRN.BAS	 |
+|	  PCSCRN.DEF	    VIDEOIBM.OBJ       DEMOSCRN.EXE	 |
+|	  PCSCRN.L86						 |
+|								 |
+|	The PCSCRN files contain CB86 functions that call the	 |
+|	actual assembly language  cursor control functions in	 |
+|	VIDEOIBM.   PCSCRN.BAS is the  CB86  function  source	 |
+|	file and VIDEOIBM.A86 is the assembly function source	 |
+|	file.  You can modify either  file  as  required  for	 |
+|	your programs.  Then, you can combine the object file	 |
+|	versions of these two files  using  LIB86 to create a	 |
+|	useable library of cursor control functions.		 |
+|								 |
+|	PCSCRN.L86 is a  useable  library  of cursor  control  	 |
+|	functions  created   by   compiling  PCSCRN.BAS, then	 |
+|	combining the resulting object file with VIDEOIBM.OBJ.   |
+|	VIDEOIBM.OBJ  is  simply  the  assembled  version  of	 |
+|	VIDEOIBM.A86 provided as a convenience.		 	 |
+|								 |
+|	PCSCRN.DEF  is   an   include   file   that  contains	 |
+|	declarations of the functions in PCSCRN.BAS.  Specify	 |
+|	PCSCRN.DEF  after  a  %INCLUDE   directive  near  the	 |
+|	beginning of your source program.  This enables	 your	 |
+|	program to call the cursor control functions.		 |
+|								 |
+|	The DEMOSCRN files  contain  a  demonstration program	 |
+|	that illustrates use of the cursor control  functions	 |
+|	and tests them  for  proper operation on your system.	 |
+|	DEMOSCRN.EXE is  ready to execute.   DEMOSCRN.BAS  is	 |
+|	the source file.   You  can  examine  DEMOSCRN.BAS to	 |
+|	learn more about the functions.			 	 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 | 
+|	                                                         |
+|                              Page 9				 |
+|	                                                         |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|	The following steps describe  how  to  use  the cursor	 |
+|	control   functions   provided   in  the  ready-to-use	 |
+|	library file  PCSCRN.L86.  Instructions on how to call	 |
+|	each function from a CB86 program follow these steps.	 |
+|								 |
+|	1. Specify PCSCRN.DEF  as  an  include  file  near the	 |
+|	   beginning of your source program using the %INCLUDE	 |
+|	   directive as shown in the following example.		 |
+|								 |
+|	   %INCLUDE PCSCRN.DEF					 |
+|								 |
+|	2. Compile your source program.   Make sure  that  the	 |
+|	   PCSCRN.DEF file is on the same drive as your source	 |
+|	   program.   The  U  and  F   compiler   options  are	 |
+|	   recommended  for  the  compilation  as shown in the	 |
+|	   following CB86 command line.				 |
+|								 |
+|	   A>CB86 PROGRAM[UF]					 |
+|								 |
+|	3. Link the resulting  object file  with PCSCRN.L86 as	 |
+|	   shown in the following LINK86 command line.	  Make	 |
+|	   sure PCSCRN.L86 is on the same drive as object file.	 |
+|								 |
+|	   A>LINK86 PROGRAM,PCSCRN.L86				 |
+|								 |
+|	4. Run your program.					 |
+|								 |
+|	There are 14 cursor control functions  in  PCSCRN.L86.	 |
+|	The following descriptions explain how  to  call  each	 |
+|	of the functions from a	CB86 program.			 |
+|								 |
+|	o ADDLINE Function - Insert new line and scroll down.	 |
+|	  ADDLINE moves all text that is on or below the line	 |
+|	  that the cursor occupies down one line  leaving the	 |
+|	  line that the cursor occupies blank.    The  cursor	 |
+|	  remains on the same line  but moves to the leftmost	 |
+|	  column.  All text above the line  that  the  cursor	 |
+|	  occupies remains unchanged.   Any  text  that is on	 |
+|	  the bottom line (row 24) moves off screen.  ADDLINE	 |
+|	  does not accept parameters as shown below.		 |
+|								 |
+|	  CALL ADDLINE						 |
+|								 |
+|								 |
+|                              Page 10				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|       o CLS Function - Clear entire screen.			 |
+|	  CLS deletes all text from the screen and returns the	 |
+|	  cursor  to  the  home position.  CLS does not accept	 |
+|	  parameters as shown in the following example.		 |
+|								 |
+|	  CALL CLS						 |
+|								 |
+|	  Using the GETPOS function, you can save the original	 |
+|	  cursor position in a variable  before  clearing  the	 |
+|	  screen with CLS.  Then,  after  clearing the screen,	 |
+|	  you can return the cursor to its  original  position	 |
+|	  with the SETCUR function.				 |
+|								 |
+|       o ERAEOL Function - Erase to end of line.		 |
+|         ERAEOL deletes any text that follows the cursor  (to	 |
+|         the right) on the same line including the  character	 |
+|	  at the cursor position.   The cursor  remains in its	 |
+|         original position.   If  you use ERAEOL after moving	 |
+|	  the cursor off the visible  screen  area,  confusing	 |
+|	  results can occur.  ERAEOL does not take parameters.	 |
+|								 |
+|	  CALL ERAEOL						 |
+|								 |
+|       o ERAEOS Function - Erase next line to end of screen.	 |
+|         ERAEOS deletes  all  text  beginning  with  the line	 |
+|         following the line  that  the  cursor  occupies  and	 |
+|	  extending to the end of the screen.  The  line  that	 |
+|	  the cursor occupies remains unchanged.  The position	 |
+|	  of the cursor remains  unchanged.   ERAEOS  does not	 |
+|	  accept parameters.					 |
+|								 |
+|         CALL ERAEOS						 |
+|								 |
+|	o GETPOS Function - Get current cursor position.	 |
+|	  GETPOS   returns    a   single  integer  value  that	 |
+|	  represents the current row and  column  position  of	 |
+|         the cursor.   The following  statements  demonstrate	 |
+|         how to decode this integer value  by  assigning  the	 |
+|         row  and  column   positions   to  separate  integer	 |
+|         variables (R% and C% respectively).			 |
+|								 |
+|         C% = GETPOS						 |
+|	  R% = C%/256						 |
+|	  C% = C% - R%*256					 |
+|								 |
+|			       Page 11				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|       o HOME Function - Move cursor to upper left corner.	 |
+|	  HOME places the cursor at  row zero and column zero.	 |
+|	  HOME does not accept parameters.			 |
+|								 |
+|         CALL HOME						 |
+|								 |
+|       o PRTSTR Function - Print string in chosen video mode.	 |
+|         PRTSTR prints a specified string on  the  screen  in	 |
+|         one of three video output modes.  PRTSTR accepts two	 |
+|         parameters as shown below.				 |
+|								 |
+|	  CALL PRTSTR("string",integer)				 |
+|								 |
+|	  The string can be any length.  Do not print a string	 |
+|	  that  extends  off  screen  beyond  column  79.  The	 |
+|	  integer must be one of three values.   7 for  normal	 |
+|	  video, 112  (hex 70)  for  reverse  video,  and  135	 |
+|	  (hex 87) for blinking video.				 |
+|								 |
+|	  After printing the string,  PRTSTR places the cursor	 |
+|	  at the first space following  the  string.   If this	 |
+|	  puts the cursor in column 80,  then  use  SETCUR  to	 |
+|	  position the cursor to a meaningful screen location. 	 |
+|								 |
+|       o PRTBLNK Function - Print string in blinking mode.	 |
+|         PRTBLNK prints a specified string on  the  screen in	 |
+|	  blinking  video mode beginning at the current cursor	 |
+|	  position.  PRTBLNK accepts one  parameter  as  shown	 |
+|	  below.				 		 |
+|								 |
+|	  CALL PRTBLNK("string")				 |
+|								 |
+|	o PRTREV Function - Print string in reverse video.	 |
+|	  PRTREV prints a specified string  on  the  screen in	 |
+|	  reverse video mode beginning at the  current  cursor	 |
+|	  position.  PRTREV takes one parameter as shown below.	 |
+|								 |
+|	  CALL PRTREV("string")					 |
+|								 |
+|	o UPCUR Function - Move cursor up one line.		 |
+|								 |
+|	  CALL UPCUR						 |
+|								 |
+|				Page 12				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|	o SETCUR Function - Move cursor to specified position.	 |
+|	  SETCUR moves the  cursor  to  a  specified  row  and	 |
+|	  column number.   SETCUR accepts  two  parameters  as	 |
+|	  shown below.  The parameters must be integer values.	 |
+|								 |
+|	  CALL SETCUR(row,column)				 |
+|								 |
+|	o UPCUR Function - Move cursor up one line.		 |
+|								 |
+|	  CALL UPCUR						 |
+|								 |
+|       o DWNCUR Function - Move cursor down one line.		 |
+|								 |
+|	  CALL DWNCUR						 |
+|								 |
+|       o CUR.RT Function - Move cursor right one column.	 |
+|								 |
+|	  CALL CUR.RT						 |
+|								 |
+|       o CUR.LT Function - Move cursor left one column.	 |
+|								 |
+|	  CALL CUR.LT						 |
+|								 |
+|       Remember, if you move the cursor off  screen   in  any	 |
+|       direction, confusing results can occur.    You  should	 |
+|       try to keep the cursor within columns 0 to 79 and rows	 |
+|       0 to 24.						 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|				Page 13				 |
+|								 |
+------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__________________________________________________________________
+|  CBASIC Compiler - CB86 READ.ME File Notes        January 1984 |
+|								 |
+|								 |
+|								 |
+|			 LINK-86 ENHANCEMENTS			 |
+|	======================================================	 |
+|								 |
+|	1. A new command line option has been added to LINK-86.	 |
+|	   The $MY option directs LINK-86  to  send  the  .MAP	 |
+|	   file to your line printer.				 |
+|								 |
+|	2. A new optional parameter has been added to the  MAP	 |
+|	   option.  The NOCOMMON parameter directs  LINK-86 to	 |
+|	   suppress the listing of common segment names in the	 |
+|	   .MAP file.						 |
+|								 |
+|	3. LINK-86 now displays  both the  filename and module	 |
+|	   name indicating the location of an undefined symbol.	 |
+|								 |
+|	4. LINK-86 can  now   report  three  additional  error	 |
+|	   messages:						 |
+|								 |
+|	   CLASS NOT FOUND  -  The class name specified in the	 |
+|	   command line does not exist in  any  of  the  files	 |
+|	   being linked.					 |
+|								 |
+|	   GROUP NOT FOUND  -  The group name specified in the	 |    
+|	   the command line does not exist in any of the files	 |
+|	   being linked.					 |
+|								 |
+|	   SEGMENT NOT FOUND  -  The segment name specified in	 |
+|	   the command line does not exist in any of the files	 |
+|	   being linked.					 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|								 |
+|				VVVVVVV				 |
+|				 VVVVV				 |
+|				  VVV				 |
+|				   V				 |
+|								 |
+|       		  END OF READ.ME FILE			 |
+|								 |
+|								 |	
+|                               Page 14				 |
+|								 |
+------------------------------------------------------------------
+

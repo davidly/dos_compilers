@@ -1,0 +1,116 @@
+;VIDEOIBM.A86
+pagesize 64+11
+;*****************************************************************
+;RASM86 interface to IBM PC/XT ROM video routine.
+;Digital Research Tech. Support
+;15 Sept. 83
+;*********************************************************************
+
+	PUBLIC VIDEOIBM
+	CSEG
+
+;Equates:
+	VID_INT	equ	10h	;how to get to ROM
+	P0	equ	16[bp]
+	P1	equ	14[bp]
+	P2	equ	12[bp]
+	P3	equ	10[bp]
+	P4	equ	 8[bp]
+	P5	equ	 6[bp]
+	P6	equ	 4[bp]
+	P7	equ	 2[bp]
+;return address equals   0[bp]
+
+;Entry point:
+VIDEOIBM:
+	mov	bp,sp		;set up stack frame
+	pushf			;must save direction flag
+	push	si
+	push	di
+
+;Branch to appropriate routine:
+	mov	bx,P0
+	and	bx,000Fh	;only 16 entries
+	shl	bx,1		;table of words
+	call	CS:TABLE[bx]	;gone
+
+;Back to CB86:
+BACK:
+	pop	di
+	pop	si
+	popf
+	ret	16		;get rid of 8 entry words
+
+;Routine to call ROM:
+ROM:
+	mov	ah,P0
+	int	VID_INT
+RET1:	ret
+
+eject
+;Jump table:
+	TABLE	equ	offset $	;function #:
+		dw	SET_MODE	;    0
+		dw	SET_CURS_TYP	;    1
+		dw	SET_CURS_POS	;    2
+		dw	RET_CURS_POS	;    3
+		dw	RET1		;Read-Light-Pen not sup.
+		dw	SET_PAGE	;    5
+		dw	SCROLL_UP	;    6
+		dw	SCROLL_DOWN	;    7
+		dw	RET_CHAR	;    8
+		dw	CHAR_OUT	;    9
+		dw	CHAR_ONLY	;    10
+		dw	SET_PALETTE	;    11
+		dw	DOT_OUT		;    12
+		dw	RET1		;Read-Dot not sup.
+		dw	TTY_OUT		;    14
+		dw	GET_MODE	;    15
+
+;*********************************************************************
+;The following routines interface by using 8-bit registers and return
+;either nothing to CB86, or have already put the returned value in AX:
+
+SET_MODE:
+SET_CURS_TYP:
+SET_CURS_POS:
+SET_PAGE:
+SCROLL_UP:
+SCROLL_DOWN:
+SET_PALETTE:
+TTY_OUT:
+RET_CHAR:
+GET_MODE:
+	;Load registers:
+	mov	al,P1
+	mov	bh,P2
+	mov	bl,P3
+	mov	ch,P4
+	mov	cl,P5
+	mov	dh,P6
+	mov	dl,P7
+
+	jmps	ROM		;ROM: will do the RET
+
+;**********************************************************************
+;The rest of the routines use a unique combination of 8- and 16-bit
+;registers:
+
+CHAR_OUT:
+CHAR_ONLY:
+DOT_OUT:
+	mov	al,P1
+	mov	bh,P2
+	mov	bl,P3
+	mov	cx,P4
+	mov	dx,P6
+	jmp	ROM
+
+RET_CURS_POS:
+	mov	bh,P2
+	call	ROM
+	mov	ax,dx
+	ret
+
+	END
+

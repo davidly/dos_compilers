@@ -1,0 +1,129 @@
+\	********************************************************
+\	*  CB86 EXTERNAL FUNCTION DEFINITIONS FOR PC DOS v1.1  *
+\	********************************************************
+\	*       REQUIRED FOR PC DOS SCREEN CONTROL             *
+\	********************************************************
+\	*              FILE:  PCSCRN.DEF                       *
+\	********************************************************
+
+
+
+\	*******************************************************
+\	*  GET CURRENT CURSOR POSITION - To Extract Position  *
+\	*  ROW    = returned value / 256                      *
+\	*  COLUMN = returned value - ROW * 256                *
+\	*******************************************************
+
+    def GETPOS external
+	integer GETPOS
+	fend
+
+\	******************************************
+\	*  SET CURSOR TO POSITION - ROW, COLUMN  *
+\	*  ROW and COLUMN are relative to ZERO   *
+\	******************************************
+
+    def SETCUR (ROW, COL) external
+	integer SETCUR, ROW, COL
+	fend
+
+\	**************************************
+\	*  HOME CURSOR TO UPPER LEFT CORNER  *
+\	**************************************
+
+    def HOME external
+	integer HOME
+	fend
+
+\	*************************
+\	*  CLEAR ENTIRE SCREEN  *
+\	*************************
+
+    def CLS external
+	integer CLS
+	fend
+
+\	*****************************
+\	*  MOVE CURSOR UP ONE LINE  *
+\	*****************************
+
+    def UPCUR external
+	integer UPCUR
+	fend
+
+\	*******************************
+\	*  MOVE CURSOR DOWN ONE LINE  *
+\	*******************************
+
+    def DWNCUR external
+	integer DWNCUR
+	fend
+
+\	**********************************
+\	*  MOVE CURSOR RIGHT ONE COLUMN  *
+\	**********************************
+
+    def CUR.RT external
+	integer CUR.RT
+	fend
+
+\	*********************************
+\	*  MOVE CURSOR LEFT ONE COLUMN  *
+\	*********************************
+
+    def CUR.LT external
+	integer CUR.LT
+	fend
+
+\	********************************************
+\	*  INSERT NEW LINE AND SCROLL SCREEN DOWN  *
+\	********************************************
+
+    def ADDLINE external
+	integer ADDLINE
+	fend
+
+\	*******************************************************
+\	*  ERASE FROM CURRENT CURSOR POSITION TO END OF LINE  *
+\	*******************************************************
+
+    def ERAEOL external
+	integer ERAEOL
+	fend
+
+\	*******************************************
+\	*  ERASE FROM NEXT LINE TO END OF SCREEN  *
+\	*******************************************
+
+    def ERAEOS external
+	integer ERAEOS
+	fend
+
+\	*****************************************
+\	*  PRINT STRING IN SELECTED VIDEO MODE  *
+\	*    S$ = print string      M = mode    *
+\	*    mode 007h = Normal Video           *
+\	*    mode 070h = Reverse Video          *
+\	*    mode 087h = Blinking Video         *
+\	*****************************************
+
+    def PRTSTR (S$,M) external
+	integer PRTSTR, M
+	fend
+
+\	****************************************
+\	*  PRINT STRING IN REVERSE VIDEO MODE  *
+\	****************************************
+
+    def PRTREV (S$) external
+	integer PRTREV
+	fend
+
+\	*****************************************
+\	*  PRINT STRING IN BLINKING VIDEO MODE  *
+\	*****************************************
+
+    def PRTBLNK (S$) external
+	integer PRTBLNK
+	fend
+
