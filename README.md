@@ -38,7 +38,7 @@ To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag
     
 The Borland Pascal (v1 through v3) and BASIC products don't support command-line builds, so you have to run the apps, load the source file, and build manually.
 
-On Linux or MacOS copy m.bat to m.sh, change % to $, use dos2unix to remove CR/LF, and chmod to enable execution. (If you do this, feel free to submit a pull request.) Also be sure to put ntvdm in your path.
+On Linux or MacOS copy m.bat to m.sh, change % to $, use dos2unix to remove CR/LF, change REM comments to #, and chmod to enable execution. (If you do this, feel free to submit a pull request.) Also be sure to put ntvdm in your path.
 
 If you're running Linux or MacOS and see perplexing compilation errors, it could be your source files don't have cr/lf line separators. Use unix2dos to add them; nearly all these compilers require them. Some compilers require a ^Z / 0x1a at the end of files. CB86 is an example. Again, if you see build errors this may be the problem.
 
