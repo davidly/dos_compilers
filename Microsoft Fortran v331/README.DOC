@@ -1,0 +1,537 @@
+                FORTRAN v 3.31 - README File
+                          8/30/85
+
+This document  presents product  information that supercedes
+or  is   not  covered   in  the  regular  documentation.  In
+particular,  this   document  covers   product  changes  and
+enhancements  made  immediately  prior  to  release.  It  is
+recommended that the user review the document immediately.
+
+
+------------------------------------------------------------
+Differences between version 3.31 and version 3.30
+------------------------------------------------------------
+
+A. Stack size of the compiler has been increased.  By  using
+  the included EXEMOD utility, you can specify the amount of
+  stack space to be available during  compilation.   If  you
+  specify a bigger stack, you can compile  larger  programs,
+  but you will need more memory for the compiler to run.
+
+  The compiler comes initially configured with a 40K stack.
+
+  If the compiler does not run on your machine,  because  of
+  limited memory, you may wish to change the stack  size  to
+  some smaller amount.  For many programs, a stack  size  of
+  10K proves to be ample.  You can use  EXEMOD  to  decrease
+  the stack size.
+
+  If the compiler fails with an "out of memory"  error,  the
+  stack is too small for the program you are  attempting  to
+  compile.  You can use EXEMOD to increase the stack size.
+
+
+B. A non-character expression can no longer be assigned to a
+  character variable.  The following is no longer permitted:
+
+          REAL R
+          CHARACTER*5 C
+          C = R + 1.0
+
+  Direct assignments (not involving expressions) are permit-
+  ted:
+
+          REAL R
+          CHARACTER*5 C
+          C = R
+
+
+C. The linker has been changed so that if it is directed  to
+  combine code segments into a physical segment  whose  size
+  is within 36 bytes of the 64K limit, it will issue a warn-
+  ing message: "Segment longer than reliable size."  This is
+  to protect against a bug in  the  Intel  80286  processor.
+  However, the message is only a  warning.   The  executible
+  file will still be created.  An attempt to build any  seg-
+  ment, code or data, longer than 64K will still result in a
+  fatal error.
+
+
+------------------------------------------------------------
+Differences between version 3.30 and version 3.20
+------------------------------------------------------------
+
+A. The following sections have been modified or added to the
+  Microsoft FORTRAN User's Guide.
+
+  Update:  Microsoft FORTRAN 3.3
+  
+  Appendix A - Differences Between Versions 3.2 and 3.3
+  
+  Appendix G - Mixed-Language Programming
+  
+  Appendix H - Error Messages
+  
+  Microsoft LIB - Library Manager Reference Manual
+  
+
+B. The  following files  are provided with the FORTRAN v 3.3
+  release, but  are not  completely documented in the User's
+  Guide. Whatever  (additional) information  is required  to
+  use these files is provided in this document.
+
+   EXEPACK.EXE -  Utility for packing .EXE files in order to
+    reduce their  size and  allow faster  loading (refer  to
+    subsection A.10 of the Microsoft FORTRAN User's Guide).
+   
+   EXEMOD.EXE -  Utility for  viewing and  modifying certain
+    header information  in .EXE  files (refer  to subsection
+    A.10 of the Microsoft FORTRAN User's Guide).
+   
+   CEXEC.LIB   - Portion  of Microsoft  C library  providing
+    routines  to  support  the  use  of  the  MS-DOS  'exec'
+    function  (function call 4B hex).
+   
+   FOREXEC.INC -  Interface declarations  and  documentation
+    for routines in CEXEC.LIB
+   
+   DEMOEXEC.FOR -   Example program demonstrating how to use
+    the routines provided in CEXEC.LIB.
+   
+   EMOEM.ASM   - Customization for the 8087.
+   
+   DATTIM.FOR -  Example demonstrating how to access the MS-
+    DOS date and time.
+   
+  Please refer  to the update notice at the beginning of the
+  User's Guide  for a  complete list of the files which have
+  been added to the FORTRAN v 3.3 release.
+  
+
+C. If  your machine has an 8087 or an 80287, you should read
+  this closely  to see  if this  pertains to  your  hardware
+  configuration. All  Microsoft languages  which support the
+  8087  need  to  intercept  8087  exceptions  in  order  to
+  properly detect  error  conditions  and  provide  reliable
+  accurate results.  The math  libraries which  contain  the
+  8087  exception   handler  and   emulator  (MATH.LIB   and
+  8087.LIB) are  designed to  work without modification with
+  the following machines:
+
+           IBM PC family and compatibles, Wang PC
+      (any machine which uses NMI for 8087 exceptions)
+          Texas Instruments Professional Computer
+
+  There is a source file EMOEM.ASM included with the release
+  that can  be modified.   Any  machine which sends the 8087
+  exception to an 8259 Priority Interrupt Controller (master
+  or master/slave)  should be  easily supported  by a simple
+  table change  to the  EMOEM.ASM module.  In the file there
+  are further  instructions on  how to  modify the  file and
+  patch libraries and executables.
+  
+  If your computer is not listed, and you need to modify the
+  EMOEM.ASM   program,    please   contact   your   hardware
+  manufacturer for  the specific information on the 8087 and
+  what needs  to be  modified. If your hardware manufacturer
+  is not  aware of  the changes  that need  to be  made they
+  should contact the Microsoft OEM Group.
+  
+  Microsoft Retail  Product Support  is not equipped to help
+  out in the customization of the EMOEM.ASM program.
+  
+
+D. The  library  file,  CEXEC.LIB,  contains  the  following
+  routines extracted  from the  Microsoft C compiler library
+  (Version 3.0).
+
+  system - Invokes COMMAND.COM with a user-specified command
+    line.
+  
+  spawn   - Loads and executes a specified .COM or .EXE file
+    (i.e., executes a child process).
+  
+  The  file   FOREXEC.INC  contains  INTERFACE  declarations
+  allowing these  routines to  be called  from  FORTRAN  and
+  extensive comments explaining how to use them.
+
+  The  file   DEMOEXEC.FOR  contains   an  example   program
+  demonstrating the use of these routines.
+  
+
+E. This section notes corrections to the documentation.
+
+  1. Microsoft  FORTRAN User's Guide, page 144 (Appendix A -
+    Differences Versions 3.2 and 3.3):
+  
+    The example  program needs  two additional  lines to  be
+    complete, as is shown below.
+    
+               CHARACTER A*12, B*20, C*32
+               A='Now is the t'
+               B='ime for all good men'
+               C(1:12) = A
+               C(13:12+20) = B
+               write (*,*) 'C=',C
+               end
+
+    This will yield the output:
+    
+             C=Now is the time for all good men
+
+
+  2. Microsoft  FORTRAN User's Guide, page 143 (Appendix A -
+    Differences Between Versions 3.2 and 3.3):
+  
+    In the  character substrings description, the syntax for
+    arrays is shown as:
+    
+             array (sub1, [,sub2])([first]:[last])
+    
+    It should be:
+    
+              array (sub1 [,sub2])([first]:[last])
+    
+    the comma  after "sub1"  is  incorrect,  and  should  be
+    deleted.
+    
+  3. Microsoft  FORTRAN User's Guide, page 155 (Appendix A -
+    Differences Between Versions 3.2 and 3.3):
+  
+    The first paragraph starts out:
+  
+     "The memory allocation is pre-set to 6144 (6K) bytes."
+  
+     This paragraph  is actually referring to the stack size
+    and the 6K is incorrect. To verify the actual stack size
+    for the  compiler passes,  use  the  EXEMOD  utility  to
+    display the header fields of FOR1.EXE and PAS2.EXE.
+
+  4. Microsoft FORTRAN User's Guide - page 161 (Appendix A -
+    Differences Between Versions 3.2 and 3.3):
+
+    The segment contents for a FORTRAN program in memory are
+    listed below  (from the  highest memory  location to the
+    lowest).
+    
+    Heap -  The "heap"  is the  area  of  the  default  data
+    segment  (DGROUP)   that  is   available   for   dynamic
+    allocation by  the runtime  support routines  (e.g., for
+    file buffers). It does not belong to a named segment and
+    will not show up on a link map.
+    
+    STACK -  The STACK  segment contains  the user's  stack,
+    which is  used for  function/subroutine  calls  and  for
+    local, temporary  variable storage  in  certain  runtime
+    support routines.
+    
+    _BSS -  The  _BSS  segment  contains  all  UNINITIALIZED
+    STATIC DATA (i.e., all uninitialized FORTRAN variables).
+    
+    EEND, EDATA - Defined and used by the runtime library.
+    
+    CONST - The CONST segment contains all CONSTANTS.
+    
+    P3CE, P3C, P3CB, P2CE, P2C, P2CB, P1CE, P1C, P1CB, P3IE,
+    P3I, P3IB,  P2IE, P2I,  P2IB, P1IE,  P1I, P1IB, XCE, XC,
+    XCB, XIE,  XI, XIB  - Defined  and used  by the  runtime
+    library.
+    
+    COMADS -  Holds information  needed to  reference COMMON
+    blocks.
+    
+    _DATA -  The DATA  segment is  the default data segment.
+    All  INITIALIZED  GLOBAL  AND  STATIC  data  (i.e.,  all
+    initialized  variables   in  FORTRAN)   reside  in  this
+    segment.
+    
+    NULL -  The NULL  segment is  a special  purpose segment
+    that occurs at the beginning of DGROUP. The NULL segment
+    contains the  compiler copyright notice. This segment is
+    checked before  and after  the program  executes. If the
+    contents of  the NULL  segment change  in the  course of
+    program execution, it means that the program has written
+    to this  area. This  will normally  not occur in FORTRAN
+    but may  arise if,  for example,  a C function is called
+    that   uses an  uninitialized pointer. The error message
+    "Null pointer  assignment" is  displayed to  notify  the
+    user.
+    
+    __FBSS - Not used. Part of C runtime support.
+    
+    Segments for  COMMON  and  LARGE  variables  -  Segments
+    allocated for  COMMON blocks  or  LARGE  variables  will
+    normally occur here. However, this dependent on the link
+    order  and   they  may   occur  above   __FBSS  if   the
+    corresponding declarations  do not  occur in  the  first
+    .OBJ file in the link sequence.
+    
+    C_ETEXT - The C_ETEXT segment marks the end of the code
+    segments. It contains no data and is therefore a segment
+    of zero length.
+    
+    Code segments   (listed  as "module" in the illustration
+    on page  161) -  Each module  is allocated  its own code
+    segment (also  called a text segment). Code segments are
+    not combined,  so  there  are  multiple  code  segments.
+    However, all code segments have class CODE.
+    
+    When implementing  an assembly  language routine to call
+    or be  called from  a FORTRAN program, you will probably
+    refer to  the code  and _DATA  segments most frequently.
+    The code  for the  assembly language  routine should  be
+    placed in  a user-defined  segment with class CODE. Data
+    should be  placed in whichever segment is appropriate to
+    their use,  as described  above.  Usually  this  is  the
+    default segment _DATA.
+    
+    If linking  with MS-C  (3.0)  routines,  data  segments,
+    outside of DGROUP,  required for the C routines normally
+    occur between  __FBSS and NULL. These segments will have
+    class name FAR_DATA or FAR_BSS depending on whether they
+    hold  initialized   C  variables   or  uninitialized   C
+    variables.
+    
+  5. Microsoft FORTRAN User's Guide - page 164 (Appendix A -
+    Differences Between 3.2 and 3.3):
+    
+    The  following   instructions  in  the  entry  and  exit
+    sequences are NOT required:
+    
+                             inc bp
+                             dec bp
+    
+    The following  instructions are  included  in  order  to
+    maintain compatibility  with XENIX C, and therefore they
+    are OPTIONAL:
+                                  
+                       extrn __chkstk:far
+                       call  __chkstk
+    
+    The following  instructions are  included  in  order  to
+    maintain  compatibility   with  MS-DOS  C  modules,  and
+    therefore they are OPTIONAL:
+    
+                            push di
+                            push si
+                            pop  di
+                            pop  si
+  
+  
+  6. Microsoft  FORTRAN User's Guide, page 182 (Appendix F -
+    Exception Handling for 8087 Math):
+  
+    It is not permitted to mask the invalid operation bit of
+    the 8087 control word.
+    
+  7.  Microsoft   FORTRAN   Reference   Manual,   page   107
+    (Statements):
+  
+    Coercions  from  double  to  single  precision  are  not
+    permitted in  DATA statements.  That is, if the variable
+    or array  element in nlist is single precision then, the
+    corresponding value in clist cannot be double precision.
+    
+  8.  Microsoft   FORTRAN   Reference   Manual,   page   107
+    (Statements):
+  
+               SEQUENTIAL=logical-sequential
+               DIRECT=logical-direct
+               FORMATTED=logical-formatted
+               UNFORMATTED=logical-unformatted
+
+    The stand-in  variable  names  (logical-sequential  etc)
+    should  be   changed  to   some  other   form  such   as
+    SEQUENTIAL=seqvar   because   these   qualifiers   yield
+    CHARACTER values, not LOGICAL ones.
+    
+  9.  Microsoft   FORTRAN   Reference   Manual,   page   186
+    (Metacommands):
+  
+    The correct  syntax for  the $LARGE  metacommand  is  as
+    follows.
+    
+                $[NOT]LARGE[: name[, name]....]
+    
+    Note that  if the  metacommand is  given with arguments,
+    the colon (":") is required.
+    
+
+F. This  section documents  product features  which are  not
+  described in the User's Guide or Reference Manual.
+
+  1. Both  the FORTRAN  compiler  and  the  runtime  library
+    associate the  name "ERR" with the MS-DOS standard error
+    device handle  (generally abbreviated as stderr). Recall
+    that stderr  is mapped  to  the  physical  console  and,
+    unlike stdin  and stdout, is not redirectable. Thus, the
+    command syntax:
+  
+                         FOR1 ERR;
+
+    will cause  the FORTRAN  compiler to  expect source code
+    from the  keyboard rather  than a  file  named  err.for.
+    Similarly, the command syntax:
+    
+                        FOR1 TEST,,ERR;
+    
+    will cause  the source  listing output to written to the
+    console  screen   rather  than  a  file  named  ERR.LST.
+    Finally, note  that any OPEN statement, specifying "FILE
+    = 'ERR'", attaches the associated unit number to stderr,
+    hence to the physical console.
+    
+  2. Both  the  compiler  and  the  runtime  use  the  Xenix
+    compatible I/O  system in  MS-DOS 2.xx/3.xx (MS-DOS 1.xx
+    is no longer supported). Thus, both the compiler and the
+    user's program will access files in other directories if
+    the proper pathnames are specified.
+  
+    Since MS-DOS has a limit on the number of 'handles' that
+    may  be  simultaneously  open  for  I/O,  the  user  may
+    occasionally encounter  an error  1034 ("too  many  open
+    files"). This  may happen  during execution of FOR1.EXE,
+    if there  are nested include files. It may also occur at
+    runtime if the user tries to have too many files open at
+    the same  time. In  most cases,  the problem  is  easily
+    circumvented using  the "FILES  = <number>" statement in
+    the  CONFIG.SYS   file  (see   your  MS-DOS  manual  for
+    details). However,  there is  a fixed upper limit in MS-
+    DOS of 20 handles (five preassigned plus 15 others) that
+    any single program may have open simultaneously.
+    
+  3. There  have been several recent changes to the behavior
+    and capabilities  of the  EXEMOD and  EXEPACK  utilities
+    provided on  this release  which are  not covered in the
+    printed manuals.
+  
+    EXEPACK  attempts to prevent you from compressing a file
+    onto itself.  It is not infallible - it can be fooled by
+    a statement of the form:
+   
+                EXEPACK TEST.EXE .\TEST.EXE
+
+    If it  detects an attempt to compress a file onto itself
+    it will issue the message:
+    
+             exepack: cannot pack file onto itself
+    
+    and exit  with return  code 1.  Also, when using EXEPACK
+    to compress  an .EXE  file with overlays, the compressed
+    file should  be renamed back to the original name of the
+    linked file  to avoid  the overlay  manager prompt  (see
+    Overlays in the User Guide).
+    
+    EXEMOD has an undocumented switch, /h, which can be seen
+    in the  usage prompt (it is not shown in the Users Guide
+    description of the usage prompt).  This option CANNOT be
+    used with any of the other options, and it is equivalent
+    to typing:
+   
+                      EXEMOD PROG.EXE
+
+    That is,  it simply  displays the  header fields  of the
+    .EXE file without modifying them.
+    
+    EXEMOD has  also been  modified  to  work  correctly  on
+    packed (via EXEPACK) files.  When it recognizes a packed
+    file, it will print the message:
+    
+                 exemod: (warning) packed file
+    
+    If the  stack value  is changed,  it modifies  the value
+    that SP  will have  AFTER expansion.   If  either min or
+    stack is  set, min  will be  corrected as  necessary  to
+    accomodate unpacking  or stack.  Setting max operates as
+    it would for unpacked files.
+    
+    If the  header of  a packed file is displayed, the CS:IP
+    and SS:SP  values are  displayed as  they will  be after
+    expansion, which is not the same as the actual values in
+    the header.
+    
+    The compiler executable files (FOR1, PAS2, and PAS3) are
+    not packed  on the distribution diskettes.  We recommend
+    that when  you set up your own diskettes (as recommended
+    in the  manual or otherwise), you run EXEPACK on all the
+    compiler  executable   files.  You'll  notice  that  the
+    savings is not great on most of them.
+    
+    Note:  Refer to the MS-DOS Programmer's Reference manual
+    for further information on .EXE file headers.
+    
+  4. Controlling the Stack Size - the /STACK  Linker option:
+  
+                       /STACK:number
+
+    The /STACK  option allows you to specify the size of the
+    stack for  your   program.   The number  is any positive
+    value (decimal,  octal, or  hexadecimal)  up  to  65,536
+    (decimal).   It represents  the size,  in bytes,  of the
+    stack.
+    
+    Note: The EXEMOD utility, can also be used to change the
+    default stack size.
+    
+
+G. The  following public variables, defined in ENTX6L.ASM in
+  earlier versions of MS-FORTRAN, no longer exist in version
+  3.3.
+
+                           BEGHQQ
+                           BEGMQQ
+                           CURHQQ
+                           ENDHQQ
+                           ENDMQQ
+                           MAXMQQ
+
+  The following  public variables,  defined in ENTX6L.ASM in
+  earlier versions  of MS-FORTRAN,  still exist  in  version
+  3.30. Note,  however, that only CESXQQ, CRCXQQ, CRDXQQ and
+  DOSEQQ are intended for direct access by the user.
+  
+     CESXQQ - DOS saved ES value (for command line)
+     CLNEQQ - last line number encountered
+     CRCXQQ - value of CX for DOS call
+     CRDXQQ - value of DX for DOS call
+     CSXEQQ - pointer to sourcef context list
+     DGRMQQ - segment of DGROUP
+     DOSEQQ - DOS return code
+     HDRFQQ - Unit F open file list header
+     HDRVQQ - Unit V open file list header
+     PNUXQQ - pointer to unit initialization list
+     RECEQQ - machine error context, program segment
+     REFEQQ - machine error context, frame ptr
+     REPEQQ - machine error context, program offset
+     RESEQQ - machine error context, stack ptr
+     STKBQQ - stack start, to fix long GOTO
+     STKHQQ - stack limit, to check overflow
+     UPCX87 - offset address of 8087 error context
+
+    
+H. When  reporting a  suspected problem with the compiler to
+  the Retail  Product Support  Group, we ask that you please
+  provide the  following information  to help us in tracking
+  down the problem.
+
+  1. The  smallest possible  example which  can be  used  to
+    demonstrate the  alleged problem  (the example should be
+    provided in  source code,  on a  standard 5  1/4" MS-DOS
+    disk or a hard copy listing if it is very short).
+  
+  2. A  complete description  of the symptoms of the problem
+    including  complete   directions  on  reproducing  these
+    effects with  the supplied  example (compilation options
+    used, libraries linked with,...,etc.).
+  
+  3. The  compiler version  number (from  the logo  that  is
+    printed out when you run FOR1).
+  
+  4. Your  system  configuration,  both  hardware  (machine,
+    total   memory,   coprocessor,...,etc.)   and   software
+    (version of  DOS, terminate-and-stay-resident  utilities
+    or unusual  system software, free memory as indicated by
+    chkdsk,...,etc.).
+  
+    Having this information will be of immense help to us in
+    our effort to diagnose and solve your problem.
