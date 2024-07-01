@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #endif
 
+#ifdef INTELC
+#include <stdlib.h>
+#endif
+
 #ifdef WATCOM
 #include <malloc.h>
 #include <process.h>
