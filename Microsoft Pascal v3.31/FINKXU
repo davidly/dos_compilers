@@ -1,0 +1,96 @@
+{MS-Pascal / MS-FORTRAN FCB Declaration Include File}
+
+INTERFACE;  UNIT 
+  FILKQQ (FCBFQQ,
+	  FILEMODES, SEQUENTIAL, TERMINAL, DIRECT,
+	  fm_sequential, fm_terminal, fm_direct,
+	  accessmodes,
+	  am_read,
+	  am_readwrite,
+	  am_write,
+	  am_default,
+	  SHAREMODES,
+	  sm_compat,
+	  sm_denyrw,
+	  sm_denywr,
+	  sm_denyrd,
+	  sm_denynone,
+	  BUFFER_SIZE,
+	  ADRFIELDS);
+
+const
+   BUFFER_SIZE  = 512;
+   ADRFIELDS    = 2;                {* Two ADR fields in the FCB, see NEWUQQ. *}
+
+TYPE
+FILEMODES = (SEQUENTIAL, TERMINAL, DIRECT);
+SHAREMODES = (sm_compat, sm_denyrw, sm_denywr, sm_denyrd, sm_denynone);
+accessmodes = (am_read, am_write, am_readwrite, am_default);
+FCBFQQ = RECORD     {byte offsets start every field comment}
+{fields accessible by Pascal user as <file variable>.<field>}
+TRAP: BOOLEAN;      {00 Pascal user trapping errors if true}
+ERRS: WRD(0)..18;   {01 error status, set only by all units}
+MODE: FILEMODES;    {02 user file mode;  not used in unit U}
+SHARE:SHAREMODES;   {03 pad to word bound, special user use}
+{fields shared by units F, V, U;  ERRC / ESTS are write-only}
+ERRC: WORD;         {04 error code, error exists if nonzero}
+			{1000..1099:  set for unit U errors}
+			{1100..1199:  set for unit F errors}
+			{1200..1299:  set for unit V errors}
+ESTS: WORD;         {06 error specific data usually from OS}
+CMOD: FILEMODES;    {08 system file mode;  copied from MODE}
+{fields set / used by units F and V, and read-only in unit U}
+TXTF: BOOLEAN;      {09 true: formatted / ASCII / TEXT file}
+			{false: not formatted / binary file}
+SIZE: WORD;         {10 record size set when file is opened}
+			{DIRECT: always fixed record length}
+			{others: max buffer variable length}
+IERF: BOOLEAN;      {12 Unit U Incomplete End Of Record    }
+			{Kluge. Set false by opnuqq and    }
+			{pccuqq, and true by peruqq. Thus  }
+			{if true in wefuqq, it means that  }
+			{there is an incomplete line, and  }
+			{pccuqq should be called to flush  }
+			{it. Only applies to terminal files}
+access: accessmodes;{13 Controls actual open mode          }
+OLDF: boolean;      {14 true :must exist before open; RESET}
+			{false :can create on open; REWRITE}
+INPT: BOOLEAN;      {15 true: user is now reading from file}
+			{false: user is now writing to file}
+RECL: WORD;         {16 DIRECT record number, lo order word}
+RECH: WORD;         {18 DIRECT record number, hi order word}
+USED: WORD;         {20 number bytes used in current record}
+{fields used internally by units F or V not needed by unit U}
+LINK: ADR OF FCBFQQ;{22 DS offset address of next open file}
+BADR: ADRMEM;       {24 F: DS offset address for buffer var}
+TMPF: BOOLEAN;      {26 F: is a temp file;  delete on CLOSE}
+FULL: BOOLEAN;      {27 F: buffer variable lazy eval status}
+UNFM: BOOLEAN;      {28 V: for unformatted binary file mode}
+OPEN: BOOLEAN;      {29 F: file opened (by RESET / REWRITE)}
+FUNT: INTEGER;      {30 V: FORTRAN unit number (1 to 32767)}
+ENDF: BOOLEAN;      {32 V: last I/O statement was a ENDFILE}
+{fields set / used by unit U, and read-only in units F and V}
+REDY: BOOLEAN;      {33 buffer ready if true;  set by F / U}
+BCNT: WORD;         {34 number of data bytes actually moved}
+EORF: BOOLEAN;      {36 true if end of record read, written}
+EOFF: BOOLEAN;      {37 end of file flag set after EOF read}
+     {unit U (operating system) information starts here}
+{**********************************************************}
+
+	FILE_NAME       : ^STRING;      {* 38 points to file name *}
+	FDSCP           : INTEGER;      {* 42 actual ZEUS file number *}
+	PREDEFINED      : BOOLEAN;      {* 44 True if file is a device. *}
+	FNER            : BOOLEAN;      {* 45 True if File name error. *}
+	BEGIN_BUFFER    : INTEGER;      {* 46 Start loc of buffer. *}
+	END_BUFFER      : INTEGER;      {* 48 top loc of buffer. *}
+	IEOF            : BOOLEAN;      {* 50 Flag if EOF ever seen. For ^Zs. *}
+	BUFFER          : STRING(512);  {* 52 Internal buffering. *}
+	PADBUF          : STRING(65);   {*564 Make same size as MS-Dos. *}
+					{*630 + 4 = 634, see newuqq *}
+{**********************************************************}
+     {end of section for unit U specific OS information}
+END;
+const fm_sequential = sequential;
+      fm_direct = direct;
+      fm_terminal = terminal;
+END;

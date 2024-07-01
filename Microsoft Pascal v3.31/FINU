@@ -1,0 +1,137 @@
+{MS-Pascal and Fortran OS Dependent File System Interface Unit}
+INTERFACE;  UNIT
+FILUQQ (FNSUQQ, INPUQQ, OUTUQQ, 
+	INIUQQ, OPNUQQ, CLSUQQ, CLDUQQ, ENDUQQ,
+	GETUQQ, PUTUQQ, PERUQQ, PCCUQQ, SEKUQQ,
+	GTYUQQ, PLYUQQ, PTYUQQ, GFNUQQ, PFNUQQ,
+	BUFUQQ, NEWUQQ, TFNUQQ, PPMUQQ,
+	NEFUQQ, DIFUQQ, IOCUQQ, DSNUQQ,
+	FPSUQQ, TFDUQQ, EOFUQQ, LKGUQQ );
+USES FILKQQ;
+
+TYPE
+  ERRORET = WORD;              {return code, error if non-zero}
+
+VAR
+  FNSUQQ: SET OF CHAR;         {allowed chars in a filename}
+  INPUQQ, OUTUQQ: STRING (8);  {filenames for user terminal}
+
+PROCEDURE INIUQQ;
+{Overall initialization call;  set FNSUQQ, INPUQQ, and OUTUQQ}
+
+FUNCTION OPNUQQ  (VAR F: FCBFQQ): ERRORET;
+{Open a file;  INPT determines whether for input or output;
+ if OLDF true and file not found, error, else create file;
+ DIRECT mode record length is in SIZE;
+ file's mode is in CMOD, but if mode is SEQUENTIAL and 
+   file is a terminal (or printer) reset CMOD to TERMINAL;
+ set EORF true; set EOFF to NOT INPT}
+
+FUNCTION CLSUQQ  (VAR F: FCBFQQ): ERRORET;
+{CLOSE;  close the file (if error occurs file assumed closed)}
+
+FUNCTION CLDUQQ  (VAR F: FCBFQQ): ERRORET;
+{CLOSE DELETE;  close the file and delete it (errors ignored)}
+
+PROCEDURE DSNUQQ (VAR F:FCBFQQ);
+{dispose a file name - noop on dos 1.25 unit U}
+
+PROCEDURE ENDUQQ;
+{Overall termination, all files should already be closed}
+
+FUNCTION GETUQQ  (VAR F: FCBFQQ;  LEN: WORD;  DST: ADSMEM): ERRORET;
+{Copy bytes from the file to the string until the string fills,
+   an error occurs, or the end of record or end of file is found.
+ Set EOFF if last byte of file has already been read (not an error);
+   else copy from zero to UPPER(S) characters from the file to S.
+ Set BCNT to actual number of bytes copied (zero to UPPER(S));
+   value of bytes in S from BCNT+1 to UPPER(S) is undefined.
+ USED is always the number of bytes read from this record.
+ Use TXTF and CMOD as appropriate for various kinds of files:
+ If CMOD=SEQUENTIAL or TERMINAL and TXTF is true,
+   set EORF if last byte of record read and BCNT < UPPER (S).
+ If CMOD=TERMINAL, reading user line from a console:
+   If TXTF, read whole line with user editing and echo,
+   If NOT TXTF, read characters as typed, without echo.}
+
+FUNCTION PUTUQQ  (VAR F: FCBFQQ;  LEN: WORD;  SRC: ADSMEM): ERRORET;
+{Copy bytes from string to file, at end of current record;
+ USED is always the number of bytes written to this record.
+ Set EORF false iff (CMOD=SEQUENTIAL or DIRECT) and TXTF true}
+
+FUNCTION PERUQQ  (VAR F: FCBFQQ): ERRORET;
+{End writing the current record and setup to write the next;
+ Set EORF true iff CMOD=SEQUENTIAL or TERMINAL and TXTF true}
+
+FUNCTION PCCUQQ  (VAR F: FCBFQQ;  CH: CHAR): ERRORET;
+{Start of line carriage control;  CMOD is TERMINAL;
+ CC is one of:
+   ' ':  single space (normal)       '0': double space
+   '+':  no spacing (overprint)      '1':  new page
+ EORF will always be true, set it false}
+
+FUNCTION SEKUQQ  (VAR F: FCBFQQ; LREC, HREC: WORD): ERRORET;
+{Reposition direct-access file to record number LREC/HREC.}
+
+FUNCTION GTYUQQ  (LEN: WORD; DST: ADSMEM): WORD;
+{Read up to LEN chars from user's terminal to DST, return number read}
+
+PROCEDURE PLYUQQ;
+{Output an end of record (crlf or equivalent) to the user's console}
+
+PROCEDURE PTYUQQ (LEN: WORD; SRC: ADSMEM);
+{Output LEN chars from SRC}
+
+FUNCTION GFNUQQ  (VAR F: FCBFQQ; LEN: WORD; DST: ADSMEM): WORD;
+{Move filename to DST, max of LEN chars, return actual length}
+
+PROCEDURE PFNUQQ (VAR F: FCBFQQ; LEN: WORD; SRC: ADSMEM);
+{Get filename from SRC of length LEN, for use in later OPNUQQ calls}
+
+{Pascal-only calls}
+
+PROCEDURE BUFUQQ (VAR F: FCBFQQ);
+{Wait for I/O transfer to finish, set REDY true (defer errors)}
+
+PROCEDURE NEWUQQ (VAR F: FCBFQQ);
+{Initialize OS dependent fields;  SIZE and TXTF set (defer errors)}
+
+PROCEDURE TFNUQQ (VAR F: FCBFQQ);
+{Set the NAME field to a unique OS temporary filename (defer errors)}
+
+FUNCTION PPMUQQ  (LEN: WORD; ADRP: ADRMEM; VAR DST: LSTRING): ERRORET;
+{Like GETUQQ, but used to read program parameters from user.
+ String P is a user prompt, which may or may not be used.
+ If user input string is shorter than UPPER(S), blank pad;
+   if it is longer, either re-prompt or give an error.
+ Called once per program parameter requested}
+
+{Fortran-only calls}
+
+FUNCTION NEFUQQ: ADRMEM;
+{If possible, allocate a file of size BOFFQQ, initialize OS dependent
+ fields, and return the address of the FCB;  else return zero}
+
+PROCEDURE DIFUQQ (F: ADRMEM);
+{Deallocate the file at address F of size BOFFQQ}
+
+FUNCTION IOCUQQ  (VAR F: FCBFQQ): ERRORET;
+{Change from read to write or vice versa, based on new INPT value;
+ CMOD is SEQUENTIAL or TERMINAL;  set EORF and EOFF as in OPNUQQ}
+
+FUNCTION FPSUQQ  (VAR F: FCBFQQ; RELPOS: INTEGER): ERRORET;
+{Position RELPOS bytes forward(+), backward(-), or rewind(0).
+ If INPT is false, write eof first.  Set EORF and EOFF as in OPNUQQ}
+
+FUNCTION TFDUQQ  (VAR F: FCBFQQ): ERRORET;
+{Truncate DIRECT file before current record;  CMOD is always DIRECT.
+ If truncation is difficult, ignore operation.  Set EOFF true}
+
+FUNCTION EOFUQQ  (VAR F: FCBFQQ;  VAR FEOF: BOOLEAN): ERRORET;
+{Set FEOF true if next GETUQQ would return with EOFF true,
+   else set it false.  If difficult to detect, just set it false}
+
+function lkguqq (var f:fcbfqq; lkgmode: word; lrec, hrec: word;
+		     recnum: integer4): erroret;
+
+END;

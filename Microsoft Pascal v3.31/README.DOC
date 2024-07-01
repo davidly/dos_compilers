@@ -1,0 +1,630 @@
+                 Pascal v 3.31 - README File
+                           10/10/85
+
+This document  presents product  information that supercedes
+or  is   not  covered   in  the  regular  documentation.  In
+particular,  this   document  covers   product  changes  and
+enhancements  made  immediately  prior  to  release.  It  is
+recommended that the user review the document immediately.
+
+
+------------------------------------------------------------
+Differences between version 3.31 and version 3.30
+------------------------------------------------------------
+
+A. Stack size of the compiler has been increased.  By  using
+  the included EXEMOD utility, you can specify the amount of
+  stack space to be available during  compilation.   If  you
+  specify a bigger stack, you can compile  larger  programs,
+  but you will need more memory for the compiler to run.
+
+  The compiler comes initially configured with a 40K stack.
+
+  If the compiler does not run on your machine,  because  of
+  limited memory, you may wish to change the stack  size  to
+  some smaller amount.  For many programs, a stack  size  of
+  10K proves to be ample.  You can use  EXEMOD  to  decrease
+  the stack size.
+
+  If the compiler fails with an "out of memory" error, it is
+  likely that the stack is too small for the program you are
+  attempting to compile.  You can use EXEMOD to increase the
+  stack size.
+
+
+B. The linker has been changed so that if it is directed  to
+  combine code segments into a physical segment  whose  size
+  is more than 65499 bytes, it will issue a warning message:
+  "Segment longer than reliable size."   The message is only
+  a warning.  The executible file will still be created.  An
+  attempt to build any segment, code or  data,  longer  than
+  64K will still result in a fatal error.
+
+
+C. FOR LOOP control variables are no longer set to the unde-
+  fined value when the loop terminates.   See  the Reference
+  Manual, page 322, "$initck-" metacommand,  second item #2,
+  which states that $initck generates code to set the  value
+  of INTEGER range FOR-loop control variables  uninitialized
+  when the loop terminates normally. This is NO LONGER done.
+
+
+D. Files and versions are as follows:
+  PAS1.EXE       Pascal Compiler                version 3.31
+  LINK.EXE       8086 Object Linker             version 3.04
+  LIB.EXE        Library Manager                version 3.02
+  EXEPACK.EXE    EXE File Compression Utility   version 3.00
+  EXEMOD.EXE     EXE File Header Utility        version 3.00
+
+
+------------------------------------------------------------
+Memory Management Details
+------------------------------------------------------------
+
+  MEMAVL  returns  the  number  of bytes from the top of the
+  heap to the end of DGROUP.  If the heap needs to grow,  it
+  will use this space.  It should be noted  that  the  space
+  allocated for the heap can only  grow  and  NEVER  SHRINK.
+  Therefore, during the course of a program, the  value  re-
+  turned by MEMAVL can only DECREASE (as the heap grows) and
+  NEVER INCREASE.  The following  diagram  illustrates  this
+  concept:
+
+    ---------------------------------   DGROUP:MAX
+    !    FREE SPACE NOT IN HEAP     !
+    ---------------------------------
+    !             HEAP              !
+    ---------------------------------
+    !            STACK              !
+    ---------------------------------
+    !STATICALLY ALLOCATED PART OF DS!
+    ---------------------------------   DGROUP:0
+
+  FREECT(0)*2 returns  the  number of free bytes in the heap
+  plus the value returned by MEMAVL.
+
+  FREECT(0)*2-MEMAVL returns the number of free bytes in the
+  heap itself.
+
+  In version 3.2, a Pascal program  allocates  all  of  free
+  memory to itself.  In version 3.3x, a Pascal  program  re-
+  turns space it doesn't need to DOS.  Therefore, in version
+  3.3x, DGROUP is at the top of  the  allocated  space,  and
+  offset 2 in the MS-DOS data area returns the segment para-
+  graph for the top of DGROUP.  See also page 164 of the Mi-
+  crosoft Pascal Compiler  User's Guide for further discuss-
+  ion of the "upper memory limit."
+
+
+------------------------------------------------------------
+Differences between version 3.30 and version 3.20
+------------------------------------------------------------
+
+A. The following sections have been modified or added to the
+  Microsoft Pascal User's Guide.
+
+  Update: Microsoft Pascal 3.3
+  
+  Appendix A - Differences Between Versions 3.2 and 3.3
+  
+  Appendix E - Mixed-Language Programming
+  
+  Appendix F - Error Messages
+  
+  Microsoft LIB - Library Manager Reference Manual
+  
+
+B. The  following files  are provided  with the Pascal v 3.3
+  release, but  are not  completely documented in the User's
+  Guide. Whatever  (additional) information  is required  to
+  use these files is provided in this document.
+
+  EXEPACK.EXE -  Utility for  packing .EXE files in order to
+    reduce their  size and  allow faster  loading (refer  to
+    subsection A.10 of the Microsoft Pascal User's Guide).
+  
+  EXEMOD.EXE -  Utility for  viewing and  modifying  certain
+    header information  in .EXE  files (refer  to subsection
+    A.11 of the Microsoft Pascal User's Guide).
+  
+  CEXEC.LIB    - Portion  of Microsoft  C library  providing
+    routines  to  support  the  use  of  the  MS-DOS  'exec'
+    function  (function call 4B hex).
+  
+  PASEXEC.INC - Interface declarations and documentation for
+    routines in CEXEC.LIB
+  
+  DEMOEXEC.PAS -    Example program demonstrating how to use
+    the routines provided in CEXEC.LIB.
+  
+  EMOEM.ASM    - Customization for the 8087.
+  
+  LVARSTK.OBJ - This object file provides a variable stack.
+  
+Note: The  version of LINK.EXE is actually v 3.02 (not 3.01,
+as documented).
+
+Please refer  to the  update notice  at the beginning of the
+User's Guide  for a  complete list  of the  files which have
+been added to the Pascal v 3.3 release.
+
+
+C. If  your machine has an 8087 or an 80287, you should read
+  this closely  to see  if this  pertains to  your  hardware
+  configuration. All  Microsoft languages  which support the
+  8087  need  to  intercept  8087  exceptions  in  order  to
+  properly detect error conditions and  provide reliable and
+  accurate results.  The math  libraries which  contain  the
+  8087  exception   handler  and   emulator  (MATH.LIB   and
+  8087.LIB) are  designed to  work without modification with
+  the following machines:
+
+           IBM PC family and compatibles, Wang PC
+      (any machine which uses NMI for 8087 exceptions)
+          Texas Instruments Professional Computer
+
+  There is a source file EMOEM.ASM included with the release
+  that can  be modified.   Any  machine which sends the 8087
+  exception to an 8259 Priority Interrupt Controller (master
+  or master/slave)  should be  easily supported  by a simple
+  table change  to the  EMOEM.ASM module.  In the file there
+  are further  instructions on  how to  modify the  file and
+  patch libraries and executables.
+  
+  If your computer is not listed, and you need to modify the
+  EMOEM.ASM   program,    please   contact   your   hardware
+  manufacturer for  the specific information on the 8087 and
+  what needs  to be  modified. If your hardware manufacturer
+  is not  aware of  the changes  that need  to be  made they
+  should contact the Microsoft OEM Group.
+  
+  The Microsoft Retail Product Support Group is not equipped
+  to help out in the customization of the EMOEM.ASM program.
+  
+
+D. The  library  file,  CEXEC.LIB,  contains  the  following
+  routines extracted  from the  Microsoft C compiler library
+  (Version 3.0).
+
+  system - Invokes COMMAND.COM with a user-specified command
+    line.
+  
+  spawn   - Loads and executes a specified .COM or .EXE file
+    (i.e., executes a child process).
+  
+  The  file   PASEXEC.INC  contains  INTERFACE  declarations
+  allowing these  routines to  be  called  from  Pascal  and
+  extensive comments explaining how to use them.
+
+  The  file   DEMOEXEC.PAS  contains   an  example   program
+  demonstrating the use of these routines.
+  
+
+E. The  following is  an updated  list of language features,
+  noted in  the User's  Guide or  Reference Manual, that are
+  not implemented in this release.
+
+  1. MARKAS and RELEAS are not supported in the release.
+  
+  2.  The   $initchk  metacommand   does   not   check   for
+    uninitialized REAL variables.
+  
+  3. OTHERWISE is not accepted in RECORD declarations.
+  
+  4. Code  is generated  for PURE functions, but no checking
+    is done.
+  
+  5. The  extend level  operators SHL,  SHR and  ISR are not
+    available.
+  
+  6. No checking is done for invalid GOTOs.
+  
+  7.  READ,   READLN,  and   DECODE  cannot  have  M  and  N
+    parameters.
+  
+  8. Enumerated I/O, permitting the reading and writing of
+  enumerated constants as strings, is not available.
+  
+  9.  The   metacommands  $tagck,  $standard,  $extend,  and
+    $system can be given, but have no effect.
+  
+  10.  The  $inconst  metacommand  does  not  accept  string
+    constants.
+  
+
+F. This  section documents  product features  which are  not
+  described in the User's Guide or Reference Manual.
+
+  1. Both  the  Pascal  compiler  and  the  runtime  library
+    associate the  name "ERR" with the MS-DOS standard error
+    device handle  (generally abbreviated as stderr). Recall
+    that stderr  is mapped  to  the  physical  console  and,
+    unlike stdin  and stdout, is not redirectable. Thus, the
+    command syntax:
+  
+                         PAS1 ERR;
+
+    will cause  the Pascal  compiler to  expect source  code
+    from the  keyboard rather  than a  file  named  ERR.PAS.
+    Similarly, the command syntax:
+    
+                        PAS1 TEST,,ERR;
+
+    will cause  the source  listing output to written to the
+    console  screen   rather  than  a  file  named  ERR.LST.
+    Finally, note  that a  file variable  may be  explicitly
+    attached to  'ERR' with,  say, the ASSIGN procedure and,
+    thereby, attached to stderr.
+    
+  2. Both  the  compiler  and  the  runtime  use  the  Xenix
+    compatible I/O  system in  MS-DOS 2.xx/3.xx (MS-DOS 1.xx
+    is no longer supported). Thus, both the compiler and the
+    user's program will access files in other directories if
+    the proper pathnames are specified.
+  
+    Since MS-DOS has a limit on the number of 'handles' that
+    may  be  simultaneously  open  for  I/O,  the  user  may
+    occasionally encounter  an error  1034 ("too  many  open
+    files"). This  may happen  during execution of PAS1.EXE,
+    if there  are nested include files. It may also occur at
+    runtime if the user tries to have too many files open at
+    the same  time. In  most cases,  the problem  is  easily
+    circumvented using  the "FILES  = <number>" statement in
+    the  CONFIG.SYS   file  (see   your  MS-DOS  manual  for
+    details). However,  there is  a fixed upper limit in MS-
+    DOS of 20 handles (five preassigned plus 15 others) that
+    any single program may have open simultaneously.
+    
+  3. There  have been several recent changes to the behavior
+    and capabilities  of the  EXEMOD and  EXEPACK  utilities
+    provided on  this release  which are  not covered in the
+    printed manuals.
+  
+   EXEPACK attempts  to prevent  you from compressing a file
+    onto itself.  It is not infallible - it can be fooled by
+    a statement of the form:
+   
+                EXEPACK TEST.EXE .\TEST.EXE
+
+    If it  detects an attempt to compress a file onto itself
+    it will issue the message:
+    
+             exepack: cannot pack file onto itself
+    
+    and exit  with return  code 1.  Also, when using EXEPACK
+    to compress  an .EXE  file with overlays, the compressed
+    file should  be renamed back to the original name of the
+    linked file  to avoid  the overlay  manager prompt  (see
+    Overlays in the User Guide).
+
+   EXEMOD has  an undocumented switch, /h, which can be seen
+    in the  usage prompt (it is not shown in the Users Guide
+    description of the usage prompt).  This option CANNOT be
+    used with any of the other options, and it is equivalent
+    to typing:
+
+                        EXEMOD PROG.EXE
+    
+    That is,  it simply  displays the  header fields  of the
+    .EXE file without modifying them.
+    
+    EXEMOD has  also been  modified  to  work  correctly  on
+    packed (via EXEPACK) files.  When it recognizes a packed
+    file, it will print the message:
+    
+                 exemod: (warning) packed file
+    
+    If the  stack value  is changed,  it modifies  the value
+    that SP  will have  AFTER expansion.   If  either min or
+    stack is  set, min  will be  corrected as  necessary  to
+    accomodate unpacking  or stack.  Setting max operates as
+    it would for unpacked files.
+    
+    If the  header of  a packed file is displayed, the CS:IP
+    and SS:SP  values are  displayed as  they will  be after
+    expansion, which is not the same as the actual values in
+    the header.
+    
+    The compiler executable files (PAS1, PAS2, and PAS3) are
+    not packed  on the distribution diskettes.  We recommend
+    that when  you set up your own diskettes (as recommended
+    in the  manual or otherwise), you run EXEPACK on all the
+    compiler  executable   files.  You'll  notice  that  the
+    savings is not great on most of them.
+    
+    Note:  Refer to the MS-DOS Programmer's Reference manual
+    for further information on .EXE file headers.
+    
+  4. Controlling the Stack Size - the /STACK  Linker option:
+
+                       /STACK:number
+
+    The /STACK  option allows you to specify the size of the
+    stack for  your   program.   The number  is any positive
+    value (decimal,  octal, or  hexadecimal)  up  to  65,536
+    (decimal).   It represents  the size,  in bytes,  of the
+    stack.
+    
+    Note: The EXEMOD utility, can also be used to change the
+    default stack size.
+
+  5. The allocation of memory for the stack is somewhat more
+    flexible than a simple fixed stack.
+
+    In the  User's manual,  there  is  a  warning  that  the
+    compiler front  end and  back end  now use a fixed stack
+    and that,  since the  ratio of  stack and  symbol  table
+    space varies  from  one  compilation  to  another,  some
+    programs that  used to  compile with  previous versions,
+    will now  fail for  lack of memory. This is not strictly
+    the case.  There is  still a  maximum  amount  of  stack
+    space, but  when the  initial allocation  of  space  for
+    symbol tables is exhausted, space will be allocated from
+    the area  reserved for  the stack.  This  will  cause  a
+    slight reduction  in compilation rate if your program is
+    big enough   for  this  to  happen.  If,  however,  your
+    program fails to compile because of lack of stack space,
+    (usually as  a result of a very complex expression), you
+    can use  EXEMOD on  the  compiler itself to increase the
+    space initially reserved for the stack.
+    
+    Your code  compiled with  this version will, by default,
+    use a  fixed stack  and  you  may  see  changes  in  its
+    behavior if it tends to use a lot of heap space or a lot
+    of stack.  On the  other hand,  the fixed stack makes it
+    much safer to compile with stack checking disabled.
+    
+    If you  want your  program to  use the  stack space  for
+    excess  heap   items,  link   with  the  object  module,
+    LVARSTK.OBJ. Then,  your  program  will  have  the  same
+    flexibility in  its stack  allocation as do the compiler
+    passes themselves.  If you  further use EXEMOD to change
+    the default  stack size  to a  much larger  number, your
+    program will  behave pretty much as it did with previous
+    versions, although  allocation from  the stack  space is
+    not as efficient as from the initial heap space. In this
+    case,  you  should  also  compile  with  stack  checking
+    enabled since  unprotected collisions  between the stack
+    and the heap can lead to unpredictable behavior.
+    
+  6. The  SIZEOF function  has  been  enhanced.  It  is  now
+    permissable to omit the second parameter if the variable
+    is a pointer to a super array. Thus, SIZEOF(P^), where P
+    is  a   pointer  to  a  super  array,  is  now  a  valid
+    expression. Note,  however, that  if in  P^ has not been
+    allocated (with  a NEW),  SIZEOF(P^) is undefined. It is
+    the programmer's  responsibility to  check that  P^  has
+    actually been  allocated before  using this  form of the
+    SIZEOF function.
+  
+
+G. This section notes corrections to the documentation.
+
+  1. Microsoft User's Guide - Appendix A.8 - page 149:
+  
+    The 5th paragraph starts out:
+  
+      "The  memory   allocation  is   preset  to  6144  (6K)
+      bytes...."
+  
+    This paragraph  is actually referring to the Stack size,
+    and the  6K is  incorrect.  To verify the actual size of
+    the stack of the compiler passes that you have received,
+    please use  the EXEMOD utility which displays the header
+    fields of an .exe file.
+    
+  2. Microsoft Pascal User's Guide - Appendix A.12 - Page
+    156:
+
+    The segment  contents for a Pascal program in memory are
+    listed below  (from the  highest memory  location to the
+    lowest).
+    
+    Heap -  The "heap"  is the  area  of  the  default  data
+    segment  (DGROUP)   that  is   available   for   dynamic
+    allocation at runtime via the NEW procedure. It does not
+    belong to a named segment and will not show up on a link
+    map.
+    
+    STACK -  The STACK  segment contains  the user's  stack,
+    which is used for all LOCAL data items.
+    
+    _BSS -  The  _BSS  segment  contains  all  UNINITIALIZED
+    STATIC DATA.
+    
+    EEND, EDATA - Defined and used by the runtime library.
+    
+    CONST - The CONST segment contains all CONSTANTS.
+    
+    P3CE, P3C, P3CB, P2CE, P2C, P2CB, P1CE, P1C, P1CB, P3IE,
+    P3I, P3IB,  P2IE, P2I,  P2IB, P1IE,  P1I, P1IB, XCE, XC,
+    XCB, XIE,  XI, XIB  - Defined  and used  by the  runtime
+    library.
+    
+    COMADS - Not used. Part of FORTRAN runtime support.
+    
+    _DATA -  The DATA  segment is  the default data segment.
+    All INITIALIZED  GLOBAL and  STATIC data  reside in this
+    segment.
+    
+    NULL -  The NULL  segment is  a special  purpose segment
+    that occurs at the beginning of DGROUP. The NULL segment
+    contains the  compiler copyright notice. This segment is
+    checked before  and after  the program  executes. If the
+    contents of  the NULL  segment change  in the  course of
+    program execution, it means that the program has written
+    to this  area. This  is usually  caused by the use of an
+    uninitialized adr variable, ads variable or pointer. The
+    error message  "Null pointer assignment" is displayed to
+    notify the user.
+    
+    __FBSS - Not used. Part of C runtime support.
+    
+    C_ETEXT - The C_ETEXT segment marks the end of the code
+    segments. It contains no data and is therefore a segment
+    of zero length.
+    
+    Code segments   (listed  as "module" in the illustration
+    on page  156) -  Each module  is allocated  its own code
+    segment (also  called a text segment). Code segments are
+    not combined,  so  there  are  multiple  code  segments.
+    However, all code segments have class CODE.
+    
+    It should  be noted  that segmented  memory above DGROUP
+    may be  accessed by  the Pascal  user via  the long heap
+    allocator. Please  refer to  Section 8.2.1 in the Pascal
+    User's Guide  for a  decription of the necessary library
+    procedures.
+    
+    When implementing  an assembly  language routine to call
+    or be  called from  a Pascal  program, you will probably
+    refer to  the code  and _DATA  segments most frequently.
+    The code  for the  assembly language  routine should  be
+    placed in  a user-defined  segment with class CODE. Data
+    should be  placed in whichever segment is appropriate to
+    their use,  as described  above.  Usually  this  is  the
+    default segment _DATA.
+    
+    If linking with MS-FORTRAN (3.30) routines, segments for
+    COMMON blocks  or LARGE  data items occur between __FBSS
+    and NULL.  Each COMMON  block has its own segment(s) and
+    class. Segments  allocated for LARGE data items all have
+    class LARGE. In the case of a COMMON block with the NEAR
+    attribute, the  segment occurs  between EEND  and  _BSS,
+    which is then combined in DGROUP.
+    
+    If linking  with MS-C  (3.0)  routines,  data  segments,
+    outside of  DGROUP,   required for  the C  routines  are
+    occur between  __FBSS and NULL. These segments will have
+    class name FAR_DATA or FAR_BSS depending on whether they
+    hold  initialized   C  variables   or  uninitialized   C
+    variables.
+    
+  3. Microsoft Pascal User's Guide - Appendix A.12 - Page
+    158:
+    
+    The  following   instructions  in  the  entry  and  exit
+    sequences are NOT required:
+    
+                             inc bp
+                             dec bp
+    
+    The following  instructions are  included  in  order  to
+    maintain compatibility  with XENIX C, and therefore they
+    are OPTIONAL:
+                                  
+                       extrn __chkstk:far
+                       call  __chkstk
+
+    The following  instructions are  included  in  order  to
+    maintain  compatibility   with  MS-DOS  C  modules,  and
+    therefore they are OPTIONAL:
+    
+                            push di
+                            push si
+                            pop  di
+                            pop  si
+  
+  4. Microsoft  Pascal User's  Guide -  Appendix D.2  - page
+    176:
+  
+    It is not permitted to mask the invalid operation bit on
+    the 8087 control word.
+  
+  5. Microsoft Pascal Reference Manual, Chapter 8.4.1 - page
+    92:
+  
+    A TERMINAL  mode file  should be  accessed as  a file of
+    TEXT if  input is  to be  READ from  it. In  particular,
+    since  the  console/keyboard  is  always  treated  as  a
+    TERMINAL mode  file, it  should always  be accessed as a
+    file  of   TEXT  for   READing.  If   single  character,
+    unbuffered,  unechoed   input  from   the  keyboard   is
+    necessary, the  function DOSXQQ  should be  used to call
+    for this  service from  MS-DOS directly (see Appendix B,
+    Version  Specifics,   of  the  Microsoft  Pascal  User's
+    Guide).
+    
+  6. Microsoft  Pascal Reference Manual, Chapter 15.2 - page
+    240:
+
+    The function,  LMULOK, is  the very  function ultimately
+    called to  perform the  multiplication in  any  integer4
+    product (e.g., the code generated for i := j * k;, where
+    i,j,k: integer4,  will invoke  LMULOK). Direct access to
+    this routine  is supported  so that the user can perform
+    an  integer4   multiplication  which  overflows  without
+    having the program abort with a fatal runtime error.
+    
+    The value  of the  product is  well-defined only  in the
+    case where  the product  does not overflow (i.e., LMULOK
+    returns TRUE).  The reason for this is that the overflow
+    condition   is    generally    detected    before    the
+    multiplication is  complete and  computation  ceases  as
+    soon as  the overflow  is  detected.  The  documentation
+    indicates  that  the  product  is  always  computed  and
+    returned and this is clearly incorrect!
+    
+
+H. The  following public variables, defined in entx6l.asm in
+  earlier versions  of MS-Pascal, no longer exist in version
+  3.3.
+
+                           BEGHQQ
+                           BEGMQQ
+                           CURHQQ
+                           ENDHQQ
+                           ENDMQQ
+                           MAXMQQ
+
+  The following  public variables,  defined in entx6l.asm in
+  earlier versions  of MS-Pascal,  still  exist  in  version
+  3.30. Note,  however, that only CESXQQ, CRCXQQ, CRDXQQ and
+  DOSEQQ are intended for direct access by the user.
+  
+     CESXQQ - DOS saved ES value (for command line)
+     CLNEQQ - last line number encountered
+     CRCXQQ - value of CX for DOS call
+     CRDXQQ - value of DX for DOS call
+     CSXEQQ - pointer to sourcef context list
+     DGRMQQ - segment of DGROUP
+     DOSEQQ - DOS return code
+     HDRFQQ - Unit F open file list header
+     HDRVQQ - Unit V open file list header
+     PNUXQQ - pointer to unit initialization list
+     RECEQQ - machine error context, program segment
+     REFEQQ - machine error context, frame ptr
+     REPEQQ - machine error context, program offset
+     RESEQQ - machine error context, stack ptr
+     STKBQQ - stack start, to fix long GOTO
+     STKHQQ - stack limit, to check overflow
+     UPCX87 - offset address of 8087 error context
+
+
+I. When  reporting a  suspected problem with the compiler to
+  the Retail  Product Support  Group, we ask that you please
+  provide the  following information  to help us in tracking
+  down the problem.
+
+  1. The  shortest possible  example which  can be  used  to
+    demonstrate the  alleged problem  (the example should be
+    provided in  source code,  on a  standard 5  1/4" MS-DOS
+    disk or a hard copy listing if it is very short).
+  
+  2. A  complete description  of the symptoms of the problem
+    including  complete   directions  on  reproducing  these
+    effects with  the supplied  example (compilation options
+    used, libraries linked with,...,etc.).
+  
+  3. The  compiler version  number (from  the logo  that  is
+    printed out when you run PAS1).
+  
+  4. Your  system  configuration,  both  hardware  (machine,
+    total   memory,   coprocessor,...,etc.)   and   software
+    (version of  DOS, terminate-and-stay-resident  utilities
+    or unusual  system software, free memory as indicated by
+    chkdsk,...,etc.).
+  
+    Having this information will be of immense help to us in
+    our effort to diagnose and solve your problem.
+
