@@ -1,0 +1,140 @@
+                              Mix C                                2.0.2
+
+                    New Features in version 2.0
+                    ---------------------------
+
+. Maximum length of a line is increased to 256 characters
+
+. Keywords are recognized in lower case only.  The compiler
+  option /*$KEYWCASE*/ may be used to switch to upper and mixed
+  case for keywords
+
+. On the listing, lines are numbered separately for each include
+  file.  A letter (a .. z) is present on the left of each line from
+  an include file to indicate the depth of includes.
+
+. When errors occur in include files, the error file (C.ERR) will
+  have the name of the file as well as the line in error.
+
+. Include files have a default extension of ".H" .  If a file name
+  in a #include does not have an extension, the compiler looks first
+  for the file as specified.  If no file exists by that name, the
+  compiler trys the same name with ".H" as an extension.
+
+. Initializers are supported for float and double.  Initializers for
+  auto variables may use constant expressions.  Initializers for float
+  and double static or global variables allow only a constant.
+
+. Hexadecimal character constants are supported and hexadecimal
+  characters may be included in strings.  They are represented by
+  a backslash followed by "x" and a two digit hexadecimal number.
+        Examples:
+               '\x30'    is the character '0'
+               "ab\x63d" is equivalent to "abcd"
+
+. Enumerations are supported.  Enumerations are declared similar
+  to structures with the keyword "enum".  The braces contain a
+  list of identifiers with optional initialization values.  Values
+  are assigned starting at zero and increasing by one for each
+  identifier.  If an intialization value is present, the corresponding
+  identifier is assigned the value supplied and counting continues
+  from that point.
+
+     Examples:
+         enum primecolor {red, blue, green} c;
+         /* declares a variable of type primecolor.  The identifiers
+            are assigned values: red=0, blue=1, green=2.
+            */
+         typedef enum {orange, yellow=8, pink, aqua} color;
+         /* defines the type color.  The values of the colors are:
+            orange=0, yellow=8, pink=9, aqua=10
+            */
+
+         c = blue;  /* assigns the value "blue" (1) to c */
+
+
+  . Structures and unions may be passed as parameters to functions.
+    They are passed by value.
+
+  . Functions may return structures or unions as results.
+
+  . The compiler has a command line option to redirect the object
+    code to a different file.  "-ofilename.ext" will place the object
+    code in the specified file.  "-o" with not file name will cause
+    the compiler to not generate object code.
+
+
+                        Optional Patches
+                        ----------------
+
+   Some people may wish to change some of the file names used by Mix C
+so that it will use a different disk drive or directory.  The addresses
+of these file names are listed below.  You can use the debug utility
+supplied with MSDOS to change the names to the ones that you prefer.
+Mix C will search for the error messages ("CERRORS.DAT") in the default
+directory and all directories listed in the path string in the
+environment.  See the msdos manual for a description of the "PATH"
+command.  Most users will not need to change this.  Be sure to make a
+copy of the original disk before attempting to make the changes.  The
+file names are strings of characters up to 15 characters in length and
+terminated by a binary zero.
+
+   CERRORS.DAT      DBAD     Error messages file
+   C.ERR            6804     File for lines in error
+   A:               D6CF     Prefix for include files that are
+                             enclosed in "<>"
+
+Example:
+
+   To make the #include preprocessor statement use drive C, directory "MIXC"
+   as the system device (ie for file names enclosed in "< >") you would
+   use debug to make the patch as illustrated below.
+
+   C>debug cc.com
+   -ed6cf "C:\MIXC\"                 ;Patch in path name
+   -W                                ;Write cc.com back to disk
+   Writing ED00 bytes
+   -Q                                ;Exit debugger
+   C>
+
+
+   The Mix linker also has some file names that are built in.  In some
+applications you may wish to change one or more of these names.  Each
+file name can be up to 31 bytes long and must be terminated by a zero
+byte.  These names are changed in the same way as illustrated above.
+
+   "RUNTIME.OVY"  391C    Default name for the runtime support file
+   "CLIB.MIX"     3A14    Library that is searched for standard functions.
+   "LINKER.MIX"   3AA5    Library that is searched if clib does not contain
+                          all referenced functions.
+   "A:" and "A:\" 3AC5    Directory prefix used to search for runtime.ovy .
+                          Each prefix is terminated by a zero, and the entire
+                          list is terminated by two zeros.
+Example:
+
+   The following example patches the linker to search for its files in
+   directory MIXC on drive C.
+
+   C>debug linker.com
+   -ed3AC5 "C:\MIXC\"                ;Patch in path name
+   -W                                ;Write linker.com back to disk
+   Writing 3D00 bytes
+   -Q                                ;Exit debugger
+   C>
+
+When the short form of the linker is used to build a command file, the
+runtime support routines are not inlcuded in the file.  To make the linker
+include the runtime by default, make the following change.
+
+   A>debug linker.com
+   -e72c
+   09FE:072C  32.b0  C0.01
+   -w
+   Writing 3D00 bytes
+   -q
+   A>
+
+Note: When using the change command in the linker to use a different
+      runtime file, the change command must be executed before any
+      load commands.  The linker must know the size of the runtime so
+      it can perform relocation as it loads the program.
