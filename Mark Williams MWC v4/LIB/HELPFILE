@@ -1,0 +1,180 @@
+#shell_main
+The Mark Williams Shell (MWS) provides an integrated environment for
+editing, compiling, debugging and executing your programs.  To select
+one of these functions, use the arrow keys to position the cursor bar
+over the desired choice, then press return.
+To leave the MWS, press the <esc> key.  Short descriptions of 
+each command follow.
+
+
+EDIT: Create a new file or edit an existing one.  Edit invokes the
+MicroEMACS editor.
+
+
+COMPILE: Compile an existing C program.  In the Compile menu, you 
+may choose whatever compiler options you need, or simply execute a
+prior command line.
+
+RUN: Use RUN to execute a compiled program.
+
+
+
+DEBUG:  Invoke the C Source Debugger (csd) to begin a debugging
+session.  The entire dialogue in csd will reference your C source code.
+
+
+MAKE: Create a script for complex compilation sequences. 
+Speeds compile time by eliminating unnecessary compilation.
+
+
+BUFFERS: Tailor the in-RAM compilation/accelerator to your needs.
+Allocate more memory, or add expanded memory, for even faster compilation.
+
+
+QUICK DOS:  Accepts one DOS command and returns to MWS.
+
+
+
+!DOS ESCAPE: Exit to DOS for unlimited DOS commands.
+In-RAM compilations and accelerator are still active. Type 'exit'
+to return to MWS.
+
+NEW DIRECTORY: Changes the current working directory.
+#shell_main_edit
+Edit invokes the MicroEMACS editor.
+EXECUTE: Invokes the editor for the file named in the menu box.
+FILES: Lists files in current directory available for editing.
+Follow with the execute command to invoke the editor.
+NEW FILE: Lets you name a new file to edit.
+Follow with the Execute command to invoke the editor.
+#shell_main_edit_file
+Name a new file to edit.  Follow with the Execute command to
+to invoke the editor.
+#shell_main_edit_files
+Select file(s) for editing.  Then, use the Execute command to begin edit.
+#shell_main_compile
+EXECUTE: Invoke compiler and linker based on command line in command box.
+OPTIONS: Choose options for the compile command line.  
+End list with END key.
+Backspace key deletes an option from the command line.
+FILES: List files in current directory with '.C' or '.OBJ' suffix.
+Use to add appropriate file(s) to command line. Follow with Execute
+command to compile.
+#shell_main_compile_files
+List files in current directory with '.C' or '.OBJ' suffix.
+Use to add appropriate file(s) to command line. Follow with Execute
+command to compile.
+#shell_main_compile_options
+Choose an option by moving the highlight bar to the option and pressing return.
+Press the <end> key once all desired options are selected.
+Delete an option by moving the highlight bar to the desired option
+and pressing backspace.
+For detailed information on each option, see the Lexicon entry for 'cc'
+or the introduction to the manual.
+#shell_main_run
+EXECUTE: Run a compiled program listed in the command box.
+ARGUMENTS: After file is selected, use Arguments to enter the desired 
+run time arguments in the command box.
+
+FILES: Lists '.EXE' files(s) in current directory.  Choose one, then
+select Execute to run.
+#shell_main_run_arguments
+ARGUMENTS: After file is selected, use Arguments to enter the desired
+runtime arguments in the command box.
+#shell_main_quickDOS
+Accepts and executes one DOS command, then returns to MWS.
+#shell_main_directory
+Enter desired directory pathname, followed by return.
+#shell_main_debug
+Debug your programs with the csd C Source-Level Debugger.
+EXECUTE: Invokes the debugger for the file and options displayed in
+the command box.
+
+OPTIONS: Choose options for command line.  End list with <end> key.
+Backspace key deletes an option from the command line.
+
+
+ARGUMENTS: After selecting file to debug, use Arguments to
+enter command line parameters.
+
+
+FILES: Lists '.exe' files in current directory.  Note: files must have
+been compiled using the '-vcsd' option for csd to debug your program.
+#shell_main_debug_options
+Choose an option by moving the highlight bar to the option and 
+pressing backspace.
+For detailed information on each option, see the Commands Reference
+section in the csd C Source Debugger manual.
+#shell_main_debug_arguments
+Select file to debug, then use Arguments to enter the
+target program's command line parameters.
+#shell_main_debug_files
+Choose the .EXE file to debug.
+In order to use csd on a .EXE file,
+the program must have been compiled using the -VCSD option.
+#shell_main_make
+MAKE provides a systematic and efficient procedure for compiling
+a program comprised of several source files.
+EXECUTE: Invoke the makefile in the current directory based on
+the information in the command box.
+OPTIONS: Choose options for the make command. End list with <end> key.
+Backspace key deletes an option from command line.
+MACROS: Create macros used to eliminate repetitive typing or allow
+special option at run time.
+TARGETS: Enter name(s) of target file(s) to be made.
+#shell_main_make_options
+Choose an option by moving the highlight bar to the option and pressing
+return.
+Press the <end> key once all desired options are selected.
+
+Delete an option by moving the highlight bar to the option and
+pressing backspace.
+For detailed information on each option, see the Lexicon entry for
+Make or the tutorial for Make in the manual.
+
+#shell_main_make_macros
+Macros should be of the form 'a=b'.   Macros can increase the flexibility 
+of your makefiles.
+#shell_main_make_targets
+Enter name(s) of file(s) to be made.
+#shell_main_make_Alternate makefile
+Enter the name of the makefile if its name is not 'makefile'
+#shell_main_buffers
+Tailor the in-RAM compilation accelerator to your needs.
+Allocate memory or add expanded memory for faster compilation.
+
+
+LOAD/UNLOAD: Tell MWS to load or unload the accelerator.
+DISK DRIVES: Select disk drives to accelerate.  The default is 
+'*', or all drives accelerated.
+
+BUFFER SIZE: Change the size of the buffer reserved for the accelerator.
+Default size is 128K.
+WRITE OPTIONS: Choose how data will be saved to disk: memory, timed save
+or disk.  For details on write options, see the Let's C manual.
+SAVE DATA: Write to disk all data stored in the accelerator's buffer.
+CHANGE DISK: Write to disk all data in the buffer, then clear the buffer for
+a new disk.
+
+EXPANDED MEMORY: Tell MWS to create buffers in the expanded memory rather
+than in main memory.
+#shell_main_buffers_load/unload
+Load or unload the accelerator.
+#shell_main_buffers_drive
+Select the disk drives you want to accelerate.  The default is '*',
+or all drives accelerated.
+#shell_main_buffers_size
+Change the size of the buffer reserved for the accelerator.
+Default size is 128K.
+#shell_main_buffers_write
+Choose how data will be written to disk:  Memory, Timed Save, or
+disk.  For complete information on the write options, see
+the Let's C manual.
+#shell_main_buffers_save
+Write to disk all data stored in the accelerator's buffer.
+#shell_main_buffers_change
+Write to disk all data stored in the accelerator's buffer, then clear
+the buffer for a new disk.
+#shell_main_buffers_expanded
+Creates buffers in the expanded memory rather that in main memory.
+

@@ -1,0 +1,64 @@
+# Makefile 10/13/87
+# Make command file to build MSDOS executable MicroEMACS me.exe.
+
+# Source file directory.
+# This allows the object to be built in a different directory
+# than where source resides.
+SOURCE=\sample
+
+# Memory Model: either "SMALL" or "LARGE", no spaces please.
+MEMMODEL=SMALL
+
+# Unlinked objects.
+OBJ1=ansi.obj basic.obj buffer.obj display.obj error.obj file.obj fileio.obj
+OBJ2=ibmbios.obj ibmpc.obj line.obj main.obj putline.obj random.obj region.obj
+OBJ3=search.obj spawn.obj tcap.obj termio.obj vt52.obj window.obj word.obj
+
+# Files "putline.m" and "ibmbios.m" use IBM PC ROM BIOS calls for screen and
+# keyboard control; they may not work on some IBM-compatible (non-IBM) systems.
+# Remove the definition of IBM below and recompile if necessary.
+# Note: the definition of IBM is required in addition to the definition 
+# of TANDY to make a Tandy 2000 version, via the command "make tandy".
+CFLAGS=-VQUIET -DIBM -V$(MEMMODEL)
+LDFLAGS=-w -o me -V$(MEMMODEL)
+
+# Primary targets.
+ibm: me.exe
+	@
+
+tandy: tandyspecific me.exe
+	@
+
+tandyspecific:
+	$(CC) $(CFLAGS) -DTANDY -c $(SOURCE)\putline.m
+
+# Uses "tempfile" to avoid MSDOS command line length restrictions.
+me.exe: $(OBJ1) $(OBJ2) $(OBJ3)
+	echo $(OBJ1)  >tempfile
+	echo $(OBJ2) >>tempfile
+	echo $(OBJ3) >>tempfile
+	cc $(LDFLAGS) @tempfile
+	del tempfile
+
+# Secondary targets.
+ansi.obj:	$(SOURCE)\ansi.c $(SOURCE)\ed.h
+basic.obj:	$(SOURCE)\basic.c $(SOURCE)\ed.h
+buffer.obj:	$(SOURCE)\buffer.c $(SOURCE)\ed.h
+display.obj:	$(SOURCE)\display.c $(SOURCE)\ed.h
+error.obj:	$(SOURCE)\error.c $(SOURCE)\ed.h
+file.obj:	$(SOURCE)\file.c $(SOURCE)\ed.h
+fileio.obj:	$(SOURCE)\fileio.c $(SOURCE)\ed.h
+ibmbios.obj:	$(SOURCE)\ibmbios.m
+ibmpc.obj:	$(SOURCE)\ibmpc.c $(SOURCE)\ed.h
+line.obj:	$(SOURCE)\line.c $(SOURCE)\ed.h
+main.obj:	$(SOURCE)\main.c $(SOURCE)\ed.h
+putline.obj:	$(SOURCE)\putline.m
+random.obj:	$(SOURCE)\random.c $(SOURCE)\ed.h
+region.obj:	$(SOURCE)\region.c $(SOURCE)\ed.h
+search.obj:	$(SOURCE)\search.c $(SOURCE)\ed.h
+spawn.obj:	$(SOURCE)\spawn.c $(SOURCE)\ed.h
+tcap.obj:	$(SOURCE)\tcap.c $(SOURCE)\ed.h
+termio.obj:	$(SOURCE)\termio.c $(SOURCE)\ed.h
+vt52.obj:	$(SOURCE)\vt52.c $(SOURCE)\ed.h
+window.obj:	$(SOURCE)\window.c $(SOURCE)\ed.h
+word.obj:	$(SOURCE)\word.c $(SOURCE)\ed.h

@@ -1,0 +1,12 @@
+#
+#	Let's C Version 4.0.4.
+#	Copyright (c) 1982-1987 by Mark Williams Company, Chicago.
+#	All rights reserved. May not be copied or disclosed without permission.
+#
+
+#	Default actions.
+
+.c.o .c.obj .s.o .s.obj .m.o .m.obj .asm.obj:
+	$(CC) $(CFLAGS) -c $<
+.o.exe .obj.exe:
+	$(CC) $(LDFLAGS) -o $@ $<
