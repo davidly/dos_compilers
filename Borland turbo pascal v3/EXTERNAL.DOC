@@ -1,0 +1,88 @@
+
+; * WARNING WARNING WARNING WARNING WARNING WARNING WARNING *
+
+;   Please do not try to use external procedures
+;   unless you are familiar with assembly language.
+;
+;   IMPORTANT: Externals must be written in assembly language.
+;
+;   The following example translates a string to upper case.
+
+;
+;   Place the following code in a file: "STU.ASM"
+;
+
+
+CODE    SEGMENT
+        ASSUME     CS:CODE
+
+STU     PROC       NEAR
+
+        PUSH       BP                    ; SAVE ENVIRONMENT
+        MOV        BP,SP                 ; MANUAL PAGE 189
+
+        LES        DI,[BP+4]             ; GET PARAMETER
+        MOV        CL,ES:[DI]
+        INC        CL
+L1:     DEC        CL
+        JZ         L2
+        INC        DI
+        CMP        ES:BYTE PTR[DI],'a'
+        JB         L1
+        CMP        ES:BYTE PTR[DI],'z'
+        JA         L1
+        SUB        ES:BYTE PTR[DI],20H
+        JMP        SHORT L1
+
+L2:     MOV        SP,BP                 ; RESTORE ENVIRONMENT
+        POP        BP                    ; MANUAL PAGE 190
+        RET        4
+STU     ENDP
+CODE    ENDS
+        END
+
+; Now exit to PC-DOS and type:
+;
+; ASM STU
+; LINK STU
+; EXE2BIN STU.EXE STU.COM
+;
+; IGNORE MINOR ERRORS FROM ASM AND LINK
+
+
+
+To use, write the following program:
+
+
+type
+  AnyString = string[255];
+
+var
+  S: AnyString;
+  I: integer;
+
+
+procedure STU(var S: AnyString); external 'STU.COM';
+
+begin
+  readln(S);
+  STU(S);
+  writeln(S);
+end.
+
+
+
+
+;   The above external procedure is only an example. You
+;   can achieve the same result in Turbo-Pascal:
+;
+;   procedure STU(var S: AnyString);
+;   var
+;     I: integer;
+;   begin
+;     for I:=1 to Length(S) do S[I]:=Upcase(S[I]);
+;   end;
+;
+
+
+

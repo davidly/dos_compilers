@@ -1,0 +1,334 @@
+
+                     WELCOME TO TURBO PASCAL 3.0
+                     ---------------------------
+
+This file contains important information not found in the Reference
+Manual.  Included is information on how to get technical help, a
+description of differences between Turbo Pascal 2.0 and 3.0,
+corrections to the Reference Manual, and a complete list of files on
+the distribution disk.  Since this file contains information important
+to you, please read it in its entirety; hopefully it will answer any
+questions you may have.
+
+Special Note:  Turbo Pascal now comes complete with three versions of
+the compiler.  The standard compiler: TURBO.COM, the compiler with
+support for the optional 8087 math coprocessor: TURBO-87.COM, and the
+compiler with BCD (Binary Coded Decimal) real number support for precise,
+business oriented computations: TURBOBCD.COM.  Simply recompile your
+source code with one of the compilers to take advantage of the optional
+real number support.  Please note that to use TURBO-87.COM you must
+have an 8087 coprocessor chip installed in your computer.  Most
+computers do not come with the 8087 chip installed.
+
+
+
+TABLE OF CONTENTS
+-----------------
+
+  1. How to Get Help
+  2. Differences between Turbo Pascal 2.0 and 3.0
+  3. Corrections to the Reference Manual
+  4. File List
+
+
+
+1. HOW TO GET HELP
+------------------
+
+  If you need help with Turbo Pascal, please read this help file and
+  the Reference Manual thoroughly. Also, see Appendix N of the Turbo
+  Pascal Reference Manual for common questions and answers.
+
+  If you still have a question and need technical assistance, please
+  have the following information ready before calling our technical
+  support department:
+
+  1. Product name and version number.  (The version number of Turbo
+     Pascal appears above the "Include error messages?" prompt when the
+     program is first loaded.)
+  2. Computer name, model and any additional hardware.
+  3. Operating system and version number.  (The version number
+     generally is displayed when your system is first booted.)
+
+  Technical assistance is also available from the following sources:
+
+    1.  Type GO BORLAND on the CompuServe bulletin board system.
+    2.  Check with your local software dealer or user group.
+    3.  Write to:  Borland International
+                   Turbo Pascal Technical Support
+                   4585 Scotts Valley Drive
+                   Scotts Valley, CA  95066
+
+
+
+2. DIFFERENCES BETWEEN TURBO PASCAL 2.0 AND 3.0
+-----------------------------------------------
+
+General Differences
+-------------------
+
+  1. Turbo Pascal no longer does a ClrScr when your program first begins.
+  2. Turbo Pascal no longer does a GoToXY(1, 25) when your program
+     terminates.
+  3. The use of file handles now necessitates closing all files, even
+     if they were not modified.  You should also place a "FILES = 20"
+     statement in your CONFIG.SYS file.  Note that DOS always uses five
+     file handles (standard input, output, error, auxiliary, standard
+     printer).  Please refer to your DOS technical reference manual for
+     more information about DOS file handles.
+  4. The handling of some logical devices has been changed to conform
+     with standard Pascal and with Turbo Pascal's handling of other
+     files:
+     a. A read statement using the logical device TRM is now buffered
+        and terminates with a <CR>.
+     b. The KBD device is not buffered.  For this reason, look-ahead
+        functions (EOF, EOLN, readln) used on the KBD device will
+        always "wait" for a key to be pressed.
+
+
+TINST Installation
+------------------
+
+  1. TINST now allows you to install a pathname which is used by Turbo
+     Pascal when loading the error message file (TURBO.MSG).
+  2. In the screen installation, after choosing your display type, the
+     following question will appear:
+       Does your screen blink when the text scrolls? (Y/N);
+     If the screen is "snowy" in the Turbo Pascal editor, answer "Y" to
+     this question.
+
+
+Chain and Execute
+-----------------
+
+  1. Heap preserved during Chain.
+  2. Chain and Execute no longer set a flag in the command line
+     parameter.
+
+
+Inline
+------
+
+  A constant identifier used in an INLINE statement does not always
+  generate two bytes of code.
+
+
+New File Oriented Procedures and Functions
+------------------------------------------
+
+  1. Append procedure.
+  2. Full DOS path-name supported.
+  3. I/O re-direction.
+  4. New FIB formats.
+  5. Optional parameter on text file declaration sets buffer size.
+  6. Optional  parameter  on Reset/ReWrite sets block size  for
+     untyped files.
+  7. Optional 4th parameter on BlockRead/BlockWrite returns the number
+     of blocks processed.
+  8. Read and ReadLn work with array of char.
+  9. LongFileSize function.
+ 10. LongFilePosition function.
+ 11. LongSeek procedure.
+ 12. SeekEoln function.
+ 13. SeekEof function.
+ 14. Truncate procedure.
+
+
+Other New Procedures and Functions
+----------------------------------
+
+  1. ChDir procedure.
+  2. Command line parameters on Options menu.
+  3. Delay procedure independent of processor speed.
+  4. Exit procedure.
+  5. Extended  graphics procedures & functions  (see page 309  in
+     manual for overview).
+  6. GetDir procedure.
+  7. MkDir procedure.
+  8. Multiple EXTERNAL subprograms in one file.
+  9. Optional parameter on Halt to return error code.
+ 10. OvrPath procedure.
+ 11. ParamCount function.
+ 12. ParamStr function.
+ 13. RmDir procedure.
+ 14. Turtlegraphics procedures, functions, and constants (see
+     page 309-310 in manual for overview).
+
+
+Overlays
+--------
+
+  1. Overlays can be run in Memory mode.
+  2. Overlay files are opened and closed every time they are accessed.
+     Therefore, there is never a need to specifically close an overlay
+     file.
+  3. The Y compiler directive is no longer supported. Instead, the
+     OvrPath standard procedure may be used to specify the drive and
+     subdirectory in which overlay files reside.
+
+
+
+3. CORRECTIONS TO THE MANUAL
+----------------------------
+
+Page 168: Text Windows
+----------------------
+  Add the following text:
+
+  The maximum number of rows in a text window has been expanded in
+  order to support video adapters such as the EGA which support screens
+  of up to 43 lines.
+
+
+Page 189: ChDir
+---------------
+  Add the following text:
+
+  ChDir also changes the logged drive if St contains a DRIVE name
+  followed by a colon.
+
+
+Page 241 & 273:
+---------------
+  Add the following section:
+
+  User Written Error Handlers
+  ---------------------------
+     In Turbo Pascal 3.0 you may write your own error handler, which
+     is called in case of an I/O or Run-time error. The procedure must
+     have the following header:
+
+          procedure Error(ErrNo, ErrAddr: Integer);
+
+     The name of the procedure and its parameters are unimportant, as
+     long as it is a procedure with two value parameters of type
+     Integer.
+
+     The value passed in ErrNo is the error type and number. The most
+     significant byte, i.e. "Hi(ErrNo)", contains the error type, and
+     the least significant byte, i.e. "Lo(ErrNo)", contains the error
+     number (see Appendix F or G in the Turbo Pascal Reference  Manual).
+
+     The following error types are defined:
+
+          0   User Break (Ctrl-C).
+          1   I/O error.
+          2   Run-time error.
+
+     In case of a user interrupt (Ctrl-C), the low byte of "ErrNo" is
+     always 1. "ErrAddr" contains the address (offset in Code Segment
+     for 16 bit versions) of the error.
+
+     To activate the error handler, assign its offset address to the
+     standard variable "ErrorPtr", i.e.
+
+          ErrorPtr:=Ofs(Error);  { 16 bit }  or
+          ErrorPtr:=Addr(Error); {  8 bit }
+
+     There are no limits to what an error handler may do. Typically it
+     will close all open files, output an error message, and call the
+     Halt standard procedure to terminate the program.  If an error
+     handler returns, i.e. if it does not call Halt, or if an error
+     occurs within an error handler, Turbo Pascal will itself output
+     the error message and terminate the program.
+
+
+Page 325: Run-Time Error Messages
+---------------------------------
+  Error 91, add the following text:
+
+  Error also occurs when you do a Dispose(p), where p is a nil
+  pointer.
+
+
+Page 328: I/O Error Messages
+----------------------------
+  Error F1, add the following text:
+
+  Error F1 also occurs when an illegal file name is specified.
+
+
+Page 365: Compile/Run-Time/I/O Errors
+-------------------------------------
+  First question
+
+  A: You can do two things: break your code into smaller segments
+     and use the $1 compiler directive or compile to a .COM or .CMD
+     file.
+
+should be:
+
+  A: You can do two things: break your code into smaller segments
+     and use the $I compiler directive or compile to a .COM or .CMD
+     file.
+
+
+Page 374: Keyboard
+------------------
+  Third question, add the following text:
+
+  Make sure the C compiler directive is turned off before using the
+  KeyPressed function.  For information in the C compiler directive,
+  see Appendix C in the Reference  Manual.
+
+
+Page 375 - File I/O
+-------------------
+  First question, add the following text:
+
+  Notice that Function Exist should also close the file it just opened
+  in order to conserve DOS file handles:
+
+  Add the following line of code after Reset(Fil);
+
+     Close(fil);
+
+
+
+4. FILE LIST
+------------
+
+      File                          Description
+  --------------------------------------------------------------------
+  README   COM   - a program that displays this file
+
+  TURBO    COM   - Turbo Pascal compiler
+  TURBO-87 COM   - Turbo Pascal compiler with 8087 support
+  TURBOBCD COM   - Turbo Pascal compiler with BCD reals
+  TURBO    MSG   - text file containing error messages
+
+  TINST    COM   - installation program
+  TINST    MSG   - messages for the installation program
+
+  GRAPH    P     - external declarations for use with routines in
+                   GRAPH.BIN
+  GRAPH    BIN   - extended graphics and turtlegraphics machine
+                   language routines
+
+  CALC     PAS   - sample spreadsheet program
+  CALC     INC   - include file for CALC.PAS
+  CALC     HLP   - spreadsheet help file
+  CALCDEMO MCS   - spreadsheet data file (not for use with TURBO-87
+                   or TURBOBCD)
+
+  ART      PAS   - sample graphics program
+  CMDLINE  PAS   - get parameters from the command line
+  COLOR    PAS   - sample color program
+  DEMO-BCD PAS   - demonstrates increased precision of TURBOBCD
+  DEMO1-87 PAS   - demonstrates increased speed and precision of
+                   TURBO-87
+  DEMO2-87 PAS   - demonstrates increased speed and precision of
+                   TURBO-87
+  GETDATE  PAS   - get the date from DOS
+  GETTIME  PAS   - get the time from DOS
+  LISTER   PAS   - simple program to list your Pascal source
+  SOUND    PAS   - sample sound program
+  SUBDIR   PAS   - demonstrates Turbo Pascal directory procedures
+  TURTLE   PAS   - demonstrates Turtlegraphics
+  WINDOW   PAS   - demonstrates windowing
+  EXTERNAL DOC   - sample program using externals
+
+  ACCESS3  BOX   - for DATABASE TOOLBOX users only: ACCESS.BOX update
+
+  README         - this file
+=========================================================================

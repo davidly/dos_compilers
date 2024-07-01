@@ -1,0 +1,48 @@
+const
+  North = 0;
+  East  = 90;
+  South = 180;
+  West  = 270;
+
+procedure Graphics;                                   external 'GRAPH.BIN';
+procedure GraphMode;                                  external Graphics[0];
+procedure GraphColorMode;                             external Graphics[3];
+procedure HiRes;                                      external Graphics[6];
+procedure HiResColor(Color: Integer);                 external Graphics[9];
+procedure Palette(N: Integer);                        external Graphics[12];
+procedure GraphBackground(Color: Integer);            external Graphics[15];
+procedure GraphWindow(X1,Y1,X2,Y2: Integer);          external Graphics[18];
+procedure Plot(X,Y,Color: Integer);                   external Graphics[21];
+procedure Draw(X1,Y1,X2,Y2,Color: Integer);           external Graphics[24];
+procedure ColorTable(C1,C2,C3,C4: Integer);           external Graphics[27];
+procedure Arc(X,Y,Angle,Radius,Color: Integer);       external Graphics[30];
+procedure Circle(X,Y,Radius,Color: Integer);          external Graphics[33];
+procedure GetPic(var Buffer; X1,Y1,X2,Y2: Integer);   external Graphics[36];
+procedure PutPic(var Buffer; X,Y: Integer);           external Graphics[39];
+function  GetDotColor(X,Y: Integer): Integer;         external Graphics[42];
+procedure FillScreen(Color: Integer);                 external Graphics[45];
+procedure FillShape(X,Y,FillCol,BorderCol: Integer);  external Graphics[48];
+procedure FillPattern(X1,Y1,X2,Y2,Color: Integer);    external Graphics[51];
+procedure Pattern(var P);                             external Graphics[54];
+procedure Back(Dist: Integer);                        external Graphics[57];
+procedure ClearScreen;                                external Graphics[60];
+procedure Forwd(Dist: Integer);                       external Graphics[63];
+function  Heading: Integer;                           external Graphics[66];
+procedure HideTurtle;                                 external Graphics[69];
+procedure Home;                                       external Graphics[72];
+procedure NoWrap;                                     external Graphics[75];
+procedure PenDown;                                    external Graphics[78];
+procedure PenUp;                                      external Graphics[81];
+procedure SetHeading(Angle: Integer);                 external Graphics[84];
+procedure SetPenColor(Color: Integer);                external Graphics[87];
+procedure SetPosition(X,Y: Integer);                  external Graphics[90];
+procedure ShowTurtle;                                 external Graphics[93];
+procedure TurnLeft(Angle: Integer);                   external Graphics[96];
+procedure TurnRight(Angle: Integer);                  external Graphics[99];
+procedure TurtleDelay(Delay: integer);                external Graphics[102];
+procedure TurtleWindow(X,Y,W,H: Integer);             external Graphics[105];
+function  TurtleThere: Boolean;                       external Graphics[108];
+procedure Wrap;                                       external Graphics[111];
+function  Xcor: Integer;                              external Graphics[114];
+function  Ycor: Integer;                              external Graphics[117];
+

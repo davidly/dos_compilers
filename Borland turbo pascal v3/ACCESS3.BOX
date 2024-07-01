@@ -1,0 +1,430 @@
+(*********************************************************)
+(*                                                       *)
+(*           TURBO-ACCESS for MS-DOS, PC-DOS             *)
+(*                                                       *)
+(*               Toolbox version:   1.21                 *)
+(*                                                       *)
+(*                   ACCESS module                       *)
+(*                                                       *)
+(*          Use with TURBO PASCAL 3.0 or later           *)
+(*                                                       *)
+(*              Copyright (C) 1984,85,86 by              *)
+(*               Borland International                   *)
+(*                                                       *)
+(*********************************************************)
+(*
+    IMPORTANT:
+
+      Use this file, ACCESS.BOX, when compiling with TURBO 3.0.
+      Use ACCESS2.BOX when compiling with TURBO 2.0.
+*)
+(*$A+,I-,R-*)
+type
+  TaStr64   =  string[64];
+  DataFile  =  record
+                 case Integer of
+                   0 : (F          : file;
+                        FirstFree,
+                        NumberFree,
+                        Int1,
+                        Int2,
+                        NumRec     : Integer);
+                   1 : (Fil2       : array[0..12] of Byte;
+                        TaName     : array[1..64] of Char);
+               end;
+  TaKeyStr  =  string[MaxKeyLen];
+  TaItem    =  record
+                 DataRef,PageRef : Integer;
+                 Key : TaKeyStr;
+               end;
+  TaPage    =  record
+                 ItemsOnPage : 0..PageSize;
+                 BckwPageRef : Integer;
+                 ItemArray   : array[1..PageSize] of TaItem;
+               end;
+  TaPagePtr =  ^TaPage;
+  TaSearchStep =
+               record
+                 PageRef,ItemArrIndex : Integer;
+               end;
+  TaPath    =  array[1..MaxHeight] of TaSearchStep;
+  IndexFile =  record
+                 DataF         : DataFile;
+                 AllowDuplKeys : Boolean;
+                 KeyL,RR,PP    : Integer;
+                 Path          : TaPath;
+               end;
+  IndexFilePtr = ^IndexFile;
+  TaStackRec = record
+                 Page      : TaPage;
+                 IndexFPtr : IndexFilePtr;
+                 PageRef   : Integer;
+                 Updated   : Boolean;
+               end;
+  TaStackRecPtr = ^TaStackRec;
+  TaPageStack = array[1..PageStackSize] of TaStackRec;
+  TaPageMap  =  array[1..PageStackSize] of Integer;
+  TaRecordBuffer  =
+               record
+                 case Integer of
+                   0 : (Page : TaStackRec);
+                   1 : (R : array[1..MaxDataRecSize] of Byte);
+                   2 : (I : Integer);
+               end;
+
+var
+  IOstatus  : Integer;
+  OK        : Boolean;
+  TaRecBuf  : TaRecordBuffer;
+  TaPageStk : TaPageStack;
+  TaPgMap   : TaPageMap;
+
+
+procedure TaIOcheck(var DatF : DataFile; R : Integer);
+var
+  I : Integer;
+begin
+  if IOstatus <> 0 then with DatF do
+  begin
+    Writeln;
+    Writeln('TURBO-access I/O error ',IOstatus);
+    Write('File ');
+    I := 1;
+    while Ord(TaName[I]) <> 0 do
+    begin
+      Write(TaName[I]);  I := Succ(I);
+    end;
+    Writeln(' Record ',R);
+    Writeln('Program aborted');
+    Halt;
+  end;
+end;
+
+procedure GetRec(var DatF   : DataFile;
+                     R      : Integer;
+                 var Buffer           );
+begin
+  Seek(DatF.F,R);
+  IOstatus := IOresult;
+  TaIOcheck(DatF,R);
+  BlockRead(DatF.F,Buffer,1);
+  IOstatus := IOresult;
+  TaIOcheck(DatF,R);
+end;
+
+procedure PutRec(var DatF   : DataFile;
+                     R      : Integer;
+                 var Buffer           );
+begin
+  Seek(DatF.F,R);
+  IOstatus := IOresult;
+  TaIOcheck(DatF,R);
+  BlockWrite(DatF.F,Buffer,1);
+  IOstatus := IOresult;
+  TaIOcheck(DatF,R);
+end;
+
+procedure MakeFile(var DatF   : DataFile;
+                       FName  : TaStr64;
+                       RecLen : Integer);
+begin
+  Assign(DatF.F,FName);
+  IOstatus := IOresult;
+  TaIOcheck(DatF, 0);
+  Rewrite(DatF.F,RecLen);
+  IOstatus := IOresult;
+  if IOstatus = $F1 then
+    OK := false
+  else
+  begin
+    TaIOcheck(DatF,0);
+    DatF.FirstFree := -1;
+    DatF.NumberFree := 0;
+    DatF.Int1 := 0;
+    DatF.Int2 := 0;
+    Move(DatF.FirstFree,TaRecBuf,8);
+    PutRec(DatF,0,TaRecBuf);
+    DatF.NumRec := 1;
+    OK := true;
+  end;
+end;
+
+procedure OpenFile(var DatF   : DataFile;
+                       FName  : TaStr64;
+                       RecLen : Integer);
+begin
+  Assign(DatF.F,FName);
+  IOstatus := IOresult;
+  TaIOcheck(DatF,0);
+  Reset(DatF.F,RecLen);
+  IOstatus := IOresult;
+  if IOstatus = 1 then OK := false
+  else
+  begin
+    TaIOcheck(DatF,0);
+    GetRec(DatF,0,TaRecBuf);
+    Move(TaRecBuf,DatF.FirstFree,8);
+    DatF.NumRec := FileSize(DatF.F);
+    OK := true;
+  end;
+end;
+
+procedure CloseFile(var DatF : DataFile);
+begin
+  DatF.Int2 := DatF.NumRec;
+  Move(DatF.FirstFree,TaRecBuf,8);
+  PutRec(DatF,0,TaRecBuf);
+  Close(DatF.F);
+  IOstatus := IOresult;
+  TaIOcheck(DatF,0);
+end;
+
+procedure NewRec(var DatF  : DataFile;
+                 var R     : Integer  );
+begin
+  if DatF.FirstFree = -1 then
+  begin
+    R := DatF.NumRec;
+    DatF.NumRec := Succ(DatF.NumRec)
+  end
+  else
+  begin
+    R := DatF.FirstFree;
+    GetRec(DatF,R,TaRecBuf);
+    DatF.FirstFree := TaRecBuf.I;
+    DatF.NumberFree := DatF.NumberFree - 1;
+  end;
+end;
+
+procedure AddRec(var DatF  : DataFile;
+                 var R     : Integer;
+                 var Buffer           );
+begin
+  NewRec(DatF,R);
+  PutRec(DatF,R,Buffer);
+end;
+
+procedure DeleteRec(var DatF : DataFile;
+                        R    : Integer);
+begin
+  TaRecBuf.I := DatF.FirstFree;
+  PutRec(DatF,R,TaRecBuf);
+  DatF.FirstFree := R;
+  DatF.NumberFree := DatF.NumberFree + 1;
+end;
+
+function FileLen(var DatF : DataFile) : Integer;
+begin
+  FileLen := DatF.NumRec;
+end;
+
+function UsedRecs(var DatF : DataFile) : Integer;
+begin
+  UsedRecs := DatF.NumRec - DatF.NumberFree - 1;
+end;
+
+procedure InitIndex;
+var
+  I : Integer;
+begin
+  for I := 1 to PageStackSize do
+  begin
+    TaPageStk[I].IndexFPtr := nil;
+    TaPageStk[I].Updated := false;
+    TaPgMap[I] := I;
+  end;
+end;
+
+procedure TaPack(var Page : TaPage;
+                     KeyL : Integer);
+var
+  I : Integer;
+  P : array[0..MaxInt] of Byte absolute Page;
+begin
+  if KeyL <> MaxKeyLen then
+    for I := 1 to PageSize do
+      Move(Page.ItemArray[I],P[(I - 1) * (KeyL + 5) + 3],KeyL + 5);
+end;
+
+procedure TaUnpack(var Page : TaPage;
+                       KeyL : Integer);
+var
+  I : Integer;
+  P : array[0..MaxInt] of Byte absolute Page;
+begin
+  if KeyL <> MaxKeyLen then
+    for I := PageSize downto 1 do
+      Move(P[(I - 1) * (KeyL + 5) + 3],Page.ItemArray[I],KeyL + 5);
+end;
+
+procedure MakeIndex(var IdxF   : IndexFile;
+                        FName  : TaStr64;
+                        KeyLen,
+                        S      : Integer);
+var
+  K : Integer;
+begin
+  K := (KeyLen + 5)*PageSize + 3;
+  MakeFile(IdxF.DataF,FName,K);
+  IdxF.AllowDuplKeys := S <> 0;
+  IdxF.KeyL := KeyLen;
+  IdxF.RR := 0;
+  IdxF.PP := 0;
+end;
+
+procedure OpenIndex(var IdxF   : IndexFile;
+                        FName  : TaStr64;
+                        KeyLen,
+                        S      : Integer);
+var
+  K : Integer;
+begin
+  K := (KeyLen + 5) * PageSize + 3;
+  OpenFile(IdxF.DataF,FName,K);
+  IdxF.AllowDuplKeys := S <> 0;
+  IdxF.KeyL := KeyLen;
+  IdxF.RR := IdxF.DataF.Int1;
+  IdxF.PP := 0;
+end;
+
+procedure CloseIndex(var IdxF : IndexFile);
+var
+  I : Integer;
+begin
+  for I := 1 to PageStackSize do
+    with TaPageStk[I] do
+      if IndexFPtr = Addr(IdxF) then
+      begin
+        IndexFPtr := nil;
+        if Updated then
+        begin
+          TaPack(Page,IdxF.KeyL);
+          PutRec(IdxF.DataF,PageRef,Page);
+          Updated := false;
+        end;
+      end;
+  IdxF.DataF.Int1 := IdxF.RR;
+  CloseFile(IdxF.DataF);
+end;
+
+procedure TaLast(I : Integer);
+var
+  J,K : Integer;
+begin
+  J := 1;
+  while (TaPgMap[J] <> I) and (J < PageStackSize) do
+    J := J + 1;
+  for K := J to PageStackSize - 1 do
+    TaPgMap[K] := TaPgMap[K + 1];
+  TaPgMap[PageStackSize] := I;
+end;
+
+procedure TaGetPage(var IdxF  : IndexFile;
+                        R     : Integer;
+                    var PgPtr : TaPagePtr);
+var
+  I     : Integer;
+  Found : Boolean;
+begin
+  I := 0;
+  repeat
+    I := I + 1;
+    with TaPageStk[I] do
+      Found := (IndexFPtr = Addr(IdxF)) and (PageRef = R);
+  until Found or (I = PageStackSize);
+
+  if not Found then
+  begin
+    I := TaPgMap[1];
+    with TaPageStk[I] do
+    begin
+      if Updated then
+      begin
+        TaPack(Page,IndexFPtr^.KeyL);
+        PutRec(IndexFPtr^.DataF,PageRef,Page);
+      end;
+      GetRec(IdxF.DataF,R,Page);
+      TaUnpack(Page,IdxF.KeyL);
+      IndexFPtr := Addr(IdxF);
+      PageRef := R;
+      Updated := false;
+    end;
+  end;
+  TaLast(I);
+  PgPtr := Addr(TaPageStk[I]);
+end;
+
+procedure TaNewPage(var IdxF  : IndexFile;
+                    var R     : Integer;
+                    var PgPtr : TaPagePtr);
+var
+  I : Integer;
+begin
+  I := TaPgMap[1];
+  with TaPageStk[I] do
+  begin
+    if Updated then
+    begin
+      TaPack(Page,IndexFPtr^.KeyL);
+      PutRec(IndexFPtr^.DataF,PageRef,Page);
+    end;
+    NewRec(IdxF.DataF,R);
+    IndexFPtr := Addr(IdxF);
+    PageRef := R;
+    Updated := false;
+  end;
+  TaLast(I);
+  PgPtr := Addr(TaPageStk[I]);
+end;
+
+procedure TaUpdatePage(PgPtr : TaPagePtr);
+var
+  P : TaStackRecPtr absolute PgPtr;
+begin
+  P^.Updated := true;
+end;
+
+procedure TaReturnPage(var PgPtr : TaPagePtr);
+var
+  P : TaStackRecPtr absolute PgPtr;
+begin
+  with P^ do
+  begin
+    DeleteRec(IndexFPtr^.DataF,PageRef);
+    IndexFPtr := nil;
+    Updated := false;
+  end;
+end;
+
+procedure TaXKey(var K;
+                     KeyL : Integer);
+var
+  Key : TaKeyStr absolute K;
+begin
+  if Ord(Key[0]) > KeyL then Key[0] := Chr(KeyL);
+end;
+
+function TaCompKeys(var K1,
+                        K2;
+                        DR1,
+                        DR2 : Integer;
+                        Dup : Boolean ) : Integer;
+var
+  Key1 : TaKeyStr absolute K1;
+  Key2 : TaKeyStr absolute K2;
+begin
+  if Key1 = Key2 then
+    if Dup then
+      TaCompKeys := DR1 - DR2
+    else TaCompKeys := 0
+  else
+    if Key1 > Key2 then
+      TaCompKeys := 1
+    else TaCompKeys :=  - 1;
+end;
+
+procedure ClearKey(var IdxF : IndexFile);
+begin
+  IdxF.PP := 0;
+end;
+
