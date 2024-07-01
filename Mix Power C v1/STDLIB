@@ -1,0 +1,6 @@
+
+stdlib bios.c close.c rand.c convert.c envir.c error.c \
+       exit.c exitmsg.c file.c gets.c init.c \
+       strcoll.c memory.c msdos.c \
+       open.c puts.c setbuf.c sort.c stdlib.c ungetc.c \
+       stdlib.h

@@ -1,0 +1,14 @@
+graphics
+
+screen.mix screen.asm fillm.asm
+   pca screen
+
+stdlib2 std_lib.h fstat.c dup.c dstring.c time.c bessel.c arith.c \
+   tempfile.c chain.c flags.c locking.c perror.c allocmem.c \
+   findfirs.c dosetc.c etc.c
+
+lib2.mix lib2.asm libdef.asm farmem.asm sound.asm absdisk.asm \
+   biosfn.asm disable.asm intent.asm signal.asm exec.asm dtafat.asm \
+   intrpt.asm intr.asm peek.asm
+   pca lib2
+

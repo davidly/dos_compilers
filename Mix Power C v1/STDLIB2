@@ -1,0 +1,3 @@
+stdlib2  stdlib.h fstat.c dup.c dstring.c time.c arith.c\
+         tempfile.c chain.c flags.c bessel.c locking.c perror.c\
+         allocmem.c findfirs.c dosetc.c etc.c

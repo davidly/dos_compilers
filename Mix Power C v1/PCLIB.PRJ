@@ -1,0 +1,25 @@
+init init.asm
+   pca init
+
+printf printf.c stdarg.h stdio.h dos.h
+   pc /f- printf
+
+scanf scanf.c stdarg.h stdio.h
+   pc /f- scanf
+
+stdlib std_lib.h fdb.h init.c convert.c rand.c gets.c puts.c open.c \
+   exit.c setbuf.c file.c close.c sort.c strcoll.c memory.c msdos.c \
+   ungetc.c envir.c bios.c
+
+io.mix io.asm libdef.asm read.asm write.asm put.asm get.asm \
+   seek.asm flush.asm
+   pca io
+
+errors std_lib.h error.c
+
+lib.mix lib.asm libdef.asm sys.asm setmem.asm movmem.asm string.asm \
+   to.asm envir.asm nheap.asm new.asm free.asm farstr1.asm farstr.asm \
+   farheap.asm div.asm long.asm far.asm setjmp.asm stack.asm inout.asm \
+   fatal.asm
+   pca lib
+
