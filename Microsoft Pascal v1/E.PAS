@@ -1,5 +1,5 @@
 (*$DEBUG-   added, of course  *)
-program e;
+program e( output );
 
 const
    DIGITS = 200;

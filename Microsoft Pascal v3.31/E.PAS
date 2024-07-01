@@ -1,4 +1,4 @@
-program e;
+program e( output );
 (*$DEBUG-   *)
 
 const
