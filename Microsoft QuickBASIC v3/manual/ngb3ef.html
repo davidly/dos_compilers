@@ -1,0 +1,45 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ngb1c8.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ngb793.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>CVDMBF                   MBF Double-Precision String to IEEE        QB87 only</B>
+
+ <U>y!</U> = <B>CVSMBF</B>(<U>8-byte-string</U>)
+
+    Converts a string representation of a double-precision number in
+    Microsoft Binary Format to an IEEE-format real.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    The IEEE format for real numbers offers more accuracy and
+                range than the Microsoft Binary Format. But the IEEE
+                format is supported only by the QB87 version of the
+                compiler, and programs compiled with QB87 run only on
+                machines equipped with 8087 or 80287 coprocessors.
+
+                An alternative to converting MBF data with CVSMBF and
+                CVDMBF is to compile the program with the /MBF command-
+                line switch. This option converts numbers as they're read
+                from a random file, then reconverts them before writing
+                them back to the file.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ngb980.html">CVS</A>
+<A HREF="ngbba5.html">CVSMBF</A>
+<A HREF="ng127c8.html">GET (File I/O)</A>
+<A HREF="ng1c1bb.html">MKDMBF$</A>
+<A HREF="ng1c568.html">MKSMBF$</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

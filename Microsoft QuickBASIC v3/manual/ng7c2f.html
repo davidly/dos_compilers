@@ -1,0 +1,48 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng76ee.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng7fd0.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>CLEAR                    Close Files, Reset Variables, Set Stack Space</B>
+
+ <B>CLEAR</B> [,,<U>stack</U>]
+
+    Closes all files, clears all COMMON variables, resets all numeric
+    variables to 0 and all string variables to null, releases all disk
+    buffers, resets the stack, and optionally specifies the size of the
+    stack.
+
+       <U>stack</U>    Specifies, in bytes, the size of QuickBASIC's stack. The
+                default is 768 bytes; the minimum is 512 bytes.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    CLEAR destroys pending return addresses left on the stack
+                by GOSUB, FOR/NEXT, and WHILE/WEND.
+
+                CLEAR does not affect symbolic constants.
+
+                QuickBASIC's CLEAR differs from the Interpreter's in two
+                ways:
+
+                1.  The Interpreter's CLEAR statement destroys all DEF FN
+                    and DEFtype statements. QB's does not.
+
+                2.  The interpreter's default stack is 512 bytes. QB's is
+                    768.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ngff2b.html">ERASE</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

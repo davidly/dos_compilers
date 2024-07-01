@@ -1,0 +1,53 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng1b754.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1bf7e.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>MID$                     Assign Substring                           Statement</B>
+
+<B>MID$(</B><U>stringvar</U>,<U>n</U>[,length]) = <U>stringexpr</U>
+
+    Assigns all or some of a string expression to a string variable,
+    beginning at a specified character position within the string
+    variable.
+
+   <U>stringvar</U>    The string variable whose characters will be replaced.
+
+           <U>n</U>    A numeric expression in the range 1 to 255, specifying the
+                position within <U>stringvar</U> where the character replacement
+                is to begin.
+
+      length    A numeric expression in the range 0 to 255, specifying the
+                number of characters from <U>stringexpr</U> that will be used. If
+                <U>length</U> is omitted, all of <U>stringexpr</U> is used.
+
+  <U>stringexpr</U>    The string expression supplying replacement characters for
+                <U>stringvar</U>.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    In the syntax shown above, the characters in <U>stringexpr</U>
+                replace length characters in <U>stringvar</U>, beginning at
+                character <U>n</U>.
+
+                In no case will the length of <U>stringvar</U> increase as a
+                result of a MID$ statement. For example, if <U>stringvar</U> is
+                seven characters long, and <U>n</U> is 3 and length is 6, only
+                the first five characters of <U>stringexpr</U> will be assigned
+                to <U>stringvar</U>.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng1b754.html">MID$ (Function)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

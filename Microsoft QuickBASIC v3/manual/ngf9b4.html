@@ -1,0 +1,38 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ngf619.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ngfc6d.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>EOF                      End of File Status</B>
+
+ <U>y</U> = <B>EOF</B>(<U>filenum</U>)
+
+    Checks for end of file.
+
+     <U>filenum</U>    The number under which the file was OPENed.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the end of the file has been reached, EOF returns -1
+                (true); otherwise, it returns 0 (false).
+
+                If <U>filenum</U> refers to a random-access file, a -1 means the
+                last GET statement did not read an entire record.
+
+                If <U>filenum</U> refers to a communications file opened in
+                binary mode, a -1 means the input queue is empty. If
+                <U>filenum</U> refers to a communications file opened in ASCII
+                mode, a -1 means a Ctrl-Z has been read.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

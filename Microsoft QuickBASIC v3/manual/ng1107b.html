@@ -1,0 +1,63 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng10e75.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng11727.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>FIELD                    Allocate Space for Random File Variables</B>
+
+ <B>FIELD</B> [#]<U>filenum</U>, <U>fieldwidth</U> <B>AS</B> <U>stringvar</U> [,<U>fieldwidth</U> AS <U>stringvar</U>]...
+
+    Allocates storage for any number of string variables, each of
+    specified character width, to be used in conjunction with a specified
+    random file buffer.
+
+     <U>filenum</U>    The number under which the file was OPENed.
+
+  <U>fieldwidth</U>    The number of character positions to be allotted to
+                <U>stringvar</U>.
+
+   <U>stringvar</U>    A string variable to be used for random access.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    Once the random file has been FIELDed, data may be
+                extracted from the random file buffer after a GET
+                statement or placed into the buffer in preparation for a
+                PUT statement.
+
+                A string variable defined by means of the FIELD statement
+                points to a specified position in the random file buffer.
+                It should not thereafter be used as an INPUT variable or
+                on the left side of an assignment statement. Doing either
+                of these things will point the variable name into the
+                string space and remove it from the file buffer.
+
+                Multiple field definitions for a given random file buffer
+                are permitted. Each new FIELD statement starts again at
+                the first character position of the buffer, and all FIELD
+                statements for a given random file are in effect
+                simultaneously. All FIELD definitions are removed when a
+                file is CLOSEd.
+
+                QuickBASIC resets all FIELDed variables to null when the
+                associated file is CLOSEd or RESET. (In interpreted BASIC,
+                such variables retain their last assigned values.)
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng127c8.html">GET (File I/O)</A>
+<A HREF="ng1b48a.html">LSET</A>
+<A HREF="ng298af.html">PUT (File I/O)</A>
+<A HREF="ng2bce4.html">RSET</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

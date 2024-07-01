@@ -1,0 +1,65 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng22914.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng23171.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>PAINT                    Fill an Area with a Pattern or Color</B>
+
+ <B>PAINT</B> [STEP] (<U>x</U>,<U>y</U>) [[,<U>color</U>] [,<U>boundary</U>] [,<U>background</U>]]
+
+    Fills an enclosed area on the graphics screen with a specific color or
+    pattern.
+
+        STEP    If included, coordinates are relative to last graphics
+                point referenced (LPR). If omitted, coordinates are
+                absolute.
+
+         <U>x</U>,<U>y</U>    Screen coordinate (column, row) within the area that is to
+                be filled.
+
+       <U>color</U>    A numeric or string expression. If numeric, specifies
+                color to fill area with; if string, specifies a bit
+                pattern to fill the area with. If this argument is
+                omitted, the foreground color will be used.
+
+    <U>boundary</U>    The color of the border of the area to be filled. PAINT
+                stops filling when it reaches this color. If this argument
+                is omitted, then <U>color</U> will be used.
+
+  <U>background</U>    A string expression specifying the background tile slice
+                to skip when checking for termination of the boundary.
+                This allows you to repaint an already painted area.
+
+   --------------------------------------------------------------------------
+
+<B>     </B><B>Notes:</B>     If <U>color</U> is a string expression, each character (8 bits)
+                in the string represents one scan line. Each character
+                therefore represents the status of 4 pixels in medium-
+                resolution and 8 pixels in high-resolution. The string can
+                be from 1 to 64 bytes long (thus allowing 1 to 64 scan
+                lines vertically).
+
+                Ensure that the area to be filled is completely enclosed,
+                or else "leaking" may destroy the entire drawing.
+
+                <U>background</U> is used to determine the stop condition when
+                filling an already painted area. If an existing pixel is
+                encountered that agrees with the corresponding bit in
+                <U>background</U>, then filling doesn't stop.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng76ee.html">CIRCLE</A>
+<A HREF="nge5df.html">DRAW</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

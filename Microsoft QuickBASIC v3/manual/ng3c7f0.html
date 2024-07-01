@@ -1,0 +1,448 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+[&lt;&lt;Previous Entry]
+[^^Up^^]
+[Next Entry&gt;&gt;]
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>                               Keyboard Codes</B>
+
+    This table lists (in decimal notation) the values that are placed in
+    the keyboard buffer by all the possible keystrokes and two-keystroke
+    combinations on the 83/84-key and 101/102-key keyboards. These are the
+    values returned (as strings) by the INKEY$ function.
+
+                              <B>     83/84-Key[1]    101/102-Key</B>
+<B>   Keystroke                        Keyboard       Keyboard[2]</B>
+      Esc                              027             same
+      1                                049             same
+      2                                050             same
+      3                                051             same
+      4                                052             same
+      5                                053             same
+      6                                054             same
+      7                                055             same
+      8                                056             same
+      9                                057             same
+      0                                048             same
+      -                                045             same
+      =                                061             same
+      Backspace                        008             same
+      Tab                              009             same
+      q                                113             same
+      w                                119             same
+      e                                101             same
+      r                                114             same
+      t                                116             same
+      y                                121             same
+      u                                117             same
+      i                                105             same
+      o                                111             same
+      p                                112             same
+      [                                091             same
+      ]                                093             same
+      Enter                            013             same
+      Ctrl                              **               **
+      a                                097             same
+      s                                115             same
+      d                                100             same
+      f                                102             same
+      g                                103             same
+      h                                104             same
+      j                                106             same
+      k                                107             same
+      l                                108             same
+      ;                                059             same
+      '                                039             same
+      `                                096             same
+      Shift                             **               **
+      \                                092             same
+      z                                122             same
+      x                                120             same
+      c                                099             same
+      v                                118             same
+      b                                 98             same
+      n                                110             same
+      m                                109             same
+      ,                                044             same
+      .                                046             same
+      /                                047             same
+      Gray *                           042             same
+      Alt                               **               **
+      Space                            032             same
+      Caps Lock                         **               **
+      F1                           000 059             same
+      F2                           000 060             same
+      F3                           000 061             same
+      F4                           000 062             same
+      F5                           000 063             same
+      F6                           000 064             same
+      F7                           000 065             same
+      F8                           000 066             same
+      F9                           000 067             same
+      F10                          000 068             same
+      F11                           no key          000 133
+      F12                           no key          000 134
+      Num Lock                          **               **
+      Scroll Lock                       **               **
+      White Home                   000 071             same
+      White Up Arrow               000 072             same
+      White PgUp                   000 073             same
+      Gray -                           045             same
+      White Left Arrow             000 075             same
+      Center Key                        --          000 076
+      White Right Arrow            000 077             same
+      Gray +                           043             same
+      White End                    000 079             same
+      White Down Arrow             000 080             same
+      White PgDn                   000 081             same
+      White Ins                    000 082             same
+      White Del                    000 083             same
+      SysReq                        no key               **
+      Key 45 [3]                    no key              092
+      Enter (number keypad)         no key          000 013
+      Gray /                        no key          000 047
+      PrtSc                         no key               **
+      Pause                         no key               **
+      Gray Home                     no key              071
+      Gray Up Arrow                 no key              072
+      Gray Page Up                  no key              073
+      Gray Left Arrow               no key              075
+      Gray Right Arrow              no key              077
+      Gray End                      no key              079
+      Gray Down Arrow               no key              080
+      Gray Page Down                no key              081
+      Gray Insert                   no key              082
+      Gray Delete                   no key              083
+
+      Shift Esc                        027             same
+      !                                033             same
+      @                                064             same
+      #                                035             same
+      $                                036             same
+      %                                037             same
+      ^                                094             same
+      &amp;                                038             same
+      * (white)                        042             same
+      (                                040             same
+      )                                041             same
+      _                                095             same
+      + (white)                        043             same
+      Shift Backspace                  008             same
+      Shift Tab (Backtab)          000 015             same
+      Q                                081             same
+      W                                087             same
+      E                                069             same
+      R                                082             same
+      T                                084             same
+      Y                                089             same
+      U                                085             same
+      I                                073             same
+      O                                079             same
+      P                                080             same
+      {                                123             same
+      }                                125             same
+      Shift Enter                      013             same
+      Shift Ctrl                        **               **
+      A                                065             same
+      S                                083             same
+      D                                068             same
+      F                                070             same
+      G                                071             same
+      H                                072             same
+      J                                074             same
+      K                                075             same
+      L                                076             same
+      :                                058             same
+      "                                034             same
+      ~                                126             same
+      |                                124             same
+      Z                                090             same
+      X                                088             same
+      C                                067             same
+      V                                086             same
+      B                                066             same
+      N                                078             same
+      M                                077             same
+      &lt;                                060             same
+      &gt;                                062             same
+      ?                                063             same
+      Shift Gray *                      **              042
+      Shift Alt                         **               **
+      Shift Space                      032             same
+      Shift Caps Lock                   **               **
+      Shift F1                     000 084             same
+      Shift F2                     000 085             same
+      Shift F3                     000 086             same
+      Shift F4                     000 087             same
+      Shift F5                     000 088             same
+      Shift F6                     000 089             same
+      Shift F7                     000 090             same
+      Shift F8                     000 091             same
+      Shift F9                     000 092             same
+      Shift F10                    000 093             same
+      Shift F11                     no key          000 135
+      Shift F12                     no key          000 136
+      Shift Num Lock                    **               **
+      Shift Scroll Lock                 **               **
+      Shift 7 (number pad)             055             same
+      Shift 8 (number pad)             056             same
+      Shift 9 (number pad)             057             same
+      Shift Gray -                     045             same
+      Shift 4 (number pad)             052             same
+      Shift 5 (number pad)             053             same
+      Shift 6 (number pad)             054             same
+      Shift Gray +                     043             same
+      Shift 1 (number pad)             049             same
+      Shift 2 (number pad)             050             same
+      Shift 3 (number pad)             051             same
+      Shift 0 (number pad)             048             same
+      Shift . (number pad)             046             same
+      Shift SysReq                  no key               **
+      Shift Key 45 [3]              no key              124
+      Shift Enter (number pad)      no key          000 013
+      Shift Gray /                  no key          000 047
+      Shift PrtSc                   no key               **
+      Shift Pause                   no key               **
+      Shift Gray Home               no key              071
+      Shift Gray Up Arrow           no key              072
+      Shift Gray Page Up            no key              073
+      Shift Gray Left Arrow         no key              075
+      Shift Gray Right Arrow        no key              077
+      Shift Gray End                no key              079
+      Shift Gray Down Arrow         no key              080
+      Shift Gray Page Down          no key              081
+      Shift Gray Insert             no key              082
+      Shift Gray Delete             no key              083
+
+      Ctrl Esc                         027             same
+      Ctrl 1                            --               --
+      Ctrl 2 (NUL)                 000 003             same
+      Ctrl 3                            --               --
+      Ctrl 4                            --               --
+      Ctrl 5                            --               --
+      Ctrl 6 (RS)                      030             same
+      Ctrl 7                            --               --
+      Ctrl 8                            --               --
+      Ctrl 9                            --               --
+      Ctrl 0                            --               --
+      Ctrl -                           031             same
+      Ctrl =                            --               --
+      Ctrl Backspace (DEL)             127             same
+      Ctrl Tab                          --              148
+      Ctrl q (DC1)                     017             same
+      Ctrl w (ETB)                     023             same
+      Ctrl e (ENQ)                     005             same
+      Ctrl r (DC2)                     018             same
+      Ctrl t (DC4)                     020             same
+      Ctrl y (EM)                      025             same
+      Ctrl u (NAK)                     021             same
+      Ctrl i (HT)                      009             same
+      Ctrl o (SI)                      015             same
+      Ctrl p (DEL)                     016             same
+      Ctrl [ (ESC)                     027             same
+      Ctrl ] (GS)                      029             same
+      Ctrl Enter (LF)                  010             same
+      Ctrl a (SOH)                     001             same
+      Ctrl s (DC3)                     019             same
+      Ctrl d (EOT)                     004             same
+      Ctrl f (ACK)                     006             same
+      Ctrl g (BEL)                     007             same
+      Ctrl h (Backspace)               008             same
+      Ctrl j (LF)                      010             same
+      Ctrl k (VT)                      011             same
+      Ctrl l (FF)                      012             same
+      Ctrl ;                            --               --
+      Ctrl '                            --               --
+      Ctrl `                            --               --
+      Ctrl Shift                        **               **
+      Ctrl \ (FS)                      028             same
+      Ctrl z (SUB)                     026             same
+      Ctrl x (CAN)                     024             same
+      Ctrl c (ETX)                     003             same
+      Ctrl v (SYN)                     022             same
+      Ctrl b (STX)                     002             same
+      Ctrl n (SO)                      014             same
+      Ctrl m (CR)                      013             same
+      Ctrl ,                            --               --
+      Ctrl .                            --               --
+      Ctrl /                            --               --
+      Ctrl Gray *                       --          000 150
+      Ctrl Alt                          **               **
+      Ctrl Space                       032             same
+      Ctrl Caps Lock                    --               --
+      Ctrl F1                      000 094             same
+      Ctrl F2                      000 095             same
+      Ctrl F3                      000 096             same
+      Ctrl F4                      000 097             same
+      Ctrl F5                      000 098             same
+      Ctrl F6                      000 099             same
+      Ctrl F7                      000 100             same
+      Ctrl F8                      000 101             same
+      Ctrl F9                      000 102             same
+      Ctrl F10                     000 103             same
+      Ctrl F11                      no key          000 137
+      Ctrl F12                      no key          000 138
+      Ctrl Num Lock                     --               --
+      Ctrl Scroll Lock                  --               --
+      Ctrl White Home              000 119             same
+      Ctrl White Up Arrow               --          000 141
+      Ctrl White PgUp              000 132             same
+      Ctrl Gray -                       --          000 142
+      Ctrl White Left Arrow        000 115             same
+      Ctrl 5 (number pad)               --          000 143
+      Ctrl White Right Arrow       000 116             same
+      Ctrl Gray +                       --          000 144
+      Ctrl White End               000 117             same
+      Ctrl White Down Arrow             --          000 145
+      Ctrl White PgDn              000 118             same
+      Ctrl White Ins                    --          000 146
+      Ctrl White Del                    --          000 147
+      Ctrl SysReq                   no key               **
+      Ctrl Key 45 [3]               no key               --
+      Ctrl Enter (number pad)       no key          000 010
+      Ctrl / (number pad)           no key          000 149
+      Ctrl PrtSc                    no key              114
+      Ctrl Break                    no key          000 000
+      Ctrl Gray Home                no key              119
+      Ctrl Gray Up Arrow            no key              141
+      Ctrl Gray Page Up             no key              132
+      Ctrl Gray Left Arrow          no key              115
+      Ctrl Gray Right Arrow         no key              116
+      Ctrl Gray End                 no key              117
+      Ctrl Gray Down Arrow          no key              145
+      Ctrl Gray Page Down           no key              118
+      Ctrl Gray Insert              no key              146
+      Ctrl Gray Delete              no key              147
+
+      Alt Esc                           --          000 001
+      Alt 1                        000 120             same
+      Alt 2                        000 121             same
+      Alt 3                        000 122             same
+      Alt 4                        000 123             same
+      Alt 5                        000 124             same
+      Alt 6                        000 125             same
+      Alt 7                        000 126             same
+      Alt 8                        000 127             same
+      Alt 9                        000 128             same
+      Alt 0                        000 129             same
+      Alt -                        000 130             same
+      Alt =                        000 131             same
+      Alt Backspace                     --          000 014
+      Alt Tab                           --          000 165
+      Alt q                        000 016             same
+      Alt w                        000 017             same
+      Alt e                        000 018             same
+      Alt r                        000 019             same
+      Alt t                        000 020             same
+      Alt y                        000 021             same
+      Alt u                        000 022             same
+      Alt i                        000 023             same
+      Alt o                        000 024             same
+      Alt p                        000 025             same
+      Alt [                             --          000 026
+      Alt ]                             --          000 027
+      Alt Enter                         --          000 028
+      Alt Ctrl                          **               **
+      Alt a                        000 030             same
+      Alt s                        000 031             same
+      Alt d                        000 032             same
+      Alt f                        000 033             same
+      Alt g                        000 034             same
+      Alt h                        000 035             same
+      Alt j                        000 036             same
+      Alt k                        000 037             same
+      Alt l                        000 038             same
+      Alt ;                             --          000 039
+      Alt '                             --          000 040
+      Alt `                             --          000 041
+      Alt Shift                         **               **
+      Alt \                             --          000 043
+      Alt z                        000 044             same
+      Alt x                        000 045             same
+      Alt c                        000 046             same
+      Alt v                        000 047             same
+      Alt b                        000 048             same
+      Alt n                        000 049             same
+      Alt m                        000 050             same
+      Alt ,                             --          000 051
+      Alt .                             --          000 052
+      Alt /                             --          000 053
+      Alt Gray *                        --          000 055
+      Alt Space                        032             same
+      Alt Caps Lock                     **               **
+      Alt F1                       000 104             same
+      Alt F2                       000 105             same
+      Alt F3                       000 106             same
+      Alt F4                       000 107             same
+      Alt F5                       000 108             same
+      Alt F6                       000 109             same
+      Alt F7                       000 110             same
+      Alt F8                       000 111             same
+      Alt F9                       000 112             same
+      Alt F10                      000 113             same
+      Alt F11                       no key          000 139
+      Alt F12                       no key          000 140
+      Alt Num Lock                      **               **
+      Alt Scroll Lock                   **               **
+      Alt Gray -                        --          000 074
+      Alt Gray +                        --          000 078
+      Alt 7 (number pad)                 #                #
+      Alt 8 (number pad)                 #                #
+      Alt 9 (number pad)                 #                #
+      Alt 4 (number pad)                 #                #
+      Alt 5 (number pad)                 #                #
+      Alt 6 (number pad)                 #                #
+      Alt 1 (number pad)                 #                #
+      Alt 2 (number pad)                 #                #
+      Alt 3 (number pad)                 #                #
+      Alt Del                           --               --
+      Alt SysReq                    no key               **
+      Alt Key 45 [3]                no key               --
+      Alt Enter (number pad)        no key          000 166
+      Alt / (number pad)                --          000 164
+      Alt PrtSc                     no key               **
+      Alt Pause                     no key               **
+      Alt Gray Home                 no key          000 151
+      Alt Gray Up Arrow             no key          000 152
+      Alt Gray Page Up              no key          000 153
+      Alt Gray Left Arrow           no key          000 155
+      Alt Gray Right Arrow          no key          000 157
+      Alt Gray End                  no key          000 159
+      Alt Gray Down Arrow           no key          000 160
+      Alt Gray Page Down            no key          000 161
+      Alt Gray Insert               no key          000 162
+      Alt Gray Delete               no key          000 163
+
+   --------------------------------------------------------------------------
+<B>   Footnotes</B>
+<B>      </B>
+         [1]    The 83-key and 84-key keyboards are the original PC
+                keyboard and the original-layout AT keyboard,
+                respectively.
+
+         [2]    The 101/102-key keyboard is the current IBM standard
+                ("Enhanced") keyboard.
+
+         [3]    In the United States, the 101/102-key keyboard is shipped
+                with 101 keys. Overseas versions have an additional key
+                sandwiched between the left Shift key and the Z key. This
+                additional key is identified by IBM (and in this table) as
+                "Key 45."
+
+        [**]    Keys and key combinations marked ** are used by the ROM
+                BIOS but do not put values into the keyboard buffer.
+
+        [--]    Keys and key combinations marked -- are ignored by the ROM
+                BIOS.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,73 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng9f05.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="nga9db.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>COMMON                   Pass Variables to CHAINed Program or Subprogram</B>
+
+ <B>COMMON</B> [SHARED] [/<U>blockname</U>/] <U>varlist</U>
+
+    Passes variables to a chained-to program or a subprogram.
+
+      SHARED    An optional attribute. The COMMON statement must appear in
+                both the calling program and the chained-to program or
+                subprogram--unless the subprogram is in the same module as
+                the calling program and the SHARED attribute is used in
+                the calling program's COMMON statement.
+
+   <U>blockname</U>    Any valid BASIC identifier; the first 31 characters are
+                significant. Allows you to name a group of common
+                variables. A group of variables passed with a <U>blockname</U> is
+                called a named COMMON block; variables passed without a
+                <U>blockname</U> are called a blank COMMON block.
+
+     <U>varlist</U>    One or more scalar or array variables to be shared with a
+                chained-to program or a subprogram.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    The order in which variables appear in <U>varlist</U> is
+                significant, not the names of the variables. To avoid type
+                mismatches and other calamities, it's advisable to put all
+                shared variables in a COMMON statement in a separate file,
+                then $INCLUDE that file in both the calling program and
+                any chained-to programs or subprograms.
+
+                The COMMON statement must appear before any executable
+                statements. Nonexecutable statements are CONST, DATA,
+                COMMON, DEFtype, DIM (for static arrays), OPTION BASE,
+                comments, and metacommands.
+
+                If a static array is to be passed to a chained-to program
+                or subprogram, its DIM statement must appear before the
+                COMMON statement. The DIM statement must use integer-
+                constant subscripts.
+
+                If a dynamic array is to be passed, it must be DIMmed or
+                REDIMmed after the COMMON statement.
+
+                When passing a named COMMON block to a program in the user
+                library, the calling program may not redefine the block to
+                a larger size. Blank COMMON blocks may be resized.
+
+                When COMMON is used with CHAIN and compilation is done
+                outside the QuickBASIC environment, the BRUN20.EXE library
+                (QB's default) must be used.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng5e67.html">CALL</A>
+<A HREF="ng6e8b.html">CHAIN</A>
+<A HREF="ng2fea2.html">SUB...END SUB</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

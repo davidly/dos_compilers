@@ -1,0 +1,89 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng135de.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng13f30.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>IF                       Conditional Branch</B>
+
+ 1. Block syntax
+
+    <B>IF</B> <U>expression</U> <B>THEN</B>
+       <U>statement1</U>
+       [<U>statement2</U>]
+       .
+       .
+       .
+    [ELSEIF <U>expression</U> THEN
+       <U>statement10</U>
+       [<U>statement11</U>]
+       .
+       .
+       .
+    [ELSE
+       <U>statement15</U>
+       [<U>statement16</U>]]
+       .
+       .
+       .
+    <B>ENDIF</B>
+
+
+ 2. Single-line syntax (three variants)
+
+    <B>IF</B> <U>expression</U> <B>THEN</B> <U>statement1</U> [ELSE <U>statement2</U>]
+
+    Causes QuickBASIC to make a decision based on the value of an
+    expression.
+
+  <U>expression</U>    A numeric expression; 0 is equivalent to FALSE, while all
+                other values are equivalent to TRUE.
+
+   <U>statement</U>    Any legal statement.  The single-line mode's statement can
+                be just a line number or line label.  This is equivalent
+                to a GOTO statement with the specified label.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    Each <U>expression</U> in the IF/ELSEIF construct is tested in
+                order.  As soon as an <U>expression</U> is found to be TRUE, then
+                its corresponding statements are executed.  If no
+                expressions are TRUE, then the statements following the
+                ELSE keyword are executed.  If ELSE is not specified, then
+                execution continues with the statement following the ENDIF
+                or the single-line IF statement.
+
+                The only difference between QuickBASIC's one-line
+                construct and that of interpreted BASIC is that QuickBASIC
+                allows the use of labels as well as numbered lines.
+
+                In the block construct, the following rules apply:
+
+                    IF, ELSE, ELSEIF, and ENDIF must all be the first
+                    keywords on their respective lines.
+
+                    THEN must be the last keyword on its line; if anything
+                    other than a comment follows on the same line with
+                    THEN, QuickBASIC thinks it's reading a single-line
+                    IF/THEN/ELSE construct.
+
+                IF blocks may be nested.
+
+                Do not put a colon before the ELSE keyword.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng209fe.html">ON...GOTO</A>
+<A HREF="ng20631.html">ON...GOSUB</A>
+<A HREF="ng2d400.html">SELECT</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

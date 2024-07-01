@@ -1,0 +1,59 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng1e384.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1f18c.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>ON PEN                   Trap for Light Pen Activity</B>
+
+ <B>ON</B> <B>PEN</B> <B>GOSUB</B> {<U>linenum</U> | <U>linelabel</U>}
+
+    Establishes a subroutine to which QuickBASIC will branch if it detects
+    light pen activity. The trap must also be turned on by means of a PEN
+    ON statement.
+
+     <U>linenum</U>    The first line of a pen-handling subroutine. Setting
+                <U>linenum</U> to 0 disables trapping.
+
+   <U>linelabel</U>    A label identifying the first line of a pen-handling
+                routine.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    {<U>linenum</U> | <U>linelabel</U>} must be defined at the main program
+                level.
+
+                When activity is detected, QuickBASIC branches to the
+                specified subroutine and temporarily suspends trapping (by
+                means of an implicit PEN STOP statement). Trapping
+                automatically resumes when a RETURN from the handling
+                subroutine is executed (unless the handler explicitly
+                performs a PEN OFF or PEN STOP).
+
+                All event trapping is temporarily disabled when QuickBASIC
+                is executing an error-handling routine (established via an
+                ON ERROR statement).
+
+                If the "Checking Between Statements" option is in effect,
+                QB checks after each statement. If the "Event Trapping"
+                option is selected, QB checks after each new program line.
+                If neither option is selected, no trapping takes place.
+
+                For command-line compilation, /v enables checking after
+                each statement, and /w enables checking after each new
+                line. If neither switch is used, no trapping takes place.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng2434c.html">PEN (Statement)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

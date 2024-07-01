@@ -1,0 +1,45 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng1250d.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng12b5a.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>GET                      Read Random File into Buffer                File I/O</B>
+
+ <B>GET</B> [#]<U>filenum</U> [,<U>recnum</U>]
+
+    Transfers a record from a specified random access file into the
+    associated random file buffer.
+
+     <U>filenum</U>    The number under which the file was OPENed.
+
+      <U>recnum</U>    A numeric expression in the range 1 to 16,777,215,
+                specifying the number of the record to be transferred.
+                Defaults to the next record, or record 1 (if no previous
+                record has been read).
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    After a record has been transferred from disk to the
+                random file buffer, its data may be accessed via INPUT #,
+                LINE INPUT #, or references to variables defined in a
+                FIELD statement.
+
+                If the file associated with <U>filenum</U> is a communications
+                file, then <U>recnum</U> specifies the number of bytes to read.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng20da4.html">OPEN</A>
+<A HREF="ng298af.html">PUT (File I/O)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

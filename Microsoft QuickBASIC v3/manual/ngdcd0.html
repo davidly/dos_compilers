@@ -1,0 +1,57 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ngd96b.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="nge1c2.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>DIM                      Dimension Array(s)</B>
+
+ <B>DIM</B> [SHARED] <U>variable</U>(<U>subscripts</U>)[,<U>variable</U>(<U>subscripts</U>)]...
+
+    Defines the maximum subscript numbers for and allocates storage for
+    one or more arrays.
+
+      SHARED    An optional attribute. Arrays DIMensioned in a main
+                program as SHARED may be shared with all subprograms that
+                are compiled with that main program.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    Arrays with a maximum subscript of 10 may be used without
+                a DIM statement. Arrays with subscripts larger than 10
+                must be DIMensioned before they are used.
+
+                The first element of an array is element 0, unless the
+                OPTION BASE statement has been used to change the starting
+                element from 0 to 1.
+
+                Static arrays may not be redimensioned. Dynamic arrays may
+                be redimensioned after an ERASE statement or by means of a
+                REDIM statement.
+
+                A DIM for a dynamic array is an executable statement and
+                must appear after any COMMON statements.
+
+                The compiler does not perform bounds checking on array
+                usage unless the program is compiled with the /d (debug)
+                option.
+
+                The maximum number that can be DIMensioned in a DIM
+                statement is 63.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ngff2b.html">ERASE</A>
+<A HREF="ng22467.html">OPTION BASE</A>
+<A HREF="ng2a6f2.html">REDIM</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

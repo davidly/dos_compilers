@@ -1,0 +1,67 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2659c.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng26f10.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>PRINT                    Display on Screen</B>
+
+ <B>PRINT</B> [<U>exprlist</U>][{, | ;}]
+
+    Displays one or more numeric or string expressions on screen.
+
+    <U>exprlist</U>    Numeric and/or string expressions to print. Each
+                expression must be separated from the one after it by
+                either a comma or a semicolon.
+
+           ;    If included at the end of the statement, suppresses the
+                usual carriage return and line feed.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    QuickBASIC divides the screen into zones of 14 character
+                positions. If an expression is followed by a comma,
+                QuickBASIC displays the next expression at the beginning
+                of the next screen zone. If an expression is followed by a
+                semicolon or space character, QuickBASIC displayed the
+                next expression directly after the last expression.
+
+                If the last expression in the list to be displayed is
+                followed by a comma, a semicolon, SPC, or TAB, QuickBASIC
+                spaces appropriately and suppresses its usual carriage
+                return-line feed pair. Otherwise, QuickBASIC issues a
+                carriage return and line feed after executing a PRINT
+                statement.
+
+                QuickBASIC also issues a carriage return and line feed if
+                the display of a list of expressions reaches the character
+                position specified by the most recent WIDTH statement (or
+                column 80, if no WIDTH statement has been executed).
+
+                Numbers are always followed by a space on the right.
+                Positive numbers are preceded by a space, and negative
+                numbers are preceded by a minus sign.
+
+                If no list of expressions is supplied, PRINT just issues a
+                carriage return and line feed.
+
+                Note that QuickBASIC does not allow the use of ? as a
+                synonym for PRINT.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng19d58.html">LPRINT</A>
+<A HREF="ng26f10.html">PRINT #</A>
+<A HREF="ng28508.html">PRINT USING</A>
+<A HREF="ng27378.html">PRINT # USING</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

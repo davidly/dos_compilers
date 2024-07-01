@@ -1,0 +1,49 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2434c.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng24ced.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>PLAY                     Enable/Disable Music Trap                  Statement</B>
+
+ <B>PLAY</B> {ON | OFF | STOP}
+
+    Enables or disables the ON PLAY trap.
+
+          ON    PLAY ON enables checking of the background music buffer.
+
+         OFF    PLAY OFF disables checking of the background music buffer.
+                This is the default condition.
+
+        STOP    PLAY STOP inhibits trapping. QuickBASIC continues checking
+                the buffer, and if the notes remaining are fewer than
+                specified in the ON PLAY statement, a subsequent PLAY ON
+                results in an immediate trap.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the "Checking Between Statements" option is in effect,
+                QB checks for communication activity after each statement.
+                If the "Event Trapping" option is selected, QB checks
+                after each new program line. If neither option is
+                selected, no trapping takes place.
+
+                For command-line compilation, /v enables checking after
+                each statement, and /w enables checking after each new
+                line. If neither switch is used, no trapping takes place.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng1f18c.html">ON PLAY(n)</A>
+<A HREF="ng24ced.html">Play (Function)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

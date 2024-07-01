@@ -1,0 +1,54 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng314eb.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng31b33.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>UNLOCK                   Remove File or Record Access Lock</B>
+
+ <B>LOCK</B> [#] <U>filenum</U> [,{<U>record</U> | [<U>start</U>] TO <U>end</U>}]
+ .
+ . [statements]
+ .
+ UNLOCK [#] <U>filenum</U> [,{<U>record</U> | [<U>start</U>] TO <U>end</U>}]
+
+    Removes a previously set file or record lock.
+
+     <U>filenum</U>    The number under which the file was OPENed.
+
+      <U>record</U>    The number of a record to be LOCKed or UNLOCKed.
+
+       <U>start</U>    The number of the first record to be LOCKed or UNLOCKed.
+
+         <U>end</U>    The number of the last record to be LOCKed or UNLOCKed.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the file specified by <U>filenum</U> has been opened for
+                random access, you may lock either a single record number
+                (with the record argument) or a range of record numbers.
+                If you specify a range and omit the <U>start</U> argument, all
+                records from the beginning of the file to <U>end</U> are locked.
+
+                If the file specified by <U>filenum</U> was opened for sequential
+                input or output, the entire file is locked.
+
+                LOCK requires DOS 3.0 or later and SHARE.EXE.
+
+                It is important to UNLOCK all LOCKed records before
+                closing the file.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng1905a.html">LOCK</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,64 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng13f30.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng147de.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>INKEY$                   Most Recent Character at Keyboard</B>
+
+<U>s$</U> = <B>INKEY$</B>
+
+    Returns, without echo, the character most recently entered into the
+    keyboard buffer, or a null string if no character is pending.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    The system variable INKEY$ must be assigned to an ordinary
+                string variable before it can be used in a BASIC
+                statement.
+
+                If the most recent character is one of the 255 IBM ASCII
+                characters, INKEY$ returns that character only. If the
+                most recent character is a "special" character--a function
+                key or a cursor keypress, for example--INKEY$ returns a
+                two-byte string; the first byte is 00h, and the second
+                byte is the extended code corresponding to the key
+                pressed.
+
+                If a key defined with the KEY statement is pressed, then
+                INKEY$ will return with the sequence of characters mapped
+                to the key as if the characters had been entered
+                independently.
+
+                Cursor control keys, such as TAB and BACKSPACE, will be
+                returned to INKEY$ without processing (in "raw" mode).
+
+                The following keys have special functions and will not be
+                returned through INKEY$:
+
+                    Ctrl-Break          Terminates the program unless the
+                                        Keyboard break option in the
+                                        Options menu was turned off.
+                    Ctrl-Alt-Del        Resets the computer system.
+                    Ctrl-NumLock        Suspends the system.
+                    Shift-PrtScrn       Prints the current screen display.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng148c5.html">INPUT</A>
+<A HREF="ng151dd.html">INPUT #</A>
+<A HREF="ng157f1.html">INPUT$</A>
+<A HREF="ng18196.html">LINE INPUT</A>
+<A HREF="ng18562.html">LINE INPUT #</A>
+<A HREF="ng3c7f0.html">Keyboard Codes</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

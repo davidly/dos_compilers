@@ -1,0 +1,99 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+[&lt;&lt;Previous Entry]
+[^^Up^^]
+[Next Entry&gt;&gt;]
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>               Command-Line Switches and Compiler Options</B>
+
+ <B>Command-line syntax:</B>
+
+ <B>QB [</B><U>source</U><B>] [/b] [/g] [/l</B><U>library</U><B>]] [c:</B><U>buffsize</U><B>] [</B><U>options</U><B>] [/cmd</B><U>string</U><B>]</B>
+
+      <U>source</U>    A source code file that's loaded when QB is invoked.
+
+          <B>/b</B>    Turns off the color burst. For use with composite displays
+                attached to CGAs.
+
+          <B>/g</B>    Turns off snow suppression. Produces faster screen update,
+                but may also produce snow. Has no effect on screens
+                attached to Monochrome Display Adapters or EGAs.
+
+<B>   /l</B><U>library</U>    Loads a specified user library. The argument <U>library</U>
+                defaults to USERLIB.EXE.
+
+  <B>c:</B><U>buffsize</U>    Specifies the size, in bytes, of the buffer for receiving
+                communications data. Default: 256 bytes, maximum: 32767
+                bytes. The transmit buffer is fixed at 128 bytes.
+
+     <U>options</U>   Specifies one or more compiler options. See below.
+
+  /<B>cmd</B><U>string</U>    Passes arguments at run time to a memory-compiled program.
+                Everything from /cmd to the carriage return is accessible
+                via the COMMAND$ function.
+
+ <B>Compiler options</B>
+
+          <B>/d</B>    <U>Debug</U>. Generates code that checks for arithmetic overflow,
+                array bounds, RETURNs without GOSUBs, and Ctrl-Break. Also
+                produces line number references for runtime errors and
+                enables the use of TRON and TROFF.
+
+          <B>/e</B>    <U>On Error</U>. For use when the program includes one or more ON
+                ERROR GOTO linenumber constructions.
+
+        <B>/MBF    </B><U>Microsoft Binary Format</U>. Designed to be used with the math
+                coprocessor version of QuickBASIC, /MBF reads data in
+                files stored via previous versions of BASIC and converts
+                it from Microsoft Binary Format to IEEE floating-point
+                format. The files are converted as they are read in, and
+                reconverted to MBF as they are written back to disk. An
+                alternative to the use of CVSMBF and CVDMBF, the /MBF
+                option allows you to preserve your original data files, so
+                they may be accessed on machines without coprocessors.
+
+          <B>/o</B>    <U>Obj(BCOM.LIB)</U>. Produces an object file linked with
+                selected routines from BCOM.LIB, instead of with BRUN.LIB.
+                Programs compiled in this manner are likely to use less
+                RAM and run faster, but take up more disk space. CHAIN and
+                COMMON are not supported by BCOM.LIB. For more
+                information, see Appendix D of the QuickBASIC manual.
+
+          <B>/q</B>    <U>Speed</U>. Optimizes for fast execution at the expense of
+                program size.
+
+          <B>/r</B>    <U>Arrays in Row Order</U>. Instructs the compiler to store
+                arrays in row order, so that, for example, ARRAY(2,1)
+                would be followed by ARRAY(2,2) instead of by ARRAY(3,1).
+                The compiler's (and the interpreter's) default storage is
+                in column order.
+
+          <B>/s</B>    <U>Turns off the Minimize String Data option</U>. By default, the
+                compiler references duplicate string literals at the same
+                memory location, in order to minimize storage
+                requirements. That requires it to keep all strings in
+                memory throughout compilation. Some programs with large
+                numbers of strings may cause memory overflow errors as a
+                result. The /s option turns off this default.
+
+          <B>/v</B>    <U>Checking Between Statements</U>. Enables event trapping, with
+                checking after each statement instead of after each
+                program line.
+
+          <B>/w</B>    <U>Event Trapping</U>. Enables event trapping, with checking
+                after each program line.
+
+          <B>/x</B>    <U>Resume Next</U>. For use with programs that contain one or
+                more RESUME, RESUME NEXT, or RESUME 0 statements.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,39 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng18562.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng18b5e.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>LOC                      Current File Position</B>
+
+ <U>y</U> = <B>LOC</B>(<U>filenum</U>)
+
+    Returns the record number last read from or written to a specified
+    (open) file.
+
+     <U>filenum</U>    The number under which the file was OPENed.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    When a sequential file is opened for input, the first
+                sector is automatically read, so LOC(<U>filenum</U>) for a newly
+                opened sequential file returns 1. LOC(<U>filenum</U>) for a
+                sequential file opened for OUTPUT or APPEND returns the
+                current byte position divided by 128.
+
+                If <U>filenum</U> specifies a communications file, LOC returns
+                the number of characters waiting in the communications
+                buffer. If that number is larger than 255, LOC returns
+                255.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

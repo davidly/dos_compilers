@@ -1,0 +1,40 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng25c31.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2627a.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>POINT                    Attribute or Value at Screen Location</B>
+
+ <U>y</U> = <B>POINT</B>({<U>x</U>,<U>y</U> | <U>n</U>})
+
+    Returns the attribute of a specified screen coordinate or coordinate
+    information about the current screen location.
+
+         <U>x</U>,<U>y</U>    Screen coordinates. POINT(<U>x</U>,<U>y</U>) returns the attribute of
+                the screen location specified by the two arguments. The
+                screen coordinates must be given in absolute form (STEP is
+                not allowed). If either coordinate is out of range, POINT
+                returns -1.
+
+           <U>n</U>    Must be 0, 1, 2, or 3. POINT(<U>n</U>) returns the following
+                information about the current screen location:
+
+                If <U>n</U> = 0      the current physical x coordinate.
+                If <U>n</U> = 1      the current physical y coordinate.
+                If <U>n</U> = 2      the current world x coordinate, if WINDOW is
+                    active; otherwise, the current physical x coordinate.
+                If <U>n</U> = 3      the current world y coordinate, if WINDOW is
+                    active; otherwise, the current physical y coordinate.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

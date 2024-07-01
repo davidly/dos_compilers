@@ -1,0 +1,47 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng30e94.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng31353.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>TIMER                    Enable/Disable Timer Trap                  Statement</B>
+
+ <B>TIMER</B> {ON | OFF | STOP}
+
+    Enables or disables event trapping via ON TIMER.
+
+          ON    Causes QB to check the timer.
+
+         OFF    Causes QB not to check the timer. This is the default
+                condition.
+
+        STOP    Also disables trapping, but QB continues checking. If the
+                specified amount of time has elapsed, a subsequent TIMER
+                ON results in an immediate trap (provided an ON TIMER
+                statement with a nonzero line number has been executed).
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the "Checking Between Statements" option is in effect,
+                QB checks after each statement. If the "Event Trapping"
+                option is selected, QB checks after each new program line.
+                If neither option is selected, no trapping takes place.
+
+                For command-line compilation, /v enables checking after
+                each statement, and /w enables checking after each new
+                line. If neither switch is used, no trapping takes place.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng1ff42.html">ON TIMER</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

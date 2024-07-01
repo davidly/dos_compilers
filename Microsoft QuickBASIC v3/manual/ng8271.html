@@ -1,0 +1,56 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng7fd0.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng86fb.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>CLS                      Clear Screen</B>
+
+ <B>CLS</B> [0 | 1 | 2]
+
+    Clears the screen, as described below, and returns the cursor to the
+    Home position (row 1, column 1).
+
+           0    CLS 0 clears all text and graphics.
+
+           1    CLS 1 clears just the graphics viewport, if a VIEW
+                statement has been issued. If no VIEW statement has been
+                issued, CLS 1 clears the entire screen.
+
+           2    CLS 2 clears just the text window. The bottom screen line
+                (line 25 or line 43) is left unchanged.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    CLS with no argument clears the entire screen, unless a
+                VIEW statement has been used to create a viewport in
+                graphics mode--in which case CLS clears only the current
+                viewport.
+
+                CLS resets the "last point referenced" (LPR) so that the
+                next graphics command that uses the STEP option references
+                the center of the screen.
+
+                In text mode, CLS clears the active page to the background
+                color. In graphics mode, CLS clears the entire screen
+                buffer to the background color.
+
+                Other ways to clear the screen include SCREEN, WIDTH, and
+                Ctrl-Home.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng86fb.html">COLOR</A>
+<A HREF="ng2c52c.html">SCREEN</A>
+<A HREF="ng32510.html">VIEW</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

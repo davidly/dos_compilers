@@ -1,0 +1,88 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng119e5.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1250d.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>FOR                      Begin Definition of FOR/NEXT Loop</B>
+
+ <B>FOR</B> <U>counter</U> = <U>start</U> <B>TO</B> <U>end</U> [STEP <U>increment</U>]
+ .
+ . [<U>statements</U>]
+ .
+ [EXIT FOR]
+ <B>NEXT</B> [<U>counter</U> [,<U>counter</U>...]]
+
+    Begins the definition of a FOR/NEXT loop.
+
+     <U>counter</U>    A numeric variable to be used as the loop counter. All
+                numeric types are allowed, but the loop executes fastest
+                if <U>counter</U> is an integer variable.
+
+       <U>start</U>    A numeric expression; the starting value of <U>counter</U>.
+
+         <U>end</U>    A numeric expression; the ending value of <U>counter</U>.
+
+   <U>increment</U>    A numeric expression; the value by which <U>counter</U> is
+                incremented or decremented with each iteration of the
+                loop. Defaults to +1.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    BASIC begins processing of the FOR/NEXT block by setting
+                <U>counter</U> equal to <U>start</U>. Then, if <U>increment</U> is positive and
+                <U>counter</U> is not greater than <U>end</U>, the statements between
+                the FOR statement and the NEXT statement are executed.
+                When the NEXT statement is encountered, <U>counter</U> is
+                increased by <U>increment</U>, and the process is repeated.
+                Execution passes to the statement following the NEXT
+                statement if <U>counter</U> is greater than <U>end</U>.
+
+                If <U>increment</U> is negative, execution of the FOR/NEXT loop
+                is terminated whenever <U>counter</U> becomes less than <U>end</U>.
+
+                If <U>increment</U> is 0, execution of the FOR/NEXT loop
+                continues until Ctrl-Break is pressed (unless one of the
+                repeated instructions itself increments <U>counter</U>).
+
+                Note that changes made within the FOR/NEXT loop to <U>counter</U>
+                affect the number of times the loop instructions are
+                executed; changes made to <U>start</U>, <U>end</U>, and <U>increment</U>,
+                however, do not have this effect.
+
+                There must be one and only one NEXT statement for each FOR
+                statement. Inclusion of <U>counter</U> in the NEXT statement is
+                optional; if <U>counter</U> is omitted, its value is assumed to
+                be that of <U>counter</U> in the most recent FOR statement.
+
+                FOR/NEXT loops may be nested within one another. Each FOR
+                must be given a unique <U>counter</U> value and each nested FOR
+                must have its NEXT statement appear within the enclosing
+                FOR-NEXT block.
+
+                Nested loops that have a common termination point may use
+                a single NEXT statement with values of <U>counter</U> matching
+                the values for each FOR statement.
+
+                The loop is skipped completely if <U>start</U> is greater than
+                <U>end</U> and <U>increment</U> is positive, or <U>start</U> is less than <U>end</U>
+                and <U>increment</U> is negative.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="nge1c2.html">DO</A>
+<A HREF="ng1982e.html">LOOP</A>
+<A HREF="ng1ca3c.html">NEXT</A>
+<A HREF="ng33204.html">WEND</A>
+<A HREF="ng335b1.html">WHILE</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

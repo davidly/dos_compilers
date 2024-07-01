@@ -1,0 +1,55 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng6db8.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng7372.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>CHAIN                    Transfer to Another Program</B>
+
+ <B>CHAIN</B> <U>filespec</U>
+
+    Transfers control to another program.
+
+    <U>filespec</U>    A string expression that follows DOS file naming
+                conventions; If no extension is supplied, an extension of
+                .EXE is assumed.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the calling program and the chained-to program are both
+                compiled with the default library, BRUN20.LIB, variables
+                may be passed to the chained-to program via COMMON, and
+                files opened by the calling program remain open to the
+                CHAINed program.
+
+                The alternate library, BCOM20.LIB does not support COMMON,
+                and in programs compiled with BCOM20.LIB, a CHAIN
+                statement is equivalent to a RUN statement (i.e., open
+                files are closed before the CHAINed program is executed).
+
+                Note the following differences between QuickBASIC and the
+                BASIC interpreter:
+
+                1.  The interpreter assumes a .BAS extension for the
+                    chained-to <U>filespec</U>; QuickBASIC assumes .EXE. The only
+                    explicit <U>filespec</U> extension allowed in QuickBASIC is
+                    .EXE.
+
+                2.  QuickBASIC does not support the ALL, MERGE, DELETE,
+                    and <U>line</U> options of the interpreted BASIC CHAIN
+                    statement.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="nga150.html">COMMON</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

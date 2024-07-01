@@ -1,0 +1,96 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2c52c.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2d400.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>SCREEN                   Set Screen Attributes                      Statement</B>
+
+ <B>SCREEN</B> [<U>mode</U>][,[<U>colorflag</U>]][,[<U>apage</U>]][,[<U>vpage</U>]]
+
+    Sets screen parameters for use by subsequent statements.
+
+        <U>mode</U>    A numeric expression. Must be 0, 1, 2, 7, 8, 9, or 10. See
+                table below.
+
+   <U>colorflag</U>    A numeric expression. Turns color on or off for composite
+                monitors (color is always on for RGB monitors). In text
+                mode, a zero value turns color off; a nonzero value turns
+                color on. Works the opposite way in medium-resolution
+                graphics mode: A zero value turns color on, while a
+                nonzero value turns color off. In screen mode 2, <U>colorflag</U>
+                is irrelevant.
+
+       <U>apage</U>    An integer expression specifying the active screen page
+                (the page written to by statements that output to the
+                screen). Valid only in screen modes 0, 7, 8, 9, and 10.
+                Legal values depend on screen mode (see table below).
+
+       <U>vpage</U>    An integer expression specifying the visual screen page
+                (the page displayed on screen; may be different from the
+                active page). Valid only in screen modes 0, 7, 8, 9, and
+                10. Legal values depend on screen mode (see table below).
+
+    <B>Screen modes:</B>
+
+------------------------------------------------------------------------
+SCREEN 0  | 40 x 25 text | 16 colors, 2 attributes (CGA) | MDA, CGA, EGA
+          | 80 x 25 text | 16 colors, 16 attributes (EGA |
+----------+--------------+-------------------------------+--------------
+SCREEN 1  | 320 x 200    | 16 colors, 4 attributes       | CGA, EGA
+          | 40 x 25 text |                               |
+----------+--------------+-------------------------------+--------------
+SCREEN 2  | 640 x 200    | 16 colors, 2 attributes       | CGA, EGA
+          | 80 x 25 text |                               |
+----------+--------------+-------------------------------+--------------
+SCREEN 7  | 320 x 200    | 16 colors, 16 attributes      | EGA only
+          | 40 x 25 text | 2 pages if 64K on EGA         |
+          |              | 4 pages if 128K on EGA        |
+          |              | 8 pages if 256K on EGA        |
+----------+--------------+-------------------------------+--------------
+SCREEN 8  | 640 x 200    | 16 colors, 16 attributes      | EGA only
+          | 80 x 25 text | 1 page if 64K on EGA          |
+          |              | 2 pages if 128K on EGA        |
+          |              | 4 pages if 256K on EGA        |
+----------+--------------+-------------------------------+--------------
+SCREEN 9  | 640 x 350    | 16 colors, 16 attributes      | EGA only
+          | 80 x 25 text |    if &gt;64K on EGA;            |
+          |   in 8 x 14  | 16 colors, 4 attributes       |
+          |   matrix     |    if 64K on EGA;             |
+          |              | 2 pages if 256K on EGA        |
+----------+--------------+-------------------------------+--------------
+SCREEN 10 | 640 x 350    | 9 pseudo colors, 4 attributes | EGA only
+          | 80 x 25 text | 2 pages if 256K on EGA        |
+          |   in 8 x 14  |                               |
+          |   matrix     |                               |
+------------------------------------------------------------------------
+
+      <B>Notes:</B>    All arguments are optional; omitted parameters retain
+                former values.
+
+                All display pages share a single cursor. Therefore, it's
+                advisable to save cursor position (with POS and CSRLIN)
+                when switching pages.
+
+                If a valid SCREEN statement results in a new display mode,
+                BASIC erases the screen and sets colors to white
+                (foreground) on black (background and border). If a SCREEN
+                statement does not produce a new display mode, BASIC does
+                not erase the screen.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng86fb.html">COLOR</A>
+<A HREF="ng23171.html">PALETTE</A>
+<A HREF="ng23637.html">PALETTE USING</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

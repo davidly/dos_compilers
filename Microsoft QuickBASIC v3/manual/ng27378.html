@@ -1,0 +1,130 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng26f10.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng28508.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>PRINT # USING            Formatted Output to File</B>
+
+ <B>PRINT</B> <B>#</B><U>filenum</U>, USING <U>strexpr</U>; <U>exprlist</U>[;]
+
+    Writes to a specified disk file an image of what would be displayed on
+    screen by a corresponding PRINT USING statement.
+
+     <U>filenum</U>    The number under which the file was OPENed.
+
+     <U>strexpr</U>    A string variable or constant specifying the format in
+                which the data is to be printed (see below).
+
+    <U>exprlist</U>    Numeric and/or string expressions to print. Each
+                expression must be separated from the one after it by
+                either a comma or a semicolon.
+
+           ;    If included at the end of the statement, suppresses the
+                usual carriage return and line feed.
+
+    <B>Formatting options:</B>
+
+    The following symbols may be used in strexpr:
+
+      Symbol    Meaning
+
+           !    Print only the first character of a string expression.
+
+        \  \    Print only the first <U>n</U> characters of a string expression,
+                where <U>n</U> is the number of spaces between the two
+                backslashes. If <U>n</U> is larger than the number of characters
+                in the string expression, QuickBASIC pads the string
+                expression on the right with space characters.
+
+           &amp;    Print a string expression without reformatting it.
+
+           .    Specifies the position of the decimal point in a numeric
+                expression.
+
+           #    A place-holder. If the numeric expression has more digits
+                to the right of the decimal point than the format string
+                has #s, QuickBASIC rounds. If the numeric expression has
+                more digits to the left of the decimal point than the
+                format string has #s, QuickBASIC prints all the digits to
+                the left of the decimal point and also prints a percent
+                sign (%) to the left of the number. If the numeric
+                expression has fewer digits to the left of the decimal
+                point than the format string has #s, QuickBASIC right-
+                justifies the number; that is, it pads the number on the
+                left with spaces. (But if there are any #s to the left of
+                the decimal point in the format string, QuickBASIC always
+                prints at least one digit--a 0 if necessary--to the left
+                of the decimal point.)
+
+           +    Print a plus or minus sign, as appropriate, to the left of
+                the number. The sign is always printed immediately to the
+                left of the number.
+
+           -    Print a minus sign immediately to the right of a negative
+                number (the minus sign should appear after the place
+                holders in the format string).
+
+          $$    Print a dollar sign immediately to the left of the number.
+                The double dollar sign also acts as a place holder for two
+                additional digits to the left of the decimal point, one of
+                which is the dollar sign itself. The dollar sign cannot be
+                prefixed to a number printed in exponential format.
+
+          **    Fill any leading spaces with asterisks. The double
+                asterisk also acts as a place holder for two additional
+                digits to the left of the decimal point.
+
+         **$    Print a dollar sign immediately to the left of the number,
+                and fill any remaining leading spaces with asterisks. The
+                combination of two asterisks and a dollar sign also acts
+                as a place holder for three additional digits, one of
+                which is the dollar sign.
+
+        ^^^^    Print a number in exponential format. The four carets
+                should appear after all place holders in the format
+                string.
+
+           _    Print next character as a literal. The combination _#, for
+                example, allows you to include a number sign as a literal
+                in your numeric format.
+
+     [other]    Characters other than the foregoing may be included as
+                literals in the format string. Thus, for example, a single
+                dollar sign may be positioned to the left of a series of
+                place holders (#s) to achieve vertically aligned dollar
+                signs, and space characters may be placed at the right
+                side of the format string to achieve horizontal separation
+                between a series of numbers.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    PRINT # USING outputs exactly the same characters that
+                would appear on screen in response to a PRINT USING
+                statement. Commas between expressions, for example, result
+                in the insertion of space.
+
+                If an expression to be output contains significant quote
+                marks or commas, you should surround it with quote marks
+                by means of CHR$(34); otherwise, when you input these
+                fields, QuickBASIC will interpret the significant commas
+                or quotes as delimiters.
+
+                Double-precision numbers in IEEE format may have three-
+                digit exponents. To print numbers with three-digit
+                exponents, use five carets instead of four.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng28508.html">PRINT USING</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

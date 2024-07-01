@@ -1,0 +1,50 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng335b1.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng33e32.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>WIDTH                    Set Output Width</B>
+
+ <B>WIDTH</B> [{#<U>filenum</U> | <U>device</U>},] <U>width</U>[,<U>lines</U>]   or   <B>WIDTH</B> <B>LPRINT</B> <U>width</U>
+
+    Sets the maximum width for a specified output device; QuickBASIC sends
+    a carriage return to the device when the specified width has been
+    reached.
+
+       <U>width</U>    A numeric expression in the range 0 to 255. A value of 0
+                is equivalent to a value of 1.
+
+      <U>device</U>    A string expression. Legal values are "SCRN:", "LPT1:",
+                "LPT2:", "LPT3:", "COM1:", "COM2:", and their lowercase
+                equivalents.
+
+     <U>filenum</U>    A numeric expression in the range 1 to 15; specifies a
+                file opened for output.
+
+       <U>lines</U>    A numeric expression; must be either 25 or 43. This
+                argument is valid only if <U>device</U> is "SCRN" or if the
+                {#<U>filenum</U> | <U>device</U>} argument is omitted. <U>lines</U> allows you
+                to specify 43-line screen mode on systems equipped with an
+                EGA.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    WIDTH size and WIDTH "SCRN:" size both set the screen
+                width. In this case, size must be either 40 or 80 (only 80
+                is allowed on the IBM Monochrome Display).
+
+                WIDTH LPRINT width sets the width of all subsequent LPRINT
+                output.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

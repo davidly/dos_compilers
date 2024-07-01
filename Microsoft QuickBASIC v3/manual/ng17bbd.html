@@ -1,0 +1,55 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng17a25.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng18196.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>LINE                     Draw Line or Box</B>
+
+ <B>LINE</B> [[STEP] (<U>x1</U>,<U>y1</U>)] - [STEP] (<U>x2</U>,<U>y2</U>) [,[<U>color</U>] [,B[F]]] [,<U>style</U>]
+
+    Draws a line or a box at specified coordinates, in a specified color.
+
+        STEP    If included, coordinates are relative to last graphics
+                point referenced. If omitted, coordinates are absolute.
+
+       <U>x1</U>,<U>y1</U>    If ,B option is used, <U>x1</U>,<U>y1</U> and <U>x2</U>,<U>y2</U> are corner
+       <U>x2</U>,<U>y2</U>    coordinates of a rectangular box; otherwise <U>x1</U>,<U>y1</U> and
+                <U>x2</U>,<U>y2</U> are end points of a line.
+
+       <U>color</U>    Specifies color to use . Defaults to 3 in medium
+                resolution, 1 in high resolution.
+
+           B    Tells BASIC to draw a rectangular box instead of a line.
+
+           F    Tells BASIC to fill the box.
+
+       <U>style</U>    Allows you to draw a broken (dashed) line or box (see
+                below).
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If STEP is included with <U>x2</U>,<U>y2</U> but not <U>x1</U>,<U>y1</U>, then <U>x2</U> and
+                <U>y2</U> are measured relative to the absolute coordinate pair
+                (<U>x1</U>,<U>y1</U>).
+
+                QuickBASIC treats <U>style</U> as a 16-bit integer mask, plotting
+                the 1 bits and skipping the 0 bits, and repeating the
+                pattern as many times as necessary to create the specified
+                line. Thus a style value of 43690 (AAAAh,
+                1010101010101010b) would produce an evenly dotted line or
+                box, with every other pixel plotted. Note that QuickBASIC
+                ignores the "off" pixels; it does not plot them in the
+                background color.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

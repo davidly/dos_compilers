@@ -1,0 +1,101 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng20da4.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng22467.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>OPEN "COM...             Open a Communications File</B>
+
+ <B>OPEN</B> "COMn: [<U>speed</U>] [,<U>parity</U>] [,<U>data</U>] [,<U>stop</U>] [,RS] [,CS[<U>m</U>]] [,DS[<U>m</U>]]
+ [,CD[<U>m</U>]] [,LF] [,BIN] [,ASC]" [FOR <U>mode</U>] AS [#]<U>filenum</U> [LEN=<U>num</U>]
+
+    Opens a communications device for input and output via GET and PUT.
+
+    <B>Required arguments:</B>
+
+           <U>n</U>    A numeric expression. Must be either 1, for COM1:, or 2,
+                for COM2:. An asynchronous adapter must be installed.
+
+     <U>filenum</U>    An integer expression specifying a valid file number.
+
+    <B>Optional arguments (all must be constants):</B>
+
+       <U>speed</U>    Transfer rate, in bits per second. Default: 300. Other
+                legal values: 75, 110, 150, 600, 1200, 1800, 2400, 4800,
+                and 9600.
+
+      <U>parity</U>    Type of parity checking, if any. Default: E, for EVEN.
+                Other legal values: S (SPACE), O (ODD), M (MARK), and <U>N</U>
+                (NONE). parity must be set to <U>N</U> if data is set to 8.
+
+        <U>data</U>    Number of data bits to be transmitted. Default: 7. Other
+                legal values: 5, 6, and 8.
+
+        <U>stop</U>    Number of stop bits. Must be 1 or 2. Default: 2, for 75
+                and 110 bps; 1, for all other transmission rates.
+
+          RS    If included, suppresses RTS (Request to Send). If not
+                included, OPEN "COM..." automatically turns the RTS line
+                on.
+
+         CS<U>m</U>    If included, controls CTS (Clear to Send). <U>m</U> specifies, in
+                milliseconds, the delay before a timeout occurs. Default:
+                1000. Acceptable values: 0 to 65535. If <U>m</U> is 0, the CS
+                argument is ignored. If RTS is suppressed via the RS
+                parameter, the default CS time is 0 milliseconds.
+
+         DS<U>m</U>    If included, controls DSR (Data Set Ready). <U>m</U> specifies,
+                in milliseconds, the delay before a timeout occurs;
+                acceptable values are 0 to 65535. Default: 1000. If <U>m</U> is
+                0, the DS argument is ignored.
+
+         CD<U>m</U>    If included, controls CD (Carrier Detect). <U>m</U> specifies, in
+                milliseconds, the delay before a timeout occurs;
+                acceptable values are 65535. Default: 0. If <U>m</U> is 0, the CD
+                argument is ignored.
+
+          LF    If included, sends a line feed after each carriage return.
+
+     LEN=<U>num</U>    If included, <U>num</U> specifies the maximum number of bytes
+                that can be read from the communications buffer via GET or
+                PUT. Default: 128.
+
+         BIN    Opens the device in binary mode. This argument overrides
+                an LF argument.
+
+         ASC    Opens the device in ASCII mode. Tabs are converted to
+                spaces, carriage returns are issued at the end of each
+                line, Ctrl-Z is read as EOF, and XON/XOFF is enabled.
+
+    FOR <U>mode</U>    <U>mode</U> may be OUTPUT, for sequential output, or INPUT, for
+                sequential input. If this argument is omitted, the device
+                is opened for random access (input and output).
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    The speed, parity, data, and stop arguments must be
+                presented in that order. Use commas as placeholders for
+                omitted arguments.
+
+                The remaining arguments--RS, CS, DS, CD, LF, BIN, and ASC
+                may be specified in any order.
+
+                Communications devices are opened in binary mode by
+                default, unless an ASC argument is included in the OPEN
+                COM statement.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng9a3c.html">COM(n)</A>
+<A HREF="ng1d78d.html">ON COM</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

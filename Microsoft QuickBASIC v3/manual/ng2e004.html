@@ -1,0 +1,45 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2dcc2.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2e3eb.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>SHELL                    Execute DOS Command</B>
+
+ <B>SHELL</B> [<U>commandstr</U>]
+
+    Loads a secondary copy of COMMAND.COM and, optionally, executes an
+    .EXE, .COM, or .BAT program, or an internal DOS command.
+
+  <U>commandstr</U>    A string expression. If omitted, SHELL leaves the user at
+                the DOS command prompt. To return to the QuickBASIC
+                program, the user types EXIT.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the SHELLed program is a batch file, its last statement
+                should be EXIT.
+
+                Parameters may be passed to the SHELLed program in the
+                usual DOS fashion. Any words in <U>commandstr</U> that are
+                separated from the program name by one or more spaces are
+                considered parameters for the SHELLed program.
+
+                It is not advisable to run TSR programs via SHELL. They
+                may cause a crash on return to QuickBASIC.
+
+                After the specified DOS command or program terminates,
+                control is returned to the line following the SHELL
+                statement.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

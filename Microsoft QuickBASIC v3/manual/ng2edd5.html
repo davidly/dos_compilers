@@ -1,0 +1,55 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2ed3b.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2f2ce.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>STATIC                   Declare Local Variable(s)</B>
+
+ <B>STATIC</B> <U>varlist</U>
+
+    Declares one or more function or subprogram variables as local and
+    memory-based (as opposed to stack-based).
+
+     <U>varlist</U>    A comma-delimited list of valid variable and/or array
+                names. Array names must be followed by an integer enclosed
+                within parentheses; the integer specifies the number of
+                dimensions in the array.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    The STATIC statement may be used only within multiline
+                function definitions and subprograms.
+
+                Variables used within multiline function definitions are
+                global by default. Variables used within subprograms are
+                local by default.
+
+                A STATIC variable is a local variable whose value doesn't
+                change between subprogram CALLs. Ordinary local variables
+                are reinitialized with each CALL. To guarantee that a
+                variable's value will not change between CALLs, declare
+                the variable STATIC.
+
+                The STATIC statement should not be confused with the
+                STATIC attribute of the SUB statement (which indicates
+                that a subprogram is nonrecursive) or the $STATIC
+                metacommand (which statically allocates memory for
+                arrays).
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ngc7f7.html">DEF FN</A>
+<A HREF="ng2dcc2.html">SHARED</A>
+<A HREF="ng2fea2.html">SUB...END SUB</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

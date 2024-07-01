@@ -1,0 +1,57 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng1d78d.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1e384.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>ON ERROR                 Enable Error Trapping</B>
+
+ <B>ON</B> <B>ERROR</B> <B>GOTO</B> {<U>linenum</U> | <U>linelabel</U>}
+
+    Enables the trapping of error conditions and specifies the beginning
+    line of an error-trapping routine.
+
+     <U>linenum</U>    The first line of an error-handling routine. Setting
+                linenum to 0 disables trapping.
+
+   <U>linelabel</U>    A label identifying the first line of an error-handling
+                routine.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    {<U>linenum</U> | <U>linelabel</U>} must be defined at the main program
+                level.
+
+                It is recommended that an ON ERROR GOTO 0 statement be
+                included within an error-handling routine to handle
+                unidentifiable error conditions.
+
+                While an error-handling routine is being executed, error
+                trapping (and all other event trapping) is disabled. If an
+                error occurs during this time, QuickBASIC halts program
+                execution and displays an error message.
+
+                An error-handling routine must end with a RESUME
+                statement.
+
+                When compiling a QuickBASIC program that uses ON ERROR and
+                RESUME, you must use the On Error (/e) and Resume Next
+                (/x) compile options.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng10563.html">ERL</A>
+<A HREF="ng107b9.html">ERR</A>
+<A HREF="ng108e8.html">ERROR</A>
+<A HREF="ng2b195.html">RESUME</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

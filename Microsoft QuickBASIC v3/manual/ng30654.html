@@ -1,0 +1,47 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng3055b.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng309ca.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>TAB                      Tab to a Specified Position</B>
+
+ <B>PRINT</B> <B>TAB</B>(<U>column</U>)
+
+    Moves to a specified print position. May be used in conjunction with
+    PRINT, LPRINT, and PRINT #.
+
+      <U>column</U>    A numeric expression.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the current print (or screen) position is already to
+                the right of <U>column</U>, TAB moves to position <U>column</U> on the
+                next line.
+
+                If <U>column</U> is larger than the width of output device,
+                TAB(<U>column</U>) moves to <U>column</U> MOD <U>width</U>.
+
+                If <U>column</U> is less than 1, TAB(<U>column</U>) is treated as
+                TAB(1).
+
+                If the TAB function comes at the end of a list of data
+                items in a PRINT statement, BASIC behaves as if the PRINT
+                statement were terminated by a semicolon; it suppresses
+                the usual carriage return and line feed.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng2e956.html">SPACE$</A>
+<A HREF="ng2ea77.html">SPC</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,48 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng5e67.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng681f.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>CALL ABSOLUTE            Invoke Subprogram or Assembly Subroutine</B>
+
+ <B>CALL ABSOLUTE</B> ([<U>arglist</U>,]<U>intvar</U>)
+
+    Transfers control and (optionally) passes parameters to an assembly
+    language subroutine.
+
+     <U>arglist</U>    Specifies one or more parameters to be passed to the
+                subroutine. Parameters must be separated by commas. Array
+                parameters should be specified by the array name followed
+                by empty parentheses.
+
+      <U>intvar</U>    An integer variable. Specifies the address of the
+                subroutine as an offset within the current code segment.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    Your program should execute a DEF SEG statement before
+                calling the subroutine to ensure the code segment is
+                correct (or put the subroutine in DGROUP).
+
+                QuickBASIC uses 4-byte string descriptors, while
+                interpreted BASIC uses 3-byte descriptors. An assembly
+                subroutine that uses string arguments may therefore need
+                to be modified if it was originally written to run with an
+                interpreted program.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng5e67.html">CALL</A>
+<A HREF="ng681f.html">CALLS</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

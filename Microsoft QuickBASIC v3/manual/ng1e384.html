@@ -1,0 +1,77 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng1ded6.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1eb89.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>ON KEY                   Trap for Keypress</B>
+
+ <B>ON</B> <B>KEY</B>(<U>n</U>) <B>GOSUB</B> {<U>linenum</U> | <U>linelabel</U>}
+
+    Establishes a subroutine to which QuickBASIC will branch if it detects
+    a specified keypress. The trap must also be turned on by means of a
+    KEY(<U>n</U>) ON statement.
+
+           <U>n</U>    A numeric expression in the range 1 to 20.
+
+     <U>linenum</U>    The first line of a keypress-handling subroutine. Setting
+                <U>linenum</U> to 0 disables trapping.
+
+   <U>linelabel</U>    A label identifying the first line of a keypress-handling
+                routine.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    {<U>linenum</U> | <U>linelabel</U>} must be defined at the main program
+                level.
+
+                The following keys may be trapped:
+
+                1-10     Function keys F1 through F10
+                11       Cursor Up
+                12       Cursor Left
+                13       Cursor Right
+                14       Cursor Down
+                15-20    Keys defined via KEY <U>n</U>,
+                         CHR$(<U>KBflag</U>)+CHR$(<U>scancode</U>)
+
+                When the keypress is detected, QuickBASIC branches to the
+                specified subroutine and temporarily suspends trapping (by
+                means of an implicit KEY(<U>n</U>) STOP statement). Trapping
+                automatically resumes when a RETURN from the handling
+                subroutine is executed (unless the handler explicitly
+                performs a KEY(<U>n</U>) OFF or KEY(<U>n</U>) STOP).
+
+                The key that produced the trap may not be determined by
+                means of INPUT$ or INKEY$.
+
+                All event trapping is temporarily disabled when QuickBASIC
+                is executing an error-handling routine (established via an
+                ON ERROR statement).
+
+                ON KEY may be used to trap Ctrl-Break and Ctrl-Alt-Del,
+                thereby preventing a user from breaking out of a program.
+
+                If the "Checking Between Statements" option is in effect,
+                QB checks after each statement. If the "Event Trapping"
+                option is selected, QB checks after each new program line.
+                If neither option is selected, no trapping takes place.
+
+                For command-line compilation, /v enables checking after
+                each statement, and /w enables checking after each new
+                line. If neither switch is used, no trapping takes place.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng16dd7.html">KEY(n)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

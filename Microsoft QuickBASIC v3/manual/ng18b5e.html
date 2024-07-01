@@ -1,0 +1,58 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng18851.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1905a.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>LOCATE                   Position the Cursor</B>
+
+ <B>LOCATE</B> [<U>row</U>][,[<U>col</U>][,[<U>cursor</U>][,[<U>start</U>][,<U>stop</U>]]]]
+
+    Sets the size and position of the cursor.
+
+         <U>row</U>    A numeric expression in the range 1 to 25. Sets the row
+                position of the cursor.
+
+         <U>col</U>    A numeric expression in the range 1 to 40 or 1 to 80. Sets
+                the column position of the cursor.
+
+      <U>cursor</U>    A numeric expression. If 1, the cursor is visible; if 0,
+                the cursor is invisible.
+
+       <U>start</U>    A numeric expression in the range 0 to 31. Sets the
+                starting scan line for the cursor.
+
+        <U>stop</U>    A numeric expression in the range 0 to 31. Sets the ending
+                scan line for the cursor. If <U>start</U> is specified and <U>stop</U>
+                is not, <U>stop</U> assumes the value of <U>start</U>.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    Cursor scan lines are numbered from 0 (top) to 7 (CGA) or
+                13 (MDA).
+
+                If <U>stop</U> is less than <U>start</U>, a two-part (wraparound) cursor
+                results.
+
+                If the softkey display on line 25 has been turned off (via
+                KEY OFF), you may write to line 25 by means of LOCATE.
+                Line 25 does not scroll in any case.
+
+                Any argument to LOCATE may be omitted. Omitted arguments
+                retain former values.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ngb058.html">CSRLIN</A>
+<A HREF="ng264a0.html">POS</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

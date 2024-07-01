@@ -1,0 +1,49 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ngf078.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ngf619.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>ENVIRON                  Modify Environment Table</B>
+
+ <B>ENVIRON</B> <U>stringexpr</U>
+
+    Adds a statement to or deletes a statement from the current
+    environment table.
+
+     <U>stringexpr</U>     A string expression of the form "<U>name</U> = <U>parameter</U>".
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If <U>name</U> already exists in the environment table, its
+                current setting is replaced with the new setting. If <U>name</U>
+                does not exist, the new statement is added at the end of
+                the environment table.
+
+                To delete an entry from the environment table, make
+                parameter a semicolon (i.e. "name = ;").
+
+                <U>parameter</U> is case-sensitive.
+
+                The new environment variable added, deleted, or modified
+                by this procedure will only take effect for SHELLed copies
+                of COMMAND.COM that are activated after this statement.
+                After the program exits, the environment table will be
+                exactly the same as before the program executed, no matter
+                what changes were made with ENVIRON.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ngf619.html">ENVIRON$</A>
+<A HREF="ng2e004.html">SHELL</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

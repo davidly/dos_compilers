@@ -1,0 +1,168 @@
+			"UPDATE.DOC" File
+	 Update Notes for the MICROSOFT(R) QuickBASIC Compiler
+	       	Version 3.0 for IBM(R) Personal Computers
+			 and Compatibles
+
+	     (C) Copyright Microsoft Corporation, 1987
+
+
+This file contains a list of corrections made to Microsoft(R) QuickBASIC
+since the last release.	 See the README.DOC file for corrections to the
+manual and enhancements made to the product.  These enhancements include
+error listing capability and IBM(R) Advanced 101-Key keyboard support.
+
+(1)  With an IBM CGA card, and your display in screen mode 0, the active
+     page parameter now works as it does in IBM BASICA and as it did in
+     QuickBASIC 1.x.  That is, more than one active page is allowed.
+
+(2)  With an IBM EGA card, the active page is now reset correctly upon return
+     to the user interface after program execution.
+
+(3)  In the user interface, inserting a word deleted from the end of a line no
+     longer inserts two spaces following the word.
+
+(4)  Palettes are no longer reversed on a CGA display in screen mode 1.
+
+(5)  A program that accesses a user-library routine containing a RESUME NEXT
+     no longer locks up the system.
+
+(6)  Compiling a program from the command line no longer locks up the system
+     if the disk is full.
+
+(7)  Variables passed to user-library routines no longer produce spurious
+     "String space corrupt" or "Out of data" errors, nor do they generate
+     incorrect values.
+
+(8)  The interaction between CHAIN, SHELL, and the DEBUG and .EXE options no
+     longer causes problems.
+
+(9)  Passing strings in COMMON that were defined in a FIELD statement no longer
+     causes a problem.
+
+(10) High-intensity colors are now options for the foreground color in the
+     View menu's Options... dialog box.
+
+(11) If an invalid CIRCLE statement was followed by a valid CIRCLE statement,
+     sometimes both the valid and invalid statements generated
+     "Illegal function call" errors.  This has been corrected.
+
+(12) The compiler no longer has problems optimizing code written without
+     line numbers and compiled without the DEBUG option.
+
+(13) A problem with function-key assignments giving spurious "String space
+     corrupt" and "String heap corrupt" errors has been corrected.
+
+(14) If a loop contained a SHELL statement followed by an LPRINT statement,
+     the LPRINT would sometimes fail after multiple iterations.	 This has
+     been corrected.
+
+(15) The PAINT statement no longer has problems painting figures in EGA
+     screen modes 7-10 when there is a gap of less than eight pixels between
+     figures and painting begins on a byte boundary.
+
+(16) The BSAVE statement now returns the proper error message if there is
+     no space on the disk.
+
+(17) The STOP statement has been corrected to set the error stack level
+     properly.
+
+(18) The color of the screen is now restored properly after a COLOR statement.
+
+(19) The LOCATE statement now properly handles the cursor.
+
+(20) Variables from a QuickBASIC program compiled with the BRUN20 library
+     are now accessed properly after a CHAIN statement transfers control
+     to an assembly-language program.
+
+(21) The SCREEN statement has been corrected so that the order of COLOR and
+     SCREEN statements no longer makes a difference.
+
+(22) An error could occur when a program containing an ON...GOSUB statement
+     was compiled with the /w (event handling) option.	This has been corrected.
+
+(23) The INKEY$ statement now works properly after an error routine traps an
+     attempt to open a nonexistent file with the OPEN statement.
+
+(24) After a character is printed in column 80 followed by a semi-colon, CSRLIN
+     now returns the next line, as it does in IBM BASICA.
+
+(25) Memory is no longer lost when the CHAIN statement runs multiple programs.
+
+(26) Calling a user-defined function (DEF FN) within an OPEN statement no
+     longer causes an error.
+
+(27) Using the compiler's /w option and the EXIT statement within a batch
+     file no longer causes a problem when the batch file is run.
+
+(28) Integer division with a denominator of zero no longer locks up the system.
+
+(29) Several memory-management problems -- including string-space manipulation,
+     which in turn led to errors ranging from "String space corrupt" to a
+     system lock up -- have been corrected.
+
+(30) The combination of the SOUND statement with an OPEN statement that
+     accesses the "SCRN:" device now works properly.
+
+(31) Floating-point subtraction performed between two SOUND statements no
+     longer causes an "Illegal function call" error on the second SOUND
+     statement.
+
+(32) A problem with the the substring form of the PLAY statement has been
+     corrected.
+
+(33) Typing CTRL-PRTSC in response to an INPUT statement no longer results
+     in all characters typed being printed twice on the printer.
+
+(34) Using a null string for a file name in an OPEN statement now gives the
+     same error message whether the file is opened for input or output.
+
+(35) The VIEW PRINT and CLS statements now work properly together.
+
+(36) KEY(<n>) ON and ON KEY(<n>) GOSUB <line> statements can now be in the
+     same FOR...NEXT loop and work properly
+
+(37) A machine lock up could occur on an 80286 machine if a COMMON block had
+     a single-precision variable as its first argument, the next statement
+     modified the variable (as in "b=b+1"), and the program was compiled with
+     the /O switch.  This problem has been corrected.
+
+(38) When the Compile... screen was displayed, pressing the right direction
+     key, the spacebar, and the ENTER key in the Program box (in that order)
+     would result in an "Invalid file specification" error.  This error could
+     not be corrected except by completely retyping the file name.  This has
+     been corrected so that the cursor is placed at the end of the name,
+     allowing use of the BACKSPACE key to correct the input error.
+
+(39) The PPRINT utility now handles the metacommand SKIP[ :n] correctly.
+
+(40) The PPRINT utility now works properly with line lengths greater than
+     80 characers when output is directed to LPT1:.
+
+(41) The editor could lock up if a CUT/COPY operation was attempted when
+     the mouse was used to select text and the area marked for selection
+     extended beyond the last line of code.  This has been corrected.
+
+(42) An "Input past end" error could occur when using BLOAD to retrieve a file
+     that contained a 1A hex character (Control-Z).  This has been corrected.
+
+(43) QuickBASIC can now correctly handle user libraries larger than 64K.
+
+(44) A DRAW statement containing a string expression and a very complex drawing
+     string could generate an "Out of memory" error.  This has been corrected.
+
+(45) A directory specified in a $INCLUDE statement could not contain an
+     extension.	 This has been corrected.
+
+(46) Addressing an array element using an invalid subscript, even with the
+     Debug (/d) option set, could produce spurious or misleading error
+     messages.	This has been corrected.
+
+(47) The program INT86.ASM has been corrected to work with VARPTR.
+
+(48) If the WRITE# statement is used to store characters in a random-file
+     buffer (a variable defined in a FIELD statement), QuickBASIC now pads
+     the record with blanks, as stated in the entry for the "PUT Statement
+     (File I/O)" in the QuickBASIC reference manual.
+
+(49) Local variables in a user library are no longer preserved across a CHAIN,
+     and no longer result in a "String space corrupt" error.

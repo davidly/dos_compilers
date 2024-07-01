@@ -1,0 +1,78 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2c723.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2db1d.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>SELECT                   Case Structure</B>
+
+ <B>SELECT</B> <B>CASE</B> <U>expression</U>
+ <B>CASE</B> <U>testlist</U>
+ .
+ . <U>statements</U>
+ .
+ [CASE <U>testlist</U>
+ .
+ . <U>statements</U>
+ .]
+ [CASE ELSE
+ .
+ . <U>statements</U>
+ .]
+ <B>END</B> <B>SELECT</B>
+
+    Compares an expression against one or more values and directs
+    execution flow in accordance with the result.
+
+  <U>expression</U>    An expression of any type.
+
+    <U>testlist</U>    A comma-delimited list of expressions (see further
+                description, below) that test the value of expression.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    The elements of a given <U>testlist</U> argument are implicitly
+                ORed. Therefore, the statements following CASE <U>testlist</U>
+                are executed if any member of <U>testlist</U> is true. Following
+                execution of those statements, control passes to the first
+                statement following END SELECT.
+
+                The SELECT CASE structure may include any number of CASE
+                <U>testlist</U> clauses but must include at least one. All CASE
+                <U>testlist</U> clauses must appear before the optional CASE ELSE
+                clause.
+
+                The statements following CASE ELSE are executed if all
+                elements in all CASE <U>testlist</U> clauses are false.
+
+                The <U>testlist</U> argument may include the following kinds of
+                tests: equality, inequality, greater than, less than, and
+                range. Examples of each are as follows:
+
+                    CASE 100
+                    CASE IS = 100
+                    CASE IS &lt;&gt; "Yomama"
+                    CASE IS &gt; -5
+                    CASE IS &lt; 2E15
+                    CASE 5 TO 10
+
+                Note that the = operator is optional for the equality
+                test, and that the keyword IS must be used before any
+                relational operator. In the range test, the smaller of the
+                two values must appear before the keyword TO.
+
+                The SELECT CASE structure is equivalent to a set of nested
+                IF/THEN/ELSE statements but produces more readable source
+                code.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

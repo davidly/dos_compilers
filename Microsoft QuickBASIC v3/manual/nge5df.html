@@ -1,0 +1,104 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="nge1c2.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ngf078.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>DRAW                     Draw Object</B>
+
+ <B>DRAW</B> <U>string</U>
+
+    Draws an object according to instructions specified as a string
+    expression.
+
+      <U>string</U>    A string expression containing commands in the BASIC
+                graphics definition language.
+
+    <B>Graphics Definition Language</B>
+
+    In the movement instructions below, <U>n</U> specifies a distance to move.
+    The number of pixels moved is equal to <U>n</U> multiplied by the current
+    scaling factor, which is set by the S command.
+
+          U<U>n</U>    Move up.
+
+          D<U>n</U>    Move down.
+
+          L<U>n</U>    Move left.
+
+          R<U>n</U>    Move right.
+
+          E<U>n</U>    Move diagonally up and right.
+
+          F<U>n</U>    Move diagonally down and right.
+
+          G<U>n</U>    Move diagonally down and left.
+
+          H<U>n</U>    Move diagonally up and left.
+
+        M<U>x</U>,<U>y</U>    Move to coordinate <U>x</U>,<U>y</U>. If <U>x</U> is preceded by a + or -, the
+                movement is relative to the last point referenced (LPR).
+
+           B    A prefix command. Next movement command moves but doesn't
+                plot.
+
+           N    A prefix command. Next movement command moves, but returns
+                immediately to previous point.
+
+          A<U>n</U>    Set angle. <U>n</U> may be 0, for 0 degrees; 1, for 90 degrees;
+                2, for 180 degrees; or 3, for 270 degrees. Rotated figures
+                are rescaled to adjust to the CGA's 4/3 aspect ratio.
+
+         TA<U>n</U>    Turn angle. <U>n</U> may range from -360 degrees to +360 degrees.
+                Positive values cause counterclockwise rotation; negative
+                values cause clockwise rotation.
+
+          C<U>n</U>    Set color to <U>n</U>.  The default color for medium-resolution
+                is 3; high-resolution default color is 1.  See PALETTE for
+                a list of legal colors.
+
+          S<U>n</U>    Set scale factor. <U>n</U> may range from 1 to 255. The scaling
+                factor used is <U>n</U>/4. The default for <U>n</U> is 4.
+
+P<U>paint</U>,<U>boundary</U> Fill figure color to <U>paint</U>, stopping at areas of color
+                <U>boundary</U>.  See PALETTE for a list of legal colors.
+
+"=" + VARPTR$(<U>var</U>)
+                Get argument from variable. May be used to supply
+                arguments to any of the foregoing commands.
+
+"X" + VARPTR$(<U>stringvar</U>)
+                Execute command sequence stored in a string variable. This
+                command allows you to call graphics-language subroutines.
+
+   -------------------------------------------------------------------------
+
+      <B>Notes:</B>    To get arguments or instructions from variables, you must
+                use VARPTR$(<U>var</U>) or VARPTR$(<U>stringvar</U>). QuickBASIC does
+                not support the =<U>variable</U>; and X<U>stringvar</U> formulations
+                available with the Interpreter.
+
+                Spaces between or within instructions are insignificant.
+
+                Semicolons may be used between commands to enhance
+                readability.
+
+                The drawing begins at the last point referenced (LPR) and
+                LPR is updated as the object is being drawn.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng23171.html">PALETTE</A>
+<A HREF="ng2c723.html">SCREEN (Statement)</A>
+<A HREF="ng321ab.html">VARPTR$</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

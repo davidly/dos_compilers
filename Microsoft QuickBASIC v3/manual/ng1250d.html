@@ -1,0 +1,35 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng11abb.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng127c8.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>FRE                      Available Memory</B>
+
+ <U>y</U> = <B>FRE</B>({<U>strexpr</U> | <U>numexpr</U>})
+
+    Returns the number of bytes available in QuickBASIC's string space;
+    optionally forces a defragmentation of the string space.
+
+     <U>strexpr</U>    A dummy argument; the actual value is inconsequential.
+                FRE(<U>strexpr</U>) causes QuickBASIC to clean house on its
+                string data space, then report the amount of free space
+                available.
+
+     <U>numexpr</U>    A dummy argument. If <U>numexpr</U> = -1, QuickBASIC reports the
+                size in bytes of the largest free LNA (large numeric
+                array) entry. If any other value is used, QuickBASIC omits
+                the housecleaning step and reports the amount of free
+                space available.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,51 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ngbf36.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ngc7f7.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>DATE$                    Get or Set System Date</B>
+
+ <U>s$</U> = <B>DATE$</B>                              ' Get the system date
+ <B>DATE$</B> = <U>stringexpr</U>                      ' Set the system date
+
+    Gets or Sets the current system date.
+
+  <U>stringexpr</U>    A string expression in either of the following forms (but
+                slash characters may be substituted for the hyphens):
+
+                    "mm-dd-yy"
+                    "mm-dd-yyyy"
+
+   -------------------------------------------------------------------------
+
+      <B>Notes:</B>    If DATE$ is being assigned a value, then the system date
+                is set, else the system date is retrieved.  The system
+                date retrieved is formatted as:
+
+                    "mm-dd-yyyy"
+
+                If the year is expressed in two digits, instead of four,
+                the twentieth century is assumed. If the month is
+                expressed as a single digit, a leading zero is assumed.
+
+                The year portion of the date must be in the range 1980 to
+                2099.
+
+                This statement resets the AT system date in nonvolatile
+                memory when QuickBasic is run under DOS 3.3.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng30bd9.html">TIME$</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

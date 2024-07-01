@@ -1,0 +1,63 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng16438.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng17428.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>KEY(n)                   Enable/Disable Key Trapping</B>
+
+ <B>KEY</B>(<U>n</U>) {ON | OFF | STOP}
+
+    Enables or disables the trapping of a specified key via ON KEY(<U>n</U>).
+
+           <U>n</U>    A numeric expression in the range 1 to 20, specifying the
+                key to trap, as follows:
+
+                1-10,30,31    Function keys F1 through F10, F11, F12
+                11            Cursor Up
+                12            Cursor Left
+                13            Cursor Right
+                14            Cursor Down
+                15-25         Keys defined via KEY <U>n</U>, CHR$(<U>KBflag</U>) +
+                                                      CHR$(<U>scancode</U>)
+
+          ON    KEY(<U>n</U>) ON activates trapping. If an ON KEY(<U>n</U>) GOSUB
+                statement has been executed, QuickBASIC checks before
+                executing each statement to see if the specified key has
+                been pressed. If it has, QuickBASIC performs the indicated
+                GOSUB.
+
+         OFF    KEY(<U>n</U>) OFF deactivates trapping.
+
+        STOP    KEY(<U>n</U>) STOP also deactivates trapping, but QuickBASIC
+                continues checking to see if the specified key has been
+                pressed. If it has been pressed, a subsequent KEY(<U>n</U>) ON
+                results in an immediate trap (provided an ON KEY(<U>n</U>)
+                statement with a nonzero line number has been executed).
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    If the "Checking Between Statements" option is in effect,
+                QB checks for communication activity after each statement.
+                If the "Event Trapping" option is selected, QB checks
+                after each new program line. If neither option is
+                selected, no trapping takes place.
+
+                For command-line compilation, /v enables checking after
+                each statement, and /w enables checking after each new
+                line. If neither switch is used, no trapping takes place.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng1e384.html">ON KEY</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

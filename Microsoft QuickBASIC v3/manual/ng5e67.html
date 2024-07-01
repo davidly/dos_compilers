@@ -1,0 +1,56 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng5b68.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng63e4.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>CALL                     Invoke Subprogram or Assembly Subroutine</B>
+
+ <B>CALL</B> <U>procname</U> [(<U>parmlist</U>)]
+
+    Transfers control to a subprogram or assembly language subroutine.
+
+    <U>procname</U>    Specifies the subprogram or assembly routine to be called.
+                The first 31 characters are significant. If name is an
+                assembly language subroutine, it must be a PUBLIC symbol
+                and must not contain '$' or '_' characters.
+
+    <U>parmlist</U>    Specifies one or more parameters to be passed to the
+                subprogram or routine. Parameters must be separated by
+                commas. Array parameters should be specified by the array
+                name followed by empty parentheses.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    CALL passes unsegmented addresses of parameters. To pass
+                segmented addresses, use CALLS.
+
+                Note the following differences between QuickBASIC and
+                interpreted BASIC:
+
+                1.  QuickBASIC uses 4-byte string descriptors, while
+                    interpreted BASIC uses 3-byte descriptors. An assembly
+                    subroutine that uses string arguments may therefore
+                    need to be modified if it was originally written to
+                    run with an interpreted program.
+
+                2.  The QuickBASIC CALL statement calls subroutines by
+                    name; interpreted BASIC's CALL statement calls
+                    subroutines by offset address. To call a subroutine by
+                    address in QuickBASIC, use CALL ABSOLUTE.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng63e4.html">CALL ABSOLUTE</A>
+<A HREF="ng681f.html">CALLS</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

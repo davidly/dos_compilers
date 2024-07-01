@@ -1,0 +1,46 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng157f1.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng15fe6.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>INSTR                    Find Substring</B>
+
+ <B>INSTR</B>([<U>start</U>,] <U>stringexp1</U>,<U>stringexp2</U>)
+
+    Returns the character position within a string at which a substring is
+    found.
+
+  <U>stringexp1</U>    The string to be scanned.
+
+  <U>stringexp2</U>    The substring to be searched for.
+
+       <U>start</U>    A numeric expression in the range 1 to 255; an optional
+                offset from which to start searching.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If <U>start</U> is specified, BASIC begins searching at the
+                character at offset <U>start</U> (The first character in the
+                string is at offset 1). Whether or not <U>start</U> is specified,
+                INSTR returns the position at which <U>stringexp2</U> is found--
+                relative to the first character in the string (not to
+                <U>start</U>).
+
+                If <U>stringexp1</U> is null or if <U>start</U> is greater than
+                LEN(<U>stringexp1</U>), INSTR returns 0.
+
+                If <U>stringexp2</U> is null, then INSTR returns 1 (if <U>start</U> was
+                specified, then INSTR returns <U>start</U>.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,81 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng16339.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng16dd7.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>KEY                      Set or Display Soft Keys</B>
+
+ <B>KEY</B> {ON | OFF | LIST}
+ <B>KEY</B> <U>n</U>, <U>strexpr</U>
+ <B>KEY</B> <U>n</U>, CHR$(<U>KBflag</U>) + CHR$(<U>scancode</U>)
+
+    Controls the display and contents of the function keys F1 through F10;
+    allows trapping of any scan code in any shift state.
+
+          ON    KEY ON enables the display, on line 25, of current
+                function key settings. Only the first six character
+                assigned to each function key are displayed. If the screen
+                is in an 80-column display mode, all ten function keys are
+                displayed; if it's in a 40-column mode, the first five are
+                displayed. KEY ON is the default setting in BASIC.
+
+         OFF    KEY OFF removes the function key display from line 25,
+                making line 25 available for other purposes. With KEY OFF
+                in effect, a LOCATE 25,<U>n</U> can be used to display other text
+                at the bottom of the screen. Line 25 does not scroll, but
+                it is erased by a CLS statement.
+
+        LIST    KEY LIST displays the current soft key definitions on
+                screen.
+
+  <U>n</U>, <U>strexpr</U>    KEY <U>n</U>, <U>strexpr</U> assigns the string expression <U>strexpr</U> to
+                function key <U>n</U>. <U>n</U> is a numeric expression in the range 1
+                to 10. Only the first 15 characters of <U>strexpr</U> are
+                significant. A null string <U>strexpr</U> deactivates the
+                associated function key.
+
+<U>n</U>, CHR$(<U>KBflag</U>) + CHR$(<U>scancode</U>)
+                The statement KEY <U>n</U>, CHR$(<U>KBflag</U>) + CHR$(<U>scancode</U>) enables
+                your program to trap specified Ctrl keys, Alt keys, and
+                Shifted keys. <U>n</U> is a numeric expression in the range 15 to
+                20 (up to six traps may be in effect at once). <U>KBflag</U>,
+                which must be expressed in hexadecimal, specifies the
+                shift state of the key to be trapped, and scancode
+                specifies which alphanumeric key is to be trapped.
+
+                The following options are available for <U>KBflag</U>:
+
+                    &amp;H40      Caps Lock active
+                    &amp;H20      Num Lock active
+                    &amp;H08      Alt key pressed
+                    &amp;H04      Ctrl key pressed
+                    &amp;H02      Left Shift key pressed
+                    &amp;H01      Right Shift key pressed
+                    &amp;H00      Caps Lock inactive, Num Lock inactive
+
+                These options may be used in additive fashion, to trap
+                combinations of shift states. For example,
+                CHR$(&amp;H08+&amp;H02+&amp;H01) would catch the combination of the
+                Alt key with either (or both) Shift keys.
+
+                Trapped keys do not enter the BIOS keyboard buffer.
+                Therefore, if either Ctrl-Break or Ctrl-Alt-Del is
+                trapped, there will be no way (other than powering down)
+                to break out of an infinite loop.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng16dd7.html">KEY(n)</A>
+<A HREF="ng1e384.html">ON KEY</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

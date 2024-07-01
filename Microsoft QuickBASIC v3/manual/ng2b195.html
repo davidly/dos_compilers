@@ -1,0 +1,45 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2af74.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2b513.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>RESUME                   Continue after Error Trap</B>
+
+ <B>RESUME</B> [0]   or   <B>RESUME</B> NEXT   or   <B>RESUME</B> {<U>linenum</U> | <U>linelabel</U>}
+
+    Allows program execution to continue after an ON ERROR GOTO routine
+    has run.
+
+           0    RESUME by itself or with the optional dummy argument 0
+                causes the program to continue from the line that produced
+                the error.
+
+        NEXT    RESUME NEXT causes program execution to continue at the
+                line following the line that produced the error.
+
+     <U>linenum</U>    RESUME {<U>linenum</U> | <U>linelabel</U>} causes program execution to
+   <U>linelabel</U>    continue at a specified line number.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    All ON ERROR GOTO routines must end with some form of
+                RESUME statement.
+
+                A RESUME that is not part of an error trapping routine
+                produces a RESUME without Error error.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng1ded6.html">ON ERROR</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

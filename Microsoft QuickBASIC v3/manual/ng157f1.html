@@ -1,0 +1,50 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng151dd.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng15bed.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>INPUT$                   Read Specified Number of Characters</B>
+
+ <B>INPUT$</B>(<U>n</U> [,[#]<U>filenum</U>])
+
+    Returns a specified number of characters from a specified sequential
+    file or device, or from the keyboard.
+
+           <U>n</U>    The number of characters to be read. Must be in the range
+                1 to 255.
+
+     <U>filenum</U>    The number under which the input file was OPENed. If
+                omitted, the characters are read from the standard input
+                device (the keyboard, by default). Characters input from
+                the keyboard are not echoed to the screen.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    The INPUT$ function terminates when the specified number
+                of characters have been received. It is not necessary to
+                press Enter.
+
+                INPUT$ doesn't allow the inputting of certain special key
+                combinations (for example, function and cursor keys).
+                These keys will return CHR$(0). Use INKEY$ to get around
+                this limitation.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng141ee.html">INKEY$</A>
+<A HREF="ng148c5.html">INPUT</A>
+<A HREF="ng151dd.html">INPUT #</A>
+<A HREF="ng18196.html">LINE INPUT</A>
+<A HREF="ng18562.html">LINE INPUT #</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

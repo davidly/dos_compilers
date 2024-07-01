@@ -1,0 +1,47 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng20631.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng20da4.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>ON...GOTO                Branch to </B><B><U>n</B></U><B>th Item in Line List</B>
+
+ <B>ON</B> <U>n</U> <B>GOTO</B> {<U>linenum</U> | <U>linelabel</U>}, [,{<U>linenum</U> | <U>linelabel</U>}]...
+
+    Causes QuickBASIC to branch to one of a list of line numbers and/or
+    line labels.
+
+           <U>n</U>    A numeric variable in the range 0 to 255. Upon execution
+                of the ON...GOTO statement, QuickBASIC branches to the nth
+                item in the list of line numbers/line labels that follows
+                the keyword GOTO.
+
+     <U>linenum</U>    A valid line number.
+
+   <U>linelabel</U>    A valid line label.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    If <U>n</U> is a noninteger numeric value, QuickBASIC rounds <U>n</U>.
+
+                If <U>n</U> is 0 or larger than the number of items in the line
+                list, QuickBASIC continues with the next executable
+                statement.
+
+                If <U>n</U> is negative or larger than 255, an Illegal Function
+                Call error occurs.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng20631.html">ON...GOSUB</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

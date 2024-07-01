@@ -1,0 +1,47 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng31e18.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng32510.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>VARPTR$                  Offset of Variable, in Character Form</B>
+
+ <B>VARPTR$</B>(<U>variable</U>)
+
+    Returns, in a character format, the offset address of a specified
+    variable in the current data segment.
+
+    <U>variable</U>    The name of a string or numeric variable, or an array
+                element.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    A three-byte string is returned. The first byte reports
+                the variable type, the second reports the low-order
+                portion of the variable address, and the third reports the
+                high-order portion of the variable address. The type byte
+                is coded as follows:
+
+                2   Integer
+                3   String
+                4   Single-precision
+                8   Double-precision
+
+                When using VARPTR$ with array variables, be aware that
+                array variables are moved in memory every time a new
+                nonarray variable is assigned.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng31e18.html">VARPTR</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

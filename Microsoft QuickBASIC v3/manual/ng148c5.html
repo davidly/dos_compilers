@@ -1,0 +1,85 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng147de.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng151dd.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>INPUT                    Get Input from Keyboard</B>
+
+<B>INPUT</B>[;]["<U>prompt</U>" {; | ,}] <U>variable</U> [,<U>variable</U>]...
+
+    Assigns input from the keyboard to one or more string or numeric
+    variables.
+
+           ;    If a semicolon is included directly after the INPUT
+                keyword, QuickBASIC does not issue a carriage return/line
+                feed after receiving the user's input.
+
+      <U>prompt</U>    A string constant supplying a prompt to guide the user.
+
+    <U>variable</U>    The name of a variable (string or numeric) that will
+                receive input.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    A prompt may be included in the INPUT statement to guide
+                the user; if included, it must be a string constant,
+                enclosed within quote marks.
+
+                If a prompt is included, it must be followed by either a
+                semicolon or a comma (outside the quotes, before the first
+                variable name). If it's followed by a semicolon,
+                QuickBASIC displays a question mark after the prompt
+                string. If it's followed by a comma, QuickBASIC suppresses
+                the question mark.
+
+                If no prompt is included, QuickBASIC displays a question
+                mark.
+
+                If more than one variable is included in the INPUT
+                statement, the user must enter values for all variables,
+                separated by commas. If only one variable is included in
+                the INPUT statement, the user has the option of simply
+                pressing the Enter key; QuickBASIC interprets that action
+                as 0 (for numeric variables) or null (for string
+                variables).
+
+                If the user enters too few or too many values in response
+                to an INPUT statement, QuickBASIC displays a ?Redo from
+                Start error message; no values are assigned to variables
+                until satisfactory input is received.
+
+                If the user enters a comma in response to an INPUT
+                statement, BASIC displays a ?Redo from Start error
+                message. You can avoid this irritation by using LINE
+                INPUT, instead of INPUT.
+
+                Input for a string variable need not be enclosed in quote
+                marks. String input that is enclosed within quotes is
+                handled as though it were not (QuickBASIC ignores the
+                quotes).
+
+                Input to a numeric variable must be numeric.
+
+                Editing keystrokes are active during response to INPUT. To
+                receive such keystrokes as part of an input string, use
+                INKEY$.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng141ee.html">INKEY$</A>
+<A HREF="ng151dd.html">INPUT #</A>
+<A HREF="ng157f1.html">INPUT$</A>
+<A HREF="ng18196.html">LINE INPUT</A>
+<A HREF="ng18562.html">LINE INPUT #</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

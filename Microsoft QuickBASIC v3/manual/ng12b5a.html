@@ -1,0 +1,64 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng127c8.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng13094.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>GET                      Read Points from Screen                     Graphics</B>
+
+ <B>GET</B> (<U>x1</U>,<U>y1</U>)-(<U>x2</U>,<U>y2</U>),<U>arrayname</U>
+
+    Copies attributes from a specified rectangle within the screen buffer
+    into a specified array.
+
+       <U>x1</U>,<U>y1</U>    Upper left corner of the rectangle to be copied.
+
+       <U>x2</U>,<U>y2</U>    Lower right corner of the rectangle to be copied.
+
+   <U>arrayname</U>    The name of a numeric array.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    To determine how large the array must be, use the
+                following formula:
+
+                    4+INT(((<U>x2</U>-<U>x1</U>+1)*<U>bitsperpixel</U>+7)/8)*((<U>y2</U>-<U>y1</U>)+1)
+
+                where <U>bitsperpixel</U> relates to screen mode as follows:
+
+                    <U>Mode</U>      <U>Bitsperpixel</U>
+                    SCREEN 1       2
+                    SCREEN 2       1
+                    SCREEN 7       4
+                    SCREEN 8       4
+                    SCREEN 9       2 (EGA memory = 64K)
+                                   4 (EGA memory &gt; 64K)
+                    SCREEN 10      2
+
+                The amount of memory allocated per array element is as
+                follows:
+
+                    Integer:            2 bytes per element
+                    Single-precision:   4 bytes per element
+                    Double-precision:   8 bytes per element
+
+                The first two bytes returned by the GET statement indicate
+                the horizontal dimension of the screen rectangle, in bits;
+                the second two bytes indicate the vertical dimension. The
+                remainder of the data returned by GET are the attributes
+                for each pixel in the rectangle.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng29bbc.html">PUT (Graphics)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

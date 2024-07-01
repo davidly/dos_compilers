@@ -1,0 +1,61 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng298af.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2a131.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>PUT                      Plot Array Image on Screen                  Graphics</B>
+
+ <B>PUT</B> (<U>x</U>,<U>y</U>), <U>array</U> [,<U>action</U>]
+
+    Transfers data from a numeric array to a specified location within the
+    (graphics) screen buffer.
+
+         <U>x</U>,<U>y</U>    The coordinates of the upper left corner of the screen
+                area that will receive the array image.
+
+       <U>array</U>    A numeric array.
+
+      <U>action</U>    An optional argument that allows you to control the
+                interaction of the incoming data with the data currently
+                in the screen buffer. Must be one of the following:
+
+                PSET     Replaces each screen location with data from the
+                         array.
+
+                PRESET   Replaces current screen values with values that
+                         are complementary to those held in the array. In
+                         medium resolution, a value of 0 in the array
+                         plots an attribute of 3, and vice versa. A value
+                         of 1 in the array plots an attribute of 2, and
+                         vice versa. In high resolution, a value of 0 in
+                         the array plots an attribute of 1, and vice
+                         versa.
+
+                XOR      Array values are XORed with current screen
+                         values. This is the default action.
+
+                OR       Array values are ORed with current screen values.
+
+                AND      Array values are ANDed with current screen
+                         values.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    Coordinates outside the current screen or window will
+                produce a runtime error when PUT is executed.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng12b5a.html">GET (Graphics)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

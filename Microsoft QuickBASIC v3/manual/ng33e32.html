@@ -1,0 +1,52 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng3395b.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng34399.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>WINDOW                   Redefine Screen Coordinates</B>
+
+ <B>WINDOW</B> [[SCREEN](<U>x1</U>,<U>y1</U>)-(<U>x2</U>,<U>y2</U>)]
+
+    Specifies "world" coordinates for the screen.
+
+      SCREEN    If omitted, <U>x1</U>,<U>y1</U> and <U>x2</U>,<U>y2</U> specify the upper left and
+                lower right corners of the world space, respectively. If
+                included, <U>x1</U>,<U>y1</U> and <U>x2</U>,<U>y2</U> specify the lower left and upper
+                right corners of the world space, respectively.
+
+ <U>x1</U>,<U>y1</U>,<U>x2</U>,<U>y2</U>    The corner coordinates of the world space.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    The WINDOW statement allows you to redefine the corners of
+                the display screen as a pair of "world" coordinates.
+                Because objects plotted by subsequent graphics statements
+                are still plotted in the standard "physical" coordinates,
+                the WINDOW statement provides a way of scaling, rotating,
+                and/or transposing such objects.
+
+                BASIC sorts the coordinates so that the lower of <U>x1</U> and <U>y1</U>
+                will be treated as <U>x1</U> and the lower of <U>y1</U> and <U>y2</U> will be
+                treated as <U>y1</U>, regardless of how the coordinates are
+                presented. Thus WINDOW (280,120)-(140,180) would be
+                equivalent to WINDOW (140,120)-(280,180).
+
+                A world space defined by WINDOW is disabled by a RUN
+                statement, a change in SCREEN attributes, or a WINDOW
+                statement with no arguments.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng32510.html">VIEW</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,42 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng31698.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng31e18.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>VAL                      Numeric Value of a String</B>
+
+ <U>y</U> = <B>VAL</B>(<U>stringexpr</U>)
+
+    Returns the numeric value represented by a string expression.
+
+  <U>stringexpr</U>    A string expression.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    VAL attempts to extract a number from the first characters
+                of its argument. In doing so, it ignores leading blanks,
+                tabs, and line feeds, and treats a single hyphen as
+                signifying negation. For example, VAL("   -32 Main
+                Street") returns -32.
+
+                If the first character in the argument (or the first
+                character following all space and tab characters) is a
+                letter, VAL returns 0. Thus, for example, VAL("Yomama")
+                returns 0.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng5456.html">ASC</A>
+<A HREF="ng2f606.html">STR$</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,55 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng1eb89.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng1f736.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>ON PLAY(n)               Trap for Background Music Remaining</B>
+
+ <B>ON</B> <B>PLAY</B>(<U>queuelimit</U>) <B>GOSUB</B> {<U>linenum</U> | <U>linelabel</U>}
+
+    Establishes a subroutine to which QuickBASIC will branch if fewer than
+    a specified number of notes remain in the background music buffer.     T
+    he trap must also be turned on by means of a PLAY ON statement.
+
+  <U>queuelimit</U>    An integer expression in the range 1 to 32 specifying the
+                number of notes to be trapped.
+
+     <U>linenum</U>    The first line of a music-handling subroutine. Setting
+                <U>linenum</U> to 0 disables trapping.
+
+   <U>linelabel</U>    A label identifying the first line of a music-handling
+                routine.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    {<U>linenum</U> | <U>linelabel</U>} must be defined at the main program
+                level.
+
+                With trapping in effect, and when QuickBASIC is executing
+                music in the background mode, when the number of notes
+                remaining is fewer than queuelimit, QuickBASIC branches to
+                the specified subroutine and temporarily suspends trapping
+                (by means of an implicit PLAY STOP statement). Trapping
+                automatically resumes when a RETURN from the handling
+                subroutine is executed (unless the handler explicitly
+                performs a PLAY OFF or PLAY STOP).
+
+                All event trapping is temporarily disabled when QuickBASIC
+                is executing an error-handling routine (established via an
+                ON ERROR statement).
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng248ab.html">PLAY (Event Trap)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

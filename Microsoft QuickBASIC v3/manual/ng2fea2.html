@@ -1,0 +1,67 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2fc55.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng30480.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>SUB...END SUB            Define Subprogram</B>
+
+ <B>SUB</B> <U>globalname</U> [(<U>parmlist</U>)] <B>STATIC</B>
+ .
+ .
+ .
+ [EXIT SUB]
+ .
+ .
+ .
+ <B>END</B> <B>SUB</B>
+
+    Defines a subprogram.
+
+  <U>globalname</U>    A variable name of 31 or fewer characters. globalname may
+                not appear in any other SUB statement in the same program
+                or in the user library.
+
+    <U>parmlist</U>    One or more simple variables or arrays passed as
+                parameters when the subprogram is CALLed. Names of array
+                variables must be followed by an integer enclosed in
+                parentheses; the integer specifies the number of
+                dimensions in the array. Parameters are passed by
+                reference.
+
+      STATIC    Indicates that the subprogram is nonrecursive. QuickBASIC
+                3.0 does not support recursive subprograms, so the STATIC
+                attribute is mandatory.
+
+    EXIT SUB    Provides optional exit from within a subprogram.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    Variables used within subprograms are local unless
+                declared otherwise by means of a SHARED statement.
+                Nevertheless, when a subprogram is exited and later
+                reentered, the value of a local variable may have changed.
+                To guarantee that a variable's value will not change
+                between subprogram CALLs, declare the variable STATIC by
+                means of a STATIC statement (not to be confused with the
+                STATIC attribute of the SUB statement).
+
+                You may not enter or exit a subprogram by means of GOSUB,
+                GOTO, or RETURN.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng5e67.html">CALL</A>
+<A HREF="ng2dcc2.html">SHARED</A>
+<A HREF="ng2edd5.html">STATIC</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

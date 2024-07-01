@@ -1,0 +1,45 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng2e3eb.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng2e956.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>SOUND                    Sound the Speaker</B>
+
+ <B>SOUND</B> <U>freq</U>,<U>duration</U>
+
+    Sounds the speaker at a specified frequency for a specified length of
+    time.
+
+        <U>freq</U>    A numeric expression in the range 37 to 32767; specifies,
+                in Hertz, the frequency (pitch) of the tone to be sounded.
+
+    <U>duration</U>    A numeric expression in the range 0 to 65535. Specifies
+                the length of time the tone is to be sounded, in units of
+                clock ticks. Each clock tick is 1/18.2 (0.054945054) of a
+                second.
+
+   -----------------------------------------------------------------------
+
+      <B>Notes:</B>    QuickBASIC continues program execution while a tone is
+                being sounded, unless a second SOUND statement is
+                encountered--in which case, QuickBASIC waits until the
+                first tone is finished, then begins executing the second
+                SOUND statement. The MB parameter of the PLAY statement,
+                however, can be used to enable buffering of SOUND
+                statements.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng24dc8.html">PLAY (Statement)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

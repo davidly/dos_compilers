@@ -1,0 +1,98 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng209fe.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng21818.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>OPEN                     Allow File or Device I/O</B>
+
+ (1) <B>OPEN</B> <U>filespec</U> [FOR <U>mode</U>] [ACCESS <U>access</U>] [lock] <B>AS</B> [#]<U>filenum</U> [LEN=<U>recl</U>]
+
+ or
+
+ (2) <B>OPEN</B> <U>mode2</U>, [#]<U>filenum</U>, <U>filespec</U> [,<U>recl</U>]
+
+    Makes a file or device available for sequential input, sequential
+    output, or random access (either input or output).
+
+     <U>filespec</U>  A string expression that follows DOS file naming conventions.
+
+     <U>filenum</U>    An integer expression in the range 1 to 255.
+
+        <U>mode</U>    (Syntax 1) One of the following (default is RANDOM):
+
+                INPUT    Sequential input
+                OUTPUT   Sequential output
+                APPEND   Sequential output, beginning at current EOF
+                RANDOM   Random input/output
+
+      <U>access</U>    If included, must be one of the following:
+
+                READ          File is opened for reading only.
+                WRITE         File is opened for writing only.
+                READ WRITE    File is opened for both reading and writing.
+
+        <U>lock</U>    If included, must be one of the following:
+
+                SHARED   Any process may read from or write to the file.
+                LOCK READ     No other process is granted read access to
+                    the file.
+                LOCK WRITE    No other process is granted write access to
+                    the file.
+                LOCK READ WRITE    No other process is granted either read
+                    or write access to the file.
+
+        <U>recl</U>    An integer expression in the range 1 to 32767. Sets the
+                record length for random files and the capacity of the I/O
+                buffer for sequential files. Defaults to 128.
+
+       <U>mode2</U>    (Syntax 2) A string expression that must evaluate to one
+                of the following:
+
+                I   Sequential input
+                O   Sequential output
+                A   Sequential output at EOF
+                R   Random input/output
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    If a file is opened in RANDOM mode with no ACCESS code
+                specified, QuickBASIC tries to open it for read/write
+                access. If permission is denied, it then tries write-only
+                access, then read-only access.
+
+                The read/write access code can be specified only for files
+                opened for APPEND in RANDOM mode.
+
+                The OPEN statement has additional optional arguments when
+                the device being opened is COM1: or COM2:. See OPEN COM...
+
+                Opening an existing file for sequential output destroys
+                the current file contents; to add to the current file,
+                open it for APPEND (the APPEND mode may be used only for
+                sequential disk files).
+
+                A file that is already open may not be opened for
+                sequential output or append.
+
+                Opening a nonexistent file for APPEND is equivalent to
+                opening it for OUTPUT.
+
+                Disk files and printers may be opened for either
+                sequential or random access. All other standard devices
+                may be opened only for sequential access.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng21818.html">OPEN "COM...</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

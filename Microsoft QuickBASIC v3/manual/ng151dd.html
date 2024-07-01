@@ -1,0 +1,62 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng148c5.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng157f1.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>INPUT #                  Get Input from Sequential File or Device</B>
+
+<B>INPUT</B> <B>#</B><U>filenum</U>, <U>variable</U> [,<U>variable</U>]...
+
+    Receives input from a sequential file or device and assigns it to one
+    or more numeric or string variables.
+
+     <U>filenum</U>    The number under which the input file was OPENed. It may
+                refer to a disk file, a communications file, or the
+                keyboard (KYBD:).
+
+    <U>variable</U>    The name of a variable (string or numeric) that will
+                receive input.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    The input data must match in type the variable(s) in the
+                INPUT # statement.
+
+                String input need not be enclosed within quote marks,
+                unless it contains one or more line feeds or carriage
+                returns or a significant quote mark or comma.
+
+                When receiving string input, QuickBASIC looks for the
+                first character other than a space, line feed, or carriage
+                return. If that character is a quote mark, QuickBASIC
+                considers the string to be everything from the character
+                following the quote mark up to the next quote mark. If the
+                first character is not a quote mark, QuickBASIC terminates
+                the string when it encounters a line feed, a carriage
+                return, or a comma--or when it has received 255
+                characters.
+
+                When receiving numeric input, QuickBASIC ignores leading
+                carriage returns, line feeds, and spaces, and it
+                terminates the input when it encounters a carriage return,
+                a line feed, or a comma.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng141ee.html">INKEY$</A>
+<A HREF="ng148c5.html">INPUT</A>
+<A HREF="ng157f1.html">INPUT$</A>
+<A HREF="ng18196.html">LINE INPUT</A>
+<A HREF="ng18562.html">LINE INPUT #</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

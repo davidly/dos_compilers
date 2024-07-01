@@ -1,0 +1,164 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng8271.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng9a3c.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>COLOR                    Set Foreground, Background, and Border Colors</B>
+
+ <B>COLOR</B> [<U>foreground</U>] [,[<U>background</U>] [,<U>border</U>]]     ' Screen mode 0
+ <B>COLOR</B> [<U>background</U>] [,[<U>palette</U>]                   ' Screen mode 1
+ <B>COLOR</B> [<U>foreground</U>] [,[<U>background</U>]]               ' Screen modes 7-10
+
+    Specifies foreground, background, and border colors in text mode
+    (SCREEN mode 0); in medium-resolution graphics mode (SCREEN mode 1),
+    specifies palette and background color; in screen modes 7 through 10,
+    specifies foreground and background colors. May not be used in SCREEN
+    mode 2 (high-resolution graphics).
+
+  <U>foregroun</U><U>d</U>    An integer expression; selects the foreground color. For
+                SCREEN mode 0, this value must be in the range 0 to 31;
+                for SCREEN modes 7-10, this value must be in the range
+                1-15.
+
+  <U>background</U>    An integer expression; selects the background color. For
+                SCREEN mode 0, this value must be in the range 0 to 7; for
+                SCREEN modes 1-10, this value must be in the range 0 to
+                63.
+
+     <U>palette</U>    An integer expression, selecting one of two color palettes
+                (see below).
+
+      <U>border</U>    An integer expression; must be in the range 0 to 15.
+                Selects the color of the border.
+
+    <B>                     Color values</B>
+
+<B>          </B><U>Value</U><B>     </B><U>Color</U><B>          </B><U>Value</U><B>     </B><U>Color</U>
+            0       Black            8       Gray
+            1       Blue             9       Light blue
+            2       Green           10       Light green
+            3       Cyan            11       Light cyan
+            4       Red             12       Light red
+            5       Magenta         13       Light magenta
+            6       Brown           14       Yellow
+            7       White           15       Bright white
+
+          Add 16 to a value to produce its blinking equivalent.
+
+    <B>                Foreground attributes for the</B>
+    <B>                 Monochrome Display Adapter</B>
+
+<B>                        </B><U>Value</U><B>      </B><U>Foreground Attribute</U>
+                         0         Black
+                         1         Underlined
+                         2-7       White
+                         8         Black
+                         9         Underlined high intensity
+                         10-15     High-intensity white
+                         16        Black
+                         17        Underlined black
+                         18-23     Blink
+                         24        Black
+                         25        Blinking underlined high intensity
+                         26-31     Blinking high intensity
+
+    Background values in the range 0 to 6 produce a black background,
+    while a value of 7 produces a white background.
+
+    If the background and foreground are the same, then the characters
+    will be invisible.
+
+    The following is a list of legal values for each of the SCREEN modes:
+
+               SCREEN 0 (Text mode)
+                    The <U>foreground</U> color must be in the range 0 to 31.
+                    The <U>background</U> color must be in the range 0 to 7.
+                    The <U>border</U> color must be in the range 0 to 15.
+
+                    The default color for <U>background</U> and <U>border</U> is black.
+
+               SCREEN 1 (Medium-resolution graphics mode)
+                    The <U>background</U> color must be in the range 0 to 15.
+                    Even numbers for <U>palette</U> will select Palette 0,
+                         whereas odd number will select Palette 1.
+
+<B>                                   Palettes</B>
+
+<B>                    </B><U>Color</U><B>     </B><U>Palette 0</U><B>                </B><U>Palette 1</U>
+                    0         Current background       Current background
+                    1         Green                    Cyan
+                    2         Red                      Magenta
+                    3         Brown                    White
+
+               SCREEN 2 (High-resolution graphics mode)
+                    Calling COLOR when in this mode will result in a
+                    runtime error.
+
+               SCREEN 7 and 8
+                    The <U>foreground</U> color must be in the range 1 to 15.
+                    The <U>background</U> color must be in the range 0 to 15.
+
+                    EGA only. The colors are dependent on the current
+                    palette selected (See PALETTE statement).
+
+               SCREEN 9
+                    The <U>foreground</U> color must be in the range 1 to 15 for
+                    EGAs with more than 64K. If the EGA only has 64K, the
+                    <U>foreground</U> color must be in the range 1 to 3.
+
+                    The <U>background</U> color must be in the range 0 to 63.
+
+                    EGA only.  The colors are dependent on the current
+                    palette selected (See PALETTE statement).
+
+               SCREEN 10
+                    The <U>foreground</U> color must be in the range 1 to 3. The
+                    values are as follows: 1 = Black; 2 = Blink; and
+                    3 = High Intensity.
+
+                    The <U>background</U> color must be in the range 0 to 8.
+
+                    EGA only. The colors are dependent on the current
+                    palette selected (See PALETTE statement).
+
+   --------------------------------------------------------------------------
+
+      <B>Notes:</B>    In text mode (SCREEN mode 0), the COLOR statement
+                specifies the foreground, background, and border colors.
+                Omitted parameters retain former values. The default is
+                white foreground (7), black background (0), and black
+                border (0). The <U>border</U> parameter is ignored on the
+                Monochrome Display Adapter.
+
+                In medium-resolution graphics mode (SCREEN mode 1), the
+                COLOR statement doesn't actually specify the foreground
+                color. Instead it specifies the background color and one
+                of two three-color palettes. Foreground colors are
+                selected from the current palette via the PSET, PRESET,
+                LINE, CIRCLE, PAINT, VIEW, and DRAW statements. Either the
+                background parameter or the palette parameter (but not
+                both) may be omitted; omitted parameters retain former
+                values.
+
+                The COLOR statement may not be used in high-resolution
+                graphics mode (SCREEN mode 2).
+
+                The <U>border</U> option cannot be used with an Enhanced Graphics
+                Adapter (EGA) with an Enhanced Color Display.
+</PRE>
+<HR>
+<B>See Also:</B>
+<A HREF="ng23171.html">PALETTE</A>
+<A HREF="ng2c723.html">SCREEN (Statement)</A>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>

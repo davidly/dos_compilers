@@ -1,0 +1,49 @@
+<HTML>
+<HEAD><TITLE>QuickBASIC 3.0 - Long Entry</TITLE></HEAD>
+<BODY>
+
+<A HREF="ng32b68.html">[&lt;&lt;Previous Entry]</A>
+<A HREF="ng320.html">[^^Up^^]</A>
+<A HREF="ng33204.html">[Next Entry&gt;&gt;]</A>
+<A HREF="menu.html" >[Menu]</A>
+<A HREF="info.html">[About The Guide]</A>
+<HR>
+<PRE>
+<B>WAIT                     Wait for Port Status</B>
+
+ <B>WAIT</B> <U>port</U>, <U>n</U>[,<U>m</U>]
+
+    Suspends program execution until a specified bit pattern appears at a
+    specified port address.
+
+        <U>port</U>    A numeric expression in the range 0 to 65535; specifies
+                the I/O port to test.
+
+         <U>n</U>,<U>m</U>    Integer expressions in the range 0 to 255; they supply the
+                test. <U>m</U> defaults to 0.
+
+   ----------------------------------------------------------------------
+
+      <B>Notes:</B>    QuickBASIC gets the value at port, XORs it with <U>m</U>, then
+                ANDs it with <U>n</U>. If the result is zero, the process is
+                repeated. If the result is nonzero, program execution
+                continues with the next statement.
+
+                To test for a 1 at a particular bit position in <U>port</U>, <U>m</U>
+                should be omitted and <U>n</U> should have a 1 at the position in
+                question. To test for a 0 in <U>port</U>, both <U>n</U> and <U>m</U> should
+                have a 1 in the position in question.
+
+                Note that the test is considered positive if any nonzero
+                value is returned. Therefore, to test for multiple bit
+                positions, use multiple WAIT statements.
+
+                Warning: If <U>port</U> never develops a nonzero value, WAIT can
+                put your system into an infinite loop.
+</PRE>
+<HR>
+This page created by ng2html v1.05, the Norton guide to HTML conversion utility.
+Written by <A HREF="http://www.acemake.com/hagbard">Dave Pearson</A>
+<HR>
+</BODY>
+</HTML>
