@@ -1,0 +1,14 @@
+  COUNT is a simple program for analyzing text files.  It makes 
+certain reasonable assumptions that will be valid for most text files.  
+For example, it assumes that terminating punctuation (period, question 
+mark, or exclamation point) marks the end of a sentence.  COUNT will 
+produce incorrect results on files that contain abbreviations, dot 
+codes, or other uses of terminating punctuation.  The program uses a 
+constant for the number of vowels per syllable.  This number is based 
+on analysis of several typical files.  Finally, Y is assumed to be a 
+consonant at the start of a word, but a vowel within a word.  
+
+  During the session you'll need to know that this file contains 796 
+bytes, 630 characters, 588 letters, 226 vowels, 127 words, 13 lines, 
+and 8 sentences.  
+

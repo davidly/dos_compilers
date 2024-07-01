@@ -1,0 +1,8 @@
+If you have a mouse, you can probably use it with the
+CodeView debugger. However, the debugger is not guaranteed
+to work correctly if your computer is not completely IBM
+compatible or if your mouse is not a Microsoft Mouse. A
+few non-IBM machines will not run the debugger at all with
+a mouse.
+
+Do you want to try using the mouse? (Y/N) 

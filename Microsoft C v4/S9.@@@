@@ -1,0 +1,17 @@
+The CodeView debugger is a powerful tool for serious debugging.
+This session uses a practical example to introduce you to
+CodeView commands. Each step in the debugging process is
+explained as it is performed. The session is quite detailed
+and takes 20 to 30 minutes.
+
+You control the pace. The session periodically pauses and asks
+you to press the SPACEBAR. Although keystrokes and commands
+are discussed on the screen, you should NOT try to type them.
+The session does this automatically. Just press the SPACEBAR.
+
+You can quit the session after the debugger is started by first 
+pressing CONTROL-C or CONTROL-BREAK, then pressing the SPACEBAR. 
+The word `break' will appear, followed by the CodeView prompt 
+(the greater-than symbol). At the prompt, enter `Q' for Quit. 
+The debugger will terminate.
+

@@ -1,0 +1,23 @@
+The debugger will be started with the following command line:
+
+	CVR /W /S /M "/C<COUNT.R" COUNT COUNT.TXT
+
+The elements of the command line are explained below:
+
+  - CVR is the program name of the restricted debugger.
+  - /W is an option that specifies window mode.
+  - /S is an option that specifies screen swapping as the
+    screen-exchange mode.
+  - /M is an option that turns off the mouse if you have one.
+  - "/C<COUNT.R" is an option that specifies that, on start-up,
+    commands will be redirected from COUNT.R to the debugger.
+  - COUNT is the executable file (the .EXE extension is assumed).
+  - COUNT.TXT is the file to be processed by COUNT.EXE.
+
+Your command line may also include the /B, /I, or /D options,
+depending on selections made at previous menus. See the
+CODEVIEW.DOC file for more information on command lines.
+
+The debugger will now be started. Loading and initial processing
+may take a moment . . .
+

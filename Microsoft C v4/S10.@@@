@@ -1,0 +1,17 @@
+A common debugging technique is to establish a situation in
+which you know the results your program should produce, then
+see if the program actually produces those results. This
+method is used in the sample session.
+
+During the session, the debugger examines a simple program
+called COUNT. This program counts the letters, words, sentences,
+and other elements in a text file. The program contains a bug
+that will be found and analyzed during the session.
+
+To test the program, a text file called COUNT.TXT is provided.
+The words, sentences, letters, bytes, and other elements in
+COUNT.TXT have been counted by hand, and noted in the file itself.
+During debugging, the numbers in the text file will be compared
+to the numbers counted by the program. Any differences will
+be a clue to help locate the bug.
+

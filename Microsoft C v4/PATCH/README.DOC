@@ -1,0 +1,28 @@
+There is a bug in IBM PC-DOS 3.20 which may cause improper operation of a
+program if a floating point exception is generated.  This patch to IBM
+PC-DOS 3.20 is provided to insure proper operation of programs which may
+generate floating point exceptions.  In particular, the C runtime routine
+signal with the SIGFPE parameter does not work with the unpatched version
+of IBM PC-DOS 3.20.  IBM has also made a patch for this problem available.
+
+Procedure for patching IBM PC-DOS 3.20:
+
+1.	Use the DOS sys command to transfer IBMDOS.COM and IBMBIO.COM
+	to a writable diskette.
+
+2.	Copy command.com, sys.com and debug.com from your IBM DOS 3.20 
+	diskette to the new diskette.  
+
+3.	Copy stkpat.bat, stkpat.scr, rmrhs.exe and setrhs.exe from the 
+	\patch directory to the new diskette.  
+
+4.	Reboot the system from the new diskette.
+
+5. 	Run stkpat.bat.  This patches the IBMBIO.COM on the new diskette.
+
+6.	Use the DOS sys command to transfer the patch to any other 
+	IBM PC-DOS 3.20 diskette.
+
+If you are running any version of DOS 3.20 other than IBM PC-DOS 3.20, contact
+your hardware manufacturer (OEM) to find out if the problem exists in your 
+DOS 3.20 version.

@@ -1,0 +1,20 @@
+							Demonstration Menu
+
+Which demonstration do you want to see?
+
+     D  Demonstrates CodeView features. This selection uses
+        a graphics program and requires a graphics adapter.
+
+     P  Prints the documentation file, CODEVIEW.DOC.
+
+     T  Teaches you about CodeView debugging. During this
+        session, a sample program is automatically examined
+        and debugged. The session demonstrates and explains
+        most CodeView commands.
+
+     E  Enables you to experiment by examining a program that
+        calculates the value of pi.
+
+     Q  Quits the sample session.
+
+Press the letter of your selection: 

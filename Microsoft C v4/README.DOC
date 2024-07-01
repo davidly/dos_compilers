@@ -1,0 +1,69 @@
+The directory \startup and its subdirectories contain the files
+necessary for building the startup portion of the C runtime library.
+The \startup directory contains the startup source files, the memory
+model independent include files, the batch file and the make file used
+to build the startup object files.  The subdirectories of \startup
+contain the memory model dependent include file (version.inc) for the 
+startup and are the repositories for the object files that get created 
+by the startup batch file.  
+
+The startup object files can be built by invoking startup.bat.  This
+batch file assumes that the \startup directory and its subdirectories
+S, M, C, and L exist and that make.exe, the C compiler and the assembler
+are in the execution path.  MASM 4.0 or later is required to build the
+startup sources with the makefile invoked by startup.bat.  The batch 
+file also assumes that the startup sources are in the same directory as 
+startup.bat.
+
+The include files stdio.h and ctype.h are required for building the
+startup source file wild.c but are not included on the \startup directory
+because they exist on the directory containing the standard include files.
+A make variable called CINC controls where the makefile looks for these
+include files.  CINC is currently set to look for these include files in
+the \startup directory by the line "CINC=.." in the makefile.  The value
+of CINC can be changed appropriately if the includes are placed elsewhere.
+
+The message "<cEnd - possible invalid use of nogen>" is generated 
+when some of the assembly language source files are assembled.  This
+message is expected and is totally benign.
+
+The startup batch file requires arguments as described in the header of 
+startup.bat.  Invoking startup.bat with no arguments will also give usage 
+information.
+
+The following files are contained in the \startup directory:
+
+Startup source files:
+	chkstk.asm
+	chksum.asm
+	crt0.asm
+	crt0dat.asm
+	crt0fp.asm
+	crt0msg.asm
+	execmsg.asm
+	nmsghdr.asm
+	setargv.asm
+	stdalloc.asm
+	stdenvp.asm
+	stdargv.asm
+	_wild.asm
+	wild.c
+
+Startup include files:
+	brkctl.inc
+	cmacros.inc
+	msdos.inc
+	register.h
+	
+Tools:
+	dosseg.exe
+    
+Make and batch files:
+	startup.bat:	invokes make file to build objs and link to null program
+	makefile:	contains rules for building startup sources
+	nulbody.c:	null c program
+	nulbody.lnk:	link script for linking null program
+
+Documentation:
+	readme.doc:	information about \startup directory structure
+			and contents

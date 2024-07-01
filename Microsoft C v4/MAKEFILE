@@ -1,0 +1,92 @@
+#############################################################
+#	
+#	(C)Copyright Microsoft Corporation, 1986
+#
+#	makefile for building c runtime startup objects
+#	and linking null c program
+#
+#	This makefile is invoked by startup.bat.  See 
+#	startup.bat for usage information.
+#############################################################
+
+MODEL=S
+
+SRC=..
+INC=..
+CINC=..
+
+CFLAGS=-A$(MODEL) -I$(INC) -Os -Gs -c
+CL=cl $(CFLAGS)
+
+ASMFLAGS= -Mx
+ASM=masm $(ASMFLAGS)
+
+CMACROS=$(INC)\$(MODEL)\version.inc $(INC)\cmacros.inc
+
+
+#	startup modules
+
+crt0.obj:	$(SRC)\crt0.asm $(CMACROS) $(INC)\msdos.inc $(INC)\brkctl.inc
+		$(ASM) $(SRC)\crt0.asm;
+		copy ..\dosseg.exe
+		dosseg crt0.obj
+		del dosseg.exe
+
+crt0dat.obj:	$(SRC)\crt0dat.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\crt0dat.asm;
+
+crt0msg.obj:	$(SRC)\crt0msg.asm $(CMACROS)
+		$(ASM) $(SRC)\crt0msg.asm;
+
+nmsghdr.obj:	$(SRC)\nmsghdr.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\nmsghdr.asm;
+
+chksum.obj:	$(SRC)\chksum.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\chksum.asm;
+
+setargv.obj:	$(SRC)\setargv.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\setargv.asm;
+
+stdalloc.obj:   $(SRC)\stdalloc.asm $(CMACROS) \
+		$(INC)\brkctl.inc $(INC)\msdos.inc
+		$(ASM) $(SRC)\stdalloc.asm;
+
+stdenvp.obj:	$(SRC)\stdenvp.asm $(CMACROS) $(INC)\msdos.inc $(INC)\brkctl.inc
+		$(ASM) $(SRC)\stdenvp.asm;
+
+chkstk.obj:	$(SRC)\chkstk.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\chkstk.asm;
+
+
+#	wild card expansion support modules
+
+$(MODEL)setargv.obj: $(SRC)\stdargv.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\brkctl.inc
+		$(ASM) -Dwildcard $(SRC)\stdargv.asm,$(MODEL)setargv.obj;
+
+_wild.obj: 	$(SRC)\_wild.asm $(CMACROS) $(INC)/msdos.inc
+		$(ASM) $(SRC)\_wild.asm;
+
+wild.obj: 	$(SRC)\wild.c $(CINC)/stdio.h $(INC)/register.h $(CINC)/ctype.h
+		$(CL) -I$(CINC) -Ze -Zl $(SRC)\wild.c
+
+
+#	error message modules
+
+crt0fp.obj:	$(SRC)\crt0fp.asm $(CMACROS)
+		$(ASM) $(SRC)\crt0fp.asm;
+
+execmsg.obj:	$(SRC)\execmsg.asm $(CMACROS)
+		$(ASM) $(SRC)\execmsg.asm;
+
+
+#	small program
+
+nulbody.obj:	$(SRC)\nulbody.c
+		$(CL) $(SRC)\nulbody.c
+
+#	this step is always done because the target does not exist
+
+startup:
+		link @$(SRC)\nulbody.lnk
+		IF NOT ERRORLEVEL 0 echo *** link failed ***

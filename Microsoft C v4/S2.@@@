@@ -1,0 +1,21 @@
+
+A few IBM-compatible computers require the /D CodeView
+option. The following are known to require this option:
+
+     Tandy 1000            AT&T 6300 Plus 
+
+Computers that work without /D include the following:
+
+     Compaq                Eagle           
+     HP Vectra             TI Business Professional
+     AT&T 6300             Zenith (except model 100)
+     Tandy 1200 or 3000    NCR PC
+
+If your computer is not mentioned, try the session first
+without /D. If you have trouble, try again with /D. If you
+still have trouble, your computer isn't compatible. 
+
+If you use the /D option, the CONTROL-C and CONTROL-BREAK
+keys cannot be used to break out of the sample session.
+
+Do you want to try the /D option? (Y/N) 
