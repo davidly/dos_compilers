@@ -1,0 +1,51 @@
+QUICK C COMPILER OPTIONS
+-MEMORY MODEL-
+/AS small model (default)
+/AC compact model
+/AM medium model
+/AL large model
+-OPTIMIZATION-
+/O enable optimization (same as /Ot)
+/Od disable optimizations
+/Ol enable loop optimizations
+/Ox enable optimization (same as /Otl)
+/Ot enable optimization
+-CODE GENERATION-
+/G0 8086 instructions (default)
+/G2  286 instructions
+/Gc Pascal style function calls
+/Gs no stack checking
+/Gt[number] data size threshold
+-OUTPUT FILES-
+/Fe<executable file>
+/Fm[map file]
+/Fo<object file>
+-PREPROCESSOR-
+/C don't strip comments
+/D<name>[=text] define macro
+/E preprocess to stdout
+/EP same as /E but no #line
+/I<name> add #include path
+/P preprocess to file
+/U<name> remove predefined macro
+/u remove all predefined macros
+/X ignore "standard places"
+-LANGUAGE-
+/Za disable extensions
+/Zd line number information
+/Ze enable extensions (default)
+/Zi symbolic debugging information
+/Zl remove default library info
+/Zp pack structures
+/Zq enable debug interrupts
+/Zr enable pointer checking
+/Zs syntax check only
+-FLOATING POINT-
+/FPi inline with emulator (default)
+/FPi87 inline with 8087
+-MISCELLANEOUS-
+/c compile only, no link
+/W<number> warning level
+-LINKING-
+/F<hex_number> stack size (hex. bytes)
+/link [linker_options_and_libraries]
