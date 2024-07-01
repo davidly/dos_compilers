@@ -1,9 +1,5 @@
 #include <stdio.h>
 
-#ifdef AZTEC86
-#include <stdlib.h>
-#endif
-
 #ifdef HISOFTC
 #include <stdlib.h>
 #endif
