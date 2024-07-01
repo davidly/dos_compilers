@@ -1,0 +1,4 @@
+-xcc:\bin\
+-xlc:\lib\
+-xtc:\tmp\
+-Ic:\include\
