@@ -1,0 +1,45 @@
+Copyright (c) 1985-1997 Jim Lopushinsky
+
+email: jimlop@ix.netcom.com
+
+This is my original documentation:
+
+Dec 10, 1985
+Jim Lopushinsky
+
+Z80.CMD allows execution of CP/M-80 .COM files under CP/M-86 and CPCDOS.
+CP/M-80 .COM files must be renamed to .CPM files.  That is, NSWP.COM is
+renamed to NSWP.CPM.
+
+A>Z80 <cpm-80 file name> <paramaters>
+
+Don't try running any funny CP/M stuff that calls the BIOS disk I/O
+functions directly.  It won't work.  Other than that, virtually any
+CP/M-80 program will be successfully executed.  Note that programs
+which make use of MP/M or Concurrent extended functions will not work.
+
+Z80 emulates the entire Z80 instruction set, and builds the CP/M-80
+environment.  The execution speed on a 5 MHZ 8088 is about 1/8 the
+true execution speed on a 4 MHZ Z80.
+
+
+Nov 30, 1997:
+
+Z80F.CMD is a version assembled with the freq flag set on (see below).
+
+11/20/85       Initial version
+
+09/08/96 1.1   Added option to record frequency of Z80 instructions.
+               Use Z80F.CMD and after any CP/M-80 .CPM file terminates,
+               run Z80FREQ.EXE and examine Z80FREQ.TXT.  Z80FREQ.EXE
+               requires Z80.TXT, Z80CB.TXT, Z80ED.TXT, Z80XD.TXT,
+               Z80XDCB.TXT and Z80FREQ.DAT.  Z80FREQ.DAT is produced
+               by the Z80 emulator.
+
+11/30/97 1.3  IN and OUT instructions are rerouted to COM 1 with a zero base.
+              To change to a different COM port, you need a hex editor.
+              Edit Z80.CMD (or Z80F.CMD) and change the value at offset
+              E1 hex.  Valid values are ASCII 1, 2, 3 or 4.
+
+              A QTERM overlay is included (QTIBM.MAC).  See the instructions
+              supplied with QTERM for implemetation.

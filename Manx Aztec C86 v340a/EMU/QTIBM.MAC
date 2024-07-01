@@ -1,0 +1,176 @@
+        .z80
+
+;QTERM overlay for IBM PC compatible running Jim Lopushinsky's
+;CP/M-80 emulator.  Note: this may even work in MYZ80, altho
+;I haven't tried it.
+
+        aseg
+
+basep   equ     0               ;base of 8250
+
+datap   equ     basep           ;data input/output register
+inte    equ     basep+1         ;interrupt enable register
+intid   equ     basep+2         ;interrupt id register
+linec   equ     basep+3         ;line control register
+modemc  equ     basep+4         ;modem control register
+linest  equ     basep+5         ;line status register
+modemst equ     basep+6         ;modem status register
+divl    equ     basep           ;divisor low register
+divh    equ     basep+1         ;divisor high register
+
+printc  equ     109h            ;print character in C
+
+;modem input status routine
+
+        org     110h
+        in      a,(linest)
+        and     1
+        ret
+
+;read modem character
+
+        org     120h
+        in      a,(datap)
+        ret
+
+;modem output status
+
+        org     130h
+        in      a,(linest)
+        and     20h
+        ret
+
+;write modem character
+
+        org     140h
+        out     (datap),a
+        ret
+
+;start break
+        org     150h
+        in      a,(linec)
+        or      40h
+        out     (linec),a
+        ret
+
+;end break
+        org     160h
+        in      a,(linec)
+        and     0bfh
+        out     (linec),a
+        ret
+
+;drop dtr
+        org     170h
+        ld      a,2
+        out     (modemc),a
+        ret
+
+;restore dtr
+        org     180h
+        ld      a,3
+        out     (modemc),a
+        ret
+
+;set baud rate
+        org     190h
+        ld      c,linec
+        in      e,(c)
+        set     7,e
+        out     (c),e
+        out     (divl),a
+        res     7,e
+        out     (c),e
+        ret
+
+;baud rate table
+        org     1a0h
+        db      3,0ffh          ;38400
+        db      6,0ffh          ;19200
+        db      12,0ffh         ;9600
+        db      24,0ffh         ;4800
+        db      48,0ffh         ;2400
+        db      96,0ffh         ;1200
+        db      192,0ffh        ;600
+        db      0,0             ;300 - not available
+
+;set communications mode
+        org     1b0h
+        out     (linec),a
+        ret
+
+;communication mode table
+        org     1c0h
+        db      22h             ;7n1
+        db      23h             ;8n1
+        db      26h             ;7n2
+        db      27h             ;8n2
+        db      1ah             ;7e1
+        db      1bh             ;8e1
+        db      1eh             ;7e2
+        db      1fh             ;8e2
+        db      0ah             ;7o1
+        db      0bh             ;8o1
+        db      0eh             ;7o2
+        db      0fh             ;8o2
+
+        db      0               ;reserved
+        db      8               ;protocol transfer size
+        db      3               ;processor speed
+        db      27              ;escape character
+
+;signon message
+        org     1d0h
+        db      'Z80 emulator - IBM PC',0
+
+;clear screen string
+        org     1f0h
+        db      27,'E',0
+
+;cursor position
+        org     200h
+        push    hl
+        ld      c,27
+        call    printc
+        ld      c,'Y'
+        call    printc
+        pop     hl
+        ld      a,h
+        push    hl
+        add     a,20h
+        ld      c,a
+        call    printc
+        pop     hl
+        ld      a,l
+        add     a,20h
+        ld      c,a
+        jp      printc
+
+;terminal capability bitmap
+        org     22fh
+        db      43h     ;end highlight, start highlight, clear to eol
+
+;terminal capability strings
+        db      27,'q',0        ;end reverse video
+        org     238h
+        db      27,'p',0        ;start reverse video
+        org     260h
+        db      27,'K',0        ;clear to end of line
+
+;entry subroutine
+        org     270h
+        ret
+
+;exit subroutine
+        org     273h
+        ret
+
+;user subroutine
+        org     276h
+        ret
+
+;keyboard mapping
+        org     279h
+        ret
+
+        end

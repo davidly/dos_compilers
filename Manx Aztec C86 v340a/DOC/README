@@ -1,0 +1,59 @@
+Dear Aztec C user:
+
+    Here are some changes made to the package since the release doc was
+printed. They are divided into two sections 3.40a and 3.40b.
+
+Version 3.40a:
+
+    C driver: the -n option for the linker should be -N.  This is a doc
+error.
+
+    Linker: the CLIB environment variable may now be a list of path
+prefixes, separated by semicolons or spaces. 
+    When using the -l option and the CLIB environment variable, the linker
+will NOT search the current directory unless explicitly specified by an empty
+prefix.
+    For example:
+        CLIB=/path1/;/path2/;   will search path1 first, then path2,
+            then the current directory.  
+        CLIB=;/path1/;;/path2/   will cause a search of the current
+            directory, then path1, then the current directory
+            again, then path2.
+
+    New linker search algorithm.  The linker will now search for your object
+file in 3 different ways. 1) it will take the name you give and search the 
+current directory. if not found then 2) it will append .o (if no extension was
+given) and search again. If still not found, then 3) it will take the name,
+append .o if none given, and search the path given in the CLIB variable. If
+still not found then an error message is given and the linker will quit.
+
+     Stksiz.c: stksiz.c has been changed to add a variable that is used by
+the stack overflow checking logic. If you are using stksiz.c, you will need to
+use the version supplied in this release and make any changes required for your
+own use.
+
+Differences between v3.40A and v3.40B:
+
+	v3.40B contains some fixes to the libraries, utilities, and the linker. 
+These changes do NOT affect the documentation in any way. 
+
+NOTE: The sign-on messages which contain the version of the compiler, 
+assembler, linker, and utilities, are changed ONLY when the software changes.
+(For example, in version 3.40B the linker will sign on as 3.40B while the
+compiler and assembler will sign on as 3.40A.)
+
+They changes are as follows:
+	1) gchar is no longer multiply defined when scanf and fscanf are 
+used together.
+	2) cswit is no longer undefined when linking with third-party libraries.
+	3) malloc now works properly in large data programs.
+	4) obj -s and -u command now works correctly.
+	5) obj now ignores sdb info (no need to use -n upon compilation)
+	6) ord now works with large code files.
+	7) hex86 options -j and -e can now be used together.
+
+    We hope you enjoy using the MANX Aztec C system. Please read the release
+doc as it contains a lot of useful information. Any problems with our software
+can be reported via our tech line from 9am-6pm EST or by mail. The phone number
+and address as well as some info to have handy can be found towards the end of
+the release doc.

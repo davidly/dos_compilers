@@ -1,0 +1,12 @@
+# -----------------------------------
+# makefile by bill buckels 2008
+# -----------------------------------
+PRG=ptxmake
+$(PRG).exe: $(PRG).o
+            ln $(PRG).o c.lib
+            del $(PRG).o
+            @echo All Done!
+
+$(PRG).o: $(PRG).c
+           cc $(PRG).c
+          

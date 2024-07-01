@@ -1,0 +1,12 @@
+A CP/M-86 and CP/M-80 emulator for MS-DOS.
+All normall CP/M-86 stuff should run including
+CMD files with overlays.  Use CPM <cmd file>
+<paramaters>.  If the .CMD file is not found in
+the current directory, the DOS path will be
+searched.  For CP/M-80, run the Z80 emulator
+under the CP/M-86 emulator:
+CPM Z80 <cp/m-80 com file> <paramaters>.
+All CP/M-80 .COM files must be renamed to
+.CPM.  Z80.CMD will also run under a vanilla
+CP/M-86, Concurrent DOS, or other system that
+can execute .CMD files.

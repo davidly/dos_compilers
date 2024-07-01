@@ -1,0 +1,25 @@
+ReadMe file for sample AZTEC C programs
+
+I have put a small number of AZTEC C programs in place to
+provide something interesting to compile.
+
+These samples include a fairly effective run length encoding and Text
+Screen compression scheme that typically compresses a 4k textscreen to
+less than half its size in a Binary File which I have dubbed a PTX file,
+using a modified PCX (ZSOFT) algorithm and providing a 128K
+descriptive header.
+
+Program Synopsis:
+
+TEXTVU   EXE  -   Screen Viewer and Batch File Driver   
+BSV2TXT  EXE  -   BSAVED to Ascii File Conversion Utility 
+PTXMAKE  EXE  -   BSAVED Screen Compression Utility
+BSAVEINC EXE  -   Programmers Tool- Screen Compression
+
+Demo Programs -
+
+BATCH    EXE
+
+You should refer to the program source for more information.
+
+Bill Buckels 1997

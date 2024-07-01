@@ -1,0 +1,29 @@
+# ------------------------------------------------------------
+# makefile(C) Copyright Bill Buckels 2008. All rights reserved.
+# ------------------------------------------------------------
+
+PRG=ov
+OV1=ov1
+OV2=ov2
+
+# The command to link the root reserves 0x4000 bytes for the overlay’s code 
+# and 0x1000 bytes for its data. 
+$(PRG).EXE: $(PRG).o $(OV1).o $(OV2).o
+	ln -o $(PRG).EXE -R +C 4000 +D 1000 $(PRG).o ovld.o -lc
+	ln $(OV1).o ovbgn.o $(PRG).rsm -lc
+	ln $(OV2).o ovbgn.o $(PRG).rsm -lc
+	del $(PRG).o
+	del $(OV1).o
+	del $(OV2).o
+	del $(PRG).rsm
+	
+		
+$(PRG).o: $(PRG).c 
+      cc $(PRG).c
+      
+$(OV1).o: $(OV1).c
+      cc $(OV1).c
+      
+$(OV2).o: $(OV2).c
+      cc $(OV2).c 
+    

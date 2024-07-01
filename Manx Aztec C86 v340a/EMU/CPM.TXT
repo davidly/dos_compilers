@@ -1,0 +1,256 @@
+  0 System Reset
+  1 Console Input
+  2 Console Output
+  3 Auxillary Input
+  4 Auxillary Output
+  5 List Output
+  6 Direct Console I/O
+  7 Auxillary Input Status
+  8 Auxillary Output Status
+  9 Print String
+ 10 Read Console Buffer
+ 11 Get Console Status
+ 12 Return Version Number
+ 13 Reset Disk System
+ 14 Select Disk
+ 15 Open File
+ 16 Close File
+ 17 Search for First
+ 18 Search for Next
+ 19 Delete File
+ 20 Read Sequential
+ 21 Write Sequential
+ 22 Make File
+ 23 Rename File
+ 24 Return Login Vector
+ 25 Return Current Disk
+ 26 Set DMA Address
+ 27 Get Addr (Alloc)
+ 28 Write Protect Disk
+ 29 Get R/O Vector
+ 30 Set File Attributes
+ 31 Get Addr (DBP)
+ 32 Set/Get User Code
+ 33 Read Random
+ 34 Write Random
+ 35 Compute File Size
+ 36 Set Random Record
+ 37 Reset Drive
+ 38 Access Drive
+ 39 Free Drive
+ 40 Write Random w/Zero Fill
+ 41 Test and Write Record
+ 42 Lock Record
+ 43 Unlock Record
+ 44 Set Multi-sector Cnt
+ 45 Set BDOS Error Mode
+ 46 Get Disk Free Space
+ 47 Chain to Program
+ 48 Flush Buffers
+ 49 Get/Set SCB
+ 50 Direct Bios Calls
+ 51 Set DMA Segment
+ 52 Return Addr DMA
+ 53 Allocate Max Memory
+ 54 Max Allocate Specific Memory
+ 55 Allocate Memory Segment
+ 56 Allocate Specific Memory
+ 57 Free Specified Mem Segment
+ 58 Free All Memory
+ 59 Load Overlay
+ 60 Call RSX
+ 61
+ 62
+ 63
+ 64 Login
+ 65 Logoff
+ 66 Send Message
+ 67 Receive Message
+ 68 Get Network Status
+ 69 Get Config Table Addr
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83 Get System Time
+ 84 Set System Time
+ 85 Get System Date
+ 86 Set System Date
+ 87 Allocate system Flag
+ 88 Free system Flag
+ 89 Allocate SYSDAT Buffer
+ 90 Lock physical Drive
+ 91 Unlock physical Drive
+ 92 Scan Path for Exec File
+ 93 Load and Execute Command
+ 94 Get/Set Process Exit Code
+ 95 Set Country Code
+ 96 Return Country Info
+ 97
+ 98 Free Blocks
+ 99 Truncate File
+100 Set Directory Label
+101 Return Dir Label Data
+102 Read File Date Stamps
+103 Write File XFCB
+104 Set Date and Time
+105 Get Date and Time
+106 Set Default Password
+107 Return Serial Number
+108 Get/Set Return Code
+109 Get/Set Console Mode
+110 Get/Set Output Delim
+111 Print Block
+112 List Block
+113 MSDOS File Functions
+114
+115
+116 Set File Time/Date Stamps
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128 Allocate Memory Segment
+129 Allocate Memory Segment
+130 Free Memory Segment
+131 Poll a Device
+132 Wait for a system Flag
+133 Set a system Flag
+134 Make Queue
+135 Open Queue
+136 Delete Queue
+137 Queue Read
+138 Cond Queue Read
+139 Queue Write
+140 Cond Queue Write
+141 Delay Specified Ticks
+142 Call Dispatcher
+143 Terminate Calling Process
+144 Create a Process
+145 Set Priority
+146 Attach Console
+147 Detach Console
+148 Set Default Console
+149 Assign Console to Process
+150 Execute Command Line
+151 Resident Procedure Library
+152 Parse Filename
+153 Return Def Console
+154 Return Addr SysDat Segment
+155 Get System Time and Day
+156 Return Addr Process Descriptor
+157 Terminate Process
+158 Attach Def List Device
+159 Detach Def List Device
+160 Set Default List Device
+161 Cond Attach Def List Device
+162 Cond Attach Def Console
+163 Return OS Release/Version
+164 Return Default List Device
+165 Attach Default Aux Device
+166 Detach Aux Device
+167 Cond Attach Def Aux Device
+168 Set Default Aux Device
+169 Return Default Aux Device
+170
+171
+172 Block Read Aux Device
+173 Block Write Aux Device
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255

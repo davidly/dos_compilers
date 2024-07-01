@@ -1,0 +1,13 @@
+# -----------------------------------
+# makefile by bill buckels 2008
+# -----------------------------------
+PRG=batch
+$(PRG).com: $(PRG).o
+            ln -o $(PRG).com $(PRG).o c.lib
+            ln -o $(PRG).cmd $(PRG).o c86.lib
+            del $(PRG).o
+            @echo All Done!
+
+$(PRG).o: $(PRG).c
+           cc $(PRG).c
+          

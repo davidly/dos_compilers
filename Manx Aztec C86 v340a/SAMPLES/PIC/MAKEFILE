@@ -1,0 +1,22 @@
+# -------------------------------------------------------------
+# makefile(C) Copyright Bill Buckels 2008. All rights reserved.
+#
+# This makefile uses a separate compiler and assembler pass
+#   to generate an object (.o) file.
+# It then links to the CP/M-86 library to produce a CPM .CMD
+#   and also links to the DOS library to produce a .COM
+# By creating a DOS 2.0 .COM as well as a CPM .CMD I wanted
+#   to provide the option of testing the program under the
+#   XP cmd window with and without the CPM86.EXE emulator.
+# -------------------------------------------------------------
+PRG=bpic
+$(PRG).com: $(PRG).o
+            ln -o $(PRG).cmd $(PRG).o g.lib c86.lib
+            ln -o $(PRG).com $(PRG).o g.lib c.lib
+            del $(PRG).o
+            @echo All Done!
+
+$(PRG).o: $(PRG).c
+           cc -A $(PRG).c
+           as $(PRG).asm
+           del $(PRG).asm
