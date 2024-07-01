@@ -1,0 +1,381 @@
+
+
+                        WELCOME TO TURBO C
+                       컴컴컴컴컴컴컴컴컴컴
+
+    This README file contains information that will be useful and/or of
+    interest to you. Please read it in its entirety, referring to it
+    when you encounter problems not addressed in the Owner's Handbook.
+
+    TABLE OF CONTENTS
+    컴컴컴컴컴컴컴컴�
+
+    1. How to get Help
+    2. Corrections/Additions to the Manual
+    3. Important tips
+    4. Files on the disk
+    5. Using Turbo C with DOS 3.2 and a Floating Point Coprocessor
+    6. How to compile MicroCalc
+
+
+    1. HOW TO GET HELP
+    컴컴컴컴컴컴컴컴컴
+
+    If you have any problems, please read this file and the Owner's
+    Handbook first. If you still have a question and need assistance,
+    help is available from the following sources:
+
+       1. Type GO BORLAND on the CompuServe bulletin board system
+          for instant access to the Borland forums with their
+          libraries of technical information and answers to
+          common questions.
+
+          If you are not a member of CompuServe, see the enclosed
+          special offer, and write for full details on how to
+          receive a free IntroPak containing a $15 credit toward
+          your first month's on-line charges.
+
+       2. Check with your local software dealer or users' group.
+
+       3. Write to us at the following address:
+
+            Borland International
+            Turbo C Technical Support
+            4585 Scotts Valley Dr
+            Scotts Valley, CA  95066
+
+          Please remember to include your serial number or we
+          will be unable to process your letter.
+
+       4. If you have an urgent problem that cannot wait and you have
+          sent in the license agreement from the front of your manual,
+          you may call the Borland Technical Support department. Please
+          have the following information ready before calling:
+
+          a. Product name and serial number on your original
+             distribution disk.  Please have your serial number
+             ready or we will be unable to process your call.
+
+          b. Product version number. The version number for Turbo C is
+             displayed when you first load the program and before you
+             press any keys.
+
+          c. Computer brand, model, and the brands and model numbers of
+             any additional hardware.
+
+          d. Operating system and version number. (The version number
+             can be determined by typing VER at the DOS prompt.)
+
+          e. Contents of your AUTOEXEC.BAT file.
+
+          f. Contents of your CONFIG.SYS file.
+
+
+    2. CORRECTIONS/ADDITIONS TO THE MANUAL
+    컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+    User's Guide (Volume I)
+
+    - Page 10 - The Distribution List is inaccurate.  The correct
+      list of files included with Turbo C is given in this readme
+      in Section Four.
+
+    - Page 98 - The example has a statement: 
+           while ((ch=getch()) != '\n') {
+      The correct statement is:
+           while ((ch=getch()) != '\r') {
+      Note the '\n' is changed to '\r'.
+
+    Reference Guide (Volume II)
+
+    - Page 29 - The description for assert says that to disable
+      the assert macro, the symbol NDEBUG must be defined before the
+      assert macro is used. In fact it must be placed before
+      assert.h is included:
+
+        #define NDEBUG
+
+        #include <assert.h>
+
+    - Page 46 - The correct usage for the bsearch function is:
+        void *bsearch(void *key, void *base, int nelem,
+                      int width, int (*fcmp)());
+      That is, nelem is an int, not a pointer to an int, as
+      given in the documentation.
+
+    - Page 108 - The Portability paragraph for the getc function
+      says that the functions described in that section (getc,
+      getchar, fgetc, etc.) are all in Unix. In fact, all but getch,
+      getche, and ungetch are in Unix; these others are MSDOS
+      specific.
+
+    - Page 181 - The printf chart is incorrect. The correct chart is:
+
+      prefix  6d      6o      8x      10.2e           10.2f
+      %-+#0 |+555   |01053  |0x22b    |+5.50e+000 |+5.50      |
+       %-+# |+555   |01053  |0x22b    |+5.50e+000 |+5.50      |  
+       %-+0 |+555   |1053   |22b      |+5.50e+000 |+5.50      |  
+        %-+ |+555   |1053   |22b      |+5.50e+000 |+5.50      |
+       %-#0 |555    |01053  |0x22b    |5.50e+000  |5.50       |  
+        %-# |555    |01053  |0x22b    |5.50e+000  |5.50       |  
+        %-0 |555    |1053   |22b      |5.50e+000  |5.50       |
+         %- |555    |1053   |22b      |5.50e+000  |5.50       |
+       %+#0 |+00555 |001053 |0x00022b |+5.50e+000 |+000005.50 |
+        %+# |  +555 | 01053 |   0x22b |+5.50e+000 |     +5.50 |
+        %+0 |+00555 |001053 |0000022b |+5.50e+000 |+000005.50 |
+         %+ |  +555 |  1053 |     22b |+5.50e+000 |     +5.50 |
+        %#0 |000555 |001053 |0x00022b |05.50e+000 |0000005.50 |
+         %# |   555 | 01053 |   0x22b | 5.50e+000 |      5.50 |
+         %0 |000555 |001053 |0000022b |05.50e+000 |0000005.50 |
+          % |   555 |  1053 |     22b | 5.50e+000 |      5.50 |
+
+    - Page 197 - The description of the scanf conversion type
+      characters lists F to indicate a float conversion.  This
+      is not correct.  F is not a valid type character.  It is
+      used instead to override the default size of the corresponding
+      address argument to be a far pointer.  That is, the format %F
+      is not valid; it does not specify a float conversion.
+      The format %Ff specifies a float conversion into an argument
+      that is given with a far pointer.
+
+    - Page 231 - The proper description for the strstr function
+      is: strstr scans str1 for the first occurrence of the substring 
+      str2.
+
+    - The Merge string option (O/C/Code generation/Merge duplicate
+      strings or -d) is actually default OFF, not default ON.
+
+    - The discussion of text mode I/O in the functions close (p. 54) 
+      and read (p. 188) states that Ctrl-Z is written to the end of a 
+      text mode file when that file is closed, if that file was opened
+      for write. That is incorrect. No Ctrl-Z is written for you. 
+      If you want your text file to be terminated with a Ctrl-Z,
+      you need to explicitly output one yourself. Some older programs on
+      DOS require a Ctrl-Z at the end of text files. This is an outmoded
+      practice inherited from CP/M.
+
+    - The description of the intdos, intdosx, int86 and int86x
+      functions is incomplete. The union REGS structure used by all
+      four functions has the additional field x.flags. This field is
+      set to the 8086 flags register after the system call is made.  
+      This is in contrast to the x.cflag field, which simply contains 
+      the state of the carry flag.
+
+      Further, for int86x and intdosx, the segregs->es and
+      segregs->ds fields are set to the values of the corresponding
+      segment registers after the system call.
+
+    - The variable int _doserrno is declared in dos.h and errno.h.
+
+    _stklen
+
+    Name         _stklen
+    Usage        extern unsigned _stklen;
+    Description
+
+      _stklen is used to specify the size of the stack.
+
+      In large data models (compact, large and huge), _stklen is
+      the exact stack size in bytes.  In small data models
+      (tiny, small and medium), _stklen is used by the startup code
+      to compute the minimum size of the DATA segment:
+           min DATA segment size =  size of _DATA segment +
+                                    size of _BSS  segment +
+                                    _stklen + MINSTACK (128 words).
+      If the memory available is less than this, the startup
+      aborts the program.
+
+    _8087
+
+    Name         _8087
+    Usage        extern int _8087;
+    Description
+
+      The _8087 variable is set to 1 if an 8087 or 80287 is detected
+      or if the 87 environment variable is set to Y (set 87=Y).  It is
+      set to 0 otherwise.  You must have floating point code in your
+      program for _8087 to be set to 1.
+
+
+    3. IMPORTANT TIPS
+    컴컴컴컴컴컴컴컴�
+
+    - When copying the *.H files from the Libraries and Header Files
+      disk be sure to copy the SYS sub-directory and its contents.
+
+    - The C startup routine (c0?.obj) parses the command line
+      to set up the argc, argv arguments to main. Double quotes on
+      the command line can be used to bracket a single argument that
+      has embedded blanks. For example, in the following, the
+      program MYPROG.EXE is invoked with three arguments:
+
+        myprog arg1 "arg2 with embedded blanks" arg3
+
+      The second argument contains embedded blanks.
+
+    - Here is further explanation of the switch to disable
+      register variables (-r- or O/C/Optimization/Use register
+      variables..Off).  Not only will the compiler not use register
+      variables, but it also will not respect and preserve register
+      variables (si,di) from any caller. For that reason, you should
+      not have code that uses register variables call code which has
+      been compiled -r-.
+
+
+    4. FILES ON THE DISK
+    컴컴컴컴컴컴컴컴컴컴
+
+    Disk 1
+    컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+    README   COM  --  Reads this README
+    TC       EXE  --  Turbo C Compiler
+    TCINST   COM  --  Installation program for TC.EXE
+    TCHELP   TCH  --  Help file for Turbo C
+    HELLO    C    --  Example Turbo C program
+    README        --  This file!
+
+
+    Disk 2
+    컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+    TCC      EXE  --  Command line version of Turbo C Compiler
+    CPP      EXE  --  Turbo C preprocessor
+    MAKE     EXE  --  Program for managing projects
+    TLINK    EXE  --  Borland Turbo Linker
+    TOUCH    COM  --  Program that updates a file's date and time
+    CNVTCFG  EXE  --  Program to convert configuration files
+
+    BUILD-C0 BAT  --  Batch file for building the startup code modules
+    C0       ASM  --  Assembler source for startup code
+    RULES    ASI  --  Assembler include file for interfacing with Turbo C
+    SETENVP  ASM  --  Assembler source code for preparing the environment
+    SETARGV  ASM  --  Assembler source code for parsing the command line
+    MAIN     C    --  Alternative, stripped-down C main file
+
+    Disk 3
+    컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+    ???????? H    --  Turbo C header files
+    C0T      OBJ  --  Tiny model startup code
+    C0S      OBJ  --  Small model startup code
+    MATHS    LIB  --  Small model math library
+    CS       LIB  --  Small model run-time library
+    C0L      OBJ  --  Large model startup code
+    MATHL    LIB  --  Large model math library
+    CL       LIB  --  Large model run-time library
+    EMU      LIB  --  8087 emulator library
+    FP87     LIB  --  8087 library
+
+    MCALC    C    --  MicroCalc main program source code
+    MCALC    H    --  The header file for MicroCalc
+    MCALC    PRJ  --  The MicroCalc project file
+    MCALC    DOC  --  Documentation for MicroCalc
+    MCOMMAND C    --  MicroCalc commands source code
+    MCDISPLY C    --  MicroCalc screen display source code
+    MCINPUT  C    --  MicroCalc input routines source code
+    MCPARSER C    --  MicroCalc input parser source code
+    MCUTIL   C    --  MicroCalc utilities source code
+    MCMVSMEM C    --  MicroCalc direct screen memory write source code
+    MCMVSMEM OBJ  --  Compiled version of MCMVSMEM.C - will link with any
+                      memory model
+
+    SYS DIRECTORY
+    컴컴컴컴컴컴�
+    STAT     H    --  Turbo C header file with file status/directory
+                      functions
+
+
+    Disk 4
+    컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+    C0C      OBJ  --  Compact model startup code
+    MATHC    LIB  --  Compact model math library
+    CC       LIB  --  Compact model run-time library
+    C0M      OBJ  --  Medium model startup code
+    MATHM    LIB  --  Medium model math library
+    CM       LIB  --  Medium model run-time library
+    C0H      OBJ  --  Huge model startup code
+    MATHH    LIB  --  Huge model math library
+    CH       LIB  --  Huge model run-time library
+
+    MATHERR  C    --  Source code for handling math library exceptions
+    FILECOMP C    --  Example Turbo C program to compare files
+    GETOPT   C    --  Parses options in commmand line
+
+    CPINIT   OBJ  --  Initialization code to be used when linking
+                      Turbo C and Turbo Prolog.
+    BAR      C    --  Example function to be used with PBAR.PRO
+    PBAR     PRO  --  Example Turbo Prolog program to be used with BAR.C
+
+
+    5. USING TURBO C WITH DOS 3.2 AND A FLOATING POINT COPROCESSOR
+    컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+    DOS 3.2 has a bug in its handling of floating exceptions.  When
+    an exception occurs, the system allocates a local stack for the
+    exception handler.  Unfortunately, when a system stack gets
+    allocated, it never gets deallocated.  The default number of
+    stacks is 8.  After 9 floating point exceptions occur, the system
+    hangs and a cold reboot is required.  Typical exceptions are
+    overflow and divide by zero.  The stacks are not reclaimed when
+    a program terminates, so a program which divides by zero once
+    will crash the machine if run 9 times.  To avoid this problem,
+    you can either:
+
+        1. Not use DOS 3.2.
+        2. Obtain a patch from IBM or Microsoft which fixes the
+           bug, and install it on your copy of DOS.
+        3. Not use a floating point coprocessor.
+        4. Disable the exception trapping in your Turbo C program.
+           You can do this easily by calling the _clear87() library
+           function.  For example,
+
+           #include <float.h>
+           unsigned int fpstatus;
+           /* stdlib.h included for exit, stdio.h for puts */
+           #include <stdlib.h>
+           #include <stdio.h>
+
+           main()
+           {
+               _clear87();
+               /* do floating point work here */
+               /*  ...  */
+               /* now, check for masked exceptions before exiting */
+               fpstatus = _status87();
+               if (fpstatus & SW_INVALID)
+               puts("Floating point error: invalid operation.");
+               if (fpstatus & SW_ZERODIVIDE)
+                   puts("Floating point error: zero divide.");
+               if (fpstatus & SW_OVERFLOW)
+                  puts("Floating point error: overflow.");
+               exit(fpstatus & (SW_INVALID | SW_ZERODIVIDE | SW_OVERFLOW));
+           }
+
+
+    6. HOW TO COMPILE MICROCALC
+    컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+       In order to compile MicroCalc do the following:
+
+       With TC.EXE:
+
+         1. Run TC.EXE
+         2. In the Project pulldown menu specify the project name
+            "MCALC.PRJ"
+         3. From the main menu select the Run option
+
+       With TCC.EXE:
+
+         Compile from DOS with the following command line:
+           TCC mcalc mcparser mcdisply mcinput mcommand mcutil mcmvsmem.obj
+
+       In both cases, compiling under a large data model (COMPACT, LARGE,
+       or HUGE) will give you much more memory for your spreadsheets.
+
+END
+컴�
+
+>
+
