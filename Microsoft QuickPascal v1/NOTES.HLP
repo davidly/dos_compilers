@@ -1,0 +1,142 @@
+>>
+
+>>contents
+
+  The NOTES.HLP file provides an easy way to add your own information 
+  to the QP Advisor.
+
+  The NOTES.HLP file is a special ASCII help file that appears in the
+  help window whenever you press a <Notes> button. Press the ALT+F1 key
+  to return from the NOTES.HLP file to the QP Advisor.
+
+  Note: the chevrons (>>) are special characters to NOTES.HLP. They
+  are markers the QP Advisor seeks when it loads a specific section of
+  NOTES.HLP. The chevrons with the name of the section in NOTES.HLP
+  should not be edited, but you can change any other part of NOTES.HLP.
+
+  The NOTES.HLP file contains three parts:
+
+    Part          Description
+
+    >>contents    Appears when you select the <Notes> button on the
+                  Contents screen. This is the part of the NOTES.HLP
+                  file now being displayed.
+
+    >>edit        Appears when you select the <Notes> button on the
+                  QuickPascal Keys screen.
+
+    >>index       Appears when you select the <Notes> button on the
+                  Index screen.
+
+  To change the contents of the NOTES.HLP file, you must do the
+  following:
+
+    1. Close the NOTES.HLP file if it is currently displayed in the
+       help window.
+
+    2. Open the NOTES.HLP file with any editor (such as the QuickPascal
+       editor) to edit NOTES.HLP. Change anything in the file except
+       the file name NOTES.HLP and lines that begin with the >>
+       characters. These lines are links to the buttons in the QP
+       Advisor
+
+    3. Save your modified NOTES.HLP file as a normal ASCII file.
+
+    4. When you open NOTES.HLP with one of the <Notes> buttons in the
+       QP Advisor, you will see your additions and changes.
+
+    5. Press ALT+F1 to return to the QP Advisor.
+
+>>edit
+
+  The NOTES.HLP file provides an easy way to add your own information
+  to the QP Advisor.
+
+  The NOTES.HLP file is a special ASCII help file that appears in the
+  help window whenever you press a <Notes> button. Press the ALT+F1 key
+  to return from the NOTES.HLP file to the QP Advisor.
+
+  Note: the chevrons (>>) are special characters to NOTES.HLP. They
+  are markers the QP Advisor seeks when it loads a specific section of
+  NOTES.HLP. The chevrons with the name of the section in NOTES.HLP
+  should not be edited, but you can change any other part of NOTES.HLP.
+
+  The NOTES.HLP file contains three parts:
+
+    Part          Description
+
+    >>contents    Appears when you select the <Notes> button on the
+                  Contents screen.
+
+    >>edit        Appears when you select the <Notes> button on the
+                  QuickPascal Keys screen. This is the part of the
+                  NOTES.HLP file now being displayed.
+
+    >>index       Appears when you select the <Notes> button on the
+                  Index screen.
+
+  To change the contents of the NOTES.HLP file you must do the
+  following:
+
+    1. Close the NOTES.HLP file if it is currently displayed in the
+       help window.
+
+    2. Open the NOTES.HLP file with any editor (such as the QuickPascal
+       editor) to edit NOTES.HLP. Change anything in the file except
+       the file name NOTES.HLP and lines that begin with the >>
+       characters. These lines are links to the buttons in the QP
+       Advisor
+
+    3. Save your modified NOTES.HLP file as a normal ASCII file.
+
+    4. When you open NOTES.HLP with one of the <Notes> buttons in the
+       QP Advisor, you will see your additions and changes.
+
+    5. Press ALT+F1 to return to the QP Advisor.
+
+>>index
+
+  The NOTES.HLP file provides an easy way to add your own information
+  to the QP Advisor.
+
+  The NOTES.HLP file is a special ASCII help file that appears in the
+  help window whenever you press a <Notes> button. Press the ALT+F1 key
+  to return from the NOTES.HLP file to the QP Advisor.
+
+  Note: the chevrons (>>) are special characters to NOTES.HLP. They
+  are markers the QP Advisor seeks when it loads a specific section of
+  NOTES.HLP. The chevrons with the name of the section in NOTES.HLP
+  should not be edited, but you can change any other part of NOTES.HLP.
+
+  The NOTES.HLP file contains three parts:
+
+    Part          Description
+
+    >>contents    Appears when you select the <Notes> button on the
+                  Contents screen.
+
+    >>edit        Appears when you select the <Notes> button on the
+                  QuickPascal Keys screen.
+
+    >>index       Appears when you select the <Notes> button on the
+                  Index screen. This is the part of the NOTES.HLP file
+                  now being displayed.
+
+  To change the contents of the NOTES.HLP file you must do the
+  following:
+
+    1. Close the NOTES.HLP file if it is currently displayed in the
+       help window.
+
+    2. Open the NOTES.HLP file with any editor (such as the QuickPascal
+       editor) to edit NOTES.HLP. Change anything in the file except
+       the file name NOTES.HLP and lines that begin with the >>
+       characters. These lines are links to the buttons in the QP
+       Advisor
+
+    3. Save your modified NOTES.HLP file as a normal ASCII file.
+
+    4. When you open NOTES.HLP with one of the <Notes> buttons in the
+       QP Advisor, you will see your additions and changes.
+
+    5. Press ALT+F1 to return to the QP Advisor.

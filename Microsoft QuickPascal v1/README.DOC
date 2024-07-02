@@ -1,0 +1,63 @@
+              README.DOC File
+
+    Release Notes for Microsoft(R) QuickPascal
+
+    (C) Copyright Microsoft Corporation, 1989
+
+You can read the release notes directly from the ON-Line help.
+
+The ON-line help file containing the release notes is titled:
+QPENV.ENV.  If you are running HELP from a floppy drive make sure
+that QPENV.ENV is present on that drive.
+
+Special Setup Notes
+-------------------
+
+For your convenience SETUP has been modified and the "path
+setting screens" section in the "Installing QuickPascal"
+chapter of "Up and Running" has changed.  You will now only
+set three "paths" instead of four.  The DOC path has been
+eliminated.
+
+Documentation Note:
+-------------------
+
+Page 17 of "Up and Running" tells you that to run QuickPascal
+you should put disk 1 in drive A.  It should instead say
+put "Program disk" in drive A.  In addition "SYSTEM.QPU" is
+now on the "Libraries" disk instead of on DISK 1.
+
+Special Instructions for QP Express
+-----------------------------------
+You may have difficulty running the QP Express Computer-Based
+Training (CBT) program due to your video driver/graphics card
+combination. Try the following:
+
+1. Make a backup copy of the QP Express or QP Express/QP Advisor
+disk. Use the backup copy for the remainder of this procedure.
+
+2. On the backup copy of the QP Express or QP Express/QP Advisor disk
+you will find files with the extension .VID. Each of these files
+is a driver for a specific type of graphics card. The following
+drivers support the indicated graphics cards:
+
+     ATT6300.VID       For Olivetti and ATT PCs.
+     CGASNO.VID        For CGA cards that produce a snow effect.
+     ERICSSON.VID      For Ericsson PCs
+     HERC102.VID       For the Hercules 102 card
+     HERC112.VID       For the Hercules 112 card
+
+If you use one of these computers/displays, rename the appropriate
+driver to SCREEN.VID. For example, if you run an AT&T computer,
+type: RENAME ATT6300.VID SCREEN.VID
+
+3. You can now resume SETUP or run the CBT directly by typing: LEARN.
+
+
+Special Instructions for Windows 386 Users
+------------------------------------------
+If you want to use QP under Windows 386  please set the
+following in your WIN.INI file under the header [win386]:
+                          emmsize=0
+This setting will prevent a a potential conflict in EMS
+usage between QP and Windows 386.

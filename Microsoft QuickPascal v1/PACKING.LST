@@ -1,0 +1,88 @@
+      Packing List for Microsoft QuickPascal (R) Compiler, Version 1.0
+				5.25" Disk Set
+
+		 Copyright (c) Microsoft Corporation, 1989
+
+
+
+DISK 1: Setup/Utilities
+
+Files		       Description
+-----		       -----------
+PACKING.LST	       Packing list (this file).
+SETUP.EXE	       SETUP program -- installs QuickPascal.
+README.DOC	       Directs you to README in Help.
+FIXSHIFT.COM	       Fixes BIOS bug for certain Compaq (R) and other
+		       keyboards.
+MOUSE.COM	       Microsoft Mouse driver.
+MSHERC.COM	       TSR -- supports Hercules (R) card graphics.
+QPMKKEY.EXE	       Creates customized keyboard command files.
+SAMPLES\BIGHEAP.PAS    New versions of GetMem and FreeMem that can allocate
+		       heap space in blocks larger than 65520 bytes.
+SAMPLES\BIGMEM.PAS     BIGMEM.PAS uses the sample BigHeap unit.
+SAMPLES\MOUSE.PAS      Real mode mouse control routines; derived from
+		       Microsoft OS/2 Programmer's Reference, Chapter 3.
+SAMPLES\SORTDEMO.PAS   Graphically demonstrates six common sorting algorithms
+SAMPLES\OBJECTS.PAS    Object-oriented demo.
+SAMPLES\CRLF.PAS       Normalizes all line endings of a text file to CRLF.
+SAMPLES\GRDMEO.PAS     Demonstrates the QuickPascal graphics library.  It
+		       uses two additional units: menu and turtle.
+SAMPLES\MENU.PAS       Used by Grdemo.
+SAMPLES\TURTLE	       Used by Grdemo (for Turtle graphics).
+BRIEF.KEY	       Keyboard MAP files.
+EMACS.KEY                " "
+EPSILON.KEY              " "
+QP.KEY                   " "
+ME.KEY                   " "
+
+DISK 2 : Program
+
+Files		       Description
+-----		       -----------
+QP.EXE		       Microsoft QuickPascal program development environment.
+QPL.COM 	       QuickPascal command-line compiler.
+QPL.ERR 	       QuickPascal command-line compiler error messages.
+
+DISK 3:	Microsoft QuickPascal Advisor
+
+Files		       Description
+-----		       -----------
+QP.HLP		       QuickPascal help files.
+QPENV.HLP		 " "
+
+DISK 4:	Libraries
+
+Files		       Description
+-----		       -----------
+SYSTEM.QPU	       System Unit.
+CRT.QPU 	       CRT Interface Unit.
+DOS.QPU 	       DOS Interface Unit.
+MSGRAPH.QPU	       Graphics Interface Unit.
+MSGRUTIL.QPU	       Graphics Support Unit.
+GRAPH.QPU	       Graphics Support Unit.
+PRINTER.QPU	       Printer Interface Unit.
+COURB.FON	       Font files.
+ROMAN.FON		 " "
+SCRIPT.FON		 " "
+TMSRB.FON		 " "
+HELVB.FON		 " "
+MODERN.FON		 " "
+
+
+Disk 5: Microsoft QuickPascal Express
+
+Files		       Description
+-----		       -----------
+LEARN.EXE	       Computer-Based Training file.
+QPCBT.CTX                " "
+QPCBT.SCN                " "
+QPCBT.SOB                " "
+LEARN.PIF	       Computer-Based Training Windows PIF file.
+ATT6300.VID	       Computer-Based Training additional display drivers.
+CGASNOW.VID              " "
+ERICSSON.VID             " "
+HERC102.VID              " "
+HERC112.VID              " "
+QPERR.HLP	       QuickPascal additional help files
+QPGRAPH.HLP		 " "
+NOTES.HLP		 " "

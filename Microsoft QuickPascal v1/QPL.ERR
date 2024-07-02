@@ -1,0 +1,163 @@
+0001 Out of memory
+0002 Cannot open file
+0003 File too big
+0004 Too many nested files
+0005 Cannot read file
+0006 Cannot close file
+0007 Cannot seek file
+0008 Invalid end of line
+0009 Illegal character
+0010 Line too long
+0011 Error in integer constant
+0012 Error in character constant
+0013 String constant exceeds line
+0014 Unexpected end of file
+0015 Invalid directive
+0016 End of file expected
+0017 Identifier expected
+0018 ";" expected
+0019 ")" expected
+0020 "." expected
+0021 BEGIN expected
+0022 END expected
+0023 Label must be in the range 0..9999
+0024 Label already defined
+0025 Identifier or Label already defined
+0026 Error in type definition
+0027 This type not allowed here
+0028 OF expected
+0029 Implementation restriction
+0030 "[" expected
+0031 "]" expected
+0032 Unknown identifier
+0033 Error in simple type definition
+0034 Type identifier expected
+0035 "=" expected
+0036 Constant expected
+0037 Integer or real constant expected
+0038 Range expected
+0039 Subrange bounds must be scalar
+0040 Incompatible subrange types
+0041 Low bound exceeds high bound
+0042 ":" expected
+0043 Unsatisfied forward reference
+0044 Integer constant expected
+0045 Invalid string length
+0046 Tag field type must be scalar or subrange
+0047 "(" expected
+0048 Too many literals
+0049 Structure too big
+0050 Error in expression
+0051 Conflicting operands
+0052 Right operand is not a set
+0053 Invalid identifier
+0054 Invalid type cast
+0055 Cannot create file
+0056 Cannot write file
+0057 Variable type must be pointer
+0058 Variable type must be record
+0059 Variable type must be array or string
+0060 No such field in this record or object
+0061 Index type is not compatible with the declaration
+0062 Routine too big
+0063 UNTIL expected
+0064 Boolean expression expected
+0065 DO expected
+0066 THEN expected
+0067 Invalid label
+0068 Unknown label
+0069 Label not within current block
+0070 Label already defined
+0071 Label expected
+0072 Undefined label in preceding statement part
+0073 Error in statement
+0074 ":=" expected
+0075 Type mismatch
+0076 Variable identifier expected
+0077 Invalid FOR control variable
+0078 Scalar type expected
+0079 TO or DOWNTO expected
+0080 Disk full
+0081 Constant value out of range
+0082 "," expected
+0083 Division by zero
+0084 Too many local routines
+0085 Integer expression expected
+0086 Pointer type cannot be referenced
+0087 Typed pointer expected
+0088 File type expected
+0089 Cannot write expressions of this type
+0090 Ordinal expression expected
+0091 Invalid file type
+0092 Variable parameter expected
+0093 Cannot read expressions of this type
+0094 Integer or real expression expected
+0095 Integer or real variable expected
+0096 Function not mounted
+0097 Inline error
+0098 Label definition not allowed in interface part
+0099 INTERFACE expected
+0100 IMPLEMENTATION expected
+0101 Invalid unit file
+0102 Field or method already defined
+0103 Invalid QPU file
+0104 Duplicate unit name
+0105 Circular unit reference
+0106 Error in real constant
+0107 Coprocessor required
+0108 Too many nested conditional directives
+0109 Misplaced directive
+0110 $ENDIF directive missing
+0111 Too many conditional symbols
+0112 Header does not match previous declaration
+0113 Invalid qualification
+0114 Too many parameters
+0115 Class must be defined at global level
+0116 Class must be defined in type definition
+0117 Invalid procedure or function reference
+0118 Procedure or function variable expected
+0119 Object type expected
+0120 Object must be defined at global level
+0121 Object must be defined in type definition
+0122 Invalid class type
+0123 Class table overflow
+0124 Syntax error
+0125 This method has no parent
+0126 Type of expression must be pointer
+0127 Invalid variable reference
+0128 Symbol table overflow
+0129 Too many imported units
+0130 Code cannot exceed 64k bytes
+0131 Invalid real operation
+0132 Real overflow
+0133 Real underflow
+0134 Undefined external
+0135 Too many object file names
+0136 Invalid object file
+0137 Object file too large
+0138 Invalid segment definition
+0139 Invalid segment name
+0140 Code segment too large
+0141 Invalid PUBLIC definition
+0142 Invalid EXTRN definition
+0143 Too many EXTRNs
+0144 Invalid fixup
+0145 Too many opened files
+0146 Too many variables
+0147 Directive must be at top of program
+0148 Invalid assigment
+0149 Set type out of range
+0150 Index out of range
+0151 Object variable expected in MEMBER function
+0152 Object type expected in MEMBER function
+0153 Expression too complicated
+0154 Invalid unit name
+0155 Line information table overflow
+0156 Fixup table overflow
+0157 Source table overflow
+0158 Unit expected
+0159 Unsatisfied forward name reference
+0160 Invalid fixupp in iterated data record
+0161 Include files not allowed here
+0162 Stack overflow 
+
