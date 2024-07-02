@@ -1,0 +1,383 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Standard Objects Unit                           }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Objects;
+
+{$O+,F+,X+,I-,S-}
+
+interface
+
+const
+
+{ TStream access modes }
+
+  stCreate    = $3C00;           { Create new file }
+  stOpenRead  = $3D00;           { Read access only }
+  stOpenWrite = $3D01;           { Write access only }
+  stOpen      = $3D02;           { Read and write access }
+
+{ TStream error codes }
+
+  stOk         =  0;              { No error }
+  stError      = -1;              { Access error }
+  stInitError  = -2;              { Cannot initialize stream }
+  stReadError  = -3;              { Read beyond end of stream }
+  stWriteError = -4;              { Cannot expand stream }
+  stGetError   = -5;              { Get of unregistered object type }
+  stPutError   = -6;              { Put of unregistered object type }
+
+{ Maximum TCollection size }
+
+  MaxCollectionSize = 65520 div SizeOf(Pointer);
+
+{ TCollection error codes }
+
+  coIndexError = -1;              { Index out of range }
+  coOverflow   = -2;              { Overflow }
+
+{ VMT header size }
+
+  vmtHeaderSize = 8;
+
+type
+
+{ Type conversion records }
+
+  WordRec = record
+    Lo, Hi: Byte;
+  end;
+
+  LongRec = record
+    Lo, Hi: Word;
+  end;
+
+  PtrRec = record
+    Ofs, Seg: Word;
+  end;
+
+{ String pointers }
+
+  PString = ^String;
+
+{ Character set type }
+
+  PCharSet = ^TCharSet;
+  TCharSet = set of Char;
+
+{ General arrays }
+
+  PByteArray = ^TByteArray;
+  TByteArray = array[0..32767] of Byte;
+
+  PWordArray = ^TWordArray;
+  TWordArray = array[0..16383] of Word;
+
+{ TObject base object }
+
+  PObject = ^TObject;
+  TObject = object
+    constructor Init;
+    procedure Free;
+    destructor Done; virtual;
+  end;
+
+{ TStreamRec }
+
+  PStreamRec = ^TStreamRec;
+  TStreamRec = record
+    ObjType: Word;
+    VmtLink: Word;
+    Load: Pointer;
+    Store: Pointer;
+    Next: Word;
+  end;
+
+{ TStream }
+
+  PStream = ^TStream;
+  TStream = object(TObject)
+    Status: Integer;
+    ErrorInfo: Integer;
+    procedure CopyFrom(var S: TStream; Count: Longint);
+    procedure Error(Code, Info: Integer); virtual;
+    procedure Flush; virtual;
+    function Get: PObject;
+    function GetPos: Longint; virtual;
+    function GetSize: Longint; virtual;
+    procedure Put(P: PObject);
+    procedure Read(var Buf; Count: Word); virtual;
+    function ReadStr: PString;
+    procedure Reset;
+    procedure Seek(Pos: Longint); virtual;
+    procedure Truncate; virtual;
+    procedure Write(var Buf; Count: Word); virtual;
+    procedure WriteStr(P: PString);
+  end;
+
+{ DOS file name string }
+
+  FNameStr = string[79];
+
+{ TDosStream }
+
+  PDosStream = ^TDosStream;
+  TDosStream = object(TStream)
+    Handle: Word;
+    constructor Init(FileName: FNameStr; Mode: Word);
+    destructor Done; virtual;
+    function GetPos: Longint; virtual;
+    function GetSize: Longint; virtual;
+    procedure Read(var Buf; Count: Word); virtual;
+    procedure Seek(Pos: Longint); virtual;
+    procedure Truncate; virtual;
+    procedure Write(var Buf; Count: Word); virtual;
+  end;
+
+{ TBufStream }
+
+  PBufStream = ^TBufStream;
+  TBufStream = object(TDosStream)
+    Buffer: Pointer;
+    BufSize: Word;
+    BufPtr: Word;
+    BufEnd: Word;
+    constructor Init(FileName: FNameStr; Mode, Size: Word);
+    destructor Done; virtual;
+    procedure Flush; virtual;
+    function GetPos: Longint; virtual;
+    function GetSize: Longint; virtual;
+    procedure Read(var Buf; Count: Word); virtual;
+    procedure Seek(Pos: Longint); virtual;
+    procedure Truncate; virtual;
+    procedure Write(var Buf; Count: Word); virtual;
+  end;
+
+{ TEmsStream }
+
+  PEmsStream = ^TEmsStream;
+  TEmsStream = object(TStream)
+    Handle: Word;
+    PageCount: Word;
+    Size: Longint;
+    Position: Longint;
+    constructor Init(MinSize, MaxSize: Longint);
+    destructor Done; virtual;
+    function GetPos: Longint; virtual;
+    function GetSize: Longint; virtual;
+    procedure Read(var Buf; Count: Word); virtual;
+    procedure Seek(Pos: Longint); virtual;
+    procedure Truncate; virtual;
+    procedure Write(var Buf; Count: Word); virtual;
+  end;
+
+{ TCollection types }
+
+  PItemList = ^TItemList;
+  TItemList = array[0..MaxCollectionSize - 1] of Pointer;
+
+{ TCollection object }
+
+  PCollection = ^TCollection;
+  TCollection = object(TObject)
+    Items: PItemList;
+    Count: Integer;
+    Limit: Integer;
+    Delta: Integer;
+    constructor Init(ALimit, ADelta: Integer);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    function At(Index: Integer): Pointer;
+    procedure AtDelete(Index: Integer);
+    procedure AtFree(Index: Integer);
+    procedure AtInsert(Index: Integer; Item: Pointer);
+    procedure AtPut(Index: Integer; Item: Pointer);
+    procedure Delete(Item: Pointer);
+    procedure DeleteAll;
+    procedure Error(Code, Info: Integer); virtual;
+    function FirstThat(Test: Pointer): Pointer;
+    procedure ForEach(Action: Pointer);
+    procedure Free(Item: Pointer);
+    procedure FreeAll;
+    procedure FreeItem(Item: Pointer); virtual;
+    function GetItem(var S: TStream): Pointer; virtual;
+    function IndexOf(Item: Pointer): Integer; virtual;
+    procedure Insert(Item: Pointer); virtual;
+    function LastThat(Test: Pointer): Pointer;
+    procedure Pack;
+    procedure PutItem(var S: TStream; Item: Pointer); virtual;
+    procedure SetLimit(ALimit: Integer); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TSortedCollection object }
+
+  PSortedCollection = ^TSortedCollection;
+  TSortedCollection = object(TCollection)
+    Duplicates: Boolean;
+    constructor Load(var S: TStream);
+    function Compare(Key1, Key2: Pointer): Integer; virtual;
+    function IndexOf(Item: Pointer): Integer; virtual;
+    procedure Insert(Item: Pointer); virtual;
+    function KeyOf(Item: Pointer): Pointer; virtual;
+    function Search(Key: Pointer; var Index: Integer): Boolean; virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TStringCollection object }
+
+  PStringCollection = ^TStringCollection;
+  TStringCollection = object(TSortedCollection)
+    function Compare(Key1, Key2: Pointer): Integer; virtual;
+    procedure FreeItem(Item: Pointer); virtual;
+    function GetItem(var S: TStream): Pointer; virtual;
+    procedure PutItem(var S: TStream; Item: Pointer); virtual;
+  end;
+
+{ TResourceCollection object }
+
+  PResourceCollection = ^TResourceCollection;
+  TResourceCollection = object(TStringCollection)
+    procedure FreeItem(Item: Pointer); virtual;
+    function GetItem(var S: TStream): Pointer; virtual;
+    function KeyOf(Item: Pointer): Pointer; virtual;
+    procedure PutItem(var S: TStream; Item: Pointer); virtual;
+  end;
+
+{ TResourceFile object }
+
+  PResourceFile = ^TResourceFile;
+  TResourceFile = object(TObject)
+    Stream: PStream;
+    Modified: Boolean;
+    constructor Init(AStream: PStream);
+    destructor Done; virtual;
+    function Count: Integer;
+    procedure Delete(Key: String);
+    procedure Flush;
+    function Get(Key: String): PObject;
+    function KeyAt(I: Integer): String;
+    procedure Put(Item: PObject; Key: String);
+    function SwitchTo(AStream: PStream; Pack: Boolean): PStream;
+  end;
+
+{ TStringList object }
+
+  TStrIndexRec = record
+    Key, Count, Offset: Word;
+  end;
+
+  PStrIndex = ^TStrIndex;
+  TStrIndex = array[0..9999] of TStrIndexRec;
+
+  PStringList = ^TStringList;
+  TStringList = object(TObject)
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    function Get(Key: Word): String;
+  end;
+
+{ TStrListMaker object }
+
+  PStrListMaker = ^TStrListMaker;
+  TStrListMaker = object(TObject)
+    constructor Init(AStrSize, AIndexSize: Word);
+    destructor Done; virtual;
+    procedure Put(Key: Word; S: String);
+    procedure Store(var S: TStream);
+  end;
+
+{ TPoint object }
+
+  TPoint = object
+    X, Y: Integer;
+  end;
+
+{ Rectangle object }
+
+  TRect = object
+    A, B: TPoint;
+    procedure Assign(XA, YA, XB, YB: Integer);
+    procedure Copy(R: TRect);
+    procedure Move(ADX, ADY: Integer);
+    procedure Grow(ADX, ADY: Integer);
+    procedure Intersect(R: TRect);
+    procedure Union(R: TRect);
+    function Contains(P: TPoint): Boolean;
+    function Equals(R: TRect): Boolean;
+    function Empty: Boolean;
+  end;
+
+{ Dynamic string handling routines }
+
+function NewStr(const S: String): PString;
+procedure DisposeStr(P: PString);
+
+{ Longint routines }
+
+function LongMul(X, Y: Integer): Longint;
+inline($5A/$58/$F7/$EA);
+
+function LongDiv(X: Longint; Y: Integer): Integer;
+inline($59/$58/$5A/$F7/$F9);
+
+{ Stream routines }
+
+procedure RegisterType(var S: TStreamRec);
+
+{ Abstract notification procedure }
+
+procedure Abstract;
+
+{ Objects registration procedure }
+
+procedure RegisterObjects;
+
+const
+
+{ Stream error procedure }
+
+  StreamError: Pointer = nil;
+
+{ EMS stream state variables }
+
+  EmsCurHandle: Word = $FFFF;
+  EmsCurPage: Word = $FFFF;
+
+{ Stream registration records }
+
+const
+  RCollection: TStreamRec = (
+    ObjType: 50;
+    VmtLink: Ofs(TypeOf(TCollection)^);
+    Load: @TCollection.Load;
+    Store: @TCollection.Store);
+
+const
+  RStringCollection: TStreamRec = (
+    ObjType: 51;
+    VmtLink: Ofs(TypeOf(TStringCollection)^);
+    Load: @TStringCollection.Load;
+    Store: @TStringCollection.Store);
+
+const
+  RStringList: TStreamRec = (
+    ObjType: 52;
+    VmtLink: Ofs(TypeOf(TStringList)^);
+    Load: @TStringList.Load;
+    Store: nil);
+
+const
+  RStrListMaker: TStreamRec = (
+    ObjType: 52;
+    VmtLink: Ofs(TypeOf(TStrListMaker)^);
+    Load: nil;
+    Store: @TStrListMaker.Store);
+
+

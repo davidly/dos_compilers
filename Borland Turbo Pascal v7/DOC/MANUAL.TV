@@ -1,0 +1,358 @@
+Turbo Vision 2.0 Programming Guide
+==================================
+
+This file contains information on material added to Turbo Vision
+2.0 after the Programming Guide had gone to press and also
+corrections to a few errors in the manual.  We strongly suggest
+that you mark these corrections and changes in your manual for
+future reference.
+
+
+=============================================================
+Changes and additions to Chapter 19, "Turbo Vision Reference"
+=============================================================
+
+=============================================================
+CreateFindDialog function                             Editors
+=============================================================
+
+       Declaration  function CreateFindDialog: PDialog;
+
+          Function  Constructs and returns a pointer to the
+                    standard text search dialog box used by
+                    StdEditorDialog. If you want to customize
+                    the simpler editor dialog boxes but still
+                    use the standard text search interface,
+                    your editor dialog box function should
+                    execute the dialog box returned by
+                    CreateFindDialog for a Dialog parameter
+                    of edFind.
+
+          See also  EditorDialog variable, edXXXX constants,
+                    StdEditorDialog function
+
+
+
+=============================================================
+CreateReplaceDialog function                          Editors
+=============================================================
+
+       Declaration  function CreateReplaceDialog: PDialog;
+
+          Function  Constructs and returns a pointer to the
+                    standard text search-and-replace dialog
+                    box used by StdEditorDialog. If you want
+                    to customize the simpler editor dialog
+                    boxes but still use the standard text
+                    search interface, your editor dialog box
+                    function should execute the dialog box
+                    returned by CreateReplaceDialog for a
+                    Dialog parameter of edReplace.
+
+          See also  EditorDialog variable, edXXXX constants,
+                    StdEditorDialog function
+
+
+
+=============================================================
+FailSysErrors variable                                Drivers
+=============================================================
+
+       Declaration  FailSysErrors: Boolean = False;
+
+                    If True, causes the system error handler
+                    to behave as if the user had responded to
+                    a system error message by pressing Esc.
+                    Normally, the system error handler
+                    displays a message on the last line of
+                    the screen and waits for user input.
+                    Setting FailSysErrors to True causes the
+                    system error handler to bypass the
+                    message and user prompt, and just return
+                    as if the DOS call that produced the
+                    error failed.
+
+          See also  SysErrorFunc variable
+
+
+
+=============================================================
+GetCtrlChar function                                  Drivers
+=============================================================
+
+       Declaration  function GetCtrlChar(KeyCode: Word):
+                    Char;
+
+          Function  Returns the character, Ch, for which
+                    Ctrl+Ch produces the 2-byte scan code
+                    given by the argument KeyCode. Gives the
+                    reverse mapping to GetCtrlCode.
+
+          See also  GetCtrlCode
+
+
+
+=============================================================
+GetCtrlCode function                                  Drivers
+=============================================================
+
+       Declaration  function GetCtrlCode(Ch: Char): Word;
+
+          Function  Returns the 2-byte scan code (keycode)
+                    corresponding to Ctrl+Ch. This function
+                    gives the reverse mapping to GetCtrlChar.
+
+          See also  GetCtrlChar
+
+
+
+=============================================================
+GetShiftState function                                Drivers
+=============================================================
+
+       Declaration  function GetShiftState: Byte;
+
+          Function  Returns a byte containing the current
+                    Shift key state, as reported by DOS. The
+                    return value contains a combination of
+                    the kbXXXX constants for shift states.
+
+                    You should call GetShiftState instead of
+                    checking the ShiftState variable
+                    directly. ShiftState is not guaranteed to
+                    be valid in protected mode, but
+                    GetShiftState returns the correct value
+                    in either real or protected mode.
+
+          See also  kbXXXX constants
+
+
+
+=============================================================
+RegisterMenus procedure                                 Menus
+=============================================================
+
+       Declaration  procedure RegisterMenus;
+
+          Function  Calls RegisterType for each of the object
+                    types defined in the Menus unit:
+                    TMenuBar, TMenuBox, TMenuPopup, and
+                    TStatusLine. After calling RegisterMenus,
+                    your application can read or write any of
+                    those types with streams.
+
+          See also  RegisterType procedure
+
+
+
+=============================================================
+RegisterViews procedure                                 Views
+=============================================================
+
+       Declaration  procedure RegisterViews;
+
+          Function  Calls RegisterType for each of the object
+                    types defined in the Views unit: TView,
+                    TFrame, TScrollBar, TScroller,
+                    TListViewer, TGroup, and TWindow. After
+                    calling RegisterViews, your application
+                    can read or write any of those types with
+                    streams.
+
+          See also  RegisterType procedure
+
+
+
+=============================================================
+ShiftState variable                                   Drivers
+=============================================================
+
+                    Although this variable exists to maintain
+                    compatibility with version 1.0, you
+                    should not check ShiftState directly.
+                    Rather, you should call GetShiftState,
+                    which returns a valid set of shift state
+                    flags in either real or protected mode.
+
+
+
+=============================================================
+TDesktop                                                  App
+=============================================================
+
+                    TDesktop has two additional methods not
+                    documented.
+
+
+           Methods  =========================================
+
+
+              Load  constructor Load(var S: TStream);
+
+                    Constructs and loads a desktop object
+                    from the stream S by first calling the
+                    Load constructor inherited from TGroup,
+                    then calling GetSubViewPtr to set up the
+                    Background field, then reading the
+                    TileColumnsFirst field.
+
+                    See also: TGroup.Load,
+                    TGroup.GetSubViewPtr
+
+
+             Store  procedure Store(var S: TStream);
+
+                    Writes the desktop object to the stream S
+                    by first calling the Store method
+                    inherited from TGroup, then calling
+                    PutSubViewPtr to store the Background
+                    field, then writing the value of
+                    TileColumnsFirst.
+
+                    See also: TGroup.Store,
+                    TGroup.PutSubViewPtr
+
+
+
+=============================================================
+TMemoryStream                                         Objects
+=============================================================
+
+                    TMemoryStream implements a stream in heap
+                    memory.
+                    The mechanics of using memory streams are
+                    simple. You construct a memory stream,
+                    specifying its initial size and a block
+                    size. The memory stream allocates as many
+                    blocks on the heap as needed to meet the
+                    initial size. Bytes stored on the stream
+                    are not guaranteed to be in contiguous
+                    memory locations unless the stream
+                    consists of a single block.
+
+                    Once you construct the stream, you use it
+                    like any other. Writing beyond the end of
+                    the stream causes the stream to grow in
+                    increments of the initial block size, up
+                    to a maximum of 16,384 blocks.
+
+                    Changing the size of a memory stream by
+                    enlarging or truncating could seriously
+                    fragment your heap. Try to set the
+                    initial size and block size of the stream
+                    to reasonable values to minimize
+                    individual allocations.
+
+
+            Fields  =========================================
+
+         BlockSize  BlockSize: Integer;
+
+                    The size of each block allocated to the
+                    memory stream.
+
+            CurSeg  CurSeg: Integer;
+
+                    Holds the segment part of the address of
+                    the block that contains the current
+                    stream position.
+
+          Position  Position: Longint;
+
+                    The position of the stream in bytes. The
+                    first position is 0.
+
+          SegCount  SegCount: Integer;
+
+                    The number of blocks currently allocated
+                    to the memory stream.
+
+           SegList  SegList: PWordArray;
+
+                    Contains the list of segment parts used
+                    by each allocated block. The entries
+                    0..SegCount-1 contain valid segments.
+
+              Size  Size: Longint;
+
+                    The size of the stream in bytes.
+
+
+           Methods  =========================================
+
+              Init  constructor Init(ALimit: Longint;
+                    ABlockSize: Word);
+
+                    Constructs a memory stream object by
+                    first calling the Init constructor
+                    inherited from TStream, then allocates
+                    enough blocks of size ABlockSize to
+                    collectively contain ALimit bytes. Sets
+                    BlockSize to ABlockSize.
+
+                    See also: TStream.Init
+
+              Done  destructor Done; virtual;
+
+                    Disposes of the memory stream object by
+                    disposing of the memory allocated to the
+                    stream, then calling the Done destructor
+                    inherited from TStream.
+
+                    See also: TStream.Done
+
+            GetPos  function GetPos: Longint; virtual;
+
+                    Returns the stream's current position.
+                    The first position is 0.
+
+           GetSize  function GetSize: Longint; virtual;
+
+                    Returns the size of the stream in bytes.
+
+              Read  procedure Read(var Buf; Count: Word);
+                    virtual;
+
+                    Reads Count bytes from the stream,
+                    starting at the current position, into
+                    the buffer Buf.
+
+              Seek  procedure Seek(Pos: Longint); virtual;
+
+                    Sets the current position to Pos bytes
+                    from the start of the stream. The first
+                    position is 0.
+
+          Truncate  procedure Truncate; virtual;
+
+                    Deletes all data on the stream from the
+                    current position to the end. Sets the
+                    current position to the new end of the
+                    stream.
+
+             Write  procedure Write(var Buf; Count: Word);
+                    virtual;
+
+                    Writes Count bytes from the buffer Buf to
+                    the stream, starting at the current
+                    position.
+
+
+
+=============================================================
+TStringList                                           Objects
+=============================================================
+
+                    In the example code in the Load
+                    constructor description, TBufStream
+                    should be PBufStream.
+
+
+
+=============================================================
+TStrListMaker                                         Objects
+=============================================================
+
+                    In the example code in the description of
+                    how to use the string list maker,
+                    TBufStream should be PBufStream.

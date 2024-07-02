@@ -1,0 +1,702 @@
+===========================================================================
+===========================================================================
+
+                             TEMC.DOC
+
+===========================================================================
+Turbo Editor macros
+===========================================================================
+
+          TEMC.EXE is an editor macro compiler for the IDE. It
+          processes a script file that defines editor macros and
+          key bindings, and produces a configuration file that is
+          read by the IDE to define the effects of keyboard
+          commands in the editor.
+
+          The file DEFAULTS.TEM contains the default macro
+          definitions and key bindings built into the IDE editor.
+          It serves as an example script, as well as a base from
+          which to customize the editor. Several other .TEM files
+          are also provided for your convenience.
+
+===========================================================================
+TEMC command line
+===========================================================================
+
+          TEMC is invoked from the DOS command line. Type
+
+              temc [-c] <script file>[.TEM] <config file><.TP>
+
+          The script file extension is assumed to be .TEM if not
+          otherwise specified. The configuration file extension
+          must be .TP.
+
+          TEMC requires that you have an existing .TP file, which
+          will be used to store the new key bindings from your
+          script.  You must specify the name of your .TP file
+          when invoking TEMC.
+
+          The optional -c switch can also be specified as /c, and
+          can appear in any argument position on the command
+          line. If you use this option, any existing command
+          table in your configuration file is thrown away before
+          TEMC processes the script file. When -c is not used,
+          the key bindings in the script file are merged with
+          those already defined in the configuration file.
+
+          You can use DEFAULTS.TEM to re-create exactly the
+          default settings of the editor command set. This
+          file is included as both a sample script file and as
+          the default command table. You can copy it and modify
+          it for your own use.
+
+===========================================================================
+Syntax
+===========================================================================
+
+          The syntax to define a macro is
+
+              MACRO <macroname>
+                <command1>;
+                [ <command2>; ... ]
+              END;
+
+          <macroname> can consist of anything that is a legal C
+          symbol, and <command> can be either the name of another
+          predefined macro or a predefined TEMC editor command. A
+          list of editor commands and what they do follows.
+
+          When you define your macro, the following points are
+          valid:
+
+          1. A statement defines either a named macro or a key
+             binding.
+
+          2. Spaces and new lines are optional.
+
+          3. Comments are in C-style /* ... */ pairs.
+
+          4. Unlike C, TEMC's language is case insensitive.
+
+          5. Some of the predefined editor commands have a syntax
+             that looks like a C function call with one argument.
+             For example,
+
+                 SetMark(5);
+
+             Depending on the command, the argument is either a
+             decimal integer constant, a character constant, or a
+             string literal. All are specified using C syntax.
+
+          Here's an example of a macro definition from
+          DEFAULTS.TEM:
+
+              MACRO MacScrollUp
+                ScrollScreenUp; FixCursorPos;
+              END;
+
+          The syntax to define a key binding is
+
+              <key-sequence>: <command>;
+
+             or
+
+              <key-sequence>: BEGIN <command1>; [ <command2>; ... ]
+              END;
+
+          The <key-sequence> is either a key (a character
+          optionally preceded by Ctrl or Alt), or a series of
+          keys separated by a plus sign (+). Note that the
+          specification of the key characters themselves is case
+          sensitive. For example, Ctrl+k B is different than
+          Ctrl+k b, even though the latter is the same as Ctrl+K b.
+
+          White space is allowed between the key-sequence and the
+          colon, and each <command> can be either the name of a
+          previously defined macro, or one of the predefined
+          editor commands listed in Table 1.1.
+
+===========================================================================
+Key codes
+===========================================================================
+
+          The IDE editor makes use of an extended character set
+          that includes key combinations not normally available
+          to DOS programs. Key codes can be specified in a script
+          through any combination of the symbols "Ctrl+", "Shift+",
+          "Alt+" and a character.
+
+          Some keys cannot be entered directly into a TEMC
+          script. Those keys can be referred to by their names,
+          as described in the following table.
+
+          Any key in a sequence--except the first key--can be
+          preceded by one of the characters ^ or @. The caret (^)
+          indicates that any combination of case and "Ctrl" can
+          be used to type the key; that is, lowercase, uppercase,
+          or control characters. The @ sign is used to indicate
+          that case is insignificant for the following character,
+          although "Ctrl" is not accepted. For example,
+
+          * Ctrl+k b specifies a Ctrl+K followed by a lowercase b.
+
+          * Ctrl+k ^b specifies a Ctrl+K followed by any of b, B,
+            or Ctrl+B.
+
+          * Ctrl+k @B specifies Ctrl+K followed by either b or B.
+
+     Named keys
+
+          Key are specified as letters, numbers, or characters,
+          optionally preceded by one or more of Ctrl+, Alt+ or
+          Shift+. The following names specify keys that cannot be
+          typed as themselves in the TEMC syntax.
+
+          -------------------------------------------------------
+             Key name    Notes
+          -------------------------------------------------------
+             Home
+             End
+             PgUp
+             PgDn
+             LfAr        Left arrow
+             RgAr        Right arrow
+             UpAr        Up arrow
+             DnAr        Down arrow
+             Ins
+             Del
+             Enter
+             Return      Same as Enter
+             BkSp        Backspace
+             Tab
+             BkTab       No longer available, use Shift+Tab
+             Esc
+             Star        * key on the numeric keypad
+             Minus       - key on the numeric keypad
+             Plus        + key on the numeric keypad
+             Space       Spacebar
+             PrtSc
+             F1 to F10   Function keys
+
+===========================================================================
+Predefined editor commands
+===========================================================================
+
+          TEMC lets you use built-in editor commands and user-
+          defined macros as commands within macros interchangeably
+          as long as you don't create any loops by having two
+          macros calling each other, even via intermediate macros.
+          Note that some commands cause an escape from the editor
+          to the surrounding IDE, for example, by bringing up a
+          dialog box. Your macro will "pause" until control returns
+          to the editor.
+
+          A list of all predefined TEMC editor commands is shown
+          next. Commands that cause an escape from the editor
+          follow.
+
+     TEMC editor commands
+
+          -------------------------------------------------------
+          Command name                What the editor does
+          -------------------------------------------------------
+
+          BackspaceDelete             Deletes character before
+                                      the cursor.
+
+          BottomOfScreen              Moves cursor to the bottom
+                                      line of the current window,
+                                      leaving column unchanged.
+
+          CenterFixScreenPos          Adjusts the screen display
+                                      to ensure the cursor is
+                                      visible. If any adjustment
+                                      is necessary, adjust the
+                                      display so the cursor is
+                                      close to being centered in
+                                      the window.
+
+          CopyBlock                   If there is a valid and
+                                      highlighted (selected)
+                                      text block, then at the
+                                      cursor location, inserts a
+                                      copy of the characters that
+                                      are selected and makes that
+                                      the new selected text
+                                      location.
+
+          CursorCharLeft              Moves cursor left over one
+                                      character. This command
+                                      will skip over tab
+                                      characters and move to the
+                                      end of the previous line.
+
+          CursorCharRight             Moves cursor right over one
+                                      character. This  command
+                                      will skip over tab
+                                      characters and advance to
+                                      the beginning of the next
+                                      line.
+
+          CursorDown                  Moves cursor down one row.
+
+          CursorLeft                  Moves cursor left one
+                                      screen column.
+
+          CursorRight                 Moves cursor right one
+                                      screen column.
+
+          CursorSwitchedLeft          Like CursorLeft, but pays
+                                      attention to cursor through
+                                      tab option setting (see
+                                      SetCursorThroughTabMode).
+
+          CursorSwitchedRight         Like CursorRight, but pays
+                                      attention to cursor
+                                      through tab option setting
+                                      (see SetCursorThroughTabMode).
+
+          CursorUp                    Moves cursor up one row.
+
+          DeleteBlock                 If there is a valid and
+                                      highlighted (selected) text
+                                      block, deletes the
+                                      characters that are in it.
+
+          DeleteChar                  Deletes the character at
+                                      the current cursor
+                                      location.
+
+          DeleteLine                  Deletes the current line.
+
+          DeleteToEOL                 Deletes all characters in
+                                      the current line, leaving a
+                                      zero-length line.
+
+          DeleteWord                  Deletes from cursor to
+                                      beginning of next word.
+
+          EndCursor                   Moves cursor to end of file
+                                      buffer.
+
+          ExtendBlockBeg              Initiates a series of
+                                      commands that will select a
+                                      block of text between the
+                                      initial and ending
+                                      positions of the cursor.
+
+          ExtendBlockEnd              Ends a series of commands
+                                      begun by ExtendBlockBeg.
+
+          FixCursorPos                Ensures that the cursor
+                                      value specifies a row
+                                      between 1 and the number of
+                                      lines in the buffer, a
+                                      column greater than 0. If
+                                      the cursor through tab
+                                      option is not set, the
+                                      cursor is not placed in the
+                                      middle of a tab character
+                                      (see SetCursorThroughTabMode).
+
+          FixScreenPos                Adjusts the screen display
+                                      to ensure the cursor is
+                                      visible.
+
+          FullPaintScreen             Redraws the entire window,
+                                      making no assumptions about
+                                      what is onscreen.
+
+          HideBlock                   Sets a flag indicating that
+                                      the selected text should
+                                      not be highlighted.
+
+          HighlightBlock              Sets a flag indicating that
+                                      if the beginning and end
+                                      selected text markers are
+                                      valid, the selected text
+                                      should be highlighted.
+
+          HomeCursor                  Moves cursor to beginning
+                                      of the file buffer.
+
+          IndentBlock                 Inserts a space at the
+                                      beginning of each line in
+                                      the highlighted (selected)
+                                      text.
+
+          InsertText                  Inserts the literal
+                                      "string" in the buffer at
+                                      the current cursor
+                                      location. Use the syntax
+                                      InsertText(string) to call
+                                      this command.
+
+          LeftOfLine                  Moves cursor to beginning
+                                      of the current line.
+
+          LiteralChar                 Inserts the character at
+                                      the current cursor
+                                      location, without doing any
+                                      special processing for
+                                      newline, tab characters,
+                                      etc. Use the syntax
+                                      LiteralChar(c), where c is
+                                      a character or integer
+                                      value.
+
+          MarkBufModified             Sets a flag indicating that
+                                      the contents of the buffer
+                                      are different than what is
+                                      in the corresponding disk
+                                      file.
+
+          MarkBufUnModified           Clears a flag, thus
+                                      indicating that the
+                                      contents of the buffer can
+                                      be assumed to be identical
+                                      to what is in the disk
+                                      file.
+
+          MatchPairBackward           Same as MatchPairForward
+                                      except if the cursor is on
+                                      a ' or ", searches backward
+                                      for the matching character.
+
+          MatchPairForward            If the cursor is on one of
+                                      the characters (, ), {, },
+                                      [, ], or on the first
+                                      character of one of the
+                                      pairs /* or */, searches in
+                                      the appropriate direction
+                                      for the closest instance of
+                                      the matching delimiter. If
+                                      the cursor is on the
+                                      character ' or ", searches
+                                      forward for the matching
+                                      character. If a match is
+                                      found, places the cursor
+                                      there.
+
+          MoveBlock                   Like CopyBlock, but also
+                                      deletes the original
+                                      selected text.
+
+          MoveToBlockBeg              Moves cursor to the
+                                      location marked as the
+                                      beginning of the selected
+                                      text.
+
+          MoveToBlockEnd              Moves cursor to the
+                                      location marked as the end
+                                      of the selected text.
+
+          MoveToMark                  Moves the cursor to the
+                                      location saved with
+                                      SetMark(n) command. Use the
+                                      syntax MoveToMark(n), where
+                                      n is a one-digit number, 0-9.
+
+          MoveToPrevPos               Moves the cursor to the
+                                      location specified by the
+                                      "previous position marker."
+
+          MoveToTempPos               Moves the cursor to the
+                                      saved temporary marker.
+
+          NullCmd                     No operation. Calls the
+                                      editor, but performs no
+                                      function. Can be used to
+                                      cause a keystroke to have
+                                      no effect.
+
+          OutdentBlock                Deletes a leading space, if
+                                      any, from the beginning of
+                                      each line in the
+                                      highlighted (selected)
+                                      text.
+
+          PageDown                    Moves cursor down by number
+                                      of lines in the window.
+
+          PageScreenDown              Scrolls screen down by
+                                      numer of lines in the
+                                      window, leaving cursor
+                                      position unchanged.
+
+          PageScreenUp                Scrolls screen up by numer
+                                      of lines in the window,
+                                      leaving cursor position
+                                      unchanged.
+
+          PageUp                      Moves cursor up by number
+                                      of lines in the window.
+
+          PaintScreen                 Redraws the entire window,
+                                      assuming that the screen
+                                      still correctly displays
+                                      what the editor last drew
+                                      on it.
+
+          ReDo                        Performs an Redo operation.
+                                      Exactly what happens
+                                      depends on the option
+                                      settings.
+
+          RightOfLine                 Moves cursor to end of
+                                      current line.
+
+          RightOfWord                 Moves cursor to the next
+                                      column that follows the end
+                                      of a word.
+
+          ScrollScreenDown            Scrolls screen down one
+                                      line, leaving cursor
+                                      position unchanged.
+
+          ScrollScreenUp              Scrolls screen up one line,
+                                      leaving cursor position
+                                      unchanged.
+
+          SetAutoIndent               Sets the Auto Indent option
+                                      On.
+
+          SetAutoOutdent              Sets the Backspace
+                                      Unindents option On.
+
+          SetBlockBeg                 Sets the beginning of the
+                                      selected text to be the
+                                      character at the current
+                                      cursor location.
+
+          SetBlockEnd                 Sets the end of the
+                                      selected text to be the
+                                      character at the current
+                                      cursor location.
+
+          SetCursorThroughTabMode     Sets the Cursor Through
+                                      Tabs option On.
+
+          SetInsertMode               Sets Insert/Overwrite
+                                      option to Insert.
+
+          SetMark                     Sets a marker to point to
+                                      the character at the
+                                      current cursor location, so
+                                      a later MoveToMark(n)
+                                      command can restore the
+                                      cursor. Use the syntax
+                                      SetMark(n), where n is a
+                                      one digit number, 0-9.
+
+          SetOptimalFillMode          Sets Optimal Fill option On.
+
+          SetPrevPos                  Sets a marker (the previous
+                                      position marker) to point
+                                      to the character at the
+                                      current cursor location.
+                                      This marker location
+                                      changes only by a call to
+                                      SetPrevPos or SwapPrevPos.
+
+          SetTabbingMode              Sets Use Tab Char option On.
+
+          SetTempPos                  Saves the cursor location
+                                      in a temporary marker that
+                                      can be used by some
+                                      internal editor commands.
+                                      This is not a practical
+                                      application in user-defined
+                                      macros. Use SetMark instead.
+
+          SmartRefreshScreen          Redraws the window,
+                                      skipping any portions that
+                                      the editor is sure are
+                                      unmodified since the last
+                                      redraw.
+
+          SmartTab                    Inserts space or tab
+                                      characters in accordance
+                                      with the current settings
+                                      of the Use Tab Char option,
+                                      Tab Width.
+
+          SwapPrevPos                 Exchanges the values of the
+                                      cursor and the "previous
+                                      position marker."
+
+          ToggleAutoIndent            Toggles the state of the
+                                      Auto Indent option.
+
+          ToggleAutoOutdent           Toggles the state of the
+                                      Backspace Unindents option.
+
+          ToggleCursorThroughTabMode  Toggles the state of the
+                                      Cursor Through Tabs option.
+
+          ToggleHideBlock             Toggles the state of the
+                                      highlight (selected) text
+                                      flag (see HighlightBlock).
+
+          ToggleInsert                Toggles state of
+                                      Insert/Overwrite option.
+
+          ToggleOptimalFillMode       Toggles state of Optimal
+                                      Fill option.
+
+          ToggleTabbingMode           Toggles state of Use Tab
+                                      Char option.
+
+          TopOfScreen                 Moves cursor to the top
+                                      line currently displayed in
+                                      the window, leaving column
+                                      unchanged.
+
+          UnDo                        Performs an Undo operation.
+                                      Exactly what happens
+                                      depends on the option
+                                      settings.
+
+          WordLeft                    Moves cursor to beginning
+                                      of previous word, or to end
+                                      of previous line, whichever
+                                      is first.
+
+          WordRight                   Moves cursor to beginning
+                                      of next word, or to the end
+                                      of a line, whichever is
+                                      first.
+
+          -------------------------------------------------------
+
+          The following commands cause an exit from the editor,
+          for example, by bringing up a dialog box. The macro
+          resumes when the editor window regains the focus.
+
+          The keys listed next to some of the commands below are
+          the ones used by default.
+
+          -------------------------------------------------------
+
+          ChangeDirectory     Opens a dialog box for changing the
+                              current directory.
+          ChangeModeFlags     Used after a command such as
+                              ToggleInsert which changes the
+                              state of an editor option switch.
+                              Causes the IDE to update various
+                              menu items.
+
+          ClipCopy            Copys selected text to Clipboard
+                              (Ctrl+Ins).
+
+          ClipCut             Cuts selected text to Clipboard
+                              (Shift+Del).
+
+          ClipPaste           Pastes Clipboard into buffer at
+                              cursor (Shift+Ins).
+
+          ClipShow            Shows Clipboard (no hot key
+                              defined).
+
+          CloseWindow         Closes editor window (Alt+F3).
+
+          CompileFile         Compiles current buffer (Alt+F9).
+
+          CompileMenu         Selects Compile menu (Alt+C).
+
+          CompilerOptions     Inserts compiler options string
+                              at the top of file (Ctrl+O O).
+
+          EditMenu            Selects Edit menu (Alt+E).
+
+          FileMenu            Selects File menu (Alt+F).
+
+          GetFindString       Opens a dialog box for the Search
+                              operation. (Alt+S F)
+
+          GotoWindow1         Selects window #1 (Alt+1).
+
+          GotoWindow2         Selects window #2 (Alt+2).
+
+          GotoWindow3         Selects window #3 (Alt+3).
+
+          GotoWindow4         Selects window #4 (Alt+4).
+
+          GotoWindow5         Selects window #5 (Alt+5).
+
+          GotoWindow6         Selects window #6 (Alt+6).
+
+          GotoWindow7         Selects window #7 (Alt+7).
+
+          GotoWindow8         Selects window #8 (Alt+8).
+
+          GotoWindow9         Selects window #9 (Alt+9).
+
+          Help                Opens the Help window (F1).
+
+          HelpMenu            Selects Help menu (Alt+H).
+
+          HelpIndex           Display the Help system's index
+                              (Shift+F1).
+
+          LastHelp            Opens previous help window (Alt+F1).
+
+          Make                Makes project (F9).
+
+          Menu                Highlights top menu bar.
+
+          Modify              Evaluates expression/modify
+                              variable (Ctrl+F4).
+
+          NextWindow          Selects next window in IDE (F6).
+
+          OpenFile            Opens dialog box for File Open (F3).
+
+          CompileMenu         Selects Compile menu (Alt+C).
+          OptionsMenu         Selects Options menu (Alt+O).
+
+          PrintBlock          Writes selected text to the
+                              printer.
+
+          Quit                Exits the IDE (Alt+X).
+
+          ReadBlock           Opens dialog box requesting a file
+                              name to be read into the buffer at
+                              the cursor location and marked as
+                              selected text.
+
+          RepeatSearch        Searches again, using previous
+                              parameters.
+
+          Replace             Opens an dialog box for the Replace
+                              operation.
+
+          RunMenu             Selects Run menu (Alt+R).
+
+          RunProgram          Makes and runs current executable
+                              (Ctrl+F9).
+
+          SaveFile            Saves current editor buffer (F2).
+
+          SaveFileAs          Opens dialog for File SaveAs.
+
+          SearchMenu          Selects Search menu (Alt+S).
+
+          WindowList          Displays window list (Alt+0).
+
+          WindowMenu          Selects Window menu (Alt+W).
+
+          WindowCascade       Cascades windows (Shift+F5).
+
+          WindowTile          Tiles windows (Shift+F4).
+
+          WordHelp            Context sensitive help (Ctrl+F1).
+
+          WriteBlock          Opens dialog box requesting a file
+                              name to which the selected text
+                              will be written.
+
+          ZoomWindow          Zooms/unzooms current window (F5).
+
+===========================================================================
+===========================================================================

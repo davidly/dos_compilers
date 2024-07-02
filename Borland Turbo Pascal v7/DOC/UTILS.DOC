@@ -1,0 +1,1287 @@
+=======================================================================
+                       Turbo Pascal Utilities
+=======================================================================
+
+-----------------------------------------------------------------------
+                         Table of Contents
+-----------------------------------------------------------------------
+ 1. The TOUCH utility
+ 2. The GREP utility
+     The GREP switches
+     How to search using GREP
+     Examples using GREP
+ 3. The BINOBJ utility
+ 4. Using TPUMOVER, the unit mover
+     A review of unit files
+     Using TPUMOVER
+ 5. The Stand-Alone MAKE Utility
+     Creating makefiles
+      Comments
+      Explicit rules
+      Implicit rules
+      Command lists
+      Macros
+       Defined test macro ($d)
+       Base file name macro ($*)
+       Full file name macro ($<)
+       File name path macro ($:)
+       File name and extension macro ($.)
+       File name only macro ($&)
+      Directives
+     Using MAKE
+      The BUILTINS.MAK file
+      How MAKE searches for files
+      MAKE command-line options
+      MAKE error messages
+       Fatal errors
+       Errors
+-----------------------------------------------------------------------
+
+This file describes three stand-alone utility programs that come
+with Turbo Pascal: TOUCH, GREP, BINOBJ, TPUMOVER and MAKE.
+
+======================
+ 1. The TOUCH Utility
+======================
+
+There are times when you want to force a particular target file
+to be recompiled or rebuilt, even though no changes have been
+made to its sources. One way to do this is to use the TOUCH
+utility included with Turbo Pascal. TOUCH changes the date and
+time of one or more files to the current date and time, making it
+"newer" than the files that depend on it.
+
+To force a target file to be rebuilt, "touch" one of the files
+that target depends on. To touch a file (or files), enter
+
+   touch filename [ filename ... ]
+
+at the DOS prompt. TOUCH will then update the file's creation
+date(s).
+
+Once you do this, you can invoke MAKE to rebuild the touched
+target file(s).
+
+
+=====================
+ 2. The GREP Utility
+=====================
+
+GREP is a powerful search utility that can look for text in
+several files at once.
+
+The command-line syntax for GREP follows:
+
+   GREP [options] searchstring [filespec ... ]
+
+where options consists of one or more single characters preceded
+by a hyphen, searchstring defines the pattern to search for, and
+filespec is the file specification. filespec tells GREP which
+files (or groups of files) to search; it can be an explicit file
+name or a generic file name incorporating the DOS wildcards (?
+and *). You can also enter a path as part of filespec; if you use
+filespec without a path, GREP only searches the current
+directory. If you don't specify filespec, input to GREP must be
+specified by redirecting stdin or piping.
+
+
+ The GREP Switches
+===================
+
+In the command line, options are one or more single characters
+preceded by a hyphen (-). Each individual character is a switch
+that you can turn on or off: type the plus symbol (+) after a
+character to turn the option on, or type a hyphen (-) after the
+character to turn the option off.
+
+The default is on (the + is implied): for example, -R means the
+same thing as -R+. You can list multiple options individually
+like this: -I -D -L). Or you can combine them like this: -ILD or
+-IL -D, and so on). It's all the same to GREP.
+
+Here is a list of the switches and their meanings:
+
+   -C   Count only: Only a count of matching lines is printed.
+        For each file that contains at least one matching line,
+        GREP prints the file name and a count of the number of
+        matching lines. Matching lines are not printed.
+
+   -D   Directories: For each filespec specified on the command
+        line, GREP searches for all files that match the file
+        specification, both in the directory specified and in all
+        subdirectories below the specified directory. If you give
+        a filespec without a path, GREP assumes the files are in
+        the current directory.
+
+   -I   Ignore case: GREP ignores upper/lowercase differences
+        (case folding). GREP treats all letters a-z as being
+        identical to the corresponding letters A-Z in all
+        situations.
+
+   -L   List match files: Only the name of each file containing a
+        match is printed. After GREP finds a match, it prints the
+        file name and processing immediately moves on to the next
+        file.
+
+   -N   Numbers: Each matching line that GREP prints is preceded
+        by its line number.
+
+   -O   UNIX output format: Changes the output format of matching
+        lines to support more easily the UNIX style of
+        command-line piping. All lines of output are preceded by
+        the name of the file which contained the matching line.
+
+   -R   Regular expression search: The text defined by
+        searchstring is treated as a regular expression instead
+        of as a literal string.
+
+   -U   Update options: GREP will combine the options given on
+        the command line with its default options and write these
+        to the GREP.COM file as the new defaults. (In other
+        words, GREP is self-configuring.) This option allows you
+        to tailor the default option settings to your own taste.
+
+   -V   Non-match: Only non-matching lines are printed. Only
+        lines that do not contain the search string are
+        considered to be non-matching lines.
+
+   -W   Word search: Text found which matches the regular
+        expression will be considered a match only if the
+        character immediately preceding and following cannot be
+        part of a word. The default word character set includes
+        A-Z, 9-0, and the underbar (_). An alternate form of this
+        option allows you to specify the set of legal word
+        characters. Its form is -W[set], where set is any valid
+        regular expression set definition. If alphabetic
+        characters are used to define the set, the set will
+        automatically be defined to contain both the upper and
+        lower case values for each letter in the set, regardless
+        of how it is typed, even if the search is case-sensitive.
+        If the -W option is used in combination with the -U
+        option, the new set of legal characters is saved as the
+        default set.
+
+   -Z   Verbose: GREP prints the file name of every file
+        searched. Each matching line is preceded by its line
+        number. A count of matching lines in each file is given,
+        even if the count is zero.
+
+Several of these options are in direct conflict with each other.
+In these cases, the following order applies (the first one is the
+one that takes precedence):
+
+   -Z   -L   -C   -N
+
+Each occurrence of an option overrides the previous definition:
+Its state reflects the way you last set it. At any given time,
+each option can only be on or off.
+
+You can install your preferred default setting for each option in
+GREP.COM with the -U option. For example, if you want GREP to
+always do a verbose search (-Z on), you can install it with the
+following command:
+
+   GREP -U -Z
+
+
+ How to Search Using GREP
+==========================
+
+The value of searchstring defines the pattern GREP will search
+for.  A search string can be either a (via the -R switch) or a
+literal string. In regular expressions, operators govern the
+search; literal strings have no operators.
+
+You can enclose the search string in quotation marks to prevent
+spaces and tabs from being treated as delimiters. Matches will
+not cross line boundaries (a match must be contained in a single
+line).
+
+When the -R switch is used, the search string is treated as a
+regular expression (as opposed to a literal expression), and the
+following symbols take on special meanings:
+
+   ^   A caret at the start of the expression matches the start
+       of a line.
+
+   $   A dollar sign at the end of the expression matches the end
+       of a line.
+
+   .   A period matches any character.
+
+   *   An expression followed by an asterisk wildcard matches
+       zero or more occurrences of that expression: fo* matches
+       f, fo, foo, etc.
+
+   +   An expression followed by a plus sign matches one or more
+       occurrences of that expression: fo+ matches fo, foo, etc.,
+       but not f.
+
+   []  A string enclosed in brackets matches any character in
+       that string, but no others. If the first character in the
+       string is a caret (^), the expression matches any
+       character except the characters in the string. For
+       example, [xyz] matches x, y, and z, while [^xyz] matches a
+       and b, but not x or y. A range of characters can be
+       specified by two characters separated by a hyphen (-).
+       These can be combined to form expressions like [?a-bd-z]
+       to match ? and any letter except c.
+
+   \   The backslash "escape character" tells GREP to search for
+       the literal character that follows it. For example, \.
+       matches a period instead of any character.
+
+   Note: Four characters (?, +, *, and .) do not have any special
+   meaning when used in a set. The character ^ is only treated
+   specially if it immediately follows the beginning of the set
+   (that is, immediately after the [).
+
+Any ordinary character not mentioned in this list matches that
+character. A concatenation of regular expressions is a regular
+expression.
+
+
+ Examples Using GREP
+=====================
+
+The following examples assume all options default to off.
+
+----------------------------------------------------------------
+
+Search String   grep -n function dirdemo.pas
+
+Finds       File DIRDEMO.PAS:
+            51        LessFunc = function(X, Y: DirPtr): Boolean;
+            60      function NumStr(N, D: Integer): String;
+            73      function LessName(X, Y: DirPtr): Boolean;
+            78      function LessSize(X, Y: DirPtr): Boolean;
+            83      function LessTime(X, Y: DirPtr): Boolean;
+
+Remarks     Finds all functions in the file DIRDEMO.PAS. The -N
+            tells GREP to precede each matched line with its line
+            number.
+
+-----------------------------------------------------------------
+
+Search String   grep {\$ dirdemo.pas
+
+Finds       File DIRDEMO.PAS:
+            {$I-,S-}
+            {$M 8192,8192,655360}
+            {$F+}
+            {$F-}
+
+Remarks     Finds all compiler directives in DIRDEMO.PAS. The \
+            (backslash) preceding the $ is necessary. Without it,
+            the $ would indicate the end of the line. All lines
+            with { (curly bracket) as the last character would
+            match this pattern and be printed out.
+
+-----------------------------------------------------------------
+
+Search String   grep -i "^ *function.*).*real" *.pas
+
+Finds       File WORKERS.PAS:
+            function RoundPay(Wages: Real): Real;
+
+Remarks     Finds all lines that begin with zero or more spaces
+            followed by the word function, followed by any string
+            of zero or more characters, followed by a
+            parenthesis, followed by another string of zero or
+            more characters, followed by the word Real, and
+            ignores case. The net effect is to search for all
+            functions returning a Real. See if you can think of
+            other ways to do this.
+
+            The double quotes are necessary because of the space
+            in the pattern string. The quotes tell the DOS
+            command-line processor to treat the intervening
+            characters as a single argument. Without the quotes,
+            DOS will think the search string is actually two
+            arguments, and GREP will think that everything after
+            ^ (the caret character) refers to file names, and
+            will complain
+
+            No files matching: *FUNCTION.*).*.
+
+
+=======================
+ 3. The BINOBJ Utility
+=======================
+
+A utility program called BINOBJ.EXE has been added to convert any
+file to an .OBJ file so it can be linked into a pascal program as
+a "procedure." This is useful if you have a binary data file that
+must reside in the code segment or is too large to make into a
+typed constant array. For example, you can use BINOBJ with the
+Graph unit to link the graphics driver or font files directly
+into your .EXE file. Then, to use your graph program, you need
+only have the .EXE file (see the example BGILINK.PAS).
+
+BINOBJ takes three parameters:
+
+   BINOBJ  <source[.BIN]>  <destination[.OBJ]>  <public name>
+
+where source is the binary file to convert, destination is the
+name of the .OBJ to be produced, and public name is the name of
+the procedure as it will be declared in your pascal program.
+
+The following example, the procedure ShowScreen, takes a pointer
+as a parameter and moves 4000 bytes of data to screen memory. The
+file called MENU.DTA contains the image of the main menu screen
+(80 * 25 * 2 = 4000 bytes).
+
+Here's a simple (no error-checking) version of MYPROG.PAS:
+
+   program MyProg;
+
+   uses Crt;
+
+   procedure ShowScreen(ScreenData : Pointer);
+   { Display a screenful of data--no error-checking! }
+   var
+     ScreenSegment: Word;
+
+   begin
+     if (Lo(LastMode) = 7) then      { Mono? }
+       ScreenSegment := $B000
+     else
+       ScreenSegment := $B800;
+     Move(ScreenData^,               { From pointer }
+      Ptr(ScreenSegment, 0)^,        { To video memory }
+      4000);                         { 80 * 25 * 2 }
+   end;
+
+   var
+     MenuP : Pointer;
+     MenuF : file;
+   begin
+     Assign(MenuF, 'MENU.DTA');      { Open screen data file }
+     Reset(MenuF, 1);
+     GetMem(MenuP, 4000);            { Allocate buffer on heap }
+     BlockRead(MenuF, MenuP^, 4000); { Read screen data }
+     Close(MenuF);
+     ShowScreen(MenuP);              { Display screen }
+   end.
+
+
+The screen data file (MENU.DTA) is opened and then read into a
+buffer on the heap. Both MYPROG.EXE and MENU.DTA must be present
+at run-time for this program to work. You can use BINOBJ to
+convert MENU.DTA to an .OBJ file (MENUDTA.OBJ) and tell it to
+associate the data with a procedure called MenuData. Then you can
+declare the fake external procedure MenuData, which actually
+contains the screen data. Once you link in the .OBJ file with the
+$L compiler directive, MenuData will be 4000 bytes long and
+contain your screen data. First, run BINOBJ on MENU.DTA:
+
+   binobj MENU.DTA MENUDTA MenuData
+
+The first parameter, MENU.DTA, shows a familiar file of screen
+data; the second, MENUDTA, is the name of the .OBJ file to be
+created (since you didn't specify an extension, .OBJ will be
+added). The last parameter, MenuData, is the name of the external
+procedure as it will be declared in your program. Now that you've
+converted MENU.DTA to an .OBJ file, here's what the new
+MYPROG.PAS looks like:
+
+   program MyProg;
+
+   uses Crt;
+
+   procedure ShowScreen(ScreenData : Pointer);
+   { Display a screenful of data--no error checking! }
+   var
+     ScreenSegment: Word;
+   begin
+     if (Lo(LastMode) = 7) then             { Mono? }
+       ScreenSegment := $B000
+     else
+       ScreenSegment := $B800;
+     Move(ScreenData^,                      { From pointer }
+      Ptr(ScreenSegment, 0)^,               { To video memory }
+      4000);                                { 80 * 25 * 2 }
+   end;
+
+   procedure MenuData; external;
+   {$L MENUDTA.OBJ }
+   begin
+     ShowScreen(@MenuData);                 { Display screen }
+   end.
+
+Notice that ShowScreen didn't change at all, and that the ADDRESS
+of your procedure is passed using the @ operator.
+
+===================================
+ 4. Using TPUMOVER, the Unit Mover
+===================================
+
+When you write units, you want to make them easily available to any
+programs that you develop. We'll now show you how to use TPUMOVER to
+remove seldom-used units from TURBO.TPL, and how to insert often-used
+units into TURBO.TPL.
+
+
+ A Review of Unit Files
+========================
+
+There are two types of unit files: .TPU files and .TPL files. When you
+compile a unit, Turbo Pascal puts the resulting object code in a .TPU
+(Turbo Pascal Unit) file, which always contains exactly one unit.
+
+A .TPL (Turbo Pascal Library) file, on the other hand, can contain multiple
+units. For example, several units that come on your Turbo Pascal disks
+are in the file TURBO.TPL. The file TURBO.TPL is currently the only
+library file Turbo Pascal will load units from.
+
+You may have noticed, though, that you can use the standard Turbo Pascal
+units without giving a file name. That's because these units are stored in
+the Turbo Pascal standard unit file--TURBO.TPL on your distribution disk.
+Because the units are in that file, any program can use them without
+"knowing" their location.
+
+Suppose you have a unit called TOOLS.TPU, and you use it in many different
+programs. Though adding Tools to TURBO.TPL takes up memory (TURBO.TPL is
+automatically loaded into memory by the compiler), adding it to the
+resident library makes "using" Tools faster because the unit is in memory
+instead of on disk.
+
+There are five standard units already in TURBO.TPL: System, Overlay,
+Printer, Crt, and Dos.
+
+
+ Using TPUMOVER
+================
+
+You can use several command-line parameters that let you manipulate units
+quickly. The syntax for these parameters is
+
+   TPUMOVER filename operations
+
+where filename is either a .TPU file or a .TPL file,
+      and operations is an optional list of one or more of the following
+      commands:
+
+         +unitname    Add a unit to the library.
+         -unitname    Delete a unit from the library.
+         *unitname    Extract a unit from the library.
+
+If no operations are specified, TPUMOVER lists the units in the library
+file along with size and dependency information.
+
+
+=================================
+ 5. The Stand-Alone MAKE Utility
+=================================
+
+This section contains complete documentation for creating makefiles and
+using MAKE.
+
+
+ Creating Makefiles
+====================
+
+A makefile contains the definitions and relationships needed to help MAKE
+keep your program(s) up to date. You can create as many makefiles as you
+want and name them whatever you want. If you don't specify a makefile when
+you run MAKE (using the -f option), then MAKE looks for a file with the
+default name MAKEFILE.
+
+You create a makefile with any ASCII text editor, such as Turbo Pascal's
+built-in interactive editor. All rules, definitions, and directives end
+with a carriage return; if a line is too long, you can continue it to the
+next line by placing a backslash (\) as the last character on the line.
+
+Whitespace--spaces and tabs--is used to separate adjacent identifiers (such
+as dependencies) and to indent commands within a rule.
+
+Creating a makefile is almost like writing a program--with definitions,
+commands, and directives. 
+
+ Comments
+----------
+
+Comments begin with a number sign (#); the rest of the line following the #
+is ignored by MAKE. Comments can be placed anywhere and never have to start
+in a particular column.
+
+
+ Explicit Rules
+----------------
+
+Explicit rules take the form
+
+   target [target ... ]: [source source ... ]
+      [command]
+      [command]
+      ...
+
+where target is the file to be updated, source is a file upon which target
+depends, and command is any valid MS-DOS command (including invocation of
+.BAT files and execution of .COM and .EXE files).
+
+Explicit rules define one or more target names, zero or more source files,
+and an optional list of commands to be performed. Target and source file
+names listed in explicit rules can contain normal MS-DOS drive and
+directory specifications, but they cannot contain wildcards.
+
+Syntax here is important. target must be at the start of a line (in column
+1), and each command must be indented (preceded by at least one space
+character or tab). As mentioned before, the backslash (\) can be used as a
+continuation character if the list of source files or a given command is
+too long for one line. Finally, both the source files and the commands are
+optional; it is possible to have an explicit rule consisting only of
+
+   target [target ...] followed by a colon.
+
+The idea behind an explicit rule is that the command or commands listed
+will create or update target, usually using the source files. When MAKE
+encounters an explicit rule, it first checks to see if any of the source
+files are target files elsewhere in the makefile. If so, those rules are
+evaluated first.
+
+Once all the source files have been created or updated based on other
+explicit (or implicit) rules, MAKE checks to see if target exists. If not,
+each command is invoked in the order given. If target does exist, its time
+and date of last modification are compared against the time and date for
+each source. If any source has been modified more recently than target, the
+list of commands is executed.
+
+A given file name can occur on the left side of an explicit rule only once
+in a given execution of MAKE.
+
+Each command line in an explicit rule begins with whitespace. MAKE
+considers all lines following an explicit rule to be part of the command
+list for that rule, up to the next line that begins in column 1 (without
+any preceding whitespace) or up to the end of the file. Blank lines are
+ignored.
+
+An explicit rule, with no command lines following it, is treated a little
+differently than an explicit rule with command lines.
+
+   o If an explicit rule exists for a target with commands, the only files
+     that the target depends on are the ones listed in the explicit rule.
+
+   o If an explicit rule has no commands, the targets depend on the files
+     given in the explicit rule, and they also depend on any file that
+     matches an implicit rule for the target(s).
+
+Here are some examples of explicit rules from a makefile:
+
+   myutil.obj: myutil.asm
+     tasm myutil.asm,myutil.obj;
+
+   myapp.exe:  myapp.pas myglobal.tpu myutils.tpu
+     tpc myapp /Tc:\tp5\bin
+
+   o The first explicit rule states that MYUTIL.OBJ depends upon
+     MYUTIL.ASM, and that MYUTIL.OBJ is created by executing the given
+     TASM command.
+
+   o The second rule states that MYAPP.EXE depends upon MYAPP.PAS,
+     MYGLOBAL.TPU, and MYUTILS.TPU, and is created by the given TPC
+     command. (The /T plus path name in these examples will be explained
+     later.)
+
+If you reorder the rules so that the one for MYAPP.EXE comes first,
+followed by the others, MAKE will recompile (or reassemble) only the files
+that it has to in order to update everything correctly. This is because a
+MAKE with no target on the command line will try to execute the first
+explicit rule it finds in the makefile.
+
+
+ Implicit Rules
+----------------
+
+MAKE also allows you to define implicit rules, which are generalizations of
+explicit rules. Here's an example to illustrate the relationship between
+the two types. Consider this explicit rule from the previous sample
+program:
+
+   myutil.obj: myutil.asm
+     tasm myutil.asm,myutil.obj;
+
+This rule is a common one, because it follows a general principle: An .OBJ
+file is dependent on the .ASM file with the same file name and is created
+by executing TASM (Turbo Assember). In fact, you might have a makefile
+where you have several (or even several dozen) explicit rules following
+this same format.
+
+By redefining the explicit rule as an implicit rule, you can eliminate all
+the explicit rules of the same form. As an implicit rule, it would look
+like this:
+
+   .asm.obj:
+     tasm $*.asm,$*.obj;
+
+This rule means, "any file ending with .OBJ depends on the file with the
+same name that ends in .ASM, and the .OBJ file is created using the command
+
+   tasm $*.asm,$*.obj
+
+where $* represents the file's name with no extension." (The symbol $* is a
+special macro and is discussed in the next section.)
+
+The syntax for an implicit rule follows:
+
+   .source_extension.target_extension:
+     {command}
+     {command}
+     ...
+
+Note the commands are optional and must be indented. The source_extension
+(which must begin in column 1) is the extension of the source file, that
+is, it applies to any file having the format
+
+   fname.source_extension
+
+Likewise, the target_extension refers to the the file
+
+   fname.target_extension
+
+where fname is the same for both files. In other words, this implicit rule
+replaces all explicit rules having the format
+
+   fname.target_extension:fname.source_extension
+     [command]
+     [command]
+     ...
+
+for any fname.
+
+Implicit rules are used if no explicit rule for a given target can be found
+or if an explicit rule with no commands exists for the target.
+
+The extension of the file name in question is used to determine which
+implicit rule to use. The implicit rule is applied if a file is found with
+the same name as the target, but with the mentioned source extension. For
+example, suppose you had a makefile (named MAKEFILE) whose contents were
+
+   .asm.obj:
+     tasm $*.asm,$*.obj;
+
+If you had an assembly language routine named RATIO.ASM that you wanted to
+compile to RATIO.OBJ, you could use the command
+
+   make ratio.obj
+
+MAKE would take RATIO.OBJ to be the target and create it by executing the
+command:
+
+   tasm ratio.asm,ratio.obj;
+
+Implicit rules are also used if an explicit rule is given with no commands.
+Suppose, as mentioned before, you had the following implicit rule at the
+start of your makefile:
+
+   .pas.tpu:
+     tpc $<
+
+You could then rewrite some explicit rules as follows:
+
+   myglobal.tpu: myglobal.pas
+   myutils.tpu: myutils.pas myglobal.tpu myutil.obj
+
+Since you don't have explicit information on how to create these .TPU
+files, MAKE applies the implicit rule defined earlier.
+
+Several implicit rules can be written with the same target extension, but
+only one such rule can apply at a time. If more than one implicit rule
+exists for a given target extension, each rule is checked in the order the
+rules appear in the makefile, until all applicable rules are checked.
+
+MAKE uses the first implicit rule that it discovers for a file with the
+source extension. Even if the commands of that rule fail, no more implicit
+rules are checked.
+
+All lines following an implicit rule are considered to be part of the
+command list for the rule, up to the next line that begins without
+whitespace or to the end of the file. Blank lines are ignored. The syntax
+for a command line is provided later in this appendix.
+
+MAKE does not know the full file name with an implicit rule, as it does
+with explicit rules. For that reason, special macros are provided with MAKE
+that allow you to include the name of the file being built by the rule.
+
+
+ Command Lists
+---------------
+
+Commands in a command list must be indented--that is, preceded by at least
+one space character or tab--and take the form
+
+   [ prefix ... ] command_body
+
+Each command line in a command list consists of an (optional) list of
+prefixes, followed by a single command body.
+
+The prefixes allowed in a command modify the treatment of these commands by
+MAKE. The prefix is either the at (@) sign or a hyphen (-) followed
+immediately by a number.
+
+   @   Keeps MAKE from displaying the command before executing it. The
+       display is hidden even if the -s option was not given on the MAKE
+       command line. This prefix applies only to the command on which it
+       appears.
+
+   -num   Affects how MAKE treats exit codes. If a number (num) is
+          provided, then MAKE will abort processing only if the exit status
+          exceeds the number given. In this example, MAKE will abort only
+          if the exit status exceeds 4:
+
+             -4 myprog sample.x
+
+          If no -num prefix is given, MAKE checks the exit status for the
+          command. If the status is nonzero, MAKE will stop and delete the
+          current target file.
+
+   -   With a hyphen but no number, MAKE will not check the exit status at
+       all. Regardless of what the exit status was, MAKE will continue.
+
+The command body is treated exactly as if it were entered as a line to
+COMMAND.COM, with the exception that redirection and pipes are not
+supported. MAKE executes the following built-in commands by invoking a copy
+of COMMAND.COM to perform them:
+
+   BREAK      CD      CHDIR      CLS      COPY
+   MD         MKDIR   PATH       PROMPT   REN
+   RENAME     SET     TIME       TYPE     VER
+   VERIFY     VOL
+
+MAKE searches for any other command name using the MS-DOS search algorithm:
+
+   o The current directory is searched first, followed by each directory
+     in the path.
+
+   o In each directory, first a file with the extension .COM is checked,
+     then an .EXE file, and finally a .BAT.
+
+   o If a .BAT file is found, a copy of COMMAND.COM is invoked to execute
+     the batch file.
+
+
+This command will cause MYPROG.PAS to be searched for, using the full
+search algorithm:
+
+   tpc myprog.pas /$B+,R+,I+
+
+
+ Macros
+--------
+
+Often certain commands, file names, or options are used again and again in
+your makefile. In an example earlier in this appendix, all the TPC commands
+used the switch /Tc:\tp5\bin, which means that the files TPC.CFG and
+TURBO.TPL are in the subdirectory C:\TP5\BIN. Suppose you wanted to switch
+to another subdirectory for those files; what would you do? You could go
+through and modify all the /T options, inserting the appropriate path name.
+Or, you could define a macro.
+
+A macro is a name that represents some string of characters (letters and
+digits). A macro definition gives a macro name and the expansion text;
+thereafter, when MAKE encounters the macro name, it replaces the name with
+the expansion text.
+
+Suppose you defined the following macro at the start of your makefile:
+
+   TURBO=c:\tp5\bin
+
+You've defined the macro TURBO, which is equivalent to the string
+c:\tp5\bin. You could now rewrite the makefile as follows:
+
+   TURBO=c:\tp5\bin
+   myapp.exe:  myapp.pas myglobal.tpu myutils.tpu
+     tpc myapp /T$(TURBO)
+
+   myutils.tpu: myutils.pas myglobal.tpu myutil.obj
+     tpc myutils /T$(TURBO)
+
+
+Everywhere the Turbo directory is specified, you use the macro invocation
+$(TURBO). When you run MAKE, $(TURBO) is replaced with its expansion text,
+c:\TP5.BIN. The result is the same set of commands you had before but with
+greater flexibility.
+
+In fact, if you leave out the first line altogether, you can specify which 
+subdirectory you want each time you run MAKE, using the -D (Define) option:
+
+   make -DTURBO=c:\tp5\project
+
+Macro definitions take the form
+
+   macro_name=expansion text
+
+where macro_name is the name of a macro made up of a string of letters and
+digits with no whitespace in it, though you can have whitespace between
+macro_name and the equal sign (=). [expansion text] is any arbitrary string
+containing letters, digits, whitespace, and punctuation; it is ended by a
+carriage return.  Note that macros are case sensitive.  Thus the macro
+names Turbo, turbo and TURBO are all different.
+
+If macro_name has previously been defined, either by a macro definition in
+the makefile or by the -D option on the MAKE command line, the new
+definition replaces the old.
+
+Macros are invoked in your makefile with the format
+
+   $(macro_name)
+
+Macros in macros: Macros cannot be invoked on the left (macro_name) side of
+a macro definition. They can be used on the right (expansion text) side,
+but they are not expanded until the macro being defined is invoked. In
+other words, when a macro invocation is expanded, any macros embedded in
+its expansion text are also expanded.
+
+MAKE comes with several special predefined macros built-in: $d, $*, $<, $:,
+$., and $&. The first is a defined test macro, used in the conditional
+directives !if and !elif; the others are file name macros, used in explicit
+and implicit rules. The various file name macros work in similar ways,
+expanding to some variation of the full path name of the file being built.
+In addition, the current SET environment strings are automatically loaded
+as macros, and the macro __MAKE__ is defined to be 1 (one).
+
+
+ Defined Test Macro ($d)
+
+This macro expands to 1 if the given macro name is defined, or to 0 if it
+is not. The content of the macro's expansion text does not matter. This
+special macro is allowed only in !if and !elif directives. For example, if
+you wanted to modify your makefile so that it would use a particular Turbo
+Pascal directory if you didn't specify one, you could put this at the start
+of your makefile:
+
+   !if !$d(TURBO)            # if TURBO is not defined
+   TURBO=c:\tp5\bin          # define it to C:\TP5\BIN
+   !endif
+
+If you invoke MAKE with the command line
+
+   make -DTURBO=c:\tp5\project
+
+then TURBO is defined as c:\tp5\project. If, however, you just invoke MAKE
+by itself,
+
+   make
+
+then TURBO is defined as c:\tp5\bin, your "default" subdirectory.
+
+
+ Base File Name Macro ($*)
+
+This macro is allowed in the commands for an explicit or an implicit rule.
+The macro expands to the file name being built, excluding any extension,
+like this:
+
+   File name is A:\P\TESTFILE.PAS
+   $* expands to A:\P\TESTFILE
+
+For example, you could modify the explicit MYAPP.EXE rule already given to
+look like this:
+
+   myapp.exe:  myapp.pas myglobal.tpu myutils.tpu
+     tpc $* /T$(TURBO)
+
+
+ Full File Name Macro ($<)
+
+The full file name macro ($<) is also used in the commands for an explicit
+or implicit rule. In an explicit rule, $< expands to the full target file
+name (including extension), like this:
+
+   File name is A:\P\TESTFILE.PAS
+   $< expands to A:\P\TESTFILE.PAS
+
+In an implicit rule, $< takes on the file name plus the source extension.
+For example, the previous implicit rule
+
+   .asm.obj:
+     tasm $*.asm,$*.obj;
+
+can be rewritten as
+
+   .asm.obj:
+      tasm $<,$*.obj;
+
+
+ File Name Path Macro ($:)
+
+This macro expands to the path name (without the file name), like this:
+
+   File name is A:\P\TESTFILE.PAS
+   $: expands to A:\P\
+
+
+ File Name and Extension Macro ($.)
+
+This macro expands to the file name, with extension, like this:
+
+   File name is A:\P\TESTFILE.PAS
+   $. expands to TESTFILE.PAS
+
+
+ File Name Only Macro ($&)
+
+This macro expands to the file name only, without path or extension, like
+this:
+
+   File name is A:\P\TESTFILE.PAS
+   $& expands to TESTFILE
+
+
+ Directives
+------------
+
+The version of MAKE bundled with Turbo Pascal allows something that other
+versions of MAKE don't: conditional directives similiar to those allowed
+for Turbo Pascal. You can use these directives to include other makefiles,
+to make the rules and commands conditional, to print out error messages,
+and to "undefine" macros.
+
+Directives in a makefile begin with an exclamation point (!). Here is the
+complete list of MAKE directives:
+
+   !include
+   !if
+   !else
+   !elif
+   !endif
+   !error
+   !undef
+
+A file-inclusion directive (!include) specifies a file to be included into
+the makefile for interpretation at the point of the directive. It takes the
+following form:
+
+   !include "filename"
+
+or
+
+   !include <filename>
+
+These directives can be nested arbitrarily deep. If an include directive
+attempts to include a file that has already been included in some outer
+level of nesting (so that a nesting loop is about to start), the inner
+include directive is rejected as an error.
+
+Conditional directives (!if, !elif, !else, and !endif) give a programmer a
+measure of flexibility in constructing makefiles. Rules and macros can be
+"conditionalized" so that a command-line macro definition (using the -D
+option) can enable or disable sections of the makefile.
+
+The format of these directives parallels, but is more extensive than, the
+conditional directives allowed by Turbo Pascal:
+
+   !if expression
+     [ lines ]
+   !endif
+
+   !if expression
+     [ lines ]
+   !else
+     [ lines ]
+   !endif
+
+   !if expression
+     [ lines ]
+   !elif expression
+     [ lines ]
+   !endif
+
+The conditional directives form a group, with at least an !if directive
+beginning the group and an !endif directive closing the group.
+
+The expression allowed in an !if or an !elif directive uses a syntax
+similar to that found in the C programming language. The expression is
+evaluated as a simple 32-bit signed integer expression.
+
+Numbers can be entered as decimal, octal, or hexadecimal constants. For
+example, these are legal constants in an expression:
+
+   4536       # decimal constant
+   0677       # octal constant (note the leading zero)
+   0x23aF     # hexadecimal constant
+
+and any of the following unary operators:
+
+   -     negation
+   ~     bit complement
+   !     logical not
+
+An expression can use any of the following binary operators:
+
+   +     addition
+   -     subtraction
+   *     multiplication
+   /     division
+   %     remainder
+   >>    right shift
+   <<    left shift
+   &     bitwise and
+   |     bitwise or
+   ^     bitwise exclusive or
+   &&    logical and
+   ||    logical or
+   >     greater than
+   <     less than
+   >=    greater than or equal to
+   <=    less than or equal to
+   ==    equality
+   !=    inequality
+
+An expression can contain the following ternary operator:
+
+   ? :   The operand before the ? is treated as a test.
+
+         If the value of that operand is nonzero, then the second
+         operand (the part between the ? and the colon) is the
+         result. If the value of the first operand is zero, the
+         value of the result is the value of the third operand
+         (the part after the :).
+
+Parentheses can be used to group operands in an expression. In the absence
+of parentheses, binary operators are grouped according to the same
+precedence given in the C language.
+
+Grouping is from left to right for operators of equal precedence, except
+for the ternary operator (? :), which is right to left.
+
+Macros can be invoked within an expression, and the special macro $d() is
+recognized. After all macros have been expanded, the expression must have
+proper syntax. Any words in the expanded expression are treated as errors.
+
+The error directive (!error) causes MAKE to stop and print a fatal
+diagnostic containing the text after !error. It takes the format
+
+   !error [any_text]
+
+This directive is designed to be included in conditional directives to
+allow a user-defined abort condition. 
+
+The undefine directive (!undef) causes any definition for the named macro
+to be forgotten. If the macro is currently undefined, this directive has no
+effect. 
+
+ Using MAKE
+============
+
+You now know a lot about how to write makefiles; now's the time to learn
+how to use them with MAKE. The simplest way to use MAKE is to type the
+command
+
+   MAKE
+
+at the MS-DOS prompt. MAKE then looks for MAKEFILE; if it can't find it, it
+looks for MAKEFILE.MAK; if it can't find that, it halts with an error
+message.
+
+You can specify a file with the -f option:
+
+   MAKE -fstars.mak
+
+The general syntax for MAKE is
+
+   make option option ... target target ...
+
+where option is a MAKE option (discussed later) and target is the name of a
+target file to be handled by explicit rules.
+
+If the command line does not include any target names, MAKE uses the first
+target file mentioned in an explicit rule. If one or more targets are
+mentioned on the command line, they will be built as necessary.
+
+Here are some more examples of MAKE command lines:
+
+   make -n -fstars.mak
+   make -s
+   make -Iinclude -DTURBO=c:\tp5\project
+
+
+ The BUILTINS.MAK File
+-----------------------
+
+As you become familiar with MAKE, you will find that there are macros and
+rules (usually implicit ones) that you use again and again. You've got
+three ways of handling them. First, you can put them in every makefile you
+create. Second, you can put them all in one file and use the !include
+directive in each makefile you create. Third, you can put them all in a
+file named BUILTINS.MAK.
+
+Each time you run MAKE, it looks for a file named BUILTINS.MAK; if it finds
+the file, MAKE reads it in before handling MAKEFILE (or whichever makefile
+you want it to process).
+
+The BUILTINS.MAK file is intended for any rules (usually implicit rules) or
+macros that will be commonly used in files anywhere on your computer.
+
+There is no requirement that any BUILTINS.MAK file exist. If MAKE finds a
+BUILTINS.MAK file, it interprets that file first. If MAKE cannot find a
+BUILTINS.MAK file, it proceeds directly to interpreting MAKEFILE (or
+whatever makefile you specify).
+
+
+ How MAKE Searches for Files
+-----------------------------
+
+MAKE will search for BUILTINS.MAK in the current directory or in the exec
+directory if your computer is running under DOS 3.x. You should place this
+file in the same directory as the MAKE.EXE file.
+
+MAKE always searches for the makefile in the current directory only. This
+file contains the rules for the particular executable program file being
+built. The two files have identical syntax rules.
+
+MAKE also searches for any !include files in the current directory. If you
+use the -I (Include) option, it will also search in the specified
+directory.
+
+
+ MAKE Command-Line Options
+---------------------------
+
+   -Didentifier   Defines the named identifier to the string consisting of
+                  the single character 1.
+
+   -Diden=string  Defines the named identifier iden to the string after
+                  the equal sign. The string cannot contain any spaces or
+                  tabs.
+
+   -Idirectory    MAKE will search for include files in the indicated
+                  directory (as well as in the current directory).
+
+   -Uidentifier   Undefines any previous definitions of the named
+                  identifier.
+
+   -s             Normally, MAKE prints each command as it is about to be
+                  executed. With the -s option, no commands are printed
+                  before execution.
+
+   -n             Causes MAKE to print the commands, but not actually
+                  perform them. This is useful for debugging a makefile.
+
+   -ffilename     Uses filename as the MAKE file. If filename does not
+                  exist and no extension is given, tries filename.MAK.
+
+   -? or -h       Prints help message.
+
+
+ MAKE Error Messages
+---------------------
+
+ Fatal Errors
+
+Don't know how to make XXXXXXXX
+   This message is issued when MAKE encounters a nonexistent file name in
+   the build sequence, and no rule exists that would allow the file name to
+   be built.
+
+Error directive: XXXX
+   This message is issued when MAKE processes an #error directive in the
+   source file. The text of the directive is displayed in the message.
+
+Incorrect command line argument: XXX
+   This error occurs if MAKE is executed with incorrect command-line
+   arguments.
+
+Not enough memory
+   This error occurs when the total working storage has been exhausted. You
+   should try this on a machine with more memory. If you already have 640K
+   in your machine, you may have to simplify the source file.
+
+Unable to execute command
+   This message is issued after attempting to execute a command. This could
+   be a result of the command file not being found, or because it was
+   misspelled. A less likely possibility is that the command exists but is
+   somehow corrupted.
+
+Unable to open makefile
+   This message is issued when the current directory does not contain a
+   file named MAKEFILE.
+
+
+ Errors
+
+Bad file name format in include statement
+   Include file names must be surrounded by quotes or angle brackets. The
+   file name was missing the opening quote or angle bracket.
+
+Bad undef statement syntax
+   An !undef statement must contain a single identifier and nothing else as
+   the body of the statement.
+
+Character constant too long
+   Character constants can be only one or two characters long.
+
+Command arguments too long
+   The arguments to a command executed by MAKE were more than 127
+   characters--a limit imposed by DOS.
+
+Command syntax error
+   This message occurs if
+
+      o the first rule line of the makefile contained any leading
+        whitespace.
+
+      o an implicit rule did not consist of .ext.ext:.
+
+      o an explicit rule did not contain a name before the : character.
+
+      o a macro definition did not contain a name before the = character.
+
+Division by zero
+   A divide or remainder in an !if statement has a zero divisor.
+
+Expression syntax error in !if statement
+   The expression in an !if statement is badly formed--it contains a
+   mismatched parenthesis, an extra or missing operator, or a missing or
+   extra constant.
+
+File name too long
+   The file name given in an !include directive was too long for MAKE to
+   process. File path names in MS-DOS must be no more than 78 characters
+   long.
+
+Illegal character in constant expression X
+   MAKE encountered some character not allowed in a constant expression. If
+   the character is a letter, this indicates a (probably) misspelled
+   identifier.
+
+Illegal octal digit
+   An octal constant was found containing a digit of 8 or 9.
+
+Macro expansion too long
+   A macro cannot expand to more than 4096 characters. This error often
+   occurs if a macro recursively expands itself. A macro cannot legally
+   expand to itself.
+
+Misplaced elif statement
+   An !elif directive was encountered without any matching !if directive.
+
+Misplaced else statement
+   An !else directive was encountered without any matching !if directive.
+
+Misplaced endif statement
+   An !endif directive was encountered without any matching !if directive.
+
+No file name ending
+   The file name in an include statement was missing the correct closing
+   quote or angle bracket.
+
+Redefinition of target XXXXXXXX
+   The named file occurs on the left-hand side of more than one explicit
+   rule.
+
+Unable to open include file XXXXXXXXX.XXX
+   The named file could not be found. This could also be caused if an
+   include file included itself. Check whether the named file exists.
+
+Unexpected end of file in conditional started on line #
+   The source file ended before MAKE encountered an !endif. The !endif was
+   either missing or misspelled.
+
+Unknown preprocessor statement
+   A ! character was encountered at the beginning of a line, and the
+   statement name following was not error, undef, if, elif, include, else,
+   or endif.
+
+
+*  *  *  *  *

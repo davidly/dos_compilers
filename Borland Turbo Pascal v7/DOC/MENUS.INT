@@ -1,0 +1,236 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Turbo Vision Unit                               }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Menus;
+
+{$O+,F+,X+,I-,S-}
+
+interface
+
+uses Objects, Drivers, Views;
+
+const
+
+{ Color palettes }
+
+  CMenuView   = #2#3#4#5#6#7;
+  CStatusLine = #2#3#4#5#6#7;
+
+type
+
+{ TMenu types }
+
+  TMenuStr = string[31];
+
+  PMenu = ^TMenu;
+
+  PMenuItem = ^TMenuItem;
+  TMenuItem = record
+    Next: PMenuItem;
+    Name: PString;
+    Command: Word;
+    Disabled: Boolean;
+    KeyCode: Word;
+    HelpCtx: Word;
+    case Integer of
+      0: (Param: PString);
+      1: (SubMenu: PMenu);
+  end;
+
+  TMenu = record
+    Items: PMenuItem;
+    Default: PMenuItem;
+  end;
+
+{ TMenuView object }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Disabled text }
+  { 3 = Shortcut text }
+  { 4 = Normal selection }
+  { 5 = Disabled selection }
+  { 6 = Shortcut selection }
+
+  PMenuView = ^TMenuView;
+  TMenuView = object(TView)
+    ParentMenu: PMenuView;
+    Menu: PMenu;
+    Current: PMenuItem;
+    constructor Init(var Bounds: TRect);
+    constructor Load(var S: TStream);
+    function Execute: Word; virtual;
+    function FindItem(Ch: Char): PMenuItem;
+    procedure GetItemRect(Item: PMenuItem; var R: TRect); virtual;
+    function GetHelpCtx: Word; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    function HotKey(KeyCode: Word): PMenuItem;
+    function NewSubView(var Bounds: TRect; AMenu: PMenu;
+      AParentMenu: PMenuView): PMenuView; virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TMenuBar object }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Disabled text }
+  { 3 = Shortcut text }
+  { 4 = Normal selection }
+  { 5 = Disabled selection }
+  { 6 = Shortcut selection }
+
+  PMenuBar = ^TMenuBar;
+  TMenuBar = object(TMenuView)
+    constructor Init(var Bounds: TRect; AMenu: PMenu);
+    destructor Done; virtual;
+    procedure Draw; virtual;
+    procedure GetItemRect(Item: PMenuItem; var R: TRect); virtual;
+  end;
+
+{ TMenuBox object }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Disabled text }
+  { 3 = Shortcut text }
+  { 4 = Normal selection }
+  { 5 = Disabled selection }
+  { 6 = Shortcut selection }
+
+  PMenuBox = ^TMenuBox;
+  TMenuBox = object(TMenuView)
+    constructor Init(var Bounds: TRect; AMenu: PMenu;
+      AParentMenu: PMenuView);
+    procedure Draw; virtual;
+    procedure GetItemRect(Item: PMenuItem; var R: TRect); virtual;
+  end;
+
+{ TMenuPopup object }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Disabled text }
+  { 3 = Shortcut text }
+  { 4 = Normal selection }
+  { 5 = Disabled selection }
+  { 6 = Shortcut selection }
+
+  PMenuPopup = ^TMenuPopup;
+  TMenuPopup = object(TMenuBox)
+    constructor Init(var Bounds: TRect; AMenu: PMenu);
+    procedure HandleEvent(var Event: TEvent); virtual;
+  end;
+
+{ TStatusItem }
+
+  PStatusItem = ^TStatusItem;
+  TStatusItem = record
+    Next: PStatusItem;
+    Text: PString;
+    KeyCode: Word;
+    Command: Word;
+  end;
+
+{ TStatusDef }
+
+  PStatusDef = ^TStatusDef;
+  TStatusDef = record
+    Next: PStatusDef;
+    Min, Max: Word;
+    Items: PStatusItem;
+  end;
+
+{ TStatusLine }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Disabled text }
+  { 3 = Shortcut text }
+  { 4 = Normal selection }
+  { 5 = Disabled selection }
+  { 6 = Shortcut selection }
+
+  PStatusLine = ^TStatusLine;
+  TStatusLine = object(TView)
+    Items: PStatusItem;
+    Defs: PStatusDef;
+    constructor Init(var Bounds: TRect; ADefs: PStatusDef);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    procedure Draw; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    function Hint(AHelpCtx: Word): String; virtual;
+    procedure Store(var S: TStream);
+    procedure Update; virtual;
+  end;
+
+{ TMenuItem routines }
+
+function NewItem(Name, Param: TMenuStr; KeyCode: Word; Command: Word;
+  AHelpCtx: Word; Next: PMenuItem): PMenuItem;
+function NewLine(Next: PMenuItem): PMenuItem;
+function NewSubMenu(Name: TMenuStr; AHelpCtx: Word; SubMenu: PMenu;
+  Next: PMenuItem): PMenuItem;
+
+{ TMenu routines }
+
+function NewMenu(Items: PMenuItem): PMenu;
+procedure DisposeMenu(Menu: PMenu);
+
+{ TStatusLine routines }
+
+function NewStatusDef(AMin, AMax: Word; AItems: PStatusItem;
+  ANext: PStatusDef): PStatusDef;
+function NewStatusKey(const AText: String; AKeyCode: Word; ACommand: Word;
+  ANext: PStatusItem): PStatusItem;
+
+{ Menus registration procedure }
+
+procedure RegisterMenus;
+
+{ Stream registration records }
+
+const
+  RMenuBar: TStreamRec = (
+     ObjType: 40;
+     VmtLink: Ofs(TypeOf(TMenuBar)^);
+     Load:    @TMenuBar.Load;
+     Store:   @TMenuBar.Store
+  );
+
+const
+  RMenuBox: TStreamRec = (
+     ObjType: 41;
+     VmtLink: Ofs(TypeOf(TMenuBox)^);
+     Load:    @TMenuBox.Load;
+     Store:   @TMenuBox.Store
+  );
+
+const
+  RStatusLine: TStreamRec = (
+     ObjType: 42;
+     VmtLink: Ofs(TypeOf(TStatusLine)^);
+     Load:    @TStatusLine.Load;
+     Store:   @TStatusLine.Store
+  );
+
+const
+  RMenuPopup: TStreamRec = (
+     ObjType: 43;
+     VmtLink: Ofs(TypeOf(TMenuPopup)^);
+     Load:    @TMenuPopup.Load;
+     Store:   @TMenuPopup.Store
+  );
+
+
+

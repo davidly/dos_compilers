@@ -1,0 +1,45 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Turbo Vision Unit                               }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit HistList;
+
+{$O+,F+,X+,I-,S-}
+
+{****************************************************************************
+   History buffer structure:
+
+    Byte Byte String          Byte Byte String
+    +-------------------------+-------------------------+--...--+
+    | 0 | Id | History string | 0 | Id | History string |       |
+    +-------------------------+-------------------------+--...--+
+
+ ***************************************************************************}
+
+interface
+
+uses Objects;
+
+const
+  HistoryBlock: Pointer = nil;
+  HistorySize: Word = 1024;
+  HistoryUsed: Word = 0;
+
+procedure HistoryAdd(Id: Byte; const Str: String);
+function HistoryCount(Id: Byte): Word;
+function HistoryStr(Id: Byte; Index: Integer): String;
+procedure ClearHistory;
+
+procedure InitHistory;
+procedure DoneHistory;
+
+procedure StoreHistory(var S: TStream);
+procedure LoadHistory(var S: TStream);
+
+

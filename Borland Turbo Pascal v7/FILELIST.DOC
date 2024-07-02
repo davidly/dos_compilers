@@ -1,0 +1,291 @@
+FILES ON DISKS
+--------------
+
+DISK 1
+------
+INSTALL   EXE - Install utility
+UNZIP     EXE - De-archiving program
+README    COM - Program to view README file
+FILELIST  DOC - This file
+SOURCE    ZIP - Archive file containing:
+   APP       PAS - Application unit source
+   COLORSEL  PAS - Color installation unit source
+   EDITORS   PAS - Editors unit source
+   MSGBOX    PAS - Message box unit source
+   OUTLINE   PAS - Outline unit source
+   STDDLG    PAS - Standard dialogs unit source
+   STRINGS   PAS - PChar support file
+   VALIDATE  PAS - Validate objects source
+   WINDOS    PAS - PChar based I/O routines
+
+TPC       ZIP - Archive file containing:
+   TPC       EXE - Command-line compiler
+
+TPL       ZIP - Archive file containing:
+   TURBO     TPL - Runtime library units
+
+TPX       ZIP - Archive file containing:
+   TPX       EXE - High capacity Integrated Development Environment
+   TPX       ICO - Icon for TPW.EXE
+   TPX       PIF - PIF file for running TPX under Windows
+   TPX        TP - Configuration file for TPX.EXE
+
+TURBO     ZIP - Archive file containing:
+   TURBO     EXE - Turbo Pascal Integrated Development Environment
+   TURBO     ICO - Turbo Pascal icon
+   TURBO      TP - Configuration file for TURBO.EXE
+   TURBO     PIF - Program information file for TURBO.EXE under Windows
+
+README        - Product information file
+
+DISK 2
+------
+BGIDEMOS  ZIP - Archive file containing:
+   ARTY      PAS - Borland Graphics Interface demo
+   BGIDEMO   PAS - Borland Graphics Interface demo
+   BGIDRIV   PAS - Borland Graphics Interface demo
+   BGIFONT   PAS - Borland Graphics Interface demo
+   BGILINK   MAK - Borland Graphics Interface demo
+   BGILINK   PAS - Borland Graphics Interface demo
+
+HELP      ZIP - Archive file containing:
+   TURBO     TPH - Online help data file
+   TVISION   TPH - Online help data file
+
+ONLINE    ZIP - Archive file containing:
+   MANUAL     TV - Corrections to printed TV documentation
+   TEMC      DOC - Online document for TEMC utility
+   UTILS     DOC - Online document for command line utilities
+
+
+DISK 3
+------
+BGIBIN    ZIP - Archive file containing:
+   ATT       BGI - AT&T 6300 driver
+   BOLD      CHR - Additional installable BGI font
+   CGA       BGI - CGA and MCGA driver
+   EGAVGA    BGI - EGA and VGA driver
+   EURO      CHR - Additional installable BGI font
+   GOTH      CHR - Gothic font
+   HERC      BGI - Hercules mono driver
+   IBM8514   BGI - IBM 8514 driver
+   LCOM      CHR - Additional installable BGI font
+   LITT      CHR - Small font
+   PC3270    BGI - 3270 PC driver
+   SANS      CHR - Sans serif font
+   SCRI      CHR - Additional installable BGI font
+   SIMP      CHR - Additional installable BGI font
+   TRIP      CHR - Triplex font
+   TSCR      CHR - Additional installable BGI font
+   VESA16    BGI - VESA 16 color BGI driver
+
+DEMOS     ZIP - Archive file containing:
+   CRTDEMO   PAS - Demo showing use of CRT unit
+   DIRDEMO   PAS - Directory list demo
+   EXECDEMO  PAS - Demo showing how to EXEC other programs
+   FIB8087   PAS - Demo showing use of 8087
+   LISTER    PAS - Source code printing demo
+   OVRDEMO   PAS - Overlay demo
+   OVRDEMO1  PAS - Overlay demo
+   OVRDEMO2  PAS - Overlay demo
+   PROCVAR   PAS - Procedure variable types demo
+   QSORT     PAS - Quick sort demo
+   TEST286   PAS - Shows how to test for 286 (or later) chip
+
+DPMISYS   ZIP - Archive file containing:
+   DPMI16BI  OVL - DPMI Server
+   DPMIINST  EXE - DPMI configuration program
+   DPMILOAD  EXE - DPMILOAD compatible with RTM
+   RTM       EXE - DPMI Runtime manager
+
+TFLOPPY   ZIP - Archive file containing:
+   TURBO     EXE - Turbo Pascal Integrated Development Environment for floppy
+                   disks
+
+TVFM      ZIP - Archive file containing:
+   ASSOC     PAS - TVFM demo file
+   COLORS    PAS - TVFM demo file
+   CYAN      PAL - TVFM demo file
+   DEFAULT   PAL - TVFM demo file
+   DIRVIEW   PAS - TVFM demo file
+   DRAGDROP  PAS - TVFM demo file
+   EDITPAL   PAS - TVFM demo file
+   EQU       PAS - TVFM demo file
+   FILECOPY  PAS - TVFM demo file
+   FILEFIND  PAS - TVFM demo file
+   FILEVIEW  PAS - TVFM demo file
+   GAUGES    PAS - TVFM demo file
+   GLOBALS   PAS - TVFM demo file
+   INFOVIEW  PAS - TVFM demo file
+   MAKERES   PAS - TVFM demo file
+   MAKETVFM  BAT - TVFM demo file
+   ROSE      PAL - TVFM demo file
+   TOOLS     PAS - TVFM demo file
+   TRASH     PAS - TVFM demo file
+   TREEWIN   PAS - TVFM demo file
+   TVFM      PAS - TVFM demo file
+   TVFM      TVR - TVFM demo file
+   VIEWHEX   PAS - TVFM demo file
+   VIEWTEXT  PAS - TVFM demo file
+
+UNITS     ZIP - Archive file containing:
+   APP       TPU - Application unit
+   COLORSEL  TPU - Color installation unit
+   DIALOGS   TPU - Dialogs unit
+   DRIVERS   TPU - Drivers unit
+   EDITORS   TPU - Editors unit
+   HISTLIST  TPU - History list unit
+   MEMORY    TPU - Memory management unit
+   MENUS     TPU - Menus unit
+   MSGBOX    TPU - Messagebox unit
+   OBJECTS   TPU - Objects unit
+   OUTLINE   TPU - Outline unit
+   STDDLG    TPU - Standard dialogs unit
+   STRINGS   TPU - PChar support unit
+   TEXTVIEW  TPU - Simple text window unit
+   VALIDATE  TPU - Validate objects unit
+   VIEWS     TPU - Views unit
+   WINDOS    TPU - PChar based I/O unit
+
+UTILS     ZIP - Archive file containing:
+   BINOBJ    EXE - Convert binary data to an OBJ file
+   BRIEF     TEM - Example TEMC script
+   DEFAULTS  TEM - Example TEMC script
+   DOSEDIT   TEM - Example TEMC script
+   EPSILON   TEM - Example TEMC script
+   GREP      COM - Borland Grep
+   GREP2MSG  EXE - GREP filter program
+   GREP2MSG  PAS - GREP filter program source code
+   MAKE      EXE - Borland Make utility
+   PRNFLTR   EXE - Printer filter program
+   PRNFLTR   PAS - Printer filter source code
+   RTMRES    EXE - Load RTM resident
+   TEMC      EXE - Turbo editor macro compiler
+   THELP     COM - TSR to view .TPH files
+   TPUMOVER  EXE - Unit mover utility
+
+
+DISK 4
+------
+BGI       ZIP - Archive file containing:
+   GRAPH     TPU - Borland Graphics Interface (BGI) Graph unit
+
+BREAKOUT  ZIP - Archive file containing:
+   BOUNDS    PAS - Breakout game source code
+   BREAKOUT  PAS - Breakout game source code
+   BRICKS    PAS - Breakout game source code
+   COUNT     PAS - Breakout game source code
+   SCREEN    PAS - Breakout game source code
+   WALLS     PAS - Breakout game source code
+
+DOCDEMO   ZIP - Archive file containing:
+   COLLECT1  PAS - Documentation demo
+   COLLECT2  PAS - Documentation demo
+   COLLECT3  PAS - Documentation demo
+   COLLECT4  PAS - Documentation demo
+   COUNT     PAS - Documentation demo
+   DRAGS     PAS - Documentation demo
+   ENDCMD    PAS - Documentation demo
+   HINTER    PAS - Documentation demo
+   IMPORT    PAS IMPORT - Documentation demo
+   INSWIN    PAS INSWIN - Documentation demo
+   ITEMS     DAT ITEMS - Documentation demo
+   ITEMS     TXT ITEMS - Documentation demo
+   MAKEDAT   BAT - Documentation demo
+   MINIMAL   PAS MINIMAL - Documentation demo
+   NEWBACK   PAS NEWBACK - Documentation demo
+   NORECVER  PAS - Documentation demo
+   ORDERS    DAT ORDERS - Documentation demo
+   ORDERS    PAS ORDERS - Documentation demo
+   ORDERS    TXT ORDERS - Documentation demo
+   OUTDIR    PAS OUTDIR - Documentation demo
+   PICKLIST  PAS - Documentation demo
+   RECOVER   PAS - Documentation demo
+   RESOURC1  PAS - Documentation demo
+   RESOURC2  PAS - Documentation demo
+   STOCKS    PAS STOCKS - Documentation demo
+   STREAM1   PAS STREAM1 - Documentation demo
+   STREAM2   PAS STREAM2 - Documentation demo
+   STRMERR   PAS STRMERR - Documentation demo
+   SUPPLIER  DAT - Documentation demo
+   SUPPLIER  PAS - Documentation demo
+   SUPPLIER  TXT - Documentation demo
+   TERMTEST  PAS - Documentation demo
+   TUTCONST  PAS - Documentation demo
+   TUTOR     PAS TUTOR - Documentation demo
+   TUTOR01   PAS TUTOR01 - Documentation demo
+   TUTOR02A  PAS - Documentation demo
+   TUTOR02B  PAS - Documentation demo
+   TUTOR02C  PAS - Documentation demo
+   TUTOR03A  PAS - Documentation demo
+   TUTOR03B  PAS - Documentation demo
+   TUTOR03C  PAS - Documentation demo
+   TUTOR04A  PAS - Documentation demo
+   TUTOR04B  PAS - Documentation demo
+   TUTOR04C  PAS - Documentation demo
+   TUTOR05   PAS TUTOR05 - Documentation demo
+   TUTOR06A  PAS - Documentation demo
+   TUTOR06B  PAS - Documentation demo
+   TUTOR07   PAS TUTOR07 - Documentation demo
+   TUTOR08A  PAS - Documentation demo
+   TUTOR08B  PAS - Documentation demo
+   TUTOR08C  PAS - Documentation demo
+   TUTOR09   PAS TUTOR09 - Documentation demo
+   TUTOR10   PAS TUTOR10 - Documentation demo
+   TUTOR11A  PAS - Documentation demo
+   TUTOR11B  PAS - Documentation demo
+   TUTOR11C  PAS - Documentation demo
+   TUTOR12   PAS TUTOR12 - Documentation demo
+   TUTORIAL  TVR - Documentation demo
+   TUTRES    PAS TUTRES - Documentation demo
+   TUTTYPES  PAS - Documentation demo
+   TWOSTAT   PAS - Documentation demo
+   WORKERS   PAS - Documentation demo
+   WORKLIST  PAS - Documentation demo
+
+INTRFACE  ZIP - Archive file containing:
+   CRT       INT - Interface section of this unit
+   DIALOGS   INT - Interface section of this unit
+   DOS       INT - Interface section of this unit
+   DRIVERS   INT - Interface section of this unit
+   GRAPH     INT - Interface section of this unit
+   HISTLIST  INT - Interface section of this unit
+   MEMORY    INT - Interface section of this unit
+   MENUS     INT - Interface section of this unit
+   OBJECTS   INT - Interface section of this unit
+   OVERLAY   INT - Interface section of this unit
+   PRINTER   INT - Interface section of this unit
+   SYSTEM    INT - Interface section of this unit
+   TEXTVIEW  INT - Interface section of this unit
+   VIEWS     INT - Interface section of this unit
+
+TURBO3    ZIP - Archive file containing:
+   GRAPH3    TPU - Turbo Pascal 3.0 Graphics compatibility unit
+   TURBO3    TPU - Turbo Pascal 3.0 compatibility unit
+
+TVDEBUG   ZIP - Archive file containing:
+   CMDNAMER  PAS - TV Debugging example
+   KEYNAMER  PAS - TV Debugging example
+   SHOWEVNT  PAS - TV Debugging example
+   TVDEBUG   PAS - TV Debugging example
+
+TVDEMOS   ZIP - Archive file containing:
+   ASCIITAB  PAS - Turbo Vision demo file
+   CALC      PAS - Turbo Vision demo file
+   CALENDAR  PAS - Turbo Vision demo file
+   DEMOCMDS  PAS - Turbo Vision demo file
+   DEMOHELP  HLP - Turbo Vision demo file
+   DEMOHELP  PAS - Turbo Vision demo file
+   DEMOHELP  TXT - Turbo Vision demo file
+   DEMOSTRS  PAS - Turbo Vision demo file
+   GADGETS   PAS - Turbo Vision demo file
+   GENRDEMO  PAS - Turbo Vision demo file
+   HELPFILE  PAS - Turbo Vision demo file
+   MKRDEMO   BAT - Turbo Vision demo file
+   MOUSEDLG  PAS - Turbo Vision demo file
+   PUZZLE    PAS - Turbo Vision demo file
+   TVDEMO    PAS - Turbo Vision demo file
+   TVEDIT    PAS - Turbo Vision demo file
+   TVHC      PAS - Turbo Vision demo file
+   TVRDEMO   PAS - Turbo Vision demo file
+

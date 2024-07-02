@@ -1,0 +1,528 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Turbo Vision Unit                               }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Dialogs;
+
+{$O+,F+,X+,I-,S-}
+
+interface
+
+uses Objects, Drivers, Views, Validate;
+
+const
+
+{ Color palettes }
+
+  CGrayDialog    = #32#33#34#35#36#37#38#39#40#41#42#43#44#45#46#47 +
+                   #48#49#50#51#52#53#54#55#56#57#58#59#60#61#62#63;
+  CBlueDialog    = #64#65#66#67#68#69#70#71#72#73#74#75#76#77#78#79 +
+                   #80#81#82#83#84#85#86#87#88#89#90#91#92#92#94#95;
+  CCyanDialog    = #96#97#98#99#100#101#102#103#104#105#106#107#108 +
+                   #109#110#111#112#113#114#115#116#117#118#119#120 +
+                   #121#122#123#124#125#126#127;
+
+  CDialog        = CGrayDialog;
+
+  CStaticText    = #6;
+  CLabel         = #7#8#9#9;
+  CButton        = #10#11#12#13#14#14#14#15;
+  CCluster       = #16#17#18#18#31;
+  CInputLine     = #19#19#20#21;
+  CHistory       = #22#23;
+  CHistoryWindow = #19#19#21#24#25#19#20;
+  CHistoryViewer = #6#6#7#6#6;
+
+{ TDialog palette entires }
+
+  dpBlueDialog = 1;
+  dpCyanDialog = 2;
+  dpGrayDialog = 3;
+
+{ TButton flags }
+
+  bfNormal    = $00;
+  bfDefault   = $01;
+  bfLeftJust  = $02;
+  bfBroadcast = $04;
+
+{ TMultiCheckboxes flags }
+{ hiword = number of bits }
+{ loword = bit mask }
+
+  cfOneBit       = $0101;
+  cfTwoBits      = $0203;
+  cfFourBits     = $040F;
+  cfEightBits    = $08FF;
+
+type
+
+{ TDialog object }
+
+  { Palette layout }
+  {  1 = Frame passive }
+  {  2 = Frame active }
+  {  3 = Frame icon }
+  {  4 = ScrollBar page area }
+  {  5 = ScrollBar controls }
+  {  6 = StaticText }
+  {  7 = Label normal }
+  {  8 = Label selected }
+  {  9 = Label shortcut }
+  { 10 = Button normal }
+  { 11 = Button default }
+  { 12 = Button selected }
+  { 13 = Button disabled }
+  { 14 = Button shortcut }
+  { 15 = Button shadow }
+  { 16 = Cluster normal }
+  { 17 = Cluster selected }
+  { 18 = Cluster shortcut }
+  { 19 = InputLine normal text }
+  { 20 = InputLine selected text }
+  { 21 = InputLine arrows }
+  { 22 = History arrow }
+  { 23 = History sides }
+  { 24 = HistoryWindow scrollbar page area }
+  { 25 = HistoryWindow scrollbar controls }
+  { 26 = ListViewer normal }
+  { 27 = ListViewer focused }
+  { 28 = ListViewer selected }
+  { 29 = ListViewer divider }
+  { 30 = InfoPane }
+  { 31 = Reserved }
+  { 32 = Reserved }
+
+  PDialog = ^TDialog;
+  TDialog = object(TWindow)
+    constructor Init(var Bounds: TRect; ATitle: TTitleStr);
+    constructor Load(var S: TStream);
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    function Valid(Command: Word): Boolean; virtual;
+  end;
+
+{ TSItem }
+
+  PSItem = ^TSItem;
+  TSItem = record
+    Value: PString;
+    Next: PSItem;
+  end;
+
+{ TInputLine object }
+
+  { Palette layout }
+  { 1 = Passive }
+  { 2 = Active }
+  { 3 = Selected }
+  { 4 = Arrows }
+
+  PInputLine = ^TInputLine;
+  TInputLine = object(TView)
+    Data: PString;
+    MaxLen: Integer;
+    CurPos: Integer;
+    FirstPos: Integer;
+    SelStart: Integer;
+    SelEnd: Integer;
+    Validator: PValidator;
+    constructor Init(var Bounds: TRect; AMaxLen: Integer);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    function DataSize: Word; virtual;
+    procedure Draw; virtual;
+    procedure GetData(var Rec); virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure SelectAll(Enable: Boolean);
+    procedure SetData(var Rec); virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure SetValidator(AValid: PValidator);
+    procedure Store(var S: TStream);
+    function Valid(Command: Word): Boolean; virtual;
+  end;
+
+{ TButton object }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Default text }
+  { 3 = Selected text }
+  { 4 = Disabled text }
+  { 5 = Normal shortcut }
+  { 6 = Default shortcut }
+  { 7 = Selected shortcut }
+  { 8 = Shadow }
+
+  PButton = ^TButton;
+  TButton = object(TView)
+    Title: PString;
+    Command: Word;
+    Flags: Byte;
+    AmDefault: Boolean;
+    constructor Init(var Bounds: TRect; ATitle: TTitleStr; ACommand: Word;
+      AFlags: Word);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    procedure Draw; virtual;
+    procedure DrawState(Down: Boolean);
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure MakeDefault(Enable: Boolean);
+    procedure Press; virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TCluster }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Selected text }
+  { 3 = Normal shortcut }
+  { 4 = Selected shortcut }
+  { 5 = Disabled text }
+
+  PCluster = ^TCluster;
+  TCluster = object(TView)
+    Value: LongInt;
+    Sel: Integer;
+    EnableMask: LongInt;
+    Strings: TStringCollection;
+    constructor Init(var Bounds: TRect; AStrings: PSItem);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    function ButtonState(Item: Integer): Boolean;
+    function DataSize: Word; virtual;
+    procedure DrawBox(const Icon: String; Marker: Char);
+    procedure DrawMultiBox(const Icon, Marker: String);
+    procedure GetData(var Rec); virtual;
+    function GetHelpCtx: Word; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    function Mark(Item: Integer): Boolean; virtual;
+    function MultiMark(Item: Integer): Byte; virtual;
+    procedure Press(Item: Integer); virtual;
+    procedure MovedTo(Item: Integer); virtual;
+    procedure SetButtonState(AMask: Longint; Enable: Boolean);
+    procedure SetData(var Rec); virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TRadioButtons }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Selected text }
+  { 3 = Normal shortcut }
+  { 4 = Selected shortcut }
+
+  PRadioButtons = ^TRadioButtons;
+  TRadioButtons = object(TCluster)
+    procedure Draw; virtual;
+    function Mark(Item: Integer): Boolean; virtual;
+    procedure MovedTo(Item: Integer); virtual;
+    procedure Press(Item: Integer); virtual;
+    procedure SetData(var Rec); virtual;
+  end;
+
+{ TCheckBoxes }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Selected text }
+  { 3 = Normal shortcut }
+  { 4 = Selected shortcut }
+
+  PCheckBoxes = ^TCheckBoxes;
+  TCheckBoxes = object(TCluster)
+    procedure Draw; virtual;
+    function Mark(Item: Integer): Boolean; virtual;
+    procedure Press(Item: Integer); virtual;
+  end;
+
+{ TMultiCheckBoxes }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Selected text }
+  { 3 = Normal shortcut }
+  { 4 = Selected shortcut }
+
+  PMultiCheckBoxes = ^TMultiCheckBoxes;
+  TMultiCheckBoxes = object(TCluster)
+    SelRange: Byte;
+    Flags: Word;
+    States: PString;
+    constructor Init(var Bounds: TRect; AStrings: PSItem;
+      ASelRange: Byte; AFlags: Word; const AStates: String);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    function DataSize: Word; virtual;
+    procedure Draw; virtual;
+    procedure GetData(var Rec); virtual;
+    function MultiMark(Item: Integer): Byte; virtual;
+    procedure Press(Item: Integer); virtual;
+    procedure SetData(var Rec); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TListBox }
+
+  { Palette layout }
+  { 1 = Active }
+  { 2 = Inactive }
+  { 3 = Focused }
+  { 4 = Selected }
+  { 5 = Divider }
+
+  PListBox = ^TListBox;
+  TListBox = object(TListViewer)
+    List: PCollection;
+    constructor Init(var Bounds: TRect; ANumCols: Word;
+      AScrollBar: PScrollBar);
+    constructor Load(var S: TStream);
+    function DataSize: Word; virtual;
+    procedure GetData(var Rec); virtual;
+    function GetText(Item: Integer; MaxLen: Integer): String; virtual;
+    procedure NewList(AList: PCollection); virtual;
+    procedure SetData(var Rec); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TStaticText }
+
+  { Palette layout }
+  { 1 = Text }
+
+  PStaticText = ^TStaticText;
+  TStaticText = object(TView)
+    Text: PString;
+    constructor Init(var Bounds: TRect; const AText: String);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    procedure Draw; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure GetText(var S: String); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TParamText }
+
+  { Palette layout }
+  { 1 = Text }
+
+  PParamText = ^TParamText;
+  TParamText = object(TStaticText)
+    ParamCount: Integer;
+    ParamList: Pointer;
+    constructor Init(var Bounds: TRect; const AText: String;
+      AParamCount: Integer);
+    constructor Load(var S: TStream);
+    function DataSize: Word; virtual;
+    procedure GetText(var S: String); virtual;
+    procedure SetData(var Rec); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TLabel }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Selected text }
+  { 3 = Normal shortcut }
+  { 4 = Selected shortcut }
+
+  PLabel = ^TLabel;
+  TLabel = object(TStaticText)
+    Link: PView;
+    Light: Boolean;
+    constructor Init(var Bounds: TRect; const AText: String; ALink: PView);
+    constructor Load(var S: TStream);
+    procedure Draw; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ THistoryViewer }
+
+  { Palette layout }
+  { 1 = Active }
+  { 2 = Inactive }
+  { 3 = Focused }
+  { 4 = Selected }
+  { 5 = Divider }
+
+  PHistoryViewer = ^THistoryViewer;
+  THistoryViewer = object(TListViewer)
+    HistoryId: Word;
+    constructor Init(var Bounds: TRect; AHScrollBar, AVScrollBar: PScrollBar;
+      AHistoryId: Word);
+    function GetPalette: PPalette; virtual;
+    function GetText(Item: Integer; MaxLen: Integer): String; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    function HistoryWidth: Integer;
+  end;
+
+{ THistoryWindow }
+
+  { Palette layout }
+  { 1 = Frame passive }
+  { 2 = Frame active }
+  { 3 = Frame icon }
+  { 4 = ScrollBar page area }
+  { 5 = ScrollBar controls }
+  { 6 = HistoryViewer normal text }
+  { 7 = HistoryViewer selected text }
+
+  PHistoryWindow = ^THistoryWindow;
+  THistoryWindow = object(TWindow)
+    Viewer: PListViewer;
+    constructor Init(var Bounds: TRect; HistoryId: Word);
+    function GetPalette: PPalette; virtual;
+    function GetSelection: String; virtual;
+    procedure InitViewer(HistoryId: Word); virtual;
+  end;
+
+{ THistory }
+
+  { Palette layout }
+  { 1 = Arrow }
+  { 2 = Sides }
+
+  PHistory = ^THistory;
+  THistory = object(TView)
+    Link: PInputLine;
+    HistoryId: Word;
+    constructor Init(var Bounds: TRect; ALink: PInputLine; AHistoryId: Word);
+    constructor Load(var S: TStream);
+    procedure Draw; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    function InitHistoryWindow(var Bounds: TRect): PHistoryWindow; virtual;
+    procedure RecordHistory(const S: String); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ SItem routines }
+
+function NewSItem(const Str: String; ANext: PSItem): PSItem;
+
+{ Dialogs registration procedure }
+
+procedure RegisterDialogs;
+
+{ Stream Registration Records }
+
+const
+  RDialog: TStreamRec = (
+     ObjType: 10;
+     VmtLink: Ofs(TypeOf(TDialog)^);
+     Load:    @TDialog.Load;
+     Store:   @TDialog.Store
+  );
+
+const
+  RInputLine: TStreamRec = (
+     ObjType: 11;
+     VmtLink: Ofs(TypeOf(TInputLine)^);
+     Load:    @TInputLine.Load;
+     Store:   @TInputLine.Store
+  );
+
+const
+  RButton: TStreamRec = (
+     ObjType: 12;
+     VmtLink: Ofs(TypeOf(TButton)^);
+     Load:    @TButton.Load;
+     Store:   @TButton.Store
+  );
+
+const
+  RCluster: TStreamRec = (
+     ObjType: 13;
+     VmtLink: Ofs(TypeOf(TCluster)^);
+     Load:    @TCluster.Load;
+     Store:   @TCluster.Store
+  );
+
+const
+  RRadioButtons: TStreamRec = (
+     ObjType: 14;
+     VmtLink: Ofs(TypeOf(TRadioButtons)^);
+     Load:    @TRadioButtons.Load;
+     Store:   @TRadioButtons.Store
+  );
+
+const
+  RCheckBoxes: TStreamRec = (
+     ObjType: 15;
+     VmtLink: Ofs(TypeOf(TCheckBoxes)^);
+     Load:    @TCheckBoxes.Load;
+     Store:   @TCheckBoxes.Store
+  );
+
+const
+  RMultiCheckBoxes: TStreamRec = (
+     ObjType: 27;
+     VmtLink: Ofs(TypeOf(TMultiCheckBoxes)^);
+     Load:    @TMultiCheckBoxes.Load;
+     Store:   @TMultiCheckBoxes.Store
+  );
+
+const
+  RListBox: TStreamRec = (
+     ObjType: 16;
+     VmtLink: Ofs(TypeOf(TListBox)^);
+     Load:    @TListBox.Load;
+     Store:   @TListBox.Store
+  );
+
+const
+  RStaticText: TStreamRec = (
+     ObjType: 17;
+     VmtLink: Ofs(TypeOf(TStaticText)^);
+     Load:    @TStaticText.Load;
+     Store:   @TStaticText.Store
+  );
+
+const
+  RLabel: TStreamRec = (
+     ObjType: 18;
+     VmtLink: Ofs(TypeOf(TLabel)^);
+     Load:    @TLabel.Load;
+     Store:   @TLabel.Store
+  );
+
+const
+  RHistory: TStreamRec = (
+     ObjType: 19;
+     VmtLink: Ofs(TypeOf(THistory)^);
+     Load:    @THistory.Load;
+     Store:   @THistory.Store
+  );
+
+const
+  RParamText: TStreamRec = (
+     ObjType: 20;
+     VmtLink: Ofs(TypeOf(TParamText)^);
+     Load:    @TParamText.Load;
+     Store:   @TParamText.Store
+  );
+
+const
+
+{ Dialog broadcast commands }
+
+  cmRecordHistory = 60;
+
+

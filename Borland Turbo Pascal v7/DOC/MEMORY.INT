@@ -1,0 +1,38 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Turbo Vision Unit                               }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Memory;
+
+{$O+,F+,X+,I-,S-}
+
+interface
+
+const
+  MaxHeapSize: Word = 655360 div 16;    { 640K }
+  LowMemSize: Word = 4096 div 16;       {   4K }
+  MaxBufMem: Word = 65536 div 16;       {  64K }
+
+procedure InitMemory;
+procedure DoneMemory;
+procedure InitDosMem;
+procedure DoneDosMem;
+function LowMemory: Boolean;
+function MemAlloc(Size: Word): Pointer;
+function MemAllocSeg(Size: Word): Pointer;
+procedure NewCache(var P: Pointer; Size: Word);
+procedure DisposeCache(P: Pointer);
+procedure NewBuffer(var P: Pointer; Size: Word);
+procedure DisposeBuffer(P: Pointer);
+function GetBufferSize(P: Pointer): Word;
+function SetBufferSize(P: Pointer; Size: Word): Boolean;
+procedure GetBufMem(var P: Pointer; Size: Word);
+procedure FreeBufMem(P: Pointer);
+procedure SetMemTop(MemTop: Pointer);
+

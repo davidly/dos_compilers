@@ -1,0 +1,583 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Turbo Vision Unit                               }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Views;
+
+{$O+,F+,X+,I-,S-}
+
+interface
+
+uses Objects, Drivers, Memory;
+
+const
+
+{ TView State masks }
+
+  sfVisible     = $0001;
+  sfCursorVis   = $0002;
+  sfCursorIns   = $0004;
+  sfShadow      = $0008;
+  sfActive      = $0010;
+  sfSelected    = $0020;
+  sfFocused     = $0040;
+  sfDragging    = $0080;
+  sfDisabled    = $0100;
+  sfModal       = $0200;
+  sfDefault     = $0400;
+  sfExposed     = $0800;
+
+{ TView Option masks }
+
+  ofSelectable  = $0001;
+  ofTopSelect   = $0002;
+  ofFirstClick  = $0004;
+  ofFramed      = $0008;
+  ofPreProcess  = $0010;
+  ofPostProcess = $0020;
+  ofBuffered    = $0040;
+  ofTileable    = $0080;
+  ofCenterX     = $0100;
+  ofCenterY     = $0200;
+  ofCentered    = $0300;
+  ofValidate    = $0400;
+  ofVersion     = $3000;
+  ofVersion10   = $0000;
+  ofVersion20   = $1000;
+
+{ TView GrowMode masks }
+
+  gfGrowLoX = $01;
+  gfGrowLoY = $02;
+  gfGrowHiX = $04;
+  gfGrowHiY = $08;
+  gfGrowAll = $0F;
+  gfGrowRel = $10;
+
+{ TView DragMode masks }
+
+  dmDragMove = $01;
+  dmDragGrow = $02;
+  dmLimitLoX = $10;
+  dmLimitLoY = $20;
+  dmLimitHiX = $40;
+  dmLimitHiY = $80;
+  dmLimitAll = $F0;
+
+{ TView Help context codes }
+
+  hcNoContext = 0;
+  hcDragging  = 1;
+
+{ TScrollBar part codes }
+
+  sbLeftArrow  = 0;
+  sbRightArrow = 1;
+  sbPageLeft   = 2;
+  sbPageRight  = 3;
+  sbUpArrow    = 4;
+  sbDownArrow  = 5;
+  sbPageUp     = 6;
+  sbPageDown   = 7;
+  sbIndicator  = 8;
+
+{ TScrollBar options for TWindow.StandardScrollBar }
+
+  sbHorizontal     = $0000;
+  sbVertical       = $0001;
+  sbHandleKeyboard = $0002;
+
+{ TWindow Flags masks }
+
+  wfMove  = $01;
+  wfGrow  = $02;
+  wfClose = $04;
+  wfZoom  = $08;
+
+{ TWindow number constants }
+
+  wnNoNumber = 0;
+
+{ TWindow palette entries }
+
+  wpBlueWindow = 0;
+  wpCyanWindow = 1;
+  wpGrayWindow = 2;
+
+{ Standard command codes }
+
+  cmValid   = 0;
+  cmQuit    = 1;
+  cmError   = 2;
+  cmMenu    = 3;
+  cmClose   = 4;
+  cmZoom    = 5;
+  cmResize  = 6;
+  cmNext    = 7;
+  cmPrev    = 8;
+  cmHelp    = 9;
+
+{ Application command codes }
+
+  cmCut     = 20;
+  cmCopy    = 21;
+  cmPaste   = 22;
+  cmUndo    = 23;
+  cmClear   = 24;
+  cmTile    = 25;
+  cmCascade = 26;
+
+{ TDialog standard commands }
+
+  cmOK      = 10;
+  cmCancel  = 11;
+  cmYes     = 12;
+  cmNo      = 13;
+  cmDefault = 14;
+
+{ Standard messages }
+
+  cmReceivedFocus     = 50;
+  cmReleasedFocus     = 51;
+  cmCommandSetChanged = 52;
+
+{ TScrollBar messages }
+
+  cmScrollBarChanged  = 53;
+  cmScrollBarClicked  = 54;
+
+{ TWindow select messages }
+
+  cmSelectWindowNum   = 55;
+
+{ TListViewer messages }
+
+  cmListItemSelected  = 56;
+
+{ Color palettes }
+
+  CFrame      = #1#1#2#2#3;
+  CScrollBar  = #4#5#5;
+  CScroller   = #6#7;
+  CListViewer = #26#26#27#28#29;
+
+  CBlueWindow = #8#9#10#11#12#13#14#15;
+  CCyanWindow = #16#17#18#19#20#21#22#23;
+  CGrayWindow = #24#25#26#27#28#29#30#31;
+
+{ TDrawBuffer maximum view width }
+
+  MaxViewWidth = 132;
+
+type
+
+{ Command sets }
+
+  PCommandSet = ^TCommandSet;
+  TCommandSet = set of Byte;
+
+{ Color palette type }
+
+  PPalette = ^TPalette;
+  TPalette = String;
+
+{ TDrawBuffer, buffer used by draw methods }
+
+  TDrawBuffer = array[0..MaxViewWidth - 1] of Word;
+
+{ TView object Pointer }
+
+  PView = ^TView;
+
+{ TGroup object Pointer }
+
+  PGroup = ^TGroup;
+
+{ TView object }
+
+  TView = object(TObject)
+    Owner: PGroup;
+    Next: PView;
+    Origin: TPoint;
+    Size: TPoint;
+    Cursor: TPoint;
+    GrowMode: Byte;
+    DragMode: Byte;
+    HelpCtx: Word;
+    State: Word;
+    Options: Word;
+    EventMask: Word;
+    constructor Init(var Bounds: TRect);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    procedure Awaken; virtual;
+    procedure BlockCursor;
+    procedure CalcBounds(var Bounds: TRect; Delta: TPoint); virtual;
+    procedure ChangeBounds(var Bounds: TRect); virtual;
+    procedure ClearEvent(var Event: TEvent);
+    function CommandEnabled(Command: Word): Boolean;
+    function DataSize: Word; virtual;
+    procedure DisableCommands(Commands: TCommandSet);
+    procedure DragView(Event: TEvent; Mode: Byte;
+      var Limits: TRect; MinSize, MaxSize: TPoint);
+    procedure Draw; virtual;
+    procedure DrawView;
+    procedure EnableCommands(Commands: TCommandSet);
+    procedure EndModal(Command: Word); virtual;
+    function EventAvail: Boolean;
+    function Execute: Word; virtual;
+    function Exposed: Boolean;
+    function Focus: Boolean;
+    procedure GetBounds(var Bounds: TRect);
+    procedure GetClipRect(var Clip: TRect);
+    function GetColor(Color: Word): Word;
+    procedure GetCommands(var Commands: TCommandSet);
+    procedure GetData(var Rec); virtual;
+    procedure GetEvent(var Event: TEvent); virtual;
+    procedure GetExtent(var Extent: TRect);
+    function GetHelpCtx: Word; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure GetPeerViewPtr(var S: TStream; var P);
+    function GetState(AState: Word): Boolean;
+    procedure GrowTo(X, Y: Integer);
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure Hide;
+    procedure HideCursor;
+    procedure KeyEvent(var Event: TEvent);
+    procedure Locate(var Bounds: TRect);
+    procedure MakeFirst;
+    procedure MakeGlobal(Source: TPoint; var Dest: TPoint);
+    procedure MakeLocal(Source: TPoint; var Dest: TPoint);
+    function MouseEvent(var Event: TEvent; Mask: Word): Boolean;
+    function MouseInView(Mouse: TPoint): Boolean;
+    procedure MoveTo(X, Y: Integer);
+    function NextView: PView;
+    procedure NormalCursor;
+    function Prev: PView;
+    function PrevView: PView;
+    procedure PutEvent(var Event: TEvent); virtual;
+    procedure PutInFrontOf(Target: PView);
+    procedure PutPeerViewPtr(var S: TStream; P: PView);
+    procedure Select;
+    procedure SetBounds(var Bounds: TRect);
+    procedure SetCommands(Commands: TCommandSet);
+    procedure SetCmdState(Commands: TCommandSet; Enable: Boolean);
+    procedure SetCursor(X, Y: Integer);
+    procedure SetData(var Rec); virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure Show;
+    procedure ShowCursor;
+    procedure SizeLimits(var Min, Max: TPoint); virtual;
+    procedure Store(var S: TStream);
+    function TopView: PView;
+    function Valid(Command: Word): Boolean; virtual;
+    procedure WriteBuf(X, Y, W, H: Integer; var Buf);
+    procedure WriteChar(X, Y: Integer; C: Char; Color: Byte;
+      Count: Integer);
+    procedure WriteLine(X, Y, W, H: Integer; var Buf);
+    procedure WriteStr(X, Y: Integer; Str: String; Color: Byte);
+  end;
+
+{ TFrame types }
+
+  TTitleStr = string[80];
+
+{ TFrame object }
+
+  { Palette layout }
+  { 1 = Passive frame }
+  { 2 = Passive title }
+  { 3 = Active frame }
+  { 4 = Active title }
+  { 5 = Icons }
+
+  PFrame = ^TFrame;
+  TFrame = object(TView)
+    constructor Init(var Bounds: TRect);
+    procedure Draw; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+  end;
+
+{ ScrollBar characters }
+
+  TScrollChars = array[0..4] of Char;
+
+{ TScrollBar object }
+
+  { Palette layout }
+  { 1 = Page areas }
+  { 2 = Arrows }
+  { 3 = Indicator }
+
+  PScrollBar = ^TScrollBar;
+  TScrollBar = object(TView)
+    Value: Integer;
+    Min: Integer;
+    Max: Integer;
+    PgStep: Integer;
+    ArStep: Integer;
+    constructor Init(var Bounds: TRect);
+    constructor Load(var S: TStream);
+    procedure Draw; virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure ScrollDraw; virtual;
+    function ScrollStep(Part: Integer): Integer; virtual;
+    procedure SetParams(AValue, AMin, AMax, APgStep, AArStep: Integer);
+    procedure SetRange(AMin, AMax: Integer);
+    procedure SetStep(APgStep, AArStep: Integer);
+    procedure SetValue(AValue: Integer);
+    procedure Store(var S: TStream);
+  end;
+
+{ TScroller object }
+
+  { Palette layout }
+  { 1 = Normal text }
+  { 2 = Selected text }
+
+  PScroller = ^TScroller;
+  TScroller = object(TView)
+    HScrollBar: PScrollBar;
+    VScrollBar: PScrollBar;
+    Delta: TPoint;
+    Limit: TPoint;
+    constructor Init(var Bounds: TRect; AHScrollBar, AVScrollBar: PScrollBar);
+    constructor Load(var S: TStream);
+    procedure ChangeBounds(var Bounds: TRect); virtual;
+    function GetPalette: PPalette; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure ScrollDraw; virtual;
+    procedure ScrollTo(X, Y: Integer);
+    procedure SetLimit(X, Y: Integer);
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ TListViewer }
+
+  { Palette layout }
+  { 1 = Active }
+  { 2 = Inactive }
+  { 3 = Focused }
+  { 4 = Selected }
+  { 5 = Divider }
+
+  PListViewer = ^TListViewer;
+
+  TListViewer = object(TView)
+    HScrollBar: PScrollBar;
+    VScrollBar: PScrollBar;
+    NumCols: Integer;
+    TopItem: Integer;
+    Focused: Integer;
+    Range: Integer;
+    constructor Init(var Bounds: TRect; ANumCols: Word;
+      AHScrollBar, AVScrollBar: PScrollBar);
+    constructor Load(var S: TStream);
+    procedure ChangeBounds(var Bounds: TRect); virtual;
+    procedure Draw; virtual;
+    procedure FocusItem(Item: Integer); virtual;
+    function GetPalette: PPalette; virtual;
+    function GetText(Item: Integer; MaxLen: Integer): String; virtual;
+    function IsSelected(Item: Integer): Boolean; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure SelectItem(Item: Integer); virtual;
+    procedure SetRange(ARange: Integer);
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure Store(var S: TStream);
+  end;
+
+{ Video buffer }
+
+  PVideoBuf = ^TVideoBuf;
+  TVideoBuf = array[0..3999] of Word;
+
+{ Selection modes }
+
+  SelectMode = (NormalSelect, EnterSelect, LeaveSelect);
+
+{ TGroup object }
+
+  TGroup = object(TView)
+    Last: PView;
+    Current: PView;
+    Phase: (phFocused, phPreProcess, phPostProcess);
+    Buffer: PVideoBuf;
+    constructor Init(var Bounds: TRect);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    procedure Awaken; virtual;
+    procedure ChangeBounds(var Bounds: TRect); virtual;
+    function DataSize: Word; virtual;
+    procedure Delete(P: PView);
+    procedure Draw; virtual;
+    procedure EndModal(Command: Word); virtual;
+    procedure EventError(var Event: TEvent); virtual;
+    function ExecView(P: PView): Word;
+    function Execute: Word; virtual;
+    function First: PView;
+    function FirstThat(P: Pointer): PView;
+    function FocusNext(Forwards: Boolean): Boolean;
+    procedure ForEach(P: Pointer);
+    procedure GetData(var Rec); virtual;
+    function GetHelpCtx: Word; virtual;
+    procedure GetSubViewPtr(var S: TStream; var P);
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure Insert(P: PView);
+    procedure InsertBefore(P, Target: PView);
+    procedure Lock;
+    procedure PutSubViewPtr(var S: TStream; P: PView);
+    procedure Redraw;
+    procedure SelectNext(Forwards: Boolean);
+    procedure SetData(var Rec); virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure Store(var S: TStream);
+    procedure Unlock;
+    function Valid(Command: Word): Boolean; virtual;
+  end;
+
+{ TWindow object }
+
+  { Palette layout }
+  { 1 = Frame passive }
+  { 2 = Frame active }
+  { 3 = Frame icon }
+  { 4 = ScrollBar page area }
+  { 5 = ScrollBar controls }
+  { 6 = Scroller normal text }
+  { 7 = Scroller selected text }
+  { 8 = Reserved }
+
+  PWindow = ^TWindow;
+  TWindow = object(TGroup)
+    Flags: Byte;
+    ZoomRect: TRect;
+    Number: Integer;
+    Palette: Integer;
+    Frame: PFrame;
+    Title: PString;
+    constructor Init(var Bounds: TRect; ATitle: TTitleStr; ANumber: Integer);
+    constructor Load(var S: TStream);
+    destructor Done; virtual;
+    procedure Close; virtual;
+    function GetPalette: PPalette; virtual;
+    function GetTitle(MaxSize: Integer): TTitleStr; virtual;
+    procedure HandleEvent(var Event: TEvent); virtual;
+    procedure InitFrame; virtual;
+    procedure SetState(AState: Word; Enable: Boolean); virtual;
+    procedure SizeLimits(var Min, Max: TPoint); virtual;
+    function StandardScrollBar(AOptions: Word): PScrollBar;
+    procedure Store(var S: TStream);
+    procedure Zoom; virtual;
+  end;
+
+{ Message dispatch function }
+
+function Message(Receiver: PView; What, Command: Word;
+  InfoPtr: Pointer): Pointer;
+
+{ Views registration procedure }
+
+procedure RegisterViews;
+
+const
+
+{ Event masks }
+
+  PositionalEvents: Word = evMouse;
+  FocusedEvents: Word = evKeyboard + evCommand;
+
+{ Minimum window size }
+
+  MinWinSize: TPoint = (X: 16; Y: 6);
+
+{ Shadow definitions }
+
+  ShadowSize: TPoint = (X: 2; Y: 1);
+  ShadowAttr: Byte = $08;
+
+{ Markers control }
+
+  ShowMarkers: Boolean = False;
+
+{ MapColor error return value }
+
+  ErrorAttr: Byte = $CF;
+
+{ Stream Registration Records }
+
+const
+  RView: TStreamRec = (
+     ObjType: 1;
+     VmtLink: Ofs(TypeOf(TView)^);
+     Load:    @TView.Load;
+     Store:   @TView.Store
+  );
+
+const
+  RFrame: TStreamRec = (
+     ObjType: 2;
+     VmtLink: Ofs(TypeOf(TFrame)^);
+     Load:    @TFrame.Load;
+     Store:   @TFrame.Store
+  );
+
+const
+  RScrollBar: TStreamRec = (
+     ObjType: 3;
+     VmtLink: Ofs(TypeOf(TScrollBar)^);
+     Load:    @TScrollBar.Load;
+     Store:   @TScrollBar.Store
+  );
+
+const
+  RScroller: TStreamRec = (
+     ObjType: 4;
+     VmtLink: Ofs(TypeOf(TScroller)^);
+     Load:    @TScroller.Load;
+     Store:   @TScroller.Store
+  );
+
+const
+  RListViewer: TStreamRec = (
+     ObjType: 5;
+     VmtLink: Ofs(TypeOf(TListViewer)^);
+     Load:    @TListViewer.Load;
+     Store:   @TLIstViewer.Store
+  );
+
+const
+  RGroup: TStreamRec = (
+     ObjType: 6;
+     VmtLink: Ofs(TypeOf(TGroup)^);
+     Load:    @TGroup.Load;
+     Store:   @TGroup.Store
+  );
+
+const
+  RWindow: TStreamRec = (
+     ObjType: 7;
+     VmtLink: Ofs(TypeOf(TWindow)^);
+     Load:    @TWindow.Load;
+     Store:   @TWindow.Store
+  );
+
+{ Characters used for drawing selected and default items in  }
+{ monochrome color sets                                      }
+
+  SpecialChars: array[0..5] of Char = (#175, #174, #26, #27, ' ', ' ');
+
+{ True if the command set has changed since being set to false }
+
+  CommandSetChanged: Boolean = False;
+
+

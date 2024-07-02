@@ -1,0 +1,57 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Turbo Vision Unit                               }
+{                                                       }
+{       Copyright (c) 1991,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit TextView;
+
+{$O+,F+,X+,I-,S-}
+
+interface
+
+uses Objects, Drivers, Views, Dos;
+
+type
+
+  { TTextDevice }
+
+  PTextDevice = ^TTextDevice;
+  TTextDevice = object(TScroller)
+    Dummy: Word;
+    function StrRead(var S: TextBuf): Byte; virtual;
+    procedure StrWrite(var S: TextBuf; Count: Byte); virtual;
+  end;
+
+  { TTerminal }
+
+  PTerminalBuffer = ^TTerminalBuffer;
+  TTerminalBuffer = array[0..65534] of Char;
+
+  PTerminal = ^TTerminal;
+  TTerminal = object(TTextDevice)
+    BufSize: Word;
+    Buffer: PTerminalBuffer;
+    QueFront, QueBack: Word;
+    constructor Init(var Bounds:TRect; AHScrollBar, AVScrollBar: PScrollBar;
+      ABufSize: Word);
+    destructor Done; virtual;
+    procedure BufDec(var Val: Word);
+    procedure BufInc(var Val: Word);
+    function CalcWidth: Integer;
+    function CanInsert(Amount: Word): Boolean;
+    procedure Draw; virtual;
+    function NextLine(Pos:Word): Word;
+    function PrevLines(Pos:Word; Lines: Word): Word;
+    function StrRead(var S: TextBuf): Byte; virtual;
+    procedure StrWrite(var S: TextBuf; Count: Byte); virtual;
+    function QueEmpty: Boolean;
+  end;
+
+procedure AssignDevice(var T: Text; Screen: PTextDevice);
+
+

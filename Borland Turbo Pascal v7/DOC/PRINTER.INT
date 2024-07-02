@@ -1,0 +1,19 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Printer Interface Unit                          }
+{                                                       }
+{       Copyright (C) 1988,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Printer;
+
+{$D-,I-,S-}
+
+interface
+
+var
+  Lst: Text;
+

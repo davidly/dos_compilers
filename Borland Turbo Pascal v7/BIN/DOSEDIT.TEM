@@ -1,0 +1,107 @@
+/***********************************************************************
+
+     MS-DOS 5.0 Editor emulation for the Borland/Turbo Pascal IDE.
+
+	This file contains a Turbo Editor Macro Language (TEML)
+script which emulates the MS-DOS Editor in the Borland/Turbo Pascal IDE.
+A complete description of the TEML language and the Turbo Editor Macro 
+Compiler (TEMC) can be found in the file "TEMC.DOC".
+
+	The TEMC compiler can be invoked from the DOS command line as
+follows:
+ 
+	  temc [-c] dosedit.tem <IDE configuration file><.CMD><.TP>
+
+The optional -c switch can also be specified as /c, and can appear in
+any argument position on the command line. If you use this option,
+any existing command table in your configuration file is thrown away
+before the script file is merged with those already defined. The
+configuration file extension must be specified as TEMC will modify both DOS
+and Windows IDEs config files.  Specify .CMD or .TP extentions for Windows
+or DOS IDE, respectively. If the .CMD file does not exist, it will be 
+created. The .TP file must exist, or an error is displayed.
+
+Most of the simple editor commands have been fully implemented.  Most
+of the complex commands have been either partially implemented or not
+implemented at all. Below is a list of the commands that have been
+fully or partially implemented.
+
+IDE Binding     MS-DOS Editor Command      Comments
+-----------     ---------------------      -------------------------
+Backspace       BackspaceDelete
+Ctrl-H          BackspaceDelete
+Del             DeleteChar
+Ctrl-G          DeleteChar
+Ctrl-T          DeleteWord                 In DOS editor cursor must
+                                           be under first letter
+Ins             ToggleInsert
+Ctrl-V          ToggleInsert
+Ctrl-LfAr       WordLeft
+Ctrl-RtAr       WordRight
+Home            LeftOfLine
+End             RightOfLine
+Ctrl-Q+E        TopOfScreen
+Ctrl-Q+X        BottomOfScreen
+Ctrl-W          CursorUp
+Ctrl-Z          CursorDown
+PgUp            MacPageUp
+PgDw            MacPageUp
+Ctrl-Home       HomeCursor
+Ctrl-Q+R        HomeCursor
+Ctrl-End        EndCursor
+Ctrl-Q+C        EndCursor
+
+**************************************************************************/
+
+/****** Macros *************************/
+
+MACRO MoveToNextLine
+  CursorDown;
+  LeftOfLine;
+END;
+
+MACRO MacPageUp
+    FixScreenPos;PageScreenUp;FixCursorPos;
+END;
+
+MACRO MacPageDown
+    FixScreenPos;PageScreenDown;FixCursorPos;
+END;
+
+
+/****** DOS EDIT Key Bindings **********/
+
+BkSp:       BackspaceDelete;
+Ctrl-H:     BackspaceDelete;
+
+Del:        DeleteChar;
+Ctrl-G:     DeleteChar;
+
+Ctrl-T:     DeleteWord;
+
+Ins:        ToggleInsert;
+Ctrl-V:     ToggleInsert;
+
+Ctrl-LfAr:  WordLeft;
+Ctrl-RgAr:  WordRight;
+Home:       LeftOfLine;
+End:        RightOfLine;
+
+Ctrl-Q+^E:  TopOfScreen;
+Ctrl-Q+^X:  BottomOfScreen;
+
+Ctrl-W:     CursorUp;
+Ctrl-Z:     CursorDown;
+
+PgUp:       MacPageUp;
+PgDn:       MacPageDown;
+
+Ctrl-Home:  HomeCursor;
+Ctrl-Q+R:   HomeCursor;
+
+Ctrl-End:   EndCursor;
+Ctrl-Q+C:   EndCursor;
+
+
+
+

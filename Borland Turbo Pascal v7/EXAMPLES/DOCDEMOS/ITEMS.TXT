@@ -1,0 +1,35 @@
+MSE-0012
+Left handed laser guided mouse
+230
+120.00
+RC9431
+MON-0213
+22" 3 Dimensional Monitor
+2
+790.00
+SM1337
+BPS-1201
+Borland Pascal 7.0
+1450
+129.99
+BO4132
+CPP-1202
+Borland C++ 3.0
+13
+495.00
+BO4132
+SMX-0088
+Smith's 586SX SuperConductor Chip
+2
+89.95
+SM1299
+SMT-0132
+Smith's All-In-One Deal
+42
+2495.00
+SM1299
+MSE-0013
+Heat Seeking Triple Action Mouse
+44
+326.95
+RC9431

@@ -1,0 +1,67 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       System Unit                                     }
+{                                                       }
+{       Copyright (C) 1988,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit System;
+
+interface
+
+const
+  OvrCodeList: Word = 0;        { Overlay code segment list }
+  OvrHeapSize: Word = 0;	{ Initial overlay buffer size }
+  OvrDebugPtr: Pointer = nil;	{ Overlay debugger hook }
+  OvrHeapOrg: Word = 0;		{ Overlay buffer origin }
+  OvrHeapPtr: Word = 0;		{ Overlay buffer pointer }
+  OvrHeapEnd: Word = 0;		{ Overlay buffer end }
+  OvrLoadList: Word = 0;	{ Loaded overlays list }
+  OvrDosHandle: Word = 0;	{ Overlay DOS handle }
+  OvrEmsHandle: Word = $FFFF;	{ Overlay EMS handle }
+  HeapOrg: Pointer = nil;	{ Heap origin }
+  HeapPtr: Pointer = nil;	{ Heap pointer }
+  HeapEnd: Pointer = nil;	{ Heap end }
+  FreeList: Pointer = nil;	{ Free list pointer }
+  FreeZero: Pointer = nil;	{ Must be zero }
+  HeapError: Pointer = nil;     { Heap error function }
+  ExitProc: Pointer = nil;	{ Exit procedure }
+  ExitCode: Integer = 0;	{ Exit code }
+  ErrorAddr: Pointer = nil;	{ Runtime error address }
+  PrefixSeg: Word = 0;		{ Program segment prefix }
+  StackLimit: Word = 0;		{ Stack pointer low limit }
+  InOutRes: Integer = 0;	{ I/O result buffer }
+  RandSeed: Longint = 0;	{ Random seed }
+  FileMode: Byte = 2;		{ File open mode }
+  Test8087: Byte = 0;		{ 8087 test result }
+
+var
+  Input: Text;                  { Input standard file }
+  Output: Text;			{ Output standard file }
+  SaveInt00: Pointer;		{ Saved interrupt $00 }
+  SaveInt02: Pointer;		{ Saved interrupt $02 }
+  SaveInt09: Pointer;		{ Saved interrupt $09 }
+  SaveInt1B: Pointer;		{ Saved interrupt $1B }
+  SaveInt21: Pointer;		{ Saved interrupt $21 }
+  SaveInt23: Pointer;		{ Saved interrupt $23 }
+  SaveInt24: Pointer;		{ Saved interrupt $24 }
+  SaveInt34: Pointer;		{ Saved interrupt $34 }
+  SaveInt35: Pointer;		{ Saved interrupt $35 }
+  SaveInt36: Pointer;		{ Saved interrupt $36 }
+  SaveInt37: Pointer;		{ Saved interrupt $37 }
+  SaveInt38: Pointer;		{ Saved interrupt $38 }
+  SaveInt39: Pointer;		{ Saved interrupt $39 }
+  SaveInt3A: Pointer;		{ Saved interrupt $3A }
+  SaveInt3B: Pointer;		{ Saved interrupt $3B }
+  SaveInt3C: Pointer;		{ Saved interrupt $3C }
+  SaveInt3D: Pointer;		{ Saved interrupt $3D }
+  SaveInt3E: Pointer;		{ Saved interrupt $3E }
+  SaveInt3F: Pointer;		{ Saved interrupt $3F }
+  SaveInt75: Pointer;		{ Saved interrupt $75 }
+
+implementation
+
+

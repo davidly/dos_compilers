@@ -1,0 +1,47 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       Overlay Interface Unit                          }
+{                                                       }
+{       Copyright (C) 1988,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Overlay;
+
+{$D-,I-,S-}
+
+interface
+
+const
+  ovrOk = 0;
+  ovrError = -1;
+  ovrNotFound = -2;
+  ovrNoMemory = -3;
+  ovrIOError = -4;
+  ovrNoEMSDriver = -5;
+  ovrNoEMSMemory = -6;
+
+const
+  OvrResult: Integer = 0;
+  OvrEmsPages: Word = 0;
+  OvrTrapCount: Word = 0;
+  OvrLoadCount: Word = 0;
+  OvrFileMode: Byte = 0;
+
+type
+  OvrReadFunc = function(OvrSeg: Word): Integer;
+
+var
+  OvrReadBuf: OvrReadFunc;
+
+procedure OvrInit(FileName: String);
+procedure OvrInitEMS;
+procedure OvrSetBuf(Size: LongInt);
+function  OvrGetBuf: LongInt;
+procedure OvrSetRetry(Size: LongInt);
+function  OvrGetRetry: LongInt;
+procedure OvrClearBuf;
+
+

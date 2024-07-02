@@ -1,0 +1,337 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 7.0                        }
+{       DOS Interface Unit                              }
+{                                                       }
+{       Copyright (C) 1988,92 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Dos;
+
+{$D-,I-,S-,O+}
+
+interface
+
+const
+
+{ Flags bit masks }
+
+  FCarry     = $0001;
+  FParity    = $0004;
+  FAuxiliary = $0010;
+  FZero      = $0040;
+  FSign      = $0080;
+  FOverflow  = $0800;
+
+{ File mode magic numbers }
+
+  fmClosed = $D7B0;
+  fmInput  = $D7B1;
+  fmOutput = $D7B2;
+  fmInOut  = $D7B3;
+
+{ File attribute constants }
+
+  ReadOnly  = $01;
+  Hidden    = $02;
+  SysFile   = $04;
+  VolumeID  = $08;
+  Directory = $10;
+  Archive   = $20;
+  AnyFile   = $3F;
+
+type
+
+{ String types }
+
+  ComStr  = string[127];        { Command line string }
+  PathStr = string[79];         { File pathname string }
+  DirStr  = string[67];         { Drive and directory string }
+  NameStr = string[8];          { File name string }
+  ExtStr  = string[4];          { File extension string }
+
+{ Registers record used by Intr and MsDos }
+
+  Registers = record
+                case Integer of
+                  0: (AX,BX,CX,DX,BP,SI,DI,DS,ES,Flags: Word);
+                  1: (AL,AH,BL,BH,CL,CH,DL,DH: Byte);
+              end;
+
+{ Typed-file and untyped-file record }
+
+  FileRec = record
+              Handle: Word;
+              Mode: Word;
+              RecSize: Word;
+              Private: array[1..26] of Byte;
+              UserData: array[1..16] of Byte;
+              Name: array[0..79] of Char;
+            end;
+
+{ Textfile record }
+
+  TextBuf = array[0..127] of Char;
+  TextRec = record
+              Handle: Word;
+              Mode: Word;
+              BufSize: Word;
+              Private: Word;
+              BufPos: Word;
+              BufEnd: Word;
+              BufPtr: ^TextBuf;
+              OpenFunc: Pointer;
+              InOutFunc: Pointer;
+              FlushFunc: Pointer;
+              CloseFunc: Pointer;
+              UserData: array[1..16] of Byte;
+              Name: array[0..79] of Char;
+              Buffer: TextBuf;
+            end;
+
+{ Search record used by FindFirst and FindNext }
+
+  SearchRec = record
+                Fill: array[1..21] of Byte;
+                Attr: Byte;
+                Time: Longint;
+                Size: Longint;
+                Name: string[12];
+              end;
+
+{ Date and time record used by PackTime and UnpackTime }
+
+  DateTime = record
+               Year,Month,Day,Hour,Min,Sec: Word;
+             end;
+
+var
+
+{ Error status variable }
+
+  DosError: Integer;
+
+{ DosVersion returns the DOS version number. The low byte of    }
+{ the result is the major version number, and the high byte is  }
+{ the minor version number. For example, DOS 3.20 returns 3 in  }
+{ the low byte, and 20 in the high byte.                        }
+
+function DosVersion: Word;
+
+{ Intr executes a specified software interrupt with a specified }
+{ Registers package.                                            }
+
+procedure Intr(IntNo: Byte; var Regs: Registers);
+
+{ MsDos invokes the DOS function call handler with a specified  }
+{ Registers package.                                            }
+
+procedure MsDos(var Regs: Registers);
+
+{ GetDate returns the current date set in the operating system. }
+{ Ranges of the values returned are: Year 1980-2099, Month      }
+{ 1-12, Day 1-31 and DayOfWeek 0-6 (0 corresponds to Sunday).   }
+
+procedure GetDate(var Year,Month,Day,DayOfWeek: Word);
+
+{ SetDate sets the current date in the operating system. Valid  }
+{ parameter ranges are: Year 1980-2099, Month 1-12 and Day      }
+{ 1-31. If the date is not valid, the function call is ignored. }
+
+procedure SetDate(Year,Month,Day: Word);
+
+{ GetTime returns the current time set in the operating system. }
+{ Ranges of the values returned are: Hour 0-23, Minute 0-59,    }
+{ Second 0-59 and Sec100 (hundredths of seconds) 0-99.          }
+
+procedure GetTime(var Hour,Minute,Second,Sec100: Word);
+
+{ SetTime sets the time in the operating system. Valid          }
+{ parameter ranges are: Hour 0-23, Minute 0-59, Second 0-59 and }
+{ Sec100 (hundredths of seconds) 0-99. If the time is not       }
+{ valid, the function call is ignored.                          }
+
+procedure SetTime(Hour,Minute,Second,Sec100: Word);
+
+{ GetCBreak returns the state of Ctrl-Break checking in DOS.    }
+{ When off (False), DOS only checks for Ctrl-Break during I/O   }
+{ to console, printer, or communication devices. When on        }
+{ (True), checks are made at every system call.                 }
+
+procedure GetCBreak(var Break: Boolean);
+
+{ SetCBreak sets the state of Ctrl-Break checking in DOS.       }
+
+procedure SetCBreak(Break: Boolean);
+
+{ GetVerify returns the state of the verify flag in DOS. When   }
+{ off (False), disk writes are not verified. When on (True),    }
+{ all disk writes are verified to insure proper writing.        }
+
+procedure GetVerify(var Verify: Boolean);
+
+{ SetVerify sets the state of the verify flag in DOS.           }
+
+procedure SetVerify(Verify: Boolean);
+
+{ DiskFree returns the number of free bytes on the specified    }
+{ drive number (0=Default,1=A,2=B,..). DiskFree returns -1 if   }
+{ the drive number is invalid.                                  }
+
+function DiskFree(Drive: Byte): Longint;
+
+{ DiskSize returns the size in bytes of the specified drive     }
+{ number (0=Default,1=A,2=B,..). DiskSize returns -1 if the     }
+{ drive number is invalid.                                      }
+
+function DiskSize(Drive: Byte): Longint;
+
+{ GetFAttr returns the attributes of a file. F must be a file   }
+{ variable (typed, untyped or textfile) which has been assigned }
+{ a name. The attributes are examined by ANDing with the        }
+{ attribute masks defined as constants above. Errors are        }
+{ reported in DosError.                                         }
+
+procedure GetFAttr(var F; var Attr: Word);
+
+{ SetFAttr sets the attributes of a file. F must be a file      }
+{ variable (typed, untyped or textfile) which has been assigned }
+{ a name. The attribute value is formed by adding (or ORing)    }
+{ the appropriate attribute masks defined as constants above.   }
+{ Errors are reported in DosError.                              }
+
+procedure SetFAttr(var F; Attr: Word);
+
+{ GetFTime returns the date and time a file was last written.   }
+{ F must be a file variable (typed, untyped or textfile) which  }
+{ has been assigned and opened. The Time parameter may be       }
+{ unpacked throgh a call to UnpackTime. Errors are reported in  }
+{ DosError.                                                     }
+
+procedure GetFTime(var F; var Time: Longint);
+
+{ SetFTime sets the date and time a file was last written.      }
+{ F must be a file variable (typed, untyped or textfile) which  }
+{ has been assigned and opened. The Time parameter may be       }
+{ created through a call to PackTime. Errors are reported in    }
+{ DosError.                                                     }
+
+procedure SetFTime(var F; Time: Longint);
+
+{ FindFirst searches the specified (or current) directory for   }
+{ the first entry that matches the specified filename and       }
+{ attributes. The result is returned in the specified search    }
+{ record. Errors (and no files found) are reported in DosError. }
+
+procedure FindFirst(Path: PathStr; Attr: Word; var F: SearchRec);
+
+{ FindNext returs the next entry that matches the name and      }
+{ attributes specified in a previous call to FindFirst. The     }
+{ search record must be one passed to FindFirst. Errors (and no }
+{ more files) are reported in DosError.                         }
+
+procedure FindNext(var F: SearchRec);
+
+{ UnpackTime converts a 4-byte packed date/time returned by     }
+{ FindFirst, FindNext or GetFTime into a DateTime record.       }
+
+procedure UnpackTime(P: Longint; var T: DateTime);
+
+{ PackTime converts a DateTime record into a 4-byte packed      }
+{ date/time used by SetFTime.                                   }
+
+procedure PackTime(var T: DateTime; var P: Longint);
+
+{ GetIntVec returns the address stored in the specified         }
+{ interrupt vector.                                             }
+
+procedure GetIntVec(IntNo: Byte; var Vector: Pointer);
+
+{ SetIntVec sets the address in the interrupt vector table for  }
+{ the specified interrupt.                                      }
+
+procedure SetIntVec(IntNo: Byte; Vector: Pointer);
+
+{ FSearch searches for the file given by Path in the list of    }
+{ directories given by DirList. The directory paths in DirList  }
+{ must be separated by semicolons. The search always starts     }
+{ with the current directory of the current drive. The returned }
+{ value is a concatenation of one of the directory paths and    }
+{ the file name, or an empty string if the file could not be    }
+{ located.                                                      }
+
+function FSearch(Path: PathStr; DirList: String): PathStr;
+
+{ FExpand expands the file name in Path into a fully qualified  }
+{ file name. The resulting name consists of a drive letter, a   }
+{ colon, a root relative directory path, and a file name.       }
+{ Embedded '.' and '..' directory references are removed.       }
+
+function FExpand(Path: PathStr): PathStr;
+
+{ FSplit splits the file name specified by Path into its three  }
+{ components. Dir is set to the drive and directory path with   }
+{ any leading and trailing backslashes, Name is set to the file }
+{ name, and Ext is set to the extension with a preceding dot.   }
+{ Each of the component strings may possibly be empty, if Path  }
+{ contains no such component.                                   }
+
+procedure FSplit(Path: PathStr; var Dir: DirStr;
+  var Name: NameStr; var Ext: ExtStr);
+
+{ EnvCount returns the number of strings contained in the DOS   }
+{ environment.                                                  }
+
+function EnvCount: Integer;
+
+{ EnvStr returns a specified environment string. The returned   }
+{ string is of the form "VAR=VALUE". The index of the first     }
+{ string is one. If Index is less than one or greater than      }
+{ EnvCount, EnvStr returns an empty string.                     }
+
+function EnvStr(Index: Integer): String;
+
+{ GetEnv returns the value of a specified environment variable. }
+{ The variable name can be in upper or lower case, but it must  }
+{ not include the '=' character. If the specified environment   }
+{ variable does not exist, GetEnv returns an empty string.      }
+
+function GetEnv(EnvVar: String): String;
+
+{ SwapVectors swaps the contents of the SaveIntXX pointers in   }
+{ the System unit with the current contents of the interrupt    }
+{ vectors. SwapVectors is typically called just before and just }
+{ after a call to Exec. This insures that the Exec'd process    }
+{ does not use any interrupt handlers installed by the current  }
+{ process, and vice versa.                                      }
+
+procedure SwapVectors;
+
+{ Keep (or Terminate Stay Resident) terminates the program and  }
+{ makes it stay in memory. The entire program stays in memory,  }
+{ including data segment, stack segment, and heap. The ExitCode }
+{ corresponds to the one passed to the Halt standard procedure. }
+
+procedure Keep(ExitCode: Word);
+
+{ Exec executes another program. The program is specified by    }
+{ the Path parameter, and the command line is specified by the  }
+{ CmdLine parameter. To execute a DOS internal command, run     }
+{ COMMAND.COM, e.g. "Exec('\COMMAND.COM','/C DIR *.PAS');".     }
+{ Note the /C in front of the command. Errors are reported in   }
+{ DosError. When compiling a program that uses Exec, be sure    }
+{ to specify a maximum heap size as there will otherwise not be }
+{ enough memory.                                                }
+
+procedure Exec(Path: PathStr; ComLine: ComStr);
+
+{ DosExitCode returns the exit code of a sub-process. The low   }
+{ byte is the code sent by the terminating process. The high    }
+{ byte is zero for normal termination, 1 if terminated by       }
+{ Ctrl-C, 2 if terminated due to a device error, or 3 if        }
+{ terminated by the Keep procedure (function call 31 hex).      }
+
+function DosExitCode: Word;
+

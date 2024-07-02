@@ -1,0 +1,305 @@
+dosmon log is at 1a20009
+byte count: 1639
+seek base 0 = beginning, offset 0
+read handle 5 count 8
+seek base 0 = beginning, offset 90224
+read handle 5 count 8
+seek base 0 = beginning, offset 325268
+read handle 5 count 955
+read handle 5 count 28
+seek base 0 = beginning, offset 90232
+read handle 5 count 3348
+read handle 5 count 256
+seek base 0 = beginning, offset 93836
+read handle 5 count 3823
+read handle 5 count 162
+seek base 0 = beginning, offset 97821
+read handle 5 count 7701
+read handle 5 count 634
+seek base 0 = beginning, offset 106156
+read handle 5 count 3535
+read handle 5 count 316
+seek base 0 = beginning, offset 110007
+read handle 5 count 4043
+read handle 5 count 222
+seek base 0 = beginning, offset 114272
+read handle 5 count 12903
+read handle 5 count 1274
+seek base 0 = beginning, offset 128449
+read handle 5 count 9029
+read handle 5 count 364
+seek base 0 = beginning, offset 137842
+read handle 5 count 52529
+read handle 5 count 80
+seek base 0 = beginning, offset 190451
+read handle 5 count 702
+read handle 5 count 26
+seek base 0 = beginning, offset 191179
+read handle 5 count 8913
+read handle 5 count 332
+seek base 0 = beginning, offset 200424
+read handle 5 count 10394
+read handle 5 count 550
+seek base 0 = beginning, offset 211368
+read handle 5 count 1631
+seek base 0 = beginning, offset 212999
+read handle 5 count 378
+read handle 5 count 40
+seek base 0 = beginning, offset 213417
+read handle 5 count 8129
+read handle 5 count 594
+seek base 0 = beginning, offset 222140
+read handle 5 count 705
+read handle 5 count 138
+seek base 0 = beginning, offset 222983
+read handle 5 count 1739
+read handle 5 count 90
+seek base 0 = beginning, offset 224812
+read handle 5 count 12415
+read handle 5 count 178
+seek base 0 = beginning, offset 237405
+read handle 5 count 6112
+read handle 5 count 118
+seek base 0 = beginning, offset 243635
+read handle 5 count 353
+read handle 5 count 26
+seek base 0 = beginning, offset 244014
+read handle 5 count 579
+read handle 5 count 26
+seek base 0 = beginning, offset 244619
+read handle 5 count 2105
+read handle 5 count 116
+seek base 0 = beginning, offset 246840
+read handle 5 count 1219
+read handle 5 count 76
+seek base 0 = beginning, offset 248135
+read handle 5 count 969
+read handle 5 count 30
+seek base 0 = beginning, offset 249134
+read handle 5 count 901
+read handle 5 count 50
+seek base 0 = beginning, offset 250085
+read handle 5 count 1282
+read handle 5 count 58
+seek base 0 = beginning, offset 251425
+read handle 5 count 10816
+read handle 5 count 704
+seek base 0 = beginning, offset 262945
+read handle 5 count 5950
+read handle 5 count 304
+seek base 0 = beginning, offset 269199
+read handle 5 count 3704
+read handle 5 count 118
+seek base 0 = beginning, offset 273021
+read handle 5 count 4080
+read handle 5 count 174
+seek base 0 = beginning, offset 277275
+read handle 5 count 5631
+read handle 5 count 238
+seek base 0 = beginning, offset 283144
+read handle 5 count 911
+read handle 5 count 64
+seek base 0 = beginning, offset 284119
+read handle 5 count 567
+read handle 5 count 14
+seek base 0 = beginning, offset 284700
+read handle 5 count 5991
+read handle 5 count 198
+seek base 0 = beginning, offset 290889
+read handle 5 count 84
+seek base 0 = beginning, offset 290973
+read handle 5 count 822
+read handle 5 count 40
+seek base 0 = beginning, offset 291835
+read handle 5 count 684
+read handle 5 count 16
+seek base 0 = beginning, offset 292535
+read handle 5 count 1169
+read handle 5 count 78
+seek base 0 = beginning, offset 293782
+read handle 5 count 402
+read handle 5 count 8
+seek base 0 = beginning, offset 294192
+read handle 5 count 3669
+read handle 5 count 124
+seek base 0 = beginning, offset 297985
+read handle 5 count 1082
+read handle 5 count 96
+seek base 0 = beginning, offset 299163
+read handle 5 count 9169
+read handle 5 count 40
+seek base 0 = beginning, offset 308372
+read handle 5 count 8153
+read handle 5 count 12
+seek base 0 = beginning, offset 316537
+read handle 5 count 4061
+read handle 5 count 22
+seek base 0 = beginning, offset 320620
+read handle 5 count 1355
+read handle 5 count 46
+seek base 0 = beginning, offset 322021
+read handle 5 count 887
+read handle 5 count 28
+seek base 0 = beginning, offset 322936
+read handle 5 count 253
+read handle 5 count 22
+seek base 0 = beginning, offset 323211
+read handle 5 count 2031
+read handle 5 count 26
+seek base 0 = beginning, offset 325268
+read handle 5 count 955
+read handle 5 count 28
+seek base 0 = beginning, offset 326251
+read handle 5 count 2515
+read handle 5 count 24
+seek base 0 = beginning, offset 328790
+read handle 5 count 1411
+read handle 5 count 6
+seek base 0 = beginning, offset 330207
+read handle 5 count 2764
+read handle 5 count 116
+seek base 0 = beginning, offset 333087
+read handle 5 count 13133
+read handle 5 count 508
+seek base 0 = beginning, offset 346728
+read handle 5 count 464
+read handle 5 count 6
+seek base 0 = beginning, offset 347198
+read handle 5 count 595
+read handle 5 count 10
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 0
+seek base 1 = current, offset 0
+seek base 0 = beginning, offset 0
+read handle 5 count 1024
+seek base 1 = current, offset -1016
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 8
+seek base 1 = current, offset 0
+seek base 0 = beginning, offset 90224
+read handle 5 count 1024
+seek base 1 = current, offset -1016
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 90232
+seek base 1 = current, offset 0
+seek base 0 = beginning, offset 347803
+read handle 5 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset -1012
+seek base 0 = beginning, offset 402492
+read handle 5 count 1024
+read handle 5 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset -8
+seek base 0 = beginning, offset 347803
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+read handle 5 count 1024
+seek base 1 = current, offset -607
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 0
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset -981
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 43
+seek base 1 = current, offset 0
+seek base 0 = beginning, offset 43
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset -1012
+seek base 0 = beginning, offset 3911
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset -8
+seek base 0 = beginning, offset 55
+read handle 6 count 1024
+seek base 1 = current, offset 0
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+read handle 6 count 1024
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset -123
+read handle 6 count 65520
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 0
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset -536
+seek base 1 = current, offset 0
+seek base 2 = end, offset 0
+seek base 0 = beginning, offset 37
+seek base 1 = current, offset 0
+seek base 0 = beginning, offset 37
+read handle 6 count 1024
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset 0
+seek base 1 = current, offset -101

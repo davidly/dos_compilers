@@ -1,0 +1,519 @@
+                   Welcome to Turbo Pascal 7.0
+                   ---------------------------
+
+This README file contains important, last minute information
+about Turbo Pascal 7.0. In addition to this file, there are
+several files in the \TP\DOC directory that you should browse.
+See FILELIST.DOC in the \TP directory for a complete list of all
+files distributed with this package.
+
+
+TABLE OF CONTENTS
+-----------------
+ 1. How to get help
+ 2. Minimum system requirements
+ 3. Installation
+ 4. New features
+ 5. Release notes
+    - Additional documentation
+    - Demonstration and utility program notes
+    - Compatibility and known problems
+ 6. Important note for Borland C++ and Paradox 4.0 users
+ 7. Turbo Pascal and the OS/2 Workplace Shell
+
+
+1. HOW TO GET HELP
+------------------
+If you have any problems with this product, please read this
+file, the online documentation files in \TP\DOC, the online help
+files, and the Turbo Pascal manuals first. If you still have a
+question and need assistance, help is available from the
+following sources:
+
+1. You can use your modem to easily obtain assistance online.
+   Borland maintains support forums on CompuServe, BIX, and
+   GEnie. These forums put you in contact with Borland technical
+   support engineers and thousands of programmers using Borland
+   products. You'll be able get your questions answered and share
+   information and ideas with others.
+
+   You can also download the latest technical information, sample
+   code, utilities, patches, etc., from these online services as
+   well as from Borland's Download Bulletin Board Service
+   (DLBBS).
+
+   Access Borland's online services in the following manner:
+
+   CompuServe
+     GO BORLAND
+
+   BIX
+     JOIN BORLAND
+
+   GEnie
+     BORLAND
+
+   Borland DLBBS
+     You can reach the Borland DLBBS by dialing (408) 439-9096
+     (up to 9600 Baud, 8 data bits, No Parity, 1 Stop bit). No
+     special setup is required.
+
+2. TechFax is a toll-free, 24-hour automated service that sends
+   free technical information to your fax machine. More than
+   1,000 documents discussing Borland software are available
+   through TechFax. These documents provide valuable technical
+   information that can be used as reference now and in the
+   future.
+
+   You can call TechFax at 1-800-822-4269 from any touch tone
+   telephone and obtain any bulletins or documents that you need.
+
+3. The Technical Support Hot Lines are there to help you with
+   questions about installation, system configuration,
+   compatibility, and usability. Lines are open from 6:00 A.M.
+   to 5:00 P.M. Pacific Time at (408) 461-9177.
+
+4. If you need an advanced level of support, Borland offers
+   a new Advisor Lines service where you can get advice on program
+   design, debugging, and performance tuning. Advisor Lines
+   operate from 8:00 A.M. to 5:00 P.M. Pacific Time at
+   1-900-786-6080. Each call is $2.00/minute, with the first
+   minute free (available in U.S. only).
+
+When calling Borland's Technical Support, please keep your
+manuals handy and have the program running. To simplify trouble-
+shooting, please be prepared with the following information:
+
+  o Product name, serial number, and version number.
+
+  o Computer name and model and the name and model of any
+    additional hardware (video adapters, modems, etc.).
+
+  o Operating system and version number (to find the version
+    number, type VER at any DOS prompt). If you are using
+    Microsoft Windows, you can find the version number by
+    selecting Help|About from Program Manager.
+
+  o The contents of your AUTOEXEC.BAT and CONFIG.SYS files
+    (located in the root directory (\) of your computer's boot
+    disk).
+
+  o The contents of your WIN.INI and SYSTEM.INI files located in
+    your Windows directory (if you are running Windows).
+
+  o A daytime phone number where you can be reached.
+
+  o The specific steps necessary to reproduce the problem.
+
+
+2. MINIMUM SYSTEM REQUIREMENTS
+------------------------------
+Turbo Pascal 7.0 requires MS-DOS 3.0 or later.
+
+TURBO.EXE, the real-mode integrated development environment
+(IDE), requires at least 512 Kb of memory.
+
+TPX.EXE, the new, high-capacity IDE can use up to 16 Mb of
+extended memory and requires the following minimum configuration:
+
+  Processor type  :  80286 or later
+  DOS memory      :  640k
+  Extended memory :  1 Mb available
+
+On 80286 machines, it is recommended that you install a memory
+manager such as HIMEM.SYS before using TPX. Refer to your DOS
+manuals for more information on memory managers.
+
+(Please note that TPX requires the files RTM.EXE and DPMI16BI.OVL
+to be located on the path or in the same directory as TPX.EXE.)
+
+When running TPX.EXE under Windows, make sure to create a Windows
+.PIF file and specify a value of 0 in the XMS Memory KB Required
+setting and at least a value of 2048 in the XMS Memory KB Limit
+setting.
+
+
+3. INSTALLATION
+---------------
+IMPORTANT: Turbo Pascal 7.0 is not intended to be installed over
+any previous version of Turbo Pascal.
+
+Use the INSTALL program to install Turbo Pascal. All files on the
+distribution disks are archived and INSTALL will unarchive
+them for you. INSTALL places them into subdirectories and
+automatically creates configuration files for the command-line
+compiler and the two integrated development environments (IDEs).
+
+Installation of the full product requires approximately 6 Mb of
+available disk space. (The installed product occupies about 4.5
+Mb. However, about 1.5 Mb of temporary workspace is required to
+unarchive very large ZIP files.) The actual disk space occupied
+by this product and the amount of temporary work space required
+will vary depending on your disk's cluster size. If you are using
+a disk compression utility (e.g., Stacker), you'll need
+substantially more temporary workspace to avoid a disk full error.
+(The amount you'll need will vary and some systems might require
+up to 8 Mb available disk space before running INSTALL.)
+
+All further references to directory paths in this README file
+assume you've used INSTALL's default directory structure.
+
+To start the installation, place the disk labeled INSTALL in
+Drive A:, and type A:INSTALL.
+
+
+Floppy Disk Installation Notes
+------------------------------
+INSTALL's floppy disk installation option will only install the
+command-line compiler, TPC.EXE, and the TURBO.TPL library on a
+floppy disk.
+
+If you want to run the TURBO.EXE integrated development
+environment on a floppy-based system, you'll need to unarchive
+TURBO.EXE of your choice by hand using the following
+instructions.
+
+Systems with greater than 360 Kb drives
+---------------------------------------
+Place the INSTALLATION DISK in Drive B. Place a blank, formatted
+system disk in Drive A. Switch to Drive A and type:
+
+  A> copy b:unzip.exe
+  A> unzip b:tpl
+
+Remove the INSTALLATION DISK from Drive B and place the Turbo
+Pascal 7.0 distribution disk containing TURBO.ZIP in Drive B:
+
+  A> unzip b:turbo
+
+Remove the disk from Drive B. Turbo Pascal 7.0 is now installed
+on your system.
+
+360 Kb Systems
+--------------
+The TFLOPPY.ZIP archive contains a special version of TURBO.EXE
+that can be run from a 360 Kb floppy disk. You'll need three
+disks in order to install Turbo Pascal 7.0 on your system. First,
+create a blank, formatted system disk and label it
+
+  Drive A SYSTEM DISK (Source code, TURBO.TPL)
+
+Next, create a blank, formatted disk (NOT a system disk) and
+label it
+
+  Drive B (TURBO.EXE)
+
+Finally, create a third blank, formatted disk (NOT a system disk)
+for use as a temporary.
+
+Now you're ready to begin the installation. Place the Turbo
+Pascal 7.0 INSTALLATION DISK in Drive B. Place the Drive A SYSTEM
+DISK in Drive A. Switch to Drive A and type:
+
+  A> b:unzip b:tpl
+
+Remove the disk from Drive A and place the temporary disk in
+Drive A. This disk will temporarily contain UNZIP.EXE and the
+TFLOPPY.ZIP archive file. Now type:
+
+  A> copy b:unzip.exe
+
+Remove the INSTALLATION DISK from Drive B and place the Turbo
+Pascal 7.0 distribution disk containing TFLOPPY.ZIP in Drive B:
+
+  A> copy b:tfloppy.zip
+
+Remove the distribution disk from Drive B. Label a third blank,
+formatted disk in Drive B (NOT a system disk). Place the Drive B
+(TURBO.EXE) disk in Drive B and type:
+
+  A> unzip tfloppy b:
+
+Remove the temporary disk from Drive A and replace it with the
+Drive A SYSTEM DISK. Turbo Pascal 7.0 is now installed on your
+system. Always switch to Drive A and type:
+
+  A> b:turbo
+
+to run Turbo Pascal 7.0 on your system. There is room on the
+Drive A SYSTEM DISK to store your .PAS files. Note that this
+special version of TURBO.EXE does not support saving startup
+options (Options|Environment|Startup).
+
+
+4. NEW FEATURES
+---------------
+Turbo Pascal 7.0 offers many new features, including:
+
+  o TPX.EXE, a new, high-capacity integrated development
+    environment (IDE) that allows you to edit, compile, browse
+    symbols, and debug very large applications. TPX can use up to
+    16 Mb of extended memory.
+
+  o ObjectBrowser - Browse units, objects, and symbols while you
+    edit your source code. Includes full cross-reference
+    information for every identifier in your program.
+
+  o Syntax highlighting - Assign unique text colors for symbols,
+    reserved words, identifiers, strings, etc. You can also print
+    your syntax-highlighted source code (bold, italics, etc.)
+    from inside the IDEs.
+
+  o Tools menu in the IDEs that enable you to transfer control to
+    external programs, such as GREP or Turbo Assembler. You can
+    add your own tools to the Tools menu in the IDEs.
+
+  o Persistent symbols - TPX saves your program's symbol
+    information across sessions so you can instantly browse or
+    debug your program after exiting and then reloading the IDE.
+
+  o User-installable Help files in the IDEs. Indexes from
+    multiple Help files are automatically merged so you can
+    perform keyword or incremental searches.
+
+  o Local Menus - A click of the right mouse button (or Alt+F10)
+    brings up a context-sensitive menu in both IDEs.
+
+  o Optimizations, run-time library, and debugging enhancements
+
+    o Now automatically recognizes 386 (or later) processors
+      and uses fast 32-bit instructions for longint arithmetic
+    o Redundant pointer load suppression
+    o Faster text file I/O
+    o Faster string Pos routine
+    o Optimized sets
+    o PChar support - Allows null terminated strings
+    o Integer overflow checking {$Q+/-} - Integer, Word, etc
+    o OBJ file line number information pass-through - Allows
+      stepping through C or ASM code using the integrated
+      debugger
+
+  o Language extensions
+
+    o Open array parameters - Allows safer, more flexible
+      variable-length array parameters.
+    o New OpenString type - Allows a procedure or function
+      to accept any type of string parameter, even in the
+      {$V+} state.
+    o Constant parameters - Efficient, read-only value
+      parameters.
+    o Public/private sections - Allows public and private
+      sections of objects to be declared in any order.
+    o Typed @ operator {$T+/-} - Enforces type-checking when
+      using the address (@) operator.
+    o Inherited reserved word - Allows references to an inherited
+      method without knowing the ancestor's name.
+
+  o New standard procedures/functions
+
+    o Assigned - Returns True if a pointer is not equal to nil
+      (especially useful for procedure and function pointers).
+    o Include - Adds an item to a set.
+    o Exclude - Removes an item from a set.
+    o Break & Continue - FOR, WHILE, REPEAT loop control.
+    o Low & High - Return the low or high bounds of open array
+      parameters or of any scalar type.
+
+  o Turbo Vision enhancements
+
+    o Data-validation objects.
+    o New outliner object.
+    o New methods for inserting/executing windows and dialog
+      boxes.
+    o Multi-state check boxes.
+    o Cluster items that can be disabled.
+
+  o Completely reorganized printed documentation with new
+    tutorial programs.
+
+  o Expanded online Help system covering all the new features.
+
+See the "What's new" section of the User's Guide for more
+information regarding the new features of Turbo Pascal 7.0.
+
+
+5. RELEASE NOTES
+----------------
+
+ADDITIONAL DOCUMENTATION
+
+  Changes and corrections to the printed documentation for Turbo
+  Vision are in MANUAL.TV in the \TP\DOC directory. Additional
+  documentation on TEMC and other utilities can be found in .DOC
+  files in the same directory.
+
+
+DEMONSTRATION AND UTILITY PROGRAM NOTES
+
+  o DOC DEMOS - Source code to all of the examples in the
+    documentation can be found in the \TP\EXAMPLES\DOCDEMOS
+    subdirectory.
+
+  o BGIDEMO SHOWS VESA SUPPORT - See BGIDEMO.PAS in the
+    \TP\EXAMPLES\BGI directory for information on how to
+    autodetect and use the new VESA16.BGI driver. It supports all
+    standard 16-color VESA high resolution modes (800x600,
+    1024x768, 1280x1024).
+
+  o COMPILING DEMOS - There are new large demonstration programs
+    that consist of multiple units each. Make sure you're in the
+    directory that contains the demo source code before
+    compiling. For example, to build TVFM.PAS, the Turbo Vision
+    File Manager demo, change to the \TP\EXAMPLES\TVFM directory
+    before doing a compile with either the integrated development
+    environment or the command-line compiler.
+
+  o SOURCE CODE TO UTILITY PROGRAMS - The integrated development
+    environments' new syntax-highlighted printing relies on a
+    print filter utility that you can modify. PRNFLTR.PAS can be
+    found in the \TP\BIN directory.
+
+    For an example of how to write a tool filter for the IDE, see
+    GREP2MSG.PAS (the Tool menu's GREP message filter) in the
+    same directory.
+
+
+COMPATIBILITY & KNOWN PROBLEMS
+
+  DOS
+  ---
+  o TURBO VISION 1.0 SOURCE - The virtual method table (VMT)
+    format was modified to support dynamic methods (DMTs). You
+    must update any code that relies on fixed offsets into VMTs.
+
+    If, for some reason, you want to use Turbo Pascal 7.0 to
+    recompile the Turbo Vision source code provided in the Turbo
+    Pascal 6.0 Run-time Library Source Code product, change the
+    following constant declarations to the values specified
+    below:
+
+      OBJECTS.PAS:
+        TStream_Error = $0C;
+        TStream_Flush = $10;
+        TStream_Read  = $1C;
+        TStream_Write = $28;
+        ...
+        TCollection_Error    = $0C;
+        TCollection_SetLimit = $24;
+
+      VIEWS.PAS:
+        TView_GetPalette = $30;
+
+  TPX (DOS Protected Mode)
+  ------------------------
+  o OLDER SYSTEM UTILITIES - Some older system utilities and
+    application programs (memory managers, disk caches, RAM
+    disks, etc.) do not observe current industry standards for
+    DOS protected-mode operation. We recommend that you upgrade
+    such utilities to more recent versions.
+
+  o KEYBOARD COMPATIBILITY - On some systems, combinations of the
+    keyboard, the BIOS, and one or more utilities loaded into
+    high memory may cause the cursor keys in TPX.EXE to produce
+    highlighting in the editor or to insert numeric characters in
+    an edit window. If you experience these or similar keyboard
+    problems, use the KEYB.COM program provided with your DOS.
+    Edit your AUTOEXEC.BAT file to contain the line:
+
+      KEYB US
+
+    and reboot your computer.
+
+  o RUNNING WINDOWS FROM TPX DOS SHELL - Starting Windows in
+    enhanced mode from a DOS shell created by TPX is unsafe.
+    Normally Windows refuses to load in enhanced mode under such
+    conditions, but in certain situations it can hang the system.
+    If you do run Windows from a TPX DOS shell, always start
+    Windows in Standard mode.
+
+  o 386^MAX DPMI SERVER - There are known problems with pre-6.02
+    versions of the 386^Max DPMI server. We recommend that you
+    obtain and use their latest version (or use the Borland DPMI
+    server contained in this package instead).
+
+  o COMPAQ VDISK - If you are running on a Compaq 386 with Compaq
+    DOS v3.31, you should not use the Compaq VDISK. This version
+    of VDISK is not compatible with DOS protected-mode
+    applications like TPX.
+
+  o OS/2 AND TPX DOS SHELL - If you run TPX under OS/2, push a
+    DOS shell and then run another DOS protected-mode
+    application, both applications MUST use Borland's
+    protected-mode loader.
+
+    There is a known problem in OS/2 that will cause the DOS
+    session to crash after the second application terminates if
+    it uses a different loader. This will be fixed in a future
+    release of OS/2's DOS protected-mode support.
+
+    Note that it is not safe to start Paradox 4.0 from a TPX DOS
+    shell.
+
+
+6. IMPORTANT NOTE FOR BORLAND C++ AND PARADOX 4.0 USERS
+-------------------------------------------------------
+The DPMILOAD.EXE and DPMI16BI.OVL files provided with this
+release replace the older ones that came with Paradox 4.0 and
+BC++ 3.0 or later. Delete or rename the older versions and put
+\TP\BIN on your DOS path (so Paradox and BC can use the newer
+ones).
+
+If you want to be able to run BC++ or Paradox from within
+TPX.EXE, you will need to use the EXTLEAVE option for the RTM
+environment variable in order to leave enough memory available.
+For example, you can set aside 2 MB for other programs by using:
+
+  SET RTM=EXTLEAVE 2048
+
+See the printed documentation for more information regarding the
+RTM environment variable.
+
+If you plan to shell out from Paradox or BC++ to run TPX.EXE,
+limit the amount of extended memory used by those programs. For
+Paradox, use its /extk command-line parameter; for BC++, use its
+/x command-line parameter. Refer to their documentation for more
+information on the use of command-line options.
+
+Here's a summary for troubleshooting purposes:
+
+  1.  Are there any copies of DPMILOAD.EXE or DPMI16BI.OVL on the
+      path prior to those provided in \TP\BIN or in the same
+      directories as BC.EXE or PARADOX.EXE? If so, replace them
+      with Turbo Pascal 7.0's newer versions, or remove them and
+      set your DOS path correctly.
+
+  2.  Have you set the RTM environment variable? For example:
+
+        SET RTM=EXTLEAVE 2048
+
+  3.  If starting Paradox or BC first, have you used the required
+      command-line options?
+
+
+7. TURBO PASCAL 7.0 AND THE OS/2 WORKPLACE SHELL
+------------------------------------------------
+These are the steps for creating a program icon for TPX.EXE under
+the OS/2 2.0 Workplace Shell:
+
+  1.  From the OS/2 desktop, double-click the Templates folder
+      to open it, grab the Program icon and drop it onto the
+      desktop or another folder.
+
+  2.  When the Program Settings dialog box appears, enter the
+      following:
+
+        Path and file Name: *
+                Parameters: /C C:\TP\BIN\TPX.EXE
+         Working directory: C:\TP\BIN
+
+      Substitute the appropriate drive/path as needed.
+
+  3.  Click the Session thumb tab and select DOS full screen
+      or DOS window as desired.
+
+  4.  Click on the General thumb tab and enter Turbo Pascal 7.0
+      for the program title.
+
+  5.  Double-click the Close button.
+
+                      *    *    *    *    *
