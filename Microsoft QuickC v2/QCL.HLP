@@ -1,0 +1,77 @@
+QUICK C COMPILER AND ASSEMBLER OPTIONS
+-MEMORY MODEL-
+/AT tiny model (.COM)
+/AS small model (default)
+/AC compact model
+/AM medium model
+/AL large model
+-OPTIMIZATION-
+/O enable optimization (same as /Ot)
+/Od disable optimizations
+/Ol enable loop optimizations
+/Ox enable optimization (same as /Otl)
+/Ot enable optimization
+-CODE GENERATION-
+/G0 8086 instructions (default)
+/G2  286 instructions
+/Gc Pascal style function calls
+/Gi incremental compilation
+/Gs no stack checking
+/Gt[number] data size threshold
+-OUTPUT FILES-
+/Fb[bound executable file]
+/Fe<executable file>
+/Fm[map file]
+/Fo<object file>
+-C PREPROCESSOR-
+/C don't strip comments
+/D<name>[=text] define macro
+/E preprocess to stdout
+/EP same as /E but no #line
+/I<name> add #include path
+/P preprocess to file
+/U<name> remove predefined macro
+/u remove all predefined macros
+/X ignore "standard places"
+-C LANGUAGE-
+/Za disable extensions
+/Ze enable extensions (default)
+/Zl remove default library info
+/Zp pack structures
+/Zr enable pointer checking
+/Zs syntax check only
+-DEBUGGING-
+/Zd line number information
+/Zi symbolic debugging information
+-FLOATING POINT-
+/FPi inline with emulator (default)
+/FPi87 inline with 8087
+-MISCELLANEOUS-
+/c compile or assemble only, no link
+/v verbose messages
+/W<number> warning level
+/w equivalent to /W0
+-LINKING-
+/F <hex_number> stack size (hex. bytes)
+/Lc link compatibility mode executable
+/Li incremental linking
+/Lr link compatibility mode executable
+/Lp link protect mode executable
+/link [linker_options_and_libraries]
+-ASSEMBLY LISTING-
+/Fl<name> generate listing file
+/l listing file with default name
+/Sa list all lines in macros
+/Sd create pass 1 listing
+/Se editor-oriented listing
+/Sn omit symbol table from listing
+/Sq line-number index in listing
+/Sx omit listing of false conditionals
+-MISCELLANEOUS ASSEMBLER OPTIONS-
+/a place segments in alphabetical order
+/Cu convert all names to uppercase
+/Cx preserve case of externals
+/Cl preserve case of all symbols
+/P1 one-pass assembly
+/s place segments in order they appear
+/t no messages if assembly successful

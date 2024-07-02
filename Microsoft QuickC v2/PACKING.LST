@@ -1,0 +1,243 @@
+    Packing List for Microsoft QuickC (R) with QuickAssembler, Version 2.01
+				 5.25" Disk Set
+
+		Copyright (c) Microsoft Corporation, 1986, 1989
+
+
+DISK 1 : QuickAssembler / QuickC Setup
+
+Files                       Description
+-----                       -----------
+
+packing.lst                 Packing list (this file)
+setup.exe                   Setup program for QuickC (R) with QuickAssembler
+readme.doc                  Release notes for QuickC (R) with QuickAssembler
+helpmake.exe                Creates and customizes help files
+msherc.com                  TSR -- supports Hercules card graphics
+fixshift.com                Fixes BIOS bug for some Compaq and other keyboards
+
+dospatch\patch320.doc       Patch files for MS-DOS 3.20 and PC-DOS 3.20
+dospatch\setrhs.exe         " -- Read the .DOC files for details
+dospatch\rmrhs.exe          ""
+dospatch\stkpat.bat         ""
+dospatch\stkpat.scr         ""
+dospatch\patch87.doc        ""
+dospatch\patch87.exe        ""
+
+samples\samples.doc         Sample C programs
+samples\grdemo.c            " -- Read SAMPLES.DOC for details
+samples\grdemo.mak          ""
+samples\menu.c              ""
+samples\menu.h              ""
+samples\turtle.c            ""
+samples\turtle.h            ""
+samples\life.c              ""
+samples\tools.c             ""
+samples\tools.h             ""
+samples\life.mak            ""
+samples\crlf.c              ""
+
+
+DISK 2 : Learning the QuickC Integrated Environment
+
+Files                       Description
+-----                       -----------
+
+learn.com                   On-line tutorial and introduction to QuickC (R)
+lc.pgm                      Tutorial support files
+qccbt.ctx                   ""
+qccbt.scn                   ""
+qccbt.sob                   ""
+link.exe                    Special linker for Windows and OS/2 developers
+
+
+DISK 3 : Integrated Development Environment 1
+
+Files                       Description
+-----                       -----------
+
+qc.exe                      QuickC (R) integrated programming environment
+qc.ini                      Default .INI file for QuickC (R)
+
+
+DISK 4 : Integrated Development Environment 2
+
+Files                       Description
+-----                       -----------
+
+qcc.ovl                     QuickC (R) overlay for the integrated environment
+c1.err                      Compiler error messages for QC and QCL
+nmake.exe                   Stand-alone program maintenance utility
+
+include\assert.h            Include files
+include\bios.h              "  -- Read the beginning of each file for details
+include\conio.h             ""
+include\ctype.h             ""
+include\direct.h            ""
+include\dos.h               ""
+include\errno.h             ""
+include\fcntl.h             ""
+include\float.h             ""
+include\graph.h             ""
+include\io.h                ""
+include\limits.h            ""
+include\malloc.h            ""
+include\math.h              ""
+include\memory.h            ""
+include\pgchart.h           ""
+include\process.h           ""
+include\search.h            ""
+include\setjmp.h            ""
+include\share.h             ""
+include\signal.h            ""
+include\stdarg.h            ""
+include\stddef.h            ""
+include\stdio.h             ""
+include\stdlib.h            ""
+include\string.h            ""
+include\time.h              ""
+include\varargs.h           ""
+
+include\sys\locking.h       ""
+include\sys\stat.h          ""
+include\sys\timeb.h         ""
+include\sys\types.h         ""
+include\sys\utime.h         ""
+
+
+DISK 5 : Utilities
+
+Files                       Description
+-----                       -----------
+
+crlf.exe                    Removes CTRL characters and inserts CR/LFs
+link.exe                    Linker
+ilink.exe                   Incremental linker
+ilinkstb.ovl                Ilink overlay
+lib.exe                     Library maintenance utility
+errors.hlp                  Help on error messages
+qcc.dat                     Data file used by QC environment
+mouse.com                   Microsoft mouse driver - version 6.24a
+mkkey.exe                   Creates customized keyboard command files
+brief.key                   Keyboard files
+emacs.key                   ""
+epsilon.key                 ""
+me.key                      ""
+qc.key                      ""
+
+
+DISK 6 : Microsoft Quick Advisor
+
+Files                       Description
+-----                       -----------
+
+qc.hlp                      Help on C and library functions
+
+
+DISK 7 : Command-Line Compiler
+
+Files                       Description
+-----                       -----------
+
+qccom.exe                   Command-line compiler
+qcl.exe                     Driver for command-line compiler
+qcl.hlp                     Help on QCL
+cl.err                      Error messages for QCL and QC
+graphics.hlp                Help on graphics functions
+
+
+DISK 8 : Libraries 1
+
+Files                       Description
+-----                       -----------
+
+slibc.lib                   Library for small model
+slibfp.lib                  Floating-point math library (small model)
+svarstck.obj                Small model competing heap/stack object file
+mlibc.lib                   Library for medium model
+mlibfp.lib                  Floating-point math library (medium model)
+mvarstck.obj                Medium model competing heap/stack object file
+
+
+DISK 9 : Libraries 2
+
+Files                       Description
+-----                       -----------
+
+binmode.obj                 Changes default file I/O mode from text to binary
+setargv.obj                 Allows wild cards in command-line arguments
+rmfixup.obj                 Removes interrupts; forces co-processor math
+dbused.obj                  Needed when linking with C 5.1 OS/2 libraries
+em.lib                      FP math library for software emulation of 8087
+libh.lib                    General helper library
+graphics.lib                Low-level graphics library
+pgchart.lib                 Presentation graphics library
+clibc.lib                   Library for compact model
+clibfp.lib                  Floating-point math library (compact model)
+cvarstck.obj                Compact model competing heap/stack object file
+
+
+DISK 10 : Libraries 3 / Fonts
+
+Files                       Description
+-----                       -----------
+
+87.lib                      FP math library for 8087 co-processor
+llibc.lib                   Library for large model
+llibfp.lib                  Floating-point math library (large model)
+lvarstck.obj                Large model competing heap/stack object file
+
+font\courb.fon              Font files
+font\helvb.fon              ""
+font\modern.fon             ""
+font\roman.fon              ""
+font\script.fon             ""
+font\tmsrb.fon              ""
+
+notes.hlp                   User-defined help file
+
+
+DISK 11 : QuickAssembler 1
+
+Files                       Description
+-----                       -----------
+
+qas.ovl                     QuickAssembler overlay
+
+samples\qasample.doc        Sample C and Assembler programs
+samples\filedemo.mak        " -- Read QASAMPLE.DOC for details
+samples\filedemo.c          ""
+samples\file.asm            ""
+samples\mathdemo.mak        ""
+samples\mathdemo.c          ""
+samples\math.asm            ""
+samples\miscdemo.mak        ""
+samples\miscdemo.asm        ""
+samples\misc.asm            ""
+samples\common.asm          ""
+samples\demo.h              ""
+samples\demo.inc            ""
+samples\chrtdemo.c          ""
+samples\chrtdemo.h          ""
+samples\chrtsupt.c          ""
+samples\chrtopt.c           ""
+samples\chrtdemo.mak        ""
+
+
+DISK 12 : QuickAssembler 2
+
+Files                       Description
+-----                       -----------
+
+qa.hlp                      Help on the QuickAssembler - part 1 of 2
+
+
+DISK 13 : QuickAssembler 3
+
+Files                       Description
+-----                       -----------
+
+qa1.hlp                     Help on the QuickAssembler - part 2 of 2
+qcenv.hlp                   Help on the QuickC (R) environment
+
+

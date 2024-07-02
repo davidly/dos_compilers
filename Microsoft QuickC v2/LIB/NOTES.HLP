@@ -1,0 +1,138 @@
+>>
+
+>>contents
+
+The NOTES.HLP file provides an easy way to add your own information to the
+QC Advisor.
+
+The NOTES.HLP file is a minimally formatted ASCII help file that appears
+in the Help window whenever you press a "Notes" button. Press the Alt+F1
+key to return from the NOTES.HLP file to the QC Advisor.
+
+The NOTES.HLP file contains three parts:
+
+        Part           Description
+        >>contents     Appears when you select the "Notes" button on the
+                       Table of Contents screen. This is the part of the
+                       NOTES.HLP file that is now being displayed.
+
+        >>edit         Appears when you select the "Notes" button on the
+                       Keyboard Shortcuts screen.
+
+        >>index        Appears when you select the "Notes" button on the
+                       Index screen.
+
+To change the contents of the NOTES.HLP file you must do the following:
+
+        1. Close the NOTES.HLP file if it is currently displayed in the
+           Help window.
+
+        2. Open the NOTES.HLP file with any editor (such as the QuickC
+           editor) to edit NOTES.HLP.  Change anything in the file except
+           the file name "NOTES.HLP" and lines that begin with the ">>"
+           characters.  These lines are links to the buttons in the QC
+           Advisor
+
+        3. Save your modified NOTES.HLP file as a normal ASCII file.
+
+        4. When you open NOTES.HLP with one of the "Notes" buttons in the
+           QC Advisor, you will see your additions and changes.
+
+        5. Press ALT+F1 to return to the QC Advisor.
+
+To change the other parts of the QC Advisor such as the run-time library
+help file QC.HLP or the graphics help file GRAPHICS.HLP, you will need to
+use the HELPMAKE utility. This program is described in the QuickC Tool Kit
+Reference book.
+
+>>edit
+
+The NOTES.HLP file provides an easy way to add your own information to the
+QC Advisor.
+
+The NOTES.HLP file is a minimally formatted ASCII help file that appears
+in the Help window whenever you press a "Notes" button. Press the Alt+F1
+key to return from the NOTES.HLP file to the QC Advisor.
+
+The NOTES.HLP file contains three parts:
+
+        Part           Description
+        >>contents     Appears when you select the "Notes" button on the
+                       Table of Contents screen.
+
+        >>edit         Appears when you select the "Notes" button on the
+                       QuickC Keys screen. This is the part of the
+                       NOTES.HLP file that is now being displayed.
+
+        >>index        Appears when you select the "Notes" button on the
+                       Index screen.
+
+To change the contents of the NOTES.HLP file you must do the following:
+
+        1. Close the NOTES.HLP file if it is currently displayed in the
+           Help window.
+
+        2. Open the NOTES.HLP file with any editor (such as the QuickC
+           editor) to edit NOTES.HLP.  Change anything in the file except
+           the file name "NOTES.HLP" and lines that begin with the ">>"
+           characters.  These lines are links to the buttons in the QC
+           Advisor
+
+        3. Save your modified NOTES.HLP file as a normal ASCII file.
+
+        4. When you open NOTES.HLP with one of the "Notes" buttons in the
+           QC Advisor, you will see your additions and changes.
+
+        5. Press ALT+F1 to return to the QC Advisor.
+
+To change the other parts of the QC Advisor such as the run-time library
+help file QC.HLP or the graphics help file GRAPHICS.HLP, you will need to
+use the HELPMAKE utility. This program is described in the QuickC Tool Kit
+Reference book.
+
+>>index
+
+The NOTES.HLP file provides an easy way to add your own information to the
+QC Advisor.
+
+The NOTES.HLP file is a minimally formatted ASCII help file that appears
+in the Help window whenever you press a "Notes" button. Press the Alt+F1
+key to return from the NOTES.HLP file to the QC Advisor.
+
+The NOTES.HLP file contains three parts:
+
+        Part           Description
+        >>contents     Appears when you select the "Notes" button on the
+                       Table of Contents screen.
+
+        >>edit         Appears when you select the "Notes" button on the
+                       Keyboard Shortcuts screen.
+
+        >>index        Appears when you select the "Notes" button on the
+                       Index screen. This is the part of the NOTES.HLP
+                       file that is now being displayed.
+
+To change the contents of the NOTES.HLP file you must do the following:
+
+        1. Close the NOTES.HLP file if it is currently displayed in the
+           Help window.
+
+        2. Open the NOTES.HLP file with any editor (such as the QuickC
+           editor) to edit NOTES.HLP.  Change anything in the file except
+           the file name "NOTES.HLP" and lines that begin with the ">>"
+           characters.  These lines are links to the buttons in the QC
+           Advisor
+
+        3. Save your modified NOTES.HLP file as a normal ASCII file.
+
+        4. When you open NOTES.HLP with one of the "Notes" buttons in the
+           QC Advisor, you will see your additions and changes.
+
+        5. Press ALT+F1 to return to the QC Advisor.
+
+To change the other parts of the QC Advisor such as the run-time library
+help file QC.HLP or the graphics help file GRAPHICS.HLP, you will need to
+use the HELPMAKE utility. This program is described in the QuickC Tool Kit
+Reference book.
+
+
