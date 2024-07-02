@@ -1,0 +1,678 @@
+
+                 Turbo Pascal 5.5 Documentation
+              Object-Oriented Programming Examples
+
+This file documents the Turbo Pascal 5.5 Object-Oriented
+Programming (OOP) examples. There are over 12,000 lines of
+examples contained in the OOPDEMOS.ARC file on the disk labeled
+OOP/DEMOS/BGI/DOC. (If you have a hard disk and run the INSTALL
+program to install Turbo Pascal on your system, it will place the
+OOP examples in C:\TP by default.)
+
+
+TABLE OF CONTENTS
+-----------------
+
+ 1.  OBJECTS.PAS - Basic object types unit
+
+ 2.  ODEMO.PAS - An example that uses streams and lists
+
+ 3.  FORMS.PAS - Implements a form entry and edit object
+
+ 4.  SLIDERS.PAS - Implements a slider field
+
+ 5.  FDEMO.PAS - A simple forms editor example
+
+ 6.  CARDS.PAS - Implements a card file object
+
+ 7.  CARDFILE.PAS - A simple card filer applciation
+
+ 8.  CARDGEN.PAS - Card filer forms generator
+
+ 9.  TCALC.PAS - See TCALC.DOC
+
+10.  Examples from the Object-Oriented Programming Guide
+
+     Four examples are included from the OOP Guide for your
+     convenience:
+
+       POINTS   PAS  - From P-20 of the OOP Guide
+       FIGURES  PAS  - From P-42 of the OOP Guide
+       FIGDEMO  PAS  - From P-47 of the OOP Guide
+       LISTDEMO PAS  - From P-57 of the OOP Guide
+
+    These examples are fully documented in Chapter 1 of the OOP
+    Guide.
+
+
+OBJECTS.PAS - BASIC OBJECT TYPES UNIT
+-------------------------------------
+
+The Objects unit implements two basic object types: a Stream and
+a List. The Stream type is the object-oriented counterpart of a
+Pascal file. Turbo Pascal 5.5 does not allow "file of object"
+types, but streams may be used to implement the same
+functionality, and much more as the example programs show. The
+List type implements a singly-linked list of objects, each of
+which must be derived from the Node type.
+
+
+The Base type
+-------------
+
+Base is an abstract object type, and serves only as an ultimate
+ancestor for other object types. Objects of type Base are never
+instantiated. Object types derived from Base are guaranteed to
+have a destructor called Done. In addition, the VMT field of
+descendants of Base will always be the first field in the
+descendant, which is a prerequisite of types registered with a
+stream.
+
+Unless overridden, the Done destructor in Base does nothing
+except to dispose the instance when called via the extended
+syntax of the Dispose standard procedure.
+
+
+The Stream type
+---------------
+
+Much like an untyped file, a stream implements a number of basic
+I/O capabilities, such as opening, closing, reading, writing, and
+seeking. What sets a stream apart from an untyped file is its
+ability to polymorphically read and write objects. This is best
+demonstrated through an example.
+
+Assume that you have three object types, Circle, Rectangle, and
+Triangle, each of which are derived from an ancestor type Shape.
+In order to read and write such objects to disk you would need a
+FILE OF Shape that allows reading and writing of objects of type
+Shape as well as descendants of Shape. For a number of reasons,
+ordinary Pascal FILE types cannot achieve this. First, objects of
+type Circle, Rectangle, and Triangle are most likely not of the
+same size, since each will add a varying number of fields to the
+basic Shape type. Thus, it would be impossible to determine the
+proper record size for a FILE OF Shape. Second, a FILE OF Shape
+would need to store additional type information for each object
+in the file so that when reading the file, the application can
+"know" the types of the objects it is reading.
+
+The Stream type provides the solution to this problem: By
+defining a Store and Load method in an object type, and by
+registering that type with a stream, the stream can perform
+polymorphic I/O through its Put and Get methods. The FORMS.PAS
+unit and the CARDFILE.PAS program provide good examples on how to
+use streams.
+
+The Stream type is the ancestor of all other streams. It defines
+the basic properties of a stream, but most of its methods are
+purely abstract and meant to be overridden in descendant types.
+
+
+FIELDS
+
+TypeCount       Number of types registered with the stream.
+
+TypeList        Pointer to array of VMT offsets of registered types.
+
+ProcList        Pointer to array of Store and Load method pointers.
+
+Status          Stream status. When Status is non-zero, an error
+                has occurred on the stream, and all subsequent
+                I/O is suspended. The Status field is the
+                equivalent of the IOResult standard function,
+                except that you have to manually clear Status to
+                re-enable I/O operations.
+
+
+CONSTRUCTORS AND DESTRUCTORS
+
+constructor Init;
+
+  Initializes the stream by allocating TypeList and ProcList, and
+  calling RegisterTypes to register the types known by the
+  stream.
+
+destructor Done; virtual;
+
+  Disposes TypeList and ProcList.
+
+
+BASIC I/O METHODS
+
+procedure Read(var Buf; Count: Word); virtual;
+
+  Reads Count bytes from the stream into Buf. In case of error,
+  Buf is filled with zeros. This method must be overridden.
+
+procedure Write(var Buf; Count: Word); virtual;
+
+  Writes Count bytes from Buf onto the stream. This method must
+  be overridden.
+
+procedure Flush; virtual;
+
+  Flushes the stream's I/O buffer, if any. This method does
+  nothing unless overridden.
+
+procedure Truncate; virtual;
+
+  Truncates the stream at the current position, i.e. makes the
+  current position the end of the stream. This method must be
+  overridden.
+
+function GetPos: Longint; virtual;
+
+  Returns the current position of the stream, or -1 in case of
+  error.
+
+procedure SetPos(Pos: Longint; Mode: Byte); virtual;
+
+  Sets the current position of the stream to a new position that
+  is Pos bytes from the stream location given by Mode. Valid Mode
+  values are given by the constants PosAbs, PosCur, and PosEnd,
+  which represent the stream's beginning, current position, and
+  end. This method must be overridden.
+
+function GetSize: Longint;
+
+  Returns the current size of a stream. Calls SetPos and GetPos
+  to find the resulting value. This method should not be
+  overridden.
+
+procedure Seek(Pos: Longint);
+
+  Seeks to the specified position. Corresponds to a call to
+  SetPos with a Mode value of PosAbs. This method should not be
+  overridden.
+
+
+TYPE REGISTRATION METHODS
+
+procedure RegisterTypes; virtual;
+
+  Registers all types that should be known to the stream. To
+  register types with a stream you must override this method and
+  call the Register method for each type. Within an overridden
+  RegisterTypes, always first call the inherited RegisterTypes to
+  register any types required by the ancestor. A type need only
+  be registered if instances of the type are read and written
+  using the Get and Put methods. Unless overridden, this method
+  does nothing.
+
+procedure Register(TypePtr, StorePtr, LoadPtr: Pointer);
+
+  Registers a type with the stream. This method must only be used
+  within a RegisterTypes method. The format of a method call is:
+
+    Register(TypeOf(AType), @AType.Store, @AType.Load);
+
+  where AType is an object type derived from the Base object type
+  (i.e. an object type whose ultimate ancestor is Base). AType
+  must define Store and a methods with the following headers:
+
+    procedure Store(var S: Stream);
+    constructor Load(var S: Stream);
+
+  The Store method must write a binary representation of the
+  object onto the stream S (using S.Write), and the Load
+  constructor must read such a binary representation back from
+  the stream S (using S.Read).
+
+
+POLYMORPHIC I/O METHODS
+
+procedure Put(P: BasePtr);
+
+  Writes the specified object to the stream. The type of the
+  object must have been registered with the stream (using an
+  overridden RegisterTypes method). Put writes a 16-bit object
+  type identifier number onto the stream and then calls the
+  object's Store method, which writes a binary copy of the
+  object. The 16-bit object type identifier corresponds to the
+  index of the object type in the TypeList and ProcList arrays.
+
+  If the specified object pointer is NIL, a 16-bit zero is
+  written to the stream. If the object type has not been
+  registered with the stream, the stream's Error method is called
+  with an error code of -1.
+
+function Get: BasePtr;
+
+  Reads an object from a stream and returns a pointer to it. Get
+  is the counterpart of Put, and can only read objects that were
+  written by Put. Get reads the 16-bit object type identifier
+  from the stream and then calls the object type's Load
+  constructor, which allocates an object on the heap and reads a
+  binary copy of it from the stream.
+
+  If the 16-bit object type identifier is zero, Get returns a
+  NIL. If the object type identifier is out of range, the
+  stream's error method is called with an error code of -2, and
+  Get returns a NIL.
+
+
+ERROR HANDLING METHODS
+
+procedure Error(Code: Integer); virtual;
+
+  This method is called whenever an error occurs on the stream.
+  Code contains the 16-bit error code, which for DOS file streams
+  is a DOS error code (see the Run-time Errors in Appendix D in
+  the Reference Guide). Unless overridden, the Error method just
+  stores Code in the stream's Status field.
+
+
+The DosStream type
+------------------
+
+The DosStream type implements a DOS file stream. Data written to
+a DosStream is written to a DOS file, and data read from a
+DosStream is read from a DOS file.
+
+
+FIELDS
+
+Handle          DOS file handle.
+
+
+CONSTRUCTORS AND DESTRUCTORS
+
+constructor Init(FileName: FNameStr; Mode: Word);
+
+  Calls Stream.Init and then opens the file given by FileName
+  using the access mode given by Mode. Valid Mode values are
+  defined by the constants SCreate, SOpenRead, SOpenWrite, and
+  SOpen. SCreate causes a new file to be created. SOpenRead,
+  SOpenWrite, and SOpen opens an existing file in read-only mode,
+  write-only mode, or read/write mode. The DOS file handle is
+  stored in the Handle field.
+
+destructor Done; virtual;
+
+  Closes the file and then calls Stream.Done.
+
+
+BASIC I/O METHODS
+
+procedure Read(var Buf; Count: Word); virtual;
+
+  Implements Read for a DOS file. Count bytes are read from the
+  file into Buf using DOS function 3FH. In case of error, Buf is
+  filled with zeros.
+
+procedure Write(var Buf; Count: Word); virtual;
+
+  Implements Write for a DOS file. Count bytes are written to the
+  file from Buf using DOS function 40H.
+
+procedure Truncate; virtual;
+
+  Implements Truncate for a DOS file using DOS function 40H with
+  a count of zero.
+
+function GetPos: Longint; virtual;
+
+  Implements GetPos for a DOS file using DOS function 42H.
+
+procedure SetPos(Pos: Longint; Mode: Byte); virtual;
+
+  Implements SetPos for a DOS file using DOS function 42H.
+
+procedure Open(var Name; Mode: Word);
+
+  Private method which creates or opens the file using DOS
+  function 3CH or 3DH. Called from DosStream.Init and should
+  never be called directly.
+
+procedure Close;
+
+  Private method which flushes the stream buffer (using the Flush
+  method) and closes the file. Called from DosStream.Done and
+  should never be called directly.
+
+
+The BufStream type
+------------------
+
+The BufStream type implements a buffered DOS stream. Input and
+output with a BufStream is buffered in blocks of a user specified
+size. When an application makes a large number of Read and Write
+method calls with a small transfer size, using a BufStream rather
+than a DosStream will substantially improve performance. For a
+typical stream, a buffer size of 1024 bytes is suggested.
+
+FIELDS
+
+Buffer          Pointer to an I/O buffer of BufSize bytes.
+
+BufSize         Size of I/O buffer.
+
+BufPtr          Index of current buffer position in the buffer.
+
+BufEnd          Index of current buffer end in the buffer. BufPtr
+                is equal to BufEnd, the buffer is empty. When
+                BufPtr is less than BufEnd, the buffer is in read
+                mode and the bytes between BufPtr and BufEnd have
+                been read ahead from the file. When BufPtr is
+                greater than BufEnd, the file is in write mode
+                and the bytes between BufEnd and BufPtr have been
+                written to the file but not yet flushed to disk.
+
+
+CONSTRUCTORS AND DESTRUCTORS
+
+constructor Init(FileName: FNameStr; Mode, Size: Word);
+
+  Allocates a buffer of Size bytes and then calls DosStream.Init.
+
+destructor Done; virtual;
+
+  Calls DosStream.Done and then disposes the stream buffer.
+
+
+BASIC I/O METHODS
+
+procedure Read(var Buf; Count: Word); virtual;
+
+  Implements Read for a buffered stream. The stream buffer is
+  used to buffer disk read operations in blocks of BufSize bytes.
+
+procedure Write(var Buf; Count: Word); virtual;
+
+  Implements Write for a buffered stream. The stream buffer is
+  used to buffer disk write operations in blocks of BufSize
+  bytes.
+
+procedure Flush; virtual;
+
+  Flushes the stream's buffer.
+
+function GetPos: Longint; virtual;
+
+
+The Node type
+-------------
+
+Node is an abstract type that serves as the ultimate ancestor of
+all objects that are kept on linked lists using the List type.
+The Next field points to the next node on the list. If the node
+is the last node on the list, the Next field points to the first
+node, thus making the list circular. The Prev method returns a
+pointer to the preceding node. If the node is the first node of
+the list, the Prev method returns a pointer to the last node.
+
+
+The List type
+-------------
+
+The List type implements the basic algorithms of a circular
+linked list. The objects kept on a List must be derived from the
+abstract Node type. Other abstract types, such as stacks and
+queues, can be built from the List type, since they are simply
+restricted versions of the functionality provided by List.
+
+The List type does not inherit and has no virtual methods. For
+that reason, no constructors or destructors are needed in the
+List object.
+
+
+FIELDS
+
+Last            Pointer to the last node on the list, or NIL if
+                the list is empty. The Next field of the last
+                node on a list, i.e. Last^.Next, points to the
+                first node on the list.
+
+
+LIST MANAGEMENT METHODS
+
+procedure Clear;
+
+  Clears the list by setting the Last field to NIL. Any nodes on
+  the list are not disposed.
+
+procedure Delete;
+
+  Disposes all nodes on the list using their Done destructor.
+
+procedure Append(N: NodePtr);
+
+  Appends a node. The new node becomes the first node on the
+  list.
+
+procedure Insert(N: NodePtr);
+
+  Inserts a node. The new node becomes the last node on the list.
+
+procedure Remove(N: NodePtr);
+
+  Removes a node. The node itself is not disposed.
+
+function First: NodePtr;
+
+  Returns a pointer to the first node on the list, or NIL if the
+  list is empty. The last node on the list can be directly
+  accessed through the Last field.
+
+function Next(N: NodePtr): NodePtr;
+
+  Returns a pointer to the node after N, or NIL if N is the last
+  node. This corresponds to N^.Next, except that the Next field
+  of the last node points to the first node in the list.
+
+function Prev(N: NodePtr): NodePtr;
+
+  Returns a pointer to the node before N, or NIL if N is the
+  first node. This corresponmds to N^.Prev, except that the Prev
+  method of the first node will return the last node in the list.
+
+function Empty: Boolean;
+
+  Returns True if the list is empty, else returns False.
+
+
+STREAM I/O ROUTINES
+
+procedure Store(var S: Stream);
+
+  Stores the list on a stream. The types of all nodes of the list
+  must have been registered with the stream. The list is stored
+  by applying S.Put to each node in the list, followed by an
+  S.Put(NIL).
+
+procedure Load(var S: Stream);
+
+  Loads the list from a stream. The types of all nodes of the
+  list to be loaded must have been registered with the stream.
+  The list is loaded by appending the result of S.Get until S.Get
+  returns NIL.
+
+
+ODEMO.PAS - AN EXAMPLE THAT USES STREAMS AND LISTS
+--------------------------------------------------
+
+The ODemo program demonstrates input and output of polymorphic
+objects using a stream. A list of IntNode and StrNode objects is
+created, written to a file, deleted, and finally reloaded from
+the file. Notice how the list is built using the List type from
+the Objects unit.
+
+
+FORMS.PAS - IMPLEMENTS A FORM ENTRY AND EDIT OBJECT
+---------------------------------------------------
+
+The Forms unit implements two basic object types: Field and Form.
+A Field represents a data entry field, and a Form represents a
+collection of Fields which add up to a complete data entry form.
+
+A number of field types are implemented by the Forms unit. Viewed
+as a whole, they form the following hierarchy:
+
+  Field                                  (Abstract field type)
+  ÀÄÄÄÄÄÄÄFText                          (Abstract text field)
+          ÃÄÄÄÄÄÄÄFStr                   (String field)
+          ÀÄÄÄÄÄÄÄFNum                   (Abstract numeric field)
+                  ÃÄÄÄÄÄÄÄFInt           (Integer field)
+                  ³       ÀÄÄÄÄÄÄÄFZip   (Zipcode field)
+                  ÀÄÄÄÄÄÄÄFReal          (Floating point field)
+
+The basic Field type defines the common properties of all fields.
+It is an abstract type, which exists only so that other field
+types can inherit from it. Instances of type Field are never
+actually created. Field is derived from Node (defined in the
+Objects unit), so that fields can be put on a linked list that
+makes up a data entry form. The data fields of type Field are:
+
+X           X coordinate in the form.
+Y           Y coordinate in the form.
+Size        Size of the data stored in the field.
+Title       Pointer to a title string.
+Value       Pointer to current value (Size bytes long).
+Extra       Marks location of fields defined in descendant types.
+
+The methods of a Field are:
+
+Init        Allocates and initializes a field.
+Load        Loads a field from a stream.
+Done        Cleans up and disposes a field.
+Clear       Sets a field to its default value.
+Edit        Edits a field and returns termination character.
+Show        Displays a field.
+Store       Stores a field on a stream.
+
+The FText type is an abstract type which serves as the ancestor
+of all text field types. It defines two "helper" methods, GetStr
+and PutStr, and implements code for the Edit and Show methods.
+GetStr converts a field's value to a string. PutStr converts a
+string and stores it as the field's value. PutStr returns True if
+the string represents a valid value; else it returns false and
+leaves the field's value unchanged.
+
+The FStr type implements a String field with a user defined
+maximum length.
+
+The FNum type is the abstract ancestor type of all numeric
+fields. It changes the Show method to right justify the value
+when it is displayed.
+
+The FInt type implements a Longint field with user defined upper
+and lower bounds.
+
+The FZip type implements a zipcode field, which essentially is a
+5-digit FInt field that gets left-padded with zeros when
+displayed.
+
+The FReal type implements a floating point value field with a
+user defined total width and number of decimals.
+
+The Form type defines a form, which primarily is a collection of
+fields kept on a list. The data fields of type Form are:
+
+X1          Left coordinate of Form window.
+Y1          Top coordinate of Form window.
+X2          Right coordinate of Form window.
+Y2          Bottom coordinate of Form window.
+Size        Total size of data in the form. This is the sum of
+            the Size fields of each field on the Fields list.
+Fields      List of Field objects.
+
+The methods of a Form are:
+
+Init        Allocates and initializes a form.
+Load        Loads a form from a stream.
+Done        Cleans up and disposes a form.
+Edit        Edits a form and returns termination character.
+Show        Displays a form, optionally first erasing the window.
+Add         Adds a field to a form.
+Clear       Sets all fields to their default values.
+Get         Copies a form into a variable.
+Put         Copies a variable into a form.
+Store       Stores a form on a stream.
+
+The fields in a form a kept on a linked list, which is managed by
+the List type in the Objects unit. Notice how the Edit, Show,
+Clear, Get, and Put methods use typecasts to promote the nodes of
+the list from type Node to type Field (a descendant of Node). The
+Form object "knows" that the entries on the field list are always
+of type Field, and can therefore safely promote them.
+
+The Get and Put methods are used to copy data into and out of a
+form. A variable specified as a parameter to Get or Put must be
+record with fields that correspond in order, type, and size to
+the fields of the form.
+
+The FStream type implements a buffered stream that knows the
+FStr, FInt, FZip, and FReal types. Notice how only the
+RegisterTypes method is overridden, and how it first calls the
+inherited RegisterTypes before registering any new types.
+
+
+SLIDERS.PAS - IMPLEMENTS A SLIDER FIELD
+---------------------------------------
+
+The Sliders unit implements a new Field type, called FSlider, for
+use with the Forms unit. Contrary to the text field types
+implemented by the Forms unit, a slider shows and edits itself as
+a scroll-bar like control with a knob that indicates the current
+value. The FSlider type is a direct descendant of the Field type.
+The current slider value, and the minimum, maximum, and delta
+values of the slider are stored as 16-bit integers.
+
+In addition to the FSlider type, the Sliders unit defines a new
+FStream type. It is a direct descendant of the FStream type in
+Forms (notice how the same name can be used in two different
+units). Sliders.FStream differs from Forms.FStream only in the
+RegisterTypes method, which adds registration of the FSlider
+type; this is required so that sliders can be stored on and
+loaded from streams along with other field types.
+
+
+FDEMO.PAS - A SIMPLE FORMS EDITOR EXAMPLE
+-----------------------------------------
+
+The FDemo program uses the Forms and Sliders unit to implement a
+simple forms editor program, which lets you edit a record using a
+form. Notice how the fields in a Person record correspond in
+order, type, and size to the fields in the form. The Form.Put and
+Form.Get methods require this one-to-one mapping in order to work
+correctly.
+
+
+CARDS.PAS - IMPLEMENTS A CARD FILE OBJECT
+-----------------------------------------
+
+The Cards unit implements a Rolodex-like card file object. The
+cards are kept on a doubly-linked list which can be traversed
+using the Next and Prev methods.
+
+The Insert and Delete methods allow insertion and deletion at the
+current location in the card list. The current location is a
+state variable maintained by the CardList object.
+
+
+CARDFILE.PAS - A SIMPLE CARD FILER APPLCIATION
+----------------------------------------------
+
+The CardFile program implements a simple card filer application.
+It takes a card file name as a command-line argument, loads that
+file, and allows you to scroll through and edit it. A card file
+contains a saved Form object followed by a saved CardList object.
+The CardFile application is not limited to a specific form
+layout--the form is loaded from the a disk file rather than being
+statically built in CARDFILE.PAS.
+
+A sample card file, CARDS.DTA, is provided on the disk. To run
+the card filer with that file, use the command line:
+
+  CARDFILE CARDS.DTA
+
+
+CARDGEN.PAS - CARD FILER FORMS GENERATOR
+----------------------------------------
+
+CARDGEN.PAS is a sample program that defines two forms and saves
+them in disk files that can be edited using CARDFILE.PAS. If you
+run CARDGEN.PAS, it will create new PARTS.DTA and PEOPLE.DTA
+files (and thus overwrite any existing files with those names, so
+beware).
+

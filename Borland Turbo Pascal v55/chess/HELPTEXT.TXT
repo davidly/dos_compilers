@@ -1,0 +1,361 @@
+KC CHESS version 1.00.00 - by Craig Bruce and Kevin Phillips, 06-Apr-90.
+
+If you don't know how to play chess, read a book!
+------------------------------------------------------------------------------
+MAIN MENU
+
+When the game starts, the board, conversation area, and main menu are
+displayed on the screen.  To select the options from the main menu, simply
+press the key indicated on the bottom of the screen.  The following options
+are available:
+
+H = Help
+    Displays this help information on the screen.  The PAGE_UP and PAGE_DOWN
+    keys allow you to view the separate pages of the help information.
+    RETURN or SPACE may be pressed instead of PAGE_DOWN.  When finished
+    viewing, press the ESCAPE key to return to the main menu.
+
+Q = Quit
+    Will exit the chess program and return to DOS.  If you do not wish to
+    lose the game currently in memory, make sure you save it (File System)
+    before you choose this option.
+
+RETURN = Play game
+    Places the game in PLAY MODE (see below).  The players make their moves
+    until the end of the game or until the user presses ESCAPE to return to
+    the main menu.  While in the main menu, the current game is merely
+    suspended, and using this option again will resume it from its
+    displayed position.
+
+T = Take back move
+    This option is used if you make a regrettable move and wish to un-do
+    it.  If the you are currently in PLAY MODE you must press ESCAPE to
+    return to the main menu to make this option accessible.  You may take
+    back as many moves as you wish, all the way back to the opening move,
+    since they are all stored in memory.  Each move taken back will be
+    displayed on the game board by the piece moving back to where it came
+    from and the conversation area information being updated as necessary.
+
+U = Un take back move
+    If you take back more moves than you meant to, then the moves can be
+    made again by this option.  All taken back moves are remembered until
+    a permanent move is made (in PLAY MODE).  Takeback and Untakeback may
+    be used to review the last few moves of the game if you wish.
+
+G = Goto move
+    This option will allow you to go directly to any move of the game.
+    The game board will clear and the computer will ask you for the move
+    number you wish to go to.  See the User Input notes below for how to
+    edit your input.  Entering a number that is larger than the last move
+    of the game will make the computer go to the last move of the game, and
+    entering a move number that is too small will go to the first move of the
+    game.  Then, the computer will ask you which color's turn within the
+    move to go to.  Enter B for Black or W for White.  The game board
+    corresponding to the selected move will then be displayed and you will
+    be returned to the main menu.
+
+W = Watch game
+    This option allows you to view the moves of the game without going
+    through them 'manually' with Takeback and Untakeback.  All of the
+    recorded moves will be displayed from the current position in the game
+    to the end of the game.  If you are currently at the end of the game,
+    the computer will go to the first move of the game and start showing the
+    moves from there.  You will return to the main menu when the end of the
+    game is reached, or you may exit watch mode by pressing the ESCAPE key
+    at any time.
+
+O = Options set
+    This option allows you to change some of the settings of the game.  The
+    game board will clear and you will be asked for the "Flash Count".  The
+    default value is two.  This gives the number of times that a piece
+    should be flashed on the screen to indicate that it is being moved.
+    Changing this value to zero will make it so the piece is not flashed
+    at all.  See the User Input section for information on how to input
+    or change the value.  Press RETURN to set the Flash Count.
+
+    Next you will be asked if you want "Sound".  Answer Y for Yes or N for
+    No.  The default is Yes.  The only sound in the game is a beep when the
+    computer is finished selecting its move in Play Mode or a buzz in some
+    places when you do something wrong.
+
+    Next you will be asked if you want to allow the "En Passent" priviledge
+    in the game.  The default value is Yes.  Although it is rarely used,
+    you may wish to set it to No if you don't know what it is and you don't
+    want the computer to do it to you.
+
+    Next you will be asked for the "Watch Delay" in milliseconds.  This is
+    the time that the computer will delay between showing moves in Watch
+    Mode.  The default value is 700 milliseconds (0.7 seconds).  The minimum
+    and maximum allowed values are 0 and 30000.  Do not enter any commas
+    in the number.  If the number entered is improper, the default value of
+    700 will be used.
+
+    Finally, you will be asked for the "Time Limit" for the game.  If either
+    player's elapsed time (shown in the player info blocks in the conversation
+    area) meets or exceeds the time limit, then that player loses and the
+    game is over.  The default value is 00:00:00 (in HH:MM:SS format), which
+    means that there is no time limit.  Changing this value will cause the
+    time limit to be enforced.  The value entered must be in the exact format
+    of HH:MM:SS or the default value will be used.  After entering this value,
+    the chess board will be displayed and the main menu will be re-entered.
+
+P = Player info
+    This option allows you to change the various attributes of each player.
+    The game board will clear and you will be asked for the white player's
+    Name.  Enter the name you wish to use and press RETURN.  You may use
+    BACKSPACE to eliminate any unwanted characters.
+
+    Next you will be asked for the white player's Elapsed Time.  Enter this
+    value in the format "HH:MM:SS" or the program will use the value 00:00:00.
+    In play mode, the move time will be added to this time.  The move Takeback
+    and Untakeback options do not update or un-update the elapsed time (you
+    can't roll back the hands of time), so if you wish to take back moves and
+    resume play from some lower elapsed time, you must enter the new elapsed
+    time value here.
+
+    Next you will be asked for the player type of the white player.  You may
+    enter H for Human or M for Machine.  Use BACKSPACE to delete the current
+    setting.  If you enter an invalid character, the default of Machine will
+    be used.  You may enter either Human or Machine for either player (white
+    or black), allowing four combinations.  Human vs. Human would be like
+    playing on a real board and Machine vs. Machine would be a demonstration
+    of the program.
+
+    Next you will be asked for the "Lookahead".  For a Machine player this
+    gives the number of half-moves (plys) to look ahead of the current
+    board position in figuring out the best move to make, and for a Human
+    player this gives the number of plys to look ahead if the human asks for
+    a hint.  To change the setting, press BACKSPACE to delete the current
+    value and enter the new value.  Zero to three ply lookaheads will not
+    require much time, but four and higher lookaheads can require a
+    considerable lookahead time.  The following table gives the ranges of the
+    move consideration times with Position Evaluation (below) on and off for
+    a 10 MHz PS/2 Model 30/286, in the format MM:SS.  The true move time will
+    be different on different computers and will vary with the complexity of
+    the board configuration.
+
+                 POSITION EVALUATION OFF        POSITION EVALUATION ON
+         PLYS     Low    Average    High        Low    Average    High
+           0      0:00     0:00     0:00        0:00     0:00     0:01
+           1      0:00     0:00     0:01        0:00     0:01     0:02
+           2      0:00     0:01     0:01        0:01     0:03     0:05
+           3      0:01     0:07     0:13        0:05     0:15     0:45
+           4      0:06     0:45     2:55        0:19     1:20     4:25
+           5        around  8 minutes
+           6        around 20 minutes
+
+    Next you will be asked if "Position Evaluation" should be used in the
+    consideration of moves when the computer is looking for the best move.
+    This consideration is used to break 'ties' for best material score by
+    examining the formation of pieces, etc. and following a number of special
+    rules.  (Please note that the rules followed and the positional score
+    generated are not very sound or scientific, and were designed by a definite
+    chess non-expert).  The drawback to enabling option is that it may take
+    significantly more time for the computer to select a move (for technical
+    reasons).  The default is to enable position evaluation, and this is
+    reflected in the conversation area by showing a "+" on the end of the
+    Machine Skill Level.
+
+    Then, all of these same questions will be asked for the black player, and
+    after that, you will return to the main menu.
+
+N = New game
+    This option will set the pieces on the board to the startup formation of a
+    new game, update the move number and player status settings appropriately,
+    and will enter Play Move as if you had pressed RETURN.
+
+S = Setup board
+    Allows you to set up the pieces on the board how you wish.  See the SETUP
+    MODE section below for more information.
+
+F = File system
+    Causes you to enter the file system.  See the FILE SYSTEM section below.
+
+
+
+-------------------------------------------------------------------------------
+PLAY MODE
+
+Accepts moves from the players, makes them, and continues until the game is
+finished or the user presses ESCAPE to return to the main menu.  The color and
+name of the player whose move it is are displayed at the bottom of the screen
+and the elapsed time of the player to move will tick away.
+
+Human Player:
+
+If the player to move is Human, then the cursor (green) will blink on the
+game board and the computer will wait for the you to move the cursor, pick up
+the piece that you want to move, and put it where you want to move it.  To
+move the cursor, use the cursor keys.  The HOME, END, PAGE_UP, and PAGE_DOWN
+keys are also active in moving the cursor.  The will 'wrap-around' to the other
+side of the board if you move it 'off' an edge.  Move the cursor on top of the
+piece you wish to move and then press RETURN or SPACE to pick it up.  The
+square will be displayed in the lower section of the conversation area.
+
+Then move the cursor to the position where you wish to move the piece and press
+RETURN or SPACE.  The full code for the move will be displayed in the
+conversation area, and the computer will check if the move is valid.  If it is
+not, the computer will buzz and display "Invalid Move", and you will be put
+back to the pick-up phase of selecting the move.  If it is not obvious why the
+move you attempted is invalid, see if moving the piece would result in you
+being in check.  (Please note that it is illegal to castle while in check and
+it is illegal to castle "through" check).  If you pick up a piece that you
+decide you really do not want to move, press BACKSPACE to put it back down.
+
+In the event that the move you made was a pawn promotion, after displaying
+the move, the computer will ask you which piece you wish to promote the pawn
+to.  You may press Q = Queen, R = Rook, B = Bishop, or N = kNight.  The piece
+will then be promoted.
+
+The following keys may also be used when you are entering your move:
+
+H = ask for Hint
+    Will ask the computer to suggest a move for you to make.  This move will be
+    generated using the skill level and position evaluation setting for the
+    human player.  The  computer will display "Thinking" and will show the
+    suggested move a short (or long) time later.  You may enter this suggestion
+    as above, or you may use your own choice of move.
+
+A = Attack/protect count
+    Will display the number of times the cursor square is attacked (threatened)
+    by enemy pieces and protected by friendly pieces.  This is provided to
+    let you make sure you are not failing to notice that a square is attacked
+    or protected.
+
+C = Check move list
+    Will display the list of all of your possible moves on the screen.  Press
+    any key after you are finished viewing the list to return to entering your
+    move.
+
+Machine Player:
+
+If the player to move is Machine, the computer will think about its move for
+a period of time and will finally make the move.  While it's thinking, it will
+display the 'best' move it has found so far and that move's Score, EnemyScore,
+and Positional Score.  The EnemyScore is the highest score that the computer
+thinks its enemy can achieve after the computer makes the move that it is
+currently showing as best.  For skill levels of three and above, the computer
+will also display a Scan countdown (the number of moves left to analyze) and
+will begin its analysis with a 'PreScan'.  The written report for this project
+goes into detail on exactly how the computer 'thinks'.
+
+If you get tired of waiting for the computer to think of its move, you may
+press the M key to force the computer to make the best move it has found so
+far.  This key (and the ESCAPE key) is checked only when the scan count is
+updated, so it may take a little time for the computer to react to your
+pressing the key.  BE PATIENT.  If the computer is taking too long to think,
+you may wish to use the Player Info option in the main menu to lower the
+lookahead for the Machine player.
+
+-------------------------------------------------------------------------------
+SETUP MODE
+
+This mode allows you to set the pieces on the board as you wish.  The only
+restrictions are that there must be exactly one king on the board for each
+player and they cannot both be in check, and a pawn cannot be placed on row one
+or row eight.  Move the cursor around the board with the cursor keys to a
+square that you wish to modify.  Then use one of the following keys to place
+the piece: K = King, Q = Queen, R = Rook, B = Bishop, N = kNight, P = Pawn, and
+SPACE = <no piece>.  If you type SPACE, whatever was under the cursor will
+disappear; otherwise, if you typed one of the other keys, the cursor will
+disappear and you will be asked for the color of the piece you wish to add.
+Type B for Black or W for White.
+
+If you are placing a king or a rook it its 'home' position, the computer will
+ask you if the piece has moved from its starting position since the start of
+the game.  This is necessary for the computer to know if castling is still
+possible.  This question will not be asked for other pieces.  Now, the new
+piece will be displayed on the board under the cursor.  You may move the cursor
+to the next place you wish to put the next piece.
+
+If you wish to clear the entire board to start from scratch, press the C key.
+If you wish to set pieces on the board to their startup positions, press the D
+key (Default).
+
+When you are finished modifying the board, press RETURN to accept the setup.
+You will then be asked for the current move number and then the player who is
+to move next.  Enter these values and use BACKSPACE to delete the current
+value.  After this, you will be returned to the main menu.  Note that all of
+the previous moves of the current game (if there are any) will be lost, and the
+setup you have input will be considered as the opening board configuration.
+
+If you entered setup mode accidentally or you are not satisfied with the setup
+you have created, you may press ESCAPE to exit back to the main menu and
+restore the board configuration that was present before you entered Setup mode.
+
+-------------------------------------------------------------------------------
+FILE SYSTEM
+
+The file system allows you to Load, Save, or Print out the current game, or
+obtain a listing of all of the chess games in the current directory.  The
+options are selected with the following keys:
+
+ESC = return to main menu
+
+L = Load game
+    The chess board will clear and you will be asked for the name of the game
+    (file) to load into memory.  Press RETURN to use the default filename or
+    use BACKSPACE and then type in another name.  Note that although all games
+    are saved with a ".CHS" extension, you do not have to type this.  After you
+    have entered the filename, the game will load and the final board position
+    will be displayed, or the message "I/O Error" will be displayed if
+    something went wrong.  Press a key for the latter case.
+
+S = Save current game
+    The chess board will clear and you will be asked for the name to save the
+    current game under.  Press RETURN to use the default filename or use
+    BACKSPACE and then type in another name.  Although chess games are saved
+    with a ".CHS" extension, you do not have to type this.  The game will then
+    be saved and you will return to the file menu.  If anything went wrong,
+    "I/O Error" will be displayed; press a key to continue.
+
+P = Print out current game
+    You will be asked for the filename to print the output for the game to.
+    The default of "PRN" (the DOS standard printer) will be shown.  You may
+    change this filename if you wish (to print to a disk file).  The listing
+    will then be printed, and "I/O Error" will be displayed if something went
+    wrong.  The listing will show all of the moves of the game and a
+    representation of the final board setup.
+
+D = show Directory listing of chess games
+    The screen will clear and the directory will be displayed.  Press RETURN
+    after viewing the listing to return to the File Menu.  Note that this
+    option calls the DOS program "COMMAND.COM" and it must be found either in
+    the current directory or in some directory in the PATH environmental
+    variable.  Also, the COMMAND.COM found MUST be for the same version of DOS
+    that the system was booted up under, or an error may be displayed or the
+    system may simply crash.  MAKE SURE that the chess program is installed to
+    use a good COMMAND.COM or do not use this option.
+
+-------------------------------------------------------------------------------
+USER INPUT MODE
+
+The design objective of the User Input subroutine was simplicity of
+implementation, and thus, it is fairly limited.  When you are put into User
+Input mode by Player Info, set Options, Filename, or other places in the
+program, the only editing key that you may use is BACKSPACE (like DOS input).
+This key will delete the last character of the input string and move the cursor
+back one position.  Usually when input mode is entered, a default string is
+provided.  If you wish to change the default or enter something entirely
+different, you will have to BACKSPACE out what you don't want before you type
+in what you do want.
+
+To type in new characters, simply type the key.  Only the letter keys, number
+keys, and a few punctuation keys are accepted.  The new character will be
+displayed and the cursor will move one space to the right.  If this does not
+happen, then you have reached the limit of the number of characters you are
+allowed to input.  You may still use BACKSPACE if you wish.
+
+When you are finished entering the string (or you have not made any changes to
+the default string and you wish to use it), press RETURN.  This will end the
+User Input Mode and the string you have entered will be given to the computer
+and processed.
+
+-------------------------------------------------------------------------------
+FINAL NOTE
+
+To the best of our knowledge, this program is completely free of bugs; however,
+of course, it is impossible to guarantee this.  If you find any errors in this
+program, we would like to know about them.  Thank you much.
+
+                  - Craig Bruce & Kevin Phillips, 06-Apr-90.

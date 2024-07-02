@@ -1,0 +1,285 @@
+                   WELCOME TO TURBO PASCAL 5.5
+                   ---------------------------
+
+This README file contains important, last minute information
+about Turbo Pascal 5.5. The HELPME!.DOC file also answers many
+common Technical Support questions.
+
+
+TABLE OF CONTENTS
+-----------------
+
+  1.  Turbo Debugger
+  2.  Important Notes & Additions
+  3.  Tour - New introduction to the IDE
+  4.  Corrections to the manual
+  5.  Turbo Pascal 5.5 and the Toolboxes
+  6.  Listing of Files on the Disks
+
+
+
+1. TURBO DEBUGGER
+-----------------
+  Turbo Debugger has been upgraded to version 1.5 to support
+  Turbo Pascal 5.5's object-oriented extensions. You can debug
+  both 5.0 and 5.5 programs with the new release of TD (1.5). If
+  you have TD 1.0, you can still debug any TP 5.5 programs that
+  do not use objects.
+
+  If you don't already have Turbo Debugger 1.5, call Customer
+  Service for information about upgrading: (408) 438-5300.
+
+
+2. IMPORTANT NOTES & ADDITIONS
+------------------------------
+
+o REBUILD TPUs. Remember to rebuild your old units with version
+  5.5 or you'll get an error 72 (Unit file format error) when you
+  try to use that unit. To rebuild an entire program from the
+  Integrated Development Environment, load the main program into
+  the editor and select the COMPILE/BUILD menu command. If you
+  are using the command-line compiler, type:
+
+    tpc /b ProgramName
+
+  You'll need to have all source code available in the logged
+  directory or in the OPTIONS\DIRECTORY\UNIT DIRECTORY path.
+
+o COMPILER ERROR MESSAGES. The following compiler error
+  messages have been added or modified:
+
+     99 File and procedure types are not allowed here
+    146 File access denied
+
+o RUN-TIME ERROR MESSAGE. The following new run-time error
+  message will occur if range-checking is on {$R+} and a call is
+  made to an object's virtual method when that object has not yet
+  been initialized via a constructor call (see Page 37 in the
+  Object-Oriented Programming Guide for more information):
+
+    210 Object not initialized
+
+
+3. TOUR - NEW INTRODUCTION TO THE IDE
+-------------------------------------
+
+  Version 5.5 now includes Tour, an online introduction to the
+  Integrated Development Environment (IDE). If you are new to
+  Turbo Pascal, spending 15 minutes with Tour will get you up to
+  speed in the IDE.
+
+
+4. CORRECTIONS TO THE OOP GUIDE
+-------------------------------
+
+o Page 3: The reference to using TINST at the bottom of the page
+  should indicate Page 308 of the User's Guide.
+
+o Page 94: To perform more complete error checking in the
+  code fragment at the top of the page, insert a conditional
+  statement immediately after the OverInitEMS call:
+
+    ...
+    OvrInitEMS;
+    if (OvrResult = OvrOK) then
+    begin
+      SaveOvrRead := OvrReadBuf;  { Save EMS default }
+      OvrReadBuf := MyOvrRead;    { Install ours }
+      UsingEMS := true;
+    end;
+
+o Page 114 - 118: Corrections or Additions to the Index
+
+    extensibility  46,78
+    Fail           107
+    with (reserved word)
+       statement   13,22,78,82
+         implicit  17
+
+
+5. TURBO PASCAL 5.5 AND THE TOOLBOXES
+-------------------------------------
+
+The source code from version 4.0 of all Turbo Pascal toolboxes
+(including the Turbo Pascal Tutor) is fully compatible with 5.5.
+
+
+6. LIST OF FILES ON THE DISKS
+-----------------------------
+
+  INSTALL/COMPILER/TOUR/ONLINE HELP
+  ---------------------------------
+  INSTALL  EXE  - Installs Turbo Pascal on your system
+  README   COM  - Program to display README file
+  TURBO    EXE  - Turbo Pascal Integrated Development Environment
+  TURBO    TPL  - Resident units for Turbo Pascal
+  TPC      EXE  - Command-line version of Turbo Pascal
+  UNPACK   COM  - Unpacks .ARC files
+  HELP     ARC  - Archived Turbo Pascal Help File (TURBO.HLP)
+  TOUR     ARC  - Archived Tour of the Integrated
+                  Development Environment
+
+    TOUR     EXE   - Tour program
+    TPTOUR1  CBT   - Tour data file
+    TPTOUR2  CBT   - Tour data file
+
+  THELP    COM  - Memory-resident help program so you can get
+                  Online Help even if you are not working in the
+                  Integrated Development Environment.
+
+  README        - This file!
+
+  OOP/DEMOS/BGI/DOC/UTILITIES/MISC
+  --------------------------------
+  OOPDEMOS ARC  - Packed file that contains object-oriented
+                  programming (OOP) examples
+
+    OOPDEMOS DOC  - Documentation overview of OOP examples
+
+    ODEMO    PAS  - Example for OBJECTS.PAS
+    OBJECTS  PAS  - OOP unit that defines some basic object types
+    BUFSTM   ASM  - Assembler code for OBJECTS.PAS
+    DOSSTM   ASM  - Assembler code for OBJECTS.PAS
+    STREAM   ASM  - Assembler code for OBJECTS.PAS
+    OBJECTS  INC  - Assembler code for OBJECTS.PAS
+    DOSSTM   OBJ  - .OBJ file for OBJECTS.PAS
+    BUFSTM   OBJ  - .OBJ file for OBJECTS.PAS
+    STREAM   OBJ  - .OBJ file for OBJECTS.PAS
+
+    FDEMO    PAS  - Example for FORMS.PAS, SLIDERS.PAS
+    FORMS    PAS  - OOP forms entry/edit unit
+    SLIDERS  PAS  - OOP unit that extends FORMS.PAS
+
+    CARDFILE PAS  - Database example for CARDS.PAS
+    CARDS    DTA  - Example data for CARDFILE.PAS
+    CARDS    PAS  - OOP unit that implements cards database
+    CARDGEN  PAS  - Generates example databases for CARDFILE.PAS
+
+    BREAKOUT PAS  - OOP game example
+    BOUNDS   PAS  - OOP unit for Breakout demo
+    BRICKS   PAS  - OOP unit for Breakout demo
+    WALLS    PAS  - OOP unit for Breakout demo
+    COUNT    PAS  - OOP unit for Breakout demo
+    SCREEN   PAS  - OOP unit for Breakout demo
+
+    POINTS   PAS  - From page 20 of the OOP Guide
+    FIGURES  PAS  - From page 42 of the OOP Guide
+    FIGDEMO  PAS  - From page 47 of the OOP Guide
+    LISTDEMO PAS  - From page 57 of the OOP Guide
+
+  TCALC    ARC  - Packed file with complete source code to
+                  new object-oriented Turbo Calc example program
+
+    TCALC    PAS  - Turbo Calc example program
+    TCALC    DOC  - Documentation for TCALC demo
+    TCCELL   PAS  - OOP unit for TCALC demo
+    TCCELLSP PAS  - OOP unit for TCALC demo
+    TCHASH   PAS  - OOP unit for TCALC demo
+    TCINPUT  PAS  - OOP unit for TCALC demo
+    TCLSTR   PAS  - OOP unit for TCALC demo
+    TCMENU   PAS  - OOP unit for TCALC demo
+    TCPARSER PAS  - OOP unit for TCALC demo
+    TCRUN    PAS  - OOP unit for TCALC demo
+    TCSCREEN PAS  - OOP unit for TCALC demo
+    TCSHEET  PAS  - OOP unit for TCALC demo
+    TCUTIL   PAS  - OOP unit for TCALC demo
+    TCCOMPAR ASM  - Assembler code for TCALC demo
+    TCMVSMEM ASM  - Assembler code for TCALC demo
+    TCCOMPAR OBJ  - .OBJ file for TCALC demo
+    TCMVSMEM OBJ  - .OBJ file for TCALC demo
+
+  DEMOS    ARC  - Packed file that contains example (non-object
+                  oriented) programs
+
+    WINDEMO  PAS  - WIN.PAS demo
+    WIN      PAS  - Simple windowing extensions to Crt unit
+    WIN      ASM  - Assembler code for WIN.PAS
+    WIN      OBJ  - .OBJ file for WIN.PAS
+
+    EXECDEMO PAS  - Executes a child program (DOS unit)
+    DIRDEMO  PAS  - Displays directory, uses procedural types
+    CRTDEMO  PAS  - Crt unit demo
+    OVRDEMO  PAS  - Overlay unit demo
+    OVRDEMO1 PAS  - Example unit for OVRDEMO.PAS
+    OVRDEMO2 PAS  - Example unit for OVRDEMO.PAS
+    CIRCULAR PAS  - Demos the USES clause in implementation section
+    DISPLAY  PAS  - Example unit for CIRCULAR.PAS
+    ERROR    PAS  - Example unit for CIRCULAR.PAS
+    QSORT    PAS  - QuickSort example
+    LISTER   PAS  - Printer unit demo
+    HILB     PAS  - Floating-point demo
+    FIB8087  PAS  - Recursive example that uses the 8087 math
+                    coprocessor and avoids 8087 stack overflow
+    PROCVAR  PAS  - Simple procedural types demo
+    EMS      PAS  - Example program that shows how to use expanded
+                    memory from your programs
+    CPASDEMO PAS  - Example program that shows how to link TURBO C .OBJ
+                    files into Turbo Pascal programs
+    CPASDEMO C    - C program for use with CPASDEMO.PAS
+    CTOPAS   TC   - Turbo C configuration file to use with TC.EXE
+                    for producing .OBJ files that can be linked with
+                    Turbo Pascal (see CPASDEMO.PAS)
+    TURBOC   CFG  - Turbo C configuration file to use with TCC.EXE for
+                    producing .OBJ files that can be linked with Turbo
+                    Pascal (see CPASDEMO.PAS)
+
+  BGI      ARC  - Packed file that contains graphics documentation,
+                  drivers, fonts, and examples
+
+    GRAPH    TPU  - Borland Graphics Interface (BGI) Graph unit
+    ATT      BGI  - Graphics device driver for AT&T 6300
+    CGA      BGI  - Graphics device driver for CGA and MCGA
+    EGAVGA   BGI  - Graphics device driver for EGA and VGA
+    HERC     BGI  - Graphics device driver for Hercules mono
+    PC3270   BGI  - Graphics device driver for 3270 PC
+    IBM8514  BGI  - Graphics device driver for IBM 8514
+    GOTH     CHR  - Gothic font character set
+    LITT     CHR  - Small font character set
+    SANS     CHR  - Sans serif font character set
+    TRIP     CHR  - Triplex font character set
+    BGIDEMO  PAS  - Graph unit example
+    ARTY     PAS  - Graph unit example
+    BGILINK  PAS  - Graph unit example that shows how to link
+                    font and driver files into an .EXE file
+    DRIVERS  PAS  - Example unit for use with BGILINK.PAS
+    FONTS    PAS  - Example unit for use with BGILINK.PAS
+    BGILINK  MAK  - Make file for use with BGILINK.PAS
+
+  DOC      ARC  - Interface section listings for system units
+
+    THELP    DOC  - Documentation for memory-resident help utility
+    SYSTEM   DOC  - Interface section listing for the System unit
+    DOS      DOC  - Interface section listing for the Dos unit
+    CRT      DOC  - Interface section listing for the Crt unit
+    PRINTER  DOC  - Interface section listing for the Printer unit
+    OVERLAY  DOC  - Interface section listing for the Overlay unit
+    GRAPH    DOC  - Interface section listing for the Graph unit
+    TURBO3   DOC  - Interface section listing for the Turbo3 unit
+    GRAPH3   DOC  - Interface section listing for the Graph3 unit
+    HELPME!  DOC  - Text file with the answers to many common
+                    questions. If you have a technical question
+                    about Turbo Pascal, chances are good that the
+                    question and answer are in HELPME!.DOC.
+
+
+  TINSTXFR EXE  - Transfers 4.0 and 5.0 IDE customizations to 5.5
+  UTILS    ARC  - Packed file that contains a number of useful
+                  utilities
+
+    TINST    EXE  - Customization program for TURBO.EXE
+    MAKE     EXE  - Manages projects
+    GREP     COM  - Searches text files for strings
+    TOUCH    COM  - Changes a file's timestamp to force re-compilation
+    BINOBJ   EXE  - Converts a binary data file to an .OBJ file
+    TPUMOVER EXE  - Unit mover utility
+    TPCONFIG EXE  - Converts .TP files to .CFG
+
+  TURBO3   ARC  - Turbo 3.0 compatibility files
+
+    UPGRADE  EXE  - Program that converts 3.0 programs to 5.5
+    UPGRADE  DTA  - Data file for UPGRADE.EXE
+    TURBO3   TPU  - TURBO3 compatibility unit
+    GRAPH3   TPU  - GRAPH3 compatibility unit (turtle graphics)
+    BCD      PAS  - Unit to convert Turbo Pascal 3.0 BCD reals to
+                    Turbo Pascal 5.5 floating point numbers
+
