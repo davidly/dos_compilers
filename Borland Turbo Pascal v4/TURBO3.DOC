@@ -1,0 +1,35 @@
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 4.0                        }
+{       TURBO3 Unit Interface Documentation             }
+{       (Turbo Pascal 3.0 Compatibility Unit)           }
+{                                                       }
+{       Copyright (c) 1987 Borland International, Inc.  }
+{                                                       }
+{*******************************************************}
+
+{$D-,I-,S-}
+
+unit Turbo3;
+
+interface
+
+uses Crt;
+
+var
+  Kbd: Text;
+  CBreak: Boolean absolute CheckBreak;
+
+procedure AssignKbd(var F: Text);
+function MemAvail: Integer;
+function MaxAvail: Integer;
+function LongFileSize(var F): Real;
+function LongFilePos(var F): Real;
+procedure LongSeek(var F; Pos: Real);
+procedure NormVideo;
+procedure HighVideo;
+procedure LowVideo;
+function IOresult: Integer;
+
+implementation
+

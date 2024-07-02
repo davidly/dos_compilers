@@ -1,0 +1,20 @@
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 4.0                        }
+{       PRINTER Unit Interface Documentation            }
+{                                                       }
+{       Copyright (c) 1987 Borland International, Inc.  }
+{                                                       }
+{*******************************************************}
+
+{$D-,I-,S-}
+
+unit Printer;
+
+interface
+
+var
+  Lst: Text;
+
+implementation
+

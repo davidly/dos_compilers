@@ -1,0 +1,38 @@
+{*******************************************************}
+{                                                       }
+{     Turbo Pascal Version 4.0                          }
+{     SYSTEM Unit Interface Documentation               }
+{     (Only the variables are listed. For a complete    }
+{      reference to System functions and procedures,    }
+{      refer to the Owner's Handbook)                   }
+{                                                       }
+{     Copyright (c) 1987 by Borland International, Inc. }
+{                                                       }
+{*******************************************************}
+
+unit System;
+
+interface
+
+var
+  Input: Text;          { Input standard file }
+  Output: Text;         { Output standatd file }
+  PrefixSeg: Word;      { Program segment prefix }
+  HeapOrg: Pointer;     { Heap origin }
+  HeapPtr: Pointer;     { Heap pointer }
+  FreePtr: Pointer;     { Free list pointer }
+  FreeMin: Word;        { Minimum free list size }
+  HeapError: Pointer;   { Heap error function }
+  ExitProc: Pointer;    { Exit procedure }
+  ExitCode: Integer;    { Exit code }
+  ErrorAddr: Pointer;   { Runtime error address }
+  RandSeed: Longint;    { Random seed }
+  SaveInt00: Pointer;   { Saved interrupt $00 }
+  SaveInt02: Pointer;   { Saved interrupt $02 }
+  SaveInt23: Pointer;   { Saved interrupt $23 }
+  SaveInt24: Pointer;   { Saved interrupt $24 }
+  SaveInt75: Pointer;   { Saved interrupt $75 }
+  FileMode: Byte;       { File open mode }
+
+implementation
+
