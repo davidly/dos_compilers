@@ -1,0 +1,2878 @@
+     0
+ 14904
+ 15290
+ 16146
+ 16994
+ 17374
+ 17955
+ 18121
+ 18467
+ 18762
+ 19136
+ 19480
+ 19828
+ 20075
+ 21054
+ 21477
+ 21898
+ 22234
+ 22610
+ 22997
+ 24988
+ 26823
+ 26990
+ 27260
+ 27969
+ 28872
+ 29665
+ 30634
+ 31776
+ 32136
+ 32349
+ 33173
+ 33456
+ 34369
+ 34722
+ 35016
+ 35314
+ 35618
+ 35924
+ 36434
+ 36725
+ 37262
+ 37429
+ 37596
+ 37763
+ 37930
+ 38249
+ 38568
+ 38955
+ 39223
+ 39639
+ 40017
+ 40395
+ 40773
+ 41370
+ 42038
+ 42478
+ 43062
+ 43403
+ 44116
+ 44762
+ 45140
+ 45420
+ 45697
+  2048
+ 46577
+ 46955
+ 47478
+ 47856
+ 48244
+ 48597
+ 48948
+ 49115
+ 49443
+ 49739
+ 50104
+ 50471
+ 51144
+ 51485
+ 51741
+ 52119
+ 52497
+ 53129
+ 53494
+ 53974
+ 54299
+ 54999
+ 55652
+ 56206
+ 56584
+ 56751
+ 56918
+ 57085
+ 57252
+ 57630
+ 58010
+ 58390
+ 58770
+ 59150
+ 59530
+ 59910
+ 60291
+ 60752
+ 61510
+ 62069
+ 62462
+ 62810
+ 63146
+ 63486
+ 63832
+ 64136
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+ 82432
+ 83351
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+  8277
+  8898
+  9618
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+  2772
+  3236
+  4270
+  5137
+  5734
+  6116
+  6534
+  6990
+  7396
+ 10415
+ 11087
+ 11812
+ 12296
+ 81399
+ 12681
+ 13229
+ 13666
+ 13921
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+ 64522
+ 65711
+ 66859
+ 67574
+ 68527
+ 69524
+ 71666
+ 72704
+ 73675
+ 74743
+ 77036
+ 77931
+ 78823
+ 79816
+ 23921
+ 80540
+     0
+ 25909
+ 70788
+ 75445
+ 76428
+     0
+     0
+     0
+     0
+     0
+\64
+"Main Help Menu" 1 5 4
+"Selecting Files" 201
+"Managing Files" 204
+"Defining Windows" 218
+"Selecting Windows" 205
+"Positioning Windows" 206
+"Searching and Replacing" 207
+"Positioning in a File" 208
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"Altering a Selection" 212
+"Undo/Redo Edits" 213
+"POINT Options Menu" 63
+"Setting POINT Colors" 214
+"Other Commands" 215
+"Exit Help" 0
+\
+	\s The POINT Help System \r
+
+    Choose a topic by using the  and  cursor keys with Enter, or
+    by clicking the left mouse button on the desired topic.
+
+
+					 (To exit help, either choose the
+					  Exit Help option, press Escape,
+					  or click outside the menu with
+					  the mouse)
+
+\201
+"Additional Information" 1 15 4
+"The File Selection Screen" 202
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Open File Full" 104
+"Open File Window" 7
+"Load File" 33
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Selecting Files \r
+
+    POINT has several commands for selecting and opening files.
+
+    These commands are found in the \bFiles\r menu.  Choose a topic or 
+    command below for more information.
+
+\202
+"Additional Information" 1 16 4
+"Next Screen" 203
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Selecting Files" 201
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s The File Selection Screen (Screen 1 of 2) \r
+
+    The \bOpen File\r and \bLoad File\r commands prompt for a file to load into
+    a window.  When POINT wants a file it displays the \bFile Selection
+    Screen\r.  This screen displays a list of all the files that match the
+    \bfilePattern\r option string.  The default filePattern is "*.*", so 
+    all the files in the current directory are shown.
+
+    The \btop line\r of the File Selection Screen shows you the current directory,
+    the current file pattern, and the number of files matching that pattern.
+ 
+    The \bsecond line\r is a line of commands that can be executed by pressing
+    the \bAlt\r key with the highlighted letter, or by clicking on the command
+    with the mouse.  (The next screen describes each command).
+
+\203
+"Additional Information" 1 17 4
+"Previous screen" 202
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Selecting Files" 201
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s The File Selection Screen (Screen 2 of 2) \r
+
+    File Selection Screen Commands:
+
+      \bCancel load:\r  this cancels the Open File or Load File commands.
+      \bNext page and Previous page:\r  these commands will page through the
+		list of file names if they do not all fit on one screen.
+      \bNew Pattern:\r  this allow you to specify a new file pattern.
+      \bChange Drive:\r this allows you to change the default drive.
+
+    You may choose a file by typing its name, selecting the name with the
+    arrow keys, or by clicking on the name with the mouse.  If you select a
+    directory name, POINT will change to that directory.
+
+\204
+"Additional Information" 1 14 4
+"Close File" 17
+"Close File & Save" 72
+"Save File" 54
+"Save All Files" 47
+"Save As ..." 18
+"Print File" 109
+"Quit & Ask" 5
+"Quit & Save All" 48
+"Quit & Discard" 49
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"The File Selection Screen" 202
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Managing Files \r
+
+    POINT has several commands for managing files (saving, printing, and
+    so on).
+
+    These commands are found in the \bFiles\r menu.  Choose a topic or command
+    below for more information.
+
+\205
+"Additional Information" 1 17 4
+"List Windows" 53
+"Next Window" 28
+"Top Second Window" 88
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Selecting Windows \r
+
+    POINT has several commands for selecting windows.
+
+    These commands are found in the \bWindows\r menu.  Choose a command below 
+    for more information.
+
+\206
+"Additional Information" 1 14 4
+"Zoom Window" 11
+"Hide Window" 38
+"Resize Window" 13
+"Move Window" 101
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Positioning Windows \r
+
+    POINT has several commands for positioning and manipulating windows.  
+
+    These commands are found in the \bWindows\r menu.  Choose a command below
+    for more information.
+
+\207
+"Additional Information" 1 15 4
+"Define Search String" 19
+"Search Forward" 27
+"Search Backward" 66
+"Search & Replace" 20
+"Find Matching Bracket" 83
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Searching and Replacing \r
+
+    POINT has several commands for locating and replacing text.
+
+    These commands are found in the \bLocate\r menu.  Choose a command below
+    for more information.
+
+\208
+"Additional Information" 1 17 4
+"Locate Line Number" 84
+"Locate Selection" 58
+"Locate Last Position" 56
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Positioning in a File \r
+
+    POINT has several commands for positioning within a file.
+
+    These commands are found in the \bLocate\r menu.  Choose a command below
+    for more information.
+
+\209
+"Additional Information" 1 17 4
+"Next Screen" 180
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Deleting, Moving, and Copying" 210
+"Altering a Selection" 212
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Defining a Selection (Screen 1 of 4) \r
+
+  \bSelecting Text with the Keyboard\r
+
+    To select text in a window from the keyboard, use the cursor keys and 
+    the \bBegin Selection\r and \bEnd Selection\r commands from the \bSelect\r menu.
+    For quick access, you may use the \bF5\r key to begin the selection, and
+    the \bF6\r key to end the selection.  Begin Selection (or F5) sets an
+    anchor point from which you can use the cursor direction keys to extend
+    the selection.
+
+    To end selection mode, execute End Selection, or press F6.
+
+    To cancel keyboard selection mode, you may press Escape.
+
+\180
+"Additional Information" 1 17 4
+"Next Screen" 181
+"Previous Screen" 209
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Deleting, Moving, and Copying" 210
+"Altering a Selection" 212
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Defining a Selection (Screen 2 of 4) \r
+
+  \bSelecting Text with the Mouse\r
+
+    Click method:
+	1. Click the left mouse button at the beginning of the desired 
+	     selection.
+	2. Move to the end of the desired selection. (You can scroll 
+	     or use any other window moving commands to do this.)
+	3. Click the right mouse button.
+
+\181
+"Additional Information" 1 17 4
+"Next Screen" 182
+"Previous Screen" 180
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Deleting, Moving, and Copying" 210
+"Altering a Selection" 212
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Defining a Selection (Screen 3 of 4) \r
+
+  \bSelecting Text with the Mouse\r (continued)
+
+    Hold down button method:
+	1. Press (and hold down) the left mouse button at the beginning
+	     of the desired selection.
+	2. Move the mouse cursor to the end of the desired selection while 
+	     holding down the left mouse button.  The selection will follow 
+	     the mouse.
+	3. Release the button when the selection is what you want.
+
+\182
+"Additional Information" 1 17 4
+"Defining a Selection" 209
+"Previous Screen" 181
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Deleting, Moving, and Copying" 210
+"Altering a Selection" 212
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Defining a Selection (Screen 4 of 4) \r
+
+  \bSelecting Text with the Mouse\r (continued)
+
+    Extending a selection:
+	1. Make an initial selection by either of the above methods
+	2. Move the mouse cursor to the place you want the selection to end.
+	3. Click the right button (or hold it down and move the mouse).
+
+    The left mouse button starts selections.  The right mouse button extends
+    (or contracts) selections.  Either button can be held down and the
+    selection will follow the mouse.
+
+\210
+"Additional Information" 1 9 4
+"Copy to Scrap" 57
+"Move to Scrap" 4
+"Copy from Scrap" 55
+"Exchange with Scrap" 62
+"Delete (no Scrap)" 61
+"Duplicate Mode" 2
+"Extract Mode" 3
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Information on Copying Text" 241
+"Information on Moving Text" 240
+"What is the Scrap?" 211
+"Defining a Selection" 209
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Deleting, Moving, and Copying \r
+
+    POINT provides several commands for deleting, moving, and copying text.
+
+    These commands may be found in the \bSelect\r menu.  Choose a command or 
+    topic below for more information.
+
+\211
+"Additional Information" 1 17 4
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"Altering a Selection" 212
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s What is the Scrap? \r
+
+    The \bScrap Buffer\r is an area that POINT reserves in memory to
+    temporarily hold characters, words, sentences and other blocks of
+    text that you delete from the file.  They stay there until they are
+    displaced by another block of deleted text.
+
+    While text is in the scrap, it can be copied anywhere else in your
+    POINT session by selecting an insertion point and executing the
+    \bCopy from Scrap\r command (or by pressing the \bIns\r key).
+
+\212
+"Additional Information" 1 16 4
+"Justify Selection" 85
+"Change Case" 81
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Altering a Selection \r
+
+    POINT provides several commands for modifying a selection.
+
+    These commands are found in the \bSelect\r menu.  Choose a command
+    or topic below for more information.
+
+\213
+"Additional Information" 1 18 4
+"Undo Last Edit" 25
+"Undo Multiple" 40
+"Redo Last Edit" 24
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Undo/Redo Edits \r
+
+    POINT has several commands for undoing and redoing edits.
+
+    These commands are found in the \bUndo\r menu.  Choose a command below
+    for more information.
+
+\215
+"Additional Information" 1 10 4
+"Toggle Insert/Overtype" 59
+"Toggle Read-Only Status" 86
+"Toggle 43/25 Lines" 68
+"Inserting any ASCII character" 23
+"Redraw Screen" 10
+"Execute Selection" 30
+"Execute Command Shell" 32
+"Keyboard Macros" 216
+"About POINT" 110
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Other Commands \r
+
+    POINT has several other miscellaneous commands.
+
+    These are found in the \bOther\r menu.  Choose a command or topic below 
+    for more information.
+
+\216
+"Additional Information" 1 18 4
+"Begin/End Recording Keys" 76
+"Play Back Recorded Keys" 77
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Keyboard Macros \r
+
+    POINT has a simple keyboard macro facility for recording a sequence
+    of keystrokes and playing them back.
+
+    These commands are found in the \bOther\r menu.  Choose a command below
+    for more information.
+
+\217
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Modula-2 Assist Help \r
+
+    The Modula-2 Assist system has a help facility available from within
+    the M2Assist menu.  Press \bAlt-M-H\r for M2Assist Help.
+
+\218
+"Additional Information" 1 18 4
+"Selecting Windows" 205
+"Positioning Windows" 206
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Defining Windows \r
+
+    \bSpecifying the Window Corners.\r  You will first be asked for the first
+    corner of the new window.  You indicate the corner by positioning the
+    blinking cursor with the cursor keys and pressing Enter, or by pressing
+    and holding the mouse button and at the starting corner.
+
+    Move the cursor to the other corner in the same manner.  Press Enter
+    (or release the mouse button, if using the mouse) to complete the window.  
+
+    \bThe Default Corner.\r  If you press Enter twice (or press and release 
+    the mouse button at the same place on the screen), the lower right corner
+    defaults to the lower right corner of the screen.
+
+    \bA Quick Full-Screen Window.\r  If you press the Spacebar, the window
+    will be opened full-screen.
+
+\1
+"Additional Help" 1 19 4
+"Inserting any ASCII character" 23
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Insert Character \r
+
+    The character typed is inserted into the text at the current selection
+    position.
+
+    You may insert any ASCII character into your file by using the \bInsert
+    ASCII Character\r command.
+
+\2
+"Additional Information" 1 16 4
+"Information on Copying Text" 241
+"Cancel Operation" 22
+"Defining a Selection" 209
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Duplicate Text \r
+
+    \bWhere it will copy to.\r  The first time this command is executed,
+    POINT will be placed in \bDuplicate Mode\r.  The current selection
+    position (before the first character of the selection) is saved.
+    Later, the selected text will be copied to this position.
+
+    \bWhere it will copy from.\r  The second time this command is executed,
+    the selection is copied to the position in the text that was saved
+    the first time you executed the command.
+
+    \bCancelling Duplicate mode.\r  You can cancel Duplicate Mode by 
+    pressing \bEsc\r or executing the \bCancel Operation\r command.
+
+\3
+"Additional Information" 1 16 4
+"Information on Moving Text" 240
+"Cancel Operation" 22
+"Defining a Selection" 209
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Extract Text \r
+
+    \bWhere it will move to.\r  The first time this command is executed,
+    POINT will be placed in \bExtract Mode\r.  The current selection
+    position (before the first character of the selection) is saved.
+    Later, the selected text will be moved to this position.
+
+    \bWhere it will move from.\r  The second time this command is executed,
+    the selection is moved to the position in the text that was saved
+    the first time you executed the command.
+
+    \bCancelling Extract mode.\r  You can cancel Extract Mode by 
+    pressing \bEsc\r or executing the \bCancel Operation\r command.
+
+\4
+"Related Information" 1 19 4
+"Deleting, Moving, and Copying" 210
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move To Scrap \r
+
+    The selected text is copied to the scrap buffer, and then deleted 
+    from the file.
+
+    The text may be reinserted by using the \bCopy from Scrap\r command (or
+    the \bIns\r key).
+
+\5
+"Related Information" 1 19 5
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Quit & Ask \r
+
+    This command will exit POINT after asking you about unsaved files.
+
+    You will be asked about each file that has been changed but not saved.
+    For each file you can choose to save it or discard the changes.  After
+    all the changed files are asked about, POINT exits.  Pressing the
+    \bEsc\r key in response to any of these "Save file?" prompts will cancel
+    the quit and return you to POINT.
+
+\6
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\7 104
+"Additional Information" 1 18 4
+"Defining Windows" 218
+"Selecting Files" 201
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Open File Window \r
+
+    This command opens a file into a window.
+
+    Choose a topic below for more information on defining windows and
+    selecting files.
+
+\8
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Beginning of File \r
+
+    The selection is moved to the beginning of the file.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\9
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s End of File \r
+
+    The selection and the window is moved to the end of the file so
+    that the end of file marker () is on the bottom line of the screen.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\10
+"Related Information" 1 19 4
+"Other Commands" 215
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Redraw Screen \r
+
+    The entire screen is redrawn.  This command is useful if the screen
+    gets overwritten somehow and you want to be sure what is really being
+    displayed by POINT.
+
+\11
+"Related Information" 1 19 4
+"Positioning Windows" 206
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Zoom Window \r
+
+    The window is enlarged so that it fills the entire screen.
+
+    If the window is already zoomed, this command unzooms it and it
+    returns to its original position.
+
+\12
+"Related Information" 1 18 4
+"Selecting Windows" 205
+"List Windows" 53
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Top Window \r
+
+    The window is made the top window on the screen.
+
+\13
+"Additional Information" 1 18 4
+"Positioning Windows" 206
+"Selecting Windows" 205
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Resize Window \r
+
+    \bSpecifying the Window Corners.\r  You will first be asked for the first
+    corner of the new window.  You indicate the corner by positioning the
+    blinking cursor with the cursor keys and pressing Enter, or by pressing
+    and holding the mouse button and at the starting corner.
+
+    Move the cursor to the other corner in the same manner.  Press Enter
+    (or release the mouse button, if using the mouse) to complete the window.  
+
+    \bThe Default Corner.\r  If you press Enter twice (or press and release 
+    the mouse button at the same place on the screen), the lower right corner
+    defaults to the lower right corner of the screen.
+
+    \bA Quick Full-Screen Window.\r  If you press the Spacebar, the window
+    will be opened full-screen.
+
+\14
+"Related Information" 1 19 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Page Up \r
+
+    The window is paged up towards the beginning of the file.
+
+    A window containing N lines will be scrolled N-2 lines.
+    This will leave a little of the previous screen for context.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\15
+"Related Information" 1 19 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Page Down \r
+
+    The window is paged down towards the end of the file.
+
+    A window containing N lines will be scrolled N-2 lines.
+    This will leave a little of the previous screen for context.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\16
+"Related Information" 1 19 4
+"Positioning in a File" 208
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Locate Line Number \r
+
+    You are prompted for a line number.  When you press Enter, the
+    window is scrolled so that this line number is the top line in
+    the window.
+
+\17
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Close File \r
+
+    The active window is removed from the screen and the file in the
+    window is closed.
+
+    If the file in the window has been changed, you are asked whether
+    to save the changes or discard them.
+
+\18
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Save As ... \r
+
+    You are prompted for a new file name and the file in the window is
+    written to that file name.
+
+    If a file path is not specified, the new file will be written in the 
+    same directory as the original.
+
+\19
+"Additional Information" 1 17 4
+"Next Screen" 244
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Search String Escape Conventions" 242
+"POINT Options Menu" 63
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Define Search String (Screen 1 of 2) \r
+
+    \bEnter a string.\r  This command first requests a string to search for
+    and then searches for it in the file.
+
+    \bThe default search string.\r  The last string you searched for is
+    automatically entered as the default search string.  You can accept it
+    with Enter, start modifying it with backspace, or cancel it with any
+    other character.
+
+    \bCase Sensitivity.\r  If the \bignoreCase\r option is 1, then the case of
+    letters is not considered when trying to match the string (this is the
+    default).  If ignoreCase is 0, the search is case sensitive.
+
+\244
+"Additional Information" 1 17 4
+"Previous Screen" 19
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"POINT Options Menu" 63
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Define Search String (Screen 2 of 2) \r
+
+    \bWhere the search starts.\r  The search starts at the selection if the
+    selection is in this file.  Otherwise the search starts at the beginning
+    of the file.
+
+    \bSearch direction.\r  The direction of the search is controlled by
+    the \bsearchMode\r option:
+	 searchMode=0 -- search forward to the end of the file
+	 searchMode=1 -- search backward to the beginning of the file
+	 searchMode=2 -- search circularly, first to the end of the file
+		and then from the beginning of the file to the selection
+         searchMode=3 -- search forward to the end of the file, then the
+		file in the next window is searched, then the next file
+					after that, and so on until the
+					string is found or the file in 
+					the bottom window is searched.
+
+\20
+"Return from Help" 1 17 4
+"Next Screen" 247
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Search String Escape Conventions" 242
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Search & Replace (Screen 1 of 2) \r
+
+    This command replaces one string with another.  Four prompts are
+    made to determine how to search and what to replace with.
+
+    \bEnter string to search for.\r  The string to search for is requested.
+	Strings matching this search string will be replaced.
+    \bEnter string to replace with.\r  This string is the string that will
+	replace the strings matching the search string.
+    \bGlobal or within selection replace.\r  This determines the range in
+	which the search and replace will occur.
+    \bVerify replacement.\r  This determines whether or not you are queried
+	before each replacement occurs.
+
+\247
+"Return from Help" 1 17 4
+"Previous Screen" 20
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Search String Escape Conventions" 242
+"POINT Options Menu" 63
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Search & Replace (Screen 2 of 2) \r
+
+    \bDefaults.\r  The defaults for the string prompts are automatically
+    entered as the last strings entered.  You can accept them with Enter,
+    start modifying it with backspace, or cancel it with any other character.
+
+    \bCase Sensitivity.\r  The search uses the \bignoreCase\r option but the
+    searchMode option is not used.
+
+    \bVerifying Replaces.\r  If you choose to verify each replace, POINT
+    will display the text with the candidate for replacement selected.  If 
+    you type 'y', 'Y', or Enter the string will be replaced, otherwise it
+    will not.
+
+\21
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\22
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Cancel Operation \r
+
+    Duplicate and extract modes are cancelled, and the pending command
+    is terminated.
+
+    If active, keyboard selection mode is cancelled as well.
+
+\23
+"Related Information" 1 19 4
+"Other Commands" 215
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Insert ASCII Character \r
+
+    This command allows you to enter any ASCII character into the file.
+
+    You specify the character by its numeric value.
+
+    You can specify the numeric value in decimal, octal, or hexadecimal:
+	 If the first two digits of the number are "0x" (or "0X") then
+		the rest of the number is taken to be in hexadecimal.
+	 If the first digit is "0" (and the second is not "x" or "X") then
+		the rest of the number is taken to be in octal.
+	 If the first digit is not "0", then the number is taken to be in
+		decimal.
+
+\24
+"Related Information" 1 19 4
+"Undo/Redo Edits" 213
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Redo Last Edit \r
+
+    The last editing action is repeated in this context.
+
+    The effect depends on the last editing action:
+	 copy -- the same text that was copied in the last edit is copied
+		to the current insertion point
+	 move -- the same text that was moved in the last edit is copied
+		to the current insertion point
+	 insert text -- the same text that was inserted (typed in) before
+		is inserted at the current insertion point
+	 delete and insert text -- if the previous two edits were a delete
+		and an insert (at the same point as the delete), then the redo
+		will delete the selection and insert the same text
+	 delete -- deletes are not considered by redo except in the previous
+		case where it followed an insert
+
+\25
+"Related Information" 1 18 4
+"Undo/Redo Edits" 213
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Undo Last Edit \r
+
+    The last edit is undone; that is, its effect is nullified.
+    Here is the effect of Undo Last Edit on the various edits:
+	 copy		     -- the text that was copied is deleted
+	 move		     -- the text that was moved is moved back
+	 delete	     -- the deleted text is reinserted
+	 insert	     -- the inserted text is deleted
+	 delete then insert -- the inserted text is deleted and the
+				deleted	text is reinserted
+
+    Undo Last Edit is considered an edit so a second undo will undo the
+    effect of this undo.  Thus undo can be used to switch back and forth 
+    between two versions of the text.
+
+\26
+"Related Information" 1 17 4
+"Defining a Selection" 209
+"Extending the Selection" 39
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Selecting Text with the Mouse \r
+
+    The mouse may be used to select a section of text.  The selected text
+    is the object of the next command.
+
+    \bExtending the Selection.\r  If you hold down the mouse button and move
+    the mouse, the selection will extend and contract with the mouse movement.
+
+    \bSelection Mode.\r  Initially, you are selecting by characters.  If you
+    select again on the selected character, you will begin selecting in
+    "word mode," where the selection extends and contracts by whole words.
+    (Words are separated by spaces or the ends of the line).  If you select 
+    a third time on a word selected in word mode, you will begin selecting
+    in "line mode," where the selection will extend and contract by whole 
+    lines.
+
+\27
+"Related Information" 1 17 4
+"Search Backward" 66
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Define Search String" 19
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Search Forward \r
+
+    The selected text is searched for.  The case of the search string is
+    ignored unless the \bignoreCase\r option is 0.
+
+    If the selection is in the file in the window, then the search starts
+    at the selection.  Otherwise, the search starts at the beginning of
+    the file.  The \bsearchMode\r option determines the extent and direction 
+    of the search.
+	 searchMode=0 -- proceed forward to the end of the file.
+	 searchMode=1 -- proceed backward to the beginning of the file.
+	 searchMode=2 -- proceed forward to the end of the file, and then
+		start at the beginning of the file, stopping at the selection.
+	 searchMode=3 -- proceed forward to the end of the file, then the
+					file in the next window is searched, 
+					then the next file after that, and so 
+					on until the string is found or the 
+					file in the bottom window is searched.
+
+\28
+"Related Information" 1 19 4
+"List Windows" 53
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Next Window \r
+
+    The window is made the top window unless it already is the top window,
+    in which case it is made the bottom window.  This has the effect of
+    cycling through the list of windows.
+
+\29
+"Related Information" 1 19 4
+"List Windows" 53
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Bottom Window\r
+
+    The window is made the bottom window.
+
+\30
+"Related Information" 1 19 4
+"Execute Command Shell" 32
+"Defining Windows" 218
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Execute Selection \r
+
+    The selection is taken as a operating system command and passed to the
+    system command interpreter for execution.  Blanks, tabs and end-of-line 
+    characters at the beginning and end of the selection are ignored.
+
+    Before the command is executed, you are prompted to specify the corners 
+    of a window to put the standard output of the command into.  (Choose
+    "Defining Windows" below for more information on defining windows).
+
+    The standard output of the command is captured and placed in a window.
+    The file name of the window is of the form "UnNamed.?" (where ? is a 
+    letter).
+
+\31
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s No Action \r
+
+    This command has no associated action.  It may be used as a default
+    command for menus or mouse motion commands where you want the default 
+    action to be nothing.
+
+\32 100 100 30
+"Related Information" 1 19 4
+"Execute Selection" 30
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Execute Command Shell \r
+
+    POINT executes another copy of the operating system command interpreter.
+    You may execute system commands by typing them in at the command prompt.
+    When you type \bexit\r at the operating system command prompt, you will
+    return to POINT in exactly the same state as before.
+
+    \bHow the current directory is handled.\r  If you change the current
+    directory while in the command interpreter, this will be the current 
+    directory if you Execute Command Shell again, or if the file selection
+    screen shows you a list of files (matching \bfilePattern\r) in the current 
+    directory.  But, when you exit POINT you will be returned to the 
+    directory you were in when you invoked POINT.
+
+\33
+"Related Information" 1 19 4
+"Selecting Files" 201
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Load File \r
+
+    This will load a new file into the active window.  If the file in the
+    active window has been changed, you will be prompted to save the file
+    before the new one is loaded.
+
+\34
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move the Cursor Up One Row \r
+
+    The selection cursor is moved up one row.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\35
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move the Cursor Down One Row \r
+
+    The selection cursor is moved down one row.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\36
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move the Cursor Left One Column \r
+
+    The selection cursor is moved left one column.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\37
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move the Cursor Right One Column \r
+
+    The selection cursor is moved right one column.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\38
+"Related Information" 1 19 4
+"List Windows" 53
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Hide Window \r
+
+    The window is removed from the screen and put on a list of hidden
+    windows.  This feature is used to tuck away a window that you are
+    not using but may use again later.  If you quit POINT, the hidden
+    windows will be asked about and saved.
+
+    You can only unhide a window by selecting it from the Window List
+    menu.
+
+\39
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Extend Selection \r
+
+    The selection is extended (or contracted) to the current mouse cursor
+    position.  You can continue to hold down the mouse button and change
+    the selection as well.
+
+\40
+"Related Information" 1 19 4
+"Undo/Redo Edits" 213
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Undo Multiple \r
+
+    The effect of the last editing action is undone.
+
+    This undoing is not recorded in the change history and cannot itself
+    be undone.
+
+    A second invocation of this command will undo a previous edit.
+
+    The number of previous edits which may be undone is determined by the 
+    \bundoSize\r option (the default is 50).
+
+\41
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\42
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\43
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\44
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\45
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Mouse Motion Command 1 \r
+
+    Hold down the mouse button and move in one of the eight compass
+    directions (or do not move the mouse at all).  Depending on which
+    way you move, one of eight commands will be executed.
+
+\46
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Mouse Motion Command 2\r
+
+    Hold down the mouse button and move in one of the eight compass
+    directions (or do not move the mouse at all).  Depending on which 
+    way you move, one of eight commands will be executed.
+
+\47
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Save All Unsaved Files \r
+
+    All the files that have been edited but not yet saved are saved.
+
+    \bNote.\r This will record on disk all changes you have made in the
+    files, so none of them can be undone after this command.
+
+\48
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Quit and Save All \r
+
+    All files that have been changed are automatically saved and then
+    POINT is exited.
+
+\49
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Quit and Discard \r
+
+    If any windows contains changed files, you are asked to verify the
+    quit.  If you verify (answer 'y'), then POINT is exited and none of 
+    the changed files are saved.  If you answer 'n', then the quit command 
+    is cancelled.
+
+\50
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 1 \r
+
+    This invokes User Defined Menu 1.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\51
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 2 \r
+
+    This invokes User Defined Menu 2.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\52
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 3 \r
+
+    This invokes User Defined Menu 3.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\53
+"Related Information" 1 19 4
+"Selecting Windows" 205
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s List Windows (the Window List menu) \r
+
+    A menu of the files in the existing windows (from top to bottom)
+    is displayed.
+
+    If you select a file name, that window is becomes the top window.
+
+    If you have hidden windows, they are listed after the visible windows 
+    and separated from them by a horizontal line.  If you select a hidden 
+    window from the menu, that window is unhidden, and becomes the top
+    window.
+
+\54
+"Related Information" 1 19 4
+"Managing Files" 204
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Save File \r
+
+    The current version of the file in the window is saved to disk.
+
+    The previous version is saved in a \b.BAK\r file (a file in the same 
+    directory and with the same root name but with ".BAK" extension).
+
+    A .BAK file always contains the version of the file before you started
+    editing it (but not necessarily the version before the last time you
+    saved it).
+
+    If the \bmakeBaks\r option is set to 0, then a .BAK file will not be 
+    created.
+
+\55
+"Related Information" 1 19 4
+"Deleting, Moving, and Copying" 210
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Insert From Scrap \r
+
+    The contents of the scrap buffer are inserted just before the first
+    character of the selection.
+
+    The contents of the scrap buffer are unchanged so you can insert the
+    same text several times (at the same or at different places).
+
+\56
+"Related Information" 1 19 4
+"Positioning in a File" 208
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Locate the Last Position \r
+
+    Every time you jump around the file in some way other than a scroll,
+    POINT remembers where you jumped from.  When you execute this command,
+    the window is moved back to the last place you jumped from.
+
+    This command is a jump itself so repeating Last Place will switch
+    back and forth between two places in the file.
+
+    POINT remembers a "last place" for each window.
+
+\57
+"Related Information" 1 19 4
+"Deleting, Moving, and Copying" 210
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Copy to Scrap \r
+
+    The selection is copied into the scrap buffer.
+
+    The text may be reinserted by using the \bCopy from Scrap\r command (or
+    the \bIns\r key).
+
+\58
+"Related Information" 1 18 4
+"Positioning in a File" 208
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Locate Selection \r
+
+    The window containing the selection is made the top window and the
+    window is then positioned so that the selection is shown.
+
+    The line the selection is on depends on the value of the \blinesOverFind\r
+    option.  That many lines will show in the window above the line the
+    selection starts on.  If that would prevent the selection from showing
+    in the window, the selection is placed in the middle of the window.
+
+    This may be used to find the selection if it is not visible.
+
+\59
+"Related Information" 1 19 4
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Toggle Insert/Overtype Mode \r
+
+    The state of overtype mode is changed from on to off or off to on.
+
+    When overtype mode is on, typed characters replace the characters at
+    the selection.
+
+    When overtype mode is off, typed characters are inserted into the text
+    just in front of the first character of the selection.
+
+    Overtype mode will not replace end-of-line characters, so at the end of
+    a line of text, characters will be inserted regardless of the mode.
+
+\60
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 4 \r
+
+    This invokes User Defined Menu 4.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\61
+"Related Information" 1 19 4
+"Deleting, Moving, and Copying" 210
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Delete (no Scrap) \r
+
+    The selection is deleted but the contents of the scrap buffer are not
+    changed.
+
+\62
+"Related Information" 1 19 4
+"Deleting, Moving, and Copying" 210
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Exchange with Scrap \r
+
+    The current selection and the contents of the scrap buffer are
+    exchanged.
+
+\63
+"Additional Information" 1 18 4
+"POINT Options Summary" 230
+"Setting POINT Colors" 214
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s The POINT Options Menu \r
+
+    If you select a on/off option and release the mouse button, that option
+    will be toggled (that is, changed from on to off or off to on).
+
+    If you select an option that takes a numeric or string value, you will
+    be prompted for the new value of the option.  The current value of the
+    option is entered as the default.
+
+    If you press \bEsc\r to a prompt for a new option value, the current
+    value of the option is unchanged.
+
+    There are many options that are not found in the options menu (they
+    can be changed in the initialization file).  Choose "POINT Options 
+    Summary" below for a summary of the available options.
+
+\65
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 5 \r
+
+    This invokes User Defined Menu 5.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\66
+"Related Information" 1 17 4
+"Search Forward" 27
+"Define Search String" 19
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Search Backward \r
+
+    The selected text is searched for backwards (that is, in the opposite
+    direction of the normal search mode).  Normally this searches from the
+    selection to the beginning of the file (unless \bsearchMode\r=1).
+
+    Case is not considered in finding a match unless \bignoreCase\r is 0.
+
+\67
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 6 \r
+
+    This invokes User Defined Menu 6.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\68
+"Related Information" 1 19 4
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Toggle 43/25 Lines \r
+
+    This command alternates the number of lines displayed on the POINT
+    screen between 43 and 25.
+
+    This command only works if you have the IBM Enhanced Graphics Adapter 
+    or an IBM VGA Adapter.
+
+\69
+"Related Information" 1 17 4
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"Information on Copying Text" 241
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Copy Text \r
+
+    The selected text will be copied to the position in the text where you
+    release the mouse button.
+
+\70
+"Related Information" 1 17 4
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"Information on Moving Text" 240
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Text \r
+
+    The selected text will be moved to the position in the text where you
+    release the mouse button.
+
+\71
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\72
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Close File and Save \r
+
+    The file in the window is saved if it has been changed, and the window
+    is closed.
+
+    This avoids the "y to save file ..." verify prompt.
+
+\73
+"Related Information" 1 18 4
+"Selecting Files" 201
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Load Selected File \r
+
+    The selection is taken as a file name and that file is loaded into
+    the current window.
+
+\74
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Left One Word \r
+
+    The selection cursor is moved left one word.  (A word is defined as
+    a contiguous sequence of non-blank characters).
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\75
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Right One Word \r
+
+    The selection cursor is moved right one word.  (A word is defined as
+    a contiguous sequence of non-blank characters).
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\76
+"Related Information" 1 19 4
+"Play Back Recorded Keys" 77
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Begin/End Recording Keystrokes \r
+
+    The first time you execute this command, POINT will begin recording all
+    subsequent keystrokes in a macro buffer.  It will continue recording
+    keystrokes until you execute this command again.
+
+    You can play back the recorded keystrokes with the \bPlay Back Recorded
+    Keys\r command.
+
+    You can record up to 50 keystrokes with this command.
+
+    There is only one macro buffer.  If you record one macro and then
+    another, the first will be lost.
+
+\77
+"Related Information" 1 19 4
+"Begin/End Recording Keystrokes" 76
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Play Back Recorded Keys \r
+
+    This command will play back all the keystrokes you recorded in the
+    macro buffer with the \bBegin/End Recording Keystrokes\r command.
+
+\78 
+"Related Information" 1 19 4
+"Move Selection to the End of File" 9
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Beginning of File \r
+
+    The selection is moved to the beginning of the file.
+
+\79
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 7 \r
+
+    This invokes User Defined Menu 7.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\80
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 8 \r
+
+    This invokes User Defined Menu 8.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\81
+"Related Information" 1 19 4
+"Altering a Selection" 212
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Change Case \r
+
+    This command changes the case of the first character of the selection.
+    That is, it changes it to upper if it was lower and changes it to lower
+    if it was upper.  A character that is not a letter is unchanged.
+
+    After the change the selection moves to the next character after the one
+    changes.  This means you can execute this command repeatedly to change
+    the case of a whole word or sequence of words (one character at a time).
+
+\82
+"Related Information" 1 17 4
+"Defining a Selection" 209
+"Defining Windows" 218
+"Selecting Files" 201
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Open Selected File Window \r
+
+    A new window is created.  The selection is taken as a file name and
+    that file is loaded into the newly created window.
+
+\83
+"Related Information" 1 19 4
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Match Bracket \r
+
+    The first character of the selection should be one of:
+
+             (    )        [    ]        {    }
+
+    POINT will find the matching character and move the selection to it.
+
+    A "matching bracket" means one of the paired types (), [], or {}
+    which is at the same nesting level.
+
+\84
+"Related Information" 1 19 4
+"Positioning in a File" 208
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Locate Selected Line Number\r
+
+    The selection is taken to be a line number and the window is scrolled
+    so that that line number is at the top of the window.
+
+\85
+"Related Information" 1 19 4
+"Altering a Selection" 212
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Justify Selection \r
+
+    This command repositions the words on the selected lines so that each
+    line contains as many words as will fit between column 1 and the column 
+    indicated by the \brightMargin\r option.  The number of lines may
+    increase if the selected lines were long, or decrease if the selected 
+    lines were short.
+
+    Any lines that have at least one character selected will be affected
+    by this command; it is not necessary to select the first and last 
+    lines completely.
+
+\86
+"Related Information" 1 19 4
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Toggle Read-Only Status \r
+
+    This command will toggle the read-only status of the active window.
+    That is, if it was read-only it makes it read-write and if it was 
+    read-write it makes it read-only.
+
+    This command will not allow you to make a file read-write if the DOS 
+    or OS/2 file permission for the file is read-only.
+
+    Files are marked read-only when they are loaded if either the DOS or
+    OS/2 file permissions are read-only, or the \breadOnly\r option is on.
+
+\87
+"Related Information" 1 18 4
+"Setting POINT Colors" 214
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Change Color Combination \r
+
+    This command changes the text and border colors of the active window
+    to the next color scheme that was specified in the \btextColors\r and
+    \bborderColors\r options in your initialization file.
+
+    You can specify a sequence (of up to 10) combinations of text colors
+    and border colors in the POINT initialization file.
+
+\88
+"Related Information" 1 19 4
+"Selecting Windows" 205
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Top Second \r
+
+    This command exchanges the two top windows in the stack of open windows.
+
+    This command is useful when you want to change quickly between two
+    windows and there are other windows open as well.
+
+\89
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\90
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\91
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\92
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s For Internal Use Only \r
+
+    This command is reserved for internal use.
+
+\93
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 9 \r
+
+    This invokes User Defined Menu 9.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\94
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 10 \r
+
+    This invokes User Defined Menu 10.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\95
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 11 \r
+
+    This invokes User Defined Menu 11.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\96
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 12 \r
+
+    This invokes User Defined Menu 12.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\97
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 13 \r
+
+    This invokes User Defined Menu 13.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\98
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 14 \r
+
+    This invokes User Defined Menu 14.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\99
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 15 \r
+
+    This invokes User Defined Menu 15.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\100
+"Return from Help" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s User Definined Menu 16 \r
+
+    This invokes User Defined Menu 16.
+
+    You can specify these menus in the POINT initialization file.
+
+    For each menu you can specify which commands will be on the menu and
+    what they will be called by.  See the POINT User's Guide for details.
+
+\101
+"Related Information" 1 19 4
+"Positioning Windows" 206
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Window \r
+
+    This command activates keyboard "Move Window" mode.  When invoked,
+    the border of the active window becomes textured instead of solid.
+    You can use the cursor arrow keys to reposition the window to its
+    new location.  Press Enter to set the window in its new position.
+
+\102
+"Related Information" 1 18 4
+"End Selection" 103
+"Defining a Selection" 209
+"Cancel Operation" 22
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Begin Selection \r
+
+    This command anchors the selection cursor at the current position,
+    and enters \bKeyboard Selection Mode\r.  
+
+    When keyboard selection mode is active, the selection is extended
+    rather than moved when using the normal cursor position keys.
+
+    This mode remains active until \bEnd Selection\r is executed, \bEsc\r is 
+    pressed, or the selection is changed using the mouse.
+
+    For detailed information on selecting text with the keyboard or the
+    mouse, choose the "Defining a Selection" option below.
+
+\103
+"Related Information" 1 18 4
+"Begin Selection" 102
+"Defining a Selection" 209
+"Cancel Operation" 22
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s End Selection \r
+
+    This command ends \bKeyboard Selection Mode\r, leaving the selection set
+    at its current position.  Commands operating on the selection may be
+    used after this command has been executed.
+
+    For detailed information on selecting text with the keyboard or the
+    mouse, choose the "Defining a Selection" option below.
+
+\104
+"Related Information" 1 19 4
+"Selecting Files" 201
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Open File Full Window \r
+
+    This command opens a file into a full screen window.
+
+    A window does not need to be defined with this command; the file
+    will be opened automatically into a window occupying the entire
+    screen.
+
+\105
+"Related Information" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Selection to Beginning of Line \r
+
+    This command moves the selection cursor to the beginning of the current
+    line.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\106
+"Related Information" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Selection to End of Line \r
+
+    This command moves the selection cursor to the end of the current
+    line.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\107
+"Related Information" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Selection to Top of Window \r
+
+    This command moves the selection cursor to the top of the current
+    window.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\108
+"Related Information" 1 21 4
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Move Selection to Bottom of Window \r
+
+    This command moves the selection cursor to the bottom of the current
+    window.
+
+    If keyboard selection mode is active, the end of the selection is 
+    extended from its original anchor position.
+
+\109
+"Related Information" 1 19 4
+"Managing Files" 204
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Print File \r
+
+    This command prints the file in the current window.  The printer
+    device is prompted for.
+
+    The default device is "PRN".
+
+\110
+"Related Information" 1 19 4
+"Other Commands" 215
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s About POINT \r
+
+    This command displays POINT version information in a window on the
+    POINT screen.  This information includes the version number of POINT, 
+    the operating system type, and the LOGITECH Copyright message.
+
+\230
+"Additional Information" 1 19 4
+"Next Screen" 231
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s POINT Options Summary (Screen 1 of 13) \r
+
+Option Name    Description {default value in brackets}
+-----------    ---------------------------
+43lines        Use 43 line mode on the IBM EGA {0}
+autoIndent     Indent new lines to the level of the previous line {1}
+borderColors   The colors of the window top, borders, and elevator {70070F}
+buffers	       Number of buffers kept in memory {50}
+filePattern    Controls the files displayed in the new/create screen {*.*}
+fileSort       Controls how files are sorted in the new/load screen {2}
+pathNames      Display the full path name when showing file names {0}
+helpMode       If =1, a help screen is shown about invoked commands {0]
+ignoreCase     Ignore case of letters in search and replace {1}
+initialWindows Determines how the initial file windows are placed {0}
+linesOverFind  Space found search string this many lines down {4}
+makeBaks       Make ".bak" files of changed files {1}
+msgColors      The colors of messages to the user {070FF007}
+
+\231
+"Additional Information" 1 18 4
+"Next Screen" 232
+"Previous Screen" 230
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s POINT Options Summary (Screen 2 of 13) \r
+
+Option Name    Description {default value in brackets}
+-----------    ---------------------------
+overType       Typed characters replace existing ones {0}
+readOnly       Make all files loaded into windows read-only {0}
+rightBack      Right button scrolls up and left button scrolls down {0}
+rightMargin    Words types past the margin wrap to the next line {999}
+searchMode     The direction and type of searches {0}
+tabWidth       The size of tabs {8}
+textColors     The colors of the text and selection in a window {0770}
+tiledSplit     Split windows into two smaller pieces {0}
+topOnFind      The window a string is found in is made the top window {0}
+undoSize       The number of changes remembered {50}
+videoMode      Determines how POINT updates the screen (DOS only) {0}
+unixMode       Insert only a line feed (ASCII 10) when Return is pressed {0}
+workDrive      Where the POINT work file is located {.\\}
+
+\232
+"Additional Information" 1 18 4
+"Next Screen" 233
+"Previous Screen" 231
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 3 of 13) \r
+
+     When POINT starts it looks for the file "pt.ini" ("ptp.ini" for OS/2)
+	 First in the current directory
+         Then in the PATH directories
+
+     If it finds an initialization  file it reads it and initializes the
+      POINT options specified in it.  The options are of the form
+
+		\b optionName=optionValue \r
+
+      with no spaces.  The option/value pair strings are separated by
+      spaces, tabs, or newlines.
+
+     caPiTaliZatIon is unimportant in option names.
+
+\233
+"Additional Information" 1 18 4
+"Next Screen" 234
+"Previous Screen" 232
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 4 of 13) \r
+
+43lines=0        The display shows the usual 25 lines of text.
+43lines=1        POINT uses the 43 line mode for supported by the EGA and
+		    VGA adapters.
+autoCreate=0     When a file name that does not exist is entered, POINT will
+                    request verification before it creates it.
+autoCreate=1     POINT will create file without asking for verification.
+
+autoIndent=1     When a newline (Enter key) is inserted, also insert the
+                    spaces and tabs that begin the previous line.
+autoIndent=0     No special action on inserting a newline
+
+buffers=50       This determines how many buffers are kept in main memory.
+                    More buffers makes editing faster but uses up memory.
+
+\234
+"Additional Information" 1 17 4
+"Next Screen" 235
+"Previous Screen" 233
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 5 of 13) \r
+
+filePattern=*.*  This pattern is used to generate the menu of file name shown
+                    in the new/load file selection screen.
+
+fileSort=0     Files in the load/new menu are unsorted
+fileSort=1     Files in the load/new menu are sorted by file name
+fileSort=2     Files in the load/new menu are sorted by file extension
+
+ignoreCase=1   For string searches (search and replace commands) ignore case
+                    in the search string and the text being searched
+ignoreCase=0   For string searches (search and replace commands) consider
+                    case in the search string and the text being searched
+
+linesOverFind=4 This many lines will be above a found search string when it
+		    is displayed in the window (if not showing already).
+
+\235
+"Additional Information" 1 17 4
+"Next Screen" 248
+"Previous Screen" 234
+"Setting POINT Colors" 214
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 6 of 13) \r
+
+textColors=0770        These options specify the color or video attributes of
+borderColors=70070F    various items on the screen. Each is composed of two or
+msgColors=070FF0       three pairs of hexadecimal digits. Each pair specifies
+                a background and a foreground color.  The hex digits 10-15 are
+                written as a-f or A-F.  The textColors specify normal text and
+                then selected text. The border colors specify: the banner/menu
+                line, the other borders, and then the elevator.  The msgColors
+                are for informational, user input, and error messages. The
+                textColors and borderColors can be different in different
+                windows. If these options are requested interactively you are
+                shown a menu of all the possible colors and you click on the
+                one you want with the mouse.  The next screen shows the
+                possible color codes.  Background colors can only be 0-7.
+
+\248
+"Additional Information" 1 18 4
+"Next Screen" 236
+"Previous Screen" 235
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 7 of 13) \r
+
+	Hex code      Color           Hex code      Color
+	--------      -----           --------      -----
+	   0          Black              8          Grey
+	   1          Blue               9          Light Blue
+	   2          Green              A          Light Green
+	   3          Cyan               B          Light Cyan
+	   4          Red                C          Light Red
+	   5          Magenta            D          Light Magenta
+	   6          Brown              E          Yellow
+	   7          White              F          White (high Intensity)
+
+    These codes may be used in the color options described on the
+    previous screen.
+
+\236
+"Additional Information" 1 18 4
+"Next Screen" 237
+"Previous Screen" 248
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 8 of 13) \r
+
+initialWindows=0 Each file name on the command line is put in a full screen
+                    window and the windows overlay each other
+initialWindows=1 The first window takes up the whole screen, the second
+                    window takes up half (if there are only two) or two-thirds
+                    (if there are three) of the screen, the third window (if
+                    any) takes up one third of the screen.  If there are more
+                    than three file names on the command line the
+                    initialWindows=0 option is used
+initialWindows=2 Like initialWindows=1 except that the windows are split
+                    vertically instead of horizontally
+
+makeBaks=1     Make ".bak" backup files when a file is edited and saved
+makeBaks=0     Do not make ".bak" files
+
+\237
+"Additional Information" 1 18 4
+"Next Screen" 238
+"Previous Screen" 236
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 9 of 13) \r
+
+overType=0     Insert characters that are typed
+overType=1     Typed characters replace existing characters in the text
+
+pathNames=0    Show only the last component of the filename on window banners.
+pathNames=1    Show the full pathname of files in windows.
+
+rightBack=0    The left mouse button scrolls up and the right mouse button
+		    scrolls down (No effect on the meaning of PgUp and PgDn)
+rightBack=1    The right mouse button scrolls up (backwards in the file) and
+		    the left mouse button scrolls down (No effect on the
+		    meaning of PgUp and PgDn)
+
+rightMargin=999  When you are entering text and a word goes past the right
+		    margin, a carriage return is generated and the word is
+					  moved to the next line.
+
+\238
+"Additional Information" 1 18 4
+"Next Screen" 239
+"Previous Screen" 237
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 10 of 13) \r
+
+searchMode=0   Searches start at the selection (or the beginning of the file
+		    if the selection is not in the file) and continue to the
+		    end of the file
+searchMode=1   Searches start at the selection (or the beginning of the file)
+		    and search backward to the beginning of the file.
+searchMode=2   Searches start at the selection (or the beginning of the file),
+		    search to the end of the file, and then start again at the
+		    beginning of the file and search to the selection.  That
+		    is, the search is circular.
+searchMode=3   Searches start at the selection (or the beginning of the file),
+		    search to the end of the file, then the file in the next
+		    window is searched, then the next file after that, and so
+		    on until the string is found or the file in the bottom 
+		    window is searched.
+
+\239
+"Additional Information" 1 18 4
+"Next Screen" 249
+"Previous Screen" 238
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 11 of 13) \r
+
+tabWidth=8     The number of characters between tab stops.
+
+tiledSplit=0   The original window of a split is unchanged during a split
+tiledSplit=1   The area of a split window is divided between the original
+                    window and the split window
+
+topOnFind=0    No other action when a string is found.
+topOnFind=1    When a string is found in a window, the window is automatically
+               made the top window.  Then you can always see the string found.
+
+\249
+"Additional Information" 1 18 4
+"Next Screen" 250
+"Previous Screen" 239
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 12 of 13) \r
+
+undoSize=50    This is how many changes are remembered that can be undone with
+               the "Undo Multiple" command.
+
+videoMode=0    For monochrome displays, no synchronizing is done on screen
+                    updating
+videoMode=1    The BIOS screen display calls are used
+videoMode=2    The display is written (two bytes at a time) during the
+                    horizontal retrace.  This mode should not cause any
+                    flicker on a color graphics display.
+videoMode=3    The display is written (one byte at a time) during the
+                    horizontal retrace.  This mode will not cause any
+                    flicker on a color graphics display.
+
+	       (Note: the videoMode options have no effect in OS/2 POINT).
+\250
+"Additional Information" 1 18 4
+"POINT Options Menu" 63
+"Previous Screen" 249
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+  	\s POINT Options Summary (Screen 13 of 13) \r
+
+workDrive=.\   This is the drive and directory that the editor work file will
+               be placed on.  It can be a RAM disk.
+
+unixMode=0     End lines with a carraige return and line feed (DOS style).
+unixMode=1     End lines with a line feed only. (Unix style).
+
+readOnly=0     New files in windows are read/write
+readOnly=1     New files in windows are read-only.
+
+\240
+"Related Information" 1 17 4
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"Extract Command" 3
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Moving Text in POINT \r
+
+   Move using the Scrap:
+      1. Select the text to be copied
+      2. Press Del or use the "Move to Scrap" command from the Select menu
+      3. Move the selection to the place where you want to move the text
+      4. Press in "Ins" key or select the "Copy from Scrap" command
+
+   Move using the Mouse:
+      1. Select the text to be moved
+      2. Move the mouse cursor to the place where you want to move the text
+      3. Hold down the "Ctrl" key and click the left mouse button
+
+   You may also move text through the use of the "Extract" command.  These
+   methods all work for moving text within one window or between two windows.
+
+\241
+"Related Information" 1 17 4
+"Defining a Selection" 209
+"Deleting, Moving, and Copying" 210
+"Extract Command" 3
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Copying Text in POINT \r
+
+   Copy using the Scrap:
+      1. Select the text to be copied
+      2. Select the "Copy to Scrap" command from the Select Menu
+      3. Move the selection to the place where you want to copy the text
+      4. Press in "Ins" key or select the "Copy from Scrap" command
+
+   Copy using the mouse
+      1. Select the text to be copied
+      2. Move the mouse cursor to the place where you want to copy the text
+      3. Hold down the "Shift" key and click the left mouse button
+  
+   You may also move text through the use of the "Duplicate" command.  These
+   methods all work for copying text within one window or between two windows.
+
+\242
+"Related Information" 1 19 4
+"Searching and Replacing" 207
+"Information on Indenting/Outdenting" 243
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Search String Escape Conventions \r
+
+    It is possible to search for strings that span several lines in the
+    file.  The backslash (\\) character in a search string is an "escape"
+    character.  This means that it gives special meaning to the character 
+    that immediately follows it.  The meanings of the various escape 
+    sequences are:
+
+     \\n -- this will match an end-of-line character in the file.  That is,
+           it will match the carriage return, line feed pair that DOS and
+           OS/2 uses to end lines
+     \\r -- this will match a carriage return
+     \\N -- this is match a line feed (ASCII 12)
+     \\\\ -- this will match a backslash (\\)
+     \\? -- this will match ? (where ? is any character other than n, N, r,
+           or \\
+
+\243
+"Related Information" 1 19 4
+"Next Screen" 245
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"More on search strings" 242
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Indenting and Outdenting with Replace (Screen 1 of 2) \r
+
+    Since you can match and replace end-of-line characters it is possible
+    to change indenting with the replace command.
+
+    Suppose you want to indent a sequence of lines by 4 spaces:
+       1. Select the lines to indent plus the line in front of the
+          first line to indent.
+       2. Replace "\\n" by "\\n    " within selection (the quotes
+          are not part of the search or replace string).
+
+\245
+"Related Information" 1 19 4
+"Previous Screen" 243
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"More on search strings" 242
+"Searching and Replacing" 207
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Indenting and Outdenting with Replace (Screen 2 of 2) \r
+
+    Suppose you want to remove a tab at the beginning of each of a sequence
+    of lines:
+       1. Select the lines to un-indent plus the line in front of
+          the first line to un-indent.
+       2. Replace "\\n<tab>" with "\\n" within the selection. (Where
+          <tab> is the tab key.
+
+    The line before must be selected so the replace will find the first
+    "\\n".  Alternatively you can start just before the lines to indent, 
+    use a global replace, and cancel it (with Escape) when you have 
+    indented enough lines.
+
+\214
+"Additional Information" 1 19 4
+"Next Screen" 170
+"POINT Options Menu" 63
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Setting POINT Colors (Screen 1 of 3) \r
+
+    POINT has a flexible way of setting the screen colors for each
+    window in your editing session.  This is especially useful if you
+    have several windows that you need to tell apart quickly.
+
+    Select a window and text whose colors you would like to change.
+    Then execute the \bChange POINT Options\r command from the \bOther\r
+    menu (or press Alt-O-O).  This opens up a menu with options that you
+    can set or change for the current editing session.
+
+    At the bottom of this menu are three settings with numbers that apply
+    to the colors you see in the active window.  These numbers reflect
+    the color settings for the window.  The options are named \btextColors\r,
+    \bborderColors\r, and \bmsgColors\r.  Select any of these to take you to
+    the color settings menu.
+
+\170
+"Additional Information" 1 19 4
+"Next Screen" 171
+"Previous Screen" 214
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Setting POINT Colors (Screen 2 of 3) \r
+
+    The top line of the color settings screen has a number of options that
+    can be selected to determine how each element of the active window
+    will appear.  In the lower right hand portion of the screen, there is
+    a little example window with representative text from your current window.
+
+    You can use the cursor keys or the mouse cursor to select the top line
+    option. A corresponding message and two-digit number appears on the
+    bottom line with the current color for each item.  If you have a mouse,
+    you can click on one of the colors to see how it affects the screen.  A
+    change of color also changes the number in the prompt at the bottom of
+    the screen.
+
+\171
+"Additional Information" 1 19 4
+"Setting POINT Colors" 214
+"Previous Screen" 170
+"컴컴컴컴컴컴컴컴컴컴컴컴컴컴" -1
+"Return to the Main Help Menu" 64
+"Exit Help" 0
+\
+	\s Setting POINT Colors (Screen 3 of 3) \r
+
+    You may also type the number in the color matrix for the color you
+    want.  Each two keystrokes change the color in the two-digit box, as
+    well as in the sample screen or the current screen boxes.
+
+    When you are satisfied with the choices reflected in the sample screen
+    and the session boxes, choose the \bExit\r option (or press Enter) to 
+    take you back to your current editing session.
+
+    Refer to the POINT User's Guide for information on making your color
+    changes permanent.
+

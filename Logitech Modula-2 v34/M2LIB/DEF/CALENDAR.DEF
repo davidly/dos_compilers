@@ -1,0 +1,93 @@
+DEFINITION MODULE Calendar;
+
+  (* 
+     This module defines a Date type and operations on dates of 
+     the Gregorian Calendar, introduced in 1582
+  *)
+
+  FROM DurationOps IMPORT
+    Duration, Unit, UnitSet;
+
+  FROM TimeDate IMPORT
+    Time;
+
+  TYPE Date = 
+         RECORD
+           year      : CARDINAL;
+           month     : [1 .. 12];
+           day       : [1 .. 31];
+           hour      : [0 .. 23];
+           minute    : [0 .. 59];
+           second    : [0 .. 59];
+           thousandth: [0 .. 999];
+         END; (* Date *)
+
+
+  PROCEDURE GetMachineDate (VAR date: Date);
+    (* Gets the machine date *)
+
+  PROCEDURE SetMachineDate (date : Date);
+    (* Sets the machine date *)
+
+
+  PROCEDURE TimeToDate (time     : Time;
+                        VAR date : Date);
+    (* Type conversion from Time (in TimeDate) to Date (in Calendar) *)
+
+  PROCEDURE DateToTime (date     : Date;
+                        VAR time : Time);
+    (* Type conversion from Date (in Calendar) to Time (in TimeDate) *)
+
+
+  PROCEDURE IsValid (date : Date): BOOLEAN;
+    (* Returns TRUE if date is valid, according to the Gregorian calendar *)
+
+  PROCEDURE DaysIn (month : CARDINAL;
+                    year  : CARDINAL): CARDINAL;
+    (* Returns the number of days in the month of the year, according to 
+       the Gregorian calendar, 0 if month is out of range. *)
+
+  PROCEDURE LeapYear (year : CARDINAL): BOOLEAN;
+    (* Returns TRUE if year is a leap year, according to the Gregorian
+       calendar (year number divisible by 400 or by 4 and not by 100) *)
+
+  
+  PROCEDURE SameDate (date1, date2 : Date;
+                      precision    : Unit) : BOOLEAN;
+    (* Returns TRUE if date1 and date2 are the same date, within precision *)
+
+  PROCEDURE Later (date1, date2 : Date;
+                   precision    : Unit) : BOOLEAN;
+    (* Returns TRUE if date1 comes after date1, within precision *)
+
+  PROCEDURE LaterOrSameDate (date1, date2 : Date;
+                             precision    : Unit) : BOOLEAN;
+    (* Returns TRUE if date2 is after date1 or if date1 and date2 are the same
+       date, within precision *)
+
+
+  (* The following operations give good results only with dates following
+     October 15, 1582; when the Gregorian Calendar was first used.
+
+     Accuracy to the second over long periods cannot be achieved, due to
+     fluctuations in the Earth rotation that often cause annual corrections
+     of one second. *)
+
+  PROCEDURE AddToDate (date           : Date;
+                       duration       : Duration;
+                       VAR resultDate : Date);
+    (* Add a duration to a date, gives a new date *)
+
+  PROCEDURE SubToDate (date           : Date;
+                       duration       : Duration;
+                       VAR resultDate : Date);
+    (* Subtract a duration from a date, gives a new date *)
+
+  PROCEDURE DeltaDate (date1, date2 : Date;
+                       unitFormat   : UnitSet;
+                       VAR duration : Duration);
+    (* Absolute value of the difference between two dates, given a duration 
+       with units in unitFormat (see module Duration) *)
+
+END Calendar.
+

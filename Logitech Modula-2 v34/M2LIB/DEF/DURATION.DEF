@@ -1,0 +1,81 @@
+DEFINITION MODULE DurationOps;
+
+(*
+   This module defines a Duration type and the relevant units.
+   It allows comparisons, addition and substraction on the Duration type, 
+   and a way to do conversion between units with ease.
+*)
+
+  TYPE Unit = (Millenium, Century, Year, Month, 
+               Day, Hour, Minute, Second, 
+               Tenth, Hundredth, Thousandth);
+
+    (* Year  = mean solar time year: 365 days 5 hours 49 minutes 12 seconds
+                                     31 556 952 seconds
+       Month = Year / 12           :  2 629 746 seconds
+    *)
+
+  TYPE Duration = ARRAY Unit OF REAL;
+    (* Each cell of this array will hold the real amount of the relevant
+       unit.
+    *)
+
+  TYPE UnitSet = SET OF Unit;
+  
+  CONST
+    FullUnitSet  = UnitSet {Millenium, Century, Year, Month,
+                            Day, Hour, Minute, Second,
+                            Tenth, Hundredth, Thousandth};
+
+    EmptyUnitSet = UnitSet {};
+
+
+  PROCEDURE Clear (VAR duration  : Duration);
+    (* Set duration to zero *)
+
+  PROCEDURE Format (VAR duration : Duration;
+                    format       : UnitSet);
+    (* Formatting of duration in format. 
+       Allows conversions between duration units.
+       Unit cells of duration not in format are set to 0.0.  Those in 
+         format are set to the greatest possible 'integer' value, 
+         except for the smallest unit which contains the remainder which may
+         not be integer.
+       If format is empty, duration is reformatted with the same units. 
+    *)
+
+  PROCEDURE FormatOf (duration : Duration): UnitSet;
+    (* Returns the format of duration, i.e. the set of the non zero 
+       unit cells.
+    *)
+
+  PROCEDURE Sum (left, right : Duration;
+                 format      : UnitSet;
+                 VAR result  : Duration);
+    (* Addition of left and right, result being formatted with format. If
+       format is empty then result is formatted with the union of left and
+       right formats 
+    *)
+
+  PROCEDURE Diff (left, right : Duration;                           
+                  format      : UnitSet;
+                  VAR result  : Duration);
+    (* Substraction of left and right, result being formatted with format. If
+       format is empty then result is formatted with the union of left and
+       right formats 
+    *)
+
+  PROCEDURE Equal (left, right : Duration;
+                   accuracy    : Unit) : BOOLEAN;
+    (* Returns TRUE if left and right are equal within accuracy  *)
+
+  PROCEDURE Greater (left, right : Duration;
+                     accuracy    : Unit) : BOOLEAN;
+    (* Returns TRUE if left is greater than right within accuracy  *)
+
+  PROCEDURE GreaterOrEqual (left, right : Duration;
+                            accuracy    : Unit) : BOOLEAN;
+    (* Returns TRUE if left is greater or equal than right within accuracy  *)
+
+END DurationOps.
+

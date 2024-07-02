@@ -1,0 +1,69 @@
+(* Abbreviation: Conversions *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Conversions;
+(*
+   Convert from INTEGER and CARDINAL to string
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+   
+EXPORT QUALIFIED
+  ConvertOctal, ConvertHex,
+  ConvertCardinal, ConvertInteger, ConvertLongInt;
+
+
+PROCEDURE ConvertOctal(num, len: CARDINAL;
+                       VAR str: ARRAY OF CHAR);
+(*
+- Convert number to right-justified octal representation
+
+in:     num     value to be represented,
+        len     minimum width of representation,
+out:    str     result string.
+
+If the representation of 'num' uses fewer than 'len'
+digits, blanks are added on the left. If the representa-
+tion will not fit in 'str', it is truncated on the right.
+*) 
+
+PROCEDURE ConvertHex(num, len: CARDINAL;
+                     VAR str: ARRAY OF CHAR);
+(*
+- Convert number to right-justified hexadecimal
+  representation.
+  [see ConvertOctal]
+*)
+
+PROCEDURE ConvertCardinal(num, len: CARDINAL;
+                          VAR str: ARRAY OF CHAR);   
+(*
+- Convert a CARDINAL to right-justified decimal
+  representation.
+  [see ConvertOctal]
+*)
+
+PROCEDURE ConvertInteger(num: INTEGER; len: CARDINAL;   
+                         VAR str: ARRAY OF CHAR); 
+(*
+- Convert an INTEGER to right-justified decimal
+  representation.
+  [see ConvertOctal]
+
+Note that a leading '-' is generated if num < 0, but never
+a '+'.
+*)
+
+PROCEDURE ConvertLongInt(num: LONGINT; len: CARDINAL;   
+                         VAR str: ARRAY OF CHAR); 
+(*
+- Convert a LONGINT to right-justified decimal
+  representation.
+  [see ConvertOctal]
+
+Note that a leading '-' is generated if num < 0, but never
+a '+'.
+*)
+     
+END Conversions.
+

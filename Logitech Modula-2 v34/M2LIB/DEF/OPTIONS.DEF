@@ -1,0 +1,73 @@
+(* Abbreviation: Options *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Options;
+(*
+   Read a file specification, with options, from the
+   terminal
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED
+   NameParts, NamePartSet, Termination,
+   FileNameAndOptions, GetOption;
+
+
+TYPE
+   Termination = (norm, empty, can, esc);
+   NameParts = (NameDrive, NamePath, NameName, NameExt);
+   NamePartSet = SET OF NameParts;
+
+
+PROCEDURE FileNameAndOptions(default:        ARRAY OF CHAR;
+                             VAR name:       ARRAY OF CHAR;
+                             VAR term:       Termination;
+                             acceptOption:   BOOLEAN;
+                             VAR readInName: NamePartSet);
+(*
+- Read file name and options from terminal.
+
+in:   default       the file specification to use if
+                    one is not entered,
+      acceptOption  if TRUE, allow options to be entered,
+
+out:  name          the file specification,
+      term          how the read ended,
+      readInName    which parts of specification are
+                    present.
+
+If the current drive is specified in the default name,
+and if no drive is entered, then the actual name of the
+current drive is returned with the name read.
+
+The variable 'term' indicates the status of the input
+termination:
+      norm   : normally terminated
+      empty  : normally terminated, but name is empty
+      can    : <can> is typed, input line cancelled
+      esc    : <esc> is typed, no file specified
+
+Input is terminated by a <cr>, blank, <can>, or <esc>.
+<bs> and <del> are allowed while entering the file name.
+*)
+
+
+PROCEDURE GetOption(VAR optStr: ARRAY OF CHAR;
+                    VAR length: CARDINAL);
+(*
+- Get another option from the last call to
+  FileNameAndOptions.
+
+out:    optStr          text of the option,
+        length          length of optStr.
+
+Calls to GetOption return the options from the last call
+to FileNameAndOptions, in the order they were entered.
+When there are no more options, a length of 0 is returned.
+*)
+
+
+END Options.
+

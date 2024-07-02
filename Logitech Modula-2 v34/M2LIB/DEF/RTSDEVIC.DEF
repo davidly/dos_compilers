@@ -1,0 +1,117 @@
+DEFINITION MODULE RTSDevice;
+
+FROM SYSTEM IMPORT ADDRESS, PROCESS;
+
+EXPORT QUALIFIED
+   GetDeviceStatus, SetDeviceStatus,
+   GetPrioMask, SetPrioMask,
+   SaveInterruptVector, RestoreInterruptVector,
+   InstallHandler, UninstallHandler;
+
+PROCEDURE GetDeviceStatus(deviceNr: CARDINAL;
+                          VAR enabled: BOOLEAN);
+(*
+- Return the status of a device in the device mask
+
+in:   deviceNr  number of the device to be checked
+                bitnumber (0..7) of bit for device in
+                interrupt controller 8259 mask
+
+out:  enabled   TRUE if interrupts from the device are
+                enabled, FALSE otherwise
+*)
+
+
+PROCEDURE SetDeviceStatus(deviceNr: CARDINAL;
+                          enable: BOOLEAN);
+(*
+- Set the status of a device in the device mask
+
+in:   deviceNr  number of the device to enable or disable
+                bitnumber (0..7) of bit for device in
+                interrupt controller 8259 mask
+                
+      enable    if TRUE, enable interrupts from the
+                device, otherwise disable them
+
+The mask register of the interrupt controller will
+be updated according to the current priority and
+the new device mask.
+*)
+
+
+PROCEDURE GetPrioMask( priorityLevel: CARDINAL ): BITSET;
+(*
+- Gets the mask used for the priorityLevel ( only low byte significant )
+*)
+
+
+PROCEDURE SetPrioMask( priorityLevel: CARDINAL; mask: BITSET);
+(*
+- Sets the used for the priorityLevel ( only low byte used )
+*)
+
+
+PROCEDURE SaveInterruptVector(vectorNr: CARDINAL;
+                              VAR vector: ADDRESS);
+(*
+- Save the current value of an interrupt vector
+
+in:   vectorNr   interrupt vector number
+
+out:  vector     value of current interrupt vector
+*)
+
+
+PROCEDURE RestoreInterruptVector(vectorNr: CARDINAL;
+                                 vector: ADDRESS);
+(*
+- Restore the value of an interrupt vector
+
+in:   vectorNr   interrupt vector number
+      vector     value to restore (previously saved
+                 with 'SaveInterruptVector')
+*)
+
+
+PROCEDURE InstallHandler(process: PROCESS;
+                         vectorNr: CARDINAL);
+(*
+- Install an interrupt handler permanently
+
+in:   process    process associated with the interrupt
+                 handler
+      vectorNr   interrupt vector number
+
+The process is associated permanently to the given
+interrupt vector number. This improves the performance
+of IOTRANSFER and of the implicit coroutine transfer
+that takes place when the interrupt occurs. A process
+may be associated to at most one interrupt, and at most
+one process may be associated to the same interrupt.
+
+'InstallHandler' must only be called after the process has
+been created (by means of NEWPROCESS) and before the
+process has called IOTRANSFER. For instance, it may be
+called right at the beginning of the code of the process.
+Except for the call to 'InstallHandler', the code of a
+permanently installed interrupt handler is identical to
+the code of a regular interrupt handler.
+*)
+
+
+PROCEDURE UninstallHandler(process: PROCESS);
+(*
+- Uninstall an interrupt handler which has been
+  installed permanently
+
+in:   process    process associated with the interrupt
+                 handler
+
+In general, there is no need to call this procedure.
+The MODULA-2/86 run-time support automatically uninstalls
+interrupt handlers upon termination of a (sub-)program.
+*)
+
+END RTSDevice.
+

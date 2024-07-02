@@ -1,0 +1,23 @@
+DEFINITION MODULE Sounds;
+
+EXPORT QUALIFIED
+   Sound, NoSound;
+
+
+PROCEDURE Sound(hertz: INTEGER);
+(* 
+  Accesses the PC speaker with the frequenz of hertz Hertz.
+
+  The spezified frequenz will be emitted until you call the
+  procedure NoSound.
+  Frequenzes between 21 and 32767 Hertz can be produced.
+*)
+
+
+PROCEDURE NoSound;
+(*
+  Turns off the PC speaker.
+*)
+
+END Sounds.
+

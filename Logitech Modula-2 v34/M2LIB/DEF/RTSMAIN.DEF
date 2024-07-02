@@ -1,0 +1,232 @@
+(******************************************************************************)
+(*                                                                            *)
+(*       MODULA-2    Library                                                  *)
+(*                                                                            *)
+(*              LOGITECH SA,   CH-1111 Romanel    (Switzerland)               *)
+(*              LOGITECH Inc,  Fremont, CA 94555  (USA)                       *)
+(*                                                                            *)
+(*       Module  :    RTSMain.DEF, Modula-2 definition for RTSMain interface  *)
+(*                                                                            *)
+(*       Release :    3.0 - July 87                                           *)
+(*                                                                            *)
+(*       Copyright (C)  1987 Logitech, All rights reserved                    *)
+(*                                                                            *)
+(*       Permission is hereby granted to registered users to use or abstract  *)
+(*       the following program in the implementation of customized versions.  *)
+(*       This permission does not include the right to redistribute the       *)
+(*       source code of this program.                                         *)
+(*                                                                            *)
+(******************************************************************************)
+(*$A+*)
+DEFINITION MODULE RTSMain;
+
+FROM SYSTEM IMPORT ADDRESS, BYTE, PROCESS;
+
+EXPORT QUALIFIED
+    Status, GetMessage,
+    ProcPtr, ProcDescriptor,
+    OverlayKey, OverlayName, OverlayPtr, OverlayDescriptor, overlayList,
+    RegisterBlock, ProcessDescriptor, ProcedureKind, ActivationBlock,
+    PSPAddress, blockList, deviceMask, dyingOverlay,
+    Process, ProcessPtr, curProcess, activProcess, errorCode,
+    Terminate, InstallTermProc, CallTermProc, InstallInitProc, CallInitProc,
+    RTDProc, DebuggerRecord, debuggerRecord, Execute, 
+    overlayInitProc, overlayTermProc;
+
+
+(* Type definition above shall imperatively correspond to the structures *)
+(* defined in RTS.INC                                                    *)
+
+CONST
+    CheckValue   = 0FA50H;
+
+(* ***** Status and program termination ***** *)
+
+TYPE
+    Status = ( Normal, Warning, Stopped, Fatal,
+               Halt, CaseErr, StackOvf, HeapOvf,
+               FunctionErr, AdressOverflow, RealOverflow, RealUnderflow,
+               BadOperand, CardinalOverflow, IntegerOverflow, RangeErr,
+               DivideByZero, CoroutineEnd, CorruptedData, FileStructureErr,
+               IllegalInstr, IllErrorCode, TooManyIOProcesses, TermListFull,
+               InitListFull, NoCoprocessor87 );
+
+VAR
+    errorCode : CARDINAL;
+
+PROCEDURE Terminate( st : Status );
+(* force the termination of the current overlay with given status *)
+
+PROCEDURE GetMessage(status: Status; VAR message: ARRAY OF CHAR);
+(* returns the message corresponding to the given status *)
+
+
+(* ***** Internal informations ***** *)
+
+VAR
+    PSPAddress : ADDRESS;
+    blockList  : ADDRESS;
+
+
+(* Type for the termination and initialization procedures *)
+
+TYPE 
+    ProcPtr        = POINTER TO ProcDescriptor;
+    ProcDescriptor = RECORD
+                       next     : ProcPtr;
+                       termProc : PROC;
+                     END;
+
+TYPE
+    Process      = POINTER TO ProcessDescriptor;
+    ProcessPtr   = POINTER TO Process;
+                
+
+
+(* ***** SubPrograms and Resident Overlays ***** *)
+
+TYPE
+  OverlayName       = ARRAY [0..39] OF CHAR;
+  OverlayKey        = ARRAY [0.. 2] OF CARDINAL;
+
+  OverlayPtr        = POINTER TO OverlayDescriptor;
+  OverlayDescriptor = RECORD
+                        overlayKey  : OverlayKey;
+                        overlayName : OverlayName;
+
+                        checkWord   : CARDINAL;
+
+                        memoryAddr  : ADDRESS;
+                        memorySize  : CARDINAL; (* in paragraphs *)
+                        codeSegment : CARDINAL;
+
+                        programLevel: CARDINAL;
+                        termProc    : ProcPtr;
+                        initProc    : ProcPtr;
+                        freeList    : ProcPtr;
+
+                        next        , 
+                        prev        : OverlayPtr;
+
+                        CASE overlay : CARDINAL OF
+                          0    :     notUsed      : ARRAY [0..14] OF CARDINAL;
+                        | 1,2  :     loaderProcess: Process;
+
+                                     priorityMask : CARDINAL;
+
+                                     SP, SS, BP   : CARDINAL;
+                                     overlayStatus: Status;
+
+                                     father       ,
+                                     parent       : OverlayPtr;
+                                     processList  : Process;
+                                     resource     : ADDRESS;
+                        END;
+                        layer      : ADDRESS;
+                        dummy      : ARRAY [1..7] OF ADDRESS;
+                      END(* OverlayDescriptor*);
+
+VAR
+   overlayList    : OverlayPtr;
+
+(* ***** Overlay Interface procedures ***** *)
+
+VAR
+    overlayInitProc : PROC;
+    overlayTermProc : PROC;
+
+(* ***** Process descriptor ***** *)
+
+TYPE
+    RegisterBlock     = RECORD
+                          ES    : CARDINAL;
+                          DS    : CARDINAL;
+                          DI    : CARDINAL;
+                          SI    : CARDINAL;
+                          BP    : CARDINAL;
+                          dummy : CARDINAL;
+                          BX    : CARDINAL;
+                          DX    : CARDINAL;
+                          CX    : CARDINAL;
+                          AX    : CARDINAL;
+                          IP    : CARDINAL;
+                          CS    : CARDINAL;
+                          flag  : CARDINAL;
+                        END;
+
+    ProcedureKind     = (FarProcedure, NearProcedure, NestedProcedure);
+    ActivationBlock   = RECORD
+                          dynamicLink: ADDRESS;
+                          IP         : CARDINAL;
+
+                          CASE ProcedureKind OF
+                            NearProcedure:
+                          | FarProcedure:
+                              CS: CARDINAL;
+                          | NestedProcedure:
+                              staticLink: ADDRESS
+                          END;
+                        END;
+                          
+    ProcessDescriptor = RECORD        
+                          topStack      : POINTER TO RegisterBlock;
+                          progStatus    : Status;  (* alignement mandatory *)
+                          priorityMask  : BITSET;
+                          programLevel  : CARDINAL;
+                          heapDesc      : ADDRESS;  
+                          termOverlay   : OverlayPtr;
+                          checkWord     : CARDINAL;
+                          bottomStack   : CARDINAL;   (* still used ??? *)
+                          currOverlay   : OverlayPtr;
+                          interruptDesc : CARDINAL;
+                          processList   : Process;
+                          dummy         : ARRAY [1..3] OF ADDRESS;
+                        END;
+
+
+VAR
+    curProcess   : ProcessPtr;   (* always points to activProcess   *)
+    activProcess : Process;      (* points to the ProcessDescriptor *)
+                                 (* of the active PROCESS           *)
+
+
+(* ***** Debugger interface ***** *)
+
+TYPE
+    RTDProc        = PROCEDURE(PROCESS, ADDRESS);
+                     (* active process and overlay list *)
+
+    DebuggerRecord = RECORD
+                       (* The debugger ID is initialized with the CheckValue *)
+                       (* The RTD initialize it to 0                         *)
+                       debuggerId     : CARDINAL;
+                       beforeInitCode : RTDProc;
+                       beforeMainCode : RTDProc;
+                       beforeTermProc : RTDProc;
+                       beforeExit     : RTDProc;
+                     END;
+
+VAR
+    debuggerRecord : DebuggerRecord;
+
+(* ***** Miscelanous ***** *)
+
+VAR
+    deviceMask   : BITSET;
+    dyingOverlay : OverlayPtr;
+
+PROCEDURE Execute;
+(* Warning : upon entry, ES:DI is a pointer to the address of the code *)
+(*           to execute !!!                                            *)
+
+(* ***** Termination procedures ***** *)
+
+PROCEDURE InstallTermProc( p : PROC );
+PROCEDURE CallTermProc;
+
+PROCEDURE InstallInitProc( p : PROC );
+PROCEDURE CallInitProc;
+
+
+END RTSMain.
+

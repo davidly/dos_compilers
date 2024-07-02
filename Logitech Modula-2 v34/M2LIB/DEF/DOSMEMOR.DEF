@@ -1,0 +1,48 @@
+DEFINITION MODULE DOSMemory;
+
+(*
+   Interface to the DOS memory allocation routines ( DOSCALL 48H, 49H, 4AH ).
+   The blocks are linked to the Modula-2 RunTime Support, thus they are known
+   by the system and dumped in case of error.
+*)
+
+FROM SYSTEM IMPORT ADDRESS;
+
+EXPORT QUALIFIED DOSAlloc, DOSDeAlloc, DOSAvail, DOSSetSize, DOSGetMaxSize;
+
+
+PROCEDURE DOSAlloc( VAR a: ADDRESS; paraSize: CARDINAL );
+(* Allocates a block of paraSize paragraphs :                      *)
+(*   a is the address of the block returned or NIL if the size     *)
+(*   is not available or an error occured                          *)
+
+PROCEDURE DOSDeAlloc( VAR a: ADDRESS; paraSize: CARDINAL );
+(* DeAllocates a block previously allocated with DOSAlloc. The     *)
+(* paraSize passed must be the size given for allocate or setsize  *)
+(*   a is set to the NIL value if DeAlloc succeds, not modified    *)
+(*   an error occured.                                             *)
+(* NOTE: the address passed MUST BE the address returned by        *)
+(*       DOSAlloc                                                  *)
+
+PROCEDURE DOSAvail(): CARDINAL;
+(* Function that returns the size ( in paragraphs ) of the largest *)
+(* space available.                                                *)
+
+PROCEDURE DOSSetSize( a: ADDRESS; paraSize: CARDINAL; VAR errorCode: CARDINAL );
+(* Sets the size of the block given to the new size given in       *)
+(* paraSize. The returned errorCode is :                           *)
+(*      0 : No Error                                               *)
+(*      7 : memory control block destroyed                         *)
+(*      8 : insufficient memory                                    *)
+(*      9 : incorrect block address                                *)
+(* NOTE: the address passed MUST BE the address returned by        *)
+(*       DOSAlloc                                                  *)
+
+PROCEDURE DOSGetMaxSize( a: ADDRESS ): CARDINAL;
+(* Gets the maximal paragraph size to which the block given as     *)
+(* parameter can be extended                                       *)
+(* NOTE: the address passed MUST BE the address returned by        *)
+(*       DOSAlloc                                                  *)
+
+END DOSMemory.
+

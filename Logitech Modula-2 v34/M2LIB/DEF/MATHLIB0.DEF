@@ -1,0 +1,73 @@
+(* Abbreviation: MathLib0 *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE MathLib0;
+(*
+   Real Math Functions
+
+From the book 'Programming in Modula-2' by Prof.
+N. Wirth.
+*)
+
+
+EXPORT QUALIFIED
+   sqrt, exp, ln, sin, cos, arctan, real, entier;
+
+
+PROCEDURE sqrt(x: REAL): REAL;
+(* 
+- returns square root x
+
+x must be positive.
+*)
+
+
+PROCEDURE exp(x: REAL): REAL;
+(*
+- returns e^x where e = 2.71828..
+*)
+
+
+PROCEDURE ln(x: REAL): REAL;
+(*
+- returns natural logarithm with base e = 2.71828.. of x
+
+x must be positive and not zero
+*)
+
+
+PROCEDURE sin(x: REAL): REAL;
+(*
+- returns sin(x) where x is given in radians
+*)
+
+
+PROCEDURE cos(x: REAL): REAL;
+(*
+- returns cos(x) where x is given in radians
+*)
+
+
+PROCEDURE arctan(x: REAL): REAL;
+(*
+- returns arctan(x) in radians
+*)
+
+
+PROCEDURE real(x: INTEGER): REAL;
+(*
+- type conversion from INTEGER to REAL
+*)
+
+PROCEDURE entier(x: REAL): INTEGER;
+(*
+- returns the largest integer number less or equal x
+
+Examples: entier(1.5) = 1; entier(-1.5) = -2;
+
+If x cannot be represented in an INTEGER, the result is
+undefined.
+*)
+
+
+END MathLib0.
+

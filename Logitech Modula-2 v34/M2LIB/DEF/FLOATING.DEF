@@ -1,0 +1,30 @@
+DEFINITION MODULE FloatingUtilities;
+
+EXPORT QUALIFIED 
+  Frac, Int, Round, Float, Trunc;
+
+PROCEDURE Frac ( r : REAL ) : REAL;
+(*
+   Returns the fractional part of r, i.e. Frac( r ) = r + Int( r )
+*)
+   
+PROCEDURE Int ( r : REAL ) : REAL;
+(* 
+   Returns the integer part of r, 1.e. the greatest integer number less than 
+   or equal to r, if r >= 0, or the smallest integer number greater than or 
+   equal to r, if r < 0.
+*)
+
+PROCEDURE Round ( num : REAL ) : INTEGER;
+(*
+   Returns the value of num rounded to the nearest integer as it follows :
+   if num >= 0, then Round( num ) = TRUNC( num - 0.5 ) num must be of type 
+   real, and result is of type integer.
+*)
+
+PROCEDURE Float ( int : INTEGER ) : REAL;
+
+PROCEDURE Trunc ( real : REAL ) : INTEGER;
+
+END FloatingUtilities.
+

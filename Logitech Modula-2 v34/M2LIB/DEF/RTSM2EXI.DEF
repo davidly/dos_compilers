@@ -1,0 +1,9 @@
+FOREIGN DEFINITION MODULE RTSM2Exit;
+
+PROCEDURE M2EXIT(errorLevel : CARDINAL);
+(*
+   This procedure is called to terminate a C program that calls
+   Modula-2 code.
+*)
+
+END RTSM2Exit.

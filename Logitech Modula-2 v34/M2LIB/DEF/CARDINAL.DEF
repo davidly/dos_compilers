@@ -1,0 +1,53 @@
+(* Abbreviation: CardinalIO *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE CardinalIO;
+(*
+   Terminal input/output of CARDINALs in decimal and hex
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+EXPORT QUALIFIED
+   ReadCardinal, WriteCardinal, ReadHex, WriteHex;
+
+
+PROCEDURE ReadCardinal (VAR c: CARDINAL);
+(*
+- Read an unsigned decimal number from the terminal.
+out:    c       the value that was read.
+
+The read terminates only on ESC, EOL, or blank, and the
+terminator must be re-read, for example with Terminal.Read.
+
+If the read encounters a non-digit, or a digit which would
+cause the number to exceed the maximum CARDINAL value, the
+bell is sounded and that character is ignored.  No more
+than one leading '0' is allowed.
+*)
+
+PROCEDURE WriteCardinal (c: CARDINAL; w: CARDINAL);
+(*
+- Write a CARDINAL in decimal format to the terminal.
+in:     c       value to write,
+        w       minimum field width.
+
+The value of c is written, even if it takes more than w
+digits. If it takes fewer digits, leading blanks are
+output to make the field w characters wide.
+*)
+
+PROCEDURE ReadHex (VAR c: CARDINAL);
+(*
+- Read a CARDINAL in hexadecimal format from the terminal.
+  [see ReadCardinal above]
+*)
+
+PROCEDURE WriteHex (c: CARDINAL; digits: CARDINAL);
+(*
+- Write a CARDINAL in hexadecimal format to the terminal.
+  [see WriteCardinal above]
+*)
+
+END CardinalIO.
+

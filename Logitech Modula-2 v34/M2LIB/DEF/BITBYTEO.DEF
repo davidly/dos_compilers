@@ -1,0 +1,74 @@
+DEFINITION MODULE BitByteOps;
+
+  (* Bitwise operations on bytes. 
+     Bits in bytes are numbered from 0 to 7 *)
+
+  FROM SYSTEM IMPORT BYTE;
+  
+  PROCEDURE GetBits (source            : BYTE;
+                     firstBit, lastBit : CARDINAL): BYTE;
+    (* Extracts the bits of source from firstBit to lastBit and returns
+       them as a byte in which bit 0 correspond to the firstBit of the
+       source. *)
+  
+  PROCEDURE SetBits (VAR byte         : BYTE;
+                     firstBit, lastBit: CARDINAL;
+                     pattern          : BYTE);
+    (* Masks byte with pattern from firstBit to lastBit. The first 
+       (lastBit - firstBit + 1 of pattern are used, with leading zeros
+       if necessary.
+       Examples : To set the bits to 1, the pattern 0FFH should be passed,
+       and to set the bits to 0, the pattern 0 should be passed. *)
+
+  PROCEDURE ByteAnd (left, right : BYTE): BYTE;
+    (* Bitwise AND *)
+
+  PROCEDURE ByteOr  (left, right : BYTE): BYTE;
+    (* Bitwise OR *)
+
+  PROCEDURE ByteXor (left, right : BYTE): BYTE;
+    (* Bitwise XOR *)
+
+  PROCEDURE ByteNot (byte : BYTE): BYTE;
+    (* Bitwise complement to 1 *)
+
+  PROCEDURE ByteShr (byte  : BYTE;
+                     count : CARDINAL): BYTE;
+    (* Shift Logical Right
+       shifts the bits in byte to the right by the number of bits specified
+       in count. Zeros are shifted in on the left. *)
+
+  PROCEDURE ByteSar (byte  : BYTE;
+                     count : CARDINAL): BYTE;
+    (* Shift Arithmetic Right
+       shifts the bits in byte to the right by the number of bits specified
+       in count. Bits equal to the original high order bit are shifted in 
+       on the left, preserving the sign of the original value. *)
+
+  PROCEDURE ByteShl (byte  : BYTE;
+                     count : CARDINAL): BYTE;
+    (* Shift Left
+       shifts the bits in byte to the left by the number of bits specified
+       in count. Zeros are shifted in on the right. *)
+
+  PROCEDURE ByteRor (byte  : BYTE;
+                     count : CARDINAL): BYTE;
+    (* Rotate Right
+       rotates byte right by the number of bits specified in count *)
+  
+  PROCEDURE ByteRol (byte  : BYTE;
+                     count : CARDINAL): BYTE;
+    (* Rotate Left
+       rotates byte left by the number of bits specified in count *)
+
+  PROCEDURE HighNibble (byte : BYTE): BYTE;
+    (* Returns the high order nibble (4 bits) value of byte *)
+
+  PROCEDURE LowNibble (byte : BYTE): BYTE;
+    (* Returns the low order nibble (4 bits) value of byte *)
+
+  PROCEDURE Swap (VAR byte : BYTE);
+    (* Swaps the high and low order nibble values of byte *)
+
+END BitByteOps.
+

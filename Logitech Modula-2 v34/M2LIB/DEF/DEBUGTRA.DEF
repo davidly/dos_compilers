@@ -1,0 +1,10 @@
+
+DEFINITION MODULE DebugTrace;
+
+(*
+   write the procedure call chain of the application upon
+   abnormal termination.
+*)
+
+END DebugTrace.
+

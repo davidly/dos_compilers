@@ -1,0 +1,42 @@
+
+ Priority Levels Enhancement
+ ===========================
+
+  The compiler now supports the compilation of programs containing priority
+  levels greater than seven (a maximum of 16 levels are now supported). The
+  supplied RTS, however, only supports a maximum priority level of seven.
+  If you wish to use the greater number of priority levels, you must modify
+  the RTS so that it can properly support the larger priority levels.
+  Logitech Modula-2 Technical Support can not provide you with any support
+  regarding any modifications you make to the RTS.  The only information we
+  can provide regarding the priority level modifications to the RTS is the
+  following:
+
+     *	All mask variables inside the RTS that are used for priorities
+	and device masks are already WORD-sized, and need not be adapted.
+	However, the priority mask table in RTSMAIN.ASM needs to be
+	modified to WORD-size, and extended to 16 values.
+
+     *	The following modules and files need to be examined and modified
+	if necessary:
+
+	    File		Item
+	    ----		----
+
+	    RTS.INC		MAX_PRIO_LEVEL, ...
+	    RTSMAIN.ASM		priorityMasks, ...
+	    RTSINTCO.INC	SetInterruptMask, GetInterruptMask,
+				    SendEOI, ...
+	    RTSDEVICE.ASM	...
+	    RTSPRIOR.ASM	MonEntry, MonExit, ...
+	    RTSINTER.ASM	ISR0, ..., ISR15, IOTransfer, ...
+
+     *	This list is just a guideline.  Be sure to check all modules
+	of the RTS that are affected (or could be affected) by any
+	modifications made.  The library module Devices (DEVICES.MOD
+	and DEVICES.DEF) must be carefully examined as well.
+
+     *	The portions of the RTS that appear to treat all 16 levels should
+	not be treated as tested and "ready to use".  Check them carefully
+	with respect to the modifications you make.
+

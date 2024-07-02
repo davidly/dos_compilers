@@ -1,0 +1,161 @@
+(* Abbreviation: NumberConv *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 8, 1985 *)
+DEFINITION MODULE NumberConversion;
+(*
+   Conversion between numbers and strings
+
+Conventions for the routines that convert a string to
+a number:
+
+   - Leading blanks are skipped.
+   - A plus sign ('+') preceeding the number is always
+     accepted, a minus sign ('-') is only accepted when
+     converting to INTEGER or LONGINT.
+   - Blanks between the plus or minus sign and the number
+     are skipped.
+   - The last character in the string must belong to the
+     number to be converted. No trailing blanks or other
+     trailing charatcers are allowed.
+   - 'done' returns TRUE if the conversion is successful.
+
+Conventions for the routines that convert a number to
+a string:
+
+   - If the string is too small, the number is truncated.
+   - If less than 'width' digits are needed to represent
+     the number, leading blanks are added.
+*)
+
+
+EXPORT QUALIFIED
+   MaxBase, BASE,
+   StringToCard, StringToInt, StringToLongInt, StringToNum,
+   CardToString, IntToString, LongIntToString, NumToString;
+
+
+CONST MaxBase = 16;
+
+
+TYPE BASE = [2..MaxBase];
+
+  
+PROCEDURE StringToCard(str: ARRAY OF CHAR;
+                       VAR num: CARDINAL;
+                       VAR done: BOOLEAN);
+(*
+- Convert a string to a CARDINAL number.
+
+in:    str    string to convert 
+
+out:   num    converted number
+       done    TRUE if successful conversion,
+               FALSE if number out of range,
+               or contents of string non numeric.
+*)
+
+
+PROCEDURE StringToInt(str: ARRAY OF CHAR;
+                      VAR num: INTEGER;
+                      VAR done: BOOLEAN);
+(*
+- Convert a string to an INTEGER number.
+
+in:    str    string to convert 
+
+out:   num    converted number
+       done    TRUE if successful conversion,
+               FALSE if  number out of range,
+               or contents of string non numeric.
+*)
+
+PROCEDURE StringToLongInt(str: ARRAY OF CHAR;
+                          VAR num: LONGINT;
+                          VAR done: BOOLEAN);
+(*
+- Convert a string to a LONGINT number.
+
+in:    str    string to convert 
+
+out:   num    converted number
+       done    TRUE if successful conversion,
+               FALSE if  number out of range,
+               or contents of string non numeric.
+*)
+
+
+PROCEDURE StringToNum(str: ARRAY OF CHAR;
+                      base: BASE;
+                      VAR num: CARDINAL;
+                      VAR done: BOOLEAN);
+(*
+- Convert a string to a CARDINAL number.
+
+in:   str    string to convert 
+      base   the base of the number represented in
+             the string
+
+out:  num    converted number
+      done   TRUE if successful conversion,
+             FALSE if number out of range,
+             or contents of string not within base.
+*)
+
+
+PROCEDURE CardToString(num: CARDINAL;
+                       VAR str: ARRAY OF CHAR;
+                       width: CARDINAL);
+(*
+- Convert a CARDINAL number to a string.
+
+in:   num    number to convert
+      width  width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+PROCEDURE IntToString(num: INTEGER;
+                      VAR str: ARRAY OF CHAR;
+                      width: CARDINAL);
+(*
+- Convert an INTEGER number to a string.
+
+in:   num    number to convert
+      width  width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+PROCEDURE LongIntToString(num: LONGINT;
+                          VAR str: ARRAY OF CHAR;
+                          width: CARDINAL);
+(*
+- Convert a LONGINT number to a string.
+
+in:   num    number to convert
+      width  width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+PROCEDURE NumToString(num: CARDINAL;
+                      base: BASE;
+                      VAR str: ARRAY OF CHAR;
+                      width: CARDINAL);
+(*
+- Convert a number to the string representation in the
+  specified base.
+
+in:   num    number to convert
+      base    the base of conversion
+      width    width of the returned string
+
+out:  str    returned string representation of the number
+*)
+
+
+END NumberConversion.
+

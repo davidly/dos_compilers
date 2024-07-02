@@ -1,0 +1,74 @@
+DEFINITION MODULE BitWordOps;
+
+  (* Bitwise operations on words. 
+     Bits in words are numbered from 0 to 15 *)
+
+  FROM SYSTEM IMPORT WORD;
+  
+  PROCEDURE GetBits (source            : WORD;
+                     firstBit, lastBit : CARDINAL): WORD;
+    (* Extracts the bits of source from firstBit to lastBit and returns
+       them as a word in which bit 0 correspond to the firstBit of the
+       source. *)
+  
+  PROCEDURE SetBits (VAR word         : WORD;
+                     firstBit, lastBit: CARDINAL;
+                     pattern            : WORD);
+    (* Masks word with pattern from firstBit to lastBit. The first 
+       (lastBit - firstBit + 1 of pattern are used, with leading zeros
+       if necessary.
+       Examples : To set the bits to 1, the pattern 0FFFFH should be passed,
+       and to set the bits to 0, the pattern 0 should be passed. *)
+
+  PROCEDURE WordAnd (left, right : WORD): WORD;
+    (* Bitwise AND *)
+
+  PROCEDURE WordOr  (left, right : WORD): WORD;
+    (* Bitwise OR *)
+
+  PROCEDURE WordXor (left, right : WORD): WORD;
+    (* Bitwise XOR *)
+
+  PROCEDURE WordNot (word : WORD): WORD;
+    (* Bitwise complement to 1 *)
+
+  PROCEDURE WordShr (word  : WORD;
+                     count : CARDINAL): WORD;
+    (* Shift Logical Right
+       shifts the bits in word to the right by the number of bits specified
+       in count. Zeros are shifted in on the left. *)
+
+  PROCEDURE WordSar (word  : WORD;
+                     count : CARDINAL): WORD;
+    (* Shift Arithmetic Right
+       shifts the bits in word to the right by the number of bits specified
+       in count. Bits equal to the original high order bit are shifted in 
+       on the left, preserving the sign of the original value. *)
+
+  PROCEDURE WordShl (word  : WORD;
+                     count : CARDINAL): WORD;
+    (* Shift Left
+       shifts the bits in word to the left by the number of bits specified
+       in count. Zeros are shifted in on the right. *)
+
+  PROCEDURE WordRor (word  : WORD;
+                     count : CARDINAL): WORD;
+    (* Rotate Right
+       rotates word right by the number of bits specified in count *)
+  
+  PROCEDURE WordRol (word  : WORD;
+                     count : CARDINAL): WORD;
+    (* Rotate Left
+       rotates word left by the number of bits specified in count *)
+
+  PROCEDURE HighByte (word : WORD): WORD;
+    (* Returns the high order byte value of word *)
+
+  PROCEDURE LowByte (word : WORD): WORD;
+    (* Returns the low order byte value of word *)
+
+  PROCEDURE Swap (VAR word : WORD);
+    (* Swaps the high and low order bytes value of word *)
+
+END BitWordOps.
+

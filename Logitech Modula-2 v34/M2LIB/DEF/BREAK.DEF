@@ -1,0 +1,79 @@
+(* Abbreviation: Break *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 7, 1985 *)
+DEFINITION MODULE Break;
+(*
+   Handling of the Ctrl-Break interrupt
+
+This module provides an interrupt handler for the
+Ctrl-Break interrupt 1BH of MS-DOS and PC-DOS on the
+IBM-PC. This module depends on the ROM BIOS of the
+IBM-PC and will not run on any machine which is not
+compatible to an IBM-PC at this level.
+
+Module 'Break' installs a default break handler, which
+stops the execution of the current program with
+'System.Terminate(stopped)' when Ctrl-Break is typed.
+This produces a memory dump for the stopped program.
+
+Module 'Break' allows a program to install its own break
+handler, and to enable or disable the break handler
+which is currently installed.
+*)
+
+
+EXPORT QUALIFIED
+   EnableBreak, DisableBreak, InstallBreak, UnInstallBreak;
+
+
+PROCEDURE EnableBreak;
+(*
+- Enable the activation of the current break handler
+
+If Ctrl-Break is detected, the currently installed break
+handler will be called.
+*)
+
+
+PROCEDURE DisableBreak;
+(*
+- Disable the activation of the current break handler
+
+If a Ctrl-Break is detected, no action takes place. The
+Ctrl-Break is ignored.
+*)
+
+
+PROCEDURE InstallBreak (BreakProc: PROC );
+(*
+- Install a break handler
+
+in:   BreakProc   break procedure to be called upon
+                  Crtl-Break
+
+A program can install its own break handler. Module
+'Break' maintains a stack of break procedures. The break
+procedure on top of the stack (i.e. the one which was
+installed most recently) will be called upon the
+occurence of a ctrl-break. The default break handler
+which is installed initially terminates the program with
+a call to 'System.Terminate(stopped)'.
+
+Up to four user defined break procedure may be installed
+at the same time.
+*)
+
+
+PROCEDURE UnInstallBreak;
+(*
+- Uninstall the current break handler
+
+Removes the break procedure which is currently on top of
+the stack. So the last installed break procedure will be
+deactivated, and the one installed previously becomes
+active again.
+*)
+
+
+END Break.
+

@@ -1,0 +1,134 @@
+DEFINITION MODULE Overlay;
+
+(*
+   Overlay manager.
+   
+   Under the LOGITECH MODULA-2 System, programs can be divided into
+   subprograms or resident overlays which are loaded upon request.
+   
+   subprograms are executed like procedures :
+   
+   - They have only one entry-point (module code of the program's
+     main module).
+   - after termination, their code and data do not exist any longer.
+   - subprograms may themselves activate other subprograms or resident
+     overlays.
+     
+   resident overlays are executed like above, but their code and data
+   still exist after termination. Therefore, they can still be accessed
+   by other part of the application. Resident Overlays can be 
+   explicitely unloaded by the application.
+*)
+   
+
+FROM SYSTEM  IMPORT ADDRESS;
+FROM RTSMain IMPORT Status, OverlayPtr, OverlayDescriptor;
+
+EXPORT QUALIFIED 
+  ErrorCode  , 
+  OverlayId  , InstallOverlay, DeInstallOverlay, CallOverlay, GetErrorCode,
+  LayerId    , NewLayer, DisposeLayer, InstallOverlayInLayer,
+  CallOverlayInLayer;
+
+
+TYPE 
+  ErrorCode = 
+     (Done, NotDone, FileNotFound, BadFormat, InsufMemory, VersionConflict);
+
+
+PROCEDURE GetErrorCode (error : ErrorCode; VAR str : ARRAY OF CHAR);
+
+
+PROCEDURE CallOverlay     (     fileName : ARRAY OF CHAR;
+                            VAR done     : ErrorCode    ;
+                            VAR status   : Status       );
+(*
+    loads and execute the overlay defined by filename. Upon
+    termination, the overlay is unloaded from memory.
+    
+    Search strategy :
+    =================
+    
+    If a path is specified in 'fileName', The manager will only
+    try to load the overlay from this given path.
+    
+    If there is no path specified in 'fileName', the overlay 
+    manager applies the following strategy (in the given order) :
+    
+    1) The directory from where the base program (.EXE) was loaded is
+       searched.
+       NOTE : The overlay manager applies this strategy only if 
+              the current DOS version is greater or equal to 3.1
+              and lower than 4.0
+              
+    2) The directories specified in the DOS environment variable
+       M2OVL are searched (if this variable exists).
+       To be used, this variable must have been previously set
+       using the 'SET <var> = <value>' DOS command.
+       If more than one directory is specified, they must be
+       separated by a semicolon :
+       
+       example :
+       
+       C:>SET M2OVL = C:\dir1;D:dir2;\dir3
+       
+    3) The current directory is searched.
+*)
+
+TYPE 
+  OverlayId  = OverlayPtr;
+
+(* defines a handle to a resident overlay *)
+
+PROCEDURE InstallOverlay    (    fileName : ARRAY OF CHAR; 
+                            VAR done     : ErrorCode    ;
+                            VAR status   : Status       ): OverlayId;
+(*
+  loads and execute a resident overlay. Upon termination,
+  the resident overlay becomes logically part of the overlay which
+  has loaded it. The handle returned can be used to explicitly
+  unload the resident overlay.
+  The applied search strategy is the same than above
+*)
+
+PROCEDURE DeInstallOverlay  (    overlayId : OverlayId     );
+(* explicitly unloads the resident overlay defined by its handle *)
+
+
+(*
+   the following procedures perform the same task than the previous one.
+   The only difference is the use of a parameter 'layer'.
+   A layer is a piece of memory, reserved from DOS trhu the call to
+   NewLayer, that one or many overlays can share. Giving the handle returned
+   by Newlayer as parameter to these routines forces the loader to
+   use the space left in this layer. 
+
+   Note : for each overlay, the loader knows in which layer it is
+          loaded. So there is no need to tell the loader in which
+          layer a resident overlay is loaded. That is why there is
+          only one procedure DeInstallOverlay.
+*)
+TYPE
+  LayerId;
+
+PROCEDURE NewLayer (VAR layer : LayerId; size : CARDINAL; VAR done : BOOLEAN);
+(* ask DOS for memory. size is given in paragraphs *)
+
+PROCEDURE DisposeLayer (layer : LayerId);
+(* give back the reservewd memory to DOS *)
+
+PROCEDURE CallOverlayInLayer
+                          (     fileName : ARRAY OF CHAR;
+                                layer    : LayerId      ;
+                            VAR done     : ErrorCode    ;
+                            VAR status   : Status       );
+
+PROCEDURE InstallOverlayInLayer
+                          (    fileName  : ARRAY OF CHAR; 
+                               layer     : LayerId      ;
+                            VAR done     : ErrorCode    ;
+                            VAR status   : Status       ): OverlayId;
+
+
+END Overlay.
+

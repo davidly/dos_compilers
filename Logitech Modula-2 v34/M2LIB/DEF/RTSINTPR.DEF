@@ -1,0 +1,46 @@
+DEFINITION MODULE RTSIntPROC;
+
+(*
+ Constraints and Limitations :                                         
+                                                                       
+ NOTE : each interrupt PROC must be removed before a new one is        
+        installed within the save vector !!                            
+                                                                       
+        The interrupt PROC must not be in a priority module !!         
+        nor call a priority module procedure.                          
+                                                                       
+        The PROC is executed interrupt off, so it must be as short as  
+        possible.                                                      
+                                                                       
+  IMPLEMENTATION :                                                     
+                                                                       
+  All registers are saved, thus the Modula-2 code can be executed      
+  without taking care of this. The End of Interrupt is also sent to    
+  the Interrupt Controller before the entry of the Modula-2 interrupt  
+  procedure.                                                           
+                                                                  
+
+
+ Sets a PROC as interrupt service routine, all registers are preserved 
+ except the stack, that remains the stack of the interrupted process   
+ NOTE: this interrupt PROC MUST BE as short as possible, and use as    
+       little stack as possible. So will it be fast and reliable       
+*)
+
+PROCEDURE SetIntPROC( p: PROC; vector: CARDINAL);
+
+(*
+ Removes the interrupt PROC previously installed and restores the old  
+ value of the interrupt vector                                         
+*)
+
+PROCEDURE RemoveIntPROC(vector: CARDINAL);
+
+(*
+ Removes all interrupt PROC installed prevously                        
+*)
+
+PROCEDURE FreeIntPROC;
+
+END RTSIntPROC.
+

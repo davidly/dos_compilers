@@ -1,0 +1,110 @@
+(* Abbreviation: RS232Code *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 7, 1985 *)
+DEFINITION MODULE RS232Code;
+(*
+   High-speed interrupt-driven input/output via the
+   RS-232 asynchronous serial port
+
+This module provides interrupt-driven I/O via the serial
+port, but the Interrupt Service Routine is implemented
+using in-line code (as opposed to IOTRANSFER). Charcters
+received are stored in a buffer of 100H characters.
+
+This approach is NOT portable to other Modula-2
+implementations, but it allows for treatment of interrupts
+with a high frequency.
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED
+   Init, StartReading, StopReading,
+   BusyRead, Read, Write;
+
+
+PROCEDURE Init (baudRate: CARDINAL;
+                stopBits: CARDINAL;
+                parityBit: BOOLEAN;
+                evenParity: BOOLEAN;
+                nbrOfBits: CARDINAL;
+                VAR result: BOOLEAN);
+(*
+- Initialize the serial port.
+
+in:   baudRate    transmission speed,
+      stopBits    number of stop bits (usually 1 or 2),
+      parityBit   if TRUE, parity is used, otherwise not,
+      evenParity  if parity is used, this indicates
+                  even/odd,
+      nbrOfBits   number of data bits (usually 7 or 8),
+
+out:  result      TRUE if the initialization was
+                  completed.
+
+The legal values for the parameters depend on the
+implementation (e.g. the range of supported baud rates).
+*)
+
+
+PROCEDURE StartReading;
+(*
+- Allow characters to be received from the serial port.
+
+This procedure initializes the communication controller to
+generate interrupts upon reception of a character. It also
+unmasks the corresponding interrupt level in the interrupt
+controller.
+*)
+
+
+PROCEDURE StopReading;
+(*
+- Disable receiving from the serial port.
+
+A call to this procedure disables the communication
+controller from generating interrupts. In addition it
+terminates the coroutine which listens to the line. The
+old interrupt vector as well as the old state of the
+interrupt controller (mask) is restored.
+*)
+
+
+PROCEDURE BusyRead (VAR ch: CHAR; VAR received: BOOLEAN);
+(*
+- Read a character from serial port, if one has been
+  received.
+
+out:  ch              the character received, if any,
+      received        TRUE if a character was received.
+
+If no character has been received, then ch = 0C, and
+received = FALSE.
+*)
+
+
+PROCEDURE Read (VAR ch: CHAR);
+(*
+- Read a character from the serial port.
+
+out:    ch      the character received.
+
+As opposed to BusyRead, Read waits for a character to
+arrive.
+*)
+
+
+PROCEDURE Write (ch: CHAR);
+(*
+- Write a character to the serial port.
+
+in:     ch      character to send.
+
+Note: no interpretation of characters is made.
+*)
+
+
+END RS232Code.
+

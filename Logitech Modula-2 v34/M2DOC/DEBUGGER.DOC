@@ -1,0 +1,341 @@
+
+Logitech Modula-2 Release 3.40                                   March, 1990
+----------------------------------------------------------------------------
+
+ The Logitech Modula-2 Release 3.40 Debuggers
+ ============================================
+
+ The Run-Time and Post-Mortem Debuggers included in Modula-2 Release 3.40
+ have undergone extensive enhancements since Release 3.03.  This section
+ documents the changes that have been made.
+
+
+ Overview of New Features
+ ------------------------
+
+ Details of these new features are described in the following section.
+
+  * A new "Breakpoint" window has been added that lists the current
+    breakpoints and their associated information (i.e. breakpoint
+    address, count, etc.).  It also allows the user to select and
+    view a breakpoint's position in the Text window.
+
+  * A new "decOde" window has been added which allows the user to
+    view the assembly decode of an address, and to manipulate
+    breakpoints at the assembly decode level.
+
+  * If a configuration file has not been found, the user is now
+    prompted for the number of lines desired (25 or 43).
+
+  * Several new options and commands have been added.
+
+
+ Debugger Options
+ ----------------
+
+  * The Run-Time Debugger no longer uses the RTDPAR.CFG file as described
+    in the Toolkit manual.  Instead, it allows you to define the default
+    values for the debugger options by means of the DOS environment
+    setting "M2RTD".
+
+    For example, you might want to include a command like the following
+    into your DOS AUTOEXEC.BAT file:
+
+     SET M2RTD=/Q-/Z-/H:40/S-/B-/M-/D+/G-/V-/P:"D:"/A:"MAP"/J:1C,21/F-
+
+    In addition, all RTD options are now also available on the command
+    line.
+
+    The PMD now also allows you to set default values for its options in
+    the same way by means of the DOS environment string "M2PMD".  For a
+    list of the PMD options please refer to the Modula-2 User's Manual.
+
+  * The RTD no longer supports the options /L and /W.  Instead, it provides
+    the option /H (described below) which is simpler to use and understand
+    than /L and /W.  The /H option allows you to specify the RTD heap space
+    size in kilobytes (KB).
+
+  * The RTD and PMD now support a "library file" option, /F.  This option
+    directs the debuggers to read a library control file that contains a
+    list of library modules.  Commands in this library control file allow
+    you to control the default step mode and storage of procedure information
+    in the debugger module window list.
+
+  * The RTD now supports an "overlay" option, /O=number.  This option
+    directs the debugger to stop at a particular overlay in the application,
+    allowing you to execute over a particular number of overlays.
+
+
+ Run-Time Debugger Option Details
+ --------------------------------
+
+ This is a complete list of the options available in the Run-Time Debugger
+ included in Release 3.40.
+
+   /A     (default: /A:"MAP")
+          Specification of the MAP file extension
+
+   /B     (default: /B-)
+          Big swap
+
+          When "/B+" is specified, the application program is removed
+          from memory while in a breakpoint (it is swapped out to disk).
+          Note: this could lead to unexpected effects when an application
+          interrupt occurs (the code of the interrupt hanlder is no longer
+          in memory).  To prevent such problems, the options /K, /I, or /J
+          should be used for all interrupts handled by the application.
+
+   /D     (default: /D+)
+          Application screen (see description in manual)
+
+   /F     (default: /F-)
+          Library file
+
+          If "/F+" is specified, the file DB.LBR is read.  This file
+          contains a list of the names of library modules and commands.
+          The commands in this library file allow you to control the
+          default step mode and storage of procedure information in the
+          debugger module list.  In the .LBR file, each library module
+          must be specified on a separate line using the following format:
+
+            MODULE = <module name> [s[+,-]] [p[+,-]]
+
+          where "s" means "Step" and "p" means "Procedure".  The defaults
+          for the switches are "s+" and "p-".  When "s" is set, the
+          corresponding module will have the step mode disabled by default.
+          When "p" is set, all procedure information for the module is
+          removed from the internal heap of the debugger.  While this
+          disables symbolic debugging for that module, it saves memory
+          in the internal heap of the debugger.
+
+          The search strategy for this file is the same as for the files
+          of the application: current directory, master path of the
+          application, and paths in the M2LBR environment string.
+
+          Note that for library modules, the debuggers do not prompt the
+          user for a file name when the REF or source file for the module
+          is not found automatically.
+
+   /G     (default: /G-)
+          Graphics screen (see description in manual)
+
+   /H     (default: /H-    if /S- and /B-
+                    /H:64  if /S+ or /B+)
+          Heap space size in kilobytes (KB)
+
+          This option specifies the size of the heap used by the RTD.
+          A heap overflow error will occur in the RTD if it needs
+          more heap memory than was specified with /H.  If this option
+          is not specified, then the heap of the RTD is only limited by
+          the free memory available from the DOS operating system.  When
+          the swap options (/S or /B) are used, the /H option is always
+          set by default.
+
+          The heap used by the RTD for a minimal program is in the
+          order of about 10 KB.  The RTD needs about 84 bytes of
+          heap space per module and 16 bytes per procedure of the
+          application program.  Depending on its structure, 10 to 20KB
+          may be needed for storing information on the call chain,
+          on data structures, and on breakpoints.  Breakpoint tables
+          may consume a significant amount of memory when using Go
+          Statement or Go Flat to step through in large procedures.
+          The command 'Free Heap' in the status or help window may be
+          used to understand the amount of heap space used by the RTD.
+
+          If a module is marked with "p-" in the file DB.LBR (see
+          option /F above), the heap space allocated initially for the
+          procedures of this module will be freed and reused.
+
+   /I     (default: not set)
+          List of interrupt vectors to be handled by a dummy
+          handler while in the RTD (e.g. /I:1C,8)
+
+          By means of the /I option it is possible to set an interrupt
+          vector to a dummy interrupt service routine while execution is
+          taking place in the RTD.
+
+          The syntax of the /I option is:
+
+            /I=hh,hh,hh     (where h is an hexadecimal digit)
+
+          The list can have a maximum of 16 elements (vectors).  The
+          keyboard (as well as the mouse and timer) interrupt should
+          not be disabled in the RTD, otherwise the corresponding device
+          cannot be used in the RTD anymore.
+
+   /J     (default: not set, except for vector 1B)
+          Interrupt vectors to be replaced by original (DOS, RTD)
+          interrupt handlers while in the RTD (e.g. /J:1C,21)
+
+          By means of the /J option it is possible to set an interrupt
+          vector to its original value while in the RTD. The original
+          value is the value this vector had when the RTD was invoked.
+
+          The syntax of the /J option is:
+
+            /J=hh,hh,hh     (where h is an hexadecimal digit)
+
+          The list can have a maximum of 16 elements (vectors).  The RTD
+          always includes interrupt 1BH (IBM-PC/DOS Ctrl+Break) implicitly
+          into the list of vectors associated with option "/J".
+
+   /K     (default: not set)
+          Interrupt mask to be used by the RTD (e.g. /K:A0)
+
+          By means of the /K option it is possible to specify an interrupt
+          mask which is used by the RTD while in a breakpoint.
+
+          The syntax of the /K option is:
+
+            /K=hh           (where h is an hexadecimal digit)
+
+          The mask A0, for instance, disables the printer as well as the
+          alternate printer.  The mask 01 disables the timer interrupt, etc.
+          The keyboard (as well as the mouse and timer) interrupt should
+          not be disabled in the RTD, otherwise the corresponding device
+          cannot be used in the RTD anymore.
+
+   /M     (default: /M-)
+          Mouse (see description in manual)
+
+   /O=n   (default /O-)
+          Overlay count
+
+          This option allows you to specifies the number of overlays in
+          which the RTD will not stop.
+
+   /P     (default: /P:"D:")
+          Drive and path for temporary files (see description in manual)
+
+   /Q     (default: /Q-)
+          Query (see description in manual)
+
+   /S     (default: /S-)
+          Small swap
+
+          When "/S+" is specified, the application program is removed
+          from memory while in a breakpoint (it is swapped out to disk).
+          Note: this could lead to unexpected effects when an application
+          interrupt occurs (the code of the interrupt hanlder is no longer
+          in memory).  To prevent such problems, the options /K, /I, or /J
+          should be used for all interrupts handled by the application.
+
+   /V     (default: /V-)
+          Virtual disk (memory disk) for temporary RTD files
+
+          The drive and directory path for the "/V+" option are defined
+          by the "/P" (see above).
+
+   /Z     (default: /Z-)
+          Use page zero for the RTD (see options /D and /G also)
+
+
+ New Commands in the Debuggers
+ -----------------------------
+
+  * A new "Free Heap" command "F" is present in both the Status and
+    Help windows.  This command shows the amount of free memory currently
+    available when in the RTD (or PMD).  If none of the memory control
+    options are selected (/H, /S, or /B), then the free heap will also
+    include the free memory available from the DOS operating system.
+    This command can be useful in order to find an optimal value to
+    specify with the /H option (described above).
+
+  * The Text window now contains a "Decode" command "D".  This command
+    shows the code address of the selected line in the Text window and
+    updates the display of the "decOde" window to that address.
+
+  * The decOde window contains several new commands:
+
+      - it now contains a "Decode" command "D".  When this command
+        is executed, you are prompted to enter an address to begin
+        the assembly decode at.
+
+      - it now contains a "Registers" command "R".  When this command
+        is executed, the current values of the registers and flags
+        are displayed.
+
+      - it now contains both "Go Line" and "Go Breakpoint" commands
+        ("GL" and "GB").  These commands operate in the same manner
+        as their equivalents in the Text window.  The "Go Line" command
+        can also be executed by a double click on the desired line in
+        the decOde window.
+
+      - it now contains the "Set Breakpoint", "Clear Breakpoint", and
+        "Kill all Breakpoint" commands ("S", "C", and "K").  These
+        commands operate in the same manner as their equivalents in
+        the Text window, but only on breakpoints in the decOde window.
+        Breakpoints set in both the decOde window and the Text window
+        will appear in the decOde window.
+
+
+ Enhancements
+ ------------
+
+  * The decOde window now supports the decoding of 80x87 and 80186
+    instructions.
+
+  * When loading and unloading overlays, the module selected in the
+    "Module" window is now always the main module of the current overlay.
+
+  * The RTD now supports the debugging of applications that have been
+    linked with the M2L optimize option.
+
+  * The RTD now preserves the interrupt controller mask used by the
+    application program.
+  
+
+ Display Configuration
+ ---------------------
+
+  The default display configuration file provided for the debuggers is
+  for the monochrome display adapter.  If you are using a CGA, EGA, or
+  VGA display, you may wish to change the default display configuration.
+  Simply change to your M2\M2EXE directory and copy the appropriate
+  configuration file for your adapter to the debugger configuration
+  file DB.CFG:
+
+	Display Adapter			Configuration File
+	---------------                 ------------------
+
+	     MDA			      MDA.CFG
+	     CGA			      CGA.CFG
+	     EGA			      EGA.CFG
+	     VGA			      EGA.CFG
+
+
+  For example, if you are using an EGA adapter, you should copy the
+  file EGA.CFG to DB.CFG:
+
+	C:
+	CD \M2\M2EXE
+	COPY EGA.CFG DB.CFG
+
+
+ Additional Notes
+ ----------------
+
+  * The RTD and Interrupt Handling
+
+    If an interrupt occurs that is handled by an IOTRANSFER in the
+    application program being debugged while the program is stopped
+    at a breakpoint, the system will hang.  In order to prevent this,
+    one of the /I, /K, or /J options (described above) should be
+    used for each interrupt handled with IOTRANSFER in the application
+    program.  This is not necessary if it is known that the interrupt
+    will not occur while the program is stopped in the debugger.
+
+    When debugging applications using the Logitech Modula-2 Real Time
+    Kernel, then the interrupt vectors 8H (the timer interrupt) and 21H
+    (the DOS call interrupt) should always be in the list of vectors
+    specified with the /J option.
+
+
+  * Debugging "Non-Debuggable" Programs
+
+    The current version of the debuggers do not support the debugging
+    of programs that have not been compiled and linked for debugging.
+    When you try debugging a program that cannot be debugged, the
+    program will execute as normal, without giving the debugger
+    control.
+

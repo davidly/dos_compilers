@@ -1,0 +1,179 @@
+(* Abbreviation: Devices *)
+(* Version 1.20, Oct 1985 *)
+DEFINITION MODULE Devices;
+(*
+   Additional facilities for device and interrupt handling
+
+The MODULA-2/86 run-time support maintains a device mask
+that indicates from which devices interrupts are enabled.
+The bits of the device mask have the same meaning as the
+bits in the mask register of the interrupt controller.
+
+Module 'Devices' provides access to the device mask.
+It allows a program to inquire and change the status of
+a device (interrupts enabled or disabled). The device
+numbers used by module 'Devices' and by the run-time
+support are equal to the number of the bit in the
+device mask, that indicates whether interrupts from
+this device are enabled or disabled.
+
+When a program is running at no priority, the mask
+register of the interrupt controller is identical to this
+device mask. When a program is running at some priority,
+then the mask register of the interrupt controller is set
+to the logical OR of the device mask and the corresponding
+priority mask. When the priority or the device mask
+changes, the MODULA-2/86 run-time support sets the
+mask register of the interrupt controller accordingly.
+At any point in time, all the interrupts masked out,
+either in the device mask or in the current priority mask,
+are disabled. The priority mask for 'no priority' does not
+mask out any interrupt, i.e. its value is all zeros.
+
+When writing interrupt handlers in MODULA-2/86, it is
+strongly recommended to use only the procedures provided
+by module 'Devices', and not to access directly the mask
+register of the interrupt controller.
+
+The following should be performed in order to install an
+interrupt handler: First save the old interrupt vector,
+then set up the interrupt handler (IOTRANSFER), and if
+necessary, save the current device status (interrupts
+enabled or disabled) and enable interrupts from the
+device.
+
+Before the program terminates, or in order to remove an
+interrupt handler, the following sequence of procedure
+calls should be performed: If necessary, restore the old
+device status or disable interrupts from the device, and
+then restore the old interrupt vector.
+
+At the end of a program the MODULA-2/86 run-time support
+resets the mask register of the interrupt controller to
+its initial value.
+
+In general, a call to IOTRANSFER in Modula-2 associates
+a process with only the next occurence of the specified
+interrupt. The procedure 'InstallHandler' provided by
+module 'Devices' allows to install an interrupt handler
+permanently. It associates a process, the interrupt
+handler, permanently with a certain interrupt.
+
+While it is not required to install an interrupt handler
+in this way, it may be useful for handling time critical
+interrupts. Installing an interrupt handler permanently
+improves the performance of IOTRANSFER and of the implicit
+coroutine transfer that takes place when the interrupt
+occurs by about 20 percent.
+
+'InstallHandler' must only be called after the process has
+been created (by means of NEWPROCESS) and before the
+process has called IOTRANSFER. For instance, it may be
+called right at the beginning of the code of the process.
+*)
+
+
+FROM SYSTEM IMPORT ADDRESS, PROCESS;
+
+EXPORT QUALIFIED
+   GetDeviceStatus, SetDeviceStatus,
+   SaveInterruptVector, RestoreInterruptVector,
+   InstallHandler, UninstallHandler;
+
+
+PROCEDURE GetDeviceStatus(deviceNr: CARDINAL;
+                          VAR enabled: BOOLEAN);
+(*
+- Return the status of a device in the device mask
+
+in:   deviceNr  number of the device to be checked
+                bitnumber (0..7) of bit for device in
+                interrupt controller 8259 mask
+
+out:  enabled   TRUE if interrupts from the device are
+                enabled, FALSE otherwise
+*)
+
+
+PROCEDURE SetDeviceStatus(deviceNr: CARDINAL;
+                          enable: BOOLEAN);
+(*
+- Set the status of a device in the device mask
+
+in:   deviceNr  number of the device to enable or disable
+                bitnumber (0..7) of bit for device in
+                interrupt controller 8259 mask
+                
+      enable    if TRUE, enable interrupts from the
+                device, otherwise disable them
+
+The mask register of the interrupt controller will
+be updated according to the current priority and
+the new device mask.
+*)
+
+
+PROCEDURE SaveInterruptVector(vectorNr: CARDINAL;
+                              VAR vector: ADDRESS);
+(*
+- Save the current value of an interrupt vector
+
+in:   vectorNr   interrupt vector number
+
+out:  vector     value of current interrupt vector
+*)
+
+
+PROCEDURE RestoreInterruptVector(vectorNr: CARDINAL;
+                                 vector: ADDRESS);
+(*
+- Restore the value of an interrupt vector
+
+in:   vectorNr   interrupt vector number
+      vector     value to restore (previously saved
+                 with 'SaveInterruptVector')
+*)
+
+
+PROCEDURE InstallHandler(process: PROCESS;
+                         vectorNr: CARDINAL);
+(*
+- Install an interrupt handler permanently
+
+in:   process    process associated with the interrupt
+                 handler
+      vectorNr   interrupt vector number
+
+The process is associated permanently to the given
+interrupt vector number. This improves the performance
+of IOTRANSFER and of the implicit coroutine transfer
+that takes place when the interrupt occurs. A process
+may be associated to at most one interrupt, and at most
+one process may be associated to the same interrupt.
+
+'InstallHandler' must only be called after the process has
+been created (by means of NEWPROCESS) and before the
+process has called IOTRANSFER. For instance, it may be
+called right at the beginning of the code of the process.
+Except for the call to 'InstallHandler', the code of a
+permanently installed interrupt handler is identical to
+the code of a regular interrupt handler.
+*)
+
+
+PROCEDURE UninstallHandler(process: PROCESS);
+(*
+- Uninstall an interrupt handler which has been
+  installed permanently
+
+in:   process    process associated with the interrupt
+                 handler
+
+In general, there is no need to call this procedure.
+The MODULA-2/86 run-time support automatically uninstalls
+interrupt handlers upon termination of a (sub-)program.
+*)
+
+
+END Devices.
+

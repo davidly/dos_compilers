@@ -1,0 +1,267 @@
+
+Logitech Modula-2 Release 3.40                                   March, 1990
+----------------------------------------------------------------------------
+
+ The Logitech Modula-2 POINT Editor 2.01
+ =======================================
+
+ The POINT Editor has had extensive improvements made to it since version
+ 1.52.  This file describes some of these improvements, and how to get
+ started with the new version.  Information in this document replaces
+ any equivalent information in the existing POINT manual.
+
+
+ Version 2.01
+ ------------
+
+ The user interface for version 2.01 has been extensively enhanced to
+ allow for simple and complete keyboard usage, without the use of the
+ "mouse simulation" commands found in version 1.52 and earlier.  The
+ complete functionality of POINT can now be accessed easily through the
+ keyboard (as well as with the mouse).  In addition to the new user
+ interface, many bugs found in the previous versions have been fixed,
+ and overall operation has been improved.
+
+
+ Quick Start
+ -----------
+
+ *  To execute POINT, enter "PT" at the DOS prompt.  To load a file,
+    press the F2 key to display the file selection screen.  You may
+    use the cursor arrow keys (or the mouse), or enter the name of
+    the file you wish to edit.  Press the Enter key to load the file.
+
+ *  Notice the highlighted letters in the menus.  These are "speed keys"
+    that can be executed by pressing and holding the Alt-key in
+    conjunction with the highlighted letter.  For example, the "Files"
+    menu has the letter "F" highlighted.  So, in order to view the Files
+    menu, simply press "Alt-F".
+
+ *  Inside each menu there are highlighted letters and optional direct
+    keys listed to perform each specific command.  For example, notice
+    the first entry in the Files menu:
+
+                      "Open File Full      F2"
+
+    The "F" in "Full" is highlighted, indicating that it is the speed 
+    key within the menu for performing that command.  The "F2" function 
+    key also will perform that command.  The cursor up and down arrow
+    keys (in conjunction with the Enter key) may also be used to select
+    a command.  So, in this case, from the editor screen, pressing
+    "Alt-F-F" (or F2) will open a file into a full screen window.
+    Experiment with the different menus and speed keys to get a feel
+    for their operation.
+
+ *  The highlighted letters in the file selection screen and the color 
+    settings screen operate in the same manner.  For example, pressing 
+    "Alt-E" in the file selection screen will execute the "New pattern"
+    command.
+
+ *  For context-sensitive help on a particular command or menu, press
+    the "F1" function key.  You may now navigate through the help system
+    via the menus on each help screen.
+
+ *  Some quick-key commands:
+
+	Esc		- returns you to the current editing screen
+			  from any process in POINT
+
+	F3		- saves all the files you currently have on 
+			  screen and returns you to DOS
+
+	F10		- abandons all changes you have made to your
+			  files and returns you to DOS
+
+	Alt-Q		- lets you choose which files you want to save
+			  and which files you want to abandon, and
+			  then returns you to DOS
+
+
+ POINT 2.01 Files Included
+ -------------------------
+
+ Here is a list of the POINT 2.01 files included in Logitech Modula-2
+ Release 3.40:
+
+ *  PT.EXE		- the POINT executable program file.
+
+ *  PT.INI		- the default initialization file.
+
+ *  PTCOLOR.INI		- color initialization file.  If you have been
+			  using a monochrome monitor, and now a color
+			  monitor, copy PTCOLOR.INI into PT.INI.
+
+ *  PTM2COLR.INI	- color initialization file for use with the
+			  Logitech Modula-2 Development System 3.4.
+
+ *  PTMONO.INI		- monochrome initialization file.  If you have
+			  been using a color monitor, and now a
+			  monochrome monitor, copy PTMONO.INI into
+			  PT.INI.
+
+ *  PTM2MONO.INI	- monochrome initialization file for use with
+			  the Logitech Modula-2 Development System 3.4.
+
+ *  PTEXPERT.INI	- "expert" user initialization file.
+
+ *  PT.ASC		- ASCII Reference Table file.  This file can be
+			  opened in your POINT editing session for
+			  quick visual reference, a basis for character
+			  search, or for inclusion into your edited 
+			  file.
+
+ *  PT.HLP		- the help file, used by POINT to give an
+			  extensive summary and detailed description
+			  of commands and menus.
+
+ *  PT.MSG		- the message file, used by POINT to give one
+			  line of help for each command.
+
+ * M2ASSIST.INI		- template initialization file, for use with
+			  Logitech Modula-2 Development System 3.4.
+
+ * M2ASSIST.HLP		- help file for use with the M2Assist system.
+
+
+ Point 2.01 Command Number Reference
+ -----------------------------------
+
+ Here is the complete list of command numbers supported by POINT 2.01.
+ These commands may be used in all key and menu definitions in the POINT
+ initialization file.  Refer to your POINT manual for details.
+
+ No.  POINT Command
+ ---  -------------
+   0  Reserved for internal use.
+   1  Reserved for internal use.
+   2  Copy the current selection to the duplicate mode insertion point.
+   3  Move the current selection to the extract mode insertion point.
+   4  Move the current selection to the scrap buffer.
+   5  Verify edited files to be saved; then exit to the operating system.
+   6  Reserved for internal use.
+   7  Define a new window; then load file.
+   8  Move insertion point to the beginning of the file.
+   9  Move insertion point to the end of the file.
+  10  Redraw the entire POINT screen.
+  11  Toggle window between full size and less-than-full size.
+  12  Place this window on the top of the stack of windows.
+  13  Redefine window size by repositioning the window corners.
+  14  Move window toward top of file by one screen less two lines.
+  15  Move window toward end of file by one screen less two lines.
+  16  Move this line number to the first line of window.
+  17  Verify save of edited file; then close window.
+  18  Prompt for new name; then save the file under that name.
+  19  Enter a string to search for; then search forward.
+  20  Replace instances of one string with another.
+  21  Reserved for internal use.
+  22  Cancel the current prompt, menu, mode, or action.
+  23  Insert a specified ASCII character at the insertion point.
+  24  Redo the last edit on the current selection.
+  25  Undo the effect of the last edit.  Undo again to restore the edit.
+  26  Select text with the mouse.
+  27  Search forward for the selected text.
+  28  Cycle next window to the top of the stack of windows.
+  29  Place this window at the bottom of the stack of windows.
+  30  Define a window; place the output of the selected system command in it.
+  31  No action.
+  32  Execute the system command interpreter. Type "EXIT" to return to POINT.
+  33  Load file into this window.
+  34  Move the selection cursor up one row.
+  35  Move the selection cursor down one row.
+  36  Move the selection cursor left one column.
+  37  Move the selection cursor right one column.
+  38  Hide window in the Window List menu.
+  39  Extend the selection to the current mouse position.
+  40  Undo multiple previous editing actions.
+  41  Reserved for internal use.
+  42  Reserved for internal use.
+  43  Reserved for internal use.
+  44  Reserved for internal use.
+  45  Execute one of nine commands depending on the mouse motion direction.
+  46  Execute one of nine commands depending on the mouse motion direction.
+  47  Save all edited files.
+  48  Save all edited files and exit POINT.
+  49  Verify discard of edits; then exit POINT.
+  50  User defined menu one (1).
+  51  User defined menu two (2).
+  52  User defined menu three (3).
+  53  Display a menu of available file windows.
+  54  Save the file.
+  55  Insert the contents of the scrap buffer in front of the insertion
+      point.
+  56  Move window back to the last file position viewed.
+  57  Copy the current selection to the scrap buffer.
+  58  Top the window containing the selection and position to show the
+      selection.
+  59  Toggle between insert and overtype entry modes.
+  60  User defined menu four (4).
+  61  Delete the current selection, preserving the contents of the scrap
+      buffer.
+  62  Exchange the current selection with the contents of the scrap buffer.
+  63  Display the Options menu for options changes in this editing session.
+  64  Enter the POINT Help system.
+  65  User defined menu five (5).
+  66  Search backward for the selected text.
+  67  User defined menu six (6).
+  68  Toggle POINT screen size between 43 and 25 lines of text (EGA, VGA
+      only).
+  69  Copy current selection to the mouse cursor position (on button
+      release).
+  70  Move current selection to the mouse cursor position (on button
+      release).
+  71  Reserved for internal use.
+  72  Save file and close the window.
+  73  Load the file specified by the current selection.
+  74  Move the cursor one word to the left.
+  75  Move the cursor one word to the right.
+  76  Begin or end recording keystrokes in the keyboard macro buffer.
+  77  Play back the keystrokes that are recorded in the keyboard macro buffer.
+  78  Move insertion point to the beginning of the file.
+  79  User defined menu seven (7).
+  80  User defined menu eight (8).
+  81  Change the case of the first character of the current selection.
+  82  Define a window, then open the file specified by the current selection.
+  83  Locate the matching bracket of the selected bracket.
+  84  Position the window at the line number specified by the current
+      selection.
+  85  Justify the current selection between the left border and the right
+      margin.
+  86  Toggle the read-only status of the file.
+  87  Cycle the color combinations of the window.
+  88  Exchange the two top windows, making the second window the top window.
+  89  Reserved for internal use.
+  90  Reserved for internal use.
+  91  Reserved for internal use.
+  92  Reserved for internal use.
+  93  User defined menu nine (9).
+  94  User defined menu ten (10).
+  95  User defined menu eleven (11).
+  96  User defined menu twelve (12).
+  97  User defined menu thirteen (13).
+  98  User defined menu fourteen (14).
+  99  User defined menu fifteen (15).
+ 100  User defined menu sixteen (16).
+ 101  Move window to a new location on the screen.
+ 102  Anchor the keyboard selection at the current insertion point.
+ 103  End keyboard selection mode.
+ 104  Load file into a full-screen window.
+ 105  Move the selection cursor to the beginning of the line.
+ 106  Move the selection cursor to the end of the line.
+ 107  Move the selection cursor to the top of the window.
+ 108  Move the selection cursor to the bottom of the window.
+ 109  Prompt for a printer device name; then print the file.
+ 110  Display POINT Editor Version and Copyright information.
+
+
+ New "makeLas" Option
+ --------------------
+
+  POINT 2.01 supports an option to control the creation of the "PT.LAS"
+  file.  Here are the possible values:
+
+        makeLas=0
+            Do not create a PT.LAS file.
+
+        makeLas=1
+            Create a PT.LAS file (this is the default).
+

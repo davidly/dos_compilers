@@ -1,0 +1,43 @@
+DEFINITION MODULE Random;
+
+  (* Random numbers generator. 
+     Algorithm : Based on the additive congruential method 
+                 (Knuth, The art of computer programming, Vol.2, pp 26-27)
+  *)
+
+  PROCEDURE Randomize;
+    (* Initializes the random number generator. The random number sequence 
+       following a call to Randomize cannot be reproduced.
+       A call to Randomize is done automatically at the initialization
+       of this module. 
+    *)
+
+  PROCEDURE RandomInit (seed : CARDINAL);
+    (* Initializes the random number generator.
+       The 'seed' parameter is used to generate the first number of the 
+         sequence. Thus, following a call to RandomInit with a given seed,
+         the random number sequence will always be the same, regardless of
+         any previous call to Randomize, RandomCard, etc...
+       Note: RandomCard, RandomInt, RandomReal are based on the same 
+         generator, so in order to get the same sequence, these functions
+         must be called in the same order.
+    *)
+             
+  PROCEDURE RandomCard (bound : CARDINAL) : CARDINAL;
+    (* Returns a random cardinal in the range (0 <= r < bound) if bound is
+       greater than 0, or in the range (0 <= r <= MaxCard) if bound = 0. 
+    *)
+
+  PROCEDURE RandomInt (bound : INTEGER): INTEGER;
+    (* Returns a random integer in the range (0 <= r < bound) if bound is
+       greater than 0, or in the range (0 <= r <= MaxInt) if bound = 0. 
+    *)
+
+  PROCEDURE RandomReal (): REAL;
+    (* Returns a random real uniformly distributed  the range (0.0 <= r < 1.0) 
+       with 15-16 decimal digits (IEEE double precision floating point numbers 
+       standard)
+    *)
+
+END Random.
+

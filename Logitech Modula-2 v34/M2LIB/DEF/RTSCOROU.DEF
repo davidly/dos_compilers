@@ -1,0 +1,27 @@
+(* Module       : RTSCoroutine
+ * Creation     : 87.05.15
+ * Auteur       : A.Richard
+ * Modification : 87.05.19
+ *
+ * Date      Name       Modification
+ *------------------------------------------------------------------------------
+ * 87.05.15  A.R        Create this file to export the addProcess variable
+ *
+ *)
+DEFINITION MODULE RTSCoroutine;
+
+(*
+   The procedure variable addProcess is called upon each call to the
+   standard procedure NEWPROCESS.
+   (used internally by the overlay manager (module Overlay))
+*)
+
+FROM SYSTEM IMPORT PROCESS;
+
+EXPORT QUALIFIED addProcess;
+
+VAR
+    addProcess : PROCEDURE( PROCESS );
+
+END RTSCoroutine.
+

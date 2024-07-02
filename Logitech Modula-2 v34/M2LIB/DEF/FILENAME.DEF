@@ -1,0 +1,39 @@
+(* Abbreviation: FileNames *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE FileNames;
+(*
+   Read a file specification from the terminal.
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED
+  FNParts, FNPartSet, ReadFileName;
+
+
+TYPE
+  FNParts   = (FNDrive, FNPath, FNName, FNExt);
+  FNPartSet = SET OF FNParts; 
+
+
+PROCEDURE ReadFileName(VAR resultFN: ARRAY OF CHAR;
+                       defaultFN: ARRAY OF CHAR;
+                       VAR ReadInName: FNPartSet);
+(*
+- Read a file specification from terminal.
+
+in:     defaultFN       default file specification,
+out:    resultFN        the file specification read,
+        ReadInName      which parts are in specification.
+
+Reads until a <cr>, blank, <can>, or <esc> is typed.
+After a call to ReadFileName, Terminal.Read must be called
+to read the termination character. The format of the
+specification depends on the host operating system.
+*)
+
+
+END FileNames.
+

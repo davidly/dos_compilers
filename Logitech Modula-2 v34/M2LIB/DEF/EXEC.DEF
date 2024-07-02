@@ -1,0 +1,51 @@
+DEFINITION MODULE Exec;
+
+(*
+  Shell commands. Provides a way to call the DOS interpreter, or to
+  execute a program from within another.
+*)
+
+  FROM SYSTEM IMPORT ADDRESS;
+
+  EXPORT QUALIFIED
+    DosShell, DosCommand, Run, Execute;
+
+  PROCEDURE DosShell(VAR done: BOOLEAN);
+  (* call "COMMAND.COM"                                      *)
+  (* remain in DOS command shell, until user types EXIT      *)
+  (* finds COMMAND.COM through environment variable COMSPEC= *)
+
+  PROCEDURE DosCommand(command, parameters: ARRAY OF CHAR; VAR done: BOOLEAN);
+  (* call COMMAND.COM/c command parameters                   *)
+  (* execute just one DOS command and return                 *)
+  (* finds COMMAND.COM through environment variable COMSPEC= *)
+  (* here, the DOS shell will perform a search strategy,     *)
+  (* using the PATH= environment variable                    *)
+  (* This call can be used to perform built in commands of   *)
+  (* DOS (e.g. dir, ren, copy ...)                           *)
+
+  PROCEDURE Run(programFileName, parameters: ARRAY OF CHAR; VAR done: BOOLEAN);
+  (* call program with parameters         *)
+  (* the complete filename with drive,    *)
+  (* path and extension has to be passed. *)
+  (* no search strategy will be performed *)
+
+  PROCEDURE Execute(programFileNameAdr: ADDRESS;
+                       (* pointer to program filename *)
+                    environment: CARDINAL;
+                       (* paragraph address of environment *)
+                       (* 0 for current environment        *)
+                    commandLineAdr: ADDRESS;
+                       (* pointer to command line parameters *)
+                       (* first byte is number of characters in command line *)
+                       (* next characters contain parameters                 *)
+                    FCB1Adr, FCB2Adr: ADDRESS;
+                       (* pointer to default file control blocks *)
+                    VAR errorCode: CARDINAL
+                       (* DOS error code *)
+                   );
+  (* call program with given parameter block information *)
+  (* no search strategy will be performed                *)
+
+END Exec.
+

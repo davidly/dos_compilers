@@ -1,0 +1,59 @@
+DEFINITION MODULE Chronometer;
+
+  (* 
+     Management and use of 'Chrono' objects, which permits to measure times
+     with an estimated accuracy of 0.02 second.
+     All the operations on these chronos are similar to those on a real
+     chronometer.
+  *)
+
+  FROM DurationOps IMPORT
+    Duration,   (* The measured time will be of this type *)
+    UnitSet;    (* The units to represent the time.       *)
+
+  TYPE 
+    Chrono;
+
+  PROCEDURE NewChrono (VAR chrono : Chrono);
+    (* Creates a new variable of type Chrono ('Takes a chrono'), and
+       resets it.
+       A call to NewChrono is mandatory before any other operation, 
+       otherwise the program will be HALTed at any call of such an
+       operation.
+    *)
+
+  PROCEDURE DisposeChrono (VAR chrono : Chrono);
+    (* Destroys variable of type Chrono ('Drops the chrono')  It is
+       illegal to call any operation with chrono as parameter 
+       other than NewChrono after a call to DisposeChrono *)
+
+  PROCEDURE StartChrono (chrono : Chrono);
+    (* Starts the chrono. 
+       The chrono begins to measure elapsing time.
+    *)
+
+  PROCEDURE ReadChrono (chrono          : Chrono;
+                        format          : UnitSet;
+                        VAR elapsedTime : Duration);
+    (* Reads the chrono, without stopping it.
+       If format is empty then elapsedTime will be in seconds.
+       A chrono can be read several times, elapsedTime holds the
+       time elapsed since the last StartChrono of this chrono. 
+       Accuracy : 0.02 second 
+    *)
+
+  PROCEDURE StopChrono (chrono : Chrono);
+    (* Stops the chrono.
+       The time elapsing after a call to StopChrono is not taken 
+       in account.
+    *)
+   
+  PROCEDURE ResetChrono (chrono : Chrono);
+    (* Stops and Resets the chrono.
+       After a call to Reset the chrono is prepared to measure times from
+       zero. Reset is automatically called by NewChrono.
+    *)
+       
+
+END Chronometer.
+

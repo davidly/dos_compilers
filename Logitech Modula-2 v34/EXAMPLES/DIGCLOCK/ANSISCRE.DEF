@@ -1,0 +1,27 @@
+DEFINITION MODULE ANSIScreen;
+(* In order to use this module the driver ANSI.SYS needs to be
+   installed. This can be achieved by inserting the command
+   DEVICE=ANSI.SYS in the CONFIG.SYS file of your computer. *)
+
+PROCEDURE GotoXY (colon, line : CARDINAL);
+(* positions the cursor at the given colon and line *)
+
+PROCEDURE ClrScr;
+(* the screen is erased and the cursor set in the top left corner *)
+
+PROCEDURE SetAttribute (attr : CHAR);
+(* all subsequent writing on the screen will use the given attribute
+   until it is changed by further calls to this procedure. Any 
+   combination of attributes can be obtained by calling SetAttribute
+   multiple times. *)
+
+CONST
+   (* here are the possible attribute: *)
+   Normal    = '0';
+   Bold      = '1';
+   Underline = '4';
+   Blink     = '5';
+   Reverse   = '7';
+   Concealed = '8';
+
+END ANSIScreen.

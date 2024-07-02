@@ -1,0 +1,42 @@
+(* Abbreviation: Keyboard *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 7, 1985 *)
+DEFINITION MODULE Keyboard;
+(*
+   Default driver for terminal input.
+   [Private module of the MODULA-2/86 system]
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED Read, KeyPressed;
+
+
+PROCEDURE Read (VAR ch: CHAR);
+(*
+- Read a character from the keyboard.
+
+out:    ch    character read
+
+If necessary, Read waits for a character to be entered.
+Characters that have been entered are returned
+immediately, with no echoing, editing or buffering.
+
+- Ctrl-C terminates the current program
+- ASCII.cr is transformed into ASCII.EOL
+*)
+
+
+PROCEDURE KeyPressed (): BOOLEAN;
+(*
+- Test if a character is available from the keyboard.
+
+out:          returns TRUE if a character is available
+              for reading
+*)
+
+
+END Keyboard.
+

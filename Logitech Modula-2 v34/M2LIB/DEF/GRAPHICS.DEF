@@ -1,0 +1,439 @@
+DEFINITION MODULE Graphics;
+
+(* 
+   Graphics module 
+   note : two different implementations are provided for this module :
+   GraphCGA and GraphHGC, to use a CGA card or a Hercules card
+*)
+
+FROM SYSTEM IMPORT BYTE;
+
+EXPORT QUALIFIED
+  (* colors *)
+  Black, Blue, Green, Cyan, Red, Magenta, Brown, LightGray,
+  DarkGray, LightBlue, LightGreen, LightCyan, LightRed,
+  LightMagenta, Yellow, White,
+
+  (* screen modes *)
+  txtMedRes, txtHiRes, txtCMedRes, txtCHiRes, gphMedRes, gphCMedRes,
+  gphHiRes, 
+  
+(* screen control *)
+  ScreenMode, GetScreenMode, GetScreenExt,
+  Palette, ColorTable, ForegroundColor, BackgroundColor, 
+
+(* graphics *)
+  Window, GetWindow, ClearWindow, BackgroundPattern,
+  ClipDot, Dot, GetDotColor, 
+  ClipLine, Line, Arc, Circle, Text,
+  FloodFill, FillRect, Pattern, 
+  SavePicture, RestorePicture,
+
+(* cursor control *)
+  cursorWidth, cursorHeight,
+  CURSORSHAPE, CURSORSHAPEPOINTER,
+  CursorShape, CursorColor, CursorWrap, CursorShow,
+  EraseCursor, DisplayCursor, MoveCursor, 
+  GetCursorPosition, CursorVisible;
+
+
+(* colors *)
+CONST
+      (*  Dark colors   ;         Light colors  *)
+
+      Black        =   0;         DarkGray     =   8;
+      Blue         =   1;         LightBlue    =   9;
+      Green        =   2;         LightGreen   =  10;
+      Cyan         =   3;         LightCyan    =  11;
+      Red          =   4;         LightRed     =  12;
+      Magenta      =   5;         LightMagenta =  13;
+      Brown        =   6;         Yellow       =  14;
+      LightGray    =   7;         White        =  15;
+
+
+(* screen control *)
+CONST
+      (* supported screen modes *)
+      txtMedRes     = 0; (* text 40x25 monochrome medium resolution mode *)
+      txtCMedRes    = 1; (* text 40x25 color medium resolution mode *)
+      txtHiRes      = 2; (* text 80x25 monochrome high resolution mode *)
+      txtCHiRes     = 3; (* text 80x25 color high resolution mode *)
+      gphCMedRes    = 4; (* graphic 320x200 color medium resolution mode *)
+      gphMedRes     = 5; (* graphic 320x200 monochrome medium resolution mode *)
+      gphHiRes      = 6; (* graphic 640x200 monochrome high resolution mode *)
+
+
+PROCEDURE ScreenMode (mode: INTEGER);
+(*
+   Sets the screen in the given mode. The screen is cleared.
+   The supported text modes are the following:
+   1. txtMedRes 
+      It activates the monochrome medium resolution text mode 
+      with 40x25 characters.
+   2. txtCMedRes 
+      It activates the color medium resolution text mode 
+      with 40x25 characters.
+   3. txtHiRes
+      It activates the monochrome high resolution text mode 
+      with 80x25 characters.
+   4. txtCHiRes  
+      It activates the color high resolution text mode 
+      with 80x25 characters.
+
+   The supported graphic modes are the following:
+   1. gphCMedRes
+      It activates the 320x200 dots color graphics screen.
+      The x-coordinates are in a range between 0..319, the 
+      y-coordinates are in a range between 0..199.
+      The drawing colors may be selected with the procedure Palette.
+   2. gphMedRes
+      It activates the 320x200 dots monochrome graphics screen.
+      The x-coordinates are in a range between 0..319, the 
+      y-coordinates are in a range between 0..199.
+      If you have an RGB monitor (like the IBM Color/Graphics display),
+      you can even use the colors from Palette(0) and Palette (1).
+   3. gphHiRes
+      It activates the 640x200 dots (high resolution)
+      monochrome graphics screen.
+      The x-coordinates are in a range between 0..639, the 
+      y-coordinates are in a range between 0..199.
+      The background in the high resolution mode is always black.
+      The drawing color may be selected by procedure ForegroundColor.
+*)
+
+
+PROCEDURE GetScreenMode (VAR mode: INTEGER);
+(*
+   Returns the current screen mode.
+*)
+ 
+
+PROCEDURE GetScreenExt (VAR x, y: INTEGER);
+(*       
+   Returns the extension of the screen.
+   If the screen is in a mode which is not supported,
+   x, y are set to 0.
+*)
+
+
+PROCEDURE Palette (palette: INTEGER);
+(*
+   Selects the current palette in gphC40 and gphBW40.
+   A change of the palette will cause everything on the screen to 
+   change to the colors of the new palette.
+   Four palettes are available and for each palette there is a choice
+   of four colors.
+
+   Color number:        0            1             2             3
+   Palette( 0 )     Background   Green         Red           Brown
+   Palette( 1 )     Background   Cyan          Magenta       LightGray
+   Palette( 2 )     Background   LightGreen    LightRed      Yellow
+   Palette( 3 )     Background   LightCyan     LightMagenta  White
+*)
+
+
+PROCEDURE ColorTable (color1, color2, color3, color4: INTEGER);
+(*
+   Defines the color translation table for subsequent drawings. 
+   The given colors are colors of the palette.
+   All the drawing procedures use the color table if the color -1
+   is specified. The SavePic procedure always uses the color table.
+   When a point has to be written on the screen and the color table is
+   specified, the point's current color is used to index the color table.
+   The point is drawn in the color so obtained.
+   The default color table setting is (0,1,2,3). That means that when
+   a point is written on the screen, it does not change the color
+   which is already there.
+ 
+   The color table (0,1,2,3) means that:
+     color 0 becomes color 0,
+     color 1 becomes color 1,
+     color 2 becomes color 2,
+     color 3 becomes color 3.
+   The color table (3,2,1,0) means that:
+     color 0 becomes color 3,
+     color 1 becomes color 2,
+     color 2 becomes color 1,
+     color 3 becomes color 0.
+*)
+
+
+PROCEDURE ForegroundColor (color: INTEGER);
+(*
+   Selects the foreground color in gphBW640 mode.
+   Changing the foreground color causes anything on the screen 
+   to change to the new color. 
+   The color constants defined above may be used.
+*)
+
+
+PROCEDURE BackgroundColor (color: INTEGER);
+(*
+   Sets the background color in gphBW320 and gphC320 modes.
+   The color constants defined above may be used.
+   Color is an integer in the range 0..15.
+*)
+
+
+PROCEDURE Window (x1, y1, x2, y2: INTEGER);
+(*
+   Defines a window, that is the area on the screen where all the
+   drawing occurs. The coordinates are absolute screen coordinates.
+   The coordinates are clipped to the screen boundaries.
+   If the specified window has no intersection with the screen,
+   the new window is not defined. The previous window is still
+   valid. The current window can be retrieved by using the
+   procedure GetWindow.
+   The point (x1, y1) is the upper left corner; the point (x2, y2)
+   is the lower right corner of the window.
+   The entire screen is the default graphic window 0,0,319,199
+   in the 320x200 dot mode and 0,0,639,199 in the 640x200 dot mode.
+   After defining a window, all the coordinates are relative to
+   the window. The origin of the reference system is the upper
+   left corner of the window.
+*)
+
+
+PROCEDURE GetWindow (VAR x1, y1, x2, y2: INTEGER);
+(*
+   Returns the coordinates of the window. 
+   (x1, y1) is the upper left corner and (x2, y2) is the lower
+   right corner of the window.
+*)
+
+
+PROCEDURE BackgroundPattern (pat: ARRAY OF BYTE);
+(* 
+   Defines the background pattern which is used by the ClearWindow procedure.
+*)
+
+
+PROCEDURE ClearWindow (color: INTEGER);
+(*
+   Fills the current window with the current background pattern
+   in the given color.
+   The colors 0..3 will be selected from the color palette;
+   the color -1 will make use of the color table. 
+   The background pattern is defined with the procedure BackgroundPattern.
+*)
+
+
+PROCEDURE ClipDot (x, y: INTEGER): BOOLEAN;
+(*
+   Returns TRUE if the dot at coordinates (x, y) is inside the window.
+*)
+
+
+PROCEDURE Dot (x, y: INTEGER; color: INTEGER);
+(*              
+   Plots a point at the screen coordinates x and y in the given color.
+   If color = -1, the color table is used.
+*)
+
+
+PROCEDURE GetDotColor (x, y: INTEGER): INTEGER;
+(*
+   Returns the color value of the dot located at coordinate xpos, ypos.
+   In the 320 x 200 dot graphic mode, values of 0..3 may be returned.
+   In the 640 x 200 dot graphic mode, values of 0..1 may be returned.
+   If the dot is outside the window, GetDotColor returns -1.
+*)
+
+
+PROCEDURE ClipLine (VAR x1, y1, x2, y2: INTEGER): BOOLEAN;
+(* 
+   Returns the in variables x1, y1 and x2, y2 the coordinates of the 
+   end points of the segment obtained by clipping the line at the window
+   boundaries. The procedure also returns TRUE if at least a portion
+   of the line lies in the window.
+*)
+
+
+PROCEDURE Line (x1, y1, x2, y2: INTEGER; color: INTEGER);
+(*              
+   Draws a straight line from (x1, y1) to (x2, y2) in the given color.
+   If the color is -1, the color will be obtained from the color table.
+*)
+
+
+PROCEDURE Arc (centerX, centerY, radius, startAngle, arcAngle, color: INTEGER);
+(*
+   Draws a circular arc centered at (centerX, centerY) and with given radius.
+   The starting position is given by startAngle and the extent of the arc
+   is given by arcAngle.  
+   startAngle and arcAngle are given in positive or negative degrees.
+   0 degrees is at 3 o'clock. A positive angle goes counterclockwise, 
+   while a negative angle goes clockwise.
+   startAngle is treated mod 360.
+   arcAngle is in the range (-360, 360).
+   The arc is drawn in the given color. If the color is -1, 
+   the color table will be used.
+*)
+
+
+PROCEDURE Circle (x, y, radius, color: INTEGER);
+(*
+   Draws a circle with center at (x, y), with the given radius and 
+   in the given color.
+   In the 640 x 200 mode, the circle will appear as an ellipse.
+   If the color is -1, the color table will be used.
+*)
+
+
+PROCEDURE FloodFill (x, y, fillColor, borderColor: INTEGER);
+(*
+   Fills an area on the display surface with the color specified by fillColor.
+   The color table is not supported.
+   The area is bounded by the given borderColor. 
+   (x, y) are the coordinates of any point within the area to be filled.
+*)
+
+
+PROCEDURE FillRect (x1, y1, x2, y2, color: INTEGER);
+(*
+   Fills the rectangular area defined by the coordinates x1, y1, x2, y2 
+   with the current pattern (see the procedure Pattern).
+   Bits set to 1 in the pattern cause a dot to be written in the given
+   color; bits set to 0 cause no change to the diplay.
+   If color = -1, the color table is used.
+*)
+
+
+PROCEDURE Pattern (pattern: ARRAY OF BYTE);
+(*
+  Defines the pattern used by the FillRect procedure.
+  Each byte corresponds to a horizontal line, each bit corresponds
+  to a pixel.
+*)
+
+
+PROCEDURE Text (x, y: INTEGER; string: ARRAY OF CHAR; color: INTEGER);
+(*
+   Displays the given string at the given position. The lower left corner
+   of the first character in the string is positioned at coordinates (x, y).
+   The width and height of a character is 8 pixels.
+   Clipping is performed at the window boundaries.
+*)
+
+
+PROCEDURE SavePicture (VAR buffer: ARRAY OF BYTE; x1, y1, x2, y2: INTEGER);
+(*
+   Saves the contents of a rectangular area on the screen
+   into the variable buffer.
+   The rectangular area is defined by the coordinates (x1, y1), (x2, y2) 
+   and it is clipped to the current graphic window.
+ 
+   The first 6 bytes of the buffer constitute a three word header. 
+   The remaining bytes will contain the data.
+   The programmer has to ensure that the buffer is large enough to 
+   accommodate the entire transfer.
+   The minimum buffer size in bytes is computed as following:
+     320 x 200 modes:
+       size = ((width + 3) div 4) * height * 2 + 6;
+     640 x 200 modes:
+       size = ((width + 7) div 8) * height + 6.
+   where:
+      x1, x2, y1, y2 have been clipped to the current graphic window;
+      width = abs(x1-x2) +1;
+      heigth = abs (y1-y2) +1;
+
+   After loading, the buffer has the following structure:
+     byte 0..1   :  contains 2 in the 320 x 200 mode,
+                    contains 1 in the 640 x 200 mode;
+     byte 2..3   :  width of the image;
+     byte 4..5   :  height of the image;
+     byte 6...   :  data.
+   Data is stored with the leftmost pixels in the most significant bits of 
+   the bytes. At the end of each row, the remaining bits of the last byte 
+   are skipped.
+*)
+
+
+PROCEDURE RestorePicture (VAR buffer: ARRAY OF BYTE; x, y: INTEGER);
+(*
+   Restores on the screen the contents of buffer (see SavePic).
+   The lower left corner of the picture is placed at (x, y).
+*)
+
+
+(* cursor data types and procedures *)
+
+TYPE CURSORSHAPE = RECORD 
+                     hotX : INTEGER;
+                     hotY : INTEGER;
+                     shape: ARRAY[0..7] OF BYTE;
+                   END;
+     
+     CURSORSHAPEPOINTER =  POINTER TO CURSORSHAPE;
+
+
+CONST 
+    cursorWidth =  7;    (* cursor pattern width - 1 *)
+    cursorHeight = 7;    (* cursor pattern height - 1 *)
+
+
+
+PROCEDURE CursorShape (shapePT: CURSORSHAPEPOINTER);
+(* 
+   Selects the cursor shape. 
+   IT does NOT redisplay the cursor.
+*)                 
+
+
+PROCEDURE CursorColor (color: INTEGER);
+(* 
+   Selects the color in which the cursor will be drawn.
+   It does NOT redisplay the cursor.
+*)
+
+
+PROCEDURE CursorShow (show: BOOLEAN);
+(* 
+   If show is TRUE, the cursor will be displayed on the screen. 
+*)
+
+
+PROCEDURE CursorWrap (wrap: BOOLEAN);
+(* 
+   If wrap is TRUE, the cursor position is wrapped at the window boundaries.
+   If wrap is FALSE, the cursor position is clipped at the window boundaries.
+*)
+
+
+PROCEDURE EraseCursor;
+(* 
+   Erases the cursor if displayed.
+*)
+
+
+PROCEDURE  DisplayCursor;
+(* 
+   Displayes the cursor on the screen with current shape and color.
+   The hotX, hotY of the cursor indicate the bit in the cursor shape 
+   which has to be positioned at the current cursor location.
+*)
+
+
+PROCEDURE MoveCursor (x, y: INTEGER);
+(* 
+   Moves the cursor to (x, y). (x, y) are coordinates realtive to the window.
+   If wrap is TRUE, the point (x, y) is wrapped. The cursor is then displayed. 
+   If wrap is FALSE, the point (x, y) is clipped. The cursor is then displayed 
+   only if the point (x, y) is inside the window.
+*)
+
+
+PROCEDURE GetCursorPosition (VAR x, y: INTEGER);
+(* 
+   Returns the cursor coordinates relative to the window.
+*)
+
+
+PROCEDURE CursorVisible (): BOOLEAN;
+(* 
+   Returns TRUE if the cursor is visible on the screen. 
+*)
+
+
+END Graphics.
+

@@ -1,0 +1,11 @@
+DEFINITION MODULE DosError;
+
+  (* Get the DOS error message associated to an error code. *)
+
+  PROCEDURE GetErrorMessage (errorCode        : CARDINAL;
+                             VAR errorMessage : ARRAY OF CHAR);
+    (* errorCode is an error number returned by DOS functions
+       errorMessage is at most 40 character long *)
+
+END DosError.
+

@@ -1,0 +1,193 @@
+;******************************************************************************
+;
+;       MODULA-2    Run-Time Support   ( RTS )
+;
+;       In case of stand-alone target systems (without DOS) this
+;       program is called "Target Run-Time Support" (TRTS).
+;
+;              LOGITECH SA,   CH-1122 Romanel    (Switzerland)
+;              LOGITECH Inc,  Fremont, CA 94555  (USA)
+;
+;       Module  :    RTSMain, main module of the Run-Time Support :
+;                    - RTS messages
+;
+;       Release :    3.10 - July 89
+;
+;       Copyright (C)  1987 - 1989 Logitech, All rights reserved
+;
+;       Permission is hereby granted to registered users to use or abstract
+;       the following program in the implementation of customized versions.
+;       This permission does not include the right to redistribute the source
+;       code of this program.
+;
+;       History:
+;          Jul-87:      Original version
+;       09-May-88/akg:  Modifications for Target Run-Time Support (TRTS).
+;       27-Sep-88/akg:  New run-time error "UnexpectedInterrupt" for TRTS,
+;                       comment after some ENDIFs added.
+;       30-Nov-88/akg:  WriteStatus displays complete error message,
+;                       messages moved from data to code segment.
+;       04-Jul-89/akg:  Version 3.10 (no changes).
+;
+;******************************************************************************
+               SUBTTL RTSMain messages and display routines
+
+RTSMain_TEXT   SEGMENT BYTE PUBLIC 'CODE'
+               ASSUME  CS : RTSMain_TEXT
+
+IF RUN_ON_PC
+;============== Some terminal output routines
+
+Write           PROC    NEAR
+; in            DL      character to write to terminal
+                MOV     AH, 2
+                INT     OS
+                RET
+Write           ENDP
+
+Write_Ln        PROC    NEAR
+                MOV     DL, 0DH    ; CR
+                CALL    Write
+                MOV     DL, 0AH    ; LF
+                CALL    Write
+                RET
+Write_Ln        ENDP
+
+
+Write_Msg       PROC    NEAR
+; in            DS:DX   address of message ended by $
+
+                MOV     AH, 9
+                INT     OS
+                RET
+Write_Msg       ENDP
+
+
+WriteStatus     PROC    NEAR
+;
+; in    BX      status value
+; preserves value of DS
+
+                PUSH    DS                   ; save DS
+                PUSH    CS
+                POP     DS                   ; segment containing messages
+
+                ASSUME  DS : RTSMain_TEXT
+
+                CALL    Write_Ln
+                MOV     DX, OFFSET RTSMain_TEXT:SOME_ERROR
+                CALL    Write_Msg
+                MOV     DL, ' '
+                CALL    Write
+                CMP     BX, HIGHEST_ERR_CODE
+                JBE     WriteStatus1
+                MOV     BX, ILL_FCT_CODE
+WriteStatus1:
+                ADD     BX, BX
+                MOV     DX, WORD PTR STATUS_MSG[BX]
+                CALL    Write_Msg
+                CALL    Write_Ln
+                POP     DS                   ; restore DS
+                RET
+WriteStatus     ENDP
+ENDIF ; RUN_ON_PC
+
+;--------------------------------------------------------------------
+L__GetMessage__RTSMain PROC FAR
+;--------------------------------------------------------------------
+                PUSH    BP
+                MOV     BP, SP
+
+                MOV     BL, [BP+12]          ; get status in param. block
+                XOR     BH, BH
+                CMP     BX, HIGHEST_ERR_CODE
+                JBE     GetMessage1
+                MOV     BX, ILL_FCT_CODE
+GetMessage1:
+                PUSH    CS
+                POP     DS                   ; segment containing messages
+
+                ASSUME  DS : RTSMain_TEXT
+
+                ADD     BX, BX
+                MOV     SI, WORD PTR STATUS_MSG[BX]
+
+                LES     DI, [BP+6]          ; string address
+                MOV     CX, [BP+10]         ; HIGH(string)
+                INC     CX
+                CLD
+GetMessage2:
+                LODSB
+                CMP     AL, '$'
+                JE      GetMessage3
+                STOSB
+                LOOP    GetMessage2
+                JMP     SHORT GetMessage4
+GetMessage3:    
+                MOV     AL, 0
+                STOSB
+GetMessage4:
+                POP     BP
+                RET     8
+L__GetMessage__RTSMain ENDP
+
+
+;25-Nov/akg: Put the following into the code segment (not data segment).
+
+;-------------- string constants and jump or index tables
+
+SOME_ERROR          DB      '===> $'
+
+NORMAL_MSG          DB      'normal termination$'
+WARNED_MSG          DB      'warning$'
+STOP_MSG            DB      'stopped$'
+FATAL_MSG           DB      'wrong assertion$'
+HALT_MSG            DB      'HALT called$'
+CASE_MSG            DB      'case-tag error$'
+STACK_MSG           DB      'stack overflow$'
+HEAP_MSG            DB      'heap overflow$'
+FCT_ERR_MSG         DB      'function return error$'
+ADDR_OVF_MSG        DB      'address overflow$'
+REAL_OVF_MSG        DB      'real overflow$'
+REAL_UDF_MSG        db      'real underflow$'
+BAD_OP_MSG          db      'bad operand$'
+CARD_OVF_MSG        DB      'cardinal overflow$'
+INTEGER_OVF_MSG     DB      'integer overflow$'
+RANGE_ERR_MSG       DB      'range error$'
+ZERO_DIV_MSG        DB      'division by zero$'
+PROC_END_MSG        DB      'coroutine end$'
+CORRUPT_DATA_MSG    DB      'corrupted data$'
+BAD_FILE_MSG        DB      'bad structure in file$'
+ILL_INSTR_MSG       DB      'illegal instruction encountered$'
+ILL_ERRC_MSG        DB      'illegal error code$'
+NO_MORE_ISR         DB      'too many concurrent IO-Processes$'
+; new in release 3.0
+NO_MORE_TERMP       DB      'too many termination procedures$'
+NO_MORE_INITP       DB      'too many initialization procedures$'
+NO_COPROC87         DB      'no coprocessor 80x87 available$'
+; M.P. 3/10/87
+DUMP_FAILURE        DB      'post mortem dump failure$'
+LONG_INT_OVF_MSG    DB      'long integer overflow$'
+;27-Sep-88/akg
+IF NOT RUN_ON_PC
+UNEXPECTED_INT_MSG  DB      'unexpected interrupt$'
+ENDIF
+
+STATUS_MSG          DW      NORMAL_MSG, WARNED_MSG, STOP_MSG, FATAL_MSG
+                    DW      HALT_MSG, CASE_MSG, STACK_MSG, HEAP_MSG
+                    DW      FCT_ERR_MSG, ADDR_OVF_MSG, REAL_OVF_MSG
+                    DW      REAL_UDF_MSG,BAD_OP_MSG,CARD_OVF_MSG 
+                    DW      INTEGER_OVF_MSG, RANGE_ERR_MSG, ZERO_DIV_MSG
+                    DW      PROC_END_MSG, CORRUPT_DATA_MSG, BAD_FILE_MSG
+                    DW      ILL_INSTR_MSG, ILL_ERRC_MSG, NO_MORE_ISR
+                    ; new in release 3.0
+                    DW      NO_MORE_TERMP, NO_MORE_INITP, NO_COPROC87
+; M.P. 3/10/87
+                    DW      DUMP_FAILURE, LONG_INT_OVF_MSG
+;27-Sep-88/akg
+IF NOT RUN_ON_PC
+                    DW      UNEXPECTED_INT_MSG
+ENDIF
+RTSMain_TEXT   ENDS
+
+

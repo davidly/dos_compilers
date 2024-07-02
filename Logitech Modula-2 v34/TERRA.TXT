@@ -1,0 +1,291 @@
+TERRA Technical Support Sheet
+-----------------------------
+Ref: TZ-BJ-18/05/90
+     TZ-BJ-23/07/90
+
+Subject:
+Bug
+Library module RealConversions.RealToString
+3.40
+
+Procedure RealToString adds wrongly 1.00 to converted numbers
+
+The bug is located in Module RealConversions.MOD in Procedure
+RealToString. Line 328
+r := r + 0.5 * exp10 (-ABS(digits)) + (1.0 + epsilon); (* round it now *)
+
+should be changed to
+r := r + 0.5 * exp10 (-ABS(digits)) * (1.0 + epsilon); (* round it now *)
+                                    ^
+                                    we have to multiply, not to add
+                                    
+Even if you do not need RealConversions now, we recommend to correct
+RealConversions.MOD at once.
+The new object file can be placed in the path specified by the environment
+variable M2OBJ. Due to the fact that .OBJ files have more priority in the
+linker search strategy the old version of RealConversion placed in the
+M2LIB.LIB will be omitted. 
+
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+
+Ref: TZ-BJ-11/06/90
+
+Subject:
+Problem
+RTD Option settings
+3.40
+
+Run-Time Debugger rejects some option settings.
+
+RTD options /J, /I and /K do not work if they are the last options
+in the list. RTD issues an option error message that is not
+appropriate and then terminates. Adding another option after the
+/J,/I or /K cures the problem.
+
+Example:
+    SET M2RTD=/H:40/J:1C,21,33  
+    results in the error message:
+    Illegal option /J, interrupt vector needed, use ","
+
+    SET M2RTD=/J:1C,21,33/H:40
+    performs correctly
+    
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+
+Ref: TZ-BJ-11/06/90
+
+Subject:
+Restriction
+RTD with packed .EXE files
+3.40
+
+The Run-Time Debugger works not correctly with packed .EXE files
+
+Program files linked with the pack option (/P) will cause the
+RTD to defective behavior.
+
+Use the Linker pack option only for the final distribution release
+of your application.
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+
+Ref: TZ-BJ-23/07/90
+
+Subject:
+Restriction
+RTD .MAP files with line numbers
+3.40
+
+The Run-Time Debugger works not correctly with .MAP files which
+contain source line numbers.
+
+Program files linked with the line number switch (/LI) will cause the
+RTD to defective behavior.
+
+This option is only used in order to produce symbolic information for
+debuggers like SYMDEB, CODEVIEW or PFIXPLUS.
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+Ref: TZ-BJ-11/06/90
+
+Subject:
+Information
+M2C
+3.40
+
+Switching overflow test for LONGINT's On or Off
+
+The overflow test for LONGINT multiplications will not be switched
+as usual with compiler option R+/R-. To control this 
+specific part of testcode you have to combine the options /R and /T.
+
+The overflow test for LONGINT multiplications is correctly ON with options:
+          /R+/T+
+and it is correctly OFF with options:
+          /R-/T-
+          
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+Ref: TZ-BJ-11/06/90
+
+Subject:
+BUG
+POINT-Editor
+2.01
+
+Template files larger than 1024 Bytes.
+
+The Point-Editor's template files (e.g. M2ASSIST.INI) are restricted 
+to a maximum size of 1 KB. With larger template files the editor will
+show a very strange behavior and even crash.
+Unfortunately there is no appropriate error message.
+
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+Ref: TZ-BJ-11/06/90
+
+Subject:
+Information
+POINT-Editor
+2.01
+
+Too many filebuffers reserved in the "PTEXPERT.INI" configuration file
+
+Usually it is no problem to compile and link a program directly in the
+Point-Editor shell. If you receive a heap overflow while starting
+the compiler from the shell it is often due to the fact that too many
+file buffers are allocated for the Point-Editor.
+
+Note: The term "buffers" means not the entry in the "CONFIG.SYS" file.
+      There is entry in the "PT.INI" file, with the same name.
+
+Since a lot of development system users copy their "PTEXPERT.INI"
+into the "PT.INI" file, they get some problems with insufficient 
+memory in the PT-Shell.
+To avoid such problems you should decrease the number of buffers
+in the Point configuration file to 40.
+
+Example: 
+Original line in "PTEXPERT.INI":
+   buffers=140	  -- lots of file buffers
+   
+sould be chanched to:
+   buffers=40	  -- not too much, but enough for fast processing
+   
+(*----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+Ref: TZ-BJ-11/06/90
+
+Subject:
+Information
+M2C
+3.40 and 3.X
+
+Two dimensional arrays are always allocated on even boundaries.
+
+As an addition to the explanations in the user's manual you have to take
+into consideration that two (or more) dimensional arrays are allocated
+to even boundaries. The compiler swtich /A does not affect this in any case.
+
+NOTE: This is only a clarification of the documentation. The implementation
+      of the alignment has not been changed since release 3.00.
+      
+MODULE Alignment;
+
+FROM SYSTEM IMPORT
+ (*P*) TSIZE;
+ 
+(*$A-*)
+TYPE
+  X	= ARRAY [ 0..4], [ 0..30 ] OF CHAR; (* 155 Bytes of Data. But     *)
+(*$A=*)                                     (* 5 times 32(!) Bytes will   *)
+                                            (* be allocated               *)
+
+BEGIN
+  IF TSIZE(X) # 155 THEN
+    HALT (* will be executed *)
+  END; (* if *)
+END Alignment.
+
+(*-----------------------------------------------------------------------*)
+
+TERRA Technical Support Sheet
+-----------------------------
+Ref: TZ-BJ-16/08/90
+
+Subject:
+Bug
+Run-Time Debugger shows wrong procedures
+3.40
+
+In some cases the procedure displayed/indicated in the source window
+does not correspond to the executed procedure (after a go command).
+
+This only happens under the following conditions:
+
+- The source module contains two adjacient procedures where the name
+  of the second one is shorter than the name of the first one, but
+  otherwise identical to the beginning of the name of the first one.
+  Example:
+
+    ReadByte
+    Read        -> name identical to the beginning of ReadByte
+
+- These procedures are written one after another in the source file.
+
+- The first one of these procedures is removed by the linker
+  (optimize = ON).
+
+If all of the three above mentioned conditions are fulfilled the RTD may
+show you after a go command the wrong procedure in the source window or
+behaves more or less defectively.
+To verify whether a procedure is removed or not you can use the
+.MAP file.
+
+After that, the possible workarounds are easy to find out:
+
+- Insert an empty dummy procedure between the two procedures.
+  Note: An empty, unreferenced procedure will be removed by the linker,
+        therefore no extra code will increase your .EXE-File size.
+- Rename the specific procedures so that the name begins with
+  different characters.
+- Reorder the procedures in your source.
+  Note: The Logitech Modula-2 Compiler passes 4 times through the code,
+  so forward references are allowed.
+- Link your application with optimize switch off (for debug reasons only).
+
+
+(*-------------------------------------------------------------------------
+Example:
+
+To clearly illustrate the condition for this specific bug we enclose a
+test module which should be linked with the /O (optimize) switch to enforce
+the error.
+--------------------------------------------------------------------------*)
+MODULE SameProcNameBugofDebuggers;
+
+  VAR
+    x : CARDINAL;
+
+  PROCEDURE SameAgain;
+  (* Not called, removed when linking with /o *)
+  BEGIN
+    x := 7;
+  END SameAgain;
+
+
+  PROCEDURE Same;
+  BEGIN
+    x := 3;
+  END Same;
+
+
+  PROCEDURE LastProc;
+  BEGIN
+    x := 2;
+    Same;
+    x := 4;
+  END LastProc;
+
+BEGIN
+  x := 1;
+  LastProc;
+  x := 5;
+END SameProcNameBugofDebuggers.
+(*-----------------------------------------------------------------------*)

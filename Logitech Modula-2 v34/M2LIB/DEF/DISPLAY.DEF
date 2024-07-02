@@ -1,0 +1,37 @@
+(* Abbreviation: Display *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 8, 1985 *)
+DEFINITION MODULE Display;
+(*
+   Low-level Console Output
+   [Private module of the MODULA-2/86 system]
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED Write;
+
+
+PROCEDURE Write (ch: CHAR);
+(*
+- Display a character on the console.
+
+in:     ch      character to be displayed.
+
+The following codes are interpreted:
+
+    ASCII.EOL  (36C) = go to beginning of next line
+    ASCII.ff   (14C) = clear screen and set cursor home
+    ASCII.del (177C) = erase the last character on the left
+    ASCII.bs   (10C) = move 1 character to the left
+    ASCII.cr   (15C) = go to beginning of current line
+    ASCII.lf   (12C) = move 1 line down, same column
+
+Write uses direct console I/O.
+*)
+
+
+END Display.
+

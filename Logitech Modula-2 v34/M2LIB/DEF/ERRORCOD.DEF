@@ -1,0 +1,36 @@
+(* Abbreviation: ErrorCode *)
+(* Version 1.20, Jul 1985  *)
+DEFINITION MODULE ErrorCode;
+(*
+
+   handle return code to operating system
+
+*)
+
+  EXPORT QUALIFIED
+    SetErrorCode, GetErrorCode, ExitToOS;
+
+  PROCEDURE SetErrorCode(value: CARDINAL);
+  (*
+     Sets the error return code that will be
+     used on normal termination; but it doesn't
+     terminate the program immediately.
+  *)
+
+  PROCEDURE GetErrorCode(VAR value: CARDINAL);
+  (*
+     Allows to inspect the set return code
+  *)
+
+  PROCEDURE ExitToOS;
+  (*
+     Terminate current program and return to operating
+     system. Set the error code corresponding to value
+     defined by a previous call to SetErrorCode.
+     implementation restriction: if the program is
+                                 using overlays, only
+     the current overlay will be terminated.
+  *)
+
+END ErrorCode.
+

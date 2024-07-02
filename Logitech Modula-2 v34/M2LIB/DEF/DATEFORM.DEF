@@ -1,0 +1,99 @@
+DEFINITION MODULE DateFormat;
+
+(* 
+   Conversion between Date (from Calendar) and string types.
+   An internal format, called current format holds the template of a string,
+   i.e. the way in which a date is represented. Routines are provided to 
+   change this format, as a whole or field by field. 
+*)
+
+  FROM Calendar IMPORT
+    Date;
+
+  TYPE 
+    Format;
+
+    Order  = (DateOnly,         (* Select Date and/or Time, and the     *)
+              DateAndTime,      (* order in which they are represented. *)
+              TimeOnly,
+              TimeAndDate);
+
+    DayFormat = (European,      (* day month year *)
+                 US,            (* month day year *)
+                 ISO);          (* year month day *)
+
+    YearFormat = (Short,        (* 87   *)
+                  Long);        (* 1987 *)
+
+    MonthFormat = (InDigits,    (* 03               *)
+                   InLetters);  (* March, Mars, ... *)
+
+    MonthName = ARRAY [0 .. 15] OF CHAR;
+
+    MonthList = ARRAY [1 .. 12] OF MonthName; (* Holds the months names, can *)
+                                              (* be changed by user.         *)
+
+    HourFormat = (PMSec,           (*  1:17:05 pm *)
+                  PMNoSec,         (*  1:17 pm    *)
+                  H24Sec,          (* 13:17:05    *)
+                  H24NoSec);       (* 13:17       *)
+
+    SeparatorList = ARRAY [0 .. 5] OF CHAR;   (* Holds the separators of the *)
+                                              (* different date/time compo - *)
+                                              (* components, can be changed  *)
+                                              (* by the user.                *)
+
+  PROCEDURE DefaultFormat (): Format;
+    (* Returns default date format :
+       dd-mmm-yyyy hh:mm:ss  i.e. 13-Jun-1987 17:45:30 *)
+
+  PROCEDURE CurrentFormat (): Format;
+    (* Returns current date format *)
+
+  PROCEDURE SetFormat (format : Format);
+    (* Sets the current format to format *)
+
+  PROCEDURE SetOrder (order : Order);
+    (* Sets the current format's order to order. 
+       (default: DateAndTime) *)
+
+  PROCEDURE SetDayFormat (dayformat : DayFormat);
+    (* Sets the current format's day format to dayFormat 
+       (default: European *)
+
+  PROCEDURE SetYearFormat (yearFormat : YearFormat);
+    (* Sets the current format's year format to yearFormat
+       (default: Long) *)
+
+  PROCEDURE SetMonthFormat (monthFormat : MonthFormat);
+    (* Sets the current format's month format to monthFormat 
+       (default: InLetters) *)
+
+  PROCEDURE SetMonthList (monthList : MonthList);
+    (* Sets the current format's month list to monthList 
+       (default: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec) *)
+
+  PROCEDURE SetHourFormat (hourFormat : HourFormat);
+    (* Sets the current format's hour format to hourFormat 
+       (default: H24Sec) *)
+
+  PROCEDURE SetSeparator (separator : SeparatorList);
+    (* Sets the current format's list to separator 
+       (default: "-- ::") *)
+
+  PROCEDURE DateToString (date      : Date;
+                          VAR image : ARRAY OF CHAR;
+                          VAR done  : BOOLEAN);
+    (* Converts a Date in a string of current format *)
+
+  PROCEDURE StringToDate (image        : ARRAY OF CHAR;
+                          VAR date     : Date;
+                          VAR done     : BOOLEAN;
+                          VAR errorPos : CARDINAL);
+    (* Converts a string in a date. The syntax of this string should be
+       the one defined by the current format, otherwise done is set to
+       FALSE and errorPos to the index of the first unexpected character
+       of the string. *)
+
+END DateFormat.
+

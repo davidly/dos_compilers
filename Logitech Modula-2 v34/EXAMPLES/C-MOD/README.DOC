@@ -1,0 +1,26 @@
+
+This example shows a simple program in C that calls Modula-2 procedures.
+
+Special attention has to be given to the following points:
+
+- Modula-2 handles only far code and far data.  Use the 'far' keyword in
+  C for all data and procedures handled also in Modula-2, or compile with
+  the C compiler option /AL to use the large memory model.
+  
+- C doesn't provide real string variables.  Strings are handled with
+  pointers to an array of characters.  Use pointers also in Modula-2
+  or use the knowledge about the implementation and pass the string
+  length along with the pointer.
+
+- The bodies of the Modula-2 modules will only be executed at the beginning
+  of the first call to a Modula-2 procedure.  Avoid using any module bodies.
+  If you do, be aware that the initialization of the module won't occur
+  before the first call.
+
+- The program must exit by calling the function "m2exit()".  This function
+  will properly exit the program by executing the Modula-2 library and
+  RTS termination procedures.
+
+  The function prototype for this function is available in the C include
+  file "rtsm2exi.h".  You should "#include" this file at the beginning
+  of any C modules that need to call the "m2exit()" function.

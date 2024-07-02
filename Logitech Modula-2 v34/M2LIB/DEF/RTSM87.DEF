@@ -1,0 +1,13 @@
+DEFINITION MODULE RTSM87;
+
+(*
+   checks for the presence of an arithmetic 80x87 coprocessor
+*)
+
+EXPORT QUALIFIED co87Present;
+
+VAR
+    co87Present : BOOLEAN;
+
+END RTSM87.
+

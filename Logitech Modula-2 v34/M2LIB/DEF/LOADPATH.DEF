@@ -1,0 +1,25 @@
+DEFINITION MODULE LoadPath;
+
+(*
+   NOTE: The following procedure can only work under
+         DOS version 3.1 and upper.
+*)
+
+PROCEDURE GetLoad(VAR str: ARRAY OF CHAR);
+  (* Get the complete filename of the file loaded by MSDOS
+          In the environnement:
+          - Look for the sequence 0,0
+          - Skip two bytes ( meaning unknown, often 1,0 )
+          - Take next characters until a 0 
+          Return empty string if:
+          - Doesn't find 0,0
+          - filename > HIGH(str)
+  *)
+
+PROCEDURE GetLoadDir(VAR str: ARRAY OF CHAR);
+  (* Return the directory of the loaded file or empty string
+       if problems
+  *)
+
+END LoadPath.
+

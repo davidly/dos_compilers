@@ -1,0 +1,52 @@
+DEFINITION MODULE BlockOps;
+
+  (* Block operations.
+     Blocks are defined with a starting address and a size, i.e. the number
+     of bytes they contain.
+   *)
+
+  FROM SYSTEM IMPORT ADDRESS;
+
+  PROCEDURE BlockMoveForward (destination, source : ADDRESS;
+                              size                : CARDINAL);
+    (* Moves size bytes from source to destination, starting at the address
+       of source and going up until address of (source+size) is reached *)
+
+  PROCEDURE BlockMoveBackward (destination, source : ADDRESS; 
+                               size                : CARDINAL);
+    (* Moves size bytes from source to destination, starting at (source+size)
+       and going down until address of source is reached *)
+
+  PROCEDURE BlockMove (destination, source : ADDRESS; 
+                       size                : CARDINAL);
+    (* Moves size bytes from source to destination, test is made on the
+       addresses of source and destination to decide whether MoveBackward or
+       MoveForward is to be used. Note that because of this comparison, 
+       Move is slightly slower than the two previous procedures *) 
+
+
+  PROCEDURE BlockClear (block : ADDRESS;
+                        size  : CARDINAL);
+    (* Fills size bytes with 0, starting from block. *)
+
+  PROCEDURE BlockSet (block       : ADDRESS;
+                      blockSize   : CARDINAL;
+                      pattern     : ADDRESS;
+                      patternSize : CARDINAL);
+    (* Fills blockSize bytes starting from block with the pattern of 
+       patternSize bytes. *)
+
+  PROCEDURE BlockEqual (block1, block2 : ADDRESS;
+                        size           : CARDINAL): BOOLEAN;
+    (* Returns TRUE if the blocks starting at left and right have the same
+       first size bytes. *)
+
+  PROCEDURE BlockPosition (block       : ADDRESS;
+                           blockSize   : CARDINAL;
+                           pattern     : ADDRESS;
+                           patternSize : CARDINAL): CARDINAL;
+    (* Searches pattern in block, returns the index of the first successful 
+       match, MaxCard if no match. *)
+
+END BlockOps.
+

@@ -1,0 +1,36 @@
+DEFINITION MODULE Lookup;
+
+(*
+   file search strategy using DOS environment variable.
+*)
+
+  FROM LogiFile IMPORT File;
+
+  EXPORT QUALIFIED LookupFile;
+
+  PROCEDURE LookupFile(prompt: ARRAY OF CHAR;
+                       name: ARRAY OF CHAR;
+                       paths: ARRAY OF CHAR;
+                       defext: ARRAY OF CHAR;
+                       VAR file: File;
+                       query, autoquery, acceptoptions: BOOLEAN;
+                       VAR effectivename: ARRAY OF CHAR;
+                       VAR goodfile: BOOLEAN);
+
+    (* for implementation the modules FileNames, *)
+    (* Options and CompFile are imported       *)
+
+    (* prompt        : string is displayed on terminal *)
+    (* name          : for construction of a default file name *)
+    (* paths         : drive and paths; separated by ';' *)
+    (* defext        : default extension of searched file *)
+    (* file          : opened file *)
+    (* query         : explicit asking for file name *)
+    (* autoquery     : switch automatically to mode query if not found *)
+    (* acceptoptions : accept options appended to file name *)
+    (*                 options are not evaluated *)
+    (* effectivename : name of found file *)
+    (* goodfile      : lookup was successful *)
+
+END Lookup.
+

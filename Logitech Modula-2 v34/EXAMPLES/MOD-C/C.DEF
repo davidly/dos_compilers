@@ -1,0 +1,16 @@
+FOREIGN C DEFINITION MODULE c;
+
+TYPE
+  StringPointer = POINTER TO ARRAY [0..50] OF CHAR;
+
+VAR 
+  extInt : INTEGER;
+
+
+PROCEDURE IntegerProcedure (x : INTEGER);
+
+PROCEDURE StringProcedure1 (s : ARRAY OF CHAR);
+
+PROCEDURE StringProcedure2 (s : StringPointer);
+
+END c.

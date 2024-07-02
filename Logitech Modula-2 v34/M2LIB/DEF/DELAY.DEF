@@ -1,0 +1,13 @@
+DEFINITION MODULE Delay;
+
+EXPORT QUALIFIED
+  Delay;
+
+
+PROCEDURE Delay(milliSec: INTEGER);
+(*
+  Interrupts the program execution for approximatly 'milliSec' milliseconds.
+*)
+
+END Delay.
+

@@ -1,0 +1,56 @@
+(* Abbreviation: DiskFiles *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 7, 1985 *)
+DEFINITION MODULE DiskFiles;
+(*
+   Interface to disk file functions of the underlying OS.
+   [Private module of the MODULA-2/86 system.]
+
+The default drive 'DK:', and drives 'A:' through 'P:'
+are supported under DOS or CP/M-86. This driver provides
+buffering. The maximum number of open files is 12.
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+FROM FileSystem IMPORT File;
+
+EXPORT QUALIFIED
+  InitDiskSystem,
+  DiskFileProc, DiskDirProc;
+
+
+PROCEDURE InitDiskSystem;
+(*
+- Initialize mediums for further disk file operations
+
+This procedure has to be imported by FileSystem. This has
+the side-effect, that this module is referenced and will
+therefore be linked to the user program.
+*)
+
+
+PROCEDURE DiskFileProc (VAR f: File);
+(*
+- low-level interface for disk operations within a file
+
+This procedure is passed as a parameter to the procedure
+CreateMedium in FileSystem.
+*)
+
+
+PROCEDURE DiskDirProc (VAR f: File;
+                       name: ARRAY OF CHAR);
+(*
+- low-level interface for disk operations within a
+  directory
+
+This procedure is passed as a parameter to the procedure
+CreateMedium in FileSystem.
+*)
+
+
+END DiskFiles.
+

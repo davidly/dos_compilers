@@ -1,0 +1,520 @@
+
+Logitech Modula-2 Release 3.40                                   March, 1990
+----------------------------------------------------------------------------
+
+ Logitech Modula-2 Release 3.40 READ.ME
+ ======================================
+
+ This READ.ME file includes the installation instructions for Release
+ 3.40; a list of the major changes between Release 3.40 and Release 3.03,
+ and additional new information about Release 3.40.  It covers the Compiler
+ Pack, Toolkit, and the Development System.  If you have purchased only
+ the Compiler Pack, you can ignore the references to the other packages
+ you did not purchase.
+
+
+ Installation of Logitech Modula-2 Release 3.40
+ ==============================================
+
+ Logitech Modula-2 Release 3.40 requires a hard disk for installation.
+ The Compiler Pack requires approximately 2.4 megabytes of hard disk space
+ and the Toolkit requires approximately 1.7 megabytes.  The Development
+ System consists of both the Compiler Pack and the Toolkit, so it's space
+ requirement is approximately 4.1 megabytes.
+
+ Both the Compiler Pack and the Toolkit are installed in a subdirectory
+ structure starting from a single subdirectory.  The AUTOEXEC.BAT and
+ CONFIG.SYS files will be modified for the proper setup of the Modula-2
+ system.
+
+ The Compiler Pack and Toolkit installation disks contain special compressed
+ archives of the Logitech Modula-2 system.  In order to properly install
+ Modula-2 Release 3.40, you must follow these instructions.
+
+ NOTE:  The installation instructions presented here take precedence
+        over the installation instructions in the User's Manual and the
+        Toolkit Manual.
+
+ There are two installation methods provided for installing Logitech
+ Modula-2 Release 3.40: automatic and manual.  The automatic installation
+ will prompt you for necessary information, and will automatically
+ update your AUTOEXEC.BAT and CONFIG.SYS files, if necessary.  After it
+ completes the extraction of the files from the installation disks, the
+ installation of Modula-2 Release 3.40 will be complete.  The manual
+ installation will require you to manually edit your CONFIG.SYS and
+ AUTOEXEC.BAT files, and use a batch file to extract the files from
+ the installation disks.  Instructions for both methods follow.
+
+ NOTE:  If you are replacing an earlier release of Logitech Modula-2 with
+ Release 3.40, you should remove all files and environment settings of the
+ previous release before installing the new release.
+
+
+   A.  Automatic Installation
+       ----------------------
+
+       1. To use the automatic installation, insert disk #1 of
+          the Compiler Pack or Toolkit in your diskette drive
+          and execute the provided INSTALL program.  For example,
+          if you are installing the Compiler Pack or Development
+          System from drive A, you would insert the first Compiler
+          Pack disk in drive A and enter this command at the DOS
+          prompt:
+
+                A:INSTALL
+
+
+          If you are installing the Toolkit alone (if purchased
+          separately from the Development System), you would
+          perform the same step with the first Toolkit disk.
+
+
+       2. The install program will provide you with a series of
+          screens and prompts.  An initial screen is displayed
+          that explains what the installation program is going
+          to do.  After the help information is displayed,
+          press [Enter] to continue with the installation at
+          this prompt:
+
+                Continue with installation (YES/no) ?
+
+	  If you do not want to continue, type
+
+                N [Enter]
+
+
+       3. You are then prompted to choose the particular Modula-2
+          3.40 package you wish to install.  Enter number corresponding
+          to the package you are installing:
+
+                  [1]  Compiler Pack
+                  [2]  Toolkit
+                  [3]  Development System
+                  [4]  Quit installation
+
+                Choice?
+
+          (Note: If you wish to terminate the installation at this
+          point, select choice 4, "Quit installation".)
+
+
+       4. You will then be prompted for the source drive containing
+          the installation disk.  Enter the drive letter at this
+          prompt:
+
+                Enter the letter of the diskette drive containing
+                the Logitech Modula-2 installation diskette
+                (default is A)
+                >
+
+          Press [Enter] to select the default drive A or type the
+          drive letter.
+
+
+       5. You will then be prompted for the directory where Logitech
+          Modula-2 will be installed.  Enter the drive and path where
+          you want to install the Modula-2 system files:
+
+		Enter the full drive and path of the directory
+		where you want Logitech Modula-2 installed
+		(default is C:\M2)
+		>
+
+	  Press [Enter] to accept the default C:\M2 or enter the drive
+	  and directory.  INSTALL will copy the Modula-2 system files
+	  to this drive and directory.
+
+
+       6. You will then be prompted for the full pathname of your DOS
+          AUTOEXEC.BAT file.  Enter the drive and path of your AUTOEXEC.BAT
+          file at this prompt:
+
+		Enter the full pathname of your DOS AUTOEXEC.BAT
+		file (default is C:\AUTOEXEC.BAT)
+		>
+
+	  Press [Enter] to accept the default C:\AUTOEXEC.BAT or enter
+	  the full pathname of the AUTOEXEC.BAT file.
+
+
+       7. You will then be prompted for the full pathname of your DOS
+          CONFIG.SYS file.  Enter the drive and path of your CONFIG.SYS
+          file at this prompt:
+
+		Enter the full pathname of your DOS CONFIG.SYS file
+		(default is C:\CONFIG.SYS)
+		>
+
+	  Press [Enter] to accept the default C:\CONFIG.SYS or enter
+	  the full pathname of the CONFIG.SYS file.
+
+
+       8. The INSTALL program will then display the choices or entries
+          you have made.  You can confirm these entries at this prompt:
+  
+		Are these values correct (YES/no) ?
+
+	  Press [Enter] to begin the installation of Logitech Modula-2
+	  Release 3.40 on your system.  If you enter no at this prompt,
+	  install will restart at step 4 above.
+
+	  Note:  If the installation program determines that there
+	  is inadequate disk space to install Modula-2 Release 3.40,
+	  a warning is displayed.  If this message is displayed,
+	  press [Enter] to terminate the installation program.
+
+
+       9. As the AUTOEXEC.BAT and CONFIG.SYS files are updated,
+          INSTALL displays the installation's progress on the
+          screen.  Backups of these files are saved before they
+          are modified (each with a .BAK extension).
+
+	  INSTALL changes these files by
+
+	    - adding the necessary directories to the PATH
+	      statement
+
+	    - adding necessary new environment settings for
+	      the Modula-2 system (M2OBJ, M2MAK, etc.)
+
+	    - ensuring that the environment space available
+	      is at least 768 bytes
+
+	    - ensuring that there are at least 20 file handles
+	      available
+
+
+      10. You will then be prompted to insert the first disk.  Press
+          [Enter] once the disk is inserted.  INSTALL will then copy
+          the Modula-2 files from the installation disk to your
+	  Logitech Modula-2 directory.
+
+
+      11. After the files from the first disk are copied, you will
+          then be prompted to insert the next disk.  Perform step 10
+          above until all disks have been installed.  After all of
+          the files have been copied, you will be returned to the
+          DOS prompt.
+
+
+      12. If you are currently using Microsoft C 5.1 and plan on
+          mixing Modula-2 code with C, add the following line to
+          the end of your AUTOEXEC.BAT file:
+
+		SET INCLUDE=%INCLUDE%;C:\M2\M2LIB\LIB
+
+          Note: replace "C:\M2" with the base installation directory
+          specified in step 5 above.
+
+	  You should also read the README.DOC files in the EXAMPLES\C-MOD
+	  and EXAMPLES\MOD-C subdirectories for details about mixing
+	  Modula-2 and C code.
+
+
+      13. Reboot your system to activate the changes made to the
+          CONFIG.SYS and AUTOEXEC.BAT files.
+
+
+   B.  Manual Installation
+       -------------------
+
+       1. You must begin by creating the Modula-2 directory on your
+          hard disk.  For example, if you want to install Modula-2
+          in C:\M2, you would enter the following commands at the
+          DOS prompt:
+
+		C:
+		MD \M2
+
+
+       2. Next, you must change to the new M2 directory.  Do this by
+          entering the following command:
+
+		CD \M2
+
+
+       3. You must then extract the files that form Logitech Modula-2
+          Release 3.40.  If you wish to install either the Compiler Pack
+          or the Development System, insert the first Compiler Pack disk
+          in drive A.  If you are installing only the Toolkit, insert the
+          Toolkit in drive A.  
+
+
+       4. After the disk has been inserted, enter the following command:
+
+		A:M2UNPACK A:
+
+	  The Modula-2 Release 3.40 files are extracted and copied to
+	  the current directory, C:\M2.  The argument "A:", which follows
+	  M2UNPACK, specifies the drive containing the installation disk.
+
+
+       5. After the files from the first disk are copied, you will
+          then be prompted to insert the next disk.  Insert each disk
+          until all the disks have been installed.
+
+
+       6. The Development System consists of both the Compiler Pack and
+          the Toolkit.  If you are installing the Development System, you
+          should install the Toolkit after the Compiler Pack has been
+          installed.  Insert the Toolkit disk in drive A, and perform
+          steps 4 and 5 until it has been installed.
+
+
+       7. You must now modify your DOS CONFIG.SYS file by adding and/or
+          modifying the "SHELL=" and "FILES=" statements.
+
+	  The FILES= statement must be at least 20.  Ensure that your
+	  CONFIG.SYS contains the statement
+
+		FILES=20
+
+	  The SHELL statement must be specified to increase the default
+	  space available for environment strings.  If you are using
+	  DOS 3.1, add the line
+
+		SHELL=COMMAND.COM /P /E:48
+
+	  to your CONFIG.SYS.  If you are using DOS 3.2 or above, add
+	  the line
+
+		SHELL=COMMAND.COM /P /E:768
+
+	  to your CONFIG.SYS.
+
+
+       8. You must then modify your DOS AUTOEXEC.BAT file to include
+          necessary settings required by Modula-2 Release 3.40.  The
+          settings here assume that Release 3.40 was installed in the
+          C:\M2 directory.
+
+	  Modify the PATH statement to include the following
+	  directories:
+
+		C:\M2\M2EXE;C:\M2\POINT
+
+          For example, if your PATH statement looked like this before
+	  the modification:
+
+		SET PATH=C:\;C:\DOS;D:\BIN
+
+	  it would look like this after the modification:
+
+		SET PATH=C:\M2\M2EXE;C:\M2\POINT;C:\;C:\DOS;D:\BIN
+
+
+	  You must also append the following settings to the end of
+	  your AUTOEXEC.BAT file:
+
+		SET M2SYM=C:\M2\M2LIB\SYM
+		SET M2LIB=C:\M2\M2LIB\LIB
+		SET M2OBJ=C:\M2\M2LIB\OBJ
+		SET M2REF=C:\M2\M2LIB\REF
+		SET M2DEF=C:\M2\M2LIB\DEF
+		SET M2MOD=C:\M2\M2LIB\MOD
+		SET M2MAP=C:\M2\M2LIB\MAP
+		SET M2TMP=C:\M2\M2TMP
+		SET M2OVL=C:\M2\M2EXE
+		SET M2MAK=C:\M2\M2EXE
+		SET M2LBR=C:\M2\M2EXE
+
+
+	  (Note: if your system includes a RAM disk, you should set
+	  the M2TMP variable to that drive).
+
+
+       9. If you are currently using Microsoft C 5.1 and plan on mixing
+          Modula-2 code with C, add the following line to the end of your
+          AUTOEXEC.BAT file:
+
+		SET INCLUDE=%INCLUDE%;C:\M2\M2LIB\LIB
+
+	  You should also read the README.DOC files in the EXAMPLES\C-MOD
+	  and EXAMPLES\MOD-C subdirectories for details about mixing
+	  Modula-2 and C code.
+
+
+      10. After all of the necessary modifications have been made, reboot
+          your system to activate the changes.
+
+
+
+ Major Differences Between Release 3.40 and Release 3.03
+ =======================================================
+
+ Many enhancements have been made to the Logitech Modula-2 Development
+ System since Release 3.03.  Some of these include:
+
+    - an enhanced compiler that provides 21-28% faster compilation,
+      and improved mixed-language support
+
+    - improved M2Make operation, including automatic support for the
+      generation of overlays
+
+    - enhanced debuggers, including new breakpoint and assembly windows,
+      and many new commands
+
+    - improved utilities, including greater speed of operation and
+      enhanced user interfaces
+
+    - a vastly improved POINT Editor, providing an improved user interface,
+      complete keyboard control, and better use of memory
+
+    - an improved M2L linker that provides complete support for the
+      Microsoft languages and mixed-language programming, and 10-20%
+      faster operation
+
+ Details of the enhancements and changes are provided in .DOC files for
+ each of the major programs.  It is important to note as well that the
+ Cross-Reference function of M2Make has replaced the M2XRef utility in
+ the package; and the Formatter is no longer included.  (All references
+ to these utilities in the Toolkit manual should be ignored.)
+
+ Here is a list of the .DOC files that contain the additional documentation
+ information about the differences between Release 3.03 and Release 3.40.
+ These files can be found in the M2DOC directory of the main Modula-2
+ installation directory.
+
+	CHANGES.DOC	- general changes and information about
+                          the compiler, linker, utilities, and
+                          libraries
+
+	DEBUGGER.DOC	- new information about the debuggers
+
+	POINT.DOC	- new information about the POINT Editor
+
+
+ New Example Files
+ -----------------
+
+ Several new example files are provided with Release 3.40.  These files
+ are in subdirectories of the EXAMPLES directory of the main Modula-2
+ installation directory.  The examples included are mixed-langauge
+ programming with Microsoft C, an example of coroutines, the use of
+ the ANSI.SYS screen interface, and operations with files.  Here is
+ a list of the example directories provided:
+
+	COROU		- example of how to use coroutines
+	DIGCLOCK	- digital clock using ANSI.SYS 
+	FILEIO		- example of performing basic file I/O
+	C-MOD		- example of a C program that calls Logitech
+                          Modula-2 procedures
+	MOD-C		- example of a Logitech Modula-2 program
+                          that calls C functions
+
+ Each directory contains a batch file, MAKE.BAT, that will compile,
+ link, and execute the example program.  In addition, the mixed-language
+ examples contain README.DOC files giving additional information on how
+ to mix C with Modula-2.
+
+
+ Diskette Archive Contents
+ =========================
+
+ What follows is are lists of the contents of the archived files on
+ the distribution disks.  Instructions for selectively extracting
+ different files from the archives follow these lists.
+
+  Compiler Pack
+  -------------
+
+   Disk #1: contents of M2340CP1.EXE
+
+	READ.ME
+	M2DOC\*.*
+	M2EXE\M2C.EXE
+	M2EXE\M2COMP.EXE
+	M2EXE\M2OVL3.OVL
+	M2EXE\M2OVL4.OVL
+	M2EXE\M2OVLINI.OVL
+	M2EXE\M2OVLLIS.OVL
+	M2EXE\M2OVLSYM.OVL
+
+   Disk #2: contents of M2340CP2.EXE
+
+	M2EXE\M2OVL1.OVL
+	M2EXE\PMD.EXE
+	M2EXE\DB.CFG
+	M2EXE\DB.HLP
+	M2EXE\DB.LBR
+	M2EXE\MDA.CFG
+	M2EXE\CGA.CFG
+	M2EXE\EGA.CFG
+	M2EXE\PTDEMO.MOD
+	POINT\*.*
+	EXAMPLES\C-MOD\*.*
+	EXAMPLES\MOD-C\*.*
+	EXAMPLES\FILEIO\*.*
+
+   Disk #3: contents of M2340CP3.EXE
+
+	M2LIB\DEF\*.*
+	M2LIB\SYM\*.*
+	M2LIB\LIB\*.*
+	M2LIB\OBJ\*.*
+	M2LIB\REF\RTSMAIN.REF
+	EXAMPLES\COROU\*.*
+	EXAMPLES\DIGCLOCK\*.*
+
+
+  Toolkit
+  -------
+
+   Disk #1: contents of M2340TK1.EXE
+
+	READ.ME
+	M2DOC\*.*
+	M2EXE\M2L.EXE
+	M2EXE\M2MAKE.EXE
+	M2EXE\LIBRARY.MAK
+	M2EXE\M2VERS.EXE
+	M2EXE\RTD.EXE
+	M2EXE\RTDINIT.OVL
+	M2EXE\RTDM2.OVL
+	M2EXE\RTDOVLAY.OVL
+	M2EXE\DB.CFG
+	M2EXE\DB.HLP
+	M2EXE\DB.LBR
+	M2EXE\MDA.CFG
+	M2EXE\CGA.CFG
+	M2EXE\EGA.CFG
+
+   Disk #2: contents of M2340TK2.EXE
+
+	M2EXE\M2CHECK.EXE
+	M2EXE\M2DECODE.EXE
+	M2LIB\ASM\*.*
+	M2LIB\MOD\*.*
+	M2LIB\REF\*.*
+	M2LIB\RTS\*.*
+
+
+ To selectively install files from these disks, perform the following
+ two steps:
+
+     1. Change to your Modula-2 3.40 base directory.  If you
+        want to extract the files into a directory structure
+        starting at C:\M2, change to your C:\M2 directory.
+	For example:
+
+		C:
+		CD \M2
+
+
+     2.	Execute the archive program that contains the files
+	you wish to extract, specifying the arguments "-d -o"
+	followed by the file specification(s) of the file(s)
+	you want to extract.  For example, to extract all of
+	the M2LIB\MOD files from the Toolkit, you would insert
+	Toolkit Disk #2 in drive A, and enter the following
+	command:
+
+		A:M2340TK2 -d -o M2LIB\MOD\*.*
+
+        The directory structure contained in the archive will
+        automatically be created if it does not already exist.
+
+
+----------------------------------------------------------------------
+Copyright (C) 1989 Logitech, Inc.
+Copyright (C) 1990 MultiScope, Inc.  All Rights Reserved.

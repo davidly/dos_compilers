@@ -1,0 +1,81 @@
+(* Abbreviation: DOS3     *)
+(* Version 1.20, Jun 1985 *)
+DEFINITION MODULE DOS3;
+(*
+
+   Additional DOS 3.0 functions
+
+*)
+
+
+  FROM SYSTEM IMPORT
+    BYTE, WORD, ADDRESS;
+
+  EXPORT QUALIFIED
+    GetExtendedError,
+    CreateTemporaryFile,
+    CreateNewFile,
+    LockUnlockFileAccess,
+    GetProgramSegmentPrefix;
+
+  (* DOS 3.0 function 59H *)
+  PROCEDURE GetExtendedError(version: WORD;
+                             (* BX *)
+                             VAR extendedError: WORD;
+                             (* AX *)
+                             VAR errorClass: BYTE;
+                             (* BH *)
+                             VAR suggestedAction: BYTE;
+                             (* BL *)
+                             VAR locus: BYTE);
+                             (* CH *)
+
+
+  (* DOS 3.0 function 5AH *)
+  PROCEDURE CreateTemporaryFile(path: ADDRESS;
+                                (* DS:DX *)
+                                attribute: WORD;
+                                (* CX    *)
+                                VAR errorCode: WORD;
+                                (* AX,CF *)
+                                VAR handle: WORD;
+                                (* AX,CF *)
+                                VAR pathAndName: ADDRESS);
+                                (* DS:BX *)
+
+                                
+  (* DOS 3.0 function 5BH *)
+  PROCEDURE CreateNewFile(pathAndName: ADDRESS;
+                          (* DS:BX *)
+                          attribute: WORD;
+                          (* CX    *)
+                          VAR errorCode: WORD;
+                          (* AX,CF *)
+                          VAR handle: WORD);
+                          (* AX,CF *)
+
+
+  (* DOS 3.0 function 5CH *)
+  PROCEDURE LockUnlockFileAccess(lock: BYTE;
+                                 (* AL    *)
+                                 handle: WORD;
+                                 (* BX    *)
+                                 offsetHigh: WORD;
+                                 (* CX    *)
+                                 offsetLow: WORD;
+                                 (* DX    *)
+                                 lengthHigh: WORD;
+                                 (* SI    *)
+                                 lengthLow: WORD;
+                                 (* DI    *)
+                                 VAR errorCode: WORD);
+                                 (* AX,CF *)
+
+
+  (* DOS 3.0 function 62H *)
+  PROCEDURE GetProgramSegmentPrefix(VAR PSPsegment: WORD);
+                                    (* BX *)
+
+                                 
+END DOS3.
+

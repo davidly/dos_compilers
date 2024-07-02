@@ -1,0 +1,197 @@
+(* Abbreviation:  LogiFile           *)
+(* Version:       1.00 , Mar 16, '87 *)
+
+DEFINITION MODULE LogiFile;
+
+(*
+  File sub-system 
+*)
+
+FROM SYSTEM   IMPORT ADDRESS, WORD, BYTE;
+FROM TimeDate IMPORT Time;
+
+EXPORT QUALIFIED
+  File, OpenMode,
+  NUL, LF, CR, EOL, EOF,
+  Open, Create, Close, Delete,
+  GetFileDate,
+  GetPos, SetPos, Reset,
+  ReadChar, WriteChar,
+  ReadNBytes, WriteNBytes,
+  ReadByte, WriteByte, ModifyByte,
+  ReadWord, WriteWord, ModifyWord,
+  EndFile;
+
+TYPE
+  File;
+  OpenMode = (ReadOnly, WriteOnly, ReadWrite);
+
+CONST
+  NUL       =  0C;
+  LF        = 12C;
+  CR        = 15C;
+  EOL       = 36C; (* end of line character for character files *)                                                    
+  EOF       = 32C; (* end of file character for character files *)
+
+
+(* --------------------------------------------------------- *)
+(*
+   Operations on the directory:
+*)
+
+PROCEDURE Open(VAR f:    File;       (* Open an existing file *)
+                   name: ARRAY OF CHAR;
+                   mode: OpenMode;
+               VAR done: BOOLEAN);
+
+
+PROCEDURE Create(VAR f:    File;     (* Open a new file *)
+                     name: ARRAY OF CHAR;
+                 VAR done: BOOLEAN);
+
+
+PROCEDURE Close(VAR f:    File;      (* Close a file *)
+                VAR done: BOOLEAN);
+
+
+PROCEDURE Delete(VAR f:    File;      (* Close a file *)
+                 VAR done: BOOLEAN);  (* remove from directory *)
+
+
+PROCEDURE GetFileDate(    f:        File;
+                      VAR datetime: Time);
+  (* returns the creation date and time of the given file *)
+
+
+(* --------------------------------------------------------- *)
+(*
+   Positioning inside an open file,
+   highpos and lowpos represent a double precision value:
+   highpos * 10000H + lowpos.
+*)
+
+PROCEDURE GetPos(    f:       File;
+                 VAR highpos: CARDINAL;
+                 VAR lowpos:  CARDINAL);
+(* Get current byte position of the file *)
+
+
+PROCEDURE SetPos( f:       File;
+                  highpos: CARDINAL;
+                  lowpos:  CARDINAL);
+(* Set file to indicated byte position, and set to "ReadMode" *)
+
+
+PROCEDURE Reset(f: File);
+(* Position the file at the beginning and set to "ReadMode"   *)
+
+
+(* --------------------------------------------------------- *)
+(*
+   Reading and Writing of files in "TextMode":
+   Calls to ReadChar and WriteChar set the internal file
+   status to "TextMode".
+   This means that EOL and EOF characters are interpreted,
+   EOL:
+    WriteChar(f,EOL) writes the physical EOL-character onto the
+    file (under MS-DOS: CR,LF; under XENIX: LF).
+    ReadChar(f,ch) with ch=EOL under MS-DOS means that the read
+    procedure found a CR on the file, translated it into EOL, and
+    skipped the character just after CR, assuming that it is a LF.
+    ReadChar(f,ch) with ch=EOL under XENIX means that the read
+    procedure found a LF on the file, and translated it into EOL.
+
+   EOF (<ctrl-Z>, 32C)
+    When writing, the EOF is treated like any other character,
+    i.e., WriteChar(f,EOF) just writes EOF onto the file thus
+    setting a logical EOF. If the character EOF is found on a
+    file, this results in ReadChar(f,ch) with ch=NUL, AND
+    EndFile(f)=TRUE.
+    Note: The EOF is never written automatically by LogiFile!
+*)
+
+PROCEDURE ReadChar(    f:  File;     (* Read a character from file *)
+                   VAR ch: CHAR);
+
+
+PROCEDURE WriteChar( f:  File;    (* Write a character to file *)
+                     ch: CHAR);
+
+
+(* --------------------------------------------------------- *)
+(*
+   Reading and Writing of files in "BinaryMode":
+   Calls to all the following read, write, and modify procedures
+   set the internal file status to "BinaryMode". 
+*)
+
+PROCEDURE ReadNBytes(    f:              File;
+                         buffPtr:        ADDRESS;
+                         requestedBytes: CARDINAL;
+                     VAR read:           CARDINAL);
+  (* Read requested bytes into buffer at address *)
+  (* 'buffPtr', number of effectiv read bytes is *)
+  (* returned in 'read'                          *)
+
+
+PROCEDURE WriteNBytes(    f:              File;
+                          buffPtr:        ADDRESS;
+                          requestedBytes: CARDINAL;
+                      VAR written:        CARDINAL);
+  (* Write requested bytes into buffer at address    *)
+  (* 'buffPtr', number of effectiv written bytes is  *)
+  (* returned in 'written'                           *)
+
+
+PROCEDURE ReadByte(    f: File;      (* Read a byte from file *)
+                   VAR b: BYTE);
+
+
+PROCEDURE WriteByte( f: File;     (* Write a word to file *)
+                     b: BYTE);
+
+
+PROCEDURE ModifyByte( f: File;    (* Modify a word on file *)
+                      b: BYTE);
+
+
+PROCEDURE ReadWord(    f: File;      (* Read a word from file *)
+                   VAR w: WORD);
+
+
+PROCEDURE WriteWord( f: File;     (* Write a word to file *)
+                     w: WORD);
+
+
+PROCEDURE ModifyWord( f: File;    (* Modify a word on file *)
+                      w: WORD);
+
+
+(* --------------------------------------------------------- *)
+
+PROCEDURE EndFile(f: File): BOOLEAN;
+
+(* End of file reached, with the following logic:
+
+   After Open   : undefined
+   After Create : undefined
+
+   "WriteMode"  : undefined
+   i.e., after calls to Write- or Modify- procedures.
+
+   "ReadMode":
+   When reading in "TextMode" (using ReadChar) a logical
+   EOF (32C,<ctrl-Z>) in the file sets EndFile to TRUE.
+   If there is no logical EOF in the file, or when reading
+   in "BinaryMode" , reading to or after the physical EOF
+   sets EndFile to TRUE.
+
+   NOTE: All read procedures return NUL or read bytes=0
+         when reading past the end of the file.
+         In "BinaryMode" this is always the physical EOF,
+         in "TextMode" this is either the logical EOF, or
+         if there is no logical EOF, the physical EOF.
+*)
+
+END LogiFile.
+

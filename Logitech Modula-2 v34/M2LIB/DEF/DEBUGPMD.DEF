@@ -1,0 +1,13 @@
+DEFINITION MODULE DebugPMD;
+
+(*
+   generates a post-mortem dump upon abnormal termination of the 
+   application.
+   This module should be imported as first module in the main 
+   module of the application to ensure correct behaviour.
+   Generated post-mortem dump file (.PMD) can then be used by
+   the PMD program to debug the application.
+*)
+
+END DebugPMD.
+

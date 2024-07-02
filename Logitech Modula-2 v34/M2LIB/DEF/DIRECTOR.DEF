@@ -1,0 +1,78 @@
+(* Abbreviation: Directories *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Directories;
+(*
+   Additional directory operations
+*)
+
+
+EXPORT QUALIFIED
+   DirQueryProc, DirResult, DirQuery,
+   Delete, Rename;
+
+
+TYPE
+   DirQueryProc = PROCEDURE(ARRAY OF CHAR, VAR BOOLEAN);
+
+   DirResult = (OK,
+                ExistingFile, (* rename to existing name *)
+                NoFile,       (* file not found *)
+                OtherError);
+
+ 
+PROCEDURE DirQuery(    wildFileName : ARRAY OF CHAR;
+                       DirProc      : DirQueryProc;
+                   VAR result       : DirResult);
+(*
+- Apply the a procedure to all matching files
+
+in:   wildFileName  file name, wild-characters are allowed
+      DirProc       procedure to be called for each file
+                    matching 'wildFileName'
+
+out:  result        result of directory operation
+
+'DirQuery' executes 'DirProc' on each file which satisfies
+the specification of 'wildFileName' where wild-characters
+are allowed. If no more files are found, or as soon as
+'DirProc' returns FALSE, the execution is stopped.
+
+If an incorrect filename is passed, this may return a
+'result <> OK', and 'DirProc' will not be called.
+
+Possible results are OK, NoFile, or OtherError.
+*)
+
+
+PROCEDURE Delete(    FileName : ARRAY OF CHAR;
+                 VAR result   : DirResult);
+
+(*
+- Delete a file.
+
+in:   FileName   name of the file to delete
+
+out:  result     result of directory operation
+
+Possible results are OK, or NoFile.
+*)
+
+
+PROCEDURE Rename(    FromName : ARRAY OF CHAR;
+                     ToName   : ARRAY OF CHAR;
+                 VAR result   : DirResult);
+(*
+- Rename a file.
+
+in:   FromName   name of the file to rename
+      ToName     new name of the file
+
+out:  result     result of directory operation
+
+Possible results are OK, NoFile, ExistingFile, or
+OtherError.
+*)
+
+
+END Directories.
+

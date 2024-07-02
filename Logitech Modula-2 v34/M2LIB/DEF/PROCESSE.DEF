@@ -1,0 +1,104 @@
+(* Abbreviation: Processes *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Processes;
+(*
+   (pseudo-) concurrent programming with SEND/WAIT
+
+From the book 'Programming in Modula-2' by Prof.
+N. Wirth.
+*)
+
+
+EXPORT QUALIFIED
+   SIGNAL, SEND, WAIT,
+   StartProcess, Awaited, Init;
+
+
+TYPE
+   SIGNAL;
+   (*
+   - SIGNAL's are the means of synchronization between
+     processes. Any variable of type SIGNAL must be
+     initialized explizitly by means of procedure
+     'Init' before using it with any other procedure
+     of this module.
+   *)
+
+
+PROCEDURE StartProcess (P: PROC; n: CARDINAL);
+(*
+- Start up a new process.
+
+in:   P   top-level procedure that will execute in this
+          process.
+      n   number of bytes of workspace to be allocated
+          to it.
+
+Allocates (from Storage) a workspace of n bytes, and
+creates a process executing procedure P in that workspace.
+Control is given to the new process.
+
+Caution: The caller must ensure that the workspace size is
+sufficient for P.
+
+Errors:  StartProcess may fail due to insufficient memory. 
+*)
+
+
+PROCEDURE SEND (VAR s: SIGNAL);
+(*
+- Send a signal
+
+in:   s   the signal to be sent.
+
+out:  s   the signal with one less process waiting
+          for it.
+
+If no process is waiting for s, SEND has precisely no
+effect. Otherwise, some process which is waiting for s
+is given control and allowed to continue from WAIT.
+*)
+
+
+PROCEDURE WAIT (VAR s: SIGNAL);
+(*
+- Wait for some other process to send a signal.
+
+in:   s   the signal to wait for.
+
+The current process waits for the signal s. At some later
+time, a SEND(s) by some other process can cause this
+process to return from WAIT.
+
+Errors:  If all other processes are waiting, WAIT
+terminates the program.
+*)
+
+
+PROCEDURE Awaited (s:SIGNAL): BOOLEAN;
+(*
+- Test whether any process is waiting for a signal.
+
+in:   s   the signal of interest.
+out:      TRUE if and only if at least one process is
+          waiting for s.
+*)
+
+
+PROCEDURE Init (VAR s: SIGNAL);
+(*
+- Initialize a SIGNAL object.
+
+in:   s   the signal to be initialized
+
+out:  s   the initialized signal (ready to be used
+          with one of the procedures declared above)
+
+An object of type SIGNAL must be initialized with this
+procedure before it can be used with any of the other
+operations.  After initilization of s, Awaited(s) is FALSE.
+*)
+
+
+END Processes.
+

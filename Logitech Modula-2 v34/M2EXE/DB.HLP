@@ -1,0 +1,83 @@
+Mouse functions
+***************
+       
+CURSOR POSITION         LEFT BUTTON        MIDDLE BUTTON      RIGHT BUTTON
+       
+CURSOR ON A WINDOW'S    scroll up          vertical           scroll down
+LEFT BORDER                                absolute position
+       
+CURSOR ON A WINDOW'S    scroll left        horizontal         scroll right
+BOTTOM BORDER                              absolute position
+       
+CURSOR ON A WINDOW'S    move               ------             ------
+BOTTOM LEFT CORNER      left/bottom border
+       
+CURSOR INSIDE           simple click:      call               call
+A WINDOW                select             window's           window's 
+                        double click:      manipulation       specific 
+                        do probable action menu               menu
+
+PROMPT                  terminate          escape             escape
+                        user entry         prompt             prompt
+
+MENU                    execute the        execute the        execute the
+                        highlighted        highlighted        highlighted
+                        action             action             action
+       
+Scroll functions
+****************
+                                 1 line up
+                                      |
+                                      |
+                          +-------+-------+-------+
+       beginning          |       |       |       |
+       of text        --- | HOME  |   ^   | PG UP |---- 1 page up
+                          |       |       |       |
+                          +-------+-------+-------+
+                          |       |       |       |
+       1 column    ------ |   <   |       |   >   |---- 1 column
+       to the left        |       |       |       |     to the right
+                          +-------+-------+-------+
+       end of             |       |       |       |
+       text       ------- |  END  |   V   | PG DN |---- 1 page down
+                          |       |       |       |
+                          +-------+-------+-------+
+                                      |
+                                      |
+                                 1 line down
+       
+        TAB : 1 page right       SHIFT-TAB : 1 page left
+       
+
+Function keys
+*************
+
+F1          to call the help screen
+ESC         to leave the help screen
+
+F10         to call the menu
+cursor keys to select a command
+CR or space to activate a command
+ESC         to leave the menu
+
+            In the menus, the following symbols are used:
+              the diamond  sign  = 'Alt'  key, 
+              the up arrow sign  = 'Ctrl' key,
+              double quaver sign = double click.
+
+Options
+*******
+
+PMD & RTD:
+       /q         (default : /q-)    Query
+
+RTD:
+       /s         (default : /s-)    Small swap
+       /b         (default : /b-)    Big swap
+       /v         (default : /v-)    Virtual disk (drive d:)
+       /l         (default : /l-)    Large
+       /m         (default : /m-)    Mouse application and old driver
+       /g         (default : /g-)    Graphic application
+                                     It is advised to try first G-.
+       /d         (default : /d+)    Display handling
+

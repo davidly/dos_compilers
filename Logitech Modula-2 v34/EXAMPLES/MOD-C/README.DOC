@@ -1,0 +1,14 @@
+
+This example shows a simple program in Modula-2 with calls to C procedures.
+
+Special attention has to be given to the following points:
+
+- Modula-2 handles only far code and far data.  Use the 'far' keyword in
+  C for all data and procedures used also in Modula-2, or compile with the
+  C compiler option /AL to use the large memory model.
+  
+- C doesn't provide real string variables.  Strings are handled with
+  pointers to arrays of characters.  Use pointers also in Modula-2 or
+  use the knowledge about the implementation and pass the string
+  length along with the pointer.
+

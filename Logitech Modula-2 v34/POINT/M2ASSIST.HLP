@@ -1,0 +1,22 @@
+                    -  Functions of M2Assist -
+              
+- Syntax Check : checks the syntax of the file in the active window.
+
+- Compile : compile the file in the active window.
+  The error messages can be viewed with the "Next Error" command.
+
+- Next Error : goto to the next compile error in the active window.
+
+- Link : link the file associated with the active window.
+
+- Run : run the file associated with the active window.
+
+- Load Listing : load the listing file associated with the active window.
+  The error messages can be viewed with the "Next Error" command.
+
+- Load Templates : load the file M2ASSIST.INI, which contains templates 
+  for Modula-2 constructs.
+
+- Help : display this help screen.
+
+

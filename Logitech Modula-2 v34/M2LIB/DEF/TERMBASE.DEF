@@ -1,0 +1,154 @@
+(* Abbreviation: Termbase *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 14, 1985 *)
+DEFINITION MODULE Termbase;
+(*
+   Terminal input/output with redirection hooks
+   [Private module of the MODULA-2/86 system]
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED
+   ReadProcedure, StatusProcedure, WriteProcedure,
+   AssignRead, AssignWrite, UnAssignRead, UnAssignWrite,
+   Read, KeyPressed, Write;
+
+
+TYPE
+   ReadProcedure = PROCEDURE (VAR CHAR);
+   (*
+   - To assign a private read procedure (for redirection
+     of input) a procedure of type 'ReadProcedure' must
+     be provided. This procedure returns a character
+     from the input device. It waits until a character
+     hes been entered.
+   *)
+
+
+TYPE
+   StatusProcedure = PROCEDURE (): BOOLEAN;
+   (*
+   - To assign a private status-procedure (for redirection
+     of input) a procedure of type 'StatusProcedure' must
+     be provided. This procedure returns TRUE, if a
+     character is available to read, FALSE otherwise.
+   *)
+
+
+TYPE
+   WriteProcedure = PROCEDURE (CHAR);
+   (*
+   - To assign a private write procedure (for redirection
+     of output) a procedure of type 'WriteProcedure' must
+     be provided. This is typically used to redirect
+     output to a file or to the screen and a file (log
+     file). Special interpretation of characters sent to
+     the screen can be performed in such a private driver
+     procedure.
+   *)
+
+
+PROCEDURE AssignRead (rp: ReadProcedure;
+                      sp: StatusProcedure;
+		      VAR done: BOOLEAN);
+(*
+- Install read and status routines for terminal input.
+
+in:   rp    read-a-character procedure,
+      sp    is-character-available function,
+
+out:  done  TRUE if the installation was done.
+
+Initially the corresponding procedures of 'Keyboard' are
+installed.
+
+Subsequent assignments will be valid until the next
+'UnAssignRead' is executed or until the (sub-)program
+which has installed the procedures terminates. Upon
+termination of a program, the read and status procedures
+allocated by that program are removed. Read procedures
+are non-sharable resources (see module 'Program').
+
+The assignments are implemented in a stack manner. When a
+read procedure is removed, the previously valid procedure
+becomes valid again. Up to six levels of re-assignment are
+allowed. Done = FALSE if this depth is exceeded.
+During execution of a read or status procedure, this
+assignments-stack is decremented, which allows an
+installed routine to call recursively Terminal.Read
+and/or Terminal.KeyPressed to activate the previously
+installed routine. At the lowest level however, the
+stack is not decremented.
+*)
+
+
+PROCEDURE AssignWrite (wp: WriteProcedure;
+                       VAR done: BOOLEAN);
+(*
+- Install write routine for terminal output.
+
+in:   wp    character output procedure,
+
+out:  done  set TRUE if the installation was done.
+
+[See AssignRead above.]
+Initially the procedure Display.Write is assigned.
+*)
+
+
+PROCEDURE UnAssignRead (VAR done: BOOLEAN);
+(*
+- Undo the last AssignRead by the current program.
+
+out:  done  set TRUE if there was something to unassign.
+
+The previously valid procedures become active again.
+*)
+
+
+PROCEDURE UnAssignWrite (VAR done: BOOLEAN);
+(*
+- Undo the last AssignWrite by the current program.
+
+out:  done  set TRUE if there was something to unassign.
+
+The previously valid procedure becomes active again.
+*)
+
+
+PROCEDURE Read (VAR ch: CHAR);
+(*
+- Read a character using the current input procedure.
+
+out:  ch    the character read.
+
+Uses the current read-procedure, as assigned by
+AssignRead.
+*)
+
+
+PROCEDURE KeyPressed (): BOOLEAN;
+(*
+- Test if a character is available from the current input.
+
+Uses the current status-procedure, as assigned by
+AssignRead.
+*)
+
+
+PROCEDURE Write (ch: CHAR);
+(*
+- Write a character to the current output.
+
+in:   ch    character to write.
+
+Uses the current write-procedure as assigned by
+AssignWrite.
+*)
+
+
+END Termbase.
+

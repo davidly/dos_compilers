@@ -1,0 +1,90 @@
+(* Abbreviation: TimeDate *)
+(* Version 3.00, Mar 1987 *)
+DEFINITION MODULE TimeDate;
+(*
+   Access to the system's date and time
+*)
+
+
+EXPORT QUALIFIED
+   Time,
+   SetTime, GetTime,
+   CompareTime, TimeToZero,
+   TimeToString;
+
+
+TYPE
+   Time = RECORD day, minute, millisec: CARDINAL; END;
+   (*
+   - date and time of day
+
+   'day' is : Bits 0..4 = day of month (1..31),
+              Bits 5..8 = month of the year (1..12),
+              Bits 9..15 = year - 1900.
+   'minute' is hour * 60 + minutes.
+   'millisec' is second * 1000 + milliseconds,
+              starting with 0 at every minute.
+   *)
+
+
+PROCEDURE GetTime (VAR curTime: Time);
+(*
+- Return the current date and time.
+
+out:    curTime         record containing date and time.
+
+On systems which do not keep date or time, 'GetTime'
+returns a pseudo-random number.
+*)
+
+
+PROCEDURE SetTime (curTime: Time);
+(*
+- Set the current date and time.
+
+in:     curTime         record containing date and time.
+
+On systems which do not keep date or time, this call has
+no effect.
+*)
+
+PROCEDURE CompareTime(t1, t2: Time): INTEGER;
+(*
+- compare two dates and time
+
+in :   t1, t2 two time structures to compare
+out:   return integer value indicating result of comparison
+        -1  t1 < t2
+         0  t1 = t2
+        +1  t1 > t2
+*)
+
+PROCEDURE TimeToZero(VAR t: Time);
+(*
+- initialize time and date to zero
+
+out:    t   zero time  00-00-00 00:00:00
+*)
+
+PROCEDURE TimeToString(t: Time; VAR s: ARRAY OF CHAR);
+(*
+- convert time into a string
+
+in :    t   time structure to be convert to a string
+out:    s   string containing description of date and
+            time given in t.
+
+The length of s should be at least 17 characters and
+the time will be of format:
+        yy-mm-dd hh:nn:ss
+     where
+        yy is year (last 2 digits only)
+        mm is month (1..12)
+        dd is day of month (1..31)
+        hh is hours (0..23)
+        nn is minutes (0..59)
+        ss is seconds (0..59)
+*)
+
+END TimeDate.
+

@@ -1,0 +1,150 @@
+(* Abbreviation: Strings  *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Strings;
+(*
+   Variable-length character strings handler.
+
+
+NOTE: For most of these string handling procedures,there
+is the possibility of the user not providing a variable
+large enough to contain the result of a string operation.
+Should this possibility arise, truncation may result, as
+there will be no other error notification. The
+implementation of this module does not cause a range
+error, instead, it truncates silently.
+
+String variables have the following characteristics:
+   - They are of type ARRAY OF CHAR.
+   - The array lower bound must be zero.
+   - The length of the string is the size of the string 
+     variable, unless a null character (0C) occurs in
+     the string to indicate end of string.
+*)
+
+
+PROCEDURE Assign (VAR source      : ARRAY OF CHAR;
+                  VAR destination : ARRAY OF CHAR);
+(*
+- Assign the contents of string variable source into
+  string variable destination.
+  source is passed as a VAR for efficiency.
+
+in:     source
+
+out:    dest
+*)
+
+
+PROCEDURE ConstAssign (source          : ARRAY OF CHAR;
+                       VAR destination : ARRAY OF CHAR);
+(*
+- Assign the contents of string variable source into
+  string variable destination.
+  source is passed as a value for ease of use.
+
+in:     source
+
+out:    dest
+*)
+
+
+PROCEDURE Insert (substr: ARRAY OF CHAR;
+                  VAR str: ARRAY OF CHAR;
+                  inx: CARDINAL);
+(*
+- Insert the string substr into str,starting at str[inx].
+
+in:     substr
+        str
+        inx
+
+out:    str
+
+If inx is equal or greater than Length(str) then substr
+is appended to end of dest.
+*)
+
+
+PROCEDURE Delete (VAR str: ARRAY OF CHAR;
+                  inx: CARDINAL;
+                  len: CARDINAL);
+(*
+- Delete len characters from str, starting at str[inx].
+
+in:     str
+        inx
+        len
+
+out:    str
+
+If inx >= Length(str) then nothing happens. If there are
+not len characters to delete, characters to the end of
+string are deleted.
+*)
+
+
+PROCEDURE Pos (substr, str: ARRAY OF CHAR): CARDINAL;
+(*
+- Return the index into str of the first occurrence of
+  the substr.
+
+in:     substr
+        str
+
+Pos returns a value greater then HIGH(str) if no
+occurrence of the substring is found
+*)
+
+
+PROCEDURE  Copy (str: ARRAY OF CHAR;
+                 inx: CARDINAL;
+                 len: CARDINAL;
+                 VAR result: ARRAY OF CHAR);
+(*
+- Copy at most len characters from str into result.
+
+in:     str     source string,
+        inx     starting position in 'str',
+        len     maximum number of characters to copy,
+
+out:    result  copied string
+*)
+
+
+PROCEDURE Concat (s1, s2: ARRAY OF CHAR;
+                  VAR result: ARRAY OF CHAR);
+(*
+- Concatenate two strings.
+
+in:     s1      left string,
+        s2      right string,
+
+out:    result  receives left string followed by right
+                string.
+*)
+
+
+PROCEDURE Length (VAR str: ARRAY OF CHAR): CARDINAL;
+(*
+- Return the number of characters in a string.
+
+in:     str
+*)
+
+
+PROCEDURE CompareStr (s1, s2: ARRAY OF CHAR): INTEGER;
+(*
+- Compare two strings.
+
+in:     s1
+        s2
+
+Returns an integer value indicating the comparison result:
+    -1 if s1 is less than s2;
+     0 if s1 equals s2; 
+     1 if s1 is greater than s2
+*)
+
+
+END Strings.
+

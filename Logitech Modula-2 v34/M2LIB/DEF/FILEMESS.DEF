@@ -1,0 +1,28 @@
+(* Abbreviation: FileMessage *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE FileMessage;
+(*
+   Write file status/response to the terminal
+*)
+
+FROM FileSystem IMPORT Response;
+
+EXPORT QUALIFIED WriteResponse;
+
+
+PROCEDURE WriteResponse (r: Response);
+(*
+- Write a short description of a FileSystem response on
+  the terminal.
+
+in:     r       the response from some FileSystem
+                operation.
+
+The actual argument for 'r' is typically the field 'res'
+of a variable of type 'File'. The printed message is up
+to 32 characters long.
+*)
+
+
+END FileMessage.
+

@@ -1,0 +1,64 @@
+DEFINITION MODULE BitBlockOps;
+
+(* Bitwise operations on blocks.
+   Blocks are defined as a starting address and a size, i.e. the number of
+   bytes they hold. 
+   In a block, the left or low bit is the low bit of the byte located at 
+   (starting address); and the right or high bit is the high bit of the byte 
+   located at (starting address + size - 1)
+ *)
+
+FROM SYSTEM IMPORT ADDRESS;
+  
+  PROCEDURE BlockAnd (destination, source: ADDRESS;
+                      size               : CARDINAL);
+    (* ANDs the block destination with the block source   *)
+
+  PROCEDURE BlockOr  (destination, source: ADDRESS;
+                      size               : CARDINAL);
+    (* Bitwise OR *)
+
+  PROCEDURE BlockXor (destination, source: ADDRESS;
+                      size               : CARDINAL);
+    (* Bitwise XOR *)
+
+  PROCEDURE BlockNot (block : ADDRESS;
+                      size  : CARDINAL);
+    (* Bitwise complement to 1 *)
+
+  PROCEDURE BlockShr (block : ADDRESS;
+                      size  : CARDINAL;
+                      count : CARDINAL);
+    (* Shift Logical Right
+       shifts the bits in block to the right by the number of bits specified
+       in count. Zeros are shifted in on the left. *)
+
+  PROCEDURE BlockSar (block : ADDRESS;
+                      size  : CARDINAL;
+                      count : CARDINAL);
+    (* Shift Arithmetic Right
+       shifts the bits in block to the right by the number of bits specified
+       in count. Bits equal to the original high order bit are shifted in 
+       on the left, preserving the sign of the original value. *)
+
+  PROCEDURE BlockShl (block : ADDRESS;
+                      size  : CARDINAL;
+                      count : CARDINAL);
+    (* Shift Left
+       shifts the bits in block to the left by the number of bits specified
+       in count. Zeros are shifted in on the right. *)
+
+  PROCEDURE BlockRor (block : ADDRESS;
+                      size  : CARDINAL;
+                      count : CARDINAL);
+    (* Rotate Right
+       rotates block right by the number of bits specified in count *)
+  
+  PROCEDURE BlockRol (block : ADDRESS;
+                      size  : CARDINAL;
+                      count : CARDINAL);
+    (* Rotate Left
+       rotates block left by the number of bits specified in count *)
+
+END BitBlockOps.
+

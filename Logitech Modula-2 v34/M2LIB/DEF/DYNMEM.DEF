@@ -1,0 +1,37 @@
+(*
+Title    : DynMem - part of storage managing a one block heap
+Creation : 87/02/19
+Author   : A.Richard
+System   : LOGITECH MODULA-2/86
+
+Last Edit: 87.04.01
+*)
+DEFINITION MODULE DynMem;
+
+(*
+   DynMem is used by Storage in order to manage one-block heap (16 k)
+*)
+
+FROM SYSTEM  IMPORT ADDRESS;
+
+EXPORT QUALIFIED  InstallDynMem, Alloc, DeAlloc, Avail;
+
+(* for all procedures below, the block address must be paragraph aligned   *)
+(* with offset 0                                                           *)
+
+PROCEDURE InstallDynMem( block : ADDRESS; size : CARDINAL );
+(* size is the size in bytes usable by DynMem and it must be < MaxInt      *)
+
+PROCEDURE Alloc( block : ADDRESS; VAR adr : ADDRESS; size : CARDINAL );
+(* adr will be the allocated block address or NIL if no space available    *)
+(* size is in bytes                                                        *)
+
+PROCEDURE DeAlloc( block : ADDRESS;
+                   VAR adr : ADDRESS; size : CARDINAL ): BOOLEAN;
+(* adr return value will be NIL                                            *)
+
+PROCEDURE Avail( block : ADDRESS; size : CARDINAL ): BOOLEAN;
+(* returns TRUE if size is available in the block                          *)
+
+END DynMem.
+

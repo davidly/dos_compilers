@@ -1,0 +1,900 @@
+(* Abbreviation: FileSystem      *)
+
+(* Version 1.10, Nov 1984        *)
+(* comments modified Feb 8, 1985 *)
+(* Version 3.00, June 1987       *)
+(* file attribute & access mode  *)
+
+DEFINITION MODULE FileSystem;
+
+(*
+   File manipulation routines
+
+This implementation is based on the underlying operating
+system for file handling. It distinguishes between BINARY
+files and TEXT files.
+
+File structure:
+
+After any file operation the result should be checked
+for errors, by testing the field 'res' of the file
+variable (see type declarations for 'File' and
+'Response').
+
+The BOOLEAN field 'eof' in a file variable (variable of
+type 'File)' allows to determine the end-of-file. It is
+set to TRUE after the first unsuccessful attempt to read
+information from the file. This first attempt to read
+beyond end-of-file does not set any error condition; the
+field 'res' of the file variable still indicates 'done'.
+However, the character (or other data) returned is
+not valid.
+
+Binary files:
+
+   A file is a sequence of bytes with no other structure
+   implied.
+
+   Under some operating systems (e.g. CP/M-86) the file
+   may be organized in records (128 bytes each), and
+   therefore, the length of a file will always be a
+   multiple of this record size.
+
+Text files:
+
+   A file is a sequence of characters. The character code
+   32C (Ctrl-Z) indicates end-of-file). All other
+   character codes from 0C to 377C are legal. When reading
+   a text file, 'eof' becomes TRUE when encountering the
+   character 32C, or at the pysical end of the file. When
+   closing a text file that has been modified, the
+   character 32C is written on the file.
+
+   When reading from a text file (by means of procedure
+   'ReadChar'), the character ASCII.EOL is returned for
+   the sequence <CR, LF>, or for a single <CR> or <LF>.
+   When writing to a text file (by means of procedure
+   'WriteChar'), the character ASCII.EOL is changed to
+   the sequence <CR,LF>.
+
+An open file is in one of the states 'opened', 'reading',
+'writing', or 'modifying'. These states have the following
+meaning:
+
+   opened    = Content of file buffer is undefined and not
+               associated with a position in the file.
+               When starting to read or write from a file
+               that is in state open, the state is changed
+               implicitly to reading or writing.
+   reading   = No writing is allowed.
+   writing   = No reading is allowed. Writing always takes
+               place at the end-of-file position.
+               When writing on an existing file, which is
+               (physically) longer than the current write
+               position, it is undefined, whether the file
+               is truncated upon a close.
+   modifying = Reading and writing are allowed. Writing an
+               element inside of a file means 'overwriting'
+               the value of the element with a new value.
+               Upon a close, the file is not truncated.
+
+The state of the file is given by the field 'flags' of
+a file variable. By means of the procedures SetRead,
+SetWrite, SetModify, and SetOpen, it is possible to change
+the state of an open file.
+
+To every file is associated a 'current position'. This
+corresponds to the number of the current byte inside the
+file, starting with zero for the first byte. The next
+reading or writing takes place at the current position.
+This position is updated automatically after reading or
+writing. It can also be inquired or set through the
+procedure GetPos or SetPos.
+
+After the opening of a file (by means of Lookup or Create)
+it is state 'opened' and positioned at the beginning
+(low = 0, high = 0).
+
+Conventions for filenames:
+
+For the procedures Lookup and Rename, a filename has to be
+given, including a medium name (drive name), a file name
+and an optional file type. For the procedure Create, a
+medium name has to be given. The medium name is up to
+three characters long (alphanumeric, starting with a
+letter). It is separated from the file name by a colon
+(':'). If no medium name is given, the current default
+medium (drive) is assumed. The default medium may also
+be denoted by 'DK:'.
+
+Depending on the operating system, the file name may
+include a path name, specifying the the directory where
+the file exists. The length of the file (and path) name,
+and the characters legal for file names, depend on the
+operating system.
+
+By default, the mediums (i.e. disk drives) handled by
+module 'DiskFiles' are installed.
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+FROM SYSTEM IMPORT ADDRESS, WORD, BYTE;
+
+EXPORT QUALIFIED
+   File, Response, Command,
+   Flag, FlagSet,
+
+   (* basic file operations: *)
+   NormalAttribute, ReadOnlyAttribute, HiddenAttribute, SystemAttribute,
+   ArchiveAttribute,
+   ReadOnlyMode, WriteOnlyMode, ReadWriteMode,
+   ExclusiveAccessMode, ReadOnlyAccessMode, WriteOnlyAcessMode, FullAccessMode,
+   PrivateFileMode, InheritedFileMode,
+   Create, Close, Lookup, Rename, Delete, CreateFile, OpenFile, 
+   GetAttribute, SetAttribute, 
+   SetRead, SetWrite, SetModify, SetOpen,
+   Doio,
+   SetPos, GetPos, Length,
+
+   (* stream-like I/O: *)
+   Reset, Again,
+   ReadWord, ReadChar, ReadByte, ReadNBytes,
+   WriteWord, WriteChar, WriteByte, WriteNBytes,
+
+   (* medium handling: *)
+   MediumType, MediumHint, BuffAdd, 
+   FileProc, DirectoryProc,
+   CreateMedium, RemoveMedium,
+
+   FileNameChar;
+
+
+TYPE
+
+   MediumHint = CARDINAL;
+   (*- medium index used in DiskFiles *)
+
+   MediumType = ARRAY [0..2] OF CHAR;
+   (*- medium name (A, B...) *)
+
+   Flag     = (er, ef, rd, wr, ag, txt);
+   (*
+   - status flag for file operations:
+
+   er  = error occured, ef = end-of-file reached,
+   rd  = in read mode,  wr = in write mode,
+   ag  = "Again" has been called after last read,
+   txt = text-file 
+         (the last access to the file was a 'WriteChar' or 'ReadChar'),
+   *)
+
+   FlagSet  = SET OF Flag;
+   (*- status flag set *)
+
+   Response = (done,
+               notdone, notsupported, callerror,
+               unknownmedium, unknownfile, paramerror,
+               toomanyfiles, eom, userdeverror, accesserror);
+   (*
+   - result of a file operation
+
+     done:
+       FileSystem routine successfully terminated
+
+     notsupported:
+       for internal purposes only
+
+     callerror:
+       a) You tried to write to a file currently in
+          state reading. Use SetWrite to change a
+          file's state from reading to writing.
+       b) You tried to read from a file currently in
+          state writing. Use SetRead to change a
+          file's state from writing to reading.
+       c) You tried to read from or write to a file
+          marked as invalid by the following operations:
+          unsuccessful Create, CreateFile, Lookup or OpenFile
+          successful Close or Delete
+
+     unknownmedium:
+       The medium, or drive, which you addressed does
+       not exist or is not known to the MODULA-2/86
+       System (it has not been installed by means of
+       the CreateMedium routine).
+
+     unknownfile:
+       The file you specified as the parameter for the
+       Delete/GetAttribute/SetAttribute routines could not be found.
+
+     paramerror:
+       a) The syntax of the medium name, or drive name,
+          which you specified is incorrect.
+       b) When renaming a file, you must not change
+          the medium name (drive name).
+       c) You tried to position a file after its
+          physical end.
+
+     toomanyfiles:
+       Only 12 files can be opened at the same time.
+
+     eom:
+       'end of medium' - The medium (disk) holding the
+       file, to which you wanted to write is short of
+       storage space.
+
+     userdeverror:
+       Not used in this implementation of the FileSystem.
+
+     notdone:
+       a) You tried to read from a file for which the
+          BOOLEAN field eof of the corresponding file
+          variable is true.
+       b) You tried to open a non-existing file with
+          Lookup (with parameter newFile = FALSE) or
+          with OpenFile.
+       c) Any other error, not covered by the above
+          meanings of the values of the FileSystem
+          Response Type.
+
+     accesserror:
+       Problems while accessing a file. For example:
+          - multiple access to a file opened with the exclusive mode
+          - file attribute cannot be changed
+          - SetRead/ SetModify with file opened in
+            WriteOnlyMode or WriteOnlyAccessMode
+          - SetWrite/ SetModify with file opened in
+            ReadOnlyMode or ReadOnlyAccessMode
+
+   *)
+
+   Command  = (create, close, lookup, rename, delete,
+               createfile, openfile, 
+               setread, setwrite, setmodify, setopen,
+               doio, setpos, getpos, length,
+               getattrib, setattrib);
+   (*- commands passed to module 'DiskFiles' *)
+
+   BuffAdd  = POINTER TO ARRAY [0..0FFFEH] OF CHAR;
+   (*- file buffer pointer type *)
+
+   File     = RECORD
+                bufa: BuffAdd;
+                (*- buffer address *)
+                buflength: CARDINAL;
+                (*- size of buffer in bytes. In the
+                    current release it is always a
+                    multiple of 128. *)
+                validlength: CARDINAL;
+                (*- number of valid bytes in buffer *)
+                bufind: CARDINAL;
+                (*- byte-index to the buffer of the
+                    current position *)
+                flags: FlagSet;
+                (*- status of the file *)
+                eof: BOOLEAN;
+                (*- TRUE if last access was past the end
+                    of the file *)
+                res: Response;
+                (*- result of last operation *)
+                lastRead: CARDINAL;
+                (*- the word or byte (char) last read *)
+                mt: MediumType;
+                (*- selects the driver that supports this
+                    file *)
+                fHint: CARDINAL;
+                (*- used internally by device driver *)
+                mHint: MediumHint;
+                (*- used internally by medium handler *)
+                fMode  : CARDINAL;
+                CASE fCreate : BOOLEAN OF
+                  TRUE: fAttribAfterCreation: CARDINAL;
+                END;
+                (*- used to store the open mode and the file attribute *) 
+                CASE com: Command OF
+                  create    :
+                | lookup    : new: BOOLEAN; 
+                | openfile  : fileMode             : CARDINAL;
+                | createfile: fileCreationAttribute: CARDINAL;
+                | setpos    ,
+                  getpos    ,
+                  length    : highpos, lowpos: CARDINAL;
+                | getattrib , 
+                  setattrib : fileAttribute  : CARDINAL;
+                END;
+              END;
+   (*- file structure used for bookkeeping by DiskFiles *)
+
+(* ********** ********** *)
+
+PROCEDURE Create (VAR f: File; mediumName   : ARRAY OF CHAR );
+(*
+- create a temporary file
+
+in:     mediumName   name of medium to create file on, 
+                     in character format
+
+out:    f            initialized file structure
+
+A temporary file is characterized by an empty name. To 
+make the file permanent, it has to  be renamed with a
+non-empty name before closing it. For subsequent
+operations on this file, it is referenced by 'f'.
+
+The file is created with the normal attribute and 
+in read write mode. If the attribute should be changed,
+the procedure SetAttribute has to be used.
+*)
+
+
+PROCEDURE Lookup (VAR f: File; fileName: ARRAY OF CHAR; newFile: BOOLEAN );
+(*
+- look for a file
+
+in:  filename     drive and name of file to search for
+     newFile      TRUE if file should be created if
+                  not found
+
+out: f            initialized file structure; f.res will
+                  be set appropriately.
+
+Searches the medium specified in "filename" for a file
+that matches the name and type given in "filename". If
+the file is not found and "newFile" is TRUE, a new
+(permanent) file with the given name and type is created.
+If it is not  found and "newFile" is FALSE, no action
+takes place and "notdone" is returned  in the result
+field of "f".
+*)
+
+
+PROCEDURE Close (VAR f: File);
+(*
+- Close a file
+
+in:     f       structure referencing an open file
+
+out:    f       the field f.res will be set appropriately.
+
+Terminates the operations on file "f". If "f" is a 
+temporary file, it will be destroyed, whereas a file with
+a non-empty name remains on its medium and is accessible
+through "Lookup". When closing a text-file after writing,
+the end-of-file code 32C is written on the file (MS-DOS
+and CP/M-86 convention).
+*)
+
+
+PROCEDURE Rename (VAR f: File; newname: ARRAY OF CHAR);
+(*
+- rename a file
+
+in:  f        structure referencing an open file
+     newname  filename to rename to, with
+              device:name.type specified
+
+out: f        file name in f will be changed and the
+              field f.res will be set appropriately.
+
+The medium, on which the files reside can not be changed
+with this command. The medium name inside "newname" has
+to be the old one.
+*)
+
+
+PROCEDURE Delete (name: ARRAY OF CHAR; VAR f: File);
+(*
+- delete a file
+
+in:     name    name of file to delete, with
+                dev:name.type specified
+
+out:    f       the field f.res will be set appropriately.
+*)
+
+(* ********** ********** *)
+
+CONST
+  (* ***** file attribute *)    
+  NormalAttribute    =   0;
+  ReadOnlyAttribute  =   1;
+  HiddenAttribute    =   2;
+  SystemAttribute    =   4;
+  ArchiveAttribute   =  32;  (* cannot be used in a file creation      *)
+  ShareableAttribute = 128;  (* This last attribute may not be         *)
+                             (* implemented on all network filesystem. *)
+                             (* (e.g. it is compatible with Novell)    *)
+
+  (* The attributes can be combined together. When the user has *)
+  (* to provide a file attribute, he can write an expression    *)
+  (* composed with the defined constants.                       *)
+  (* Example: the attribute 5 means a read only and system file *)
+  (*                                                            *)
+  (* Note that the parameters file attribute are forwarded      *)
+  (* without processing to DOS (no error detected), so the user *)
+  (* can give not yet defined values (DOS future functions).    *)
+
+PROCEDURE CreateFile (VAR f: File; fileName   : ARRAY OF CHAR ;
+                                   fileAttrib : CARDINAL      );
+(*
+- create a temporary file
+
+in:     fileName     name of the file to create
+        fileAttrib   attribute set to the file when it is closed
+
+out:    f            initialized file structure
+
+The file is created with the normal attribute and 
+in read write mode.  When the file is closed, it has
+the attributes specified in the parameter fileAttrib.
+
+If the file already exists, it is truncated to a 0 byte length.
+*)
+
+PROCEDURE GetAttribute(     fileName  : ARRAY OF CHAR; 
+                        VAR fileAttrib: CARDINAL     ;
+                        VAR f         : File         );
+PROCEDURE SetAttribute(     fileName  : ARRAY OF CHAR;
+                            fileAttrib: CARDINAL     ;
+                        VAR f         : File         );
+
+(*
+- get and set file attributes
+    (combination of: normal, read only, hidden, system and archive)
+
+in    : filename    drive and name of file to search for
+
+in/out: fileAttrib  file attribute
+
+out   : f           f.res will be set appropriately.
+*)
+
+
+CONST  
+  (* ***** open mode *)
+  ReadOnlyMode        =  0H;
+  WriteOnlyMode       =  1H;
+  ReadWriteMode       =  2H;
+  ExclusiveAccessMode = 10H; (* network functions available only in DOS 3.0 *)
+  ReadOnlyAccessMode  = 20H; (* see DOS Ref Manual for more info            *)
+  WriteOnlyAcessMode  = 30H;
+  FullAccessMode      = 40H;
+  PrivateFileMode     = 60H; (* parental functions available only in DOS 3.0 *)
+  InheritedFileMode   = 00H; (* see DOS Ref Manual for more info             *)
+
+  (* The modes can be combined together. When the user has      *)
+  (* to provide an open mode, he can write an expression        *)
+  (* composed with the defined constants.                       *)
+  (* Example: the mode 10H means read only and exclusive access *)
+  (*                                                            *)
+  (* Note that the parameter openMode is forwarded              *)
+  (* without processing to DOS (no error detected), so the user *)
+  (* can give not yet defined values (DOS future functions).    *)
+
+PROCEDURE OpenFile (VAR f: File; fileName: ARRAY OF CHAR;
+                                 openMode: CARDINAL     );
+(*
+- look for a file
+
+in:  filename     drive and name of file to search for
+     openMode     the file is opened with the mode specified
+                  in this parameter.
+
+out: f            initialized file structure; f.res will
+                  be set appropriately.
+
+Searches the medium specified in "filename" for a file
+that matches the name and type given in "filename". If
+the file is not found, an error is signaled.
+*)
+
+(* ********** ********** *)
+
+PROCEDURE ReadWord (VAR f: File; VAR w: WORD);
+(*
+- Returns the word at the current position in f
+
+in:     f       structure referencing an open file
+
+out:    w       word read from file
+        f       the result field f.res will be set
+                appropriately.
+
+The file will be positioned at the next word when the
+read is done.
+*)
+
+
+PROCEDURE WriteWord (VAR f: File; w: WORD);
+(*
+- Write one word to a file
+
+in:     f       structure referencing an open file
+        w       word to write
+
+out:    f       the field f.res will be set appropriately.
+
+When overwriting, the file will be positioned at the next
+word when the write is done.
+*)
+
+
+PROCEDURE ReadChar (VAR f: File; VAR ch: CHAR);
+(*
+- Read one character from a file
+
+in:     f       structure referencing an open file
+
+out:    ch      character read from file
+        f       the field f.res will be set appropriately.
+
+ReadChar returns the character contained in the referenced
+file at the file's current position, with the following
+exceptions:
+
+(The symbolic constants are from the Standard Library
+module ASCII.DEF)
+
+Character Sequence          Character Returned
+   in File:
+Symbolic     Octal          Symbolic     Octal
+----------------------------------------------
+<cr, lf>     15C, 12C         <EOL>       36C
+<cr>         15C              <EOL>       36C
+<lf>         12C              <EOL>       36C
+<Ctrl-z>     32C              <nul>        0C
+
+<Ctrl-z>, i.e. 32C, indicates end-of-file.
+
+If ReadChar encounters the end of the file or
+tries to read beyond it, a nul character, or 0C,
+is returned.
+
+The file will be positioned at the next character when
+the read is done.
+
+*)
+  
+
+PROCEDURE WriteChar (VAR f: File; ch: CHAR);
+(*
+- Write one character to a file
+
+in:     f       structure referencing an open file
+        ch      character to write
+
+out:    f       the field f.res will be set apporopriately.
+
+
+WriteChar writes the character to the referenced file
+at the file's current position, with the following
+exceptions:
+
+(The symbolic constants are from the Standard Library
+module ASCII.DEF)
+
+Character to write          Character Sequence
+                                 in File:
+Symbolic     Octal          Symbolic     Octal
+----------------------------------------------
+<EOL>         36C           <cr, lf>     15C, 12C
+<cr>          15C           <cr>         15C
+<lf>          12C           <lf>         12C
+<Ctrl-z>      32C           <Ctrl-z>     32C
+
+<Ctrl-z>, i.e. 32C, indicates end-of-file.
+
+When overwriting, the file will be positioned at the next
+character when the write is done.
+
+*)
+
+
+PROCEDURE ReadByte (VAR f: File; VAR b: BYTE);
+(*
+- Read one byte from a file
+
+in:     f       structure referencing an open file
+
+out:    b       byte read from file
+        f       the field f.res will be set appropriately.
+
+The file will be positioned at the next byte when the
+read is completed.
+*)
+
+
+PROCEDURE WriteByte (VAR f: File; b: BYTE);
+(*
+- Write one byte to a file
+
+in:     f       structure referencing an open file 
+        b       byte to write
+
+out:    f       the field f.res will be set appropriately.
+
+When overwriting, the file will be positioned at the next
+byte when the write is done.
+*)
+
+
+PROCEDURE ReadNBytes (VAR f: File;
+                      bufPtr: ADDRESS;
+                      requestedBytes: CARDINAL;
+                      VAR read: CARDINAL);
+(*
+- Read a specified number of bytes from a file
+
+in:    f        structure referencing an open file
+       bufPtr   pointer to buffer area to read bytes into
+       requestedBytes number of bytes to read
+
+out:   bufPtr^  bytes read from file
+       f        the field f.res will be set appropriately.
+       read     the number of bytes actually read.
+
+The file will be positioned at the next byte after the
+requested sequence of bytes.
+*)
+
+
+PROCEDURE WriteNBytes (VAR f: File;
+                       bufPtr: ADDRESS;
+                       requestedBytes: CARDINAL;
+                       VAR written: CARDINAL);
+(*
+- Write a specified number of bytes to a file
+
+in:    f        structure referencing an open file
+       bufPtr   pointer to string of bytes to write
+       requestedBytes number of bytes to write
+out:   f        the field f.res will be set appropriately.
+       written  the number of bytes actually written
+
+When overwriting, the file will be positioned at the next
+byte after the requested sequence of bytes.
+*)
+
+
+PROCEDURE Again (VAR f: File);
+(*
+- returns a character to the buffer to be read again
+
+in:     f       structure referencing an open file
+
+out:    f       the f.res field will be set appropriately. 
+
+This should be called after a read operation only (it has
+no effect otherwise). It prevents the subsequent read
+from reading the next element; the element just read
+before will be returned a second time. Multiple calls to
+Again without a read in between have the same effect as
+one call to Again. The position in the file is undefined
+after a call to Again (it is defined again after the next
+read operation).
+*)
+
+
+PROCEDURE SetRead (VAR f: File);
+(*
+- Sets the file in reading- state, without changing the
+  current position.
+
+in:     f       structure referencing an open file
+
+out:    f       f.res will be set appropriately.
+
+Upon calling SetRead, the current position must be before
+the eof. In reading state, no writing is allowed.
+*)
+
+
+PROCEDURE SetWrite (VAR f: File);
+(*
+- Sets the file in writing-state, without changing the
+  current position.
+
+in:     f       structure referencing an open file
+
+out:    f       f.res will be set appropriately.
+
+Upon calling SetWrite, the current position must be a
+legal position in the file (including eof). In writing
+state, no reading is allowed, and a write always takes
+place at the eof. The current implementation does not
+truncate the file.
+*)
+
+
+PROCEDURE SetModify (VAR f: File);
+(*
+- Sets the file in modifying-state, without changing the
+  current position.
+
+in:     f       structure referencing an open file
+
+out:    f       f.res will be set appropriately.
+
+Upon calling SetModify, the current position must be
+before the eof. In modifying-state, reading and writing
+are allowed. Writing is done at the current position,
+overwriting whatever element is already there. The file
+is not truncated.
+*)
+
+
+PROCEDURE SetOpen (VAR f: File);
+(*
+- Set the file to opened-state, without changing the
+  current position.
+
+in:     f       structure referencing an open file
+
+out:    f       f.res will be set appropriately.
+
+The buffer content is written back on the file, if the
+file has been in writing or modifying status. The new
+buffer content is undefined. In opened-state, neither
+reading nor writing is allowed.
+*)
+
+
+PROCEDURE Reset (VAR f: File);
+(*
+- Set the file to opened state and position it to the
+  top of file.
+
+in:     f       structure referencing an open file
+
+out:    f       f.res will be set appropriately.
+*)
+
+
+PROCEDURE SetPos (VAR f: File; high, low: CARDINAL);
+(*
+- Set the current position in file 
+
+in:     f       structure referencing an open file
+        high    high part of the byte offset
+        low     low part of the byte offset
+
+out:    f       f.res will be set appropriately.
+
+The file will be positioned (high*2^16 + low) bytes from
+the top of file.
+*)
+
+
+PROCEDURE GetPos (VAR f: File; VAR high, low: CARDINAL);
+(*
+- Return the current byte position in file 
+
+in:     f       structure referencing an open file
+
+out:    high    high part of byte offset
+        low     low part of byte offset
+
+The actual position is (high*2^16 + low) bytes from the
+top of file.
+*)
+
+PROCEDURE Length (VAR f: File; VAR high, low: CARDINAL);
+(*
+- Return the length of the file in bytes.
+
+in:     f       structure referencing an open file.
+
+out:    high    high part of byte offset
+        low     low part of byte offset
+
+The actual length is (high*2^16 +low) bytes. Depending on
+the operating system, this length may always be a multiple
+of some record size reflecting the physical length of the
+file and maybe not the true logical file length.
+*)
+
+(* ********** ********** *)
+
+PROCEDURE Doio (VAR f: File);
+(*
+-  Do various read/write operations on a file 
+
+in:     f       structure referencing an open file
+
+out:    f       f.res will be set appropriately.
+
+The exact effect of this command depends on the state of
+the file (flags):
+
+   opened    = NOOP.
+   reading   = reads the record that contains the current
+               byte from the file. The old content of the
+               buffer is not written back.
+   writing   = the buffer is written back. It is then
+               assigned to the record, that contains the
+               current position. Its content is not
+               changed.
+   modifying = the buffer is written back and the record
+               containing the current position is read.
+
+Note that 'Doio' does not need to be used when reading
+through the stream-like I/O routines. Its use is limited
+to special applications.
+*)
+
+
+PROCEDURE FileNameChar (c: CHAR): CHAR;
+(*
+- Check the character c for legality in a filename. 
+
+in:     c       charater to check
+
+out:            0C for illegal characters and c otherwise;
+                lowercase letters are transformed into
+                uppercase letters.
+
+Which characters are leagl in a filename depends on the
+host operating system.
+*)
+
+
+TYPE
+  FileProc = PROCEDURE (VAR File);
+  (*- Procedure type to be used for internal file
+      operations 
+
+  A procedure of this type will be called for the following
+  functions (see TYPE 'Command'): setread, setwrite,
+  setmodify, setopen, doio, setpos, getpos, and length.
+  *)
+
+  DirectoryProc = PROCEDURE (VAR File, ARRAY OF CHAR);
+  (*- Procedure type to be used for operations on
+      entire files
+
+  A procedure of this type will be called for the following
+  functions (see TYPE 'Command'): create, close, lookup,
+  rename, and delete.
+  *)
+
+
+PROCEDURE CreateMedium (mt: MediumType;
+                        fproc: FileProc;
+                        dproc: DirectoryProc;
+                        VAR done: BOOLEAN);
+(*
+- Install the medium "mt" in the file system
+
+in:     mt      medium type to install
+        fproc   procedure to handle internal file
+                operations
+        dproc   procedure to handle operations on an
+                entire file
+
+out     done    TRUE if medium was installed successfully
+
+Before accessing or creating a file on a medium, this
+medium has to be announced to the file system by means
+of the routine CreateMedium. FileSystem calls "fproc"
+and "dproc" to perform operations on a file of this
+medium. Up to 24 mediums can be announced.
+*)
+
+
+PROCEDURE RemoveMedium (mt: MediumType; VAR done: BOOLEAN);
+(*
+- Remove the medium "mt" from the file system
+
+in:     mt      medium type to remove
+
+out:    done    TRUE if medium was removed successfully
+
+Attempts to access a file on this medium result in an
+error (unknownmedium).
+*)
+
+
+END FileSystem.
+

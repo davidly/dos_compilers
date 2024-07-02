@@ -1,0 +1,130 @@
+(* Abbreviation: Decimals *)
+(* Version 1.10, Dec 1984 *)
+DEFINITION MODULE Decimals;
+(*
+   Decimal Arithmetic
+*)
+
+EXPORT QUALIFIED
+   DECIMAL, DecDigits, DecPoint, DecSep, DecCur,
+   DecStatus, DecState, DecValid, StrToDec, DecToStr,
+   NegDec, CompareDec, AddDec, SubDec, MulDec,DivDec,
+   Remainder,DecRepr;
+
+
+CONST
+   DecDigits =  18;
+   DecRepr   =  10;
+   DecCur    = '$';
+   DecPoint  = '.';
+   DecSep    = ',';
+
+
+TYPE
+   DECIMAL  = ARRAY [0..DecRepr-1] OF CHAR;
+     (* WARNING : Representation is
+                  implementation dependent!
+     *)
+              
+
+   DecState = (NegOvfl,
+               Minus,
+               Zero,
+               Plus,
+               PosOvfl,
+               Invalid
+              );
+
+
+VAR
+   DecValid: BOOLEAN;
+   (* set after every operation *)
+
+   Remainder: CHAR;
+   (* remainder digit - set after DivDec *)
+
+
+PROCEDURE StrToDec (String: ARRAY OF CHAR;
+                    Picture: ARRAY OF CHAR;
+                    VAR Dec: DECIMAL);
+(*
+Converts a DECIMAL number from an external format to an
+internal format;  after checking and matching between the
+picture and the input string.  The result is placed in
+variable Dec.
+*)
+
+
+PROCEDURE DecToStr  (Dec: DECIMAL;
+                     Picture: ARRAY OF CHAR;
+                     VAR RsltStr: ARRAY OF CHAR);
+(*
+Converts a DECIMAL number from an internal format to an
+external format;  after checking and matching between the
+picture and the DECIMAL number.  The result is placed in
+variable RsltStr.
+*)
+
+
+PROCEDURE DecStatus (Dec: DECIMAL): DecState;
+(*
+Detects the state of the number represented as DECIMAL
+and returns one of the following states :
+
+ - Negative overflow      --> NegOvfl
+ - Negative               --> Minus
+ - Null                   --> Zero
+ - Positive               --> Plus
+ - Positive overflow      --> PosOvfl
+ - Invalid representation --> Invalid
+*)
+
+
+PROCEDURE CompareDec (Dec0,Dec1: DECIMAL): INTEGER;
+(*
+Compares two DECIMAL numbers and returns an integer value
+indicating the comparison result:
+
+ -1 if Dec0 is less than Dec1
+  0 if Dec0 equals Dec1
+  1 if Dec0 is greater than Dec1
+*)
+
+
+PROCEDURE AddDec (Dec0,Dec1: DECIMAL; VAR Sum: DECIMAL);
+(*
+Adds two DECIMAL numbers (Dec0 and Dec1) together and
+places the result in the variable Sum.
+*)
+
+
+PROCEDURE SubDec (Dec0,Dec1: DECIMAL; VAR Sub: DECIMAL);
+(*
+Subtracts Dec1 from Dec0 and places the result in Sub.
+*)
+
+
+PROCEDURE MulDec (Dec0,Dec1: DECIMAL; VAR Prod: DECIMAL);
+(*
+Multiplies two DECIMAL numbers and places the result in
+the variable Prod.
+*)
+
+
+PROCEDURE DivDec (Dec0,Dec1: DECIMAL; VAR Quot: DECIMAL);
+(*
+Dec0 is divided by Dec1. The quotient is placed in the
+variable Quot and the remainder is placed in the global
+variable Remainder.
+*)
+
+
+PROCEDURE NegDec (Dec: DECIMAL; VAR NDec: DECIMAL);
+(*
+The negative DECIMAL value of Dec is placed in the
+variable NDec.
+*)
+
+
+END Decimals.
+

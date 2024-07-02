@@ -1,0 +1,303 @@
+(* Abbreviation: Mouse  *)
+(* Version 1.00, Nov 85 *)
+DEFINITION MODULE Mouse;
+(*
+
+Mouse Driver Interface
+
+Short description:
+
+The functions implemented in this module provide a
+Modula-2 interface for the LOGITECH Mouse Driver.
+This driver interface is compatible with the Microsoft
+Mouse Driver interface, so this module can be used with
+all the compatible mouse drivers.
+For detailed description of these functions, please
+refer to your mouse documentation:
+
+e.g. LOGITECH Mouse Driver Programmer's Reference Manual
+     Microsoft Mouse, Installation and Operation Manual
+
+
+Microsoft is a registered trademark of
+Microsoft Corporation
+
+*)
+
+  EXPORT QUALIFIED
+    DriverInstalled,
+
+    Button, ButtonSet,
+
+    FlagReset,
+
+    ShowCursor, HideCursor,
+
+    GetPosBut,
+
+    SetCursorPos,
+
+    GetButPres, GetButRel,
+
+    SetHorizontalLimits, SetVerticalLimits,
+
+    GraphicCursor, SetGraphicCursor,
+    SetTextCursor,
+
+    ReadMotionCounters,
+
+    Event, EventSet, EventHandler, SetEventHandler,
+
+    LightPenOn, LightPenOff,
+
+    SetMickeysPerPixel,
+
+    ConditionalOff,
+
+    SetSpeedThreshold;
+
+  
+  VAR
+    DriverInstalled: BOOLEAN;
+      (* Flag that indicates, whether a mouse driver is
+         loaded or not. If its value is FALSE, none of
+         the following functions will work properly.
+      *)
+     
+
+  TYPE
+   Button = (LeftButton,
+             RightButton, (* not available on some mice *)
+             MiddleButton (* not available on some mice *)
+            );
+
+    ButtonSet = SET OF Button;
+
+
+  PROCEDURE FlagReset(VAR mouseStatus: INTEGER;
+                      VAR numberOfButtons:CARDINAL);
+    (* Microsoft Mouse Driver System Call 0
+          Input : AX = 0 System Call 0
+
+          Output: AX --> mouse status
+                   0 (FALSE): mouse hardware and software
+                              not installed
+                  -1 (TRUE) : mouse hardware and software
+                              installed
+                  BX --> number of mouse buttons
+    *)
+
+  PROCEDURE ShowCursor;
+    (* Microsoft Mouse Driver System Call 1
+          Input : AX = 1 System Call 1
+    *)
+
+  PROCEDURE HideCursor;
+    (* Microsoft Mouse Driver System Call 2
+          Input : AX = 2 System Call 2
+    *)
+
+  PROCEDURE GetPosBut(VAR buttonStatus: ButtonSet;
+                      VAR horizontal, vertical:INTEGER);
+    (* Microsoft Mouse Driver System Call 3
+          Input : AX = 3 System Call 3
+
+          Output: BX --> mouse button status
+                  CX --> horizontal cursor position
+                  DX --> vertical cursor position
+    *)
+
+
+  PROCEDURE SetCursorPos(horizontal, vertical: INTEGER);
+    (* Microsoft Mouse Driver System Call 4
+          Input : AX = 4 System Call 4
+                  CX <-- horizontal mouse cursor position
+                  DX <-- vertical mouse cursor position
+    *)
+
+  PROCEDURE GetButPres(button: Button;
+                       VAR buttonStatus: ButtonSet;
+                       VAR buttonPressCount: CARDINAL;
+                       VAR horizontal, vertical: INTEGER);
+    (* Microsoft Mouse Driver System Call 5
+          Input : AX = 5 System Call 5
+                  BX <-- button
+          Output: AX --> current button status
+                  BX --> count of button presses since
+                         last call to this function
+                  CX --> horizontal cursor position at
+                         last press
+                  DX --> vertical cursor position at
+                         last press
+    *)
+
+  PROCEDURE GetButRel(button: Button;
+                      VAR buttonStatus: ButtonSet;
+                      VAR buttonReleaseCount: CARDINAL;
+                      VAR horizontal ,vertical: INTEGER);
+    (* Microsoft Mouse Driver System Call 6
+          Input : AX = 6 System Call 6
+                  BX <-- button
+          Output: AX --> current button status
+                  BX --> count of button releases since
+                         last call to this function
+                  CX --> horizontal cursor position at
+                         last press
+                  DX --> vertical cursor position at
+                         last press
+    *)
+
+  PROCEDURE SetHorizontalLimits(minPos, maxPos: INTEGER);
+    (* Microsoft Mouse Driver System Call 7
+          Input : AX = 7 System Call 7
+                  CX <-- minimum horizontal position
+                  DX <-- maximum horizontal position
+    *)
+
+  PROCEDURE SetVerticalLimits(minPos, maxPos: INTEGER);
+    (* Microsoft Mouse Driver System Call 8
+          Input : AX = 8 System Call 8
+                  CX <-- minimum vertical position
+                  DX <-- maximum vertical position
+    *)
+
+
+  TYPE
+    GraphicCursor = RECORD
+                      screenMask,
+                      cursorMask: ARRAY [0..15] OF BITSET;
+                      hotX, hotY: [-16..16];
+                    END;
+
+      (* The screenMask is first ANDed into the display,
+         then the cursorMask is XORed into the display.
+         The hot spot coordinates are relative to the
+         upper-left corner of the cursor image, and define
+         where the cursor actually 'points to'.
+      *)
+
+
+  PROCEDURE SetGraphicCursor(VAR cursor: GraphicCursor);
+    (* Microsoft Mouse Driver System Call 9
+          Input : AX = 9 System Call 9
+                  BX    <-- cursor hot spot (horizontal)
+                  CX    <-- cursor hot spot (vertical)
+                  ES:DX <-- pointer to screen and cursor
+                            masks
+    *)
+
+
+  PROCEDURE SetTextCursor(selectedCursor,
+                          screenMaskORscanStart,
+                          cursorMaskORscanStop: CARDINAL);
+    (* Microsoft Mouse Driver System Call 10
+          Input : AX = 10 System Call 10
+                  BX <-- cursor select
+                         0: Software text cursor
+                         1: Hardware text cursor
+                  CX <-- screen mask value or 
+                         scan line start
+                  DX <-- cursor mask value or
+                         scan line stop
+
+          For the software text cursor, the second two
+       parameters specify the screen and cursor masks.
+       The screen mask is first ANDed into the display,
+       then the cursor mask is XORed into the display.
+          For the hardware text cursor, the second two
+       parameters contain the line numbers of the first
+       and last scan line in the cursor to be shown on
+       the screen.
+    *)
+
+
+  PROCEDURE ReadMotionCounters(VAR horizontal,
+                                   vertical:INTEGER);
+    (* Microsoft Mouse Driver System Call 11
+          Input : AX = 11 System Call 11
+                  CX <-- horizontal count
+                  DX <-- vertical count
+    *)
+
+
+
+  TYPE
+    Event = (Motion,
+             LeftDown,
+             LeftUp,
+             RightDown,  (* not available on some mice *)
+             RightUp,    (* not available on some mice *)
+             MiddleDown, (* not available on some mice *)
+             MiddleUp    (* not available on some mice *)
+            );
+
+    EventSet = SET OF Event;
+
+    EventHandler =
+       PROCEDURE (EventSet,  (* condition mask        *)
+                  ButtonSet, (* button state          *)
+                  INTEGER,   (* horizontal cursor pos *)
+                  INTEGER    (* vertical cursor pos   *)
+                 );
+
+  PROCEDURE SetEventHandler(mask: EventSet;
+                            handler: EventHandler);
+    (* Microsoft Mouse Driver System Call 12
+          Input : AX = 12 System Call 12
+                  CX    <-- call mask
+                  ES:DX <-- address of handler routine
+
+       Establish conditions and handler for mouse events.
+       After this, when an event occurs that is in the
+       mask, the handler is called with the event set that
+       actually happened, the current button status, and
+       the cursor x and y.
+
+       Note: the event handler must not use an arbitrary
+       amount of stack space.  It is called from an
+       interrupt handler, and the stack at the time
+       of the call is not the regular Modula-2 stack.
+       As a result, the installed event handler must
+       reduce its stack usage to the absolute minimum.
+       In addition, the event handler code should be
+       compiled with all tests off.
+    *)
+
+
+  PROCEDURE LightPenOn;
+    (* Microsoft Mouse Driver System Call 13
+          Input : AX = 13 System Call 13
+    *)
+
+  PROCEDURE LightPenOff;
+    (* Microsoft Mouse Driver System Call 14
+          Input : AX = 14 System Call 14
+    *)
+
+  PROCEDURE SetMickeysPerPixel(horPix, verPix: CARDINAL);
+    (* Microsoft Mouse Driver System Call 15
+          Input : AX = 15 System Call 15
+                  CX <-- horizontal mickey/pixel ratio
+                  DX <-- vertical mickey/pixel ratio
+    *)
+
+
+  PROCEDURE ConditionalOff(left, top,
+                           right, bottom: INTEGER);
+    (* Microsoft Mouse Driver System Call 16
+          Input : AX = 16 System Call 16
+                  CX <-- left
+                  DX <-- top
+                  SI <-- right
+                  DI <-- bottom
+    *)
+
+  PROCEDURE SetSpeedThreshold(threshold: CARDINAL);
+    (* Microsoft Mouse Driver System Call 19
+          Input : AX = 19 System Call 19
+                  DX <-- treshold in mickeys/second
+    *)
+
+
+END Mouse.
+

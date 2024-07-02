@@ -1,0 +1,95 @@
+(* Abbreviation: Terminal *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE Terminal;
+(*
+
+   Terminal Input/Output
+
+This module uses the read and write procedures from
+module TermBase, which allows to redirect the i/o.
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED
+   Read, KeyPressed, ReadAgain, ReadString,
+   Write, WriteString, WriteLn;
+
+
+PROCEDURE Read (VAR ch: CHAR);
+(*
+- Read a character from the terminal.
+
+out:    ch      character that was read.
+
+The character is not echoed.
+The character ASCII.cr is transformed into ASCII.EOL.
+*)
+
+
+PROCEDURE KeyPressed (): BOOLEAN;
+(*
+- Test if a character is available to Read from terminal.
+*)
+
+
+PROCEDURE ReadAgain;
+(*
+- Undo the last read: Make the last character be re-read.
+*)
+
+
+PROCEDURE ReadString(VAR string: ARRAY OF CHAR);
+(*
+- Read (with echo) a line from the terminal.
+
+out:    string  receives the text of the line
+
+Characters are accepted (and echoed) from the keyboard
+until <cr> is entered.  The <cr> is not returned or
+echoed. <del> and <bs> can be used for editing.
+Tabs may be entered, but are expanded into blanks
+immediately. No other control characters may be entered.
+*)
+
+
+PROCEDURE Write (ch: CHAR);
+(*
+- Write a character to the terminal.
+
+in:     ch      character to be written.
+
+If terminal output has not been redirected, the following
+interpretations are made:
+
+    ASCII.EOL  (36C) = go to beginning of next line
+    ASCII.ff   (14C) = clear screen and set cursor home
+    ASCII.del (177C) = erase the last character on the left
+    ASCII.bs   (10C) = move 1 character to the left
+    ASCII.cr   (15C) = go to beginning of current line
+    ASCII.lf   (12C) = move 1 line down, same column
+*)
+
+
+PROCEDURE WriteString (string: ARRAY OF CHAR);
+(*
+- Write a string to the terminal.
+
+in:     string          string to be written.
+
+The string is terminated by its physical length or by a
+null character (0C).
+*)
+
+
+PROCEDURE WriteLn;
+(*
+- Write a new-line to the terminal.
+  [Equivalent to Write(ASCII.EOL)]
+*)
+
+
+END Terminal.
+

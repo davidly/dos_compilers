@@ -1,0 +1,246 @@
+;******************************************************************************
+;
+;       MODULA-2    Run-Time Support   ( RTS )
+;
+;       In case of stand-alone target systems (without DOS) this
+;       program is called "Target Run-Time Support" (TRTS).
+;
+;              LOGITECH SA,   CH-1122 Romanel    (Switzerland)
+;              LOGITECH Inc,  Fremont, CA 94555  (USA)
+;
+;       Module  :    RTSMain, main module of the Run-Time Support : interrupts  
+;
+;       Release :    3.10 - July 89
+;
+;       Copyright (C)  1987 - 1989 Logitech, All rights reserved
+;
+;       Permission is hereby granted to registered users to use or abstract
+;       the following program in the implementation of customized versions.
+;       This permission does not include the right to redistribute the source
+;       code of this program.
+;
+;       History:
+;          Jul-87:      Original version
+;       06-May-88/akg:  Save/restore of trace (int 1) and breakpoint (int 3)
+;                       vectors removed because it is not necessary (and may
+;                       even disturb debugging with a non-Modula-2 debugger).
+;                       Save/Restore/SetHVector become NEAR procedures.
+;       09-May-88/akg:  Modifications for Target Run-Time Support (TRTS).
+;       23-Sep-88/akg:  Unnecessary PUBLIC ATco87Vector removed,
+;                       comment after some ENDIFs added.
+;       04-Jul-89/akg:  Version 3.10 (no changes).
+;
+;******************************************************************************
+               SUBTTL RTSMain hardware interrupts
+
+
+RTSMain_TEXT   SEGMENT BYTE PUBLIC 'CODE'
+               ASSUME  CS : RTSMain_TEXT
+
+
+IF NOT ISTRTS
+;-----------------------------------------------------------
+$SaveVector   PROC    NEAR
+;-----------------------------------------------------------
+; in  :  AL           vector number
+;        DS:DI        pointer to the save area
+; out :  DS:DI        pointer to next byte after save area
+; mod :  AX, ES, BX
+
+              MOV   AH, 35H
+              INT   OS
+              MOV   WORD PTR [DI], BX
+              MOV   WORD PTR [DI+2], ES
+              ADD   DI, 4
+              RET
+$SaveVector   ENDP
+ENDIF
+
+;-----------------------------------------------------------
+SaveHVector    PROC    NEAR
+;-----------------------------------------------------------
+;
+; Saves interrupt vectors 0H, 2H, 23H, 1BH, and 75H
+
+IF ISTRTS
+               MOV   AX, RTSMain_DATA
+               MOV   ES, AX
+               MOV   DI, OFFSET RTSMain_DATA:saveVect
+               XOR   AX, AX
+               MOV   DS, AX
+               CLD
+               MOV   SI, 0H * 4         ; DIV 0 exception
+               MOVSW
+               MOVSW
+  IF RUN_ON_PC
+               MOV   SI, 2H * 4         ; NMI, 8087 exceptions
+               MOVSW
+               MOVSW
+               MOV   SI, 23H * 4        ; ^C vector
+               MOVSW
+               MOVSW
+               MOV   SI, 1BH * 4        ; BREAK
+               MOVSW
+               MOVSW
+               MOV   SI, 75H * 4        ; AT 80x87 int. vector
+               MOVSW
+               MOVSW
+  ENDIF
+ELSE ; NOT ISTRTS
+               MOV   AX, RTSMain_DATA
+               MOV   DS, AX
+               MOV   DI, OFFSET RTSMain_DATA:saveVect
+               MOV   AL, 0H             ; DIV 0 exception
+               CALL  $SaveVector
+               MOV   AL, 2H             ; NMI, 8087 exceptions
+               CALL  $SaveVector
+               MOV   AL, 23H            ; ^C vector
+               CALL  $SaveVector
+               MOV   AL, 1BH            ; BREAK
+               CALL  $SaveVector
+               MOV   AL, 75H            ; AT 80x87 int. vector
+               CALL  $SaveVector
+ENDIF ; NOT ISTRTS
+               RET
+SaveHVector    ENDP 
+
+
+IF NOT ISTRTS
+;-----------------------------------------------------------
+$SetVector     PROC    NEAR
+;-----------------------------------------------------------
+; in  :   ES:DI        pointer to the vector to be set
+;         AL           vector number
+; out :   ES:DI        points after the vector that has been set
+; mod :   AH, DX, DS
+
+               MOV   DX, ES:[DI]
+               MOV   DS, ES:[DI+2]
+               ADD   DI, 4
+               MOV   AH, 25H
+               INT   OS
+               RET
+$SetVector     ENDP
+ENDIF
+
+;-----------------------------------------------------------
+RestoreHVector PROC    NEAR
+;-----------------------------------------------------------
+;
+; Restores interrupt vectors 0H, 2H, 23H, 1BH, and 75H
+
+               PUSH  DS                 ; save current DS
+IF ISTRTS
+               MOV   AX, RTSMain_DATA
+               MOV   DS, AX
+               MOV   SI, OFFSET RTSMain_DATA:saveVect
+               XOR   AX, AX
+               MOV   ES, AX
+               CLD
+               MOV   DI, 0H * 4         ; DIV 0 exception
+               MOVSW
+               MOVSW
+  IF RUN_ON_PC
+               MOV   DI, 2H * 4         ; NMI, 8087 exceptions
+               MOVSW
+               MOVSW
+               MOV   DI, 23H * 4        ; ^C vector
+               MOVSW
+               MOVSW
+               MOV   DI, 1BH * 4        ; BREAK
+               MOVSW
+               MOVSW
+               MOV   DI, 75H * 4        ; AT 80x87 int. vector
+               MOVSW
+               MOVSW
+  ENDIF
+ELSE ; NOT ISTRTS
+               MOV   AX, RTSMain_DATA
+               MOV   ES, AX
+               MOV   DI, OFFSET RTSMain_DATA:saveVect
+               MOV   AL, 0H             ; DIV 0 exception
+               CALL  $SetVector
+               MOV   AL, 2H             ; NMI, 8087 exceptions
+               CALL  $SetVector
+               MOV   AL, 23H            ; ^C vector
+               CALL  $SetVector
+               MOV   AL, 1BH            ; BREAK
+               CALL  $SetVector
+               MOV   AL, 75H            ; AT 80x87 int. vector
+               CALL  $SetVector
+ENDIF ; NOT ISTRTS
+               POP   DS                 ; restore DS
+               RET
+RestoreHVector ENDP  
+
+
+IF RUN_ON_PC
+;-----------------------------------------------------------
+SetHVector     PROC    NEAR
+;-----------------------------------------------------------
+;
+; in           BX:DX   address of routine to install
+;              AL      interrupt number
+
+               PUSH  DS
+               MOV   AH, 25H
+               MOV   DS, BX
+               INT   OS
+               POP   DS
+               RET
+SetHVector     ENDP
+
+;=====================================================================
+;=============== Interrupt driver for BREAK and ^C ===================
+;=====================================================================
+
+IRETCode         EQU   0CFH
+NOPCode          EQU   090H
+
+; We disable the ^C interrupt, otherwise there are problems when using
+; the ^BREAK that leads to interrupt 1BH and 23H, thus the program is
+; "BROKEN" twice.
+
+Stopped_23       PROC  FAR
+;                 INT   1BH
+                 IRET 
+Stopped_23       ENDP
+
+BREAK            PROC  FAR
+                 PUSH  DS
+                 PUSH  SI
+                 MOV   SI, SEG RTSMain_DATA
+                 MOV   DS, SI
+                 LDS   SI, DWORD PTR RTSMain_DATA:criticalSection
+                 CMP   BYTE PTR [SI], 0
+                 JE    PossibleStop
+                 POP   SI
+                 POP   DS
+                 IRET
+PossibleStop:
+                 POP   SI
+                 POP   DS
+                 PUSH  AX
+                 SendEOI                ; might use AX, DX and ES
+                 MOV   AX, WARNED_CODE
+                 JMP   IError_RTS
+BREAK            ENDP
+ENDIF ; RUN_ON_PC
+
+RTSMain_TEXT   ENDS
+
+
+RTSMain_DATA        SEGMENT WORD PUBLIC 'FAR_DATA'
+saveVect            DD      ?           ; vector 0 : divide by zero
+
+IF RUN_ON_PC
+                    DD      ?           ; vector 2 : NMI, 8087
+                    DD      ?           ; 23H and 1BH : ^C and BREAK
+                    DD      ?
+                    DD      ?           ; AT 80x87 int. vector ( 75H )
+oldNMIvector        EQU     saveVect + 4
+; 22-Sep-88/akg: Unnecessary PUBLIC ATco87Vector removed.
+ENDIF
+
+RTSMain_DATA        ENDS
+

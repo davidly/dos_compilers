@@ -1,0 +1,81 @@
+;******************************************************************************
+;
+;       MODULA-2    Run-Time Support   ( RTS )
+;
+;       In case of stand-alone target systems (without DOS) this
+;       program is called "Target Run-Time Support" (TRTS).
+;
+;              LOGITECH SA,   CH-1122 Romanel    (Switzerland)
+;              LOGITECH Inc,  Fremont, CA 94555  (USA)
+;
+;       Module  :    Definition of configuration constants for RTS
+;
+;       Release :    3.10 - July 89
+;
+;       Copyright (C)  1987 - 1989 Logitech, All rights reserved
+;
+;       Permission is hereby granted to registered users to use or abstract
+;       the following program in the implementation of customized versions.
+;       This permission does not include the right to redistribute the source
+;       code of this program.
+;
+;       History:
+;          Jul-87:      Original version
+;       06-May-88/akg:  Defining TRUE = 0FFFFH allows to use NOT.
+;       06-May-88/akg:  Command line symbols TRTS and ONPC, boolean
+;                       symbols ISTRTS and RUN_ON_PC introduced for
+;                       use in Target Run-Time Support (TRTS)
+;       04-Jul-89/akg:  Version 3.10 (no changes).
+;
+;******************************************************************************
+            SUBTTL  Definition of configuration flags for the RTS 3.0
+
+TRUE                    =       0FFFFH      ; to be able to use NOT
+FALSE                   =       0
+
+StackStatistic          EQU     FALSE
+
+IFDEF M2Only
+                M2RTS   EQU     TRUE
+                MCRTS   EQU     FALSE
+                CMRTS   EQU     FALSE
+                ISTRTS  EQU     FALSE
+ELSE
+  IFDEF RTSmainM2
+                M2RTS   EQU     FALSE
+                MCRTS   EQU     TRUE
+                CMRTS   EQU     FALSE
+                ISTRTS  EQU     FALSE
+  ELSE
+    IFDEF RTSmainC
+                M2RTS   EQU     FALSE
+                MCRTS   EQU     FALSE
+                CMRTS   EQU     TRUE
+                ISTRTS  EQU     FALSE
+    ELSE
+      IFDEF TRTS
+                M2RTS   EQU     TRUE
+                MCRTS   EQU     FALSE
+                CMRTS   EQU     FALSE
+                ISTRTS  EQU     TRUE
+      ELSE
+                M2RTS   EQU     FALSE
+                MCRTS   EQU     FALSE
+                CMRTS   EQU     FALSE
+                ISTRTS  EQU     FALSE
+                .ERR
+      ENDIF
+    ENDIF
+  ENDIF
+ENDIF
+
+IF ISTRTS
+  IFDEF ONPC
+        RUN_ON_PC       EQU     TRUE
+  ELSE
+        RUN_ON_PC       EQU     FALSE
+  ENDIF
+ELSE
+        RUN_ON_PC       EQU     TRUE
+ENDIF
+

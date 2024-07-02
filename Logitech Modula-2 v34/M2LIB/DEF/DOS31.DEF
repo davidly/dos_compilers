@@ -1,0 +1,88 @@
+(* Abbreviation: DOS31    *)
+(* Version 1.20, Aug 1985 *)
+DEFINITION MODULE DOS31;
+(*
+
+   Additional DOS 3.1 functions
+
+*)
+
+  FROM SYSTEM IMPORT
+    BYTE, WORD, ADDRESS;
+
+  EXPORT QUALIFIED
+    GetMachineName,
+    SetPrinterSetup,
+    GetPrinterSetup,
+    GetRedirectionListEntry,
+    RedirectDevice,
+    CancelRedirection;
+
+    (* DOS 3.1 function 5E00H *)
+    PROCEDURE GetMachineName(computerName: ADDRESS;
+                             (* DS:DX *)
+                             VAR nameNumberIndFlag: BYTE;
+                             (* CH *)
+                             VAR nameNumber: BYTE;
+                             (* CL *)
+                             VAR errorCode: WORD);
+                             (* AX,CF *)
+
+    (* DOS 3.1 function 5E02H *)
+    PROCEDURE SetPrinterSetup(redirectionListIndex: WORD;
+                              (* BX *)
+                              setupStringLength: WORD;
+                              (* CX *)
+                              setupBuffer: ADDRESS;
+                              (* DS:SI *)
+                              VAR errorCode: WORD);
+                              (* AX,CF *)
+
+    (* DOS 3.1 function 5E03H *)
+    PROCEDURE GetPrinterSetup(redirectionListIndex: WORD;
+                              (* BX *)
+                              setupBuffer: ADDRESS;
+                              (* ES:DI *)
+                              VAR setupStringLength: WORD;
+                              (* CX *)
+                              VAR errorCode: WORD);
+                              (* AX,CF *)
+
+    (* DOS 3.1 function 5F02H *)
+    PROCEDURE GetRedirectionListEntry
+                   (redirectionIndex: WORD;
+                    (* BX *)
+                    localDeviceName: ADDRESS;
+                    (* DS:SI *)
+                    networkName: ADDRESS;
+                    (* ES:DI *)
+                    VAR deviceStatusFlag: BYTE;
+                    (* BH *)
+                    VAR deviceType: BYTE;
+                    (* BL *)
+                    VAR storedParmValue: WORD;
+                    (* CX *)
+                    VAR errorCode: WORD);
+                    (* AX,CF *)
+
+    (* DOS 3.1 function 5F03H *)
+    PROCEDURE RedirectDevice(deviceType: BYTE;
+                             (* BL *)
+                             valueToSaveForCaller: WORD;
+                             (* CX *)
+                             deviceName: ADDRESS;
+                             (* DS:SI *)
+                             networkPath: ADDRESS;
+                             (* ES:DI *)
+                             VAR errorCode: WORD);
+                             (* AX,CF *)
+
+    (* DOS 3.1 function 5F04H *)
+    PROCEDURE CancelRedirection(deviceName: ADDRESS;
+                                (* DS:SI *)
+                                VAR errorCode: WORD);
+                                (* AX,CF *)
+
+
+END DOS31.
+

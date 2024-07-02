@@ -1,0 +1,86 @@
+(* Abbreviation: RealConv *)
+(* Version 1.10, Nov 1984 *)
+DEFINITION MODULE RealConversions;
+(*
+   Conversion Module for floating numbers
+*)
+
+
+EXPORT QUALIFIED
+   RealToString, StringToReal;
+
+
+PROCEDURE RealToString (r: REAL;
+                        digits, width : INTEGER;
+                        VAR str:ARRAY OF CHAR;
+                        VAR okay : BOOLEAN);
+
+(*
+- Convert a REAL to right-justified fixed point or
+  exponent representation
+
+in:    r        real number to be represented,
+       digits   number of digits to the right of the
+                decimal point,
+       width    maximum width of representation,
+
+out:   str      string result,
+       okay     TRUE if the conversion is done properly,
+                FALSE otherwise.
+
+If 'digits' < 0 then exponent notation is used,
+otherwise fixed point notation is used. Note that a
+leading '-' is generated if r < 0, but never a '+'.
+
+If the representation of 'r' uses fewer than 'width'
+digits, blanks are added on the left. If the
+representation will not fit in 'width' then 'str' is
+returned empty and 'okay' is set to FALSE. 
+
+The minimum required 'width' is:
+
+   - if 'digits' <  0:  width >= ABS(digits) + 8
+
+   - if 'digits' >= 0:  width >= ABS(digits) + 2 + before,
+     where 'before' is the number of digits before the
+     decimal point of 'r' in fixed point notation (e.g.
+     r = 123.456 --> before = 3, r = 0.012 --> before = 1)
+*)
+
+
+PROCEDURE StringToReal (str:ARRAY OF CHAR;
+                        VAR r:REAL;
+                        VAR okay:BOOLEAN);
+
+(*
+- Convert ARRAY OF CHAR to REAL representation.
+
+in:    str    string to be represented,
+
+out:   r      REAL result,
+       okay   TRUE if the conversion is done properly,
+              FALSE otherwise.
+
+Leading blanks are skipped, control code characters and
+space are considered as legal terminators. The syntax for
+a legal real representation in 'str' is:
+
+   realnumber       = fixedpointnumber [exponent].
+   fixedpointnumber = [sign] {digit} [ '.' {digit} ].
+   exponent         =  ('e' | 'E') [sign] digit {digit}.
+   sign             = '+' | '-'.
+   digit            = '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|
+                      '8'|'9'.
+
+The following numbers are legal representations of one
+hundred: 100, 10E1, 100E0, 1000E-1, E2, +E2, 1E2, +1E2,
++1E+2, 1E+2 .
+
+At most 15 digits are significant, leading zeros not
+counting. The range of representable real numbers is:
+     1.0E-307 <= ABS(r) < 1.0E308
+*)
+
+
+END RealConversions.
+

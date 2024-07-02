@@ -1,0 +1,13 @@
+DEFINITION MODULE LongIO;
+
+(*
+   inpout/output module for LONGINT type variables
+*)
+
+EXPORT QUALIFIED ReadLongInt, WriteLongInt;
+
+PROCEDURE ReadLongInt (VAR longX : LONGINT);
+PROCEDURE WriteLongInt(x: LONGINT; n: CARDINAL);
+
+END LongIO.
+

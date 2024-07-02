@@ -1,0 +1,303 @@
+;******************************************************************************
+;
+;       MODULA-2    Run-Time Support   ( RTS )
+;
+;              LOGITECH SA,   CH-1122 Romanel    (Switzerland)
+;              LOGITECH Inc,  Fremont, CA 94555  (USA)
+;
+;       Module  :    RTSMain, main module of the Run-Time Support :
+;                             - termination and initialization procedures
+;
+;       Release :    3.10 - July 89
+;
+;       Copyright (C)  1987 - 1989 Logitech, All rights reserved
+;
+;       Permission is hereby granted to registered users to use or abstract
+;       the following program in the implementation of customized versions.
+;       This permission does not include the right to redistribute the source
+;       code of this program.
+;
+;       History:
+;          Jul-87:      Original version
+;       05-May-88/akg:  Use NIL value constants.
+;       25-Apr-89/akg:  Constant "MaxTermProc" renamed to "MaxTermInitProc",
+;                       do not multiply it by two any more!
+;       04-Jul-89/akg:  Some labels renamed conformant to usual rules (i.e.
+;                       with terminating "__RTSMain"): "Error_RTS".
+;
+;******************************************************************************
+               SUBTTL RTSMain termination and initialization procedures
+
+
+RTSMain_TEXT   SEGMENT BYTE PUBLIC 'CODE'
+
+               ASSUME  CS : RTSMain_TEXT
+
+O_NEXT_OFF     EQU  0
+O_NEXT_SEG     EQU  O_NEXT_OFF+2
+O_PROC_OFF     EQU  O_NEXT_SEG+2
+O_PROC_SEG     EQU  O_PROC_OFF+2
+
+TermProcSize   EQU  O_PROC_SEG+2
+
+;-----------------------------------------------------------
+L__InstallTermProc__RTSMain   PROC   FAR
+;-----------------------------------------------------------
+;
+; in :     p : PROC as normal Modula2 parameter
+;
+               PUSH  BP
+               MOV   BP, SP
+
+               MOV   BX, SEG RTSMain_DATA
+               MOV   DS, BX
+
+               ASSUME  DS : RTSMain_DATA
+
+               LDS   SI, activProcess__RTSMain    ; get addr. of activ Process
+               LDS   SI, [SI+PD_CURR_OVL]         ; get addr. of curr. overlay
+
+               ASSUME DS: NOTHING
+
+               LES   BX, DWORD PTR DS:[SI+DD_FREE_LIST]
+               CMP   BX, NIL_OFFSET                ; freeList = NIL ?
+               JE    TermListFull                  ; yes: no more room in table.
+
+               MOV   AX, [BP+6]                    ; offset of p
+               MOV   DX, [BP+8]                    ; segment of p
+
+               MOV   ES:[BX+O_PROC_OFF], AX        ; store p in list
+               MOV   ES:[BX+O_PROC_SEG], DX
+
+              ; Extract proc. of free list and insert it in ovl's list
+              ;
+              ; free list ---> ovl's list ---> free list^.next
+              ;     ^                                  |
+              ;     |----------------------------------|
+
+               ASSUME ES : NOTHING
+
+               MOV   AX, BX
+               MOV   DX, ES
+
+               XCHG  AX, DS:[SI+DD_TERM_PROC]      ; insert proc. in ovl's list
+               XCHG  DX, DS:[SI+DD_TERM_PROC+2]
+
+               XCHG  AX, ES:[BX+O_NEXT_OFF]
+               XCHG  DX, ES:[BX+O_NEXT_SEG]
+
+               MOV   WORD PTR DS:[SI+DD_FREE_LIST],   AX
+               MOV   WORD PTR DS:[SI+DD_FREE_LIST+2], DX
+
+               POP   BP
+               RET   4
+TermListFull:
+               PUSH  AX
+               MOV   AX, TERM_LIST_FULL
+               JMP   FAR PTR Error__RTSMain
+
+L__InstallTermProc__RTSMain   ENDP
+
+
+;-----------------------------------------------------------
+NormalTermProc_RTSMain   PROC   FAR
+;-----------------------------------------------------------
+;
+               PUSH    BP
+               MOV     BP, SP
+CallTermProc0:
+
+               MOV     AX, SEG RTSMain_DATA
+               MOV     DS, AX
+
+               ASSUME  DS : RTSMain_DATA
+
+               LDS   SI, activProcess__RTSMain    ; get addr. of activ Process
+               LDS   SI, [SI+PD_CURR_OVL]         ; get addr. of curr. overlay
+
+               ASSUME  DS: NOTHING
+
+               LES     BX, DWORD PTR [SI+DD_TERM_PROC]
+
+               ASSUME  ES : NOTHING
+
+               CMP     BX, NIL_OFFSET             ; is list empty ?
+               JE      ExitCallTermProc
+
+               MOV     AX, ES:[BX+O_NEXT_OFF]
+               MOV     [SI+DD_TERM_PROC], AX
+               MOV     AX, ES:[BX+O_NEXT_SEG]
+               MOV     [SI+DD_TERM_PROC+2], AX
+
+               CALL    DWORD PTR ES:[BX+O_PROC_OFF] ; call the term. proc.
+
+               JMP     CallTermProc0
+
+ExitCallTermProc:
+               MOV     AX, RTSMain_DATA
+               MOV     DS, AX
+
+               POP     BP
+               RET
+
+NormalTermProc_RTSMain   ENDP
+
+
+;-----------------------------------------------------------
+L__InstallInitProc__RTSMain   PROC   FAR
+;-----------------------------------------------------------
+;
+; in :     p : PROC as normal Modula2 parameter
+;
+               PUSH  BP
+               MOV   BP, SP
+
+               MOV   BX, SEG RTSMain_DATA
+               MOV   DS, BX
+
+               ASSUME  DS : RTSMain_DATA
+
+               LDS   SI, activProcess__RTSMain    ; get addr. of activ Process
+               LDS   SI, [SI+PD_CURR_OVL]         ; get addr. of curr. overlay
+
+               ASSUME DS: NOTHING
+
+               LES   BX, DWORD PTR DS:[SI+DD_FREE_LIST]
+               CMP   BX, NIL_OFFSET                ; freeList = NIL ?
+               JE    InitListFull                  ; yes: no more room in table.
+
+               MOV   AX, [BP+6]                    ; offset of p
+               MOV   DX, [BP+8]                    ; segment of p
+
+               MOV   ES:[BX+O_PROC_OFF], AX        ; store p in list
+               MOV   ES:[BX+O_PROC_SEG], DX
+
+              ; Extract proc. of free list and insert it in ovl's list
+              ;
+              ; free list ---> ovl's list ---> free list^.next
+              ;     ^                                  |
+              ;     |----------------------------------|
+
+               ASSUME ES : NOTHING
+
+               MOV   AX, BX
+               MOV   DX, ES
+
+               XCHG  AX, DS:[SI+DD_INIT_PROC]      ; insert proc. in ovl's list
+               XCHG  DX, DS:[SI+DD_INIT_PROC+2]
+
+               XCHG  AX, ES:[BX+O_NEXT_OFF]
+               XCHG  DX, ES:[BX+O_NEXT_SEG]
+
+               MOV   WORD PTR DS:[SI+DD_FREE_LIST],   AX
+               MOV   WORD PTR DS:[SI+DD_FREE_LIST+2], DX
+
+               POP   BP
+               RET   4
+InitListFull:
+               PUSH  AX
+               MOV   AX, TERM_LIST_FULL
+               JMP   FAR PTR Error__RTSMain
+
+L__InstallInitProc__RTSMain   ENDP
+
+
+;-----------------------------------------------------------
+NormalInitProc_RTSMain   PROC   FAR
+;-----------------------------------------------------------
+;
+               PUSH    BP
+               MOV     BP, SP
+
+               MOV     AX, SEG RTSMain_DATA
+               MOV     DS, AX
+
+               ASSUME  DS : RTSMain_DATA
+
+               LDS   SI, activProcess__RTSMain    ; get addr. of activ Process
+               LDS   SI, [SI+PD_CURR_OVL]         ; get addr. of curr. overlay
+
+               ASSUME  DS: NOTHING
+
+               LES     BX, DWORD PTR [SI+DD_INIT_PROC]
+
+               ASSUME  ES : NOTHING
+
+CallInitProc0:
+               CMP     BX, NIL_OFFSET             ; is list empty ?
+               JE      ExitCallInitProc
+
+               PUSH    ES
+               PUSH    BX
+
+               CALL    DWORD PTR ES:[BX+O_PROC_OFF] ; call the term. proc.
+
+               POP     BX
+               POP     ES
+
+               LES     BX, ES:[BX+O_NEXT_OFF]
+
+               JMP     CallInitProc0
+
+ExitCallInitProc:
+               MOV     AX, RTSMain_DATA
+               MOV     DS, AX
+
+               POP     BP
+               RET
+
+NormalInitProc_RTSMain   ENDP
+
+
+;-------------------------------------------------------------------
+L__CallInitProc__RTSMain PROC FAR
+;-------------------------------------------------------------------
+
+               PUSH    BP
+               MOV     BP, SP
+               MOV     AX, SEG RTSMain_DATA
+               MOV     DS, AX
+               ASSUME  DS:RTSMain_DATA
+
+               CALL    DWORD PTR overlayInitProc__RTSMain
+               POP     BP
+               RET
+
+L__CallInitProc__RTSMain ENDP
+
+;-------------------------------------------------------------------
+L__CallTermProc__RTSMain PROC FAR
+;-------------------------------------------------------------------
+
+               PUSH    BP
+               MOV     BP, SP
+               MOV     AX, SEG RTSMain_DATA
+               MOV     DS, AX
+               ASSUME  DS:RTSMain_DATA
+
+               CALL    DWORD PTR overlayTermProc__RTSMain
+               POP     BP
+               RET
+
+L__CallTermProc__RTSMain ENDP
+
+
+RTSMain_TEXT   ENDS
+
+
+RTSMain_DATA        SEGMENT WORD PUBLIC 'FAR_DATA'
+; M.P. 3/6/87
+
+ProcTable           LABEL   WORD
+REPT MaxTermInitProc-1
+                    DW      $+TermProcSize ; link offset
+                    DW      RTSMain_DATA   ; link segment
+                    DD      ?              ; init procedure
+ENDM
+; last entry of proc table:
+                    DD      NIL_ADDRESS
+                    DD      ?
+
+RTSMain_DATA        ENDS
+
+

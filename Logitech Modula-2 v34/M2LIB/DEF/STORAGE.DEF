@@ -1,0 +1,81 @@
+(*
+Title    : Storage for release 3.0
+Creation : 87/02/19
+Author   : A.Richard
+System   : LOGITECH MODULA-2/86
+
+Last Edit: 87.02.19
+*)
+DEFINITION MODULE Storage;
+(*
+   Standard dynamic storage management
+
+Storage management for dynamic variables. Calls to the
+Modula-2 standard procedures NEW and DISPOSE are
+translated into calls to ALLOCATE and DEALLOCATE. The
+standard way to provide these two procedures is to
+import them from this module 'Storage'.
+*)
+
+FROM SYSTEM IMPORT ADDRESS;
+
+EXPORT QUALIFIED
+   ALLOCATE, DEALLOCATE, Available,
+   InstallHeap, RemoveHeap;
+
+
+PROCEDURE ALLOCATE (VAR a: ADDRESS; size: CARDINAL);
+(*
+- Allocate some dynamic storage (contiguous memory area).
+
+in:     size    number of bytes to allocate,
+
+out:    a       ADDRESS of allocated storage.
+
+The actual number of bytes allocated may be slightly
+greater than 'size', due to administrative overhead.
+
+Errors: If not enough space is available, or when
+attempting to allocate more than 65520 (0FFF0H)
+bytes at once, then the calling program is terminated
+with the status 'heapovf'.
+*)
+
+
+PROCEDURE DEALLOCATE (VAR a: ADDRESS; size: CARDINAL);
+(*
+- Release some dynamic storage (contiguous memory area).
+
+in:     a       ADDRESS of the area to release,
+        size    number of bytes to be released,
+
+out:    a       set to NIL.
+
+The storage area released is made available for subsequent
+calls to ALLOCATE.
+*)
+
+
+PROCEDURE Available (size: CARDINAL) : BOOLEAN;
+(*
+- Test whether some number of bytes could be allocated.
+
+in:     size    number of bytes
+
+out:    TRUE if ALLOCATE (p, size) would succeed.
+*)
+
+
+PROCEDURE InstallHeap;
+(*
+- Used internally by the loader
+*)
+
+
+PROCEDURE RemoveHeap;
+(*
+- Used internally by the loader
+*)
+
+END Storage.
+

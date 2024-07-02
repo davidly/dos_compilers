@@ -1,0 +1,133 @@
+(* Abbreviation: DiskDir *)
+(* Version 1.10, Nov 1984 *)
+(* comments modified Feb 7, 1985 *)
+DEFINITION MODULE DiskDirectory;
+(*
+   Interface to directory functions of the underlying OS
+
+Derived from the Lilith Modula-2 system developed by the
+group of Prof. N. Wirth at ETH Zurich, Switzerland.
+*)
+
+
+EXPORT QUALIFIED
+    CurrentDrive, SelectDrive,
+    CurrentDirectory, ChangeDirectory,
+    MakeDir, RemoveDir,
+    ResetDiskSys, ResetDrive;
+
+
+PROCEDURE CurrentDrive (VAR drive: CHAR);
+(*
+- Returns the current default drive.
+
+out:    drive   name of the default drive, given in
+                character format (e.g. 'A').
+*)
+
+
+PROCEDURE SelectDrive (drive: CHAR; VAR done: BOOLEAN);
+(*
+- Set default drive.
+
+in:     drive   name of drive to make default, specified
+                in character format (e.g. 'A').
+
+out:    done    TRUE if operation was successful.
+
+The default drive will be used by all routines referring
+to DK: .
+*)
+
+
+PROCEDURE CurrentDirectory (drive: CHAR;
+                            VAR dir: ARRAY OF CHAR);
+(*
+- Gets the current directory for the specified drive. 
+
+in:     drive   name of the drive, specified in
+                character format (e.g. 'A'); blank or
+                0C denotes the current drive.
+
+out:    dir     current directory for that drive.
+
+Because CP/M-86 does not support named directories,
+dir[0] will always be set to nul (0C) under CP/M-86.
+*)
+
+
+PROCEDURE ChangeDirectory (dir: ARRAY OF CHAR;
+                           VAR done: BOOLEAN);
+(*
+- Set the current directory 
+
+in:     dir     drive and directory path name.
+
+out:    done    TRUE if successful; FALSE if the
+                directory does not exist.
+
+Because CP/M-86 does not support named directories,
+this function has no effect and 'done' returns always
+FALSE under CP/M-86.
+*)
+
+
+PROCEDURE MakeDir (dir: ARRAY OF CHAR;
+                   VAR done: BOOLEAN);
+(*
+- Create a sub-directory
+ 
+in:     dir     drive, optional pathname and name of
+                sub-directory to create.
+
+out:    done    TRUE if successful; FALSE if path or
+                drive does not exist.
+
+Because CP/M-86 does not support named directories,
+this function has no effect and 'done' returns always
+FALSE under CP/M-86.
+*)
+
+
+PROCEDURE RemoveDir (dir: ARRAY OF CHAR;
+                     VAR done: BOOLEAN);
+(*
+- Remove a directory
+
+in:     dir     drive and name of the sub-directory
+                to remove.
+
+out:    done:   TRUE if successful; FALSE if directory
+                does not exist.
+
+The specified directory must be empty, otherwise 'done'
+returns FALSE and the directory is not removed.
+
+Because CP/M-86 does not support named directories,
+this function has no effect and 'done' returns always
+FALSE under CP/M-86.
+*)
+
+
+PROCEDURE ResetDiskSys;
+(*
+- MS-DOS or CP/M-86 disk reset 
+*)
+
+
+PROCEDURE ResetDrive (d: CHAR): CARDINAL;
+(*
+- CP/M-86 reset drive.
+
+in:     drive   name of drive to make default, specified
+                in character format (e.g. 'A').
+
+out:            returns always zero under CP/M-86
+
+Under DOS this function has no effect and returns always
+the value 255.
+*)
+
+
+END DiskDirectory.
+

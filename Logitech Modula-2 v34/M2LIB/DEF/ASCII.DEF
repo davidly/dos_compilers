@@ -1,0 +1,47 @@
+(* Abbreviation: ASCII *)
+(* Version 1.10, Nov 1984 *)
+(* spacing modified Feb 12, 1985 *)
+DEFINITION MODULE ASCII;
+(*
+   Symbolic constants for non-printing ASCII characters.
+   This module has an empty implementation.
+*)
+
+EXPORT QUALIFIED
+   nul, soh, stx, etx, eot, enq, ack, bel,
+   bs,  ht,  lf,  vt,  ff,  cr,  so,  si,
+   dle, dc1, dc2, dc3, dc4, nak, syn, etb,
+   can, em,  sub, esc, fs,  gs,  rs,  us,
+   del,
+   EOL;
+
+
+CONST
+   nul = 00C;	soh = 01C;  stx = 02C;	etx = 03C;
+   eot = 04C;	enq = 05C;  ack = 06C;	bel = 07C;
+   bs  = 10C;	ht  = 11C;  lf	= 12C;	vt  = 13C;
+   ff  = 14C;	cr  = 15C;  so	= 16C;	si  = 17C;
+   dle = 20C;	dc1 = 21C;  dc2 = 22C;	dc3 = 23C;
+   dc4 = 24C;	nak = 25C;  syn = 26C;	etb = 27C;
+   can = 30C;	em  = 31C;  sub = 32C;	esc = 33C;
+   fs  = 34C;	gs  = 35C;  rs	= 36C;	us  = 37C;
+   del = 177C;
+
+CONST
+   EOL = 36C;
+   (*
+   - end-of line character
+
+   This (non-ASCII) constant defines the internal name
+   of the end-of-line character. Using this constant has
+   the advantage, that only one character is used to
+   specify line ends (as opposed to cr/lf).
+
+   The standard I/O modules interpret this character
+   and transform it into the (sequence of) end-of-line
+   code(s) required by the device they support. See
+   definition modules of 'Terminal' and 'FileSystem'.
+   *)
+
+END ASCII.
+

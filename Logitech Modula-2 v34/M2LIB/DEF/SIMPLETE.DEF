@@ -1,0 +1,35 @@
+DEFINITION MODULE SimpleTerm;
+(* test implementation for release 3.0 *)
+(*                                     *)
+(* AR, le 31.12.86                     *)
+
+(* All the procedures above use the standard console device from MS-DOS  *)
+(* and thus can be redirected as DOS allows it                           *)
+
+EXPORT QUALIFIED
+   Read, KeyPressed, ReadAgain, ReadString,
+   Write, WriteString, WriteLn;
+
+
+PROCEDURE WriteString( s : ARRAY OF CHAR );
+(* Displays the string s on DOS standard output *)
+
+PROCEDURE WriteLn;
+(* Displays an end of line on DOS standard output *)
+
+PROCEDURE Write( ch: CHAR );
+(* Displays the character ch on DOS standard output *)
+
+PROCEDURE Read( VAR ch: CHAR );
+(* Reads a character from DOS standard input *)
+
+PROCEDURE KeyPressed(): BOOLEAN;
+(* Tests if any character is ready from DOS standard input *)
+
+PROCEDURE ReadString( VAR s: ARRAY OF CHAR );
+(* Gets a string from DOS standard input : ESC or RETURN ends the input *)
+
+PROCEDURE ReadAgain;
+
+END SimpleTerm.
+

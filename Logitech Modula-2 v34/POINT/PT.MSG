@@ -1,0 +1,111 @@
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+Copy the current selection to the duplicate mode insertion point.             
+Move the current selection to the extract mode insertion point.               
+Move the current selection to the scrap buffer.                               
+Verify edited files to be saved; then exit to the operating system.           
+Reserved for internal use.                                                    
+Define a new window; then load file.                                          
+Move insertion point to the beginning of the file.                            
+Move insertion point to the end of the file.                                  
+Redraw the entire POINT screen.                                               
+Toggle window between full size and less-than-full size.                      
+Place this window on the top of the stack of windows.                         
+Redefine window size by repositioning the window corners.                     
+Move window toward top of file by one screen less two lines.                  
+Move window toward end of file by one screen less two lines.                  
+Move this line number to the first line of window.                            
+Verify save of edited file; then close window.                                
+Prompt for new name; then save the file under that name.                      
+Enter a string to search for; then search forward.                            
+Replace instances of one string with another.                                 
+Reserved for internal use.                                                    
+Cancel the current prompt, menu, mode, or action.                             
+Insert a specified ASCII character at the insertion point.                    
+Redo the last edit on the current selection.                                  
+Undo the effect of the last edit.  Undo again to restore the edit.            
+Select text with the mouse.                                                   
+Search forward for the selected text.                                         
+Cycle next window to the top of the stack of windows.                         
+Place this window at the bottom of the stack of windows.                      
+Define a window; place the output of the selected system command in it.       
+No action.                                                                    
+Execute the system command interpreter.  Type "EXIT" to return to POINT.      
+Load file into this window.                                                   
+Move the selection cursor up one row.                                         
+Move the selection cursor down one row.                                       
+Move the selection cursor left one column.                                    
+Move the selection cursor right one column.                                   
+Hide window in the Window List menu.                                          
+Extend the selection to the current mouse position.                           
+Undo multiple previous editing actions.                                       
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+Execute one of nine commands depending on the mouse motion direction.         
+Execute one of nine commands depending on the mouse motion direction.         
+Save all edited files.                                                        
+Save all edited files and exit POINT.                                         
+Verify discard of edits; then exit POINT.                                     
+User defined menu one (1).                                                    
+User defined menu two (2).                                                    
+User defined menu three (3).                                                  
+Display a menu of available file windows.                                     
+Save the file.                                                                
+Insert the contents of the scrap buffer in front of the insertion point.      
+Move window back to the last file position viewed.                            
+Copy the current selection to the scrap buffer.                               
+Top the window containing the selection and position to show the selection.   
+Toggle between insert and overtype entry modes.                               
+User defined menu four (4).                                                   
+Delete the current selection, preserving the contents of the scrap buffer.    
+Exchange the current selection with the contents of the scrap buffer.         
+Display the Options menu for options changes in this editing session.         
+Enter the POINT Help system.                                                  
+User defined menu five (5).                                                   
+Search backward for the selected text.                                        
+User defined menu six (6).                                                    
+Toggle POINT screen size between 43 and 25 lines of text (EGA, VGA only).     
+Copy current selection to the mouse cursor position (on button release).      
+Move current selection to the mouse cursor position (on button release).      
+Reserved for internal use.                                                    
+Save file and close the window.                                               
+Load the file specified by the current selection.                             
+Move the cursor one word to the left.                                         
+Move the cursor one word to the right.                                        
+Begin or end recording keystrokes in the keyboard macro buffer.               
+Play back the keystrokes that are recorded in the keyboard macro buffer.      
+Move insertion point to the beginning of the file.                            
+User defined menu seven (7).                                                  
+User defined menu eight (8).                                                  
+Change the case of the first character of the current selection.              
+Define a window, then open the file specified by the current selection.       
+Locate the matching bracket of the selected bracket.                          
+Position the window at the line number specified by the current selection.    
+Justify the current selection between the left border and the right margin.   
+Toggle the read-only status of the file.                                      
+Cycle the color combinations of the window.                                   
+Exchange the two top windows, making the second window the top window.        
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+Reserved for internal use.                                                    
+User defined menu nine (9).                                                   
+User defined menu ten (10).                                                   
+User defined menu eleven (11).                                                
+User defined menu twelve (12).                                                
+User defined menu thirteen (13).                                              
+User defined menu fourteen (14).                                              
+User defined menu fifteen (15).                                               
+User defined menu sixteen (16).                                               
+Move window to a new location on the screen.                                  
+Anchor the keyboard selection at the current insertion point.                 
+End keyboard selection mode.                                                  
+Load file into a full-screen window.                                          
+Move the selection cursor to the beginning of the line.                       
+Move the selection cursor to the end of the line.                             
+Move the selection cursor to the top of the window.                           
+Move the selection cursor to the bottom of the window.                        
+Prompt for a printer device name; then print the file.                        
+Display POINT Editor Version and Copyright information.                       
