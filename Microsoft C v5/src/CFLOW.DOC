@@ -1,0 +1,117 @@
+NAME
+        CFLOW - Generates text showing flow of function relationships
+                for specified C source files
+
+SYNTAX
+        CFLOW [-v] [-r] [-dnum] filelist
+
+DESCRIPTION
+
+CFLOW scans C source code, building a caller list and a callee list
+for each function reference. Both function prototypes and function
+definitions are scanned for return types. Macros are considered
+functions. CFLOW can also analyze source files for the XENIX yacc and
+lex utilities.
+
+Each output line has the following elements separated by white space
+(from left to right):
+
+    optional cross-reference number (for first occurence of function only)
+    current nesting level number followed by tabs to current level
+    function name:return type()
+    <source file name,reference line number>
+
+For example:
+    (  0)   1               foo:int() <test.c,5>
+
+The default format is to display calling functions followed by called
+functions starting with main if it exists, or in alphabetical order if
+there is no main. If a function is called cyclically, its relationship 
+is shown only once. Subsequent calls cross-reference the first call.
+
+The output format can be varied with the following options:
+
+-r      Reverses the caller:callee relationship and sorts the
+        functions in alphabetical order.
+
+-v      Shows relations between functions as many times as they occur
+        regardless of nesting. No cross-references are shown.
+        Programs with cyclic relations print out their dependencies
+        multiple (maximum nesting level * maximum nesting level)
+        times.
+
+-dnum   Sets the maximum nesting level to num (default is 35).
+
+EXAMPLE
+
+Given the following code for file TEST.C:
+
+extern char far *moo();
+
+main()
+{
+        foo();
+        bar();
+        moo();
+}
+
+char *foo()
+{
+        mar();
+        bar();
+        mar();
+}
+
+unsigned int mar()
+{
+        bar();
+}
+
+The following results are generated:
+
+> cflow test.c
+test.c
+   0    main:int() <test.c,3>
+(  0)   1               foo:int() <test.c,5>
+(  1)   2                       mar:int() <test.c,12>
+(  2)   3                               bar:int() <test.c,19>
+        2                       bar:int() <test.c,13>
+        2                       mar:int() <test.c,14>
+        3                               ...relations shown at (2)
+        1               bar:int() <test.c,6>
+        1               moo:extern char far *() <test.c,7>
+
+> cflow -r test.c
+test.c
+   0    bar:int() <,>
+(  0)   1               main:int() <test.c,6>
+        1               foo:int() <test.c,13>
+(  1)   2                       main:int() <test.c,5>
+        1               mar:int() <test.c,19>
+(  2)   2                       foo:int() <test.c,12>
+        3                               ...relations shown at (1)
+        2                       foo:int() <test.c,14>
+        3                               ...relations shown at (1)
+
+   0    foo:int() <test.c,10>
+        1               ...relations shown at (1)
+
+   0    main:int() <test.c,3>
+
+   0    mar:int() <test.c,17>
+        1               ...relations shown at (2)
+
+   0    moo:extern char far *() <,>
+(  3)   1               main:int() <test.c,7>
+
+> cflow -v test.c
+test.c
+   0    main:int() <test.c,3>
+        1               foo:int() <test.c,5>
+        2                       mar:int() <test.c,12>
+        3                               bar:int() <test.c,19>
+        2                       bar:int() <test.c,13>
+        2                       mar:int() <test.c,14>
+        3                               bar:int() <test.c,19>
+        1               bar:int() <test.c,6>
+        1               moo:extern char far *() <test.c,7>

@@ -1,0 +1,16 @@
+CLS
+TYPE s8.@@@
+PAUSE
+CLS
+IF %1==B GOTO B
+CV %4 /W /S /M "/C<LIFE.R" LIFE 10
+IF %3==3 RESPOND 
+IF %3==2 RESPOND 
+MENU %1 %2 %3 %4
+:B
+CV %4 /W /B /S /M "/C<LIFE.R" LIFE 10
+IF %3==3 RESPOND 
+IF %3==2 RESPOND 
+MENU %1 %2 %3 %4
+ECHO OFF
+

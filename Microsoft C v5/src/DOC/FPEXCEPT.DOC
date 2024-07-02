@@ -1,0 +1,335 @@
+
+			   FPEXCEPT.DOC File
+
+	    Information on floating-point-exception handling for
+	    the Microsoft(R) C Optimizing Compiler Version 5.10
+
+	     (C) Copyright Microsoft Corporation, 1987, 1988
+
+
+This document provides additional information about floating-point-exception
+handling in the Microsoft(R) C run-time system. This information includes
+descriptions of floating-point error signals and exit codes, and instructions
+for controlling the coprocessor status and control words through the use of
+C run-time-library functions.
+
+
+Explanation of Floating-Point Error Signals and Exit Codes
+----------------------------------------------------------
+The Microsoft C run-time library supports 11 kinds of floating-point errors
+which, if unmasked and untrapped, generate fatal run-time error messages.
+The result is to print out a message such as
+
+     run-time error M6101 : MATH
+     - floating-point error: invalid
+
+This causes the program to terminate with an exit code that corresponds to the
+error condition.  This set of floating-point errors is documented in the
+Microsoft C Optimizing Compiler User's Guide in Section E.4.2, "Floating-Point
+Exceptions." The error number, message, description, and exit return codes
+are given for each error. The set of exit return codes (also known as SIGFPE
+error subcodes) is also listed in the FLOAT.H include file; the macro names
+begin with FPE_.
+
+Appendix E of the Microsoft C Optimizing Compiler User's Guide mentions that
+some of these error conditions (denormal, underflow, inexact) are normally
+masked (no error is signaled) when the default setting of the floating-point 
+control word is used.  Also some error conditions do not normally occur with
+Microsoft C floating-point-code generation, but they may occur if assembly-
+language code is linked with the user program; these are the square-root,
+stack-underflow, and unemulated errors.
+
+The following is a list of the floating-point error conditions:
+
+     Name of Error         Message Number    Exit Code    FLOAT.H Macro Name
+     -------------         --------------    ---------    ------------------ 
+     Invalid               M6101             0x81 (129)   FPE_INVALID
+     Denormal              M6102             0x82 (130)   FPE_DENORMAL
+     Divide by zero        M6103             0x83 (131)   FPE_ZERODIVIDE
+     Overflow              M6104             0x84 (132)   FPE_OVERFLOW
+     Underflow             M6105             0x85 (133)   FPE_UNDERFLOW
+     Inexact               M6106             0x86 (134)   FPE_INEXACT
+     Unemulated            M6107             0x87 (135)   FPE_UNEMULATED
+     Square root           M6108             0x88 (136)   FPE_SQRTNEG
+     Stack overflow        M6110             0x8a (138)   FPE_STACKOVERFLOW
+     Stack underflow       M6111             0x8b (139)   FPE_STACKUNDERFLOW
+     Explicitly generated  M6112             0x8c (140)   FPE_EXPLICITGEN
+
+If the program does no user-defined floating-point error signal handling with
+the signal function, or if default signal handling is specified in the
+following statement
+
+     signal(SIGFPE, SIG_DFL);
+
+then the fatal error message described above is generated for all
+unmasked floating-point exceptions. To install your own signal handler,
+include a signal statement of the following form in the program: 
+
+     signal(SIGFPE, ptr_to_func);
+
+See the documentation for the signal and _fpreset functions in the Microsoft
+C Optimizing Compiler Run-Time Library Reference for an explanation of
+user-defined signal handling for the SIGFPE case. The use of _fpreset and
+longjmp is recommended within user handlers. Do not use
+
+     signal(SIGFPE, SIG_IGN);
+
+in an attempt to ignore floating-point errors, as the results will be 
+unpredictable.
+
+Unlike other kinds of signals, the floating-point error signal (SIGFPE)
+has an additional subcode associated with it to distinguish the different 
+floating-point error types.  There are at least two uses for this subcode
+information:
+
+     1.  The subcode can be accessed through an optional second argument
+	 of the user-defined signal-handling function. (See the example
+	 under _fpreset and Table R.9 under the signal function in the
+	 Microsoft C Optimizing Compiler Run-Time Library Reference, as
+	 well as the example below. In such a context, the use of the
+	 floating-point error subcode macros (FPE_INVALID, and so on)
+	 defined in FLOAT.H is fitting.
+
+     2.  The subcode macros and values can be used in checking the exit-status
+         code of a child process (from the operating system's command language 
+         or from a parent process that has spawned a child) to see what type
+	 of (floating-point) error has occurred, if any.
+
+Here is an example of a user-defined SIGFPE signal handler that distinguishes
+among floating-point error types by using the subcode macros in FLOAT.H:
+
+	int fphandler(sig,num)
+	int sig,num;
+	{
+	    if (num == FPE_ZERODIVIDE) {
+       		 printf("divide-by-zero error; exiting ...\n");
+	         exit(num);
+    		}
+	    else {
+	        printf("floating-point error, subcode = %d;
+			recovering ...\n",num);
+	        _fpreset();
+       	   	 longjmp(mark,-1);
+    		}
+	}
+
+This program fragment could replace the "fphandler" of the _fpreset example
+in the Microsoft C Optimizing Compiler Run-Time Library Reference. It prints
+an error message and exits when it encounters a divide-by-zero error, but
+recovers from other types of floating-point errors.
+
+
+Handling 8087/80287/80387 Floating-Point Exceptions
+---------------------------------------------------
+1.  Introduction
+
+The five exceptions to floating-point arithmetic required by the IEEE
+standard are supported by the 8087/80287/80387 coprocessor and the
+Microsoft C coprocessor and emulator math packages.  Exceptions that 
+would result in a NAN ("not a number") if they were disabled are 
+enabled by default (these are invalid, overflow, and divide by zero
+exceptions).  The other exceptions are disabled (masked) by default
+(these are underflow and precision exceptions).
+
+The coprocessor exception handling is controlled by the coprocessor's
+"status word" and "control word."
+
+Table of Floating-Point Exceptions
+----------------------------------
+                                          Default          Alternative
+Exception          Explanation            Action           Action
+-------------------------------------------------------------------------------
+Invalid Operation  Operation results      Enabled; gives   Disabled;
+                   in a NAN,              run-time error   returns a NAN
+                   such as 0/0, 0*INF,    message M6101
+                   or square root of a
+		   negative number
+
+Divide by Zero     x/0.0 where x != 0.0   Enabled; gives   Disabled;
+                                          run-time error   returns a properly
+                                          message M6103    signed INF
+
+Overflow           Operation results in   Enabled; gives   Disabled;
+                   a number greater in    run-time error   returns INF
+                   magnitude than the     message M6104
+                   maximum representable
+		   number
+                                          
+Underflow          Operation results in   Disabled;        Enabled; gives
+                   a number smaller in    returns zero     run-time error
+                   magnitude than the                      message M6105
+                   smallest valid repre-          
+		   sentable number
+
+Precision          Operation gives a      Disabled;        Enabled; gives
+(or Inexact)       rounded result rather  returns the      run-time error
+                   than an exact result   rounded result   message M6106
+-------------------------------------------------------------------------------
+                   
+If any of these five exceptions are disabled, you may get either NAN,
+infinite, or indefinite values in your variables.  If you print such a value
+by means of a function like printf, the output field will contain NAN, INF,
+or IND.
+
+2.  Controlling the Processing Environment
+
+Two hardware registers can be used to control the 8087/80287/80387 coprocessor:
+the status word and the control word.  The C include file FLOAT.H contains
+macros that describe the fields of these two 16-bit registers.
+
+2.1.  The Status Word
+
+The coprocessor status word is a 16-bit register that includes the following
+information:
+
+Bit Field      Use
+------------------------------------------------------------------------------
+Bit  15        Busy (8087) or NEU busy (80287/80387)
+Bits 14,10:8   Condition codes (C3,C2,C1,C0)
+Bits 13:11     Stack-top pointer (0-7)
+Bit  7         Interrupt request (8087) or error-summary status (80287/80387)
+Bit  6         Unused (8087/80287) or stack flag (80387)
+Bit  5         Precision (inexact result) exception
+Bit  4         Underflow exception
+Bit  3         Overflow exception
+Bit  2         Divide-by-zero exception
+Bit  1         Denormalized-operand exception
+Bit  0         Invalid-operation exception
+
+The C library functions _status87 and _clear87 do not return all of this
+information -- just the exceptions (bits 0 through 5) and some additional
+information about subconditions of the invalid exception (bits 6, 7, 9, and
+10). The subconditions are meaningful when bit 0 is set. The floating-point
+status word returned by _status87 and _clear87 differs from the coprocessor
+status word as follows:
+
+Bit Field      Use                                   FLOAT.H Macro Name
+---------------------------------------------------------------------------
+Bits 15:11     Unused                               
+Bit  10        Floating-point stack overflow         SW_STACKOVERFLOW
+Bit  9         Floating-point stack underflow        SW_STACKUNDERFLOW
+Bit  8         Unused
+Bit  7         Square root of a negative number      SW_SQRTNEG
+Bit  6         Unemulated instruction                SW_UNEMULATED
+Bit  5         Precision (inexact result) exception  SW_INEXACT
+Bit  4         Underflow exception                   SW_UNDERFLOW
+Bit  3         Overflow exception                    SW_OVERFLOW
+Bit  2         Divide-by-zero exception              SW_ZERODIVIDE
+Bit  1	       Denormalized-operand exception	     SW_DENORMAL
+Bit  0	       Invalid-operation exception	     SW_INVALID
+
+The exception information bits are set when an exception has occurred.
+A program can clear these bits by calling the _clear87 or _fpreset function.
+
+2.2.  The Control Word
+
+The coprocessor control word is a 16-bit register that contains the following
+information:
+
+						     FLOAT.H   FLOAT.H
+Bit Field      Use (values)                          Mask Name Value Name  
+-----------------------------------------------------------------------------
+Bits 15:13     Unused
+Bit  12        Infinity control                      MCW_IC 
+                 (1) affine (+INF and -INF)                      IC_AFFINE
+                 (0) projective (unsigned INF)                   IC_PROJECTIVE
+Bits 11:10     Rounding control                      MCW_RC 
+                 (11) chop (round toward zero)                   RC_CHOP
+                 (10) up   (round toward +INF)                   RC_UP
+                 (01) down (round toward -INF)                   RC_DOWN
+                 (00) near (round to nearest or even)            RC_NEAR 
+Bits 9:8       Precision control                     MCW_PC 
+                 (11) 64 bits                                    PC_64
+                 (10) 53 bits                                    PC_53
+                 (00) 24 bits                                    PC_24
+Bit  7         Interrupt-enable mask (8087 only)
+Bit  6         Unused
+Bit  5         Precision (inexact result) mask       EM_INEXACT
+Bit  4         Underflow mask                        EM_UNDERFLOW
+Bit  3         Overflow mask                         EM_OVERFLOW
+Bit  2         Zero-divide mask                      EM_ZERODIVIDE
+Bit  1         Denormal-operand mask                 EM_DENORMAL
+Bit  0         Invalid-operation mask                EM_INVALID
+
+When the mask bit corresponding to a given exception (that is, bits 0 through 5)
+is set in the control word, that exception is masked, and any operation that
+caused that exception proceeds with a masked response.  When the mask bit
+corresponding to a given exception is reset (unmasked), any operation that
+generates that exception generates an error message and terminates the program.
+
+The _control87 library function reads and sets the value of the control word
+according to the same bit fields as in the above table.  This function can be 
+used to change most exception masks, as well as the infinity-control, 
+precision-control, and rounding-control fields of the control word.  
+Attempts to change the settings of bits 7, 6, 1, and 0 will be ignored, 
+however.  For Microsoft C programs, the denormal-operand mask is always 
+set and the invalid-operation mask is always cleared. Since projective infinity
+is not part of the IEEE standard, it is not supported by the 80387 but is
+supported by the 8087/80287.
+
+The default control-word setting is 0x1332, defined as follows:
+
+#define CW_DEFAULT (IC_AFFINE+RC_NEAR+PC_64+EM_DENORMAL+EM_UNDERFLOW+EM_INEXACT)
+
+3.  Reading and Setting Status- and Control-Word Values
+
+Four C run-time library functions are provided for reading and setting
+the values of the coprocessor status word and control word. These
+functions (_status87, _control87, _clear87, and _fpreset) and their
+accompanying bit-field macros are declared in FLOAT.H.	See the Microsoft C
+Optimizing Compiler Run-time Library Reference for more details about the
+use of each function.
+
+3.1.  _status87
+
+unsigned int _status87(void);
+
+The _status87 function may be used to read the current value of the 
+8087/80287/80387 status word.  The format of the floating-point status word,
+which differs somewhat from the actual coprocessor status word, is 
+described in Section 2 above.
+
+3.2.  _control87
+
+unsigned int _control87(unsigned int new, unsigned int mask);
+
+The _control87 function may be used either to read or to set the value of
+the 8087/80287/80387 control word.  The new argument contains the new
+control-word bit values; the mask argument indicates which bits of the control
+word should be updated.  The return value is the value of the control word
+after any changes.  
+
+Important:  When mixing assembly language (MASM) and a Microsoft high-level
+language to build a program, do not alter the coprocessor/emulator control
+word by means of an FLDCW instruction; use the _control87 function (or the
+equivalent run-time routine in the other language) to modify the control word.
+
+Since the denormal exception is not a part of the IEEE standard,
+_control87 always alters the user-specified control word to mask denormals.
+The user cannot affect the handling of denormals with _control87.
+
+Use the unmasked setting (the default) for the invalid-operation bit of
+the control word.  The floating-point exception-handling software in
+the run-time library is not designed to handle masked invalid exceptions,
+since it needs exceptions to be unmasked in order to detect 8087/80287 stack
+overflow and underflow.
+
+3.3  _clear87
+
+unsigned int _clear87(void);
+
+The _clear87 function may be used to clear the exception-indicating bits
+of the coprocessor status word; it also returns the value of the status
+word before these bits were cleared.
+
+3.4  _fpreset
+
+void _fpreset(void);
+
+The _fpreset function may be used to reset (reinitialize) the state of the
+floating-point coprocessor or emulator software following a floating-point
+exception, so that processing can continue.  An example in which this applies
+is a program that uses the signal function to catch SIGFPE error conditions.  
+
+Resetting the floating-point state includes emptying the floating-point 
+stack, clearing the exceptions, and resetting the control word.

@@ -1,0 +1,25 @@
+
+			  SAMPLES.DOC File
+
+	  Notes on sample programs included with the Microsoft(R)
+		 C Optimizing Compiler Version 5.10
+
+	     (C) Copyright Microsoft Corporation, 1988
+
+
+This file describes the sample program included with the Microsoft C Optimizing
+Compiler, Version 5.10.
+
+
+    DEMO.C     Displays program arguments and environment. This file is used
+	       in the practice session in Chapter 2 of the Microsoft C
+	       Optimizing Compiler User's Guide.
+    
+    CFLOW.C    Displays relationships between the functions of a C  program.
+	       The file CFLOW.DOC describes how to use this utility.
+
+    SIEVE.C    Finds prime numbers using the Sieve of Eratosthenes algorithm.
+
+    GRDEMO.C   Illustrates functions of the graphics library.
+
+    SORTDEMO.C Visually illustrates six different sorting algorithms.

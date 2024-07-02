@@ -1,0 +1,28 @@
+CLS
+TYPE S13.@@@
+PAUSE
+IF %1==B GOTO B
+IF %1==M GOTO B
+IF %2==M GOTO M
+CLS
+ECHO CV %4 /M /W /S LIFE
+CV %4 /M /W /S LIFE
+MENU %1 X %3 %4
+:M
+CLS
+ECHO CV %4 /W /S LIFE 
+CV %4 /W /S LIFE 
+MENU %1 M %3 %4
+:B
+IF %2==M GOTO BM
+CLS
+ECHO CV %4 /B /M /W /S LIFE 
+CV %4 /B /M /W /S LIFE 
+MENU %1 X %3 %4
+:BM
+CLS
+ECHO CV %4 /B /W /S LIFE 
+CV %4 /B /W /S LIFE 
+MENU %1 M %3 %4
+ECHO OFF
+

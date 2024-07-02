@@ -1,0 +1,248 @@
+
+			  SETUP.DOC File
+
+	   Setup Notes for Microsoft(R) C Optimizing Compiler
+			   Version 5.10
+
+	   (C)	Copyright Microsoft Corporation, 1987, 1988
+
+
+IMPORTANT: This document contains information about using the program
+SETUP.EXE to install Version 5.10 of the Microsoft(R) C Optimizing Compiler.
+Please read the entire document carefully before attempting to install this
+product.
+
+
+========================< What Is SETUP? >=====================================
+
+The program SETUP.EXE, found on the disk labeled "Setup Disk," can be used to
+install the entire compiler and supporting files for Version 5.10 of the
+Microsoft C Optimizing Compiler. You can also use it to build additional
+combined libraries without repeating the installation process. See "Combined
+Libraries" below, and the printed documentation, for more information about
+combined libraries.
+
+
+=======================< Starting SETUP.EXE >==================================
+
+To use the SETUP program, insert the disk labeled "Setup Disk" and go to
+the root directory of that disk. Enter a command in the following format:
+
+SETUP [/L]
+
+When you use SETUP to install this product for the first time, you should
+invoke SETUP without the /L option. If you use the /L option, SETUP builds
+combined libraries but does not copy the Version 5.10 files from the
+distribution disks to your disk. See "Building Libraries" below for more
+information about using the /L option.
+
+
+===========================< Using SETUP >=====================================
+
+SETUP is a full-screen interactive program. It asks you several questions
+about which files to copy to your hard disk, and where to put those files.
+For each question, SETUP supplies a default response enclosed in square
+brackets ([]). If the default response is satisfactory, you can choose it
+by pressing the ENTER key.
+
+If you want something other than the default response, enter your response
+at the cursor. As you type, SETUP checks each character for validity. If you
+type an invalid character, SETUP ignores the character and issues a warning
+beep. After you enter the response, SETUP checks the entire response for
+validity. If the response is invalid, SETUP issues a beep and displays an
+error message at the bottom of the screen, giving you another opportunity
+to respond.
+
+After you answer all of the questions, SETUP asks whether you wish to change
+any of your responses. If you answer by pressing Y, SETUP returns to the
+first question. To simplify the process of re-entering information, SETUP
+gives your previous response as the default response for each question.
+This allows you to move quickly through the list of questions to the response
+that you wish to change. You can also use this method to review each of your
+responses.
+
+
+===========================< Setup Options >===================================
+
+Some of the questions that SETUP asks have to do with the memory model(s) and
+floating-point method(s) that you plan to use. These subjects are explained in
+the printed documentation for this product.
+
+SETUP gives you the option to copy files that eliminate bugs with floating-
+point exceptions in IBM(R) PC-DOS 3.20 and MS-DOS 3.20. These files are
+explained in the files PATCH320.DOC and PATCH87.DOC, which are included in
+this release.
+
+SETUP asks whether it should copy all of the documentation (.DOC) files
+in this release onto your hard disk. It is recommended that you do so, since
+these files contain important information about this release. The files can
+be deleted after you read them.
+
+Before installing this product on a hard-disk system, you should make sure
+that your system has enough free space. See the section "Disk-Space
+Requirements" below for more information about how much free disk space is
+required for various configurations.
+
+
+========================< Naming Directories >=================================
+
+Once you press N to signal that your responses are correct, SETUP asks you to
+name the directories where you want to put the Version 5.10 files. These
+include the following directories.
+
+1.  The "binary" directory contains the compiler, linker, and run-time
+    modules.
+
+2.  The "library" directory contains C library files, including the combined
+    libraries built by SETUP.
+
+3.  The "include" directory contains C include files for both the regular
+    C environment and the multiple-thread support library.
+
+4.  The "source" directory contains the Version 5.10 documentation files,
+    sample C files, start-up source files, and Microsoft CodeView(R) tutorial.
+
+
+Note that when SETUP suggests a default response for each of the installation
+directories, it uses the first path defined by the PATH environment variable
+in your environment.
+
+When providing a directory name, do not give any name that contains a hyphen
+(-) character. Using a name that contains a hyphen will create problems when
+SETUP builds combined libraries. (The LIB utility interprets the hyphen as
+an operator rather than as part of a DOS file name.)
+
+After you finish naming the destination directories, SETUP creates them if they
+do not already exist. If you specify an existing directory, SETUP will
+overwrite any files that have the same names as files that it copies into
+that directory.
+
+Once you have specified all of the directories, SETUP asks if you want to
+change any of the directory names. Again, press N to proceed with the
+installation process, or Y to change one or more responses. (Note that if you
+decide to change the name of a directory that you previously specified, SETUP
+does not delete that directory.)
+
+After you press N, SETUP copies files from the distribution disks to your
+hard disk, prompting you to insert each floppy disk as needed. It checks
+to make sure that you insert the correct disk and displays a message showing
+where it copies each file.
+
+
+========================< Combined Libraries >=================================
+
+After it finishes copying files from the distribution disks, SETUP creates
+one or more combined libraries, using the responses you gave concerning the
+memory model(s) and floating-point math method(s) that you wish to use.
+
+A "combined library" is a file containing one or more component (individual)
+libraries. You can decrease link time dramatically by linking a single
+combined library instead of separately linking the component libraries that
+it contains.
+
+One of the questions that SETUP asks is whether you wish to delete the
+component libraries after SETUP has used them to build the combined library
+or libraries that you requested. In most cases you will want to delete the
+component libraries, since they occupy significant disk space, and they are
+not needed for linking once the combined library exists. After SETUP deletes
+component libraries, several non combined libraries remain on your hard disk.
+(GRAPHICS.LIB is an example.) Do not delete these remaining libraries; they
+are needed by other programs.
+
+
+=======================< Environment Variables >===============================
+
+The compiler and linker depend on several DOS environment variables to
+locate needed files. After you install Version 5.10, you need to set
+environment variables so that the compiler can find files in the directories
+that you specified when running SETUP. To simplify this process, SETUP
+automatically creates a file named NEW-VARS.BAT that contains commands that
+set these variables. SETUP places this file in the "binary" directory that
+you specified earlier in the setup process.
+
+You may run NEW-VARS.BAT directly as a batch file However, it is easier to
+copy the commands from NEW-VARS.BAT into the AUTOEXEC.BAT file in your root
+directory. In this way, the environment variables are set automatically
+whenever you boot.
+
+
+=======================< Buffers and Files >===================================
+
+The compiler requires a certain number of buffers and files to operate
+efficiently. These parameters are set with the CONFIG.SYS file. SETUP places
+the commands needed to select the right number of buffers and files in a
+file named NEW-CONF.SYS. Again, this file is placed in the "real-mode binary"
+directory that you specified earlier in the setup process.
+
+You should copy the commands from NEW-CONF.SYS into your existing CONFIG.SYS
+file (or create a new CONFIG.SYS file if none exists).
+
+
+===================< Building Libraries (SETUP /L) >===========================
+
+After installing the Version 5.10 files on your hard disk, you may later
+decide that you need a different set of combined libraries. One way to
+do this is to build the libraries by hand, using the Microsoft Library
+Manager (LIB) utility and the list of libraries given in the printed
+documentation. A more convenient method, however, is to run SETUP with
+the /L option.
+
+If you supply the /L option when invoking SETUP, it creates combined
+libraries without repeating the installation process. If you need to
+copy files from a distribution disk, SETUP prompts you to insert each disk
+as needed, and copies only the files that it needs to create the combined
+library that you specify.
+
+In all other respects but for one, SETUP works just as it does when you
+install the compiler. That is, it asks you for the memory model and
+floating-point method that characterize the combined library you wish to build.
+However, SETUP also allows for the possibility that you chose not to delete
+the component libraries used to build the original combined library. Thus,
+SETUP allows you to specify a directory, not only a floppy disk, as the
+source of the component libraries. The source directory can be the same
+directory where SETUP places the new combined library.
+
+If you specify a directory as the source of files, and SETUP cannot find
+a file that it needs, it prompts you to specify a new directory as the
+source. If the needed file no longer exists on your hard drive, you can
+specify a floppy disk as the source. Note, however, that once you begin
+reading from a floppy disk, you must allow SETUP to obtain all subsequent
+files from a floppy disk.
+
+
+======================< Disk-Space Requirements >==============================
+
+The amount of free disk space needed to install Version 5.10 depends on what
+configuration you choose when you run SETUP. This section describes the amount
+of disk space needed for several typical configurations.
+
+Minimal Installation
+--------------------
+Approximately 2.6 megabytes of free space are required to perform a minimal
+installation of this product. This includes all documentation files, all
+sample programs, all start-up source files, no patch files, no QuickC, and one
+combined library.
+
+
+Minimal Installation With QuickC
+--------------------------------
+Approximately 2.85 megabytes of free space are required to perform a minimal
+installation of this product including QuickC. This includes QuickC and
+two combined libraries, with no documentation files, no sample programs, no
+start-up source files, and no patch files.
+
+
+Full Installation
+-----------------
+Approximately 3.7 megabytes of free disk space are required for a full
+installation of this product. This includes QuickC, all documentation files,
+all sample programs, all patch files, all startup-source files, and four
+combined libraries.
+
+
+If you choose to retain component libraries after you build combined libraries,
+the component libraries for each memory model occupy about 140 kilobytes each.
+Another 170-200 kilobytes is consumed by each additional combined library that
+you build (this assumes that you do not include GRAPHICS.LIB in the combined
+library). About 250-270 kilobytes is required for a combined library that
+includes GRAPHICS.LIB.

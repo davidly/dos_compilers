@@ -1,0 +1,17 @@
+The CodeView debugger is a powerful tool for serious debugging.
+This tutorial introduces you to CodeView commands using a simple
+statistics program.  The tutorial is broken up into four lessons.
+Each lesson is fairly short and takes 5 to 10 minutes.  You can
+quit by selecting the Q option when you see the main menu.
+
+You control the pace in each lesson. The lessons periodically 
+pause and ask you to press the SPACEBAR. Although keystrokes 
+and commands are discussed on the screen, you should NOT try 
+to type them. The session does this automatically. Just press 
+the SPACEBAR.
+
+You can quit in the middle of a lesson by first pressing CONTROL-C 
+or CONTROL-BREAK, then pressing the SPACEBAR. The word `break' will 
+appear, followed by the CodeView prompt (the greater-than symbol). 
+At the prompt, enter `Q' for Quit. The tutorial will end.
+

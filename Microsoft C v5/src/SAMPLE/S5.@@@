@@ -1,0 +1,19 @@
+							Demonstration Menu
+
+What would you like to do next?
+
+     T  Teaches you about CodeView debugging. During this
+        session, most CodeView commands are demonstrated using
+        a sample program, LIFE.C.
+
+     D  Demonstrates some major features of the CodeView
+        debugger using the sample program LIFE.
+
+     E  Enables you to experiment with the program used in 
+	the tutorial. 
+
+     P  Prints the documentation file, CODEVIEW.DOC.
+     
+     Q  Quits the sample session.
+
+Press the letter next to your selection: 

@@ -1,0 +1,1469 @@
+
+			      README.DOC File
+
+	     Release Notes for the Microsoft(R) C Optimizing Compiler
+				Version 5.10
+
+	       (C) Copyright Microsoft Corporation, 1987, 1988
+
+
+This document contains release notes for Version 5.10 of the Microsoft(R) C
+Optimizing Compiler and libraries for MS-DOS(R). The information in this
+document is more up to date than that in the manuals.
+
+Microsoft improves its languages documentation at the time of reprinting, so
+some of the information in this on-line file may already be included in your
+manuals.
+
+
+===================< Requesting Assistance from Microsoft >====================
+
+If you need to contact Microsoft Product Support for assistance, the four-digit
+phone code for the Microsoft C Optimizing Compiler is 1222.
+
+
+======================< Other On-Line Documents >==============================
+
+For additional information, consult the files listed below. Note that the
+SETUP program gives you the option of copying all documentation files to your
+hard disk.
+
+	File		      Disk    Information:
+	----		      ----    ------------
+
+	ERRMSG.DOC	      1       New and changed error messages for all
+				      software in this release
+
+	SETUP.DOC	      1       Using the SETUP program to install
+				      this product
+
+	FPEXCEPT.DOC	      1       Handling floating-point exceptions
+
+	UTILITY.DOC	      3       Microsoft CodeView(R) debugger and
+				      utilities
+
+	README.QC	      3       Microsoft QuickC(TM) Compiler
+
+	\STARTUP\README.DOC   3       Start-up source files
+
+	\PATCH\PATCH87.DOC    3       Patch for MS-DOS 3.20
+
+	\PATCH\PATCH320.DOC   3       Patch for IBM(R) PC-DOS 3.20
+
+	\SOURCE\SAMPLES.DOC  14       Demo programs included in this release
+
+	\SOURCE\CFLOW.DOC    14       CFLOW.C demonstration program
+
+
+
+
+
+=============================< Contents >======================================
+
+This file has four parts. Each part contains the notes for one of the manuals
+included in this release. Within each part, every note indicates the manual
+page to which it refers.
+
+	    Part    Notes for:
+	    ----    ----------
+
+	    1	    Microsoft C Optimizing Compiler 5.1 Update
+
+	    2	    Microsoft C Optimizing Compiler User's Guide
+
+	    3	    Microsoft C Optimizing Compiler Run-Time Library Reference
+
+	    4	    Microsoft C Optimizing Language Reference
+
+
+
+====< Part 1: Notes for the Microsoft C Optimizing Compiler 5.1 Update >=======
+
+The following notes refer to specific pages in the Microsoft C Optimizing
+Compiler 5.1 Update.
+
+Page	Note
+----	----
+12	The comment Pragma
+	------------------
+	This release does not support the exestr record type of the comment
+	pragma.
+
+
+13	The data_seg Pragma
+	-------------------
+	The data_seg pragma names the data segment to be used by subsequent
+	load-DS functions and subsequent allocations of static and global data
+	items. However, it does not, in itself, cause a function to load a data
+	segment. Use the /Au option or the _loadds keyword to cause a function
+	to load a data segment upon entry.
+
+
+21	The _saveregs Keyword
+	---------------------
+	The _saveregs keyword is useful in any case where it is not certain
+	what the register conventions of the caller might be. For instance,
+	_saveregs could be used for a general-purpose function that will reside
+	in a dynamic-link library. Since a function in a dynamic-link library
+	might be called from any language, you may choose not to assume
+	Microsoft C calling conventions in some cases.
+
+
+
+====< Part 2: Notes for the Microsoft C Optimizing Compiler User's Guide >=====
+
+The following notes refer to specific pages in the Microsoft C Optimizing
+Compiler User's Guide.
+
+Page	Note
+----	----
+
+29	C1L.EXE
+	-------
+	This release includes an alternate form of compiler pass 1 named
+	C1L.EXE. This compiler pass can be used to compile programs that get
+	the error message "out of near heap space." Invoke C1L.EXE by entering
+	the CL command with the /B1 <path> option
+
+	    cl /B1 <path>\c1l.exe <sourcefile>.c
+
+	In the preceding command, <path> is the path (including drive and
+	directory) where C1L.EXE resides, and <sourcefile> is the name of the
+	C source file you wish to compile.
+
+
+32	Assembling Start-Up Source Files
+	--------------------------------
+	The start-up source files provided with Version 5.10 should be
+	assembled with Version 5.00A or higher of the Microsoft Macro
+	Assembler (MASM).
+
+
+47	MSC Driver
+	----------
+	The MSC compiler driver is not supported in Version 5.10. If you have
+	batch files that use the MSC command, you can make the following
+	global changes to MSC command lines to ensure that your programs
+	compile in the same way:
+
+	    1.	Replace any MSC command with a CL command.
+
+	    2.	Replace the terminating semicolon on the MSC command line
+		with the /c (compile only) CL option.
+
+	    3.	If commas appear on the MSC command line:
+
+		Replace the first comma (preceding the object-file name)
+		with /Fo. (This step is not required if no file name follows
+		the first comma, that is, if the comma is used only as a
+		placeholder.)
+
+		Replace the second comma (preceding the source-listing-file
+		name) with the /Fs option.
+
+		Replace the third comma (preceding the object-listing-file
+		name) with the /Fc option.
+
+		Note that each of these options must appear immediately before
+		the corresponding file name, with no intervening spaces.
+
+	For example, to convert the MSC command line
+
+	    MSC test.c,,,;
+
+	to a CL command line, follow these steps:
+
+	    1.	Replace the MSC command with a CL command, as follows:
+
+		    CL test.c,,,;
+
+	    2.	Replace the semicolon with the /c option, as follows:
+
+		    CL test.c,,src.lst, /c
+
+	    3.	Since no object-file name follows the first comma, you do
+		not need to add an /Fo option. Replace the first comma with
+		a blank and the second comma with an /Fs option, as follows:
+
+		    CL test.c /Fssrc.lst, /c
+
+	    4.	Replace the second comma with an /Fc option, as follows:
+
+		    CL test.c /Fssrc.lst /Fc /c
+
+
+48	Specifying Overlays
+	-------------------
+	You can specify overlays on the CL command line. Simply enclose the
+	names of the overlay source or object files in parentheses. For
+	example, if you enter the command line
+
+	    cl src_1.c (src_2.c obj_1) obj_2
+
+	the modules SRC_2.OBJ and OBJ_1.OBJ are put in an overlay in the
+	SRC_1.EXE file. They are read into memory from disk only if and when
+	they are needed. The QCL command supports the same syntax for
+	specifying overlays.
+
+
+53	/Zc Option
+	----------
+	The new /Zc option causes any name declared with the pascal keyword
+	to be case-insensitive.
+
+
+61	/Fa Option
+	----------
+	You must use Version 5.10 of the Microsoft Macro Assembler to assemble
+	output from the /Fa option. Earlier versions of the Macro Assembler do
+	not support the new communal variables generated by the /Fa option.
+
+
+75	/D Option
+	---------
+	Note that the /Didentifier= and /Didentifier=string forms of this
+	option cannot be defined in the CL environment variable. This is
+	because the SET command does not accept the equal sign (=), which is
+	a special character in the environment.
+
+
+77	Predefined Identifiers
+	----------------------
+	The compiler defines the following new identifiers:
+
+	    Identifier	    Function
+	    ----------	    --------
+	    M_I8086	    The M_I8086 identifier identifies the target
+			    processor as an 8086. It is defined by default or
+			    when the /G0 option is used.
+
+	    M_I286	    The M_I286 identifier identifies the target
+			    processor as an 80286. It is defined when the
+			    /G1 or /G2 option is given.
+
+	You can still give the same number of /D options on the CL command
+	line.
+
+	Note that the /U option no longer removes the definition of the
+	predefined identifier M_I86mM, which identifies the memory model. You
+	can use the /U option to remove the definition of M_I86mM. However,
+	if you do, the NULL constant will not be defined automatically in the
+	program (since the definition of NULL in the stdio.h and stddef.h
+	files depends on the memory model in use). If you compile a program
+	with the /UM_I86mM option, be sure to define NULL explicitly if you
+	use it in the program.
+
+
+89	/Ow Option
+	----------
+	The new /Ow option is useful in developing Windows applications. It
+	has the same effect as the /Oa optimization option, except that the
+	compiler assumes that ANY function call can potentially alter the value
+	of any variable, including local variables. For example, the following
+	program prints the word "pass" when compiled with the /Ow option, and
+	prints the word "fail" when compiled with the /Oa option:
+
+	    main()
+	    {
+		int *p, i;
+		i = 5;
+		sample((int)&i);
+		if (i != 5)   puts("pass");
+		else  puts("fail");
+	    }
+
+	    #ifdef EXEC
+	    sample( a )
+	    int a;
+	    {
+		*(int *)a = 2;
+	    }
+	    #endif
+
+	The /Oa option, which /Ow resembles, tells the compiler that no
+	aliasing is being done. That is, when you tell the compiler that you
+	are passing a locally declared int value, as in the previous example,
+	that int value cannot be changed by a function call. The previous
+	example, which is common in Windows development, uses a cast on the
+	argument to fool the compiler. The function call says that it is
+	passing an int value, but it actually passes a pointer that is later
+	used by the function to modify data.
+
+	Windows does not discriminate between far pointers and unsigned long
+	types (the type used for all arguments in Windows). Furthermore, in
+	a Windows application, it is possible that data segments can move in
+	memory at the time of a function call, allowing the address of a data
+	item to change across the function call. The /Oa option assumes that
+	this is not the case. The /Ow option is a compromise that tells the
+	compiler that no aliasing is being done, EXCEPT across function calls.
+	This preserves the compiler's ability to do good local optimization,
+	but prevents it from keeping common subexpressions alive across
+	function calls.
+
+
+93	/On Option
+	----------
+	The new /On option disables potentially unsafe loop optimizations in
+	programs compiled with the /Ol or /Ox option.  When the /On option
+	is used, the compiler does not perform the following type of loop
+	optimization:
+
+	    Hoisting Division Operations Out of Loops
+	    -----------------------------------------
+	    This type of optimization can cause problems in code such as the
+	    following:
+
+		for (i=0; i<=99; i+=10)
+		{
+		     if (denom != 0)
+		     {
+			  array[i] += (numer/denom);
+			  printf("%f ", array[i]);
+		     }
+		}
+
+	    When loop optimizations are turned on, the compiler knows that
+	    numer/denom does not change within the loop. Therefore, it
+	    calculates numer/denom only once: before the start of the loop
+	    and before the if statement within the loop can check for
+	    division by zero. Compiling with the /On option helps to avoid
+	    error message C2023, "divide by zero," which may result from code
+	    like that shown above.
+
+	In general, you may want to compile with /On if your programs use
+	arrays that are larger than 32K, or if you experience division-by-
+	zero or infinite-loop errors in programs compiled with the /Ol option.
+
+
+93	Generating Intrinsic Functions (/Oi Option, intrinsic Pragma)
+	-------------------------------------------------------------
+	In addition to the functions listed in the manual, the following
+	functions have intrinsic forms:
+
+	    Floating-point Functions
+	    ------------------------
+	    acos, asin, atan, atan2, cos, cosh, exp, fabs, fmod, log, log10,
+	    pow, sin, sinh, sqrt, tan, tanh
+
+	    Other Functions
+	    ---------------
+	    _enable, _disable, inpw, outpw
+
+	If you use intrinsic forms of the floating-point functions listed
+	above (that is, if you compile with the /Oi option or specify any of
+	the functions in an intrinsic pragma), you cannot link with an
+	alternate math library (mLIBCA.LIB). Any attempt to do so will cause
+	linker errors arising from unresolved external references. Note that
+	this restriction applies even if you link with an alternate math
+	library after compiling with the /FPc or /FPc87 option.
+
+	If you want to compile with /Oi (to use the intrinsic forms of
+	non-floating-point functions) and then link with an alternate-math
+	library, specify any floating-point functions that appear in a
+	program in a function pragma.
+
+
+96	/Ox Option
+	----------
+	For Version 5.10, the /Ox (maximum optimization) option performs more
+	optimizations than in previous versions, including loop optimizations
+	and generation of intrinsic forms for certain library functions. If
+	you have problems compiling programs with the /Ox option, try breaking
+	the option down to its component parts and removing either the
+	"i" (generate intrinsic forms) or the "l" (perform loop optimizations)
+	from the option string, and recompiling. For Version 5.10, the
+	"expanded" version of the /Ox option is
+
+	    /Oailt /Gs
+
+
+99	/Za and /Ze Options
+	-------------------
+	Three new Microsoft extensions have been added to the list in
+	Section 3.3.14:
+
+	    1. Casting data pointers to function pointers, as in the following
+	       example:
+
+		   int *ip;
+		   int sample();
+
+		   ((int (*)())ip)();
+
+	    2. Casting function pointers to data pointers, as in the following
+	       example:
+
+		   int *ip;
+		   int sample();
+
+		   ip = (int *)sample;
+
+	    Casts like these generate error C2068, "illegal cast," in programs
+	    compiled with the /Za option. Otherwise, they generate warning
+	    C4074, "non standard extension used," at warning level 3 or higher.
+
+	    The ANSI-standard way to cast from data pointers to function
+	    pointers, and from function pointers to data pointers, is to
+
+		- Cast to an integral type (int or long depending on
+		  pointer size)
+
+		- Cast to the final pointer type
+
+	    For example, in a small-model program, the previous examples could
+	    be rewritten as follows to conform to the ANSI convention:
+
+		/* cast function pointer to data pointer */
+		ip = (int *)(int)sample;
+
+		/* cast data pointer to function pointer */
+		((int (*)())(int)ip)();
+
+	    Examples like those above work correctly whether or not the program
+	    is compiled with the /Za option. Note that the compiler generates
+	    identical code in both cases; the only difference is that one form
+	    is ANSI-compatible, and the other is not.
+
+	    3. Using an ellipsis in a function prototype and a fixed parameter
+	       list in the definition of that function, as shown in the
+	       following code fragment:
+
+		    int sample(int,...);
+		    int sample(int a, int b)
+			{
+			}
+
+		The preceding code generates warning C4028, "parameter
+		declaration different" when compiled with /Za (language
+		extensions disabled) and warning C4074, "non standard
+		extension used - function declaration used ellipsis," when
+		compiled with language extensions (enabled by default, or
+		with the /Ze option).
+
+
+99	The interrupt Attribute
+	------------------------
+	The interrupt attribute can be applied to a function to tell the
+	compiler that the function is an interrupt handler. This attribute
+	tells the compiler to generate entry and exit sequences that are
+	appropriate for an interrupt-handling function, including saving and
+	restoring registers and executing an IRET instruction to return.
+
+	When an interrupt function is called, the DS register is initialized
+	to the C data segment. This allows you to access global variables from
+	within an interrupt function.
+
+	In addition, all registers (except SS) are saved on the stack. You
+	can access these registers within the function if you declare a
+	function parameter list containing a formal parameter for each
+	saved register. The following example illustrates such a declaration:
+
+	    void interrupt cdecl far int_handler (unsigned es, unsigned ds,
+			unsigned di, unsigned si, unsigned bp, unsigned sp,
+			unsigned bx, unsigned dx, unsigned cx, unsigned ax,
+			unsigned ip, unsigned cs, unsigned flags)
+		{
+		}
+
+	The order in which the formal parameters must appear is the opposite
+	order from which they are pushed onto the stack. You can omit
+	parameters from the end of the list in a declaration, but not from
+	the beginning. For example, if your handler needs to use only DI and
+	SI, you must still provide ES and DS, but not necessarily BX or DX.
+
+	The compiler always saves and restores registers in the same, fixed
+	order. Thus, no matter what names you use in the formal parameter
+	list, the first parameter in the list refers to ES, the second refers
+	to DS, and so on.
+
+	You can pass additional arguments if your interrupt handler will be
+	called directly from C rather than by an INT instruction. To do this,
+	you must declare all register parameters and then declare your
+	parameter at the end of the list.
+
+	If you change any of the parameters of an interrupt function while
+	the function is executing, the corresponding register contains the
+	changed value when the function returns. For example:
+
+	    void interrupt cdecl far int_handler (unsigned es, unsigned ds,
+						  unsigned di, unsigned si)
+		{
+		di = -1;
+		}
+
+	This causes the DI register to contain -1 when the int_handler
+	function returns. In general, it is not a good idea to modify the
+	values of the parameters representing the IP and CS registers in
+	interrupt functions. If you need to modify a particular flag,
+	such as the carry flag for certain DOS and BIOS interrupt
+	routines, use the OR operator (|) so that other bits in the flags
+	register are not changed.
+
+	When an interrupt function is called by an INT instruction, the
+	interrupt enable flag is cleared. If your function needs to do
+	significant processing, you should use the _enable function to set
+	the interrupt flag so that interrupts can be handled.
+
+	Interrupt functions often need to transfer control to a second
+	interrupt routine. This can be done in two ways:
+
+	   1. You can call the interrupt routine (after casting it to an
+	      interrupt function if necessary). Do this if you need to do
+	      further processing after the second interrupt routine finishes.
+
+		 void interrupt cdecl new_int ()
+		     {
+		     ... /* Initial processing here */
+		     (*old_int) ();
+		     ... /* Final processing here */
+		     }
+
+	   2. Call _chain_intr with the interrupt routine as an argument.
+	      Do this if your routine is finished and you want the second
+	      interrupt routine to terminate the interrupt call.
+
+		 void interrupt cdecl new_int ()
+		     {
+		     ... /* Initial processing here */
+		     _chain_intr (old_int);
+			 /* This is never executed */
+		     }
+
+	In general, it is not a good idea for an interrupt function to call
+	standard-library functions, especially functions that rely on DOS
+	INT 21H or BIOS calls. Functions that rely on INT 21H calls include
+	I/O functions and _dos functions. Functions that rely on the BIOS
+	include graphics functions and _bios functions. It may be safe to use
+	functions that do not rely on INT 21H or BIOS, such as string-handling
+	functions. Before using a standard-library function in an interrupt
+	function, be sure that you are familiar with the library function and
+	what it does.
+
+
+100	/Zp Option
+	----------
+	In Version 5.0 and higher, a structure or union whose members have only
+	the types char or unsigned char, or any array of those types, is
+	byte-aligned. That is, every such structure or union is sized exactly,
+	not padded to an even number of bytes as in Version 4.0. If a structure
+	or union contains any member whose type is not char or unsigned char,
+	there is no difference between Versions 4.0 and 5.0. (Note that this
+	change makes a difference only if the sum of the sizes of the members
+	is odd; if the sum is even, then no alignment byte is added.)
+
+	This example demonstrates the difference between Versions 4.0 and 5.x:
+
+	    char a;
+	    struct {char a, b, c} y;
+	    struct {char a[3]} z;
+	    main()
+	    {
+		printf( "Size of y = %d\n", sizeof(y) );
+		printf( "Size of z = %d\n", sizeof(z) );
+	    }
+
+	If the preceding code is compiled with Version 4.0 (not using /Zp),
+	the output is :
+
+	    Size of y = 4
+	    Size of z = 4
+
+	If the above sample is compiled with Version 5.0 and higher (not
+	using /Zp), the output is :
+
+	    Size of y = 3
+	    Size of z = 3
+
+	Programs affected by this change should not mingle objects generated
+	by Versions 4.0 and 5.0. In such a case, you should recompile all of
+	the objects with Version 5.0 and higher. If that remedy is impossible
+	(for instance, if you do not have source code for the objects in
+	question), it is possible to change include files to add an extra
+	char-type member at the end of any odd-sized structure or union. This
+	change explicitly adds the alignment member that the compiler no
+	longer adds automatically.
+
+
+105	/J Option
+	---------
+	When you invoke CL with the /J option, a new predefined identifier,
+	_CHAR_UNSIGNED, is defined. This identifier is used with #ifndef
+	in the file LIMITS.H to define the range of the default char type.
+	Note that compiling with /J reduces by one the number of constant and
+	macro definitions that you can give on the command line. The /J
+	option is not supported when using the /qc (QuickC) option of the
+	CL command (this is also true of the QCL driver for QuickC).
+
+
+128	Passing Command-Line Data to a Program
+	--------------------------------------
+	The contents of the argv[0] string may be unpredictable in some
+	versions of DOS if you set all environment variables to null. (There
+	are few occasions when such an "empty environment" would be
+	appropriate. Since COMMAND.COM may need the COMSPEC variable, you
+	should normally define COMSPEC, at least.)
+
+
+157	/NM Option
+	----------
+	The compiler uses the name of the file itself, not the name of the
+	module, in error messages. Furthermore, the effect of the /NM option
+	is now very limited. It only changes the name of the text segment in
+	a program with a large code segment _TEXT to <module>_TEXT. In a
+	small-model program, the /NM option has no effect.
+
+
+130	Expanding Wild-Card Arguments
+	----------------------------
+	If you link your program with the SETARGV.OBJ file to expand
+	wild-card arguments, you must specify the /NOE linker option, which
+	tells the linker not to use the extended dictionary in searching
+	libraries. (See the description of the /NOE option under the heading
+	"Linker Options" later in this document.)
+
+	To compile a program WILDCARD.C that uses wild-card expansion, you can
+	use either this command:
+
+	    CL wildcard.c \lib\setargv /link /NOE
+
+	or this command:
+
+	   QCL wildcard.c \lib\setargv /link /NOE
+
+	This procedure is not necessary if you have used LIB to place the
+	wild-card expansion routines in the standard C combined library.
+
+
+137	Segment Setup for Memory Models
+	-------------------------------
+	The primary segments of a C program are ordered in memory as shown
+	below, from the highest memory location to the lowest:
+
+	Segment     Contents
+	-------     --------
+	Heap	    Area of unallocated memory that is available for dynamic
+		    allocation by the program. Its size varies, depending on
+		    the program's other storage requirements.
+
+	STACK	    User's stack, used for all local data items
+
+	_BSS	    All uninitialized static data items except those that are
+		    explicitly declared as far or huge.
+
+	c_common    Uninitialized global data items for small- and medium-model
+		    programs. In compact- or large-model programs, this type of
+		    data item is placed in a data segment with class FAR\_BSS.
+
+	CONST	    Read-only constants, including floating-point constants,
+		    string literals, and segment values for data items declared
+		    far or huge or forced into their own segments by use of the
+		    /Gt option.
+
+	_DATA	    Default data segment: this segment includes initialized
+		    global and static data except data explicitly declared far
+		    or huge, or data forced into different segments by use of
+		    the /Gt option.
+
+	NULL	    Special-purpose segment at the beginning of DGROUP that
+		    contains the compiler copyright notice. This segment is
+		    checked before and after the program executes. If its
+		    contents change during program execution, the program has
+		    written to this area, usually by an inadvertent assignment
+		    through a null pointer. Error message R6001 ("null pointer
+		    assignment") appears to warn of this error.
+
+	Data	    Initialized static and global data items, placed in their
+	segments    own segments with class name FAR_DATA, allowing the linker
+		    to combine these items so that they precede DGROUP.
+		    Uninitialized static and global far data items are placed
+		    in segments that have class FAR_BSS, allowing the linker
+		    to place these items between the _TEXT segment(s) and
+		    DGROUP. Uninitialized huge items are placed in segments
+		    with class FAR_DATA. In large- and huge-model programs,
+		    global uninitialized data are treated as though declared
+		    far (unless specifically declared near) and given class
+		    FAR_BSS.
+
+	_TEXT	    In small and compact model, segment containing code for all
+		    modules. In medium, large, and huge models, each module has
+		    its own text segment with the name of the module plus the
+		    suffix _TEXT.
+
+	When you look at a map file produced by linking a C program, you may
+	notice other segments in addition to the names listed below. These
+	additional segments have specialized uses for Microsoft languages and
+	should not be used by other programs.
+
+
+159	The alloc_text Pragma
+	---------------------
+	No more than 10 alloc_text pragmas may appear in the same
+	compilation unit.
+
+	The alloc_text pragma MUST appear after the declarations of any
+	functions and before the definition of any functions given in the
+	pragma. Functions given in an alloc_text pragma may be implicitly near
+	(because the small or compact memory model is used) or explicitly near
+	(declared with the near keyword), provided that they are called only
+	by functions in the same segment.
+
+	Functions referenced in an alloc_text pragma should be defined in the
+	same module as the pragma. If this is not done, and an undefined
+	function is later compiled into a different text segment, the error
+	may or may not be caught. Although the program will usually run
+	correctly, the function is not allocated in the intended segments. The
+	following example shows code that may cause these problems:
+
+	    Module 1
+	    --------
+	    #pragma  alloc_text(SEG1, sample, example)
+
+	    int sample(int i)
+	    {
+		i = example(10);
+	    }
+
+	    Module 2
+	    --------
+	    int example(int i)
+	    {
+		return(i*i);
+	    }
+
+	You could prevent problems in the preceding code by placing the
+	definitions of the functions sample and example in the same module.
+
+
+280	Limit on Nested Include Files
+	-----------------------------
+	The limit given for nested include files refers to the total number of
+	open files that the compiler allows. Since the original source file
+	counts as an open file, a total of nine files (in addition to the
+	original file) may have #include directives.
+
+
+286	Increasing the Maximum Number of Open Files
+	-------------------------------------------
+	Version 5.10 allows you to increase the maximum number of open files
+	(the default number is 20). To use this feature, you must be running
+	OS/2 or DOS Version 3.3 (or later). Use the following procedure
+	to increase the maximum number of open files:
+
+	    1. Increasing File Handles: To increase the number of file
+	       handles, edit the startup source file CRT0DAT.ASM, which is
+	       provided in this release. Change the line
+
+		   _NFILE_ = 20
+
+	       so that _NFILE_ is set to the desired maximum. For example, to
+	       increase the maximum number of file handles to 40, change the
+	       line as shown here:
+
+		   _NFILE_ = 40
+
+	       Increasing the number of file handles allows you to use low-
+	       level I/O functions, such as open() and read(), with more files.
+	       However, it does NOT affect the number of stream-level I/O
+	       files (that is, the number of "FILE *" streams).
+
+	    2. Increasing Streams: To increase the number of streams, edit
+	       the source _FILE.C. Change the line
+
+		   #define _NFILE_ 20
+
+	       to set _NFILE_ to the desired maximum. For example, to allow a
+	       maximum of 40 streams, change the line as shown here:
+
+		   #define _NFILE_ 40
+
+	       Increasing the number of streams allows you to use stream-level
+	       I/O functions, such as fopen() and fread(), with more files.
+
+	       Note that the number of low-level files MUST be greater than or
+	       equal to the number of stream-level files. Thus, if you increase
+	       the value of _NFILE_ in the module _FILE.C, you must also
+	       increase the value of _NFILE_ in the module CRT0DAT.ASM.
+
+	    3. Increasing the System Limit: To use more than 20 files at a
+	       time, you must increase the file limit imposed on your process
+	       by the operating system.
+
+	       A. Increasing the System-Wide Limit: Increase the number of
+		  files available on your system as a whole by editing your
+		  system configuration file (for instance, CONFIG.SYS). For
+		  example, to allow 100 files open at a time on your system,
+		  put this statement in the configuration file:
+
+		      FILES=100
+
+	       B. Increasing the Per Process Limit: You must also increase the
+		  number of files that the operating system makes available to
+		  your particular process. To do this, edit CRT0DAT.ASM and
+		  enable the commented-out code that is preceded by the
+		  appropriate description before it.
+
+		  In the DOS version of CRT0DAT.ASM, for example, the
+		  commented-out code appears as shown here:
+
+		      ;       mov     ah,67h
+		      ;       mov     bx,_NFILE_
+		      ;       callos
+
+		  Remove the ';' comment characters.
+
+	    4. Using the Modified Startup Files: After you modify CRT0DAT.ASM
+	       and/or _FILE.C, assemble or compile the file(s). The startup
+	       makefile contains sample command lines to perform these jobs.
+
+	       To use the new objects, either explicitly link your program
+	       with the new CRT0DAT.OBJ and _FILE.OBJ file(s), or replace
+	       the CRT0DAT.OBJ and _FILE.OBJ object(s) in the appropriate
+	       model of the C run-time library.
+
+
+
+=========< Part 3: Notes for Microsoft C Run-Time Library Reference >==========
+
+
+IMPORTANT: The memcpy function has been changed. It should no longer be used
+to copy overlapping memory regions. See the note for page 421 in this Section
+for more information about using memcpy.
+
+
+The following notes refer to specific pages in the Microsoft C Optimizing
+Compiler Run-Time Library Reference.
+
+
+Page	Note
+----	----
+
+33	_amblksiz
+	---------
+	The _amblksiz variable has the type unsigned int, not int.
+
+
+48	Hercules(R) Graphics
+	--------------------
+	This version of Microsoft C supports the Hercules(R) display adapter.
+	Below is a brief summary of this feature; see your Hercules
+	documentation for more details. Note that the graphics demonstration
+	program GRDEMO.C supports Hercules graphics.
+
+	    Cards Supported
+	    ---------------
+	    This version of Microsoft C supports the Hercules Graphics Card,
+	    Graphics Card Plus, Incolor Card, and 100% compatibles.
+
+	    Display Characteristics
+	    -----------------------
+	    Only monochrome (two-color) text and graphics are supported. The
+	    screen resolution is 720 x 348 pixels in monochrome. The text
+	    dimensions are 80 columns by 25 rows, with a 9 x 14 character box.
+	    The bottom two scan lines of the 25th row are not visible.
+
+	    The MSHERC.COM Driver
+	    ---------------------
+	    You must load the Hercules driver MSHERC.COM before running your
+	    program. Type MSHERC to load the driver. This can be done from an
+	    AUTOEXEC.BAT file.
+
+	    If you have both a Hercules monochrome card and a color video card,
+	    you should invoke MSHERC.COM with the /H (/HALF) option. The /H
+	    option causes the driver to use one instead of two graphics pages.
+	    This prevents the two video cards from attempting to use the same
+	    memory. You do not have to use the /H option if you have only a
+	    Hercules card.
+
+	    If you are developing a commercial application that uses graphics,
+	    you should include MSHERC.COM with your product; you are free to
+	    include this file without an explicit licensing agreement.
+	    (MSHERC.COM is identical to QBHERC.COM, the Hercules driver
+	    shipped with Microsoft QuickBASIC Version 4.0 and Microsoft BASIC
+	    Compiler Version 6.0).
+
+	    Using a Mouse
+	    -------------
+	    To use a mouse, you must follow special instructions for Hercules
+	    cards in the Microsoft Mouse Programmer's Reference Guide. (This
+	    must be ordered separately; it is not supplied with either
+	    Microsoft C or the mouse package.)
+
+	    Setting Hercules Graphics Mode
+	    ------------------------------
+	    In the file GRAPH.H, note that the manifest constant _HERCMONO
+	    sets the video mode to 720 x 348 monochrome for Hercules graphics,
+	    and the constant _HGC has been added in the section "videoconfig
+	    adapter values."
+
+
+49	Alternate Text Heights
+	----------------------
+	The graphics library now functions correctly in 43-line mode on an EGA,
+	and 30-line, 43-line, 50-line, and 60-line modes on a VGA. In all video
+	modes, you should avoid mixing calls to the printf and _outtext
+	functions (use either printf or _outtext, but not both). The printf
+	function does not always handle scrolling correctly when the text
+	height has been changed.
+
+	Note that calling the _setvideomode function with the _DEFAULTMODE
+	parameter not only restores the original BIOS video mode, but also
+	restores the original text height.
+
+
+51	Colors in Graphics and Text Modes
+	---------------------------------
+	In a color text mode (such as _TEXTC80), _setbkcolor accepts (and
+	_getbkcolor returns) an attribute, or pixel value. The value for the
+	default colors is given by the table in Section 4.4 of the QuickC
+	Programmer's Guide. For example, _setbkcolor(2L) sets the background
+	color to pixel value 2. The actual color displayed depends on the
+	palette mapping for pixel value 2. The default is green in a color
+	text mode.
+
+	In a color graphics mode (such as _ERESCOLOR), _setbkcolor accepts (and
+	_getbkcolor returns) a color (as used in _remappalette). The value for
+	the background color is given by the manifest constants defined in the
+	GRAPH.H include file. For example, _setbkcolor(_GREEN) sets the
+	background color in a graphics mode to green. These manifest constants
+	are provided as a convenience in defining and manipulating the most
+	common colors. The actual range of colors is, in general, much greater.
+
+	The function _setcolor accepts an int value as an argument. It is an
+	attribute or pixel value.
+
+	In general, whenever an argument is long, it refers to a color, and
+	whenever it is short, it refers to an attribute or pixel value. The two
+	exceptions are _setbkcolor and _getbkcolor described above.
+
+
+61	Controlling Stream Buffering
+	----------------------------
+	The stdin, stdout, and stderr streams are buffered by default. The
+	stdout and stderr buffers are flushed whenever they are full, or, if
+	you are writing to a tty, after each library call. The stdprn and
+	stdaux streams are unbuffered by default.
+
+
+93	The FLOAT.H File
+	----------------
+	To conform with the ANSI C standard, the following constants defined
+	in the include file FLOAT.H refer to a base-2 exponent in Version 5.10
+	of Microsoft C:
+
+	    DBL_MIN_EXP
+	    DBL_MAX_EXP
+	    FLT_MIN_EXP
+	    FLT_MAX_EXP
+	    LDBL_MIN_EXP
+	    LDBL_MAX_EXP
+
+	In Version 4.0, these constants refer to a base-10 exponent. The
+	base-10 versions of these constants are now named DBL_MIN_10_EXP,
+	DBL_MAX_10_EXP, and so on.
+
+
+93	The GRAPH.H File
+	----------------
+	Several elements have been added to the GRAPH.H file in addition to
+	those mentioned in the manual. These include elements in the
+	videoconfig structure and manifest constants that allow you to test
+	the adapter and monitor information in the videoconfig structure. See
+	the current version of the GRAPH.H file for the most recent constant
+	names and definitions related to graphics functions.
+
+
+114	alloca
+	------
+	When you compile with optimization on (either by default or by
+	using one of the /O options), the stack pointer may not be restored
+	properly in functions that have no local variables and also reference
+	the alloca function. This program demonstrates the problem:
+
+		/* Compile with CL /Lp /AM /Ox /Fc */
+		#include <malloc.h>
+
+		void main( void )
+		{
+		    func( 10 );
+		}
+
+		void func( register int i )
+		{
+		    alloca( i );
+		}
+
+	To ensure that the stack pointer is properly restored, you should
+	make sure that any function that references alloca declares at least
+	one local variable.
+
+
+126	atof
+	----
+	In compact- and large-model programs, the string argument to the
+	atof function can be no longer than 100 characters.
+
+
+128	bdos
+	----
+	Do not use the bdos, intdos, or int86 functions to call interrupts
+	that modify DS. Instead, use intdosx or int86x. Intdosx and int86x load
+	DS and ES from the "segregs" parameter, as documented, but they also
+	store DS and ES into "segregs" after the call.
+
+
+138	_bios_keybrd, _bios_printer
+	---------------------------
+	The return value from the functions _bios_keybrd and _bios_printer
+	is of the type unsigned int.
+
+
+174	cputs, fputs, puts
+	------------------
+	The return value from the cputs, fputs, or puts function is zero if the
+	function returns normally or a non-zero value if an error occurs.
+
+
+179	ctime, gmtime, localtime, mktime
+	--------------------------------
+	Calls to the ctime and mktime functions modify the single statically
+	allocated buffer used by gmtime and localtime. Thus, a mktime or ctime
+	call destroys the results of any previous localtime or gmtime call.
+
+	The parameter to the localtime function is declared as
+
+	    const time_t *time;
+
+	The information about the TZ environment variable should appear in the
+	description of the gmtime function, not the localtime function.
+
+
+194	_dos_findfirst, _dos_findnext
+	-----------------------------
+	If the attributes argument to either of these functions is _A_RDONLY,
+	_A_HIDDEN, _A_SYSTEM, or _A_SUBDIR, the function also returns any
+	normal-attribute files that match the path argument (a normal file does
+	not have a read-only, hidden, system, or directory attribute).
+
+
+208	_dos_open
+	---------
+	The argument to the _dos_open function should be *handle. The constant
+	O_RDONLY is defined in the file FCNTL.H, which you should include
+	when using O_RDONLY as the mode argument.
+
+
+238	exec*, spawn* functions
+	-----------------------
+	Because of a bug in DOS Versions 2.0 and 2.1, child processes generated
+	by the exec* family of functions (or by the equivalent spawn* functions
+	with the P_OVERLAY argument) may cause fatal system errors when they
+	exit. If you are running DOS 2.0 or 2.1, you must upgrade to DOS
+	Version 3.0 to use these functions.
+
+
+238	exec* functions
+	---------------
+	A program executed with one of the exec* family of C run-time functions
+	is always loaded into memory as if the "maximum allocation" field
+	in the program's .EXE file header is set to the default value of
+	0FFFFH. If you use the EXEMOD utility to change the maximum allocation
+	field of a program, the program behaves differently when invoked with
+	one of the exec* functions than when it is invoked directly from the
+	DOS command line or with one of the spawn* run-time functions.
+
+
+277	FP_OFF, FP_SEG
+	--------------
+	The argument to these functions should be declared as a void far
+	pointer, not a char far pointer.
+
+	In models that use near data pointers (small and medium), the
+	FP_SEG and FP_OFF macros work only if the far-pointer argument is
+	stored in the default data segment. If the far pointer is stored in a
+	far data segment, the macros do not work correctly.
+
+
+280	_fpreset
+	--------
+	In the example code, the second to last line should read
+
+	    longjmp(mark, -1);
+
+
+314	_getbkcolor
+	-----------
+	See note for page 51 above.
+
+
+342	_getvideoconfig
+	---------------
+	In every text mode, including monochrome, the _getvideoconfig function
+	returns the value 32 for the number of available colors. The value 32
+	indicates the range of values (0 - 31) accepted by the _settextcolor
+	function. This includes sixteen normal colors (0 - 15) and sixteen
+	blinking colors (16 - 31). Blinking is selected by adding 16 to the
+	normal color value. Monochrome text mode has fewer unique display
+	attributes, so some color values are redundant. However, because
+	blinking is selected in the same manner, monochrome text mode has the
+	same range (0 - 31) as other text modes.
+
+
+353	_heapchk
+	--------
+	In the example program, the statement
+
+	    int heapstatus();
+
+	should read
+
+	    int heapstatus;
+
+
+365	int86, intdos, intdosx
+	----------------------
+	See note for page 128 above.
+
+
+368	int86x
+	------
+	The "Return Values" section should refer to the cflag field in the
+	outregs union (not the flag  field).
+
+
+374	iscsym, iscsymf
+	---------------
+	The list of ctype routines should include the iscsym and iscsymf
+	routines, which test for the underscore (_) character. These routines
+	are defined in the CTYPE.H file.
+
+
+410	malloc, _fmalloc, _nmalloc
+	--------------------------
+	The second paragraph under "Return Value" should read, "To get a
+	pointer to a type other than void, use a type cast on the return
+	value."
+
+	In the entry for malloc, delete the sentence that reads, "The
+	resulting pointer can be passed to the realloc function to adjust the
+	size at any time."
+
+	To ensure compatibility with a recent change to the ANSI C standard,
+	malloc(0) now returns a non-null pointer. In this regard, malloc works
+	the same way as in Microsoft C Version 4.0.
+
+
+413	max
+	---
+	The example should not have a semicolon at the end of the line
+	containing main(). The body of the main function should be enclosed
+	in braces.
+
+
+416	memccpy
+	-------
+	The dest and src arguments should have the type void *, not the type
+	const void *.
+
+
+418	memchr
+	------
+	The c argument should have type int rather than size_t, and the count
+	argument should have type size_t rather than unsigned.
+
+
+421	memcpy
+	------
+	The memcpy function does NOT ensure that overlapping regions of memory
+	are copied before they are overwritten. Use the memmove function
+	instead of memcpy to copy overlapping regions of memory.
+
+	If you need to ensure that memcpy exhibits its original behavior,
+	place the following #define directive in your source program:
+
+		#define memcpy(d,s,n)	memmove(d,s,n)
+
+
+426	memmove
+	-------
+	This function should be added to the list of functions that support
+	the use of huge pointers. The memmove function returns the value of
+	the dest parameter, not the src parameter.
+
+
+429	min
+	---
+	The example should not have a semicolon at the end of the line
+	containing main(). The body of the main function should be enclosed
+	in braces.
+
+
+444	open and sopen
+	--------------
+	Certain calls to the open or sopen function may set the global
+	variable errno to EINVAL. For instance, a call to sopen with an
+	invalid shflag argument (for example, 6) or a call to open with an
+	invalid oflag argument (for example, O_RDWR|O_WRONLY) returns a value
+	of -1 and sets errno to EINVAL.
+
+
+461	printf
+	------
+	In Table R.3, the "Default" column for the "f" format type should
+	read as follows:
+
+	    Default precision is 6; if precision
+	    is 0 or the period (.) appears without
+	    a number following it, no decimal point
+	    is printed.
+
+	In the same table (R.3), in the "Default" column for the "g" format
+	type, the statement
+
+	    All significant digits are printed.
+
+	should read
+
+	    Six significant digits are printed, less
+	    any trailing zeros that are truncated.
+
+
+482	realloc
+	-------
+	The three paragraphs under "Return Value" should read as follows:
+
+	    The realloc function returns a void pointer to the reallocated
+	    memory block.
+
+	    The return value is NULL if the size is zero and the buffer
+	    argument is non-NULL, or if there is not enough available
+	    memory to expand the block to the given size. In the first case,
+	    the original block is freed. In the second, the original block
+	    is unchanged.
+
+	    To get a pointer to a type other than void, use a type cast
+	    on the return value.
+
+
+488	_remapallpalette, _remappalette
+	-------------------------------
+	The section "Return Value" should state that these functions return
+	a zero value when an error occurs, and non-zero when successful.
+
+
+503	scanf
+	-----
+	This function no longer supports the D, O, X, and I type characters,
+	which represented long-integer input fields.
+
+
+514	_setbkcolor, _setcolor
+	----------------------
+	See note for page 51 above.
+
+
+523	setjmp
+	------
+	In the section "Return Value," the phrase
+
+	    if the value argument of longjmp is 1, it returns 0
+
+	should read
+
+	    if the value argument of longjmp is 0, it returns 1
+
+
+525	_setlinestyle
+	-------------
+	In the section "Description," note that the default mask is
+	0xFFFF, not 0xFFF.
+
+531	_settextcolor
+	-------------
+	See note for page 342 above.
+
+
+537	setvbuf
+	-------
+	The setvbuf function can be used for an open stream only if you have
+	not yet been read from, or written to, that stream.
+
+
+559	_splitpath
+	----------
+	The manifest constant shown as _MAX_NAME should be _MAX_FNAME. In
+	the example program for this function on page 560, the line
+
+	    char * ext[4];
+
+	should read
+
+	    char * ext[5];
+
+
+584	strlen
+	------
+	The string parameter should have type const char * rather than char *.
+
+
+598	strtod
+	------
+	In compact- and large-model programs, the string argument to the
+	strtod function can be no longer than 100 characters.
+
+
+611	tmpnam
+	------
+	The description of this function under "Summary" should read "Create
+	temporary file in the directory defined by P-tmpdir." Also, the
+	sentence beginning "The tmpnam function uses malloc to allocate
+	space..." actually describes the tempnam function, not tmpnam.
+
+
+624	ungetc
+	------
+	In the first paragraph under "Description," the second sentence
+	should read, "The stream must be open for reading."
+
+
+
+
+==========< Part 4: Notes for the Microsoft C Language Reference >=============
+
+The following notes refer to specific pages in the Microsoft C Optimizing
+Compiler Language Reference.
+
+Page	Note
+----	----
+
+76	Default Function Prototypes
+	---------------------------
+	When a call to a function precedes its declaration or definition,
+	a default function prototype is constructed. The default prototype has
+	the return type int, but the number and types of the actual arguments
+	are not used as the basis for declaring formal parameters. The
+	only way to ensure type checking of parameters is to use explicit
+	prototypes.
+
+
+77	Parameter-Type Lists in Function Prototypes
+	-------------------------------------------
+	To conform with the ANSI standard, parameter-type lists in a function
+	prototype must match the corresponding function definition in types and
+	number of parameters and in the use of ellipsis terminators. Thus, code
+	such as the following, which was legal in Version 4.0, generates
+	warning messages in Version 5.10:
+
+	    int func(int,...);	/* prototype: ellipsis terminator */
+
+	    int func(x, y, z)	/* definition: no ellipsis terminator */
+	    int x, y, z;
+	    {
+	    }
+
+
+77	Defining Types in the Formal List of a Function
+	-----------------------------------------------
+	You cannot define a type within the formal list of a function. For
+	example, the following code is not acceptable:
+
+	    void func( struct s { int a, b; } st );
+
+	    void func( struct s st )
+		{
+		}
+
+	This rule applies to union and enumeration declarations as well as
+	structure declarations. Declare the type in conventional fashion,
+	outside the function's formal list.
+
+	The preceding code is acceptable under the ANSI standard, but the
+	type defined survives only to the closing parenthesis of the
+	prototype, and the closing brace (}) of the function definition.
+	Future versions of the Microsoft C Optimizing Compiler will treat
+	this code as an error.
+
+
+77	Function Prototypes/Definitions with Float Arguments
+	----------------------------------------------------
+	In Version 4.0 of Microsoft C, the following code fragment apparently
+	specified a function that expected an argument of type float:
+
+	    void takesfloat(float);
+
+	    void takesfloat(f)
+	    float f;
+	    {
+	    }
+
+	However, C as defined by Kernighan and Ritchie does not actually
+	support float (single-precision) arithmetic (unless double and float
+	are both single precision). Therefore, the argument was assumed to be
+	of the type double in both cases, and the compiler simply made the
+	change.
+
+	Under ANSI C, which specifically allows single-precision arithmetic,
+	you can pass single-precision actual arguments. However, a change
+	made to support this feature in Version 5.10 of Microsoft C may require
+	you to change existing code and recompile.
+
+	When compiled with Version 5.10, the preceding code fragment causes a
+	warning about a parameter mismatch between the prototype and the
+	definition of the takesfloat function. Although this is a warning
+	rather than an error, the resulting code DOES NOT work correctly.
+
+	The problem is that ANSI C considers old- and new-style function
+	definitions to be different. In particular, old-style definitions,
+	such as the definition in the preceding code, are forced to widen
+	type-float arguments to the type double. Thus, the example generates
+	a warning about a parameter mismatch because the prototype specifies
+	a type-float argument and the definition specifies a type-double
+	argument. However a new-style definition, such as the following,
+	accepts the narrower argument type:
+
+	    void takesfloat(float f)
+	    {
+	    }
+
+	If you have code of this kind that causes parameter-mismatch problems,
+	you have two possible solutions, depending on whether the desired
+	argument type is actually float or double:
+
+	    1. If you want type-double arguments, change argument types in the
+	       prototype to double. (Also change the definition if you use the
+	       /Zg option to generate the prototypes and you want to clarify
+	       the change for anyone who reads the code later.)
+
+	    2. If you want type-float arguments, change the definition to use
+	       the new-style format shown above.
+
+	If the code must be portable to other (non-ANSI) C compilers, you must
+	use solution 1, since such compilers do not handle the new-style
+	definitions.
+
+
+77	Return Type
+	-----------
+	If you use both QuickC and the C Optimizing Compiler, Version 5.0 and
+	higher, you should be aware of a difference in the values that each
+	compiler returns for a function declared as type float. QuickC
+	returns a float (4-byte real) value for such a function, while the
+	C Optimizing Compiler returns a double (8-byte real) value. This
+	difference causes problems if you mix QuickC and Version 5.x objects,
+	including libraries, in the same executable file.
+
+	The solution is to declare such return values as type double rather
+	than type float. For instance, the declaration
+
+	    extern float func(float, double, int);
+
+	should appear as follows:
+
+	    extern double func(float, double, int);
+
+
+143	Converting unsigned long to double
+	----------------------------------
+	Unsigned values of the type long are now converted directly to type
+	double. They are not first converted to type long.
+
+=================================< End >=======================================

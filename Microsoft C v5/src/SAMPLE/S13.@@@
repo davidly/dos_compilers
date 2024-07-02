@@ -1,0 +1,10 @@
+The session opens the debugger with LIFE as the program to
+be debugged. The number 10 is a parameter.
+
+To quit, enter `Q' or select Quit from the File menu. For
+on-line help, press F1 or select Help from the View menu.
+Other than that, you're on your own. Good luck!
+
+The debugger will now be started. Loading and initial
+processing may take a moment . . .
+

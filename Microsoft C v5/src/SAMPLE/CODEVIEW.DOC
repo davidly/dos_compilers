@@ -1,0 +1,382 @@
+
+
+
+
+
+
+=== The Sample Disk ===
+
+The CodeView (R) sample disk is freely copyable as long as the
+programs and files on the disk are not modified. You may give
+the disk to friends, upload it to electronic bulletin boards, or
+distribute it through computer clubs. However, you may not sell
+the sample disk for profit. User groups may charge a fee to
+cover the actual cost of the disk and of administration.
+
+The version of the CodeView debugger on this disk has been
+disabled so that it works only with the sample programs
+provided on the disk. To distinguish it from the commercial
+version, the restricted debugger file is called CVR.EXE rather
+than CV.EXE.
+
+Do not alter the sample programs on the disk, since this will
+make the sample session nonoperational. However, the sample
+programs are in the public domain. You may modify and
+recompile the source code after copying the files to another
+disk. Do not distribute modified programs with the sample
+disk.
+
+	   Copyright (C) Microsoft Corporation 1986
+		      All Rights Reserved
+
+
+
+=== Starting the CodeView Debugger ==
+
+The syntax for starting the restricted version of the debugger
+is shown below:
+
+     CVR [<options>] <executablefile> [<arguments>]
+
+The CodeView start-up options are shown in the table below:
+
+     Option		Effect
+     ------		------
+     /B 		Starts in black-and-white mode
+			with color graphics adapter (CGA).
+
+     /C<commands>	Executes commands on start-up.
+
+     /E			Enables use of extended memory for
+			CodeView symbol table.
+
+     /F 		Starts with screen flipping (exchanges
+			screens by flipping video pages).
+
+     /M 		Disables the mouse.
+
+     /P			Disables palette-register saving (necessary
+			for compatibility with some EGAs).
+
+     /T 		Starts in sequential mode.
+
+     /S 		Starts with screen swapping (exchanges
+			screens by swapping buffers).
+
+     /W 		Starts in window mode.
+
+     /43		Starts in 43-row mode with an
+			enhanced graphics adapter (EGA).
+
+     /2 		Allows two video adapters. You must have
+			two video adapters and two monitors. The
+			program display appears on the current default
+			adapter and monitor, while the debugging
+			display appears on the other adapter and
+			monitor. For example, if you have both a color
+			graphics adapter and a monochrome adapter, you
+			might want to set the CGA up as the default
+			adapter. You could then debug a graphics
+			program with the graphics display appearing on
+			the graphics monitor and the debugging display
+			appearing on the monochrome adapter. Microsoft
+			Mouse support will be disabled on the
+			debugging display if you use this option.
+
+
+     /D 		Turns off certain IBM-specific functions,
+			including NMI trapping and 8259 masking. This
+			option is required for IBM-compatible machines
+			that do not support these functions, such as
+			the IBM PC Convertible, the Tandy 1000, and
+			the AT&T 6300 Plus. CONTROL-C and CONTROL-
+			BREAK do not work if this option is used.
+			Sequential mode is set automatically; use /W
+			with /D to enable window mode.
+
+     /I 		Forces the debugger to handle certain IBM-
+			specific functions, including NMI trapping and
+			8259 masking. This option can be used to
+			enable CONTROL-C and CONTROL-BREAK handling on
+			computers that the debugger does not recognize
+			as being IBM compatible, such as the Eagle PC.
+			Window mode is set automatically; you do not
+			have to specify /W.
+
+If you have an IBM Personal Computer, the system always starts
+in window mode. Screen flipping is used if you have a graphics
+adapter and monitor.  Screen swapping is used if you have a
+monochrome adapter and monitor.
+
+If you have an IBM-compatible computer, you will usually want to
+specify the options that are used automatically with the IBM PC.
+
+If your computer is not IBM compatible, you will not be able to
+use the CodeView debugger in window mode. You must specify /T to start
+in sequential mode. Sequential mode is not as convenient, but any
+debugging operation that can be done in window mode can also be done
+in sequential mode. You will not be able to use a mouse or menus in
+sequential mode, but you can use most function keys.
+
+
+
+=== CodeView Quick Start ===
+
+If you are familiar with previous Microsoft (R) debuggers (SYMDEB
+or DEBUG), you will have little trouble using the CodeView debugger.
+
+Once the CodeView display appears, you can start debugging. The primary
+CodeView debugging commands are the same or very similar to the ones
+used in SYMDEB and DEBUG. The most important commands common to both
+the CodeView debugger and SYMDEB are listed below (all but the last
+two are also available in DEBUG):
+
+     If You Want to:		Do This:
+     ---------------		--------
+     Quit the debugger		Enter Q.
+
+     Execute code a step	Enter T (for Trace) or P (for
+     at a time			Program Step).
+
+     Execute your program	Enter G (for Go).
+
+     Set a breakpoint		Enter BP (for Breakpoint Set)
+				followed by an address. An easy
+				way of specifying an address is
+				to type a dot followed by the
+				number of the source line where
+				the breakpoint will be. For
+				example, to set a breakpoint on
+				line 25, enter
+
+				       BP .25
+
+     Dump a portion of memory	Enter D (for Dump) followed by the
+				address where you want the dump to
+				start. For example, enter
+
+				       D DS:100
+
+     Examine a variable or	Enter ? followed by the variable or
+     expression 		expression. For example, to view
+				the sum of sym1 and sym2 divided by
+				the constant 3, enter
+
+				       ? (sym1+sym2)/3
+
+     View source code		Enter V followed by a dot and the
+				number of the first source line to be
+				viewed. For example, to view source
+				code starting at line 36, enter
+
+				       V .36
+
+
+
+Two differences between the CodeView debugger and previous Microsoft
+debuggers may be confusing at first. The command for getting a summary
+help screen is H, not ? as in the earlier debuggers. Also, the
+CodeView debugger expects initial input in decimal, not in
+hexadecimal. You can enter hexadecimal numbers in the FORTRAN format (for
+example, #3CC2). You can also change the radix to hexadecimal or
+octal using the Radix command (for example, N16 for hexadecimal).
+
+If you do not have an IBM or IBM-compatible computer, this may be all
+the information you need to start experimenting. If you have an IBM
+Personal Computer or a compatible computer capable of using CodeView's
+window mode, there are easier ways of doing many of the tasks shown
+above.
+
+The table below concentrates on methods of executing commands from
+the keyboard, but the mouse versions of some commands are also
+mentioned:
+
+     If You Want to:		Do This:
+     ---------------		--------
+     View on-line help		Press F1. The first menu screen
+				appears. Use the mouse, menu selection
+				letters, or the TAB and ENTER
+				keys to move through the system.
+
+     Move through your		First make sure the cursor is in the
+     source code		window containing source code. If
+				it is not, press F6 to move the cursor
+				to the correct window. Then press
+				PGUP, PGDN, HOME, END, UP ARROW, or
+				DOWN ARROW to move through the source
+				code.
+
+     Execute code a step	Press F8 (for Trace) or F10 (for
+     at a time			Program Step). If you have a mouse,
+				you can click Trace on the menu bar.
+				Use the right mouse button for the
+				Trace command or the left mouse button
+				for the Program Step command.
+
+     Execute your program	Press F5 (for Go). Execution stops
+				only if a breakpoint is encountered.
+				If you have a mouse, you can click
+				Go on the menu bar. Use either button.
+
+
+
+     Execute to a specified	Move the cursor to the line to which
+     line of code		you want to execute (you may need to
+				press F6 to switch the cursor to
+				the correct window), then press
+				F7. The reverse-video line marking
+				the current location will move to
+				that line. If you have a mouse,
+				you can do the same thing by
+				moving the mouse cursor and clicking
+				the right button.
+
+     Set a breakpoint		Move the cursor to the line where
+				you want the breakpoint (you may
+				need to press F6 to switch the
+				cursor to the correct window),
+				then press F9. The source line
+				will be shown in high-intensity
+				text to indicate that a breakpoint
+				is set. You can repeat the same
+				command to remove the breakpoint.
+				If you have a mouse, you can do
+				the same thing by moving the mouse
+				cursor and clicking the left button.
+
+You can also experiment with the menus listed on the top line of the
+display. To select from a menu with the keyboard, press the ALT key
+and the first letter of the menu title. A menu box listing the
+selections pops up. To make a selection, use the cursor keys to move
+the highlight to the selection you want, then press the ENTER key. You
+can also select from an open menu by pressing the highlighted "hot" key
+for the selection.
+
+To select from a menu using the mouse, move the mouse cursor to the
+menu title, press either mouse button, and while holding the button
+down, drag the highlight down to the desired selection. Then release
+the button.
+
+
+
+=== Command Summary ===
+
+
+The following table shows the window commands that can be
+executed with the mouse or function keys:
+
+ Command		      Keyboard		      Mouse
+---------------------------- ----------------------- ---------------------------
+ Open help screen	    | F1		    | Use Help menu
+ Open register window	    | F2		    | Use View menu
+ Toggle source/assembly/mix | F3		    | Use View menu
+ Switch to output screen    | F4		    | Use View menu
+ Go			    | F5		    | Click on Go
+ Switch cursor window	    | F6		    | None
+ Go to cursor line	    | F7 at location	    | Click right on source line
+ Trace through functions    | F8		    | Click left on Trace
+ Set breakpoint at cursor   | F9 at location	    | Click left on source line
+ Step over functions	    | F10		    | Click right on Trace
+ Change flag		    | None		    | Click on flag
+ Make window grow           | CONTROL-G 	    | Drag bar up or down
+ Make window smaller (tiny) | CONTROL-T 	    | Drag bar up or down
+ Scroll up line in window   | Move cursor off top   | Click left on up arrow
+ Scroll up page in window   | PGUP		    | Click above elevator
+ Scroll to top of window    | HOME		    | Move elevator to top
+ Scroll down line in window | Move cursor off bottom| Click left on down arrow
+ Scroll down page in window | PGDN		    | Click below elevator
+ Scroll to bottom of window | END		    | Move elevator to bottom
+ Move cursor		    | UP ARROW or DOWN ARROW| None
+---------------------------- ----------------------- ---------------------------
+
+
+
+The syntax for each of the CodeView dialog commands is listed below.
+The commands are listed in groups according to their functions:
+
+Execute Code
+
+   Command		 Syntax
+   -------		 ------
+   Trace		 T [<count>]
+   Program Step 	 P [<count>]
+   Go			 G [<address>]
+   Execute		 E
+   Restart		 L [<arguments>]
+
+Examine Data
+
+   Command		 Syntax
+   -------		 ------
+   Display Expression	 ? <expression>[,format]
+   Examine Symbols	 X?[mod!][fun.][sym][*]
+   Dump 		 D[<type>] [<range>]
+   Register		 R [<reg>] [[=]<expression>]
+   8087 Dump		 7
+   Port Input            I <port>
+   Search Memory	 S <range> <list>
+   Compare Memory	 C <range> <address>
+
+Breakpoints
+
+   Command		 Syntax
+   -------		 ------
+   Breakpoint Set	 BP [<address>] [<count>] ["<command>"]
+   Breakpoint Clear	 BC [<list>]
+   Breakpoint Disable	 BD [<list>]
+   Breakpoint Enable	 BE [<list>]
+   Breakpoint List	 BL
+
+Watch Statements
+
+   Command		 Syntax
+   -------		 ------
+   Watch		 W? <expression>
+   Watch		 W[<type>] <range>
+   Watchpoint		 WP? <expression>
+   Tracepoint		 TP? <expression>
+   Tracepoint		 TP[<type> <range>
+   Delete Watch 	 Y<list>
+
+Examine Source
+
+   Command		 Syntax
+   -------		 ------
+   Set Mode		 S[+|-|&]
+   Unassemble		 U [<range>]
+   View Source		 V [<address>]
+   Current Location	 .
+   Stack Trace		 K
+
+Modify
+
+   Command		 Syntax
+   -------		 ------
+   Assemble		 A [<address>]
+   Enter		 E[<type>] [<list>]
+   Port Output		 O <port> <byte>
+   Fill Memory		 F <range> <list>
+   Move Memory		 M <range> <address>
+
+System Control
+
+   Command		 Syntax
+   -------		 ------
+   Set Radix		 N[<radix>]
+   Quit 		 Q
+   Search		 /[<regex>]
+   Screen Exchange	 \
+   Tab Set		 #[<num>
+   Option		 O[F|B|C|3 [+|-] ]
+
+Redirection
+
+   Command		 Syntax
+   -------		 ------
+   Send Output		 [T]>[>]<device>
+   Get Input		 <<device>
+   Redirect Both	 =<device>
+   Pause		 "
+   Delay		 :
+   Comment		 *[<comment>]
+

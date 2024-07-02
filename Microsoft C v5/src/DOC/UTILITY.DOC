@@ -1,0 +1,424 @@
+
+			   UTILITY.DOC File
+
+		Release notes for the Microsoft(R) Utilities
+
+	      (C) Copyright Microsoft Corporation, 1987, 1988
+
+
+This document contains information about the Microsoft(R) CodeView(R) debugger
+and utilities. Note that the file ERRMSG.DOC contains new and changed error
+messages for all of the software included with the Microsoft C Optimizing
+Compiler Version 5.10, including utilities and the compiler itself.
+
+The information in this document is more up to date than that in the printed
+manuals. Where information in the manuals conflicts with this document, you
+should assume that this document contains the correct information.
+
+Microsoft improves its language documentation at the time of reprinting, so
+some of the information in this on-line file may already be included in your
+manuals.
+
+
+========================< The Mouse Driver >===================================
+
+If you will be using the Microsoft Mouse with the Microsoft CodeView debugger
+you must have Version 6.0 or later of the Microsoft Mouse. If you do not,
+use the version of the MOUSE.COM driver provided in this package.  Copy
+MOUSE.COM to the appropriate mouse directory. When you are ready to use the
+mouse, type
+
+	mouse
+
+at the DOS command level. If you want to install the mouse driver automatically
+every time you reboot,  insert the "mouse" command in your AUTOEXEC.BAT file.
+
+Note that in earlier releases of Microsoft C, both the MOUSE.SYS and the
+MOUSE.COM driver were provided.  If you have been using an earlier version
+of the MOUSE.SYS driver, delete the following line from your CONFIG.SYS file:
+
+	device=\<directory>\mouse.sys
+
+where <directory> is the directory where the earlier mouse driver resides.
+
+
+=================< Microsoft(R) CodeView(R) Debugger >=========================
+
+
+New Command-Line Option
+-----------------------
+If you have an IBM(R) Personal System/2, then you can use the /50
+command-line option to start the CodeView debugger in 50-line mode.
+Note that you must be in 25-line mode to effectively use either the
+/43 or /50 command-line option.
+
+Compiling BASIC Programs for CodeView Debugger
+----------------------------------------------
+To compile BASIC programs for use with the CodeView debugger, specify the
+/Zi option rather than the /D option.
+
+Expression Evaluator for BASIC Programs
+---------------------------------------
+In the BASIC expression evaluator, "+" is not supported for string
+concatenation.
+
+Stack Trace Command
+-------------------
+In order for the Stack Trace command (or the Calls menu) to work
+reliably, you need to execute to at least the beginning of the main
+function or procedure, and the current module should have full CodeView
+information (a module has full CodeView information if compiled or
+assembled with /Zi).
+
+Error Messages
+--------------
+The error message "? cannot display" indicates that the Display
+Expression command (?) has been passed a valid symbol that it
+cannot display. In previous versions of the debugger, structures
+could not be displayed. With current version of the debugger, only
+the enums type cannot be displayed.
+
+The error message "Expression not a memory address" occurs when
+the Tracepoint command is given without a symbol that evaluates to
+a single memory address.  For example, the commands "TP?1" and
+"TP?a+b" each produce this error message.  The proper way to put a
+tracepoint on the word at address 1 is with the command "TPW 1".
+
+The error message "Function call before 'main'" occurs when you
+attempt to evaluate a program-defined function before you have entered
+the main function.  Execute to at least to the beginning of the main
+function before attempting to evaluate program-defined functions.
+
+The error message "Bad emulator info" occurs when CodeView cannot
+read data from the floating-point emulator.
+
+The error message "Floating point not loaded" has a special meaning
+for CVP (in addition to the explanation given in the Microsoft CodeView
+and Utilities manual).	Each thread has its own floating-point emulator.
+This message is issued when the current thread has not initialized
+its own emulator.
+
+Microsoft Pascal Programs
+-------------------------
+In this release, Microsoft Pascal programs cannot be debugged with
+the CodeView debugger.
+
+
+The Pascal example on pg. 61 of the Microsoft CodeView and Utilities
+manual should read 
+
+	PAS1 /Zz TEST;
+
+rather than
+
+	PAS1 /Zi TEST;
+
+========================< Exit Codes for Utilities >===========================
+
+The exit codes for LINK and the utilities in the Microsoft CodeView
+and Utilities manual should appear as follows:
+
+LINK
+----
+	Code	Meaning
+
+	0	No error.
+
+	2	Program error--something was wrong with the commands
+		or files input to the linker.
+
+	4	System error.  The linker
+
+		- ran out of space on output files
+		- was unable to reopen the temporary file
+		- experienced an internal error
+		- was interrupted by the user
+
+LIB, EXEPACK, EXEMOD, MAKE, and SETENV
+---------------------------------------
+	Code	Meaning
+
+	0	No error.
+
+	2	Program error--something was wrong with the commands
+		or files input to the utility.
+
+	4	System error.  The utility ran out of memory, was
+		interrupted by the user, or experienced an internal
+		error.
+
+============< Microsoft Segmented-Executable Linker (LINK) >===================
+
+Overlay Restrictions
+--------------------
+You cannot use long jumps (using the longjmp library function) or indirect
+calls (through a function pointer) to pass control to an overlay.  When a
+function is called through a pointer, the called function must be in the same
+overlay or in the root.
+
+=================<  Microsoft Library Manager (LIB) >==========================
+
+New Option
+----------
+There is a new option for LIB:  /NOIGNORECASE (abbreviated as /N).
+This option tells LIB to not ignore case when comparing symbols.
+By default, LIB ignores case.  Multiple symbols that are
+the same except for case can be put in the same library.  An
+example of this is: "_Open" and "_open". Normally you could not
+add both these symbols to the same library.
+
+Note that if a library is built with /NOI, the library is
+internally "marked" to indicate /NOI.	All libraries built
+with earlier versions of LIB are not marked.
+
+If you combine multiple libraries, and any one of them is
+marked /NOI, then /NOI is assumed for the output library.
+
+In addition, LIB also supports the option /IGNORECASE (/I), which
+is completely analogous to /NOIGNORECASE.  /I is the default. The only
+reason to use it would be if you have an existing library marked /NOI
+that you wanted to combine with other libraries that were not marked,
+and have the output library be not marked. If you don't use
+/IGNORECASE, the output is marked /NOI (see above).
+
+=============< Microsoft Program Maintenance Utility (MAKE) >==================
+
+Inference Rules
+---------------
+You cannot have inference rules in both the TOOLS.INI and the description
+file that use the same inextension and outextension.  For example, you
+cannot place the following inference rule in the TOOLS.INI file:
+
+	.c.obj:
+		cl /c /Zi /Od $*.c
+
+while also placing the following line in the description file:
+
+	.c.obj:
+		cl /Ot $*.c
+
+However, you can define the same macro in both the TOOLS.INI and the
+description file.  In such cases, the definition in the TOOLS.INI file
+takes precedence.
+
+Backslash (\) as Continuation Character
+---------------------------------------
+Note that MAKE considers a backslash immediately followed by a new-line
+character to be a continuation character.  When it finds this combination
+in a description file, MAKE concatenates the line immediately following
+the combination with the line where the combination appears.
+
+If you define a macro that ends in a backslash, make sure that you put a
+space after the terminating backslash.  For example, if you want to define
+macros for the path C:\SRC\BIN and C:\SRC\LIB, you must use the format 
+illustrated below:
+
+	BINPATH=C:\SRC\BIN\<space><newline>
+	LIBPATH=C:\SRC\LIB\<space><newline>
+
+To illustrate the problems that can result if you do not put a space before the
+new-line character, assume that the macros above appear as shown below
+instead: 
+
+	BINPATH=C:\SRC\BIN\<newline>
+	LIBPATH=C:\SRC\LIB\<newline>
+
+Because a new-line character appears immediately after the backslash at the end
+of the first macro, MAKE assumes that you are defining the single macro shown
+below:
+
+	BINPATH=C:\SRC\BIN\LIBPATH=C:\SRC\LIB\
+
+
+==========< Microsoft STDERR Redirection Utility (ERROUT) >====================
+
+The ERROUT utility does not accept batch files. To redirect standard-error
+output from a batch file, you must enter a command of the following form:
+
+	ERROUT COMMAND /c <batchcommand> 
+
+If no /f option is given, then ERROUT redirects standard-error output to
+the standard-output device.
+
+==========================< Microsoft Editor >=================================
+
+Installing the Editor
+---------------------
+The Microsoft Editor does not come with an MESETUP program. Instead,
+run the setup program for the compiler. This program offers you choices
+about how to set up the editor.
+
+Keystroke Configurations
+------------------------
+Some of the keystroke configurations listed in Table A.2 of the
+Microsoft Editor User's Guide may need to be changed.
+
+In the Quick/WordStar(R) configuration, the Sinsert function is assigned
+to ALT+INS, not CTRL+INS.
+
+In the BRIEF(R) configuration, the Plines function is assigned to ALT+D,
+and the Refresh function is assigned to CTRL+].
+
+In the Epsilon(TM) configuration, the Ppage function is assigned to PGDN,
+and the Sdelete function is assigned to DEL and CTRL+D.
+
+The Compile Function
+--------------------
+The commands
+
+	Arg streamarg Compile
+        Arg textarg Compile
+
+each use the command specified by the extmake:text switch.  The
+editor does not check the extension of the file name given as an
+argument, but instead uses the "text" extension.  The streamarg
+or textarg replaces a %s in the command.  These commands are typically
+used to invoke MAKE.
+
+The Setfile Function
+--------------------
+The commands that use Setfile, along with a streamarg or textarg,
+accept a variety of input: either the name of a file, a file name
+with a wild-card character (* or ?), the name of a directory, or the
+name of a disk drive.  File names can also include environment variables,
+such as $INIT.  If the streamarg or textarg is a directory name, then
+the editor changes the current directory.  If the argument is a drive
+name, then the editor changes the current drive.  Environment variables
+are translated into directories to be searched for a file.  For example,
+the following macro directs the editor to search the $INIT environment
+variable in order to find the tools.ini file:
+
+    tools.ini := Arg "$INIT:tools.ini" Setfile
+
+
+Entering Strings in Macros
+--------------------------
+When you enter a text argument directly, no characters have special
+meaning (except when the argument is interpreted as a regular
+expression).  However, when you enter text as part of a macro, then
+strings inside of quotes are interpreted according to the C string
+format.  This format uses a backslash followed by double quotes (\")
+to represent double quotes and it uses two backslashes (\\) to represent
+a single backslash.  Therefore, to find the next occurrence of the string
+
+    She wrote, "Here is a backslash: \ "
+
+you could use the following macro definition:
+
+    findit := Arg "She wrote, \"Here is a backslash: \\ \"" Psearch
+
+Note that to indicate a backslash for a regular expression that is
+also part of a macro definition, you must use four consecutive
+backslashes.
+
+
+Using Text Switches
+-------------------
+The text switches extmake and readonly each take a special
+kind of syntax that allows you to specify drive, file name,
+base name, or file extension. The syntax consists of the
+characters:
+
+%|<letters>F
+
+where <letters> consists of any of the following: "p" for path,
+"d" for drive, "f" for file base name, or "e" for file extension.
+For example, if you are editing the file c:\dir1\sample.c, and you
+make the following switch assignment:
+
+extmake:c cl /Fod:%|pfF %|dfeF
+
+then each time you give the command <Arg><Compile>, the editor
+performs the following system-level command:
+
+cl /Fod:\dir1\sample c:sample.c
+
+The expression "%s" is equivalent to "%|feF" except that the former
+only works once, whereas the latter can appear any number of times
+in the extmake switch assignment. The expression "%|F" is equivalent
+to "%|dpfeF".
+
+The filetab Switch
+------------------
+The filetab switch is a numeric switch that determines how the
+editor translates tabs when loading a file into memory.  The value
+of the switch gives the number of spaces associated with each tab
+column.  For example, the setting "filetab:4" assumes a tab column
+every 4 positions on each line.  Every time the editor finds a tab
+character in a file, it loads the buffer with the number of spaces
+necessary to get to the next tab column.  Depending on the value of
+the entab switch, the editor also uses the filetab switch to determine
+how to convert spaces into tabs when writing to a file.  The default
+value of filetab is 8.
+
+Functions Callable by C Extensions
+----------------------------------
+The following list summarizes functions from the standard compact-
+memory-model library, which should work when called by a C-extension
+module.  (The technique of programming C extensions is presented in 
+Chapter 8 of the Microsoft Editor User's Guide.)  The memory model
+of the extension is assumed to be /Asfu (small code pointers, far
+data pointers, and stack segment unequal to data segment).  This list
+uses the function categories from Chapter 4 of the Microsoft C
+Optimizing Compiler Run-Time Library Reference (Version 4.0
+or later.)
+
+Buffer Manipulation: All functions can be called.
+
+Character Classification and Conversion: All functions can be called.
+
+Data Conversion: All functions can be called except for
+
+     strtod()
+
+Directory Control: All functions can be called except for
+
+     getcwd()
+
+File Handling: All functions can be called.
+
+Low-Level I/O Routines: All functions can be called, but write()
+will not work in binary mode.
+
+Console and Port I/O: All functions can be called except for
+
+     cgets()
+     cprintf()
+     cscanf()
+
+Searching and Sorting: All functions can be called except for
+
+     qsort()
+
+String Manipulation: All functions can be called except for
+
+     strdup()
+
+BIOS Interface: All functions can be called.
+
+MS-DOS Interface: All functions can be called except for
+
+     int86()
+     int86x()
+
+Time: All functions can be called except for
+
+     ctime()
+     gmtime()
+     localtime()
+     utime()
+
+Miscellaneous: All functions can be called except for
+
+     assert()
+     getenv()
+     perror()
+     putenv()
+     _searchenv()
+
+
+Linking Extensions in Protected Mode
+--------------------------------------
+To link C extension modules in protected mode, link with the
+object file EXTHDRP.OBJ, instead of the real-mode header
+EXTHDR.OBJ.

@@ -1,0 +1,462 @@
+/*
+EXT.DOC
+
+This file documents each of the low-level editing functions that can be
+called from a Microsoft-Editor C extension.
+
+The types COL and LINE, formally declared in the file EXT.H, are short and
+long integers, respectively.  A variable of type COL refers to a column
+in a file, and a variable of type LINE refers to a line (in other words, a
+row) in a file.  Numbering for both COL and LINE variables begins with
+0.  Therefore, line 0 is the first line in the file.
+*/
+
+
+/*  Replace - edits a character in a file
+ *
+ *  The Replace function inserts character c at position (x, y) in the file
+ *  pFile.  If fInsert equals TRUE (-1) the function moves remaining characters
+ *  on the line over by one space.  If fInsert equals FALSE (0) function re-
+ *  laces the character at specified position.  The function takes no action if
+ *  fInsert equals FALSE, and c is identical to the character at specified
+ *  position.
+ *
+ *  c		Character to place into the file
+ *  x, y	Column and row (respectively) of position of insertion
+ *  pFile	Handle to file being modified
+ *  fInsert	If TRUE (-1), inserts before character at specified position;
+ *              otherwise, overwrites character at specified position
+ *
+ *  returns	TRUE if line is successfully edited, FALSE if line is too
+ *		long
+ */
+flagType pascal Replace (c, x, y, pFile, fInsert)
+char c;
+COL  x;
+LINE y;
+PFILE pFile;
+flagType fInsert;
+
+
+/*  MoveCur - moves the cursor to a specified location in the current file
+ *
+ *  The MoveCur function moves the cursor to specified position within the
+ *  current file.  If the cursor is within the same window, then no window
+ *  movement occurs.  Otherwise, the cursor is placed at a common position
+ *  specified by the numeric switch "hike."
+ *
+ *  x		Column where cursor is to appear in file
+ *  y		Line (row) where cursor is to appear in file
+ */
+void pascal MoveCur (x, y)
+COL  x;
+LINE y;
+
+
+/*  DelLine - deletes lines from a file
+ *
+ *  The DelLine function deletes lines yStart through yEnd, inclusive, in
+ *  the file pFile.
+ *
+ *  pfile	Handle to file from which lines are to be deleted
+ *  yStart	First line to be deleted
+ *  yEnd	Last line to be deleted
+ */
+void pascal DelLine (pfile, yStart, yEnd)
+PFILE pfile;
+LINE yStart, yEnd;
+
+
+/*  DelBox - deletes a rectangular area (box) from a file
+ *
+ *  The DelBox function deletes all spaces in the box delimited
+ *  by the positions (xLeft, yTop) and (xRight, yBottom).  The
+ *  box includes both corners specified in the function call.
+ *
+ *  pFile		Handle to file to be modified
+ *  xLeft, yTop 	Column and line of start of box
+ *  xRight, yBottom 	Column and line of end of box
+ */
+void pascal DelBox (pFile, xLeft, yTop, xRight, yBottom)
+PFILE pFile;
+COL  xLeft, xRight;
+LINE yTop, yBottom;
+
+
+/*  DelStream - deletes a stream of text from a file
+ *
+ *  The DelStream function deletes the stream of text beginning with
+ *  position (xStart, yStart), up to but not including position
+ *  (xEnd, yEnd), within file pFile.
+ *
+ *  pFile		Handle to file to be modified
+ *  xStart, yStart 	Column and line of start of stream
+ *  xEnd, yEnd		Column and line of end of stream
+ */
+void pascal DelStream (pFile, xStart, yStart, xEnd, yEnd)
+PFILE pFile;
+COL  xStart, xEnd;
+LINE yStart, yEnd;
+
+
+/*  GetLine - retrieves a line of text
+ *
+ *  The GetLine function retrieves a line of text from the specified
+ *  file and places the text in the specified buffer.  The text has
+ *  all tabs expanded into spaces, and no carriage-return or line-feed
+ *  character is included.  Lines requested beyond the end of the file
+ *  are considered empty.
+ *
+ *  line	Number of the line to be retrieved
+ *  buf 	Buffer for text of the line
+ *  pfile	Handle of file from which the line is to be retrieved
+ *
+ *  returns     The number of characters retrieved
+ */
+int pascal GetLine (line, buf, pfile)
+LINE line;
+char far *buf;
+PFILE pfile;
+
+
+/*  AddFile - creates a file buffer
+ *
+ *  The AddFile function creates and initializes a file buffer.  The
+ *  contents are initially empty.  A new file is not placed on disk
+ *  until the FileWrite function is called. 
+ *
+ *  p		Character pointer to name
+ *
+ *  returns	Handle to internal file structure
+ */
+PFILE pascal AddFile (p)
+char far *p;
+
+
+/*  DelFile - deletes contents of file
+ *
+ *  The DelFile function deletes the entire contents of an internal
+ *  file buffer.  The effect of deleting contents can be made
+ *  permanent by calling the FileWrite function, which replaces the
+ *  contents of the file on disk with the contents of the internal
+ *  file buffer.
+ *
+ *  pFile	Handle to file that is to be cleared
+ */
+void pascal DelFile (pFile)
+PFILE pFile;
+
+
+/*  FileNameToHandle - returns handle corresponding to the file name
+ *
+ *  The FileNameToHandle function searches for the specified file
+ *  and returns a handle to the file if found.  If pName points to a
+ *  zero-length string, then the function returns a handle to the current
+ *  file.  Otherwise, the function searches for the file named by pName,
+ *  which may include a complete path.  If pName not found and pShortName
+ *  is not a NULL pointer, then the function scans the information file
+ *  for a file name that matches pShortName.  If a match is found, then
+ *  the function uses the complete path name in the information file.
+ *
+ *  pName	Pointer to name of file
+ *  pShortName	Pointer to short name of file (this parameter may be NULL)
+ *
+ *  Returns	Handle to specified file (if found) or NULL.
+ */
+PFILE pascal FileNameToHandle (pName, pShortName)
+char far *pName, *pShortName;
+
+
+/*  RemoveFile - frees up all resources attached to a particular file
+ *
+ *  The RemoveFile function removes a file handle from memory, along
+ *  with the file buffer and all other memory-resident information about the
+ *  file.  Calling this function helps to free up main memory, but it has
+ *  no effect on the file as stored on disk.
+ *
+ *  pFileRem	File handle to be removed
+ */
+flagType pascal RemoveFile (pFileRem)
+PFILE	 pFileRem;
+
+
+/*  CopyLine - copies lines from one file to another
+ *
+ *  The CopyLine function copies lines yStart through yEnd, inclusive,
+ *  and inserts them into the destination file just before line yDst.  If
+ *  the handle to the source file is NULL, then the function inserts a
+ *  blank line into the destination file (in that case, yStart and yEnd
+ *  are ignored).
+ *
+ *  pFileSrc	Handle to source file
+ *  pFileDst	Handle to destination file
+ *  yStart	First line to be copied
+ *  yEnd	Last line to be copied
+ *  yDst	Destination of copy
+ */
+void pascal CopyLine (pFileSrc, pFileDst, yStart, yEnd, yDst)
+PFILE pFileSrc, pFileDst;
+LINE yStart, yEnd, yDst;
+
+
+/*  CopyBox - copies a rectangular area (box) from one file to another
+ *
+ *  The CopyBox function copies the box delimited by positions (xLeft, yTop)
+ *  and (xRight, yBottom) in the source file and inserts this box just
+ *  before position (xDst, yDst) in the destination file.  If the the
+ *  source-file handle is NULL, a blank space is inserted.
+ *
+ *  The box in the source file includes both corners specified in the
+ *  function call.
+ *
+ *  pFileSrc		Handle to source file
+ *  pFileDst		Handle to destination file
+ *  xLeft, yTop 	Column and line of beginning of copy
+ *  xRight, yBottom  	Column and line of end of copy
+ *  xDst, yDst		Column and line of destination of copy
+ */
+void pascal CopyBox (pFileSrc, pFileDst, xLeft, yTop, xRight, yBottom, xDst, yDst)
+PFILE pFileSrc, pFileDst;
+COL  xLeft, xRight, xDst;
+LINE yTop, yBottom, yDst;
+
+
+/*  CopyStream - copies a stream of text
+ *
+ *  The CopyStream function copies the stream of text (including newlines)
+ *  beginning at position (xStart, yStart), up to but not including position
+ *  (xEnd, yEnd).  The stream of text is inserted into the destination file
+ *  just before position (xDst, yDst).  If the source-file handle is NULL,
+ *  a blank space is inserted.
+ *
+ *  pFileSrc		Source file handle
+ *  pFileDst		Destination file handle
+ *  xStart, yStart 	Column and line of beginning of copy
+ *  xEnd, yEnd		Column and line of end of copy
+ *  xDst, yDst		Column and line of destination of copy
+ */
+void pascal CopyStream (pFileSrc, pFileDst, xStart, yStart, xEnd, yEnd, xDst, yDst)
+PFILE pFileSrc, pFileDst;
+COL  xStart, xEnd, xDst;
+LINE yStart, yEnd, yDst;
+
+
+/*  pFileToTop - makes the specified file visible in the current window
+ *
+ *  In effect, the pFileToTop function selects a file as the current
+ *  file and makes it visible in the current window.  The function 
+ *  accomplishes this operation by moving the specified file handle to
+ *  the top of the "stack" of file handles attached to the current
+ *  window.
+ *
+ *  pFileTmp	Handle of file to bring to top of stack
+ */
+void pascal pFileToTop (pFileTmp)
+PFILE pFileTmp;
+
+
+/*  Display - updates the physical display
+ *
+ *  The Display function refreshes the screen, by examining editing
+ *  changes and making the minimum screen changes necessary.  A keystroke
+ *  interrupts the function and causes immediate return.
+ *
+ *  You do not normally need to use the Display function to see the
+ *  results of an edit on the screen.  The function is typically useful
+ *  when you have an SWI_SPECIAL function that alters a file directly.
+ */
+void pascal Display ()
+
+
+/*  FileRead - reads the contents of a file into the file buffer
+ *
+ *  The FileRead function reads the contents of the specified disk file
+ *  and stores them in the internal file buffer specified by pFile.  The
+ *  old contents of the file buffer are lost.
+ *
+ *  name	Pointer to name of file to be read
+ *  pFile	Handle to internal file to receive contents
+ *
+ *  returns     TRUE (-1) if successful; FALSE (0) if file could not be read
+ */
+flagType pascal FileRead (name, pFile)
+char far *name;
+PFILE pFile;
+
+
+/*  FileWrite - writes buffer contents out to disk
+ *
+ *  The FileWrite function writes the contents of the specified file buffer
+ *  out to the disk file specified by savename.  If savename is a NULL pointer,
+ *  then the function writes the file buffer out to the disk file with the
+ *  same name.  The FileWrite function first writes contents to a temporary
+ *  file; if the write operation is successful, then the temporary file is
+ *  renamed to the destination file.
+ *
+ *  savename	Pointer to name of file to be overwritten
+ *  pFile	Handle to file buffer to write
+ */
+flagType pascal FileWrite (savename, pFile)
+char far *savename;
+PFILE pFile;
+
+
+/*  SetKey - associates an editor function with a keystroke
+ *
+ *  The SetKey function creates a function assignment.  Any current assignment
+ *  to the keystroke is discarded and each time that particular keystroke is
+ *  received, the corresponding editor function will be invoked.
+ *
+ *  pFunction	Pointer to name of string being assigned
+ *  pKey	Pointer to keystroke
+ *
+ *  returns     TRUE (-1) if a successful assignment was made; FALSE (0)
+ *              otherwise
+ */
+flagType pascal SetKey (pFunction, pKey)
+char far *pFunction, *pKey;
+
+
+/*  DoMessage - outputs a string on the dialog line
+ * 
+ *  The DoMessage function prints the specified string on the dialog
+ *  line.
+ *
+ *  pStr	Pointer to character string to print
+ *
+ *  returns	Number of characters written
+ *
+ */
+int pascal DoMessage (pStr)
+char far * pStr;
+
+
+
+/*  PutLine - places a line of text into a file
+ *
+ *  The PutLine function places the indicated buffer string into
+ *  the specified file, replacing an existing line.  If the specified
+ *  line is out of range, then the PutLine function enlarges the
+ *  file, and inserts as many blank lines as needed at the end of the
+ *  file.  The buffer line should have no carriage return or line feed;
+ *  the PutLine function adds a newline automatically.
+ *
+ *  line	Number of line to be replaced
+ *  buf 	Buffer with line of text to be placed in file
+ *  pfile	Handle to file
+ */
+void pascal PutLine (line, buf, pfile)
+LINE line;
+char far *buf;
+PFILE pfile;
+
+
+/*  BadArg - displays a message that a bad argument has been received
+ *
+ *  The "bad argument" message is printed on the dialog line.
+ */
+flagType pascal BadArg (void);
+
+
+
+/*  FileLength - returns the number of lines in the file
+ *
+ *  The FileLength function is particularly useful for global operations,
+ *  in which it is necessary to know where the end of the file is.
+ *
+ *  pFile	Handle to file
+ *
+ *  returns	Number of lines in file
+ */
+LINE pascal FileLength (pFile)
+PFILE pFile;
+
+
+/*  GetCursor - returns the current cursor position
+ *
+ *  The GetCursor function indicates current cursor position by
+ *  modifying the integers that px and py point to.  The function
+ *  sets *px to the current cursor column, and *py to the current
+ *  cursor line.
+ *
+ *  px		Pointer to column-position variable
+ *  py		Pointer to line-position variable
+ */
+void pascal GetCursor (px, py);
+COL  far *px;
+LINE far *py;
+
+
+/*  fExecute - executes a Microsoft-Editor macro
+ *
+ *  The fExecute function executes a macro, using the standard rules
+ *  for macro execution (see the Microsoft Editor User's Guide for details).
+ *
+ *  pStr	Pointer to macro string to execute
+ *
+ *  returns	Return value of last executed macro
+ */
+flagType pascal fExecute (pStr)
+char far *pStr;
+
+
+/*  ReadCmd  - returns next command from user
+ *
+ *  The ReadCmd waits for input from user.  The next keystroke is
+ *  translated into a function that is not executed.  Instead, the
+ *  editor passes information about the function in the form of a
+ *  structure of type cmdDesc.  This structure is declared in the file
+ *  EXT.H and is described in Chapter 8 of the Microsoft Editor    
+ *  User's Guide.  Once intercepted, the keystroke cannot be placed
+ *  back for execution.
+ *
+ *  returns	Pointer to cmdDesc structure corresponding to next keystroke
+ */
+PCMD pascal ReadCmd ();
+
+
+/*  ReadChar - returns next raw keystroke
+ *
+ *  The ReadChar intercepts the next keystroke from the user.  No action
+ *  is taken, but information about the keystroke is passed.  Once
+ *  intercepted, the keystroke cannot be placed back for execution.
+ *
+ *  returns	a long value containing information on the keystroke:
+ *
+ *		byte 0: ASCII code for character
+ *		byte 1: scan code for character
+ *		byte 2: shift info for character:
+ *			    (S)HIFT, (C)TRL, (A)LT, (N)UMLOCK
+ *			    Format is: SxCAxNxx
+ *		byte 3: 0
+ *
+ *  In the format for byte 2, each "x" indicates an unusued bit. The
+ *  bits S, C, A, and N are each on or off, depending on the associated
+ *  condition.  For example, if the SHIFT, CTRL, and ALT conditions are
+ *  all on, but not the NUMLOCK condition, then byte 2 will be returned as
+ *  10110000.  Note: the "N" bit is always 0, unless the the key pressed
+ *  is on the numeric keypad.
+ */
+long pascal ReadChar();
+
+
+/*  KbUnHook - Disable Microsoft Editor's logical keyboard
+ *
+ *  The KbUnHook function changes the "focus" of the keyboard so that
+ *  keyboard input is no longer read by the editor.  When attempting to
+ *  use system-level calls to read from the keyboard, it is necessary to
+ *  first call this function.
+ *
+ *  In paticular, it is necessary to call the KbUnHook function before
+ *  transferring control to a program that reads from the keyboard.
+ */
+void pascal KbUnHook();
+
+
+/*  KbHook - Enable Microsoft Editor's logical keyboard
+ *
+ *  The KbHook function reverses the affect of the KbUnHook function
+ *  (described above), and restores normal keyboard-input reading
+ *  by the editor.
+ */
+void pascal KbHook();

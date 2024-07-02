@@ -1,0 +1,550 @@
+
+			     ERRMSG.DOC File
+
+	       Error-message information for software included with
+	       the Microsoft(R) C Optimizing Compiler Version 5.10
+
+		(C) Copyright Microsoft Corporation, 1987, 1988
+
+
+This document describes new and changed error and warning messages for the
+software included with the Microsoft(R) C Optimizing Compiler, Version 5.10.
+The information contained in this document is more up to date than that in the
+printed manuals.
+
+Microsoft improves its languages documentation at the time of reprinting, so
+some of the information in this on-line file may already be included in your
+manuals.
+
+===================< Compiler Command-Line Errors >============================
+
+New Messages
+------------
+
+D2025 : missing argument
+
+You supplied a CL option that requires an argument, but did not supply the
+argument. For instance, the following command generates error D2025:
+
+    cl /Tc
+
+The preceding command causes an error because the /Tc option requires a
+source-file name.
+
+D4019 : string too long. Truncated to 40 characters.
+
+You supplied an overly long string as an argument for the /ND, /NT, /NM,
+/St, or /Ss option of the CL command; the string was truncated.
+
+
+====================< Compiler and Run-Time Errors >===========================
+
+Deleted Messages
+----------------
+Error message C2049, warning message C4043, and run-time-error message R6004
+are no longer generated.
+
+Error message C2089 is no longer generated; error message C2131 is generated
+in its place.
+ 
+Changed Messages
+----------------
+Error message C1009 has been changed to read as follows:
+
+	C1009  compiler limit: macros too deeply nested
+
+Error message C1013 has	been changed to	read as	follows:
+
+	C1013  cannot open source file 'filename'
+
+Error C2003 has	been changed to	read as	follows:
+
+	C2003  Expected 'defined id'
+
+Error message C2085 has	been changed to	read as	follows:
+
+	C2085  'identifier' : not in formal parameter list
+
+Error message C2095 has been changed to read as follows:
+
+	C2095  function : actual has type void : parameter number
+
+	An attempt was made to pass a void argument to a function. The
+	given number identifies	which argument was in error.
+	Formal parameters and arguments	to functions cannot have type void;
+	they can, however, have type "void *" (pointer to void).
+
+Error message C2147 has been changed to read as follows:
+
+	C2147  unknown size
+
+
+Warning message C4013 ("constant too big") has been changed to error
+message	C2177.
+
+Warning	message	C4016 has been changed to read as follows:
+
+	C4016	'<name>' : no function return type, using 'int'	as
+	default
+
+Warning message C4079 has been changed to read as follows:
+
+	C4079	unexpected token <token>
+
+Warning message C4080 has been changed to read as follows:
+
+	C4080	expected 'identifer' for segment name, found '<token>'
+
+Warning message C4081 has been changed to read as follows:
+
+	C4081	expected a comma, found <token>
+
+Warning message C4082 has been changed to read as follows:
+
+	C4082	expected an identifier, found '<token>'
+
+Warning message C4083 has been changed to read as follows:
+
+	C4083	expected '(', found '<token>'
+
+Warning message C4084 has been changed to read as follows:
+
+	C4084	expected a pragma keyword, found '<token>'
+
+Warning message C4085 has been changed to read as follows:
+
+	C4085	expected [on | off]
+
+Warning message C4086 has been changed to read as follows:
+
+	C4086	expected [1 | 2 | 4]
+
+Warning message C4095 has been changed to read as follows:
+
+	C4095	expected ')', found '<token>'
+
+
+New Messages
+------------
+In the following messages, the number in parentheses after a warning message
+indicates the minimum warning level that must be set for the warning to appear:
+
+C1015	cannot open include file 'filename'
+
+The given include file either did not exist, could not be opened,
+or was not found. Make sure your environment settings are valid	and
+that you have given the	correct	path name for the file.
+
+C1058: floating point expression too complex - would overflow NDP stack
+
+A floating-point expression was too complex for the compiler to handle,
+as in the following example:
+
+	double f(a, b, c, d, e, f, g, h, i, j)
+	double a, b, c, d, e, f, g, h, i, j;
+	{
+		return ( a / ( b / ( c / ( d / ( e / ( f / ( g / ( h /
+		( i / j ) ) ) ) ) ) ) ) );
+	}
+
+Try breaking up the expression that caused the error and recompiling.
+
+C1062  error writing to preprocessor output file
+
+You compiled with the /P, /E, or /EP option to produce a preprocessor
+output file, but not enough room was available to hold the file.
+
+C1065  compiler limit: declarator too complex
+
+This error occurs when you compile with the /Zg option and a function
+definition would generate a prototype that is too large to hold in an
+internal buffer.
+
+C2164	'<function>' : intrinsic was not declared
+
+You did not declare the given function before using it in an intrinsic
+pragma. This error appears only if you compile with the /Oi option.
+
+C2166	lval specifies 'const' object
+
+An attempt was made to modify an item declared with const type.
+
+C2172	<function> : actual is not a pointer : parameter <number>
+
+An attempt was made to pass a non pointer argument to a function
+that expected a	pointer. The given number indicates which argument
+was in error. 
+
+C2173	<function> : actual is not a pointer : parameter <number> :
+	parameter list <number>
+
+An attempt was made to pass a non pointer argument to a function that
+expected a pointer.  This error	occurs in calls	that return a pointer
+to a function.	The first number indicates which argument was in error;
+the second number indicates which argument list	contained the invalid
+argument. 
+
+C2174	<function> : actual has type void : parameter <number>,
+	parameter list <number>
+
+An attempt was made to pass a void argument to a function.
+Formal parameters and arguments	to functions cannot have type
+void; they can,	however, have type "void *" (pointer to	void).
+This error occurs in calls that return a pointer to a function. The
+first number indicates which argument was in error; the second number
+indicates which argument list contained the invalid argument.
+
+C2178	'<name>' : storage class for same_seg variables	must be	'extern'
+
+The given variable was specified in a same_seg pragma, but it was not
+declared with extern storage class.
+
+C2179	'<name>' : was used in same_seg, but storage class is no
+	longer 'extern'
+
+The given variable was specified in a same_seg pragma, but it was 
+redeclared with	a storage class	other than extern, as in the following
+example:
+ 
+	extern	int	i,j;
+	#pragma	same_seg(i,j)
+	int i;
+
+C2180	controlling expression has type 'void'
+
+The controlling expression in an if, while, for, or do statement
+was a function with void return type.
+
+C2182	'<name>' : 'void' on variable
+
+The given variable was declared with the void keyword. The void
+keyword can be used only in function declarations. 
+
+C2183	<name> : 'interrupt' function must be 'far'
+
+The given interrupt function was implicitly or explicitly declared to be
+near. You must declare the function without the near attribute; and if
+you compile the program with the default (small) or compact memory
+model, you must explicitly declare the function with the far attribute.
+
+C2184	<name> : 'interrupt' function cannot be 'pascal/fortran'
+
+The given interrupt function was declared with the FORTRAN/Pascal calling
+convention, either because the fortran or pascal attribute was used in the
+declaration or because the program was compiled with the /Gc option.
+Functions declared with the interrupt attribute are required to use the C
+calling conventions. Therefore, you must either declare the function without
+the fortran or pascal attribute if you compile the program without the /Gc
+option, or declare the function with the cdecl attribute if you compile
+the program with the /Gc option.
+
+C2186  '<name>' : 'saveregs/interrupt' modifiers mutually exclusive
+
+The saveregs and interrupt modifiers are mutually exclusive.
+
+C2188	#error : <message>
+
+The #error directive was used to terminate compilation and display a message.
+
+C2190  '<seg name>' : is a text segment
+
+The data_seg pragma expects to receive the name of a data segment; you
+passed the name of a text segment.
+
+C2191  '<seg name>' : is a data segment
+
+The first argument in an alloc_text pragma should be the name of a text
+segment; you passed the name of a data segment.
+
+C2192  '<func name>' : function has already been defined
+
+A function name passed as an argument in an alloc_text pragma
+has already been defined, as in the following example:
+
+sample()
+    {
+    }
+#pragma alloc_text(CODE_SEG, sample)
+
+The preceding code causes compilation-error message C2189 because the
+pragma tells the compiler where to allocate the function after
+it has already been allocated.
+
+C4054  insufficient memory may affect optimization
+
+Not enough memory was available to perform all of the requested
+optimizations. This message appears if available memory is
+within 64K of the absolute minimum that will accommodate the 
+executable file.
+
+C4078	loss of debugging information caused by optimization
+
+Because of the requested optimization, the compiler could not generate
+debugging information.
+
+C4088	'<function>' : pointer mismatch : parameter <number>
+	parameter list <number>
+
+The argument in the given function call has a different level of
+indirection, as in the following example:
+
+	int (*sample (void *)) (void *);
+	.
+	.
+	.
+	main()
+	{
+	    sample(10) (10); /* pointer mismatch: parameter 1,
+			    parameter list 2 */
+	}
+
+C4089 'function' : different types : parameter int parameter list int
+
+The argument in the given function call did not have the same type as
+the argument in the function prototype, as in the following example:
+
+	int (*sample(int,int))(char *);
+	.
+	.
+	.
+	main()
+	{
+		int i;
+
+		(*sample(10,20))(i);/* pointer mismatch : parameter 1,
+				  parameter list 2. */
+	}
+
+C4098	void function returning a value
+
+A function declared with a void return type also returned a value, as
+in the following example:
+
+	void func()
+	{
+		.
+		.
+		.
+		return(10);
+	}
+
+C4100	'<name>' : unreferenced	formal parameter
+
+The given formal parameter was never referenced	in the body of the
+function for which it was declared. (3)
+
+C4101	'<name>' : unreferenced	local variable
+
+The given local	variable was never used. (3)
+
+C4102	'<name>' : unreferenced	label
+
+The given label	was defined but	never referenced. (3)
+
+C4103	'<name>' : function definition used as prototype
+
+A function definition appeared before its prototype in the program. (3)
+
+C4104 : '<identifier>' : near data in same_seg pragma, ignored
+
+The given near variable was specified in a same_seg pragma, as in
+the following example:
+
+	extern int near near_var;
+	extern int far far_var;
+	#pragma same_seg(near_var, far_var);
+
+In this example, the compiler ignores the specification of near_var;
+consequently, it does not assume that near_var and far_var reside
+in the same data segment.
+
+C4105	<name> : code modifiers only on function or pointer to function
+
+The given modifier was used to declare something other than a function
+or function pointer.
+
+C4113	function parameter lists differed
+
+You assigned a function pointer to a function pointer, but the parameter
+lists of the functions do not agree, as in the following example:
+
+    int (*sample) (int);
+    int (*example) (char, char);
+
+    main()
+    {
+	sample = example;
+    }
+
+C4185	near call to <function> in different segment
+
+You specified the given function in an alloc_text pragma without declaring it
+to be far, then called this function from another text segment, as in the
+following example:
+
+	int f();
+	#pragma alloc_text(NEW, f)
+	main()
+	{
+		f();
+	}
+
+	f()
+	{
+	}
+
+In this example, the main function (in default text segment) makes a near call
+to the f function (in the text segment NEW). The error generated is
+	
+	C4185: near call to _f in different segment
+
+Although this is a warning message rather than an error message, THE RESULTING
+CODE WILL NOT WORK CORRECTLY.
+
+Note that if you compile with stack checking enabled (the default), you would 
+also get the following error message for the f function:
+	
+	C4185: near call to __chkstk in different segment
+
+
+C4186: string too long. Truncated to 40 characters.
+
+The string argument for a title or subtitle pragma exceeded the maximum
+allowable length and was truncated.
+
+
+=========< Microsoft Segmented-Executable Linker (LINK) Errors >===============
+
+Changed Messages
+----------------
+The explanation for fatal-error message L1008 is changed as follows: 
+
+	The /SEGMENTS option specified a limit greater than 3072 on the
+	number of segments allowed.
+
+Error message L1009 has been changed to read as follows:
+
+	L1009	<number> : CPARMAXALLOC : illegal value
+
+Error message L1053 has been changed to read as follows:
+
+	L1053   out of memory for symbol table
+
+	The program had more symbolic information (such as public, external,
+	segment, group, class, and file names) than the amount that could fit
+	in available real memory.
+
+	Try freeing memory by linking from the DOS command level instead of
+	from a MAKE file or from an editor. Otherwise, combine modules or
+	segments and try to eliminate as many public symbols as possible.
+
+Fatal error L1123 has been removed. 
+
+Warning message L4050 has been changed as follows:
+
+	L4050	too many public symbols for sorting
+
+	The linker uses the stack and all available memory in the
+	near heap to sort public symbols for the /MAP option.  If
+	the number of public symbols exceeds the space available
+	for them, this warning is issued and the symbols are not
+	sorted in the map file but instead are listed in arbitrary order.
+
+New Messages
+------------
+L1003	/QUICKLIB, /EXEPACK incompatible
+
+You cannot link with both the /QU option and the /E option.
+
+L1006	<option-text>: stack size exceeds 65535 bytes
+
+The value given as a parameter to the /STACKSIZE option exceeds
+the maximum allowed.
+
+L1115   /QUICKLIB, overlays incompatible
+
+You specified overlays and used the /QUICKLIB option.
+These cannot be used together.
+
+L2013	LIDATA record too large
+
+A LIDATA record contained more than 512 bytes.	This is
+probably a compiler error.
+
+L2024	<name>: symbol already defined
+
+Your program defined the same symbol more than once.
+
+L2041	stack plus data exceed 64K
+
+The total of near data and requested stack size exceeds 64K, 
+and the program will not run correctly.  Reduce the stack size.
+The linker only checks for this condition if /DOSSEG
+is enabled, which is done automatically in the library
+start-up module.
+
+L2043	Quick Library support module missing
+
+When creating a Quick library, you did not link with the required
+QUICKLIB.OBJ module.
+
+L2044	<name> : symbol	multiply defined, use /NOE
+
+The linker found what it interprets as a public-symbol
+redefinition, probably because you have redefined a symbol that
+is defined in a library.  Relink with the /NOEXTDICTIONARY
+(/NOE) option. If error L2025 results for the same symbol, then you
+have a genuine symbol-redefinition error.
+
+L4003	intersegment self-relative fixup at <offset> in segment <name>
+	pos: <offset> Record type: 9C target external '<name>'
+
+The linker found an intersegment self-relative fixup. This error
+may be caused by compiling a small-model program with the /NT
+option. 
+
+L4034	more than 239 overlay segments; extra put in root
+
+Your program designated more than the limit of 239 segments to 
+go in overlays.  Starting with the 234th segment, they are assigned to 
+the root (that is, the permanently resident portion of the program).
+
+===============< Microsoft Library Manager (LIB) Errors >======================
+
+Changed Messages
+----------------
+Warning messages U4152, U4155, and U4157-U4159 for the Microsoft Library
+Manager (LIB) are now nonfatal error messages U2152, U2155, and U2157-U2159,
+respectively.
+
+Warning message U4151 has been changed to read as follows:
+
+	U4151	'<name>' : symbol defined in module <name>, redefinition ignored
+
+New Messages
+------------
+The following new warning messages have	been added for LIB:
+
+U4155	<modulename> : module not in library
+
+A module specified to be replaced does not already exist in the 
+library.  LIB adds the module anyway.
+
+U4157	insufficient memory, extended dictionary not created
+U4158	internal error,	extended dictionary not	created
+
+For the	reason indicated, LIB could not	create an extended
+dictionary. The	library	is still valid,	but the	linker
+will not be able to take advantage of the extended dictionary
+to speed linking. 
+
+
+==========< Microsoft Program Maintenance Utility (MAKE) Errors >==============
+
+New Message
+-----------
+U1015: <file> : error redirection failed
+
+This error occurs if the /X option is given and error output cannot
+be redirected to the given file (for example, because the file
+is read only).
