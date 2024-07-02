@@ -1,0 +1,7 @@
+mcalc (mcalc.h)
+mcparser (mcalc.h)
+mcdisply (mcalc.h)
+mcinput (mcalc.h)
+mcommand (mcalc.h)
+mcutil (mcalc.h)
+

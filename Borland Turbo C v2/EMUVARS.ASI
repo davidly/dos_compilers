@@ -1,0 +1,158 @@
+;	emuVars.asi		last modified :- 13 Jul 88
+
+;	Turbo-C Run Time Library	version 2.0
+
+;	Copyright (c) 1986,87,88 by Borland International Inc.
+;	All Rights Reserved.
+
+;	This file is designed to be included both by the start-up
+;	module (C0.asm, for TC) and by the emulator.  The data is
+;	actually allocated in startup, and externally referenced
+;	from the emulator.
+
+;	4/15/88 ah:
+;	Modified for Turbo Pascal using _Pascal_ conditional.
+;	7/13/88 rss:
+;	Data initialization removed, moved to emualor FINIT code.
+;	Added Safety Stamp so debugger can detect emulator.
+
+IFNDEF	_Pascal_	; if Turbo C version
+
+IFNDEF	_InsideEmu87_
+	PUBLIC	emws_limitSP,	emws_initialSP,
+	PUBLIC	emws_saveVector,emws_nmiVector
+	PUBLIC	emws_status,	emws_control,	emws_TOS,	emws_adjust
+	PUBLIC	emws_fixSeg,	emws_BPsafe
+	PUBLIC	emws_stamp, emws_version
+
+	IF _Strict87_
+		PUBLIC    emws_instrnPtr, emws_dataPtr, emws_instruction 
+	ENDIF
+ENDIF
+
+; The Use of Interrupt Vectors
+
+;	There are 11 interrupt vectors.  The first 8 map onto the 8 floating
+;	point instruction patterns:
+
+;		{WAIT	ESC n } -->  INT (34h + n), where n is in (0..7)
+
+;	No segment prefixes may apply to these patterns.
+
+;	The ninth interrupt provides instructions with segment prefixes:
+
+;		{WAIT	ES: ESC n } --> INT (3Ch), byte (C0h + n)
+;		{WAIT	CS: ESC n } --> INT (3Ch), byte (80h + n)
+;		{WAIT	SS: ESC n } --> INT (3Ch), byte (40h + n)
+;		{WAIT	DS: ESC n } --> INT (3Ch), byte (00h + n)
+
+
+;	The tenth interrupt corresponds to the sequence NOP, FWAIT, and
+;	is a no-op for emulation purposes.
+
+;	The eleventh interrupt provides Borland-defined shortcuts.
+
+
+
+;	Data space is actually allocated in the stack segment by C0.asm,
+;	the start-up module, and accessed by the emulator via externs.
+;	It is initialized during the first emulated FINIT instruction.
+
+IFNDEF	_InsideEmu87_		; if we are building C0.obj
+
+; Allocate a set of 8 iNDP registers, plus extras for workspace
+
+emws_limitSP	label	word
+
+	db	(16 * 12) DUP (?)
+
+emws_initialSP	label	word
+
+; Append a spare for underflow situations.
+
+	dw	6 dup (?)
+
+
+emws_saveVector dd	?	; prior contents of NMI vector
+emws_nmiVector	dd	?	; PC/AT error vector for 80287 exceptions
+
+emws_status	dw	?	; result of comparisons
+emws_control	dw	?	; processing options and exceptions.
+
+emws_TOS	dw	?	; current level of e87 register stack
+emws_adjust	dw	?	; adjusts TOS at exit
+
+emws_fixSeg	dw	?	; selector implied by segFix
+emws_BPsafe	dw	?	; keep BP --> userRegs here for safety.
+emws_stamp	dd	?	; after initialization, 'emu', 87h
+emws_version	dw	?	; 1 for TC2, TP5; 2 for TB2
+
+IF _Strict87_
+    emws_instrnPtr	dd	?	; used with error recovery
+    emws_dataPtr	dd	?	; --------- " ------------
+    emws_instruction 	dw	?	; bytes swapped, used for error recovery
+ENDIF
+
+ELSE			; _InsideEmu87_, we are building the emulator
+
+	EXTRN	emws_limitSP	: WORD
+	EXTRN	emws_initialSP	: WORD
+	EXTRN	emws_saveVector : DWORD
+	EXTRN	emws_nmiVector	: DWORD
+	EXTRN	emws_status	: WORD
+	EXTRN	emws_control	: WORD
+	EXTRN	emws_TOS	: WORD
+	EXTRN	emws_adjust	: WORD
+	EXTRN	emws_fixSeg	: WORD
+	EXTRN	emws_BPsafe	: WORD
+	EXTRN	emws_stamp	: DWORD
+	EXTRN	emws_version	: WORD
+
+	IF _Strict87_
+		EXTRN	emws_instrnPtr	: DWORD
+		EXTRN	emws_dataPtr	: DWORD
+		EXTRN	emws_instruction: DWORD
+	ENDIF
+
+	EmuAssume@	MACRO	aSeg
+		ASSUME	aSeg : SEG emws_TOS
+	ENDM
+	EmuNothing@	MACRO	aSeg
+		ASSUME	aSeg : NOTHING
+	ENDM
+ENDIF
+
+ELSE			; _Pascal_, Turbo Pascal version
+
+; Turbo Pascal's linker does not allow explicit references to the
+; stack segment, so instead of the above PUBLICs and EXTRNs we
+; define the following equates for the emulators variables. These
+; declarations cause the assembler to use DS as the default segment
+; register, so an SS: override MUST be coded in places where DS is
+; not yet set up.
+
+; Note: The Turbo Pascal runtime library assumes that an FINIT will
+; correctly initialize all emulator variables. Turbo Pascal never
+; initializes them, nor does it ever directly reference any of them.
+
+emws_limitSP	equ	(word ptr DS: 0)
+emws_initialSP	equ	(word ptr DS: 192)
+emws_saveVector equ	(dword ptr DS: 204)
+emws_nmiVector	equ	(dword ptr DS: 208)
+emws_status	equ	(word ptr DS: 212)
+emws_control	equ	(word ptr DS: 214)
+emws_TOS	equ	(word ptr DS: 216)
+emws_adjust	equ	(word ptr DS: 218)
+emws_fixSeg	equ	(word ptr DS: 220)
+emws_BPsafe	equ	(word ptr DS: 222)
+emws_stamp	equ	(word ptr DS: 224)
+emws_version	equ	(word ptr DS: 228)
+
+EmuAssume@	MACRO	aSeg
+	ASSUME	aSeg : NOTHING
+ENDM
+EmuNothing@	MACRO	aSeg
+	ASSUME	aSeg : NOTHING
+ENDM
+
+ENDIF
