@@ -1,0 +1,53 @@
+        This package provides a sample SMALL-model interface from  PLM-86  to
+        PC-DOS (or MS-DOS).  It includes the following files:
+        
+            DOSLIBS.ASM     a set of assembly language procedures that adhere
+                            to SMALL-model PLM-86  calling  conventions,  and
+                            make DOS system calls by placing parameter values
+                            in registers and  then  issuing  the  appropriate
+                            interrupt instruction.
+
+            DOSLIBS.INC     a file that gives PLM-86 EXTERNAL definitions for
+                            all the procedures in DOSLIBS.ASM.
+        
+            SAMPLE.PLM      a PLM-86 program  that  makes  each  of  the  DOS
+                            systems  calls  DOSLIBS.ASM  to manipulate files,
+                            access system resources, etc.
+        
+            MAKE.BAT        a generation procedure that  will  create  a  DOS
+                            executable version (EXE file) of SAMPLE.PLM.
+        
+            READ.ME         this text.
+            
+            UDI2DOS.EXE	    X046.  The  program  supplied  with  this  package 
+                            that converts Intel  loadable  program  files  to 
+                            EXE files.   Although it also supplies an 
+                            environment that allows programs to make UDI calls,
+                            it can be used with programs that do not make UDI 
+                            calls, as this sample program illustrates.
+
+        This  generation  procedure  uses  the  following  files/programs not
+        included on this disk:
+        
+            PLM86.EXE       DOS version of PLM86 compiler.
+        
+            LINK86.EXE      DOS version of Intel linker program.
+        
+            PLM86.LIB       PLM86  run-time  libraries.      The   generation
+                            procedure  assumes  that  this  file  is  in  the
+                            directory C:\intel.    The  generation  procedure
+                            should be changed if this file is found somewhere
+                            else.  This pathname must also be changed in the
+                            MAKE.BAT file used for generating the sample program
+                            on this disk.
+        
+            LINK.EXE        DOS linker.  This program is  one  of  the  files
+                            that is supplied with PC-DOS (MS-DOS) from IBM.
+        
+        The sample program that makes each of the DOS system calls is  fairly
+        self-explanatory.  The program doesn't actually do anything.  Most of
+        the files it accesses are on the current default drive, but  it  also
+        tries  to  access  drive A, and to access an illegal drive (drive F).
+        It beeps if an error occurs that it does not expect.
+        
+

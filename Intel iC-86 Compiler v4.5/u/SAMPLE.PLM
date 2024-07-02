@@ -1,0 +1,791 @@
+sample: DO;
+
+$include(doslibs.inc)
+  
+  DECLARE CR LITERALLY '13';
+  DECLARE LF LITERALLY '10';
+  
+  DECLARE FALSE  LITERALLY '0';
+  DECLARE TRUE   LITERALLY '0FFh';
+  
+  DECLARE CRLF (*) BYTE DATA (CR,LF,24h);
+
+  DECLARE error_status BYTE;
+  DECLARE err WORD;
+
+  DECLARE version WORD;
+  DECLARE version_major BYTE AT(.version);
+  DECLARE version_minor BYTE AT(.version + 1);
+  
+  DECLARE psps SELECTOR;
+  DECLARE psp BASED psps STRUCTURE (
+    skip1 (2) BYTE,
+    top_of_memory WORD,
+    skip2 (28h) BYTE,
+    envs SELECTOR,
+    skip3 (52h) BYTE,
+    unformated_parameter_length BYTE,
+    unformated_parameter_area (127) BYTE);
+
+  DECLARE any_name (*) BYTE INITIAL('*.*',0);
+  
+
+  error_if: PROCEDURE(condition);
+    DECLARE condition BYTE;
+    IF condition THEN
+      DO;
+        CALL dos_std_string_out(@('** Error',CR,LF,24h));
+        error_status = 2;
+        CALL dos_std_out(7);
+      END;
+  END error_if;
+  
+  error_if_not_zero: PROCEDURE(code);
+    DECLARE code WORD;
+    IF code <> 0 THEN
+      DO;
+        CALL dos_std_string_out(@('** Error: ',24h));
+        CALL print_word(code, 1, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        error_status = 2;
+        CALL dos_std_out(7);
+      END;
+  END error_if_not_zero;
+
+  print_string: PROCEDURE(bufferp);
+    DECLARE bufferp POINTER;
+    DECLARE buffer BASED bufferp (1) BYTE;
+    DECLARE k WORD;
+    k = 0;
+    DO WHILE buffer(k) <> 0;
+      CALL dos_std_out(buffer(k));
+      k = k + 1;
+    END;
+  END print_string;
+  
+  print_word: PROCEDURE(n, digits, base, leading_zeros) REENTRANT;
+    DECLARE n  WORD, digits INTEGER, base WORD, leading_zeros BYTE;
+    DECLARE ch BYTE;
+    IF (n < base) THEN
+      DO;
+        IF leading_zeros THEN
+          ch = '0';
+        ELSE
+          ch = ' ';
+        DO WHILE digits > 1;
+          CALL dos_std_out(ch);
+          digits = digits - 1;
+        END;
+        IF n > 10 THEN
+          ch = 'A' + (n - 10);
+        ELSE
+          ch = '0' + n;
+        CALL dos_std_out(ch);
+      END;
+    ELSE
+      DO;
+        CALL print_word(n / base, digits - 1, base, leading_zeros);
+        CALL print_word(n MOD base, 1, base, leading_zeros);
+      END;
+  END print_word;
+
+  print_dword: PROCEDURE(n, digits, base, leading_zeros) REENTRANT;
+    DECLARE n  DWORD, digits INTEGER, base WORD, leading_zeros BYTE;
+    DECLARE ch BYTE;
+    IF (n < base) THEN
+      DO;
+        IF leading_zeros THEN
+          ch = '0';
+        ELSE
+          ch = ' ';
+        DO WHILE digits > 1;
+          CALL dos_std_out(ch);
+          digits = digits - 1;
+        END;
+        IF n > 10 THEN
+          ch = 'A' + (n - 10);
+        ELSE
+          ch = '0' + n;
+        CALL dos_std_out(ch);
+      END;
+    ELSE
+      DO;
+        CALL print_word(n / base, digits - 1, base, leading_zeros);
+        CALL print_word(n MOD base, 1, base, leading_zeros);
+      END;
+  END print_dword;
+
+  print_time: PROCEDURE(timep, print_hundreths);
+    DECLARE timep POINTER, print_hundreths BYTE;
+    DECLARE time BASED timep STRUCTURE(
+      hundredeths BYTE,
+      seconds     BYTE,
+      minutes     BYTE,
+      hours       BYTE);
+    CALL print_word(time.hours, 2, 10, FALSE);
+    CALL dos_std_out(':');
+    CALL print_word(time.minutes, 2, 10, TRUE);
+    CALL dos_std_out(':');
+    CALL print_word(time.seconds, 2, 10, TRUE);
+    IF print_hundreths THEN
+      DO;
+        CALL dos_std_out(':');
+        CALL print_word(time.hundredeths, 2, 10, TRUE);
+      END;
+  END print_time;
+
+  print_date: PROCEDURE(datep);
+    DECLARE datep POINTER;
+    DECLARE date BASED datep STRUCTURE(
+      day   BYTE,
+      month BYTE,
+      year  WORD);
+    CALL print_word(date.month, 2, 10, FALSE);
+    CALL dos_std_out('-');
+    CALL print_word(date.day, 2, 10, FALSE);
+    CALL dos_std_out('-');
+    CALL print_word(date.year, 1, 10, FALSE);
+  END print_date;
+  
+  
+  DECLARE INT LITERALLY '0FFh';
+  DECLARE int_count BYTE;
+  
+  int_proc: PROCEDURE INTERRUPT int;
+    int_count = 1;
+  END int_proc;
+  
+
+/* Main program */
+
+  CALL dos_std_string_out(@('DOS Library Tests, X003',CR,LF,24h));
+  error_status = 0;
+
+
+  /* Version Number Test */
+  
+  DO;
+    CALL dos_std_string_out(@('<> Test for DOS Version',CR,LF,24h));
+    version = dos_version;
+    CALL dos_std_string_out(@('DOS Version = ',24h));
+    CALL print_word(version_major, 1, 10, FALSE);
+    CALL dos_std_out('.');
+    CALL print_word(version_minor, 1, 10, FALSE);
+    CALL dos_std_string_out(@CRLF);
+  END;
+  
+  
+  /* Program Segment Prefix Access Test */
+  
+  DO;
+    DECLARE k WORD;
+    DECLARE envw WORD;
+    DECLARE envs SELECTOR AT (@envw);
+    DECLARE env BASED envs (8000h) BYTE;
+
+    CALL dos_std_string_out(@('<> Test Program Segment Prefix Access',CR,LF,24h));
+    psps = dos_get_psp;
+
+    CALL dos_std_string_out(@('Command line: ',24h));
+    k = 0;
+    DO WHILE k < psp.unformated_parameter_length
+    AND psp.unformated_parameter_area(k) > CR;
+      CALL dos_std_out(psp.unformated_parameter_area(k));
+      k = k + 1;
+    END;
+    CALL dos_std_string_out(@CRLF);
+
+    CALL dos_std_string_out(@('Environment selector: ',24h));
+    envs = psp.envs;
+    CALL print_word(envw, 4, 16, TRUE);
+    CALL dos_std_string_out(@CRLF);
+
+    CALL dos_std_string_out(@('Environment strings: ',CR,LF,24h));
+    k = 0;
+    DO WHILE env(k) <> 0;
+      CALL dos_std_string_out(@('  ',24h));
+      DO WHILE env(k) <> 0;
+        CALL dos_std_out(env(k));
+        k = k + 1;
+      END;
+      CALL dos_std_string_out(@CRLF);
+      k = k + 1;
+    END;
+
+    IF version_major >= 3 THEN
+      DO;
+        CALL dos_std_string_out(@('Invocation path: ',24h));
+        k = k + 3; /* skip over byte 0 and word count */
+        DO WHILE env(k) <> 0;
+          CALL dos_std_out(env(k));
+          k = k + 1;
+        END;
+        CALL dos_std_string_out(@CRLF);
+      END;
+  END;
+  
+  
+  /* Keyboard Input Test */
+  
+  DO;
+    DECLARE buf(16) BYTE, ch BYTE, k WORD;
+    CALL dos_std_string_out(@('<> Test Keyboard Input',CR,LF,24h));
+    CALL dos_std_string_out(@('Please type (type ENTER at end): abc',CR,LF,24h));
+    k = 0;
+    DO WHILE k < SIZE(buf) AND (ch := dos_std_in) <> CR;
+      buf(k) = ch;
+      k = k + 1;
+    END;
+    buf(k) = 24h;
+    CALL dos_std_string_out(@CRLF);
+    CALL dos_std_string_out(@('Input was: ',24h));
+    CALL dos_std_string_out(@buf);
+    CALL dos_std_string_out(@CRLF);
+    CALL error_if(k <> 3 OR cmpb(@buf, @('abc'), k) <> 0FFFFh);
+  END;
+  
+  
+  /* Direct Console I/O Test */
+  
+  DO;
+    DECLARE (ch1, ch2) BYTE;
+    CALL dos_std_string_out(@('<> Test Direct Console I/O',CR,LF,24h));
+    CALL dos_std_string_out(
+      @('Each character you type will be repeatedly displayed',CR,LF,24h));
+    CALL dos_std_string_out(@('until you press ENTER',CR,LF,24h));
+    ch1 = dos_direct_in_noecho;
+    DO WHILE ch1 <> CR;
+      DO WHILE (ch2 := dos_direct_in) = 0FFh;
+        CALL dos_direct_out(ch1);
+      END;
+      ch1 = ch2;
+    END;
+    CALL dos_std_string_out(@CRLF);
+  END;
+  
+  
+  /* Console Input Without Echo Test */
+  
+  DO;
+    DECLARE ch BYTE;
+    CALL dos_std_string_out(@('<> Console Input Without Echo Test',CR,LF,24h));
+    CALL dos_std_string_out(
+      @('Each character you type will not be echoed directly.  Press ENTER to continue.',CR,LF,24h));
+    DO WHILE (ch := dos_std_in_noecho) <> CR;
+      CALL dos_std_string_out(@('The character you input was:  ',24h));
+      CALL dos_std_out(ch);
+      CALL dos_std_string_out(@CRLF);
+    END;
+    CALL dos_std_string_out(@CRLF);
+  END;
+  
+  
+  /* Buffered Keyboard Input */
+  
+  DO;
+    DECLARE buf8 (8) BYTE;
+    buf8(0) = 6;
+    CALL dos_std_string_out(@('<> Buffered Keyboard Input Test',CR,LF,24h));
+    CALL dos_std_string_out(@('Input 6 characters: ',24h));
+    CALL dos_buffered_std_in(@buf8);
+    CALL dos_std_string_out(@CRLF);
+    CALL error_if(buf8(1) > buf8(0));
+    CALL error_if(buf8(2+buf8(1)) <> CR);
+    buf8(2+buf8(1)) = 24h;
+    CALL dos_std_string_out(@('Input was: ',24h));
+    CALL dos_std_string_out(@buf8(2));
+    CALL dos_std_string_out(@CRLF);
+  END;
+  
+  
+  /* Check Input Status & Clear Keyboard Buffer and Invoke Keyboard Function */
+  
+  DO;
+    DECLARE done BYTE;
+    CALL dos_std_string_out(
+      @('<> Check Input Status & Clear Keyboard Buffer Test',CR,LF,24h));
+    CALL dos_std_string_out(
+      @('Press any key to continue (don''t press ENTER)',CR,LF,24h));
+    done = FALSE;
+    DO WHILE NOT done;
+      done = dos_check_std_in; /* 0FFh => key pressed, 0 => no input */
+    END;
+    CALL dos_std_string_out(@('Press the ENTER key',CR,LF,24h));
+    CALL error_if(dos_clear_and_std_in(01h) <> CR); /* Standard Input */
+  END;
+  
+  
+  /* Get/Set Date Test */
+  
+  DO;
+    DECLARE date1 STRUCTURE(
+      day   BYTE,
+      month BYTE,
+      year  WORD);
+    DECLARE date2 STRUCTURE(
+      day   BYTE,
+      month BYTE,
+      year  WORD);
+    DECLARE day BYTE;
+
+    CALL dos_std_string_out(@('<> Test Get/Set Date',CR,LF,24h));
+    day = dos_get_date(@date1);
+    CALL dos_std_string_out(@('Date is: ',24h));
+    CALL print_date(@date1);
+    CALL dos_std_string_out(@CRLF);
+    CALL dos_std_string_out(@('Day of week is: ',24h));
+    CALL print_word(day, 1, 10, FALSE);
+    CALL dos_std_string_out(@CRLF);
+    
+    CALL dos_std_string_out(@('Setting new date',CR,LF,24h));
+    date2.day   = 17;
+    date2.month = 3;
+    date2.year  = 1987;
+    err = dos_set_date(@date2);
+    day = dos_get_date(@date2);
+    CALL error_if(err <> 0 OR date2.day <> 17 
+                  OR date2.month <> 3 OR date2.year <> 1987);
+    CALL error_if (dos_set_date(@date1) <> 0);
+  END;
+  
+  
+  /* Get/Set Time Test */
+  
+  DO;
+    DECLARE time1 STRUCTURE(
+      hundredeths BYTE,
+      seconds     BYTE,
+      minutes     BYTE,
+      hours       BYTE);
+    DECLARE time2 STRUCTURE(
+      hundredeths BYTE,
+      seconds     BYTE,
+      minutes     BYTE,
+      hours       BYTE);
+    DECLARE ch1 BYTE;
+    CALL dos_std_string_out(@('<> Test Get/Set Time',CR,LF,24h));
+    CALL dos_std_string_out(
+      @('Time will display until you press ENTER',CR,LF,24h));
+    DO WHILE (ch1 := dos_direct_in) = 0FFh;
+      CALL dos_get_time(@time1);
+      CALL print_time(@time1, TRUE);
+      CALL dos_std_out(CR);
+    END;
+    CALL dos_std_string_out(@CRLF);
+    
+    CALL dos_std_string_out(@('Setting time to  23:10:05:00',CR,LF,24h));
+    CALL dos_get_time(@time1);
+    time2.hours = 23;
+    time2.minutes = 10;
+    time2.seconds = 5;
+    time2.hundredeths = 0;
+    CALL error_if(dos_set_time(@time2) <> 0);
+    CALL dos_get_time(@time2);
+    CALL dos_std_string_out(@('Time returned is ',24h));
+    CALL print_time(@time2, TRUE);
+    CALL dos_std_string_out(@CRLF);
+    CALL error_if(dos_set_time(@time1) <> 0);
+  END;
+  
+  
+  /* Verify Test */
+  
+  DO;
+    DECLARE (old_mode, mode) BYTE;
+    CALL dos_std_string_out(@('<> Test Verify Get/Set',CR,LF,24h));
+    old_mode = dos_get_verify;
+    CALL dos_std_string_out(@('Current mode: ',24h));
+    CALL dos_std_out('0' + old_mode);
+    CALL dos_std_string_out(@CRLF);
+    CALL dos_std_string_out(@('Setting checking on',CR,LF,24h));
+    CALL dos_set_verify(1);
+    CALL error_if(dos_get_verify <> 1);
+    CALL dos_std_string_out(@('Setting checking off',CR,LF,24h));
+    CALL dos_set_verify(0);
+    CALL error_if(dos_get_verify <> 0);
+    CALL dos_set_verify(old_mode);
+  END;
+  
+  
+  /* Ctrl-Break Check Test */
+  
+  DO;
+    DECLARE (old_mode, mode) BYTE;
+    CALL dos_std_string_out(@('<> Test Ctrl-Break Check Get/Set',CR,LF,24h));
+    old_mode = dos_get_ctrl_break;
+    CALL dos_std_string_out(@('Current mode: ',24h));
+    CALL dos_std_out('0' + old_mode);
+    CALL dos_std_string_out(@CRLF);
+    CALL dos_std_string_out(@('Setting checking on',CR,LF,24h));
+    CALL dos_set_ctrl_break(1);
+    CALL error_if(dos_get_ctrl_break <> 1);
+    CALL dos_std_string_out(@('Setting checking off',CR,LF,24h));
+    CALL dos_set_ctrl_break(0);
+    CALL error_if(dos_get_ctrl_break <> 0);
+    CALL dos_set_ctrl_break(old_mode);
+  END;
+  
+  
+  /* Get/Set Interrupt Vector Test */
+  
+  DO;
+    DECLARE (old_vector, vector) DWORD;
+    DECLARE handler_ptr DWORD;
+    DECLARE handler_off WORD AT(.handler_ptr);
+    DECLARE handler_seg SELECTOR AT(.handler_ptr+2);
+    CALL dos_std_string_out(@('<> Test Get/Set Interrupt Vector',CR,LF,24h));
+    old_vector = dos_get_vector(int);
+    handler_off = .int_proc;
+    handler_seg = dos_get_cs;
+    CALL dos_set_vector(int, handler_ptr);
+    CALL error_if(handler_ptr <> dos_get_vector(int));
+    CALL dos_std_string_out(@('Testing Interrupt Procedure',CR,LF,24h));
+    int_count = 0;
+    CAUSE$INTERRUPT(int);
+    CALL error_if(int_count <> 1);
+    CALL dos_set_vector(int, old_vector);
+  END;
+  
+  
+  /* Get disk free space test */
+  
+  DO;
+    DECLARE info STRUCTURE (
+      avail_clusters  WORD,
+      total_clusters  WORD,
+      bytes_sector    WORD,
+      sectors_cluster WORD);
+    CALL dos_std_string_out(@('<> Test Get Disk Free Space',CR,LF,24h));
+    CALL dos_std_string_out(@('Testing illegal drive: F',CR,LF,24h));
+    CALL error_if(dos_get_disk_free_space(6, @info) = 0);
+    CALL dos_std_string_out(@('Testing default drive',CR,LF,24h));
+    err = dos_get_disk_free_space(0, @info);
+    CALL error_if(err <> 0);
+    IF err = 0 THEN
+      DO;
+        CALL dos_std_string_out(@('  Available clusters:  ',24h));
+        CALL print_word(info.avail_clusters, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        CALL dos_std_string_out(@('  Total clusters:      ',24h));
+        CALL print_word(info.total_clusters, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        CALL dos_std_string_out(@('  Bytes per sector:    ',24h));
+        CALL print_word(info.bytes_sector, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        CALL dos_std_string_out(@('  Sectors per cluster: ',24h));
+        CALL print_word(info.sectors_cluster, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+      END;
+    CALL dos_std_string_out(@('Testing drive A',CR,LF,24h));
+    err = dos_get_disk_free_space(1, @info);
+    CALL error_if(err <> 0);
+    IF err = 0 THEN
+      DO;
+        CALL dos_std_string_out(@('  Available clusters:  ',24h));
+        CALL print_word(info.avail_clusters, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        CALL dos_std_string_out(@('  Total clusters:      ',24h));
+        CALL print_word(info.total_clusters, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        CALL dos_std_string_out(@('  Bytes per sector:    ',24h));
+        CALL print_word(info.bytes_sector, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+        CALL dos_std_string_out(@('  Sectors per cluster: ',24h));
+        CALL print_word(info.sectors_cluster, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+      END;
+  END;
+
+
+  /* Create/Remove/Change/Get Directory Test */
+  
+  DO;
+    DECLARE buffer (64) BYTE;
+    CALL dos_std_string_out(@('<> Test Directory Management',CR,LF,24h));
+    CALL error_if_not_zero(dos_get_dir(0, @buffer));
+    CALL dos_std_string_out(@('Current directory: ',24h));
+    CALL print_string(@buffer);
+    CALL dos_std_string_out(@CRLF);
+    CALL error_if_not_zero(dos_create_dir(@('@@funny@',0)));
+    CALL error_if_not_zero(dos_change_dir(@('@@funny@',0)));
+    CALL error_if_not_zero(dos_get_dir(0, @buffer));
+    CALL dos_std_string_out(@('Current directory: ',24h));
+    CALL print_string(@buffer);
+    CALL dos_std_string_out(@CRLF);
+    CALL error_if_not_zero(dos_change_dir(@('..',0)));
+    CALL error_if_not_zero(dos_delete_dir(@('@@funny@',0)));
+  END;
+  
+
+  /* File I/O test */
+  
+  DO;
+    DECLARE (f1, f2) WORD;
+    DECLARE k WORD;
+    DECLARE BUF_SIZE  LITERALLY '1024';
+    DECLARE FILE_SIZE LITERALLY '64';
+    DECLARE buf1 (BUF_SIZE) WORD;
+    DECLARE buf2 (BUF_SIZE) WORD;
+    DECLARE n WORD;
+    DECLARE (p1, p2) DWORD;
+    k = 0;
+    DO WHILE k < BUF_SIZE;
+      buf1(k) = k;
+      k = k + 1;
+    END;
+
+    CALL dos_std_string_out(@('<> Test File I/O',CR,LF,24h));
+  
+    CALL dos_std_string_out(@('Creating: FILE0000.TMP',CR,LF,24h));
+    CALL error_if_not_zero(dos_create(@f1, @('FILE0000.TMP',0), 0));
+    CALL dos_std_string_out(@('Writing to file',CR,LF,24h));
+    k = 0;
+    DO WHILE k < FILE_SIZE;
+      buf1(0) = k + BUF_SIZE;
+      err = dos_write(f1, @buf1, SIZE(buf1), @n);
+      CALL error_if(err <> 0 OR n < SIZE(buf1));
+      k = k + 1;
+    END;
+    CALL dos_std_string_out(@('Seeking from end to check file size',CR,LF,24h));
+    err = dos_seek(f1, SEEK_FROM_END, 0, @p1);
+    p2 = FILE_SIZE;
+    p2 = p2 * SIZE(buf1);
+    CALL error_if(err <> 0 OR p1 <> p2);
+    CALL dos_std_string_out(@('Closing file',CR,LF,24h));
+    CALL error_if_not_zero(dos_close(f1));
+    
+    CALL dos_std_string_out(@('Opening:  FILE0000.TMP',CR,LF,24h));
+    CALL error_if_not_zero(dos_open(@f1, @('FILE0000.TMP',0), OPEN_READ_ONLY));
+    CALL dos_std_string_out(@('Reading file',CR,LF,24h));
+    k = 0;
+    DO WHILE k < FILE_SIZE;
+      buf1(0) = k + BUF_SIZE;
+      err = dos_read(f1, @buf2, SIZE(buf2), @n);
+      CALL error_if(   err <> 0
+                    OR n < SIZE(buf2)
+                    OR cmpb(@buf1, @buf2, SIZE(buf1)) <> 0FFFFh);
+      k = k + 1;
+    END;
+
+    CALL dos_std_string_out(@('Seeking absolute',CR,LF,24h));
+    p1 = SIZE(buf1);
+    p1 = p1 * 13;
+    err = dos_seek(f1, SEEK_FROM_BEG, p1, @p2);
+    CALL error_if(err <> 0 OR p1 <> p2);
+    buf1(0) = 13 + BUF_SIZE;
+    err = dos_read(f1, @buf2, SIZE(buf2), @n);
+    CALL error_if(   err <> 0
+                  OR n < SIZE(buf2)
+                  OR cmpb(@buf1, @buf2, SIZE(buf1)) <> 0FFFFh);
+
+    CALL dos_std_string_out(@('Seeking relative',CR,LF,24h));
+    p1 = SIZE(buf1);
+    p1 = p1 * 40;
+    err = dos_seek(f1, SEEK_RELATIVE, p1, @p2);
+    p1 = SIZE(buf1);
+    p1 = p1 * (40 + 14);
+    CALL error_if(err <> 0 OR p1 <> p2);
+    buf1(0) = 54 + BUF_SIZE;
+    err = dos_read(f1, @buf2, SIZE(buf2), @n);
+    CALL error_if(   err <> 0
+                  OR n < SIZE(buf2)
+                  OR cmpb(@buf1, @buf2, SIZE(buf1)) <> 0FFFFh);
+
+    CALL dos_std_string_out(@('Closing file',CR,LF,24h));
+    CALL error_if_not_zero(dos_close(f1));
+
+    CALL dos_std_string_out(
+      @('Renaming FILE0000.TMP to FILE0001.TMP',CR,LF,24h));
+    CALL error_if_not_zero(dos_rename(@('FILE0000.TMP',0), @('FILE0001.TMP',0)));
+
+    CALL dos_std_string_out(@('Deleting: FILE0001.TMP',CR,LF,24h));
+    CALL error_if_not_zero(dos_delete(@('FILE0001.TMP',0)));
+  END;
+    
+
+  /* Get/Set file attribute Test */
+  
+  DO;
+    DECLARE (attr1, attr2) WORD;
+    DECLARE (f1) WORD;
+    
+  /* This test causes problems when accessing files over a network, so it
+     is commented out for now.  The problems occur on OpenNET with DOS 3.10,
+     iNDX 3.0 with OpenNET upgrade, and PC-LINK 1.0.  This comment may be
+     removed when testing this sample program under some other environment.
+     
+    CALL dos_std_string_out(@('<> Test Get/Set file attribute',CR,LF,24h));
+    CALL dos_std_string_out(@('Creating READ_ONLY, HIDDEN file',CR,LF,24h));
+    attr1 = ATTR_READ_ONLY + ATTR_HIDDEN;
+    CALL error_if_not_zero(dos_create(@f1, @('FILE0000.TMP',0), attr1));
+    CALL error_if_not_zero(dos_close(f1));
+    CALL dos_std_string_out(@('Deleting READ_ONLY, HIDDEN file',CR,LF,24h));
+    CALL error_if(dos_delete(@('FILE0000.TMP',0)) = 0);
+    err = dos_get_attribute(@('FILE0000.TMP',0), @attr2);
+    CALL error_if(err <> 0 OR (attr1 <> (attr1 AND attr2)));
+    attr1 = 0;
+    CALL error_if_not_zero(dos_set_attribute(@('FILE0000.TMP',0), attr1));
+    err = dos_get_attribute(@('FILE0000.TMP',0), @attr2);
+    CALL error_if(err <> 0 OR attr1 <> attr2);
+    CALL error_if_not_zero(dos_delete(@('FILE0000.TMP',0)));
+  */
+  END;
+  
+  
+  /* Allocate/Free/Modify Memory Test */
+  
+  DO;
+    DECLARE (s1, s2) SELECTOR;
+    DECLARE (available_size, error) WORD;
+
+    CALL dos_std_string_out(@('<> Test Allocate/Free/Modify Memory',CR,LF,24h));
+
+    CALL error_if((error := dos_allocate(@s1, 0F000h, @available_size)) = 0);
+    IF error = 0 THEN
+      DO;
+        CALL dos_std_string_out(@('Memory error',CR,LF,24h));
+        GOTO exit;
+      END;
+    
+    CALL dos_std_string_out(@('Largest available block: ',24h));
+    CALL print_word(available_size, 5, 10, FALSE);
+    CALL dos_std_string_out(@CRLF);
+    
+    IF available_size < 2000h THEN
+      DO;
+        /* Assume some memory can be freed from this program's block */
+        /* Note that this block of code is designed to handel the case
+           where the EXE file is produced by DOS's LINK program, since
+           it allocates all memory in a single block with the Program
+           Segment Prefix as the selector.  This does not work when
+           the EXE file is produced by the UDI2DOS program.  That is why
+           we first test to see if memory is free or not.  
+         */
+        psps = dos_get_psp;
+        CALL error_if_not_zero(
+          error := dos_set_block(psps, 1000h, @available_size));
+        IF error > 0 THEN
+          DO;
+            CALL dos_std_string_out(
+              @('Insufficient memory to test allocation',CR,LF,24h));
+            GOTO exit;
+          END;
+        
+        CALL error_if(
+          (error := dos_allocate(@s1, 0F000h, @available_size)) = 0);
+        IF error = 0 THEN
+          DO;
+            CALL dos_std_string_out(@('Memory error',CR,LF,24h));
+            GOTO exit;
+          END;
+        CALL dos_std_string_out(
+          @('Largest available block (after freeing): ',24h));
+        CALL print_word(available_size, 5, 10, FALSE);
+        CALL dos_std_string_out(@CRLF);
+      END;
+
+    CALL error_if_not_zero(dos_allocate(@s2, 2000h, @available_size));
+    CALL error_if_not_zero(dos_set_block(s2,  800h, @available_size));
+    CALL error_if_not_zero(dos_set_block(s2, 1000h, @available_size));
+    CALL error_if_not_zero(dos_free(s2));
+
+  exit:
+  END;
+  
+  
+  /* EXEC Test */
+  
+  DO;
+    DECLARE exec_parameter_block STRUCTURE(
+      envs SELECTOR,
+      command DWORD,
+      fcb1 DWORD,
+      fcb2 DWORD);
+    DECLARE dw STRUCTURE(off WORD, seg SELECTOR);
+    DECLARE d DWORD AT(.dw);
+    DECLARE paragraphs_free WORD;
+    DECLARE s SELECTOR;
+    DECLARE exit_code WORD;
+    
+    CALL dos_std_string_out(@('<> Test EXEC',CR,LF,24h));
+    
+    CALL error_if(dos_allocate(@s, 0F000h, @paragraphs_free) = 0);
+    IF paragraphs_free < 1000h /* 64K */ THEN
+      DO;
+        CALL dos_std_string_out(
+          @('Insufficient memory to test EXEC',CR,LF,24h));
+      END;
+    ELSE
+      DO;
+        psps = dos_get_psp;
+        exec_parameter_block.envs = psp.envs;
+        dw.off = 0;
+        dw.seg = 0;
+        exec_parameter_block.fcb1 = d;
+        exec_parameter_block.fcb2 = d;
+        dw.seg = dos_get_ds;
+        dw.off = .(12,'/C CHKDSK A:',13);
+        exec_parameter_block.command = d;
+        
+        CALL error_if_not_zero(dos_exec(EXEC_EXEC, @('C:\COMMAND.COM',0), @exec_parameter_block));
+        CALL dos_std_string_out(@('Exit code returned by EXEC: ',24h));
+        exit_code = dos_wait;
+        CALL print_word(exit_code, 4, 16, TRUE);
+        CALL dos_std_string_out(@CRLF);
+      END;
+  END;
+  
+  
+  /* Search Directory Test */
+  
+  DO;
+    DECLARE dta (128) BYTE;
+    DECLARE file STRUCTURE(
+      reserved (21) BYTE,
+      attr BYTE,
+      time WORD,
+      date WORD,
+      size DWORD,
+      name (13) BYTE) AT (.dta);
+    DECLARE date STRUCTURE(
+        day   BYTE,
+        month BYTE,
+        year  WORD);
+    DECLARE time STRUCTURE(
+      hundredeths BYTE,
+      seconds     BYTE,
+      minutes     BYTE,
+      hours       BYTE);
+    DECLARE ERR_NO_MORE_FILES LITERALLY '18';
+    CALL dos_std_string_out(@('<> Test Directory Search',CR,LF,24h));
+    CALL dos_set_disk_transfer_address(@dta);
+    err = dos_find_first(@any_name, 0);
+    CALL error_if_not_zero(err);
+    DO WHILE err = 0;
+      date.day   =    (file.date AND 0001Fh);
+      date.month = SHR(file.date AND 001E0h, 5);
+      date.year  = SHR(file.date AND 0FE00h, 9) + 1980;
+      CALL print_date(@date);
+      CALL dos_std_string_out(@('  ',24h));
+      time.hundredeths = 0;
+      time.seconds = SHL(file.time AND 0001Fh, 1);
+      time.minutes = SHR(file.time AND 007E0h, 5);
+      time.hours   = SHR(file.time AND 0F800h, 11);
+      CALL print_time(@time, FALSE);
+      CALL dos_std_string_out(@('  ',24h));
+      CALL print_dword(file.size, 10, 10, FALSE);
+      CALL dos_std_string_out(@('  ',24h));
+      CALL print_string(@file.name);
+      CALL dos_std_string_out(@CRLF);
+      err = dos_find_next(@any_name);
+    END;
+    CALL error_if(err <> ERR_NO_MORE_FILES);
+  END;
+  
+  
+  /* Exit */
+  
+  CALL dos_std_string_out(@('<> Normal Exit',CR,LF,24h));
+  CALL dos_exit(error_status);
+  
+END;

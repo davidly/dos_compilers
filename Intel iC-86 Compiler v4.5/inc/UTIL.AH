@@ -1,0 +1,598 @@
+; macros and defines for assembly language code
+; $Version: 1.28 $
+; Copyright 1988,89,90,91 Intel Corporation, ALL RIGHTS RESERVED
+
+
+%'	errno values returned by assembly routines
+
+EACCES	equ	 2
+EBADF	equ	 5
+EDOM	equ	10
+
+
+%'	controls
+
+%'	module name
+
+%*define(module=name)	(%define(module_name)(%name))
+
+
+%'	memory model
+
+%*define(small)		(%set(far_code, 0)%set(far_stack, 0)%set(set_ds, 0)%set(set_sregs, 1))
+%*define(medium)	(%set(far_code, 1)%set(far_stack, 0)%set(set_ds, 0)%set(set_sregs, 1))
+%*define(compact)	(%set(far_code, 0)%set(far_stack, 1)%set(set_ds, 0)%set(set_sregs, 1))
+%*define(large)		(%set(far_code, 1)%set(far_stack, 1)%set(set_ds, 1)%set(set_sregs, 1))
+%*define(flat)		(%set(far_code, 0)%set(far_stack, 0)%set(set_ds, 0)%set(set_sregs, 0))
+
+%'	memory submodel
+
+%*define(ram)		(%set(const_in_code, 0))
+%*define(rom)		(%set(const_in_code, 1))
+
+%'	calling convention
+
+%*define(varparams)	(%set(fpl, 0))
+%*define(fixedparams)	(%set(fpl, 1))
+
+%'	instruction set
+
+%*define(mod86)		(%set(i186_instrs, 0))
+%*define(mod186)	(%set(i186_instrs, 1))
+
+%'	assembler
+
+%*define(asm86)		(%set(i86_asm, 1)%set(i286_asm, 0)%set(i386_asm, 0)%set(i32_asm ,0))
+%*define(asm286)	(%set(i86_asm, 0)%set(i286_asm, 1)%set(i386_asm, 0)%set(i32_asm ,0)%set(i186_instrs, 1))
+%*define(asm386)	(%set(i86_asm, 0)%set(i286_asm, 0)%set(i386_asm ,1)%set(i32_asm ,0)%set(i186_instrs, 1))
+%*define(asm32)		(%set(i86_asm, 0)%set(i286_asm, 0)%set(i386_asm ,1)%set(i32_asm ,1)%set(i186_instrs, 1))
+
+%'	stack size
+
+%*define(stacksize=size) (%set(stack_size, %size))
+
+%'	abbreviations
+
+%*define(cp)	(%compact)
+%*define(fp)	(%fixedparams)
+%*define(fl)	(%flat)
+%*define(la)	(%large)
+%*define(md)	(%medium)
+%*define(sm)	(%small)
+%*define(vp)	(%varparams)
+
+%'	defaults
+
+%module=anonymous
+%small
+%ram
+%fixedparams
+%mod86
+%asm86
+%stacksize=0
+
+%'	parse the controls
+
+%match(control controls)(%controls)
+%while(%len(%control) ne 0)
+(
+	%match(control=argument)(%control)
+	%if(%len(%argument) ne 0)
+	then(
+		%%control=%argument
+	)else(
+		%%control
+	)fi
+	%match(control controls)(%controls)
+)
+
+%'	instruction set implications
+
+%if(%i186_instrs)
+then(
+	%*define(enter)	(enter)
+	%*define(leave)	(leave)
+	%if(%i386_asm)
+	then(
+		%*define(pusha)	(pushad)
+		%*define(popa)	(popad)
+	)else(
+		%*define(pusha)	(pusha)
+		%*define(popa)	(popa)
+	)fi
+)else(
+	%*define(enter locals, level)
+	(
+		push	bp
+		mov	bp, sp
+		%if(%locals ne 0)
+		then(
+			sub	sp, %locals
+		)fi
+	)
+	%*define(leave)
+	(
+		mov	sp, bp
+		pop	bp
+	)
+	%*define(pusha)
+	(
+		push	ax
+		push	cx
+		push	dx
+		push	bx
+		push	bx	; dummy value for sp
+		push	bp
+		push	si
+		push	di
+	)
+	%*define(popa)
+	(
+		pop	di
+		pop	si
+		pop	bp
+		pop	bx	; dummy value for sp
+		pop	bx
+		pop	dx
+		pop	cx
+		pop	ax
+	)
+)fi
+
+%if(%i386_asm)
+then(
+	%define(lodsw)		(lodsd)
+	%define(movsw)		(movsd)
+	%define(movsx)		(movsx)
+	%define(movzx)		(movzx)
+	%define(pushf)		(pushfd)
+)else(
+	%define(lodsw)		(lodsw)
+	%define(movsw)		(movsw)
+	%define(movsx)		(mov)
+	%define(movzx)		(mov)
+	%define(pushf)		(pushf)
+)fi
+
+%'	16-bit vs. 32-bit register
+%'	( note that reg_size uses the assembler definition of word and dword)
+
+%if(%i386_asm)
+then(
+	%define(ax)		(eax)
+	%define(bx)		(ebx)
+	%define(cx)		(ecx)
+	%define(dx)		(edx)
+	%define(bp)		(ebp)
+	%define(sp)		(esp)
+	%define(si)		(esi)
+	%define(di)		(edi)
+	%define(reg_size)	(dword ptr)
+)else(
+	%define(ax)		(ax)
+	%define(bx)		(bx)
+	%define(cx)		(cx)
+	%define(dx)		(dx)
+	%define(bp)		(bp)
+	%define(sp)		(sp)
+	%define(si)		(si)
+	%define(di)		(di)
+	%define(reg_size)	(word ptr)
+)fi
+
+%'	declaration conveniences (as defined by the assembler, not the compiler)
+
+	%set(byte,   1)
+	%set(word,   2)
+	%set(dword,  4)
+	%set(qword,  8)
+	%set(tbyte, 10)
+%if(%i386_asm)
+then(
+	%set(pword,  8)
+	%set(int_size, 4)
+	%define(int)	(dword)
+	%define(dint)	(dd)
+	%define(far_ptr) (pword)
+)else(
+%'	%set(pword,  4)
+	%set(int_size, 2)
+	%define(int)	(word)
+	%define(dint)	(dw)
+	%define(far_ptr) (dword)
+)fi
+
+%'	memory model implications
+
+%'	medium/large vs. small/compact
+%'	%code    is the name of the code segment for this module
+%'	%fnc     is the type of a global function
+%'	%fnc_ptr is the size of a function pointer
+
+%if(%far_code)
+then(
+	%define(code)		(%module_name%(_)code)
+	%define(fnc)		(far)
+	%if(%i386_asm)
+	then(
+		%define(fnc_ptr)	(pword)
+		%define(min_prmoff)	(12)
+	)else(
+		%define(fnc_ptr)	(dword)
+		%define(min_prmoff)	(6)
+	)fi
+	%*define(extern_fnc(name))
+	(
+		extrn	%name:far
+	)
+	%if(%i386_asm)
+	then(
+		%define(cgroup)		(code32)
+	)else(
+		%define(cgroup)		(%code)
+	)fi
+)else(
+	%if(%i386_asm)
+	then(
+		%define(code)		(code32)
+	)else(
+		%define(code)		(code)
+	)fi
+	%if(%i86_asm)
+	then (
+		%define(cgroup)		(cgroup)
+	)fi
+	%if(%i286_asm)
+	then(
+		%define(cgroup)		(code)
+	)fi
+	%if(%i386_asm)
+	then(
+		%define(cgroup)		(code32)
+	)fi
+	%define(fnc)		(near)
+	%if(%i386_asm)
+	then(
+		%define(fnc_ptr)	(dword)
+		%define(min_prmoff)	(8)
+	)else(
+		%define(fnc_ptr)	(word)
+		%define(min_prmoff)	(4)
+	)fi
+	%*define(extern_fnc(name))
+	(
+		%code	segment
+			extrn	%name:near
+		%code	ends
+	)
+)fi
+	%define(tos)		(%module_name%(_)tos)
+
+
+%'	large vs. small/medium/compact
+%'	%data is the name of the segment to contain any static variable data
+%'	%data_used is set if the data segment is referenced
+
+%if(%set_ds)
+then(
+	%*define(data)	(%set(data_used, 1) %module_name%(_)data)
+	%define(dgroup)	(%data)
+	%*define(extern(type, name))
+	(
+		extrn	%name:%type
+	)
+)else(
+	%*define(data)	(%set(data_used, 1) data)
+	%if(%i286_asm or %i386_asm)
+	then(
+		%define(dgroup)	(data)
+	)else(
+		%define(dgroup)	(dgroup)
+	)fi
+	%*define(extern(type, name))
+	(
+		%data	segment
+			extrn	%name:%type
+		%data	ends
+	)
+)fi
+
+%'	ram vs. rom
+%'	%far_data is true iff data pointers have selectors
+%'	%const is the name of the segment to contain the constant data
+
+%if(%const_in_code)
+then(
+	%set(far_data, 1)
+	%define(const)		(%code)
+	%if(%far_code)
+	then(
+		%*define(extern_const(type, name))
+		(
+			extrn	%name:%type
+		)
+	)else(
+		%*define(extern_const(type, name))
+		(
+			%code	segment
+				extrn	%name:%type
+			%code	ends
+		)
+	)fi
+)else(
+	%set(far_data, %far_stack)
+	%if(%i286_asm or %i386_asm or %set_ds)
+	then(
+		%define(const)	(%data)
+	)else(
+		%define(const)	(const)
+	)fi
+	%if(%set_ds)
+	then(
+		%*define(extern_const(type, name))
+		(
+			extrn	%name:%type
+		)
+	)else(
+		%*define(extern_const(type, name))
+		(
+			%const	segment
+				extrn	%name:%type
+			%const	ends
+		)
+	)fi
+)fi
+
+%'	small/medium vs. compact/large
+%'	%stack is the name of the stack segment
+
+%if(not %far_stack)
+then(
+	%if(%i286_asm or %i386_asm)
+	then(
+		%define(stack)	(data)
+		%define(sgroup)	(data)
+	)else(
+		%define(stack)	(stack)
+		%define(sgroup)	(dgroup)
+	)fi
+)else(
+	%define(stack)		(stack)
+	%define(sgroup)		(stack)
+)fi
+
+%'	compact/large/rom vs. small/medium ram
+%'	%ptr is the type of a data pointer
+%'	%data_ptr is the size of a data pointer
+
+%if(%far_data)
+then(
+	%*define(mov|lsr)		(%lsr)
+	%*define(if_sel(stuff))		(%stuff)
+	%*define(if_nsel(stuff))	()
+	%if(%i386_asm)
+	then(
+		%define(ptr)		(pword)
+		%define(data_ptr)	(8)
+	)else(
+		%define(ptr)		(dword)
+		%define(data_ptr)	(4)
+	)fi
+)else(
+	%*define(mov|lsr)		(mov)
+	%*define(if_sel(stuff))		()
+	%*define(if_nsel(stuff))	(%stuff)
+	%if(%i386_asm)
+	then(
+		%define(ptr)		(dword)
+		%define(data_ptr)	(4)
+	)else(
+		%define(ptr)		(word)
+		%define(data_ptr)	(2)
+	)fi
+)fi
+
+%'	calling convention implications
+
+%if(%fpl)
+then(
+	%*define(ret)	(ret %prmlen)
+	%if(%i386_asm)
+	then(
+		%define(retsel)	(edx)
+		%define(retoff)	(eax)
+	)else(
+		%define(retsel)	(es)
+		%define(retoff)	(bx)
+	)fi
+
+	%*define(param(type, name))
+	(
+		%if (%%type eq %byte) then (	%'make sure it is word aligned
+			%set(prmlen, %prmlen + %word)
+		) else (
+			%set(prmlen, %prmlen + %%type)
+		) fi
+		%define(%name)(%type ptr [%bp + %(%prmoff + %prmlen) - %prmlen])
+	)
+	%*define(param_flt(type, name))	()	%'in FPL, the double parameters
+						%'are on the NDP stack
+)else(
+	%*define(ret)	(ret)
+	%if(%i386_asm)
+	then(
+		%define(retsel)	(edx)
+		%define(retoff)	(eax)
+	)else(
+		%define(retsel)	(dx)
+		%define(retoff)	(ax)
+	)fi
+
+	%*define(param(type, name))
+	(
+		%define(%name)	(%type ptr [%bp + %(%prmoff) + %prmlen])
+		%if (%%type eq %byte) then (	%'make sure it is word aligned
+			%set(prmlen, %prmlen + %word)
+		) else (
+			%set(prmlen, %prmlen + %%type)
+		) fi
+	)
+	%*define(param_flt(type, name))		%'in VPL, the double parameters
+	(					%'are on the CPU stack
+		%define(%name)	(%type ptr [%bp + %(%prmoff) + %prmlen])
+		%set(prmlen, %prmlen + %%type)
+	)
+)fi
+
+%'	function bracketing
+
+%*define(function(name))
+(
+	%set(prmoff, %min_prmoff)
+	%set(prmlen, 0)
+	%set(autolen, 0)
+	%code	segment
+	%name	proc	%fnc
+		public	%name
+)
+
+%*define(endf(name))
+(
+	%name	endp
+	%code	ends
+)
+
+%'	function parameters and locals
+
+%*define(auto(type, name))
+(
+	%set(autolen, %autolen + %%type)
+	%define(%name)	(%type ptr [%bp - %autolen])
+)
+
+%'	function prolog and epilog
+
+%*define(prolog(registers))
+(
+	%set(push_bx, 0)
+	%set(push_si, 0)
+	%set(push_di, 0)
+	%set(push_es, 0)
+	%set(push_ds, %set_ds and %data_used)
+	%match(register regs)(%registers)
+	%while(%len(%register) ne 0)
+	(
+		%set(push_%register, 1)
+		%match(register regs)(%regs)
+	)
+	%set(push_bx, %push_bx and not %fpl)
+	%set(push_si, %push_si and not %fpl)
+	%set(push_di, %push_di and not %fpl)
+	%if(%push_bx)
+	then(
+		%set(prmoff, %prmoff + %int_size)
+		push	%bx
+	)fi
+	%if(%push_si)
+	then(
+		%set(prmoff, %prmoff + %int_size)
+		push	%si
+	)fi
+	%if(%push_di)
+	then(
+		%set(prmoff, %prmoff + %int_size)
+		push	%di
+	)fi
+	%if(%push_es and %i386_asm and %set_sregs)
+	then(
+		%set(prmoff, %prmoff + %int_size)
+		push	es
+	)fi
+	%if(%push_ds and %set_sregs)
+	then(
+		%set(prmoff, %prmoff + %int_size)
+		push	ds
+		%if(%set_ds and %data_used)
+		then(
+			mov	cx, %data
+			mov	ds, cx
+		)fi
+	)fi
+	%enter	%autolen, 0
+)
+
+%*define(epilog)
+(
+	%leave
+	%if(%push_ds and %set_sregs)
+	then(
+		pop	ds
+	)fi
+	%if(%push_es and %i386_asm and %set_sregs)
+	then(
+		pop	es
+	)fi
+	%if(%push_di)
+	then(
+		pop	%di
+	)fi
+	%if(%push_si)
+	then(
+		pop	%si
+	)fi
+	%if(%push_bx)
+	then(
+		pop	%bx
+	)fi
+)
+
+%'	segment definitions
+
+	name	%module_name
+
+%if(%i286_asm or %i386_asm)
+then(
+	%code	segment	er public
+	%code	ends
+	%data	segment	rw public
+	%data	ends
+	%stack	stackseg	%stack_size
+		assume	ds:%data
+		assume	es:nothing
+		assume	ss:%stack
+)else(
+	%code	segment	para public 'code'
+	%code	ends
+	%data	segment	para public 'data'
+	%data	ends
+	memory	segment para memory 'memory'
+	memory	ends
+	%stack	segment	para stack 'stack'
+		%if(%stack_size ne 0)
+		then(
+			db	%stack_size dup (?)
+		)fi
+		%tos	label word
+	%stack	ends
+	%if(not %const_in_code and not %set_ds)
+	then(
+		%const	segment	para public 'const'
+		%const	ends
+	)fi
+	%if(not %far_code)
+	then(
+		%cgroup	group	%code
+	)fi
+	%if(not %set_ds)
+	then(
+		%dgroup	group	%data	%'
+	%if(not %const_in_code)	then(, %const)fi %'
+	%if(not %far_stack)	then(, %stack, memory)fi
+	)fi
+		assume	cs:%cgroup
+		assume	ds:%dgroup
+		assume	es:nothing
+		assume	ss:%if(not %far_stack) then(%dgroup) else(%stack) fi
+)fi
+
+%set(data_used, 0)

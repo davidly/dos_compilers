@@ -1,0 +1,3 @@
+PATH=G:\INTEL\IC86;
+rem -- :INCLUDE: is  used  to  locate iC-86  header files
+SET :INCLUDE:=G:\INTEL\IC86\INC
