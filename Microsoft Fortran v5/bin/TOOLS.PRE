@@ -1,0 +1,79 @@
+;
+; Predefined and Example Microsoft Editor Macros
+;
+; Revision History:
+;
+;   26-Aug-1988 ln  Created
+;   05-Oct-1988 bw  Added clear
+;   18-Oct-1988 ln  Added prevmessage
+;   23-Nov-1988 bw  Added setmsg and make
+;   03-Jan-1989 ln  Added spell
+;
+; argcompile
+; shorthand for arg followed by compile, used to start backround compiles.
+;
+argcompile:=arg compile
+argcompile:f5
+;
+; assignments
+; Displays the current assignments pseudo-file. (Formerly called "help")
+;
+assignments:=arg "?" assign < <
+assignments:f10
+;
+; clear
+; Deletes selected text without copying it to the clipboard
+;
+clear:= meta delete
+clear:del
+;
+; hsplit
+; Splits the current window horizontally at the current cursor location
+;
+hsplit:= arg window
+hsplit:ctrl+H
+;
+; prevmsg
+; Used to view the previous error message in the results of a compile.
+;
+prevmsg:=arg "-1" nextmsg
+prevmsg:SHIFT+F4
+;
+; rawoutput
+; switches the current window to the compile log to view the raw compile
+; output
+;
+rawoutput:=arg "<compile>" setfile
+rawoutput:alt+F3
+;
+; setmsg
+; Used to set the current message
+;
+setmsg:=arg arg nextmsg
+setmsg:SHIFT+F5
+;
+; spell
+; Invoke the Microsoft Word 4.0 spelling checker on the current file. (Only
+; available for DOS).
+;
+spell:=arg "spell-am " curfile shell
+spell:ctrl+f7
+;
+; undotoggle
+; toggling undo. Repeately executing this macro undoes and redoes the most
+; recent editting change.
+;
+undotoggle:=meta undo +> undo
+undotoggle:ctrl+bksp
+;
+; vsplit
+; Splits the current window vertically at the current cursor location
+;
+vsplit:=arg arg window
+vsplit:ctrl+U
+;
+; make
+; Invokes Make command
+;
+make:= arg " " compile
+make:ctrl+f4

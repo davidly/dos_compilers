@@ -1,0 +1,82 @@
+FORTRAN COMPILER OPTIONS
+-METACOMMAND-
+/4cc<string> conditional compilation
+/4I{2|4} default integer size
+/4{Y|N}6 fortran 66
+/4{Y|N}a make variables AUTOMATIC 
+/4{Y|N}b debug
+/4{Y|N}d declare
+/4{Y|N}f free-form format
+/4{Y|N}i conformed to IBM extensions
+/4{Y|N}s strict syntax
+/4{Y|N}t truncate variable names
+/4{Y|N}v conformed to VAX extensions
+-SOURCE LISTINGS-
+/Slnumber listing page width
+/Sttitle Title
+/Spnumber listing page size
+/Sssub-title Sub_title
+-MEMORY MODEL-
+/AM medium model
+/AL large model
+/AH huge model
+-OPTIMIZATION-
+/O enable optimization (same as /Ot)
+/Od disable optimizations
+/Ol enable loop optimizations
+/Op enable precision optimizations
+/Os optimize for space
+/Ot optimize for speed
+/Ox max. optimization (/Olt /Gs)
+-CODE GENERATION-
+/G0 8086 instructions
+/G1  186 instructions
+/G2  286 instructions
+/Ge enable stack checking
+/Gi incremental linking
+/Gs disable stack checking
+/Gt[number] data size threshold
+-OUTPUT FILES-
+/Fa[assembly listing file]
+/Fb[bound executable file]
+/Fc[mixed object/source listing file]
+/Fe<executable file>
+/Fl[object listing file]
+/Fm[map file]
+/Fo<object file>
+/Fs[source listing file]
+-LANGUAGE-
+/Zd line number information
+/Zi symbolic debugging information
+/Zl remove default library info
+/Zp[n] pack struct on n-byte boundary
+/Zs syntax check only
+-FLOATING POINT-
+/FPa calls with altmath
+/FPc calls with emulator
+/FPc87 calls with 8087 library
+/FPi inline with emulator
+/FPi87 inline with 8087
+-MISCELLANEOUS-
+/c compile only, no link
+/D<name>[=text] define macro
+/H<number> external name length
+/I<name> add "include file" path
+/MD support DLL
+/MT support multi-threads
+/ND<name> set data segment's name
+/NT<name> set text segment's name
+/Tf<file> compile file without .for
+/V<string> set version string
+/W<number> warning level
+/X ignore "include file" paths
+-MASM SUPPORT-
+/MAswitch set MASM switch
+/Ta<file> assemble file without .asm
+/Fx[cross reference file]
+-LINKING-
+/F<hex_number> stack size (hex. bytes)
+/Lc link compatibility mode executable
+/Lr link compatibility mode executable
+/Lp link protect mode executable
+/link [linker_options_and_libraries]
