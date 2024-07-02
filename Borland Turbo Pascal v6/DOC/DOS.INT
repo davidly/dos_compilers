@@ -1,0 +1,152 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 6.0                        }
+{       DOS Interface Unit                              }
+{                                                       }
+{       Copyright (C) 1987, 1990 Borland International  }
+{                                                       }
+{*******************************************************}
+
+unit Dos;
+
+{$D-,I-,S-}
+
+interface
+
+const
+
+{ Flags bit masks }
+
+  FCarry     = $0001;
+  FParity    = $0004;
+  FAuxiliary = $0010;
+  FZero      = $0040;
+  FSign      = $0080;
+  FOverflow  = $0800;
+
+{ File mode magic numbers }
+
+  fmClosed = $D7B0;
+  fmInput  = $D7B1;
+  fmOutput = $D7B2;
+  fmInOut  = $D7B3;
+
+{ File attribute constants }
+
+  ReadOnly  = $01;
+  Hidden    = $02;
+  SysFile   = $04;
+  VolumeID  = $08;
+  Directory = $10;
+  Archive   = $20;
+  AnyFile   = $3F;
+
+type
+
+{ String types }
+
+  ComStr  = string[127];        { Command line string }
+  PathStr = string[79];         { Full file path string }
+  DirStr  = string[67];         { Drive and directory string }
+  NameStr = string[8];          { File name string }
+  ExtStr  = string[4];          { File extension string }
+
+{ Registers record used by Intr and MsDos }
+
+  Registers = record
+                case Integer of
+                  0: (AX,BX,CX,DX,BP,SI,DI,DS,ES,Flags: Word);
+                  1: (AL,AH,BL,BH,CL,CH,DL,DH: Byte);
+              end;
+
+{ Typed-file and untyped-file record }
+
+  FileRec = record
+              Handle: Word;
+              Mode: Word;
+              RecSize: Word;
+              Private: array[1..26] of Byte;
+              UserData: array[1..16] of Byte;
+              Name: array[0..79] of Char;
+            end;
+
+{ Textfile record }
+
+  TextBuf = array[0..127] of Char;
+  TextRec = record
+              Handle: Word;
+              Mode: Word;
+              BufSize: Word;
+              Private: Word;
+              BufPos: Word;
+              BufEnd: Word;
+              BufPtr: ^TextBuf;
+              OpenFunc: Pointer;
+              InOutFunc: Pointer;
+              FlushFunc: Pointer;
+              CloseFunc: Pointer;
+              UserData: array[1..16] of Byte;
+              Name: array[0..79] of Char;
+              Buffer: TextBuf;
+            end;
+
+{ Search record used by FindFirst and FindNext }
+
+  SearchRec = record
+                Fill: array[1..21] of Byte;
+                Attr: Byte;
+                Time: Longint;
+                Size: Longint;
+                Name: string[12];
+              end;
+
+{ Date and time record used by PackTime and UnpackTime }
+
+  DateTime = record
+               Year,Month,Day,Hour,Min,Sec: Word;
+             end;
+
+var
+
+{ Error status variable }
+
+  DosError: Integer;
+
+
+function DosVersion: Word;
+procedure Intr(IntNo: Byte; var Regs: Registers);
+procedure MsDos(var Regs: Registers);
+procedure GetDate(var Year,Month,Day,DayOfWeek: Word);
+procedure SetDate(Year,Month,Day: Word);
+procedure GetTime(var Hour,Minute,Second,Sec100: Word);
+procedure SetTime(Hour,Minute,Second,Sec100: Word);
+procedure GetCBreak(var Break: Boolean);
+procedure SetCBreak(Break: Boolean);
+procedure GetVerify(var Verify: Boolean);
+procedure SetVerify(Verify: Boolean);
+function DiskFree(Drive: Byte): Longint;
+function DiskSize(Drive: Byte): Longint;
+procedure GetFAttr(var F; var Attr: Word);
+procedure SetFAttr(var F; Attr: Word);
+procedure GetFTime(var F; var Time: Longint);
+procedure SetFTime(var F; Time: Longint);
+procedure FindFirst(Path: PathStr; Attr: Word; var F: SearchRec);
+procedure FindNext(var F: SearchRec);
+procedure UnpackTime(P: Longint; var T: DateTime);
+procedure PackTime(var T: DateTime; var P: Longint);
+procedure GetIntVec(IntNo: Byte; var Vector: Pointer);
+procedure SetIntVec(IntNo: Byte; Vector: Pointer);
+procedure SwapVectors;
+procedure Keep(ExitCode: Word);
+procedure Exec(Path: PathStr; ComLine: ComStr);
+function DosExitCode: Word;
+function FSearch(Path: PathStr; DirList: String): PathStr;
+function FExpand(Path: PathStr): PathStr;
+procedure FSplit(Path: PathStr; var Dir: DirStr;
+  var Name: NameStr; var Ext: ExtStr);
+function EnvCount: Integer;
+function EnvStr(Index: Integer): String;
+function GetEnv(EnvVar: String): String;
+
+

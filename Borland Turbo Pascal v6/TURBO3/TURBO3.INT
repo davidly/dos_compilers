@@ -1,0 +1,33 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 6.0                        }
+{       3.0 Compatibility Unit                          }
+{                                                       }
+{       Copyright (C) 1987, 1990 Borland International  }
+{                                                       }
+{*******************************************************}
+
+unit Turbo3;
+
+{$D-,I-,S-}
+
+interface
+
+uses Crt;
+
+var
+  Kbd: Text;
+  CBreak: Boolean absolute CheckBreak;
+
+procedure AssignKbd(var F: Text);
+function MemAvail: Integer;
+function MaxAvail: Integer;
+function LongFileSize(var F): Real;
+function LongFilePos(var F): Real;
+procedure LongSeek(var F; Pos: Real);
+procedure NormVideo;
+procedure HighVideo;
+procedure LowVideo;
+function IOresult: Integer;
+

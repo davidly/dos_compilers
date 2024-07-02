@@ -1,0 +1,341 @@
+                        Turbo Pascal 6.0
+                        ----------------
+
+This file contains answers to commonly asked questions. See the README
+file for suggestions on where to get more help. If you're programming
+with Turbo Vision, make sure you look at TVISION.DOC for additional
+information.
+
+
+Floppy use
+----------
+Turbo Pascal 6.0 requires a dual-floppy system (a hard disk is
+recommended). If you're using 720 kbyte floppies (or more), you can
+put TURBO.EXE and TURBO.TPL on the same disk. If you're using 360
+kbyte floppies, you'll need to put TURBO.EXE on Drive B: and TURBO.TPL
+on your boot disk. Boot and then type B:TURBO. You can store your
+source files on the same disk with TURBO.TPL. You can use TPUMOVER to
+make TURBO.TPL smaller by removing units you don't use.
+
+If you use the INSTALL program, make sure your floppies are completely
+empty (no system files or COMMAND.COM) before installing. After
+running INSTALL, you can copy TURBO.TPL onto a boot disk.
+
+Turbo Pascal's online help system (TURBO.HLP) requires about 700
+kbytes of disk storage and cannot be used on a system equipped
+only with 360 kbyte floppy drives.
+
+Once you have used INSTALL to build your working diskettes, you
+can manually UNZIP other Turbo Pascal components (e.g. BGI, Turbo
+Vision or the demo programs) onto other floppy diskettes.
+
+
+FreePtr and FreeMin
+-------------------
+These Turbo Pascal 5.x identifiers are no longer needed by the new
+heap manager. Simply delete references to FreeMin from your code. If
+you're using routines that use FreePtr to compress the heap or perform
+other implementation-dependent operations on the heap, you'll need to
+update these routines for use with the new heap manager. (If you just
+need to lower the top of memory in order to do an Exec, you can call
+the SetMemTop procedure from the Turbo Vision Memory unit.) See
+Chapter 16 in the Programmer's Guide for more information about how
+the new heap manager works.
+
+
+HeapError
+---------
+If you are using a HeapError function, make sure it returns
+as quickly as possible when passed a Size value of 0:
+
+  function HeapError(Size: Word): Integer; far;
+  begin
+    if Size > 0 then
+    begin
+      { ... perform HeapError processing here ... }
+    end;
+  end;
+
+In version 6.0, HeapError is called with a value of 0 whenever an
+allocation moves the HeapPtr upwards.
+
+
+Mouse Support
+-------------
+Turbo Pascal's IDE and Turbo Vision require a mouse driver compatible
+with Microsoft driver 6.x or later.
+
+
+286 Code Generation Notes
+-------------------------
+Programs compiled with {$G+} do not check the processor at runtime to
+determine whether it is 286-compatible. Trying to execute 80286
+instructions on an 8086 or an 8088 will lock up the computer.
+Refer to TEST286.PAS in \TP\DEMOS for an example of how to check
+for the presence of a 286-compatible chip at runtime.
+
+
+$X+ Is Global
+-------------
+The {$X+} compiler directive is global, so it must appear in the
+source code before any declarations or program statements. A $X
+directive elsewhere will cause an "Invalid Compiler Directive" error.
+
+
+Non-static Constuctor Calls
+---------------------------
+When making inherited constructor calls from inside a method, always
+use the TypeName.ConstructorName syntax. This allows the compiler to
+statically call the inherited constructor and will not change the
+"identity" of the calling object:
+
+  Correct:
+    ...
+    TObject.Init;         { always specify type name }
+    ...
+
+  WRONG:
+    ...
+    Init;                 { may change calling object's "identity" }
+    ...
+
+
+DOS Critical Error Handling
+---------------------------
+The IDE and Turbo Vision both provide critical error handling. Due to
+problems with some versions of DOS, however, you may need to press ESC
+several types to successfully cancel an operation after a critical
+error has occurred (e.g. DRIVE NOT READY).
+
+
+Iterator Methods
+----------------
+The ForEach, FirstThat and LastThat all take a local (nested), far
+procedure or function as a parameter. Refer to Chapter 7 in the Turbo
+Vision Guide for details.
+
+Note: never use ForEach to delete items from a collection. The act of
+deleting an item moves subsequent items forward and will result in
+items being skipped.
+
+
+Editor Swap File
+----------------
+The IDE creates a swap file for its virtual editor with the naming
+convention of TPxxxx.$$$. Never delete this file while the IDE is
+running (e.g. while in a DOS shell). However, if you reboot your
+system while the IDE is running, it is safe to delete the swap file
+before re-loading the IDE.
+
+Note that the swap file grows but never shrinks while the IDE is
+running. If you're editing a large file on a drive without much disk
+space available, place the swap file on another drive (ideally a RAM
+disk; use the /S command-line option at startup). If there is no other
+drive available, and you've done an unusual amount of editing of large
+files, you can exit and re-load the IDE and thus reduce the swap file
+down to a normal size.
+
+
+Inline Assembler Notes
+----------------------
+ The built-in assembler works differently than Turbo Assembler in the
+ following case. In TASM, there is no distinction between an array of
+ some types and a single variable of this type:
+
+    MyVar       DW      ?
+    MyArray     DW      10 DUP(?)
+                .
+                .
+                MOV     AX,MyVar
+                MOV     AX,MyArray[BX]
+
+  Using TASM on the above example, the type of both "MyVar" and
+  "MyArray" is WORD, and either can be loaded into a word-sized
+  register without a type cast.
+
+  This is not the case with Turbo Pascal's built-in assembler. In
+  Pascal, an array is not the same as a single variable, and a type
+  cast is required when accessing an element of an array, as
+  illustrated below:
+
+    var
+      MyVar: Word;
+      MyArray: array[0..9] of Word;
+      .
+      .
+    asm
+      MOV     AX,MyVar
+      MOV     AX,MyArray[BX].Word
+      MOV     AX,WORD PTR MyArray[BX]
+    end;
+
+
+Turbo Pascal 6.0 and the Toolboxes
+----------------------------------
+With the exception of the Turbo Editor Toolbox, the 4.0 toolboxes
+will compile with Turbo Pascal 6.0. The Turbo Editor Toolbox
+needs the minor source code changes described below in order to
+work with the new heap manager:
+
+  MicroStar
+  ---------
+    In MSVARS.PAS:
+      1) On line 219 after "var"
+            Add  "FreePtr: Pointer;"
+      2) On line 295 after "begin"
+            Add  "FreePtr := Ptr(Seg(HeapEnd^) - $1000, 0);"
+    In INVOKE.PAS:
+      1) On line 18 after "Dos"
+            Add   ", MsVars"
+
+  FirstEd
+  -------
+    In EDVARS.PAS:
+      1) On line 139
+            Add "FreePtr: Pointer;"
+         On line 207
+            Add "FreePtr := Ptr(Seg(HeapEnd^) - $1000, 0);"
+
+In addition, an updated version of BINED.OBJ is required for use
+with version 6.0 and is available on CompuServe.
+
+
+************************************************
+Tech Support's Ten Most Commonly Asked Questions
+************************************************
+
+  1. How do you read and write a file inside a Turbo Pascal
+     program?
+
+     Here's a program that creates a text file and then reads it
+     back:
+
+       program FileDemo;
+       var
+         FileVar: Text;
+         InString, OutString: String;
+       begin
+         OutString := 'Write this to a text file';
+         Assign(FileVar, 'TEST.TXT');
+         Rewrite(FileVar);           { Creates new text file }
+         Writeln(FileVar, OutString);
+         Close(FileVar);
+         Assign(FileVar, 'TEST.TXT');
+         Reset(FileVar);             { Opens existing text file }
+         Readln(FileVar, InString);
+         Close(FileVar);
+       end.
+
+  2. What is the GRAPH.TPU file?
+
+     GRAPH.TPU is the BGI unit found in BGI.ZIP on your distribution
+     diskettes. The INSTALL program puts it in \TP\BGI by default.
+
+  3. How do you send a program's output to the printer?
+
+       program Print;
+       uses Printer;
+       begin
+         Writeln(Lst, 'Hello Printer');
+       end.
+
+  4. Why am I getting a "Unit file format error" when I compile my
+     program with the new Turbo Pascal compiler?
+
+     You are using a unit that has been compiled with an earlier
+     version of Turbo Pascal. Re-build all your programs with Turbo
+     Pascal 6.0 using the command-line compiler's /B switch or using
+     the IDE's Compile|Build command.
+
+     Contact third-party vendors for updated TPU's if you don't
+     have the source code.
+
+  5. How do you calculate X to the power of Y?
+
+       function Power(X, Y: Real): Real;
+       begin
+         Power := Exp(Y * Ln(X));
+       end.
+
+  6. How come my program runs fine in the IDE and locks when run
+     from the DOS prompt?
+
+     This usually happens when you have uninitialized variables (for
+     another possible reason, refer to the next question).
+
+  7. I think my program is trashing memory. Which statements are the
+     likely culprits?
+
+     Here are some of the most common causes for out-of-bounds memory
+     writes:
+
+     Problem                        Suggestion
+     -------                        ----------
+     Array index out of range       Turn on range checking {$R+}.
+
+     Uninitialized variable         Initialize it, of course.
+
+     Pointers out of bounds         Make sure you're not using
+                                    unallocated pointers or pointers
+                                    to blocks that have been
+                                    disposed.
+
+     Move, FillChar, BlockRead      These routines all write to
+                                    memory without regard for
+                                    Pascal's normal size- and
+                                    type-checking. Make sure you're
+                                    specifying the correct amount of
+                                    data to be moved, filled or
+                                    read.
+
+     Indexing beyond the size       If you're using relaxed var string
+     of a string                    checking {$V-}, make sure you're
+                                    not writing past the end of a
+                                    string (and onto neighboring
+                                    data).
+
+  8. Why doesn't the Exec procedure run the program I specify?
+
+     Make sure you define a maximum heap size using a $M compiler
+     directive at the beginning of your program. Refer to EXECDEMO.PAS
+     in \TP\DEMOS.
+
+     In addition to omitting a $M compiler directive, two other common
+     are common errors can be diagnosed easily by looking at the
+     value of DosError after a call to Exec:
+
+     DosError     Explanation
+     --------     -----------
+        2         File not found. Specify the full path and program
+                  name. If you're trying to execute an internal DOS
+                  command (like DIR), you need to Exec COMMAND.COM
+                  (see the Exec example in online help and the Library
+                  Reference).
+
+        8         Not enough memory available to Exec the specified
+                  program. Lower the amount of heap your program is
+                  using (see \TP\DEMOS\EXECDEMO.PAS).
+
+
+  9. What do I do if Turbo Pascal gives an "out of memory" error?
+
+     If you're running out of memory using the IDE, you have many
+     configuration options available. Refer to P-146 in the User's
+     Guide for a comprehensive checklist.
+
+     If you're using the command-line compiler and running out of
+     memory during a compilation, first try the appropriate
+     suggestions on P-146 in the User's Guide. If you're still running
+     out of memory during compilation, you should probably TPCX.EXE,
+     the extended memory compiler available with Turbo Pascal 6.0
+     Professional.
+
+ 10. How come I don't get the results that I expect when I
+     compare and print real numbers?
+
+     Floating point, or real numbers, are an approximation and small
+     rounding errors will occur during calculations and
+     transformations between numeric types. For a complete discussion
+     of this topic, refer to the section on comparing reals in Chapter
+     14 in the Programmer's Guide.
+

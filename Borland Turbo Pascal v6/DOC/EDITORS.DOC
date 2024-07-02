@@ -1,0 +1,774 @@
+                             EDITORS
+                             -------
+
+TEditor implements a small, fast 64K editor for use in Turbo
+Vision applications. It features mouse support, undo, clipboard
+cut, copy and paste, autoindent and overwrite modes, WordStar
+key bindings, and search and replace. This editor can be used not
+only for editing files, but as a multi-line memo field in dialogs
+or forms.
+
+The use of TEditor is demonstrated in TVEDIT.PAS for editing
+files and TVFORM.PAS as a memo field. Both of these file can be
+found in the \T6\TVDEMOS directory.
+
+
+
+                         Object summary
+                         --------------
+
+TEditor
+-------
+TEditor is the base object for all editors. It implements most of
+the editor's functionality. If a TEditor object is created, it
+will allocate its buffer out of the heap with the given size. The
+buffer will initially be empty.
+
+TMemo
+-----
+TMemo is a descendant of TEditor that is intended to go into a
+dialog or form. It supports GetData and SetData and allows the Tab
+key to be processed by TDialog. It also has a different palette
+than TEditor. GetData/SetData expect a record like the following,
+
+  TMemoRec = record
+    TextLen: Word;
+    TextData: array[1..MaxMemoLen] of Char;
+   end;
+
+where MaxMemoLen is the BufSize value passed to TMemo. TMemo
+allocates its buffer from the heap.
+
+TFileEditor
+-----------
+TFileEditor edits the contents of a file, which it stores in memory
+allocated from the Buffers unit. This allows several editors to share
+the same memory pool. Instead of allocating 64k for each editor, you
+can allocate, say, 128k for all your editors. If the first editor only
+takes up 16k, it will leave 112k for other editors. The editor takes
+only the memory it needs at the time out of the pool. An editor will
+grow by 4k at a time whenever the "gap" shrinks to 0, and will shrink
+by 4k at a time if the gap grows larger than 4K. See below for a
+description of the "gap." See BUFFERS.DOC for further information on
+dynamic buffers.
+
+TEditWindow
+-----------
+TEditWindow is a window designed to hold a TFileEditor or the
+clipboard. It will change its title to display the file name
+being edited and will initialize scroll bars and an indicator for
+the editor. If the name passed to TEditWindow is blank, it
+assumes that you are initializing the clipboard.
+
+TIndicator
+----------
+TIndicator is the line and column counter in the lower left
+corner of the edit window. It is initialized by TEditWindow and
+passed as the fourth parameter to a TEditor.
+
+
+                          Key Bindings
+                          ------------
+
+Keys are bound to many of the the familiar WordStar key bindings
+used in the IDE. The only exceptions are the block commands. Since
+TEditor does not use persistent blocks, the block commands are
+simulated by copying the information to and from the clipboard.
+For example, ^K^B will begin selecting text. ^K^K will copy the
+text to the clipboard. ^K^C will paste the contents from the
+clipboard to the editor. This simulates, quite closely, the
+keystrokes to do the same thing using WordStar bindings.
+
+The selection can be started by holding down the shift key with
+any of the cursor movement commands instead of using the ^K
+bindings.
+
+These key bindings can be changed by overriding the ConvertEvent
+method which translates the given key event to a command event.
+
+
+                            Internals
+                            ---------
+
+Buffer structure
+----------------
+TEditor implements a "buffer gap" editor. It stores the text in
+two pieces. Any text before the cursor is stored at the beginning
+of the buffer, and text after the cursor is stored at the end
+of the buffer. The space between the text is called the "gap."
+When a character is inserted into the editor it is inserted into
+the gap. The editor supports undo by recording deleted text in the
+gap and maintaining the the number of characters inserted and
+deleted. When asked to perform an undo, the characters that were
+inserted are deleted, the deleted characters are copied to the
+beginning of the gap, and the cursor is positioned after the
+formerly-deleted text.
+
+To illustrate how the buffer operates, consider the following
+diagram of an editor buffer after the characters
+"abcdefghijkxxxopqrstuvwxyz" are inserted,
+
+                                      CurPtr
+                                      |
+                                      v<-- GapLen -->
+           ===========================................
+           |abcdefghijkxxxopqrstuvwxyz               |
+           ===========================................
+            <-------- BufLen -------->
+            <---------------- BufSize -------------->
+
+                   Buffer after text inserted
+
+CurPtr records the position of the cursor, GapLen is the length
+of the gap, and BufLen is the total number of characters in the
+buffer. BufSize is the size of the buffer which is always the sum
+of GapLen and BufLen. If the cursor is then moved to just after
+the "xxx" characters, the buffer would look like,
+
+                          CurPtr
+                          |
+                          v<-- GapLen -->
+           ===============...............=============
+           |abcdefghijkxxx               opqrstuvwxyz|
+           ===============...............=============
+  BufLen =  <------------>      +       <----------->
+            <--------------- BufSize --------------->
+
+                  Buffer after cursor movement
+
+Note that the gap is kept in front of the cursor. This allow for
+quick insertion of characters without moving any text. If "xxx"
+is deleted using the backspace key the characters are copied to
+the bottom of the gap and the cursor is moved backwards. The
+DelCount field records the number of characters deleted.
+
+                       CurPtr
+                       |
+                       v<--- GapLen ---->
+           ============..................=============
+           |abcdefghijk               xxxopqrstuvwxyz|
+           ============..................=============
+                                      <-> DelCount
+  BufLen =  <------------>      +       <----------->
+            <--------------- BufSize --------------->
+
+                  Buffer after "xxx" is deleted
+
+When characters are inserted, the insertion count, InsCount, is
+incremented to record how to many characters to delete with an
+undo. If "lmn" are now typed, the buffer would look like this:
+
+                          CurPtr
+                          |
+                          v<-- GapLen -->
+           ===============...............=============
+           |abcdefghijklmn            xxxopqrstuvwxyz|
+           ===============...............=============
+                       <-> InsCount   <-> DelCount
+  BufLen =  <------------>      +       <----------->
+            <--------------- BufSize --------------->
+
+                 Buffer after "lmn" is inserted
+
+InsCount records the number of characters inserted. If an undo is
+now requested "lmn" are deleted and "xxx" are copied on top of them,
+restoring the buffer to what it was before the edits.
+
+                          CurPtr
+                          |
+                          v<-- GapLen -->
+           ===============...............=============
+           |abcdefghijkxxx               opqrstuvwxyz|
+           ===============...............=============
+  BufLen =  <------------>      +       <----------->
+            <--------------- BufSize --------------->
+
+                        Buffer after undo
+
+
+If the cursor is moved before the undo is performed, all undo
+information is lost because the gap moves. Undo will only undo
+operations done between cursor movements. As soon as the cursor
+moves, the edits performed are considered "accepted."  Note also
+that undo takes space inside the buffer which could prevent the
+user from inserting text. The space can be recovered by moving
+the cursor.
+
+Selection or block
+------------------
+The Selection or block mark is always either before or after the
+cursor. If text is inserted into the editor, either through a key
+press, or through InsertText, the contents of the selection are
+replaced by the inserted text. If there is no selection, the text
+is just inserted. The selection is marked by the fields SelStart
+and SelEnd. The selection can be set by the call SetSelection,
+which will also move the cursor.
+
+Options
+-------
+TEditor provides several options, the state of which are stored in
+Boolean fields. CanUndo indicates whether the editor records undo
+information. Since undo takes space temporarily from inserts, you
+might find it advantageous to disable undo. This is done
+automatically for the clipboard. Overwrite indicates whether the
+editor is in overwrite or insert mode. AutoIndent records whether
+the editor will, when the Enter key is pressed, indent the cursor
+to the column of the first non-space character of the previous
+line. This is convenient if the editor is used to edit source
+code.
+
+
+                             Objects
+                             -------
+
+TEditor
+-----------------------------------------------------------------
+
+Fields
+------
+HScrollBar: PScrollBar;
+
+  Pointer to the horizontal scroll bar, nil if the scroll bar
+  does not exist.
+
+VScrollBar: PScrollBar;
+
+  Pointer to the vertical scroll bar, nil if the scroll bar does
+  not exist.
+
+Indicator: PIndicator;
+
+  Pointer to the indicator, nil if the indicator does not exist.
+
+Buffer: PEditBuffer;
+
+  Pointer to the buffer used to hold the text.
+
+BufSize: Word;
+
+  Size of Buffer.
+
+BufLen: Word;
+
+  The amount of text currently in buffer.
+
+GapLen: Word;
+
+  The size of the "gap" between the text before the cursor and
+  the text after the cursor. See above description of the "gap."
+
+SelStart: Word;
+
+  Starting offset of the selection.
+
+SelEnd: Word;
+
+  Ending offset of the selection.
+
+CurPtr: Word;
+
+  Offset of the cursor.
+
+CurPos: TPoint;
+
+  Line/Column location of the cursor in the file.
+
+Delta: TPoint;
+
+  The top line and left most column shown in the view.
+
+Limit: TPoint;
+
+  The maximum number of columns to display, and the number of lines
+  in the file. Records the limits of the scroll bars.
+
+DelCount: Word;
+
+  Number of characters in the end of the gap that were deleted
+  from the text. Used to implement undo.
+
+InsCount: Word;
+
+  Number of characters inserted into the text since the last
+  cursor movement. Used to implement undo.
+
+IsValid: Boolean;
+
+  True if the view is valid. Used by the Valid method.
+
+CanUndo: Boolean;
+
+  True if the editor is to support undo.
+
+Modified: Boolean;
+
+  True if the buffer has been modified.
+
+Selecting: Boolean;
+
+  True if the editor is in selecting mode (i.e., ^K^B has been
+  pressed).
+
+Overwrite: Boolean;
+
+  True if in overwrite mode, otherwise the editor is in insert
+  mode.
+
+AutoIndent: Boolean;
+
+  True if the editor is in autoindent mode.
+
+
+Methods
+-------
+constructor Init(var Bounds: TRect; AHScrollBar, AVScrollBar: PScrollBar;
+  AIndicator: PIndicator; ABufSize: Word);
+
+  Creates a TEditor object with the given scroll bars and indicator,
+  and with a buffer of size ABufSize. Options are set to
+  sfSelectable and the EventMask additionally allows handling of
+  broadcast events. Any of AHScrollBar, AVScrollBar or
+  AIndicator can be nil if you do not want to use them.
+
+constructor Load(var S: TStream);
+
+  Creates and initializes a TEditor object off the given stream.
+  It does not load the previous contents of the buffer, but
+  instead initializes the buffer to empty.
+
+function BufChar(P: Word): Char;
+
+  Returns the P'th character in the file, factoring in the gap.
+
+function BufPtr(P: Word): Word;
+
+  Returns the offset into Buffer of the P'th character in the
+  file, factoring in the gap.
+
+procedure ChangeBounds(var Bounds: TRect); virtual;
+
+  Overridden to ensure the file stays within view if the parent
+  size changes.
+
+procedure ConvertEvent(var Event: TEvent); virtual;
+
+  Converts key events into command events. Used to implement the
+  WordStar key-bindings. Override if you wish to change or
+  extend the default key-bindings.
+
+function CursorVisible: Boolean;
+
+  Returns true if the cursor (or insertion point) is visible
+  within the view.
+
+procedure DeleteSelect;
+
+  Deletes selection if one exists.
+
+procedure DoneBuffer; virtual;
+
+  Called whenever the buffer should be disposed. By default it
+  calls FreeMem with Buffer and BufSize. It should be overridden
+  if you wish not to use the heap to store the buffer. This is
+  done in TFileEditor.
+
+procedure Draw; virtual;
+
+  Overridden to draw the editor. This should not be overridden
+  by descendants of TEditor.
+
+function GetPalette: PPalette; virtual;
+
+  Returns the Editor palette, CEditor. Override if you wish to
+  change the palette of the editor.
+
+procedure HandleEvent(var Event: TEvent); virtual;
+
+  Provides the event handling for the editor. Override if you
+  wish to extend the commands the editor handles.
+
+procedure InitBuffer; virtual;
+
+  Called whenever the buffer should be allocated. By default, an
+  editor will call GetMem with Buffer and BufSize. You should
+  override this method if you do not want the editor to allocate
+  the buffer from the heap.
+
+function InsertBuffer(var P: PEditBuffer; Offset, Length: Word;
+  AllowUndo, SelectText: Boolean): Boolean;
+
+  This is the lowest-level text insertion method. It will
+  insert Length bytes of text from the given pointer to text into
+  the buffer from the given offset into the buffer, P. It will
+  optionally record undo information and select the text
+  inserted. This method need never be called directly, since it
+  is called from InsertFrom and InsertText. This method should
+  be used if the buffer to be copied from could move (e.g., P was
+  allocated using the Buffers unit).
+
+function InsertFrom(Editor: PEditor): Boolean; virtual;
+
+  Insert the selection from the given editor into this editor.
+  This method is used to implement Cut, Copy, and Paste. It need
+  never be overridden by the user.
+
+function InsertText(Text: Pointer; Length: Word;
+  SelectText: Boolean): Boolean;
+
+  Insert the given text of length Length into the buffer,
+  optionally selecting the text. This is an easier-to-use
+  version of InsertBuffer.
+
+procedure ScrollTo(X, Y: Integer);
+
+  Move column X and line Y to the upper-left corner of the editor.
+
+function Search(FindStr: String; Opts: Word): Boolean;
+
+  Search for the given string in the editor with the given
+  options. The options words are,
+
+    efCaseSensitive      Case sensitive search
+    efWholeWordsOnly     Find whole words only
+
+
+function SetBufSize(NewSize: Word): Boolean; virtual;
+
+  Called whenever the buffer can be grown or shrunk to the given
+  value. It should return true if the the buffer can be of the
+  given size. By default, it returns true if NewSize is less than
+  or equal to the new size.
+
+procedure SetCmdState(Command: Word; Enable: Boolean);
+
+  Disables or enables the given command. The command is always
+  disabled if the editor is not the selected view. Used as a
+  convenient way to enable and disable command instead of using
+  EnableCommands and DisableCommands.
+
+procedure SetSelect(NewStart, NewEnd: Word; CurStart: Boolean);
+
+  Set the selection to the given offsets into the file. This
+  method will either place the cursor in front of behind the
+  selection pending on the value of CurStart.
+
+procedure SetState(AState: Word; Enable: Boolean); virtual;
+
+  SetState is overridden to hide and show scroll bars and the
+  indicator and to enable and disable commands. If you wish to
+  enable and disable additional commands, override UpdateCommands
+  instead. This is called whenever the command states should be
+  updated.
+
+procedure Store(var S: TStream);
+
+  Stores the editor on the given stream.
+
+procedure TrackCursor(Center: Boolean);
+
+  Forces the cursor to be visible. If Center is True, the
+  cursor is forced to be in the center of the screen in the Y
+  access. The X, or column, is not changed.
+
+procedure Undo;
+
+  Undo the changes since the last cursor movement.
+
+procedure UpdateCommands; virtual;
+
+  Called whenever the commands should be updated. This is used
+  to enable and disable commands such as cmUndo, cmClip, cmCopy,
+  etc.
+
+function Valid(Command: Word): Boolean; virtual;
+
+  Returns whether the view is valid given Command. By default it
+  returns the value of IsValid which is True if Buffer is non-nil.
+
+
+TMemo
+-----------------------------------------------------------------
+
+Methods
+-------
+constructor Load(var S: TStream);
+
+  Creates and initializes a TMemo object off the given stream.
+
+function DataSize: Word; virtual;
+
+  Returns the size of the data written by GetData and read by
+  SetData. By default it return SizeOf(Word) + BufSize.
+
+procedure GetData(var Rec); virtual;
+
+  Writes the contents of the buffer into the given Rec.
+
+function GetPalette: PPalette; virtual;
+
+  Returns a palette, CMemo, suitable for TMemo's use in a
+  TDialog.
+
+procedure HandleEvent(var Event: TEvent); virtual;
+
+  Prevents TMemo from handling kbTab, otherwise handles events the
+  same as a TEditor.
+
+procedure SetData(var Rec); virtual;
+
+  Read the contents of the buffer from the given Rec.
+
+procedure Store(var S: TStream);
+
+  Store the TMemo to the given stream.
+
+
+TFileEditor
+-----------------------------------------------------------------
+
+Fields
+------
+
+FileName: FNameStr;
+
+  Name of the file being edited.
+
+
+Methods
+-------
+constructor Init(var Bounds: TRect;
+  AHScrollBar, AVScrollBar: PScrollBar;
+  AIndicator: PIndicator; AFileName: FNameStr);
+
+  Creates a TFileEditor object with the given scroll bars and
+  indicator and loads the contents of the given file. If the
+  file is not found or invalid an error message will be displayed
+  and the object's Valid method will return false. Options are
+  set to sfSelectable and the EventMask additionally allows
+  handling of broadcast events. Any of AHScrollBar, AVScrollBar
+  or AIndicator can be nil if you do not want them.
+
+constructor Load(var S: TStream);
+
+  Creates and initializes a TFileEditor object off the given
+  stream. The file is reloaded into the editor and the cursor is
+  positioned back to the location it was when the Store was
+  performed. It is ideal for use with a "Desktop save" option.
+
+procedure DoneBuffer; virtual;
+
+  Disposes of the buffer allocated from the Buffers unit.
+
+procedure HandleEvent(var Event: TEvent); virtual;
+
+  Overridden to implement the cmSave and cmSaveAs commands.
+
+procedure InitBuffer; virtual;
+
+  Allocates memory from the Buffers unit to use for the editor
+  buffer.
+
+function LoadFile: Boolean;
+
+  Read the file from disk and check for errors. Sets IsValid to
+  False if the file was not loaded into the buffer.
+
+function Save: Boolean;
+
+  Saves the file to disk. Returns false if the save failed or
+  was canceled. If EditorFlags has the efBackupFiles bit set, a
+  .BAK file is created. Will call SaveAs if the editor is
+  "Untitled."
+
+function SaveAs: Boolean;
+
+  Saves the editor with a different name. The name is derived
+  from a dialog brought up using the EditorDialogs function
+  pointer. Returns True if the editor was saved, False otherwise
+  (i.e., the operation was canceled).
+
+function SaveFile: Boolean;
+
+  Saves the file to disk. Returns False if the save failed. If
+  EditorFlags has the efBackupFiles bit set, a .BAK file is
+  created.
+
+function SetBufSize(NewSize: Word): Boolean; virtual;
+
+  Overridden to grow and shrink the buffer with calls to the
+  Buffers unit. Will grow and shrink the buffer in 4k
+  increments.
+
+procedure Store(var S: TStream);
+
+  Store the TFileEditor object on the given stream. The file
+  name, not the file contents, are stored on the stream.
+
+procedure UpdateCommands; virtual;
+
+  Overridden to enable and disable the cmSave and cmSaveAs
+  commands. They are only valid if the selected view is an
+  editor, otherwise they should be disabled.
+
+function Valid(Command: Word): Boolean; virtual;
+
+  Overridden to make sure the file is saved before the program
+  exits. Returns False if the user cancels the save.
+
+
+TEditWindow
+-----------------------------------------------------------------
+
+Fields
+------
+
+Editor: PFileEditor;
+
+  Pointer to the editor object in the edit window.
+
+constructor Init(var Bounds: TRect; FileName: FNameStr;
+  ANumber: Integer);
+
+  Creates a TEditWindow object that will edit the given file
+  name with window number ANumber. This method initializes a
+  TFileEditor with scroll bars and an indicator. If the file
+  name is a null string, it is assumed to be an untitled file. If
+  Editor is equal to the Clipboard variable, the editor is assumed
+  to be the clipboard.
+
+constructor Load(var S: TStream);
+
+  Creates and initializes a TEditWindow off the given stream.
+
+procedure Close; virtual;
+
+  Overridden to hide, instead of close, the window if the editor
+  is a clipboard.
+
+function GetTitle(MaxSize: Integer): TTitleStr; virtual;
+
+  Returns the name of the file being edited by the editor or
+  'Clipboard' if the editor is the clipboard.
+
+procedure HandleEvent(var Event: TEvent); virtual;
+
+  Handles cmUpdateTitle to redraw the frame of the window. Used
+  in SaveAs to change the title of the window if the file being
+  edited changes names.
+
+procedure Store(var S: TStream);
+
+  Saves the TEditWindow object to the given stream.
+
+
+TIndicator
+-----------------------------------------------------------------
+
+Fields
+------
+
+Location: TPoint;
+
+  Stores the location to display. Updated by a TEditor.
+
+Modified: Boolean;
+
+  True if the associated TEditor has been modified. Displays a
+  special character if true.
+
+Methods
+-------
+
+constructor Init(var Bounds: TRect);
+
+  Creates a TIndicator object.
+
+procedure Draw; virtual;
+
+  Draws the indicator.
+
+function GetPalette: PPalette; virtual;
+
+  Return the a pointer to CIndicator, the TIndicator default
+  palette.
+
+procedure SetState(AState: Word; Enable: Boolean); virtual;
+
+  Draws the indicator in the frame dragging color if dragging.
+
+procedure SetValue(ALocation: TPoint; AModified: Boolean);
+
+  Method called by TEditor to update the values to the fields of
+  a TIndicator.
+
+
+
+
+                             Globals
+                             -------
+
+Variables
+---------
+WordChars: set of Char;
+
+  Set of characters that define a word. Used when handling the
+  cmWordLeft and cmWordRight commands. The default value is
+  ['0'..'9', 'A'..'Z', '_', 'a'..'z'].
+
+EditorDialog: TEditorDialog;
+
+  EditorDialog is a procedure variable that is used by TEditor
+  objects to display various dialogs. Since dialogs are very
+  application-dependent, EDITORS cannot display its own dialogs.
+  Instead it calls this function variable instead. For an
+  example of an EditorDialog function, see TVEDIT.PAS. The various
+  dialog values are
+
+    edOutOfMemory
+    edReadError
+    edWriteError
+    edCreateError
+    edSaveModify
+    edSaveUntitled
+    edSaveAs
+    edFind
+    edSearchFailed
+    edReplace
+    edReplacePrompt
+
+
+EditorFlags: Word;
+
+  EditorFlags contains various flags for use in the editor. The
+  value of which are
+
+    efCaseSensitive         Default to case sensitive search
+    efWholeWordsOnly        Default to whole words only search
+    efPromptOnReplace       Prompt on replace
+    efReplaceAll            Replace all occurrences.
+    efDoReplace             Do replace.
+    efBackupFiles           Create .BAK files on saves.
+
+  The default value is efBackupFiles + efPromptOnReplace.
+
+FindStr: String[80];
+
+  Stores the last value used for a find.
+
+ReplaceStr: String[80];
+
+  Stores the last value of a replace.
+
+Clipboard: PEditor = nil;
+
+  Pointer to the clipboard. Any TEditor can be the clipboard, it
+  just needs be assigned to this variable. The clipboard should
+  not support undo (i.e., its CanUndo should be false).
+
+Procedures
+----------
+
+procedure RegisterEditors;
+
+  Register all object types in EDITORS.
+

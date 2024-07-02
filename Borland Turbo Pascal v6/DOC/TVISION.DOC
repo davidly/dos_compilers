@@ -1,0 +1,694 @@
+
+======================================================================
+                Additional Turbo Vision Documentation
+======================================================================
+
+
+----------------------------------------------------------------------
+                          Table of Contents
+----------------------------------------------------------------------
+A. Additional reference material
+
+   1. Enhancements to OBJECTS.PAS
+      a. New TCollection.AtFree method
+      b. Duplicate keys in sorted collections
+      c. Changes to TEmsStream.Init to support EMS 3.2
+
+   2. Enhancements to DRIVERS.PAS
+      a.  MouseReverse variable
+
+   3. Enhancements to VIEWS.PAS
+      a.  ErrorAttr variable
+      b.  TWindow.Close method
+      c.  cmListItemSelected constant
+      d.  TListViewer.SelectItem method
+
+   4. Enhancements to DIALOGS.PAS
+      a.  bfBroadcast constant
+      b.  TButton.Press method
+
+   5. Enhancements to MEMORY.PAS
+      a.  bfBroadcast constant
+      b.  TButton.Press method
+
+   6. Stream RegisterXXXX procedures and ID codes
+
+B. Additional explanatory material
+   1. Overlaying Turbo Vision applications
+   2. Ordering of inherited calls
+
+----------------------------------------------------------------------
+
+   This appendix contains additional explanatory and reference
+   material about Turbo Vision.
+
+1. Enhancements to OBJECTS.PAS
+------------------------------
+
+  TCollection.AtFree method
+  -------------------------
+
+    procedure TCollection.AtFree(Index: Integer);
+
+  Deletes and disposes of the item at the given Index. Equivalent to
+
+    Item := At(Index);
+    AtDelete(Index);
+    FreeItem(Item);
+
+  Duplicate keys in sorted collections
+  ------------------------------------
+
+  TSortedCollection implements sorted collections both with or without
+  duplicate keys. The TSortedCollection.Duplicates field controls
+  whether duplicates are allowed or not. It defaults to False,
+  indicating that duplicate keys are not allowed, but after creating a
+  TSortedCollection you can set Duplicates to True to allow elements
+  with duplicate keys in the collection.
+
+  When Duplicates is True, the Search method returns the index of the
+  first item in the collection that has the given key, and the Insert
+  method inserts an item before other items (if any) with the same
+  key. The IndexOf method uses Search to locate the first item with
+  the key given by the Item parameter, and then performs a linear
+  search to find the exact Item.
+
+  TSortedCollection overrides the Load and Store methods inherited
+  from TCollection to also load and store the value of the Duplicates
+  field.
+
+
+  TEmsStream.Init method
+  ----------------------
+
+    constructor TEmsStream.Init(MinSize, MaxSize: Longint);
+
+  EMS drivers earlier than version 4.0 don't support resizeable
+  expanded memory blocks. With a pre-4.0 driver, an EMS stream cannot
+  be expanded beyond its initial size once it has been allocated. To
+  properly support both older and newer EMS drivers, a TEmsStream's
+  Init constructor takes two parameters which specify the minimum and
+  maximum size of the initial EMS memory block allocation. Init will
+  always allocate at least MinSize bytes.
+
+  If the EMS driver version number is greater than or equal to 4.0,
+  Init allocates only MinSize bytes of EMS, and then expands the block
+  as required by subsequent calls to TEmsStream.Write. MaxSize is
+  ignored.
+
+  If the driver version number is less than 4.0, Init allocates as
+  much expanded memory as is available up to MaxSize bytes, and an
+  error will occur if subsequent calls to TEmsStream.Write attempt to
+  expand the stream beyond the allocated size.
+
+
+2. Enhancements to DRIVERS.PAS
+------------------------------
+
+  MouseReverse variable in Drivers
+  -----------------------------------
+
+    const MouseReverse: Boolean = False;
+
+  Setting MouseReverse to True causes Turbo Vision's event manager to
+  reverse the mbLeftButton and mbRightButton flags in the Buttons
+  field of TEvent records.
+
+
+3. Enhancements to VIEWS.PAS
+----------------------------
+
+  ErrorAttr variable
+  ------------------
+
+    const ErrorAttr: Byte = $CF;
+
+  Contains a video attribute byte used as the error return value of a
+  call to TView.GetColor. If TView.GetColor fails to correctly map a
+  palette index into a video attribute byte (because of an
+  out-of-range index), it returns the value given by ErrorAttr. The
+  default ErrorAttr value represents blinking high-intensity white
+  characters on a red background. If you see this color combination on
+  the screen, it is most likely an indication of a palette mapping
+  error.
+
+  TWindow.Close method
+  --------------------
+
+  Calls the TWindow's Valid method with a Command value of cmClose,
+  and then, if Valid returns True, closes the window by calling its
+  Done method.
+
+  cmListItemSelected constant
+  ---------------------------
+
+  A TListViewer uses the Message function to send an evBroadcast event
+  with a Command value of cmListItemSelected to its TView.Owner
+  whenever an item in the list viewer is selected (by double-clicking
+  on it, or by moving the selection bar to the item and pressing the
+  spacebar). The InfoPtr of the event points to the TListViewer
+  itself.
+
+
+  TListViewer.SelectItem method
+  -----------------------------
+
+  The default SelectItem method sends a cmListItemSelected broadcast
+  to its Owner as follows:
+
+    Message(Owner, evBroadcast, cmListItemSelected, @Self);
+
+
+4. Enhancements to DIALOGS.PAS
+------------------------------
+
+  bfBroadcast constant in Dialogs
+  -------------------------------
+
+    const bfBroadcast = $04;
+
+  This flag is used in constructing the AFlags bit mask passed to
+  TButton.Init. It controls whether TButton objects should generate
+  events using the PutEvent method or the Message function. If
+  bfBroadcast is clear, a TButton uses PutEvent to geneate an
+  evCommand event whenever it is pressed:
+
+    E.What := evCommand;
+    E.Command := Command;
+    E.InfoPtr := @Self;
+    PutEvent(E);
+
+  If bfBroadcast is set, a TButton uses Message to send an evBroadcast
+  message to its Owner whenever it is pressed:
+
+    Message(Owner, evBroadcast, Command, @Self);
+
+
+  TButton.Press method
+  --------------------
+
+    procedure TButton.Press; virtual;
+
+  This method is called to generate the effect associated with
+  "pressing" a TButton object. The default method sends an evBroadcast
+  event with a command value of cmRecordHistory to the button's owner
+  (causing all THistory objects to record the contents of the
+  TInputLine objects they control), and then uses PutEvent or Message
+  to generate an event (see description of bfBroadcast flag). You can
+  override TButton.Press to change the behaviour of a button when it
+  is pressed.
+
+5. Enhancements to MEMORY.PAS
+-----------------------------
+
+  New SetMemTop procedure
+  -----------------------
+
+    procedure SetMemTop(MemTop: Pointer);
+
+  Sets the top of the application's memory block. The initial memory
+  top corresponds to the value stored in the HeapEnd variable.
+  SetMemTop is typically used to shrink the application's memory block
+  before executing a DOS shell or another program, and to expand the
+  memory block afterwards. For an example of how to use SetMemTop, See
+  TVDEMO.PAS in the \TP\TVDEMOS directory.
+
+
+6. RegisterXXXX procedures and ID codes
+---------------------------------------
+
+  To allow easy interface with streams, the App, ColorSel, Dialogs,
+  Editors, Menus, Objects, StdDlg, and Views units each define a
+  procedure which registers all object types in the unit using a
+  sequence of calls to RegisterType. These registration procedures all
+  have names of the form RegisterXXXX where XXXX is the name of the
+  containing unit. The types and object ID values registered by the
+  RegisterXXXX procedures are show below.
+
+    RegisterApp
+      TBackground         30
+      TDeskTop            31
+
+    RegisterColorSel
+      TColorSelector      21
+      TMonoSelector       22
+      TColorDisplay       23
+      TColorGroupList     24
+      TColorItemList      25
+      TColorDialog        26
+
+    RegisterDialogs
+      TDialog             10
+      TInputLine          11
+      TButton             12
+      TCluster            13
+      TRadioButtons       14
+      TCheckBoxes         15
+      TListBox            16
+      TStaticText         17
+      TLabel              18
+      THistory            19
+      TParamText          20
+
+    RegisterEditors
+      TEditor             70
+      TMemo               71
+      TFileEditor         72
+      TIndicator          73
+      TFileWindow         74
+
+    RegisterMenus
+      TMenuBar            40
+      TMenuBox            41
+      TStatusLine         42
+
+    RegisterObjects
+      TCollection         50
+      TStringCollection   51
+
+    RegisterStdDlg
+      TFileInputLine      60
+      TFileCollection     61
+      TFileList           62
+      TFileInfoPane       63
+      TFileDialog         64
+      TDirCollection      65
+      TDirListBox         66
+      TChDirDialog        67
+
+    RegisterViews
+      TView                1
+      TFrame               2
+      TScrollBar           3
+      TScroller            4
+      TListViewer          5
+      TGroup               6
+      TWindow              7
+
+  If your application uses stream I/O, you should call the appropriate
+  RegisterXXXX procedures in the application's Init method, and in
+  addition use RegisterType to register your own types:
+
+    type
+      TMyApp = object(TApplication)
+        constructor Init;
+        ...
+      end;
+
+    constructor TMyApp.Init;
+    begin
+      RegisterApp;
+      RegisterDialogs;
+      RegisterMenus;
+      RegisterObjects;
+      RegisterViews;
+      RegisterType(RStringList);
+      RegisterType(RMyFirstType);
+      RegisterType(RMySecondType);
+      TApplication.Init;
+      ...
+    end;
+
+  Notice the explicit call to RegisterType(RStringList) to register
+  the TStringList type. The RegisterObjects procedures does not
+  register the TStringList and TStrListMaker types, since they have
+  the same object type ID (52). Depending on whether your application
+  is using or generating string lists, you must manually register
+  TStringList or TStrListMaker.
+
+  See TVRDEMO.PAS and TVFORMS.PAS in the \TP\TVDEMOS directory for
+  examples of applications that perform stream registration.
+
+
+----------------------------------------------------------------------
+B. Additional explanatory material
+   1. Overlaying Turbo Vision applications
+   2. Ordering of inherited calls
+----------------------------------------------------------------------
+
+1. Overlaying Turbo Vision applications
+---------------------------------------
+
+  Turbo Vision was designed to work efficiently in an overlaid
+  application. All Turbo Vision units can be overlaid, except for the
+  Drivers unit, which contains interrupt handlers and other low-level
+  system interfaces.
+
+  When designing an overlaid Turbo Vision application, carefully
+  consider which objects constitute the various "working sets" of your
+  application. At any given moment, the user will be interacting with
+  a group of objects. Therefore, the code for all of these objects
+  need to fit in the overlay pool at the same time to avoid excessive
+  disk access. Since Turbo Pascal's overlay manager swaps in entire
+  units at a time, do not place unrelated objects in the same overlaid
+  unit. If you do, when you use only one of the objects, the code for
+  all the others will also be swapped into the overlay pool and will
+  take up valuable space. Remember--when a unit is brought into the
+  overlay pool, another unit may very well be squeezed out.
+
+  Consider an example in which you're designing a special dialog that
+  contains some customized controls. Your dialog is derived from
+  TDialog and your custom controls are derived from TListViewer and
+  TInputLine. Placing all three derived object types in the same unit
+  makes sense because they're part of the same working set. However,
+  placing other unrelated objects in that unit would require a larger
+  overlay pool to hold your working set and therefore may cause disk
+  thrashing when you run the program.
+
+  Within a Turbo Vision application, the App, Memory, Menus Objects,
+  and Views units total about 50 kbytes of code and will almost always
+  be part of the current working set. In addition, units containing
+  your derived application object and any windows or dialogs with
+  which the user is currently interacting will also be part of the
+  working set, bringing the typical minimum overlay pool size to about
+  64K bytes.
+
+  Through experimentation, you can determine the ideal size of the
+  overlay pool. In general, the presence of EMS makes code swapping
+  much faster and allows you to reduce the size of overlay pool by 25%
+  to 35%. Determining the best size of the pool depends on many
+  factors, however and generally involves a tradeoff of speed vs.
+  capacity. The best approach allows for runtime flexibility with some
+  reasonable, established limits. If possible, we recommend that you
+  support a command-line parameter or a configuration file to control
+  the size of the overlay pool at startup (like the /X command-line
+  option for TURBO.EXE).
+
+  The following skeleton program presents a typical overlaid Turbo
+  Vision application:
+
+    program MyProg;
+
+    {$F+,O+,S-}
+    {$M 8192,65536,655360}
+
+    uses Overlay, Drivers, Memory, Objects, Views, Menus, Dialogs,
+      HistList, StdDlg, App;
+
+    {$O App      }
+    {$O Dialogs  }
+    {$O HistList }
+    {$O Memory   }
+    {$O Menus    }
+    {$O Objects  }
+    {$O StdDlg   }
+    {$O Views    }
+
+    const
+      ExeFileName = 'MYPROG.EXE';     { EXE name for DOS 2.x }
+      OvrBufDisk  = 96 * 1024;        { Overlay pool size without EMS }
+      OvrBufEMS   = 72 * 1024;        { Overlay pool size with EMS }
+
+    type
+      TMyApp = object(TApplication)
+        constructor Init;
+        destructor Done; virtual;
+        .
+        .
+      end;
+
+    procedure InitOverlays;
+    var
+      FileName: string[79];
+    begin
+      FileName := ParamStr(0);
+      if FileName = '' then FileName := ExeFileName;
+      OvrInit(FileName);
+      if OvrResult <> 0 then
+      begin
+        PrintStr('Fatal error: Cannot open overlay file.');
+        Halt(1);
+      end;
+      OvrInitEMS;
+      if OvrResult = 0 then OvrSetBuf(OvrBufEMS) else
+      begin
+        OvrSetBuf(OvrBufDisk);
+        OvrSetRetry(OvrBufDisk div 2);
+      end;
+    end;
+
+    constructor TMyApp.Init;
+    begin
+      InitOverlays;
+      TApplication.Init;
+      .
+      .
+    end;
+
+    destructor TMyApp.Done;
+    begin
+      .
+      .
+      TApplication.Done;
+    end;
+
+    var
+      MyApp: TMyApp;
+
+    begin
+      MyApp.Init;
+      MyApp.Run;
+      MyApp.Done;
+    end.
+
+  Notice how the overlay manager is initialized before calling the
+  inherited TApplication.Init--this is a requirement since the App
+  unit, which contains TApplication, is overlaid. Also notice the use
+  of ParamStr(0) to get the name of the .EXE file; that only works
+  with DOS version 3.0 or later. In order to support earlier DOS
+  versions, a test for a null string combined with the ability to
+  supply an .EXE file name is required. Finally, notice that
+  OvrSetRetry isn't called if EMS is present, since it generally only
+  improves performance when the overlay file is on disk.
+
+  The above example assumes that you've used the recommended practice
+  of appending the overlay file to the end of .EXE file. This is
+  easily done using the DOS COPY command:
+
+    REN MYPROG.EXE TEMP.EXE
+    COPY/B TEMP.EXE+MYPROG.OVR MYPROG.EXE
+
+  See TVRDEMO.PAS in the \TP\TVDEMOS directory for an example of an
+  overlaid Turbo Vision application. And always remember to place a
+  {$F+,O+} directive at the beginning of all overlaid units.
+
+  For further information on Turbo Pascal's overlay manager, please
+  refer to Chapter 13 in the Programmer's Guide.
+
+
+2. Ordering of inherited calls
+------------------------------
+
+  Turbo Vision is designed so that you can extend it to suit your
+  application's specific needs by deriving new descendants from
+  existing Turbo Vision objects. Sometimes, your new object will want
+  to completely replace the inherited behavior for a given method. For
+  example, when TInputLine is derived from TView, TInputLine.Draw does
+  not call its inherited method, TView.Draw. That's because TView.Draw
+  simply creates an empty rectangle. Instead, TInputLine overrides the
+  inherited Draw and defines a new one:
+
+    procedure TInputLine.Draw;
+     ...
+    begin
+      { Insert code to draw an input line here }
+    end;
+
+  In fact, calling TView.Draw would cause an unpleasant flicker on the
+  screen when first TView cleared the rectangle, and then TInputLine
+  filled it in. Methods like Draw are an exception, though.
+  Programming effectively with Turbo Vision involves making lots of
+  inherited method calls. For each method you're overriding, you must
+  know which to do first: Execute the code that you're adding? Or
+  first call the inherited method and then execute your new code?
+  Moreover, as you've just seen with the Draw method, sometimes you
+  don't call your inherited method at all. Doing the right thing in
+  the right order, of course, depends on where your new object falls
+  in the Turbo Vision hierarchy and which method you're overriding.
+  The rules for inherited call ordering break into 3 categories
+
+  1)  Constructors. Call the inherited method first.
+
+        procedure MyObject.Init(...);
+        begin
+          { Call inherited Init first }
+          { Insert code to init MyObject }
+        end;
+
+  2)  Destructors. Call the inherited method last.
+
+        procedure MyObject.Done;
+        begin
+          { Insert code to cleanup MyObject }
+          { Call inherited Done last }
+        end;
+
+  3)  All other methods: It depends. See below for an explanation.
+
+  Overriding Init and Load: The Call First Rule
+  ---------------------------------------------
+  You should always call your inherited constructor first and then
+  initialize any new fields your descendent object defines. This
+  advice applies to Init and Load constructors equally
+
+    type
+      MyObject = object(TWindow)
+        Value: Word;
+        Ok: Boolean;
+        constructor Init(var Bounds: TRect; ATitle: TTitleStr;
+          AValue: Word; AOk: Boolean);
+      end;
+
+    constructor MyObject.Init(var Bounds: TRect; ATitle: TTitleStr;
+      AValue: Word; AOk: Boolean);
+    begin
+      TWindow.Init(Bounds, ATitle, wnNoNumber);
+      Value := 16;
+      Ok := True;
+    end;
+
+  Here, MyObject calls its inherited Init method, TWindow.Init, to
+  perform initialization, first. Then MyObject puts meaningful values
+  into Value and Ok. If you were to reverse the order of these steps,
+  you'd be in for an unpleasant surprise: Value would be zero and Ok
+  would be False! That's because TWindow follows the Init convention
+  and calls its inherited method, TGroup.Init. TGroup.Init calls
+  TView.Init; which--finally--calls TObject.Init, the ultimate
+  ancestor to all Turbo Vision objects. TObject.Init zeros ALL the
+  fields in MyObject, including Value and Ok.
+
+  Your Init and Load methods can rely on this and refrain from zeroing
+  new fields--as long as you're deriving an object from some TView
+  descendant.
+
+  The Exception
+  -------------
+  Having said "always call the inherited constructor first", it's not
+  always true. When working with non-view objects like TCollection or
+  TStream descendants, you don't HAVE to call your inherited Init or
+  Load first. But you should, unless there is some compelling reason
+  to break the rule. And there might be, as in the following case when
+  an inherited constructor includes a call to a virtual method which
+  has been overridden. TCollection.Load relies on the virtual method
+  GetItem to get a collection item from the stream
+
+    constructor TCollection.Load(var S: TStream);
+    begin
+      ...
+      for I := 0 to Count - 1 do AtPut(I, GetItem(S));
+    end;
+
+  Since GetItem is virtual, you may have overridden it and your
+  GetItem may rely on your descendent object's Load method to
+  initialize a field before GetItem is called. In this case, you'd
+  want your new Load method to read the field value first, then call
+  TCollection.Load, which would end up "calling back" to your GetItem.
+  Here's a partial implementation of a collection of binary data (not
+  objects). The size of a data item is fixed for the entire collection
+  and held in the new field, ItemSize
+
+    type
+      PDataCollection = ^TDataCollection;
+      TDataCollection = object(TStringCollection)
+        ItemSize: Word;
+        KeyType: KeyTypes;
+        constructor Init(ALimit, ADelta, AnItemSize: Integer);
+        constructor Load(var S: TStream);
+        function Compare(Key1, Key2: Pointer): Integer; virtual;
+        procedure FreeItem(Item: Pointer); virtual;
+        function GetItem(var S: TStream): Pointer; virtual;
+        procedure PutItem(var S: TStream; Item: Pointer); virtual;
+        procedure Store(var S: TStream); virtual;
+      end;
+
+    ...
+
+    constructor TDataCollection.Load(var S: TStream);
+    begin
+      S.Read(ItemSize, SizeOf(ItemSize));
+      TStringCollection.Load(S);
+    end;
+
+    function TDataCollection.GetItem(var S: TStream): Pointer;
+    var Item: Pointer;
+    begin
+      GetMem(Item, ItemSize);
+      S.Read(Item^, ItemSize);
+      GetItem := Item;
+    end;
+
+    ...
+
+  Load first reads the ItemSize off the stream, then it calls
+  TSTringCollection.Load, which "calls back" to GetItem. Now GetItem
+  knows how big the item it's supposed to load is and can allocate
+  heap and read data correctly. That's why the "call inherited first"
+  applies to TView descendants all the time and to all other objects
+  unless there's a compelling reason. And of course, Load and Store go
+  hand-in-hand, so in this example, Store would write data to the
+  stream in the same order as Load reads it. This code is extracted
+  from the DATACOLL.PAS unit in the \TP\TVDEMOS directory.
+
+  Destructors: call them last
+  ---------------------------
+  A destructor's job is to undo the constructor's handiwork in reverse
+  order. Therefore, a destructor should always free its own dynamic
+  memory and then call its inherited destructor to do the same.
+
+
+  All other methods: it depends
+  -----------------------------
+  You saw how TInputLine doesn't call its inherited Draw method. If it
+  did, TView.Draw would have to be called first or else it would
+  obliterate any writing done by TInputLine.Draw. For the remaining
+  Turbo Vision methods, whether to make an inherited call or not--and
+  in what order--depends on which method you're overriding. In
+  general, call the inherited method first. We've covered the most
+  common methods to override: Init, Done, Draw, Load, and Store. Now
+  consider HandleEvent. Here's a skeleton of a descendent object's
+  HandleEvent method
+
+    procedure MyObject.HandleEvent(var Event: TEvent);
+    begin
+      { Insert code to change inherited behavior }
+      { Call inherited HandleEvent }
+      { Insert code to add additional behavior }
+    end;
+
+  First, code that will CHANGE the inherited behavior is executed.
+  Then the inherited call is made. Finally, the code that will EXTEND
+  the inherited behavior is added.
+
+  If you want to change the way the inherited method behaves or filter
+  out events, then put this code ahead of the inherited call. Most
+  Turbo Vision views call their inherited HandleEvent and then add
+  code to handle new events
+
+    procedure TDialog.HandleEvent(var Event: TEvent);
+    begin
+      TWindow.HandleEvent(Event);
+      case Event.What of
+        evKeyDown:
+            ...
+        evCommand:
+            ...
+      end;
+    end;
+
+  TDialog's HandleEvent manages all keyboard and mouse events,
+  including tabs. But what if you need to define a new dialog that
+  ignores tabs? Since you want to change your inherited method's
+  behavior (the handling of tabs) you'll put this tab-eating code
+  BEFORE the call to TDialog.HandleEvent
+
+    procedure TNoTabsDialog.HandleEvent(var Event: TEvent);
+    begin
+      if (Event.What = evKeyDown) then
+        if (Event.KeyCode = kbTab) or (Event.KeyCode = kbShiftTab) then
+          ClearEvent(Event);
+      TDialog.HandleEvent(Event);
+    end;
+
+  That's it. Your TNoTabsDialog will throw away the tabs before
+  TDialog.HandleEvent can ever see them and the tab key will not move
+  from control to control when using your dialog.

@@ -1,0 +1,66 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 6.0                        }
+{       3.0 Graphics Compatibility Unit                 }
+{                                                       }
+{       Copyright (C) 1987, 1990 Borland International  }
+{                                                       }
+{*******************************************************}
+
+unit Graph3;
+
+{$D-,I-,S-}
+
+interface
+
+uses Crt;
+
+const
+  North = 0;
+  East  = 90;
+  South = 180;
+  West  = 270;
+
+procedure GraphMode;
+procedure GraphColorMode;
+procedure HiRes;
+procedure HiResColor(Color: Integer);
+procedure Palette(N: Integer);
+procedure GraphBackground(Color: Integer);
+procedure GraphWindow(X1,Y1,X2,Y2: Integer);
+procedure Plot(X,Y,Color: Integer);
+procedure Draw(X1,Y1,X2,Y2,Color: Integer);
+procedure ColorTable(C1,C2,C3,C4: Integer);
+procedure Arc(X,Y,Angle,Radius,Color: Integer);
+procedure Circle(X,Y,Radius,Color: Integer);
+procedure GetPic(var Buffer; X1,Y1,X2,Y2: Integer);
+procedure PutPic(var Buffer; X,Y: Integer);
+function  GetDotColor(X,Y: Integer): Integer;
+procedure FillScreen(Color: Integer);
+procedure FillShape(X,Y,FillCol,BorderCol: Integer);
+procedure FillPattern(X1,Y1,X2,Y2,Color: Integer);
+procedure Pattern(var P);
+procedure Back(Dist: Integer);
+procedure ClearScreen;
+procedure Forwd(Dist: Integer);
+function  Heading: Integer;
+procedure HideTurtle;
+procedure Home;
+procedure NoWrap;
+procedure PenDown;
+procedure PenUp;
+procedure SetHeading(Angle: Integer);
+procedure SetPenColor(Color: Integer);
+procedure SetPosition(X,Y: Integer);
+procedure ShowTurtle;
+procedure TurnLeft(Angle: Integer);
+procedure TurnRight(Angle: Integer);
+procedure TurtleDelay(Delay: integer);
+procedure TurtleWindow(X,Y,W,H: Integer);
+function  TurtleThere: Boolean;
+procedure Wrap;
+function  Xcor: Integer;
+function  Ycor: Integer;
+
+

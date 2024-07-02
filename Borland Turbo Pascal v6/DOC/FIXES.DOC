@@ -1,0 +1,134 @@
+
+======================================================================
+                     Corrections & Additions
+======================================================================
+
+
+This documentation file chronicles corrections or additions to
+the printed documentation. Make sure you look at other .DOC files
+in the \TP\DOC directory, especially TVISION.DOC. Note that the
+\TP\DOCDEMOS directory contains complete, correct versions of all
+the examples in the Turbo Vision Guide and in Chapter 4 of the
+User's Guide.
+
+----------------------------------------------------------------------
+                          Table of Contents
+----------------------------------------------------------------------
+
+1.  User's Guide
+2.  Programmer's Guide
+3.  Library Reference
+4.  Turbo Vision Guide
+
+----------------------------------------------------------------------
+
+1.  User's Guide
+----------------
+
+  P-1  Far and near directives
+  ----------------------------
+    Far and near directives can be placed after a procedure or
+    function declaration:
+
+      procedure MyProc; far;
+      function MyFunc: Boolean; near;
+
+    If MyProc and MyFunc are declared in the implementaton section of
+    a unit or in the body of the main program, they will be far and
+    near (respectively) regardless of the enabled or disabled state of
+    the {$F} compiler directive.
+
+
+  P-197  Stepping into conditional breakpoints
+  --------------------------------------------
+    An anomaly exists when the execution bar is above a conditional
+    breakpoint you've set and the condition is false. If you press F8
+    in this situation, the debugger will execute the statement with
+    the false conditional breakpoint without stopping. To have the
+    debugger stop before executing that statement, it is not necessary
+    to delete the conditional breakpoint. Instead, just position the
+    cursor on the line with the false conditional berakpoint and press
+    F4 (Run|Go to cursor).
+
+
+2.  Programmer's Guide
+----------------------
+
+  P-153  Incorrect demo program name
+  ----------------------------------
+    The correct name for the BGI demo program that shows how to link
+    font and driver files into an EXE is called BGILINK.PAS.
+
+  P-215  Free list
+  ----------------
+    The second paragraph incorrectly implies that the free list starts
+    at the top of memory and grows downwards. The remaining text in
+    that chapter correctly explains that the free list is maintained
+    by using the first 8 bytes of each freed block.
+
+  P-328  Allows PUBLIC without external
+  -------------------------------------
+    Error message #51 will no longer occur if you link with an .OBJ
+    file that defines a PUBLIC for which there is no corresponding
+    external Pascal procedure. When the linker encounters an unmatched
+    PUBLIC in an .OBJ file, it simply creates a corresponding entry in
+    the symbol table that can be referenced by EXTERNs in other .OBJ
+    files.
+
+
+3.  Library Reference
+---------------------
+
+  P-115  Incorrect demo program name
+  ----------------------------------
+  The correct name for the BGI demo program that shows how to
+  link font and driver files into an EXE is called BGILINK.PAS.
+
+
+2.  Turbo Vision Guide
+----------------------
+
+  P-29   Missing parameters
+  -------------------------
+  The first line of the bottom two examples should be just like
+  the topmost example on the page:
+
+      MenuBar := New(PMenuBar, Init(R, NewMenu(
+       ...
+
+  P-54   Missing parameters
+  -------------------------
+  The example in the middle of the page is missing parameters in
+  the call to Assign. The correct syntax is:
+
+      R.Assign(22, 3, 34, 6);
+
+  P-157  Stream registration made easy
+  ------------------------------------
+  Turbo Vision defines stream registration records for all its
+  objects. In addition, each Turbo Vision unit defines a
+  RegisterXXXX procedure that automatically registers all of the
+  unit's objects. Finally, to register all Turbo Vision objects,
+  just call TApplication.RegisterTypes. Note that this will link
+  in ALL Turbo Vision objects, regardless of whether you're using
+  them or not (that's why it's not done automatically). See
+  TVISION.DOC for more information about additional registration
+  procedures.
+
+  P-166  Incorrect method call
+  ----------------------------
+  The Append call in the IF statement should be a call to Insert
+  as follows:
+
+      ...
+      Insert(Desktop);
+      ...
+
+  P-224  Wrong order
+  ------------------
+  The TCollection.Free method descriptions has the calls in
+  reverse order. The correct order is:
+
+      Delete(Item);
+      FreeItem(Item);
+

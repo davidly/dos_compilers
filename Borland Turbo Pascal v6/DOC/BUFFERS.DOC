@@ -1,0 +1,113 @@
+                             BUFFERS
+                             -------
+
+This unit implements a simple movable memory manager, primarily 
+for use with the EDITORS unit. This unit sets aside a fixed
+amount of memory to manage at the end of the normal heap, the
+size of which is determined by BufHeapSize (in paragraphs).
+Memory is allocated through calls to NewBuffer and SetBufferSize.
+The advantage to movable memory managers is no memory is wasted
+due to fragmentation since the memory can move. Unfortunately,
+unless great care is taken, only one pointer to this memory can
+exist.
+
+As with most movable memory managers, BUFFERS allocates the
+memory to what is referred to as a master pointer. The master
+pointer is kept up-to-date as to the current location of the
+buffer and is modified whenever the memory is moved. It is
+assumed that this pointer, the pointer passed to the NewBuffer
+procedure, is the only pointer that is pointing to the memory. If
+a copy is made, either through an assignment or if the pointer is
+passed as a parameter, the copy will not be updated. Typically
+when a copy is necessary a pointer to the master pointer is used
+instead. For example
+
+  CopyPtr = @MstrPtr;
+
+When the copy is used, it is dereferenced twice, as in
+
+  CopyPtr^^ := {Some value};
+
+so that all references to the memory allocated go through the
+master pointer. Note, since very few allocations can meet these
+requirements, this unit is not intended to replace Turbo Pascal's
+heap manager for general heap allocation needs.
+
+Care should be taken when using pointers allocated with BUFFERS.
+It is bad practice to assume that a copy of the master pointer is
+valid. Such assumptions can lead to sporadic and very difficult-
+to-reproduce bugs. Typically, only the master pointer itself is 
+ever used, as is done in EDITORS.
+
+BUFFERS is a simple movable memory manager in that it does not
+try to minimize the movement of buffers when a buffer is
+deallocated or resized. Buffers are positioned in the buffer area
+in the order they are allocated. When a buffer is resized, the
+buffers above it are moved up or down to accommodate the change.
+Since this movement takes time, it is assumed that the user of
+this unit will take great pains to minimize the resizing of
+buffers.
+
+
+                            Variables
+                            ---------
+
+BufHeapSize: Word = 0;
+
+  The amount of memory, in paragraphs, to be managed by this
+  unit. This variable must be set before calling InitBuffers.
+
+BufHeapPtr: Word = 0;
+
+  The segment marking the beginning of buffer memory.
+
+BufHeapEnd: Word = 0;
+
+  The segment marking the end of buffer memory.
+
+
+                    Procedures and Functions
+                    ------------------------
+
+procedure InitBuffers;
+
+  Allocates a block of memory from the end of the heap to be used
+  for buffers. The size of this block is determined by the value
+  of BufHeapSize (in paragraphs) when this routine is called.
+
+procedure DoneBuffers;
+
+  Returns to the heap the memory allocated by InitBuffers.
+
+procedure NewBuffer(var P: Pointer);
+
+  Allocates a buffer to the given pointer. The given pointer
+  becomes the master pointer to the allocated buffer and a
+  reference to the pointer's location is stored. The pointer will
+  be updated whenever the position of the buffer changes. The
+  buffer size is initially zero an can be adjusted by a call to
+  SetBufferSize. If a buffer is deallocated, or the size of a
+  buffer changes, the position of all the buffers allocated after
+  this one change. Each buffer has an overhead of 16 bytes (one
+  paragraph) which is used to store the size of the buffer and
+  the location of its master pointer.
+
+procedure DisposeBuffer(P: Pointer);
+
+  Deallocates the buffer allocated to the given pointer. The memory
+  allocated can now be used by other buffers. This pointer must
+  point to a buffer allocated with a call to NewBuffer. Disposing
+  of a buffer will cause the master pointer of all buffers allocated
+  after this buffer to change.
+
+function GetBufferSize(P: Pointer): Word;
+
+  Returns the size of the buffer allocated to this pointer. This
+  pointer must be a pointer allocated with NewBuffer.
+
+function SetBufferSize(P: Pointer; Size: Word): Boolean;
+
+  Increases or decreases the size of the given buffer. This
+  pointer must have been allocated with NewBuffer. Changing the 
+  size of a buffer will cause the master pointer of buffers
+  allocated after this one to change.
