@@ -1,0 +1,88 @@
+C Runtime Library Startup Sources
+---------------------------------
+The directory \startup and its subdirectories contain the files
+necessary for building the startup portion of the C runtime library.
+The \startup directory contains the startup source files, the include
+include files, the batch file and the make file used to build the startup 
+object files.  The subdirectories of \startup contain OS specific sources.
+
+The startup object files can be built by invoking startup.bat from within
+the \startup directory.  This batch file assumes the following:
+
+	(1) make.exe, link.exec, the C compiler, and the assembler must be
+	in the execution path.  MASM 5.0 and C 5.0 or later are required to
+	build the startup sources.
+	(2) doscalls.lib must be in the directory specified by the LIB 
+	environment variable.
+
+Startup will create four memory model specific subdirectories (i.e., S, M, C,
+and L) and place the appropriate object files there.  Under each memory model
+subdirectory, startup creates two addition subdirectories OS2 and DOS where
+OS specific objects reside.
+
+The include files stdio.h and ctype.h are required for building the
+startup source file wild.c but are not included on the \startup directory
+because they exist on the directory containing the standard include files.
+A make variable called CINC controls where the makefile looks for these
+include files. STARTUP.BAT sets CINC to the current value of the INCLUDE
+environment variable.  This variable should be set to the location of
+the C include files.  CINC can also be set in the makefile if you wish
+to run the makefile separately.
+
+The message "<cEnd - nogen>" is generated when some of the assembly language 
+source files are assembled.  This message is expected and is totally benign.
+
+The startup batch file requires as arguments a list of capital letters
+describing the memory models you wish to build.  For example,
+"startup S L" will build the small and large model startup objects.
+Startup will then link the objects with a sample C program called nulbody.c
+(consisting of a null main functions) to produce nulbody.exe.
+[Invoking startup.bat with no arguments will give usage information.]
+
+Note:  startup sources written in assembly language have been edited with
+tabstops set to 8.  Startup sources written in C have been edited with
+tabstops set to 4.  
+
+The following files are contained in the \startup directory:
+
+Startup source files (OS independent):
+
+	chkstk.asm
+	chksum.asm
+	crt0fp.asm
+	setargv.asm
+	wild.c
+
+Startup source files (OS specific):
+	crt0.asm
+	crt0dat.asm
+	crt0msg.asm
+	execmsg.asm
+	nmsghdr.asm
+	stdalloc.asm
+	stdenvp.asm
+	stdargv.asm
+
+Startup include files:
+	brkctl.inc
+	cmacros.inc
+	msdos.inc
+	register.h
+	msdos.h
+	version.inc
+
+File count files:
+	_file.c
+	file2.h
+	
+Make and batch files:
+	startup.bat:	invokes make file to build objs and link to null program
+	makefile:	contains rules for building startup sources
+	nulbody.c:	null c program
+	nulbody.lnk:	link script for linking null program
+
+Documentation:
+	readme.doc:	information about \startup directory structure
+			and contents
+
+				--- End ---

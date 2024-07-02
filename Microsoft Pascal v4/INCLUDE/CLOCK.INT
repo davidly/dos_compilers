@@ -1,0 +1,10 @@
+Interface;
+
+  Unit Clock(GetDat,SetDat,GetTim,SetTim);
+
+  Procedure GetDat(Vars Year,Month,Day:Integer);
+  Function  SetDat(Year,Month,Day:Integer):Boolean;
+  Procedure GetTim(Vars Hours,Minutes,Seconds,Hundreds:Integer);
+  Function  SetTim(Hours,Minutes,Seconds,Hundreds:Integer):Boolean;
+
+  End;

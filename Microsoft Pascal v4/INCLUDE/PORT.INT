@@ -1,0 +1,8 @@
+Interface;
+
+  Unit Port(InP,OutP);
+
+  Function  InP(PortNo:Word):Byte;
+  Procedure OutP(PortNo:Word; Data:Byte);
+
+  End;

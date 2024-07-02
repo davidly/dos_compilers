@@ -1,0 +1,14 @@
+Interface;
+
+  Unit Intrp(Reglist,Intrp);
+
+  Type
+    Reglist=Record
+	      AX,BX,CX,DX,SI,DI,DS,ES,Flags:WORD
+	    End;
+
+  Procedure Intrp(Intno:Byte;
+		  Vars InRegs:Reglist;
+		  Vars OutRegs:RegList);
+
+  End;
