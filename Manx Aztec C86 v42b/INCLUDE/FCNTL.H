@@ -1,0 +1,13 @@
+#define O_RDONLY	0
+#define O_WRONLY	1
+#define O_RDWR		2
+#define O_DENYRW	0x10
+#define O_DENYW		0x20
+#define O_DENYR		0x30
+#define O_DENYN		0x40
+#define O_INHER		0x80
+#define O_COMP		0x00
+#define O_CREAT		0x0100
+#define O_TRUNC		0x0200
+#define O_EXCL		0x0400
+#define O_APPEND	0x0800

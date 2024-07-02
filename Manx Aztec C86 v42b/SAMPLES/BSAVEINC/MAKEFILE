@@ -1,0 +1,11 @@
+# ---------------------------------------------------------------------
+# makefile by bill buckels 1997
+# ---------------------------------------------------------------------
+
+bsaveinc.exe: bsaveinc.o
+            ln bsaveinc.o c.lib
+            rm bsaveinc.o
+            @echo All Done!
+
+bsaveinc.o: bsaveinc.c
+           cc bsaveinc.c

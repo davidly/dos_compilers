@@ -1,0 +1,11 @@
+# ---------------------------------------------------------------------
+# makefile by bill buckels 1997
+# ---------------------------------------------------------------------
+
+batch.exe: batch.o
+            ln batch.o c.lib
+            rm batch.o
+            @echo All Done!
+
+batch.o: batch.c
+           cc batch.c

@@ -1,0 +1,11 @@
+# ---------------------------------------------------------------------
+# makefile by bill buckels 1997
+# ---------------------------------------------------------------------
+
+ptxmake.exe: ptxmake.o
+            ln ptxmake.o c.lib
+            rm ptxmake.o
+            @echo All Done!
+
+ptxmake.o: ptxmake.c
+           cc ptxmake.c

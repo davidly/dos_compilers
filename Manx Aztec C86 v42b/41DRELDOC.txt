@@ -1,0 +1,396 @@
+
+
+
+
+                              Aztec C86, version 4.10d
+                                  Release Document
+                                      26 Oct 88
+
+       This "readme" file describes what's new version 4.10d of Aztec C86. For
+     more information on Aztec C86, see the printed release documents for
+     versions 4.10a and 4.10c. In particular, these printed documents contain
+     packaging information and describe features in Aztec C86 that have been
+     added since the manual was last printed.
+
+       Version 4.10d of Aztec C86 differs from version 4.10c in the following
+     ways: (1) sdb has been enhanced; and (2) bugs have been fixed.
+
+       The programs and functions that have had bugs fixed are:
+            
+            *  cc
+            *  cgen
+            *  as
+            *  z
+            *  hex86
+            *  signal() and raise()
+            *  all libraries
+
+       The new versions of cc, cgen, and as must be used together; you can't,
+     for example, use v4.10c of cc with v4.10d of cgen.
+
+       The following paragraphs describe the new features of sdb.
+
+
+     1.  SDB: New Features
+
+       Version 4.10d of sdb has the following new features:
+       
+       *  Separate virtual screens for sdb and the program being debugged are
+          now required.
+       *  sdb's screen is now formatted, with different sections of the screen
+          being used for different purposes.
+       *  The Microsoft mouse, and compatibles, are now supported by sdb.
+       *  A new program, initsdb, is used to configure sdb. THIS PROGRAM MUST BE
+          RUN BEFORE SDB.
+       *  A new environment variable, SDBOPT, can be used to pass options to
+          sdb.
+       *  sdb's bm command (memory-change breakpoint) now works.
+       *  The new be command sets an expression breakpoint. When the specified
+          expression is true, a breakpoint is taken.
+       *  sdb now supports the 43-line mode of EGA display adaptors.
+       *  The -w option has been changed. It now suppresses restoration of the
+          program screen when single-stepping, thus reducing screen flicker. The
+          old meaning of -w has been taken over by the new -p option.
+       *  The w command has been changed. It now toggles screen restoration
+          mode. For example, if screen restoration was disabled, the w command
+          disables it.
+       *  The new -p option, defines the display page that sdb is to use for its
+          screen.
+       *  The new -m option defines the memory address at which the display
+          memory begins.
+
+
+
+                                Page 1
+
+
+
+
+     Aztec C86, v4.10d                                         Release Document
+
+       The following paragraphs describe these features in detail.
+
+     1.1 Virtual screens
+
+       Separate virtual screens for sdb and the program being debugged are now
+     required. sdb uses one virtual screen to display its information and to get
+     operator commands, and the program uses the other.
+
+       As with previous versions of sdb, virtual screens can either be stored in
+     display adaptor pages or in sdb buffers:
+       +  Virtual screens can be stored in a display adaptor page, if the
+          display adaptor has multiple pages. (The CGA is one such adaptor).
+          sdb's screen is stored in one page, and the program is free to use any
+          other page. Screen swapping is fast, since to switch the display from
+          one virtual screen to the other, sdb simply outputs a single command
+          to the display adaptor.
+       +  Virtual screens can be stored in sdb buffers, if the display adaptor
+          has only one display page; it can also be used if you want sdb to
+          share display page 0 with the program that's being debugged. To switch
+          the display from one virtual screen to the other, sdb stores the
+          screen page in one of its buffers, and restores the virtual screen
+          that's in the other buffer.
+
+       You define the display type when you run initsdb. If the display contains
+     only one page, then sdb will automatically store virtual pages in its own
+     buffers. If the display contains multiple pages you tell initsdb where
+     virtual screens are to be stored. If display pages are to be used, you tell
+     initsdb the page that sdb is to use; this can be overriden when sdb is
+     started, using the new -p option.
+
+       The -p option has the form -px, where x is the number of the page that
+     sdb is to use.
+
+     1.2 Formatted Screen
+
+       sdb's virtual screen is now formatted, with different sections of the
+     screen displaying different information, as follows:
+       
+       *  The top line lists the name of the source file currently being
+          displayed, and specifies whether sdb is in source or assembly mode.
+       *  The next few lines display lines in the current source file. These
+          lines act like a window into the source file, a window that can be
+          moved (as described below) to display different sections of the source
+          file.
+       *  The next line is used to enter and display commands. sdb maintains a
+          log of commands, and this line acts like a window into that log. You
+          can move the window around within the log, and then easily rexecute a
+          previously-entered command.
+       *  The remaining lines are used for sdb output. sdb remembers data that
+          it has previously displayed, and these lines act like a window onto
+          that data, a window that can be moved to recall different sections of
+          the displayed data.
+       *  The rightmost column contains a scroll bar and other features that are
+          used with a mouse.
+
+
+
+
+
+                                Page 2
+
+
+
+
+     Aztec C86, v4.10d                                         Release Document
+
+     1.3 Keys used to manipulate sdb
+
+       Function keys and cursor-motion keys have meaning to sdb, as follows:
+               
+               Key       Meaning
+               F1        Scroll source window up one line
+               F2        Scroll source window down one line
+               F3        Move command line up one line (also makes source window
+                         one line smaller and data window one line larger)
+               F4        Move command line down one line (also makes source
+                         window one line larger and data window one line
+                         smaller)
+               F5        Scroll data window up one line
+               F6        Scroll data window down one line
+               Alt-F1    Move source window to the top of the source file
+               Alt-F2    Move source window to the bottom of the source file
+               Alt-F3    Move the command line to the top of the screen
+               Alt-F4    Move the command line to the bottom of the screen
+               Alt-F5    Move the data window to the top of the data buffer
+               Alt-F6    Move the data window to the bottom of the data buffer
+               Shift-F1  Move the source window to the position at which it was
+                         located before the previous Alt-F1 or Alt-F2
+               Shift-F2  Same as Shift-F1
+               Shift-F3  Move the command line to the position at which it was
+                         located before the previous Alt-F3 or Alt-F4
+               Shift-F4  Same as Shift-F3
+               Shift-F5  Move the data window to the position at which it was
+                         located before the previous Alt-F5 or Alt-F6
+               Shift-F6  Same as Shift-F5
+               F9        Scroll source window to current source line
+               F10       Toggle between Source and Assembly modes
+               PgUp      Move the source window up one page
+               PgDn      Move the source window down one page
+               Up arrow  Move command window up one line in the command log
+               Dn arrow  Move command window down one line in the command log
+               Left arrow
+                         Move cursor left one character on the command line
+               Right arrow
+                         Move cursor right one character on the command line
+               Delete    Delete the character on the command line that's under
+                         the cursor
+               Home      Move the cursor to the beginning of the command line
+               End       Move the cursor to the end of the command line
+               Escape    Display the other virtual screen
+               Right single quote
+                         Same as Escape
+               Control-L Redraw the screen
+
+     1.4 Using a mouse
+
+       There are three sections of the sdb screen in which a mouse can be used:
+     the scroll bar at the right of the screen, the top line of the screen, and
+     the command line. These sections are described in the following paragraphs.
+
+
+
+
+
+
+                                Page 3
+
+
+
+
+     Aztec C86, v4.10d                                         Release Document
+
+     1.4.1 The scroll bar
+
+       The scroll bar has three sections. The box in the middle of the bar with
+     the up and down triangles positions the command line on the screen, and
+     hence indirectly controls the size of the source and data windows. The area
+     above the triangles positions the source window; the area below the
+     triangles positions the data window.
+
+     1.4.1.1 Moving the command line
+
+       To move the command line with the mouse, move the mouse cursor to the box
+     that contains the triangles. Press and hold the left mouse button, drag the
+     cursor to the desired location, and release the mouse button.
+
+     1.4.1.2 Positioning the source window
+
+       The area of the scroll bar that positions the source window contains a
+     solid rectangle; this indicates the current position of the window within
+     the source file. When the rectangle is at the top of the area, the window
+     is at the top of the file; when the rectangle is at the bottom of the area,
+     the window is at the bottom of the file; and so on. Using the mouse, you
+     can move the rectangle within the scroll bar; this causes the source window
+     to move the source window within the source file. To do this, put the mouse
+     cursor in the rectangle, press and hold the left mouse button, move the
+     mouse cursor to the desired position in the scroll bar, and release the
+     button.
+
+       At the top of the source window's section of the scroll bar are two
+     upward-facing arrows. To scroll the source window up a line at a line, move
+     the mouse cursor to the arrows, press and hold the left mouse button. The
+     source window will begin scrolling upward. When it reaches the desired
+     location, release the button.
+
+       At the bottom of the source window's section of the scroll bar are two
+     downward-facing arrows. They are used to scroll the source window down a
+     line at a time, in a manner analagous to the up arrows.
+
+       To move the source window up a page, move the mouse cursor somewhere
+     below the up arrows and above the rectangle, and click the left mouse
+     button.
+
+       To move the source window down a page, move the mouse cursor somewhere
+     above the down arrows and below the rectangle, and click the left mouse
+     button.
+
+       To move the source window to the beginning or end of the source file,
+     move the mouse cursor to the up or down arrows, respectively, and click
+     both mouse buttons.
+
+     1.4.1.3 Positioning the data window
+
+       The data window's section of the scroll bar looks just like the source
+     window's, and is used in the same way. For example, (1) the rectangle
+     indicates the position of the window in the data buffer and can be used to
+     move to the data window within the data buffer; (2) the up arrows scroll
+     the data window up in the data buffer one line; (3) the down arrows scroll
+     the data window down one line; (4) and so on.
+
+
+                                Page 4
+
+
+
+
+     Aztec C86, v4.10d                                         Release Document
+
+     1.4.2 Using the mouse on the top line
+
+       The top line of sdb's virtual screen has a section that specifies whether
+     sdb is in source or assembly mode, and a section that lists the file that's
+     currently displayed in the source window. To use the mouse to toggle
+     between source and assembly mode, move the mouse cursor to the top line's
+     source/assembly mode section and click the left mouse button.
+
+       To move the source window back to the source line at which execution is
+     currently stopped, move the mouse cursor to the top line's source file
+     section and click the left mouse button.
+
+     1.4.3 Using the mouse on the command line
+
+       The mouse can be used to position the text cursor on the command line. To
+     do this, just move the mouse cursor to the desired location and click the
+     left mouse button.
+
+     1.4.4 Switching screens with the mouse
+
+       The mouse can be used to switch the display from one virtual screen to
+     another: just click the right mouse button.
+
+     1.5 The SDBOPT environment variable
+
+       The SDBOPT environment variable can be used to pass frequently-used
+     options to sdb, without having to explicitly list them on the command line
+     when sdb is started.
+
+       For example, if you always want the -p2 option to be specified when sdb
+     is started, you could set SDBOPT like this:
+
+               set SDBOPT=-p2
+
+     1.6 The initsdb utility
+
+       The initsdb utility is used to define the attributes of your monitor to
+     sdb and the way you want the lines on sdb's virtual screen to appear. The
+     information you select is written to a file named sdb.ini.
+
+     1.6.1  Using initsdb
+
+       initsdb's screen is organized into four sections. The top three sections
+     are used to set options, and the bottom section summarizes the keys that
+     you can use with initsdb. The three option-selecting sections are entitled
+     Basic Options, Advanced Options, and Color selection.  Selections are 
+	 toggled using the <ENTER> key.
+
+       In the Basic Options section you define the type of monitor you have, and
+     for CGA monitors, whether you want "snow" removed. This section also has
+     options that you select to write your choices to the sdb.ini file, to abort
+     without writing anything, and to quit after writing.
+
+       In the Color Selection section you define the attributes of the various
+     lines that appear on sdb's screen; i.e. the foreground and background color
+     of each type of line. There are five lines in the Color Selection section,
+     each of which corresponds to one type of line on the sdb screen. To select
+     the attributes of a line, move the cursor to a line; then type 'f' or 'F'
+
+                                Page 5
+
+
+
+
+     Aztec C86, v4.10d                                         Release Document
+
+     to advance or decrement the line's forground color. Type 'b' or 'B' to
+     advance or decrement the line's background color.
+
+       The Advanced Options section contains several display-dependent options.
+     You are only allowed to change the ones that are relevant to your monitor.
+     For example, if you have an EGA monitor, you can select the option that
+     causes sdb to use a 43 line screen. If you have a CGA monitor, you can
+     select whether you want sdb and the program that's being debugged to share
+     the same display page or whether you want sdb and the program to each have
+     a separate display page.
+
+     1.6.2 The sdb.ini file
+
+       Configuration options are stored in a file named sdb.ini. When sdb and
+     initsdb start, they look for this file first in the current drive's current
+     directory, and then in the directories specified in the PATH environment
+     variable.
+
+       initsdb writes configuration options back to the same file; if it didn't
+     find an sdb.ini file, it writes the options to an sdb.ini file in the
+     current directory.
+
+     1.7  Summary of new and changed sdb options
+
+       Here is a summary of the new sdb options:
+            
+          -px       On a CGA monitor, have sdb use page x for its screen.
+          -mx       Display memory begins at paragraph x, where x is a
+                    hexadecimal number. If this option isn't used, sdb will use
+                    the standard value for your type of display.
+          -w        When single-stepping, don't restore the program's screen.
+
+     1.8 Summary of new and changed commands
+
+       Here is a summary of the sdb commands that are new or have changed:
+          
+          w         Toggle screen restoration mode.
+          be        Set or remove a memory change breakpoint
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                Page 6
+
+

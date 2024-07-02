@@ -1,0 +1,11 @@
+# ---------------------------------------------------------------------
+# makefile by bill buckels 1997
+# ---------------------------------------------------------------------
+
+textvu.exe: textvu.o
+            ln textvu.o c.lib
+            rm textvu.o
+            @echo All Done!
+
+textvu.o: textvu.c
+           cc textvu.c

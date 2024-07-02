@@ -1,0 +1,11 @@
+# ---------------------------------------------------------------------
+# makefile by bill buckels 1997
+# ---------------------------------------------------------------------
+
+bsv2txt.exe: bsv2txt.o
+            ln bsv2txt.o c.lib
+            rm bsv2txt.o
+            @echo All Done!
+
+bsv2txt.o: bsv2txt.c
+           cc bsv2txt.c

@@ -1,0 +1,11 @@
+# ---------------------------------------------------------------------
+# makefile by bill buckels 1997
+# ---------------------------------------------------------------------
+
+exmpl.exe: exmpl.o
+            ln exmpl.o c.lib
+            rm exmpl.o
+            @echo All Done!
+
+exmpl.o: exmpl.c
+           cc exmpl.c
