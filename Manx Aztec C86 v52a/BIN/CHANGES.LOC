@@ -1,0 +1,28 @@
+Changes to ALOC:
+
+10/22/91
+	ALOC would exit w/ an error if it encountered control characters in
+	a -f file (including ^Z, which some editors put out at the end of a
+	file).
+
+11/19/91 mapfile.c *jd
+	aloc was only outputting \n to map file, not \r\n. 
+	added code to pm_putchar to add the \r when passed \n.
+
+4/9/92 --------------------	Released v5.2a beta 1 ---------------------
+
+8/14/92 getinfo.c *jd
+	aloc was incorrectly computing the address of _Uend.
+
+8/28/92 locmain.c jd
+	When generating output file name from first input name that includes
+	a path having dots (e.g. ../foo.lnk), aloc didn't generate correct output
+	name.
+
+
+10/4/92 --------------------	Released v5.2a beta 2 ---------------------
+
+10/9/92 jd: getinfo.c
+	+JUMP created reset code in segment named _RESET_CODE, but ahex was
+	looking for it in segment named RESET_CODE, so ahex was not correctly
+	positioning it in ROM.

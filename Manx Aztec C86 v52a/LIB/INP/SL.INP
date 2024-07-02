@@ -1,0 +1,16 @@
+../screen/cio.ol
+../screen/scr_call.ol
+../screen/scr_cdel.ol
+../screen/scr_cins.ol
+../screen/scr_clea.ol
+../screen/scr_curs.ol
+../screen/scr_echo.ol
+../screen/scr_eol.ol
+../screen/scr_eos.ol
+../screen/scr_getc.ol
+../screen/scr_home.ol
+../screen/scr_inve.ol
+../screen/scr_ldel.ol
+../screen/scr_lins.ol
+../screen/scr_loc.ol
+../screen/scr_putc.ol

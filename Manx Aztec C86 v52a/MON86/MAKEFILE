@@ -1,0 +1,8 @@
+AFLAGS=-dROM
+
+.asm.o:
+	as $(AFLAGS) $*.asm
+
+mon86rom.exe: pcio.o
+	ln -c f800 -d 40 -o mon86rom.exe -x 5 mon.o pcio.o 
+	hex86 -p32 -s32 mon86rom.exe

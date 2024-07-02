@@ -1,0 +1,505 @@
+^9999
+!Breakpoint commands
+1000
+!Display commands
+2000
+!Frame commands
+3000
+!I/O commands
+6000
+!Memory commands
+4000
+!Formatted output
+8000
+!Register command
+9000
+!Unassemble commands
+10000
+!Macro commands
+28000
+!Display value
+29000
+!Change sdb console
+27000
+!Copy ouput to a file
+14000
+!Shell to dos 
+15000
+!Display current context 
+16000
+!Evaluate a C expression
+17000
+!Execute program
+18000
+!(re)load program file
+19000
+!Quit
+20000
+!Single step
+5000
+!Toggle screen swapping
+21000
+!Toggle source/assembly mode
+22000
+!Find string in current file
+23000
+!Redirect input 
+24000
+!Log commands only to a file
+25000
+General SDB commands
+  Breakpoint commands         Display current context 
+  Display commands            Evaluate a C expression
+  Frame commands              Execute program
+  I/O commands                (re)load program file
+  Memory commands             
+  Formatted output            Quit
+  Register command            Single step
+  Unassemble commands         Toggle screen swapping
+  Macro commands              Toggle source/assembly mode
+  Display value               Find string in current file
+  Change sdb console          Redirect input 
+  Copy ouput to a file        Log commands only to a file
+  Shell to dos 
+#
+^11000
+                      Using the Help system
+
+ Use TAB key to move cursor, and Spacebar or ENTER key to
+ select an option.  Your options are:
+
+  CONTINUE:   Return back to screen prior to last F1.
+  PREVIOUS:   Return back to the previous screen.
+  TOPICS:     Review index of topics.
+  KEYS:       Review Keystrokes & their functions.
+
+  Use TAB key to move cursor past the 4 buttons to select
+  highlighted keywords and then press Spacebar/ENTER key to
+  obtain further information on related topics.
+#
+^12000
+                         Using the Help system
+
+ Use TAB key to move cursor, and Spacebar or ENTER key to
+ select an option.  Your options are:
+
+  CONTINUE:   Return back to screen prior to last F1.
+  PREVIOUS:   Return back to the previous screen.
+  TOPICS:     Review index of topics.
+  KEYS:       Review Keystrokes & their functions.
+
+  Use TAB key to move cursor past the 4 buttons to select
+  highlighted keywords and then press Spacebar/ENTER key to
+  obtain further information on related topics.
+#
+^1000
+!bc
+30000
+!bC
+30000
+!bd
+31000
+!br 
+32000
+!bs
+33000
+!bt
+34000
+!bT
+34000
+!bm
+35000
+!be
+36000
+!ADDR
+7000
+!CMDLIST
+26000
+Breakpoint commands
+  bc ADDR                    Clear breakpoint 
+  bC                         Clear all breakpoints 
+  bd                         Display breakpoints 
+  br [ADDR]                  Reset breakpoint counters 
+ #bs ADDR [;COND][;CMDLIST]  Set or modify a breakpoint 
+  bt                         Toggle call trace
+  bT                         Toggle source line trace
+  bm                         Set memory change breakpoint
+  be                         Set expression breakpoint
+#
+^2000
+!RANGE
+13000
+Display commands
+  da                         Display local addresses
+  dc                         Display code addresses
+  db RANGE                   Display memory as bytes
+  dd                         Display data addresses
+  df [FILENAME,]RANGE        Display file 
+  dg                         Display globals' values
+  dm                         Display DOS RAM map 
+  dn                         Display 8087 
+ #ds                         Display stack backtrace
+ #dS                         Display stack with autos
+  dw RANGE                   Display memory as words
+#
+^3000
+Frame commands
+ #fu                         Frame up
+ #fd                         Frame down
+#
+^4000
+!ADDR
+7000
+!RANGE
+13000
+Memory commands
+  mb ADDR VAL1 VAL2 ...      Modify memory as bytes
+  mc RANGE = ADDR            Compare memory
+  mf RANGE = VAL             Fill memory with value
+  mm RANGE = ADDR            Move memory
+  ms RANGE = VAL1 VAL2 ...   Search memory for value
+  mw ADDR VAL1 VAL2 ...      Modify memory as words
+#
+^5000
+!CMDLIST
+26000
+Single step commands (step into called functions)
+ #s [;CMDLIST]          Single step the program # times
+ #S [;CMDLIST]          Single step without display
+
+Single step commands (step over called functions)
+ #t [;CMDLIST]          Single step # times 
+ #T [;CMDLIST]          Same as 't' 
+                        but don't display until last
+#
+^6000
+Outport commands
+  ob PORT,VAL                Output byte to port
+  ow PORT,VAL                Output word to port
+
+Inport commands
+  ib PORT                    Input byte from port
+  iw PORT                    Input word from port
+#
+^7000
+The Definition of ADDR
+
+An ADDR is the name of a C variable,
+an address constant, or a C expression that yields an address.
+
+Examples of an ADDR are as follows:
+  linkmain.c.19     Address of the code corresponding
+                    to line 19 of linkmain.c
+  .19               Same as above if current file is linkmain.c
+  main              Address of main
+  cs:0x1532         Address formed by using the current 
+                    code and an offset of 0x1532
+  token[j]          Address of jth element of array token
+#
+^8000
+!RANGE
+13000
+Print command
+  p [@FORMAT] [RANGE][,NEXT]  - formatted output
+where 
+    FORMAT is sequence of [COUNT][INDIR][COUNT]DESC
+      COUNT  is a decimal number (defaults to 1)
+      INDIR  is '*'   - short indirect pointer
+             or '#'   - long indirect pointer
+      DESC   is:
+             d (D)    - 2-byte (4-byte) decimal
+             o (O)    - 2-byte (4-byte) octal
+             u (U)    - 2-byte (4-byte) unsigned decimal
+             x (X)    - 2-byte (4-byte) hexadecimal
+             f (F)    - single (double) floating point
+             b[xdo]   - byte in hex or (hex, decimal, or octal)
+             c (C)    - character with (without) translation
+             s (S)    - string with (without) translation
+             p (P)    - short (long) pointer
+             n (N)    - output a newline
+             r (R)    - print a name
+             t (T)    - output a tab
+             \"STRING\"  - output STRING
+             .        - display floats to COUNT significance
+             + (-)    - advance (reduce) address COUNT bytes
+             ^        - reduce address by size of last item
+             a (A)    - set print address to follow short (long)
+                        pointer chain
+#
+^9000
+Register command
+  r [REG = VAL]
+#
+^10000
+!RANGE
+13000
+Unassemble commands
+  u RANGE             - unassemble the program
+  U RANGE             - unassemble without symbols
+#
+^13000
+!ADDR
+7000
+The Definition of RANGE
+
+A RANGE defines a block of memory.
+It has one of the following forms:
+
+  ADDR,CNT
+  ADDR to ADDR  (the word `to' must be included)
+  ADDR 
+  ,CNT
+
+The form ADDR,CNT specifies the starting address, ADDR, and 
+a number, CNT. CNT is interpreted differently by different 
+commands. For example, the `disassemble code' command, u, will 
+display CNT lines, while the `display bytes' command, db, will 
+display CNT bytes.
+
+The form ADDR to ADDR specifies the starting and ending 
+addresses of the range.
+
+A full range need not be explicitly specified, because db 
+remembers the last-used range and will set unspecified RANGE 
+parameters from the remembered values:
+
+  *  When a RANGE is specified which consists of a single 
+     ADDR,  the last used CNT is used.
+  *  When a RANGE is specified which consists of `,CNT', the 
+     next consecutive address is used, and the remembered 
+     count is changed to the new value.
+  *  When nothing is specified as the RANGE, the next 
+     consecutive address is used as the starting ADDR, and 
+     the CNT is set to the remembered value.
+#
+^14000
+Copy ouput to a file
+#
+^15000
+Shell to dos 
+#
+^16000
+Display current context 
+#
+^17000
+Evaluate a C expression
+#
+^18000
+Execute program
+#
+^19000
+(re)load program file
+#
+^20000
+Quit
+#
+^21000
+Toggle screen swapping
+#
+^22000
+Toggle source/assembly mode
+#
+^23000
+Find string in current file
+#
+^24000
+Redirect input 
+#
+^25000
+Log commands only to a file
+#
+^26000
+The Definition of CMDLIST
+
+A CMDLIST is a list of commands.
+It consists of a sequence of commands or macros separated by semicolons:
+
+  COMMAND [;COMMAND ...]
+
+If a macro is in a CMDLIST, it must be the last 
+command in the list.
+#
+^27000
+Change sdb console
+#
+^28000
+Macro commands
+  x NAME MACRO        - create a macro
+  X NAME              - display a macro
+#
+^29000
+!EXPR
+37000
+Display value
+  = EXPR              - display the value of EXPR
+#
+^30000
+!ADDR
+7000
+bc   -    Clear a single breakpoint
+bC   -    Clear all breakpoints
+
+Syntax:
+   bc ADDR
+   bC
+
+These commands delete breakpoints from the breakpoint table.
+
+bc deletes the single breakpoint specified by the address 
+ADDR, and bC deletes all breakpoints from the table.
+#
+^31000
+bd   -    Display breakpoints
+
+Syntax:
+bd
+
+bd displays all entries in the breakpoint table. 
+
+For each breakpoint, the following information is displayed:
+  *  Its address, using a symbolic name, if possible.
+  *  The number of times it's  been `hit' without a 
+     breakpoint being taken.
+  *  The skip count for it.
+  *  The command list for it, if any.
+
+For example, a bd display might be:
+  address       hits  skip    command
+  cs:printf_     1     2
+  cs:putc_       0     0      db ds:_Cbuffs
+
+In this example, two breakpoints are in the table. 
+The first is at the beginning of the function printf_; 
+a breakpoint will be taken for it every third time it is reached, 
+and no command will be executed. 
+Given its current hit count, a breakpoint will be 
+taken the next time printf_ is reached.
+
+The second breakpoint is at the function putc_; a breakpoint 
+will be taken each time the function is reached, and will display 
+memory, in bytes, starting at ds:_Cbuffs.
+#
+^32000
+!ADDR
+7000
+br   -    Reset breakpoint counters
+.sP
+Syntax:
+  br [ADDR]
+
+br resets the `hit' counter for the specified breakpoint 
+which is at the address, ADDR. 
+If ADDR isn't given, the `hit' 
+counters for all breakpoints in the breakpoint table are reset.
+#
+^33000
+!ADDR
+7000
+!CMDLIST
+26000
+bs   -    Set or modify a breakpoint
+.sP
+Syntax:
+  [#] bs ADDR [;CMDLIST]
+
+bs enters a breakpoint into the breakpoint table, or 
+modifies an existing entry.
+
+The optional parameter # is the skip count for the 
+breakpoint. 
+If not specified, the skip count is set to 0, meaning 
+that each time the breakpoint is reached it will be taken.
+
+The optional parameter CMDLIST is a list of debugger 
+commands to be executed when the breakpoint is taken.
+#
+^34000
+bt   -    Toggle the call trace mode flag
+bT   -    Toggle the source line trace mode flag
+
+Syntax:
+  bt
+  bT 
+
+bt and bT toggle the call trace mode and source line 
+trace mode flags,  respectively.
+The state of the trace mode flag determines whether trace 
+mode is enabled or disabled.
+
+In call trace mode, the debugger will print the names and 
+arguments of each call within the program as it executes. 
+On return, the value of the function's return will be printed.
+
+In source line trace mode, each statement of the program will 
+be displayed just before it is executed.
+#
+^35000
+!RANGE
+13000
+bm   -    Set memory change breakpoint
+
+Syntax:
+  bm [RANGE]
+
+bm sets and clears a memory change breakpoint. Only one such 
+breakpoint can be active at a time.
+
+A memory change breakpoint is set by specifying the optional 
+RANGE parameter; in this case, a breakpoint will be taken 
+whenever the specified RANGE changes.
+
+A memory change breakpoint is cleared when the bm command 
+is specified with no parameter.
+
+When a memory change breakpoint is set, the debugger will 
+check the specified RANGE at the following times: 
+  * on function entry and exit, when call trace mode is active 
+    (see the bt command);
+  * after each instruction execution, when source line trace 
+    mode is active (see the bT command), or when single-stepping 
+    (see the s and t commands).
+#
+^36000
+!EXPR
+37000
+be   -    Set expression change breakpoint
+
+Syntax:
+  be [EXPR]
+
+be sets and clears the expression breakpoint. 
+Only one such breakpoint can be active at a time.
+
+An expression breakpoint is set by specifying the optional 
+EXPR parameter; in this case, a breakpoint will be taken 
+whenever the specified EXPR is true.
+
+An expression breakpoint is cleared when the be command 
+is specified with no parameter.
+
+When an expression breakpoint is set, the debugger will check the 
+specified RANGE at the following times: 
+  * on function entry and exit, when call trace mode is active 
+    (see the bt command);
+  * after each instruction execution, when source line trace 
+    mode is active (see the bT command), or when single-stepping 
+	(see the s and t commands).
+#
+^37000
+The Definition of EXPR
+
+An EXPR is any valid C expression.
+
+For example, an EXPR can consist of a single term, a series of 
+terms separated by operators, the use of registers by their 
+standard names, or 16 bit values representing memory locations 
+of the form segment:offset.
+
+Here are some examples of EXPR:
+  si
+  x + 2.0
+  (i == j) ? 2 : 3
+  ds:0x4127
+  sin(y)
+  array[j]
+#

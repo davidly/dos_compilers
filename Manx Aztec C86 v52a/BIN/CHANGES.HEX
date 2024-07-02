@@ -1,0 +1,8 @@
+Changes to hex86:
+
+4/9/92 ------------- Released v5.2a beta 1 ------------------------
+
+5/10/92 jd
+	When generating a jump instruction at reset vector for system in which
+	odd bytes are in one set of ROMs and even bytes in another, HEX86
+	put the jump instruction at the wrong address

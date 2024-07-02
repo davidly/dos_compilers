@@ -1,0 +1,58 @@
+Changes to AHEX:
+
+1/16/92
+	- ahex was using wrong memory model for stricmp()
+
+	- when path was specified on file to be hexed, ahex generated an invalid
+	  name for a temporary file.
+
+	- cleaned up log of ahex messages.
+
+1/23/92
+	- added support to ahex for separation of binary output to odd and even
+	  bytes.
+
+1/27/92
+	- added support for splitting binary files into ROM-sized chunks.
+
+	- Got rid of the fluff reporting stuff - it got in the way too much!  It
+	  can be re-enabled by #define'ing MSDOS, if need be.
+
+	- Added warning:
+
+		WARNING: Segment '%s' in the input file not specified in order list.
+
+	  for when the -a or -s options are used and a segment is found which
+	  isn't on the list.  It does not warn about 0-length segments or the
+	  _bss segment, which should cut down on spurious warnings (however,
+	  spurious warnings of this type can still occur on occasion).
+
+3/5/92
+	I was angrered by ahex's poor design, and so sent devastating rains for 40
+	days and 40 nights to deluge the source code and render it unusable.
+	After the waters resided, a new ahex rose from the destruction, and lo!, it
+	was good.
+
+		- When in non-ICE mode, ahex acts like a mini-locator, locating
+		  segments and classes with ROM.
+
+		- Option syntax based on aloc syntax.
+
+4/9/92 ----------------------	Released v5.2a beta 1 ------------------
+
+8/14/92 conv_to_hex() *jd
+	ahex was outputting screwy data after putting out extended address record,
+	because counter not being reset.
+
+8/27/92 add_extension() *jd
+	ahex was not generating correct extension when input file specified a
+	path using dots (e.g. ..)
+
+8/27/92 conv_to_hex() *jd
+	ahex output extended addr record after each 65535 bytes, not 65536.
+
+8/27/92 conv_to_hex() *jd
+	ahex was not deleting its temporary file
+
+8/31/92 layout.c *jd
+	ahex did not properly handle segments whose memory address was 0

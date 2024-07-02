@@ -1,0 +1,6 @@
+../graphics/mode.o
+../graphics/circ.o
+../graphics/lin.o
+../graphics/point.o
+../graphics/address.o
+../graphics/scr_call.o

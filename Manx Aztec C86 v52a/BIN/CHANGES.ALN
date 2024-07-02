@@ -1,0 +1,85 @@
+Changes to ALN:
+
+10/12/91
+1) LNR would put out a bad .lnk file when it encountered static data
+(i.e., data declared with the 'static' keyword in C).  When the bad
+.lnk file was given to aloc, aloc would abort with a fatal error.
+
+2) LNR would abort if it was given more than ~17 files to link.
+
+3) In some situations LNR would put out a bad .lnk file if RDB debugging
+information was desired, which aloc would subsequently reject.
+
+10/22/91
+4) LNR would exit w/ an error if it encountered control characters in
+a -f file (including ^Z, which some editors put out at the end of a
+file).
+
+11/19/91 mapfile.c *jd
+	lnr was only outputting \n to map file, not \r\n. 
+	added code to pm_putchar to add the \r when passed \n.
+
+11/20/91 debug.c *mks
+	lnr was putting out bad index fields in the debugging records
+
+1/10/92 MWS
+	Changed name from lnr to aln to be consistent with the rest of the
+	ROM tools.  So, we've now got aln, aloc, and ahex.
+
+1/16/92 azpass2.c MWS
+	Modified expression fixup code so that SUB expressions with
+	two symbols will work.  i.e.:
+
+		Expr SUB
+            GBLSYM 0, endtbl
+            GBLSYM 1, ledxref
+
+	The only reason this works is because SUBS of this type always turn
+	out to be constants.  In other words, the #$%!@ assembler should be
+	doing this itself.
+
+2/10/92 pass1.h MWS
+	Modified 'Data_seg' segment definition to reserve 2 bytes at the beginning
+	of the Data group.  This makes it easier to catch NULL-pointer write
+	bugs, and also matches what ln does.
+
+4/9/92 ------------------	Released v5.2a beta 1 ---------------------
+
+8/26/92 omffile.c jd
+	changed omfinit() to compute acbp field in segdef records, so that
+	segment alignment codes work
+
+8/28/92 alnmain.c jd
+	When generating output file name from first input name that includes
+	a path having dots (e.g. ../foo.o), aln didn't generate correct output
+	name.
+
+9/3/92 pass1.h *jd
+	aln leaves 2 unused bytes at beginning of _data (aka dataseg) segment,
+	but wasn't adjusting size of segment for those bytes
+
+10/4/92 ------------------	Released v5.2a beta 2 ---------------------
+
+
+10/12/92 jd: link.h
+	aln was creating invalid fixup records, because it was creating LEDATA
+	records that were longer than the maximum 1024 byte length.
+
+10/12/92 jd: seglook()
+	aln was not gathering together segments in the same class, but this
+	is required by rdb (it expects all code symbols to be grouped together
+	in the .dbg file, followed by the data symbols). aloc could handle
+	this separation of segments, but not rdb.
+
+
+10/19/92 jd: getval()
+	aln was not correctly processing the DATAREF, CODEREF, and BSSREF
+	loader items, which are generated when sqz optimizes the object module
+	libraries.
+
+10/28/92 jd: omf_fixup()
+	aln was not generating the correct offset for a fixup record that
+	referenced the first data bytes of the previous LEDATA record
+
+11/10/92 jd: outrecord(), omf_fixup(), outbyte(), RecordAlmostFull()
+	Added code to flush omf record buffer when it's almost full

@@ -1,0 +1,7 @@
+Changes to unitools GREP, DIFF, LS:
+
+4/9/92 ------------- Released v5.2a beta 1 -------------------------
+
+9/21/92 jd: grep
+	changed grep to ignore directories.
+

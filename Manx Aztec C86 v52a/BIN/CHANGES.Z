@@ -1,0 +1,12 @@
+Changes to Z:
+
+4/9/92 ---------------- Released v5.2a beta 1 ------------------------
+9/17/92 jd: termpc.c, colon.c
+	Added support for vga 50-line mode. 
+	New command- :se 50={1|0}
+
+10/4/92 ---------------- Released v5.2a beta 2 ------------------------
+
+10/14/92 jd: dobang()
+	Before executing an external program for the :! command, z now clears
+	the screen and homes the cursor.

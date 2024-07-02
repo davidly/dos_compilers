@@ -1,0 +1,10 @@
+Changes to LN:
+
+11/25/91
+	Linker was mixing calls to sbrk and malloc, resulting in linker incorrectly
+	reporting 'out of memory' error messages
+
+4/9/92 ---------- Release v5.2a beta 1 -----------------------
+
+10/2/92
+	One minor bug fixed related to parsing of command line arguments.

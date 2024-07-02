@@ -1,0 +1,64 @@
+------------ Released beta 1 ------------------------
+6/7/92 jd: dos/utime.c
+	changed utime() to call _dosdattim() instead of time()
+	i.e. use dos format for a file's time instead of secs since jan 1, 1970
+
+6/24/92 jd: dos/ioctl.c
+	ioctl() was aborting when called with a valid fd
+
+6/29/92 jd: dos/makefile
+	large code model not supported for overlays, so removed lc files
+	from makefile
+
+8/28/92 jd: stdio/getc.c & filbuf.c
+	When reading ctrl-z from a text stream, getc was not returning EOF.
+
+8/31/92 jd:
+	Removed lmalloc.c from stdlib.lzh (obsolete)
+	Removed pow.asm from math.lzh (pow.c contains actual source)
+	Removed ttyio.asm from sysio.lzh (ttyio.c contains actual source)
+	Removed croot.asm from 86sup.lzh (croot.c contains actual source)
+	Removed fclose.asm from stdio.lzh (fclose.c contains actual source)
+
+8/31/92 jd: stdio/fwrite.c
+	When outputting in text mode, fwrite() translated \n to \n\r, not
+	\r\n.
+
+9/1/92 jd: dos/ioctl.c
+	changed ioctl to use stdin, stdout, or stderr, whichever is assigned
+	to console.
+
+9/1/92 jd: graphics/mode.c & point.asm
+	added support for ega & vga graphics modes
+
+9/8/92 jd: 86sup/crt0.asm
+	changed reference from v4.10a to v5.2a
+
+9/8/92 jd: open.c, sysio/io.asm, include/fcntl.h, & sysio/ioincl.c
+	Added code to check that file handle doesn't go beyond end of our _ioflg[]
+	array. 
+	Created ioincl.c, which, when precompiled into ioincl.h, defines
+	array size in assembler terms.
+
+9/20/92 jd: 86sup/filetime.c
+	replaced LocalFileTime() in 86sup/locftime.c with TimeFile2TM() in 
+	filetime.c
+
+	Added new function TimeTM2File() in 86sup/filetime.c.
+
+9/21/92 jd: dos/scdir.c
+	Added new feature to scdir(): when called with NULL parameter, it resets
+	and can then be called with new pattern.
+
+9/23/92 jd: string/movblock.asm
+	Changed movblock() so that length of 0 means "don't move anything", instead
+	of "move 64kb".
+
+	Fixed bug where movblock could occasionally move 1 byte too many.
+
+9/23/92 jd: rom86/abeginsd.asm & rom86/abeginld.asm
+	Fixed code for initializing far data
+
+	Fixed bug where these routines were setting starting address of 
+	near initialized data in ROM 1 byte too high. (i.e. should be _Cend_, not
+	_Cend_+1).

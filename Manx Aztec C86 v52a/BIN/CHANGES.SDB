@@ -1,0 +1,102 @@
+8/19/90
+	token() wasn't handling macro expansion correctly. body must be
+	unget()-ed from last to first, not first to last.
+
+	bpchk() wasn't recognizing conditional breakpoints - setting Mptr
+	to condition doesnt cause gch() to get the condition's chars.
+
+?/?/91
+	added -a option to rwdb's 'lp' command, for loading absolute symbols
+
+7/16/91
+	added +i command to wdb and rwdb to allow stepping into int handler
+
+1/27/92 MWS
+	Changed default absolute Intel OMF file extension from ".omf" to
+	".loc", to match how other Aztec tools work.
+
+2/10/92 MWS \windpro\hype\src\dispnode.c
+	Changed hypertext system to look for an environment variable named
+	'AZTEC' to find help files.  It does this _last_, after all its other
+	gyrations.
+
+4/9/92 --------------- Released v5.2a beta 1 ----------------------------
+
+9/21/92 jd: woption.c
+	On some systems, mouse wouldn't go below line 25 when in 50-line mode.
+
+9/22/92 jd: reg_mod()
+	sdb didn't allow 'r' command to take parameter; e.g. "r ip=.4"
+
+
+9/22/92 jd: parse()
+	If typed-in command contained invalid expression, sdb displayed error
+	msg on user screen, not on sdb's screen.
+
+9/22/92 jd: draw_thumbs()
+	If mouse was in source or message window when command was typed, mouse
+	disappeared and didn't reappear until it was moved.
+
+9/25/92 jd: remote/monomf.c
+	When downloading omf file, rdb sent too many bytes.
+
+9/28/92 jd: wbpexpr.c
+	Counldn't set an Expression True breakpoint from dialog box.
+
+9/28/92 jd: wmemops.c
+	With multiple memory dump windows open, each one's 'set options' dialog
+	box showed same values, which were those set last.
+
+9/28/92 jd: getch()
+	Couldn't read in a program's macro (.mac) file or redirect command input
+	to a disk file.
+
+9/28/92 jd: remote/monexec.c
+	When rdb was loading a program's symbols in response to an 'ls' command,
+	it didn't load the program's macros; and when quitting it didn't save
+	the program's macros to a .mac file.
+
+9/28/92 jd: IsEGA()
+	To see if host system has EGA attached, rdb used peek() instead of 
+	hostpeek().
+
+9/29/92 jd: text(), int.asm, localint.asm, setjmp.asm, setjmp.h
+	Ctrl-Break handler wasn't supported.
+
+9/29/92 jd: fixup()
+	Changed debugger so that ctrl-break justs interrupts executing program,
+	without terminating it.
+
+9/30/92 jd: dbgcall()
+	sdb locked up when evaluating a function call: eg "e myfunc()"
+
+10/1/92 jd: ShowStats(), main(), cmdtab.c, etc
+	Added 'di' command to display info about sdb's heap usage.
+
+10/4/92 --------------- Released v5.2a beta 2 ----------------------------
+
+10/20/92 jd: OMFload(), loadexe()
+	Changed rdb so that when .loc or abs .exe program is downloaded to ROM
+	system, initial stack is set to area at top of monitor data. Previously,
+	.loc's initial stack was random and abs .exe's was 64k above _Dorg; when
+	monitor transfered control to user program by pushing info on this random
+	stack, random areas of memory were overwritten.
+
+
+11/3/92 jd: whelp.c wdbpro.c
+	sdb and rdb couldn't find the help files sdb.hyp and sdb.idx, even when
+	the AZTEC environment variable pointed at the directory that held them.
+
+11/4/92 jd: wconfig.c
+	Changed name of default config file to sdb.set, to avoid conflict with
+	4.10d sdb, which used sdb.ini.
+
+	Changed order in which sdb searches for config file. It's now 
+		current dir,
+		AZTEC dir, if AZTEC env exists
+	if config file not found and AZTEC doesn't exist, sdb.set is created
+	in current directory
+
+	Added sdb.set file, with default settings, to sdb.lzh, so that install
+	program will put this in bin directory, where it can be found during
+	standard usage of sdb and rdb

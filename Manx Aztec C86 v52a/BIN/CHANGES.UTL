@@ -1,0 +1,18 @@
+Changes to utilities: 
+
+4/9/92 ----------------- Released v5.2a beta 1 ---------------------
+
+9/10/92 jd: cnm
+	cnm wasn't printing segment, class, group info correctly when in long mode.
+
+9/21/92 jd: lb
+	changed lb to make file & module searches case insensitive.
+
+10/4/92 ----------------- Released v5.2a beta 2 ---------------------
+
+10/27/92 jd: cnm
+	Added -U option to cnm, to display info about unnamed symbols
+
+11/17/92 jd: ai
+	Added ai program to util.lzh
+

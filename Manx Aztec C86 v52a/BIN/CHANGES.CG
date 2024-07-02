@@ -1,0 +1,53 @@
+Changes to CGEN:
+
+4/9/92 ---------- Released v5.2a beta 1 ---------------------
+
+9/2/92 trailer() *jd
+	Added +t option to force $$var's (used for far data items) into codeseg
+	instead of dataseg.
+
+9/11/92 starregs() *jd
+	Bad code generated for:
+		int a; huge struct mystr {int i,k,j;} *mp;
+		m() { a = mp->j; a = mp->i; }
+
+9/14/92 gencast() *jd
+	When a null ptr was cast from near to far, result was not null (it was ds:0)
+
+9/15/92 jd: outoper()
+	For the following:
+		(*(far void(*)())0x12345678L)()
+	cgen generated far call to 5678h, not 0x12345678.
+
+9/16/92 jd: genstr()
+	For some structure copying, cgen generated bad code, because it
+	always prepared right side first, even if left was more complex. 
+	Changed cgen to do hardest side first.
+
+9/16/92 jd: templ.inp
+	For addition of constant to a huge pointer, compiler wasn't generating
+	extrn references to $hadd. For inc of huge ptr, it wasn't generating
+	extrn ref to $hinx.
+
+
+10/4/92 ---------------- Released v5.2a beta 2 ----------------------------
+
+
+10/5/92 jd: execvp()
+	Relinked 'cgen' to use fixed execvp() - previous execvp() didn't always 
+	correctly search all directories specified in PATH.
+
+10/22/92 jd: EvalRightFirst()
+	For some expressions, cgen was dereferencing a null pointer, causing 
+	random areas of memory to be modified
+
+10/22/92 jd: gencast()
+	The check for a null pointer in a cast of a near pointer to far
+	does not always have to be done. cgen was modified so that if the
+	near pointer is guarenteed not to be null, the check is not done,
+	thus saving space.
+
+10/23/92 jd: outstatic()
+	cgen was putting near static uninitialized variables in the data
+	segment, not the bss segment, thus increasing the size of the data
+	seg.
