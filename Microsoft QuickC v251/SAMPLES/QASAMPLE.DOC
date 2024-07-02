@@ -1,0 +1,52 @@
+			       QASAMPLE.DOC File
+
+                     QuickAssembler Compiler, Version 2.51
+
+
+===========================< Samples List >================================
+
+In addition to examples in the Quick Advisor, the following
+sample programs are provided with QuickAssembler. The main
+program files (FILEDEMO.C, MATHDEMO.C and MISCDEMO.ASM) contain
+calls to routines in the support modules (FILE.ASM, MATH.ASM,
+MISC.ASM, and COMMON.ASM).
+
+     Files              Description
+     -----              -----------
+
+     FILEDEMO.MAK       FILEDEMO illustrates DOS functions related to
+     FILEDEMO.C         file handling. It also illustrates many general
+     FILE.ASM           instructions and directives. Most of the procedures
+			in FILE.ASM are also included in on-line help.
+
+     MATHDEMO.MAK	MATHDEMO creates a simple calculator. It primarily
+     MATHDEMO.C 	illustrates instructions related to numeric
+     MATH.ASM           calculations. Many general instructions and
+                        directives are also illustrated. Most of the
+                        procedures in MATH.ASM are also included in
+			on-line help.
+
+     MISCDEMO.MAK       MISCDEMO illustrates miscellaneous instructions,
+     MISCDEMO.ASM       directives, DOS functions, and BIOS functions.
+     MISC.ASM           Most of the procedures in MISC.ASM are also
+			included in on-line help.
+
+     COMMON.ASM 	This is an assembly-language module containing
+			assembly procedures used by FILEDEMO, MATHDEMO, and
+                        MISCDEMO. The procedures in it are also
+			included in on-line help.
+
+     DEMO.INC		These are include files used by the assembly and
+     DEMO.H		C modules. DEMO.H is included by all C modules;
+			DEMO.INC is included by all the assembly-language
+			modules. The constants and structures are
+			equivalent in both files. DEMO.INC also has
+			assembly language macros that are duplicated in
+			the on-line help.
+
+The sample programs can be used in connection with on-line help. When
+you examine a help topic that has an example procedure, macro, or data
+structure, you may also wish to see the example used in context in an
+example program. You can load the appropriate sample program and search
+for instances of the help topic. You may also wish to trace through
+samples to see step-by-step execution of sample code.

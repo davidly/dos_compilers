@@ -1,0 +1,507 @@
+                              README.DOC File
+                    
+                           Release Notes for the
+   Microsoft(R) QuickC(R) Compiler with QuickAssembler, Version 2.51
+
+          (C) Copyright Microsoft Corporation, 1989-1990
+
+This document contains release notes for Version 2.51 of the Microsoft
+QuickC Compiler with QuickAssembler. It includes information on both C and 
+assembly language. The Contents section below lists the documentation for 
+C and assembly language affected by the release notes. In all cases, the 
+information in this document supersedes the information in the manuals.
+However, Microsoft revises its documentation at the time of reprinting;
+the manuals may already include some of this information.
+
+Note: If you're reading this from within on-line help, but would prefer to
+print it out by loading README.DOC into a word processor, you can find the
+file in the executable files directory (the default is \QC25\BIN).
+
+The other documentation files are \SAMPLES\QASAMPLES.DOC, which explains
+the assembly-language example programs in the SAMPLES directory; and
+SAMPLES.DOC, which explains the C-language example programs in the same
+directory.
+
+(COMPAQ is a registered trademark of Compaq Computer Corporation.)
+(Intel is a registered trademark of Intel Corporation.)
+(Novell is a registered trademark of Novell, Inc.)
+
+
+===============================< Contents >================================
+
+
+This document has five parts:
+
+          Part           Notes
+          ----           ----------------------------------------------
+            1            Notes on "Up and Running"
+            2            Notes on "C for Yourself"
+            3            Notes on "QuickC Tool Kit"
+            4            Notes on "QuickAssembler Programmer's Guide"
+            5            Additional Notes on QuickC with QuickAssembler
+
+
+
+===================< Part 1: Notes on "Up and Running" >===================
+
+
+Page  Note
+----  ----
+
+Inside Front Cover
+      Brief Guide to Keystrokes
+---   -------------------------
+      The chart on the inside front cover says the ESC key "stops the
+      compiler and linker from continuing."  ESC stops the compiler but NOT
+      the linker.  Press CTRL+BREAK to stop both the compiler and linker.
+
+      If you are using the debugger and running a program that expects
+      keyboard input, pressing either CTRL+C or CTRL+BREAK and then ENTER
+      will allow you to exit.
+
+  6   Running SETUP
+---   -------------
+      If you already have QuickC installed, SETUP will overwrite the
+      existing QC.INI file that contains the current compiler options,
+      etc. set in the environment. If you wish to save those settings,
+      rename this file before running SETUP.
+
+ 19   Using QuickC
+---   ------------
+      If you own a COMPAQ(R) SLT/286, and the LCD display goes
+      blank when exiting from QuickC back to DOS, you should
+      run the program DAC_ON.COM before loading QuickC. To obtain a
+      copy of DAC_ON.COM, contact your authorized COMPAQ Computer
+      Dealer.
+
+ 42   The Debugger
+---   ------------
+      The Quickwatch command does not display complete information
+      for assembler structures. Only the first member of a structure
+      is shown.
+
+      You may see the message "currently running program terminated"
+      while debugging.
+      
+      This may happen if your program is linked with a user-created
+      library module that contains debugging information, and for
+      which the source files are present. In such a case, single-
+      stepping into a function contained in the library will cause
+      the debugger to terminate the current program and attempt to
+      compile the source files for the library module into an
+      executable program.
+
+      You can avoid this problem by setting your program list to
+      contain only the name of the source file of your program.
+
+(miscellaneous)
+
+      Accessing Memory at 0xFFFF
+      --------------------------
+      Due to a problem with the Intel(R) processor, any attempt to
+      access a word value at memory location 0xFFFF may cause the
+      system to hang. The most likely way for this to happen is from
+      within the QuickC debugger, if you use the WO (display word) or
+      DW (display double word) operators to examine a register 
+      containing 0xFFFF. Any C or assembly-language program trying
+      to access that location may also cause the system to hang.
+
+      Incompatibility with Novell(R) Netware
+      --------------------------------------
+      If you have a peripheral (such as a mouse) that uses IRQ 3, and
+      your system is part of a network using Novell Netware version
+      2.15 or lower, your system may hang when you load the QuickC
+      environment. As a temporary solution, reset your peripheral to
+      use another interrupt. For more information, contact your Novell
+      Netware dealer.
+
+
+
+===================< Part 2: Notes on "C for Yourself" >===================
+
+
+Page  Note
+----  ----
+
+ 53   Type Qualifiers
+---   ---------------
+      The fourth paragraph in this section is incorrect. A long double
+      value is the same size as a double. It contains 8 bytes, not 10. It
+      expresses a floating-point number with at least 15 digits of
+      precision, not 19. Table 4.1 on page 49 should also be corrected.
+
+164   Declaring a Pointer with the Wrong Type
+---   ---------------------------------------
+      In the first program listing on the page, the line
+
+           ptr = val;      /* Error! */
+
+      should read
+
+           ptr = &val;     /* Error! */
+
+215   Table 11.4   Standard vs. Low-Level
+---   -----------------------------------
+      The headings across the top of the table should read 
+
+         Function     Parameters        Returns        Error Condition
+
+298   Vector-Mapped Fonts
+---   -------------------
+      Add this note to the description of vector mapping:
+
+      If a vector-mapped font is selected in graphics mode, any function
+      affecting "_moveto" or "_lineto" will also affect the font
+      ("_setlinestyle" and so on) when "_outgtext" is called.
+
+304   Example Program Using Fonts
+---   ---------------------------
+      The line reading
+
+           if( !_setfont( list ) )
+
+      should read
+
+           if( _setfont( list ) >= 0 )
+
+309   Limits on _asm Identifiers
+---   --------------------------
+      Never use reserved assembly words as labels, variable names, or other
+      identifiers within an _asm block. This includes words in the
+      following categories:
+
+         - ASM Opcodes such as CMP or MOV
+         - Opcodes new to the 80186, 80286, and 80386 such as ARPLS or CLTS
+         - Reserved operand words such as WORD or PARA
+         - C library functions such as "exit" or "time"
+
+      For example, the following code is not permitted:
+
+           main()
+           {
+              int word;
+              _asm { mov WORD PTR [word],ax }
+           }
+
+      The variable 'word' can be used in the C part of the program, but not
+      within the assembly block.
+
+ 366  Font Display Routines
+ ---  ---------------------
+      The return values for the _registerfonts and _setfont functions
+      should be
+
+      _registerfonts
+
+      Returns: the number of fonts registered, or a negative value if
+               failure
+
+      _setfont
+
+      Returns: a negative value if failure, zero or positive if
+               successful
+
+
+
+==================< Part 3: Notes on "QuickC Tool Kit" >===================
+
+
+Page  Note
+----  ----
+
+  94  /Gw, GW (Generate Code for Windows Function Calls)
+ ---  --------------------------------------------------
+      QuickC 2.5 supports development of programs for the next release
+      of Windows. If you wish to develop programs for Windows 2.03, you
+      must explicitly link your program with C51STUBS.LIB.
+
+ 130  /INC (Prepare for ILINK)
+ ---  ------------------------
+      By default, ILINK will call LINK if the incremental link fails.
+      To make ILINK call QLINK instead, use the /E option and an 
+      argument. For example:
+
+           ILINK /E "QLINK @RESPONSE" PROGRAM.EXE
+
+ 259  Warning Message C4018
+ ---  ---------------------
+      The warning message below is new and should be added to page 259:
+
+           C4018   'operator': signed/unsigned mismatch
+
+      An expression involving the specified operator had inconsistent
+      integer types. The two integer expressions used in the comparison
+      operation are not of the same signed or unsigned type.
+
+(miscellaneous)
+
+      Makefile Compatibility with QuickC 2.0
+      --------------------------------------
+      The name of the linker supplied with QuickC has been changed
+      from LINK to QLINK. Any makefile used with QuickC 2.0 that
+      specify the LINK command should be changed accordingly.
+
+      Makefile Compatibility with Programmer's WorkBench
+      --------------------------------------------------
+      The makefiles generated by QuickC are not fully readable by 
+      Microsoft Programmer's WorkBench (PWB) included with Microsoft's
+      Professional Development Systems. PWB is unable to read the
+      linker options specified in QuickC makefiles, so you will have to 
+      re-specify those options using PWB's menus. QuickC cannot read
+      makefiles generated by PWB.
+
+
+
+========< Part 4: Notes on "QuickAssembler Programmer's Guide" >===========
+
+
+Page  Note
+----  ----
+
+ xi   Running SETUP Before Using Help
+---   -------------------------------
+      Before using the Quick Advisor, make sure you run the SETUP
+      program. This program combines files on different disks to build
+      QA.HLP, which contains help on assembly language as well as DOS
+      and BIOS interrupt functions. 
+
+ xi   Expanding Environment Space
+---   ---------------------------
+
+      QuickAssembler for QuickC makes use of certain environment
+      variables, such as HELPFILES. However, these variables are stored
+      in an area of memory called the "environment space." You may need
+      to expand this memory to use the new environment variables
+      successfully.
+
+      If you run DOS 3.2 or later, you can set the environment space
+      with the DOS SHELL command. For example, the following command
+      sets the environment size at 3000 bytes when placed in CONFIG.SYS:
+
+           SHELL=COMMAND.COM /E:3000 /p
+
+      Consult your DOS manual for more information.
+
+ xi   Temporary Files and the TMP Environment Variable
+---   ------------------------------------------------
+      If you do not have a TMP environment variable set, the linker
+      prints the following message when it creates a temporary file:
+
+           temporary file <filename> created
+
+      To avoid getting this message, set the TMP environment variable to
+      the name of a drive and directory. This drive should have some free
+      space. For example, the following command line sets C:\TEMP as the
+      directory where the linker places temporary files:
+
+           SET TMP=C:\TEMP
+
+      For convenience, place this command (or a similar one) in your
+      AUTOEXEC.BAT file to execute it automatically.
+
+  6   Terminating the Program with .EXIT
+---   ----------------------------------
+      When you use the .STARTUP directive, the recommended method for
+      terminating the program is to use the .EXIT directive. With
+      stand-alone assembly programs, you must explicitly terminate
+      or the processor will execute meaningless instructions beyond the
+      end of the program.
+
+      The .EXIT directive has the following syntax:
+
+           .EXIT [exitcode]
+
+      in which exitcode is an optional register, memory location, or
+      constant that contains a value to return to DOS. This value must
+      not be larger than one byte.
+
+      When you use this directive, the assembler generates instructions
+      that call DOS function 4CH (Exit with Return Code). You can use
+      another method to terminate the program if you wish. The assembler
+      generates an advisory warning if you use .STARTUP without .EXIT.
+
+      The .EXIT directive requires that .MODEL was previously used.
+
+      Within the environment, the assembler generates an advisory
+      warning message if you use .STARTUP without using .EXIT. Outside
+      the environment, the assembler does not generate this message.
+
+  7   Effect of ILINK on Building a Program
+---   -------------------------------------
+      By default, the QuickC environment invokes ILINK to link programs.
+      ILINK, in turn, requires that a program have a default data
+      segment (it may be empty). To meet this requirement, you can do
+      any of three alternatives:
+
+      1. Declare a data segment with .DATA if using simplified segment
+         directives.
+
+      2. Declare a group named DGROUP.
+
+      3. Turn Incremental Link off in the Linker Flags dialog box.
+
+      The use of ILINK imposes some other requirements on assembly-
+      language programs:
+
+      1. You cannot have a segment with the AT attribute.
+
+      2. Avoid depending on distances between segments being fixed. Some
+         programs calculate the distance between two segments and then
+         use this value elsewhere. When ILINK is in use, segment-address
+         arithmetic is unpredictable.
+
+      3. The DUP operator cannot have a program address as an operand.
+         For example, the following statement is compatible with ILINK:
+
+      myarr     DW     10 DUP (5)
+
+      However, the next statement is not compatible with ILINK, even
+      though it is supported by the assembler:
+
+      myarr     DW     10 DUP (myproc)
+
+  7   Searching for Include Files
+---   ---------------------------
+      When building and running a program, note that the assembler looks
+      for include files in the following order:
+
+      1. The directory in which the current source file is located
+      2. Directories specified with the /I command-line option
+      3. The current directory (as recognized by the environment)
+      4. Directories specified in the INCLUDE environment variable
+
+  9   Assembling from the Command Line
+---   --------------------------------
+      QCL does not report some warning messages reported inside the QuickC
+      environment. QCL does not warn you if you use .STARTUP without .EXIT.
+
+ 14   Specifying Debug Expressions
+---   ----------------------------
+      The QuickC environment now supports an optional display-format
+      character for examining arrays. You can add a suffix to any
+      expression for the Watch window as follows:
+
+           expression,nf
+
+      in which n is a number and f is a format specifier (such as i, x,
+      d, or a). Both are optional. The use of n displays the expression
+      as if it were an array. If the expression is already an array,
+      then the use of n displays the array as if it were an array of a
+      higher dimension. The assembler does not type any symbol as an
+      array. Thus, the use of n with a variable declared in assembly
+      always displays the variable as an array of one dimension.
+
+      The optional f display-format specifier only affects the format
+      in which each member of the array is displayed.
+
+      The Watch window determines the type of array from the expression
+      or from BY, WO, or DW if used. If WVAR is declared as type WORD
+      (or "int" in C), then WVAR,5x displays the first five words at the
+      address of WVAR. The "x" specifies hex format. BY WVAR,5x displays
+      the first five bytes at the address of WVAR. Each byte is
+      displayed as if it were a hexadecimal word-sized value.
+
+ 56   The PROC Directive
+---   ------------------
+      The PROC directive sets the BP register to point to a procedure's
+      frame, but only if you use a parameter list or the LOCAL directive.
+
+ 82   Using Full Segment Definitions
+---   ------------------------------
+      The program example on this page should declare class name 'CODE'
+      for the segment definition:
+
+      _TEXT     SEGMENT  'CODE'
+
+      The class name 'CODE' is necessary if you want to debug the
+      module. The assembler issues a warning message if you assemble a
+      code segment without this class name. If you use simplified
+      segment directives, the code segments automatically have this
+      class name.
+
+109   Defining Segment Combine Types
+---   ------------------------------
+      The combine type describes how the linker combines segments, but
+      does not affect the assembler itself. Within any given module, the
+      assembler concatenates segments with the same name. Thus, segments
+      with the COMMON attribute are overlapped only if they are in
+      different modules.
+
+383   Assembling with Two Passes
+---   --------------------------
+      In addition to the options listed in Appendix B, QCL supports the
+      /P2 option, which specifies two-pass assembly. The /P1 option
+      specifies one-pass assembly and is now the default. Two-pass
+      assembly is slower than one-pass assembly, but enables some
+      language-specific features (such as IF1 and IF2) that rely on two
+      passes.
+
+383   Removing Copyright Message
+---   --------------------------
+      In addition to the options listed in Appendix B, QCL supports the
+      /nologo option, which prevents QCL from printing the product name
+      and copyright information. QCL also prints a warning message when a
+      nonstandard version of DOS is detected. The /nologo option prevents
+      this message from being printed.
+
+386   Using /AT to Generate a .COM File
+---   ---------------------------------
+      If you use QCL to generate a .COM file but do not use /AT, the
+      linker may produce a file with an .EXE extension. This file is
+      really in .COM format. It should be renamed immediately. You can
+      prevent this situation by using the /AT option, or by using the
+      /Fe option to explicitly give the name of the output file. For
+      example, the following command line produces a file with a .EXE
+      extension:
+
+           QCL sample.asm /link /TINY
+
+      However, the following command lines each produce a file with a
+      .COM extension:
+
+           QCL /AT /Ln sample.asm /link /TINY
+           QCL /Fe sample.com sample.asm /link /TINY
+
+392   Line-Number Index in Listing File
+---   ---------------------------------
+      The line-number index generated by /Sq (and generated by default
+      within the environment) lists correspondences between source-file
+      lines and listing-file lines. This index, placed at the end of the
+      listing file, is read and interpreted by the QuickC environment.
+      You should avoid writing utilities that read this index. The
+      format of the line-number index is subject to change without
+      notice.
+
+
+
+========< Part 5: Additional Notes for QuickC with QuickAssembler>=========
+
+
+Source of DOS and BIOS Function Information in Help
+---------------------------------------------------
+On-line help includes information on IBM ROM BIOS services as well as
+MS-DOS service calls. The information on these topics is adapted from the
+books "IBM ROM BIOS" and "MS-DOS Functions" by Ray Duncan. Both books are
+published by Microsoft Press and are part of the Programmer's Quick
+Reference Series.
+
+Math Coprocessor Instructions in .ASM Programs
+----------------------------------------------
+If you do not have a math coprocessor chip, you must use the /FPi option
+when assembling code for emulated floating-point instructions. If the
+switch is omitted, your assembly-language programs may hang your machine.
+
+Setting Breakpoints on Assembly Procedures and Labels
+-----------------------------------------------------
+Version 2.51 of QuickAssembler now supports setting breakpoints on labels.
+Because assembly procedures are treated as labels, a dialog box verifies if
+you want to set a breakpoint at a procedure label.  Additional information
+can be found in the on-line help. 
+
+ILINK and Tiny Model
+--------------------
+When switching to tiny model from another model, or from another model to
+tiny model, turn off the incremental link option the first time you build
+after switching models.  Alternatively, you can delete to .SYM and .ILK
+files to force a full link.  ILINK should always be disabled
+when creating tiny model (.COM) programs.

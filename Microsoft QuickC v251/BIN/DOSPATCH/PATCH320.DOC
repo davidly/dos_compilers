@@ -1,0 +1,57 @@
+
+			 PATCH320.DOC File
+
+	     Notes on patching IBM(R) PC-DOS Version 3.20
+
+	      (C) Copyright Microsoft Corporation, 1988
+
+
+Version 3.20 of IBM(R) PC-DOS contains a bug that can cause unexpected results
+in programs that generate floating-point exceptions. This file explains how to
+install a small patch in DOS to eliminate the problem.
+
+It is especially important to install this patch if you wish to use the C
+run-time routine signal with the SIGFPE parameter, since that routine does
+not work correctly in the unpatched version of IBM PC-DOS 3.20. IBM Corporation
+also supplies a patch to eliminate this problem.
+
+Note that MS-DOS(R) Version 3.20 contains another, different floating-point
+bug. The README.DOC file for this release tells you where to find more
+information about installing a patch for that bug. If you use any version of
+DOS 3.20 other than IBM PC-DOS 3.20 or MS-DOS 3.20, contact your hardware
+manufacturer to determine whether the problem exists in your version.
+
+You can install the DOS patch for IBM PC-DOS 3.20 by following these steps:
+
+    1.	Format a blank floppy disk. (Do NOT use the /s formatting option to
+	transfer system files to the disk.)
+
+    2.	Use the SYS command to copy the files IBMDOS.COM and IBMBIO.COM to
+	the new disk. For example, if you boot from drive C:, you could use
+	these commands:
+
+	C:
+	SYS A:
+
+    3.	Use the COPY command to copy the files COMMAND.COM, SYS.COM,  and
+	DEBUG.COM to the new disk.
+
+    4.	Use the COPY command to copy the files STKPAT.BAT, STKPAT.SCR,
+	RMRHS.EXE, and SETRHS.EXE from the \PATCH directory of your hard-disk
+	drive to the new disk.
+
+    5.	Reboot your system from the floppy disk that you prepared in steps 1-4.
+
+    6.	Run the STKPAT.BAT file to patch the IBMBIO.COM file on the new disk.
+
+    7.	Use the SYS command to transfer the patch from the floppy disk to any
+	other Version 3.20 disk. For example, if you normally boot from drive
+	C:, you would enter these commands to transfer the patched DOS to
+	your hard-disk drive:
+
+	    A:
+	    SYS C:
+
+	This installs the patch.
+
+    8.	Reboot your system as you normally do.

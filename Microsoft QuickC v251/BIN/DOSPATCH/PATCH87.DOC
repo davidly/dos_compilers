@@ -1,0 +1,107 @@
+
+			     PATCH87.DOC File
+
+		Notes on patching MS-DOS(R) Version 3.20
+
+		(C) Copyright Microsoft Corporation, 1988
+
+
+Version 3.20 of MS-DOS(R) contains a bug that can cause unexpected results in
+programs that use floating-point math. This file explains how to eliminate
+that problem by using PATCH87.EXE, a program included in this release.
+
+Note that IBM(R) PC-DOS 3.20 contains another, different floating-point bug.
+The README.DOC file for this release tells you where to find more information
+about installing a patch for that bug. If you use any version of DOS 3.20
+other than IBM PC-DOS 3.20 or MS-DOS 3.20, contact your hardware manufacturer
+to determine whether the problem exists in your version.
+
+
+Do I Need to Use This Program?
+------------------------------
+You do not need to read any further unless your system has ALL of the following
+characteristics:
+
+    1.	You use MS-DOS version 3.20.
+    2.	You boot from a hard-disk drive.
+    3.	Your system has a math coprocessor (for instance, an 8087 chip).
+    4.	You run programs that use floating-point math.
+
+For systems that satisfy all of the preceding conditions, you may be able to
+eliminate floating-point math problems by installing a small patch in DOS. If
+you are not sure whether you need the patch, perform the following steps:
+
+    1.	Copy the program PATCH87.EXE (included in this release) to the root
+	directory of your hard-disk drive.
+
+    2.	Reboot your system from the hard disk and DO NOT PERFORM ANY FLOPPY-
+	DISK OPERATIONS after rebooting. It is very important that you avoid
+	floppy-disk I/O after rebooting, since that will affect the reliability
+	of the diagnostic test that you are about to perform.
+
+    3.	If necessary, use the CD command to move to the root directory of your
+	hard-disk drive.
+
+    4.	Run the PATCH87.EXE program by entering this command at the DOS prompt:
+
+	    PATCH87
+
+	The program performs a diagnostic test on your system to determine
+	whether it needs the DOS patch, and, if the patch is needed,
+	whether it can be performed successfully.
+
+     5. Follow the procedure described in the next section if the program
+	tells you that you need to install the DOS patch, and that it can
+	be done.
+
+    NOTE: The floating-point problem has been eliminated in versions of
+    MS-DOS higher than 3.20. This includes MS-DOS versions 3.21 and 3.30.
+
+
+
+If You Need to Install the Patch
+--------------------------------
+If you performed the preceding test and determined that you should install the
+DOS patch on your system, perform the following steps:
+
+    1.	Format a blank floppy disk. (Do NOT use the /s formatting option to
+	transfer system files to the disk.)
+
+    2.	Use the SYS command to copy IO.SYS and MSDOS.SYS from the root
+	directory of your hard disk to the new floppy disk. For instance, if
+	you boot from drive C:, you would enter the following commands:
+
+	    C:
+	    SYS A:
+
+    3.	Use the COPY command to copy COMMAND.COM and SYS.COM to the same
+	floppy disk.
+
+    4.	Use the COPY command to copy the program PATCH87.EXE (included in this
+	release) to the same floppy disk.
+
+    5.	Change the current drive and directory to the floppy disk, by entering
+	the following command:
+
+	    A:
+
+    7.	Install the DOS patch by entering the following command:
+
+	    PATCH87 /F
+
+	WARNING: If you experience any disk errors during steps 2 through 7,
+	do NOT proceed with step 8. Reboot from your hard disk and repeat the
+	entire process.
+
+    8.	If you have not experienced any errors, use the SYS command to transfer
+	the files IO.SYS and MSDOS.SYS from the floppy disk back to your hard
+	disk. For instance, if the boot directory of your system is the root
+	directory of drive C:, you would enter the following command at the DOS
+	prompt:
+
+	    A:
+	    SYS C:
+
+	This installs the DOS patch.
+
+    9.	Reboot the system.
