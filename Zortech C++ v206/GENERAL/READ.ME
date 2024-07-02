@@ -1,0 +1,556 @@
+
+----------------- 2.06 Notes --------------------
+ZTCPP1 is numbered as 2.06.
+ZTC2 and ZTC2B are at 2.05.
+ZTC1, ZTC1B and ZTG are at 2.00.
+
+ZTCPP1
+	Fixed a number of errors.
+
+ZTC2 and ZTC2B
+	Fixed bug in Windows prolog/epilog code.
+	Fixed bug in LINK4 compatibility.
+-------------------------------------------------
+ZTCSETUP
+
+UNLIKE the documentation states, you cannot run ztcsetup from c: by typing
+a:ztcsetup, it thinks it should look for compiler disk #1 on c:.
+
+-------------------------------------------------
+C and C++ COMPILERS
+	The following is *NOT* a bug, it's ANSI C:
+	    extern int func(char);
+	    int func(c)
+	    char c;
+	    {
+	    ^
+	    "test.c", line 5 Syntax error: type of 'c' does not match function prototype
+	    Had: <int>
+	    and: <char>
+	    }
+	Old style parameter types undergo integral promotions before
+	comparing them against the prototype. The old style "char c;"
+	is interpreted as "c is passed as an int, but interpret it as
+	a char in func". If you want it to be a char, define func as:
+	    int func(char c) { ... }
+
+	Bit fields can now be any integral type, though they are always
+	treated as the unsigned versions of the integral types.
+
+	Pointer type mismatches are now syntax errors instead of warnings.
+
+	Conversions of ints directly to far pointers is now a syntax error
+	instead of a warning. If you want to do this, cast the int to
+	a long before casting it to a pointer.
+
+	The following cast:
+		long l;
+		char near *p;
+		l = (long) p;
+	is now handled like:
+		l = (long)(char far *)p;
+	instead of like:
+		l = (long)(unsigned)p;	/* 0 fill high 16 bits	*/
+	The conversion of a far pointer to a long and vice versa
+	is done as a 'paint', i.e. no change in the bit pattern
+	occurs.
+
+-------------------------------------------------
+C++ COMPILER
+	Inline functions involving only simple combinations of if-else
+	constructs are now actually inlined. If an inline function contains
+	loop or switch statements, it is not inlined.
+
+	Inline member functions are now parsed at the close of the class
+	definition, rather than as they are tokenized. This eliminates
+	order dependencies in class definitions, at the cost of
+	obscure error messages. The error message line number will try
+	to be the line of the inline function causing it, but the
+	source line and ^ displayed will be the one with the closing }
+	of the class definition.
+
+	Inline member functions that have a non-void return value,
+	but no return statement, now generate a syntax error.
+
+	0 sized structs are no longer generated if there are no
+	non-static data members, the minimum size of a struct is now
+	1. This is to prevent new() from return 0 when it tries to
+	allocate an instance of a struct.
+
+	If a runtime error message is printed by the library, the program
+	is aborted without calling any static constructors. The reason
+	is that a serious error has occurred (such as the heap has been
+	corrupted), and it's best to stop the program immediately so
+	that hopefully the damage is contained.
+
+-------------------------------------------------
+WINDOWS SUPPORT
+
+The documentation says to use the switch "-mw" when compiling for
+MS-Windows, to tell the compiler that DS!=SS.
+This is misleading, since for regular Windows apps, DS==SS.  A
+switch that specifies DS!=SS is only needed for the following types of code:
+	A) Windows Dynamic Link Libraries (DLLs).
+	B) OS/2 DLLs.
+	C) OS/2 threads.
+
+Currently, class objects can only be created on the near heap for S and M
+models, and only on the far heap for C and L models. Objects cannot be
+created in __ss or __handle space.
+-------------------------------------------------
+MAKE
+	You can now include files in makefiles, with the syntax:
+
+	include filespec
+
+	This is quite handy when supporting several configurations with
+	one makefile.
+
+-------------------------------------------------
+LIBRARY
+	Added
+		void disp_puts(const char *p);
+	which sends out string p to the display.
+
+	Added disp_getattr() as a complement to disp_setattr().
+
+	Modified getcwd(char *buffer,size_t length) so that if buffer
+	is NULL, sufficient bytes are malloc'd for the path. At least
+	length bytes are allocated, instead of failing if length bytes
+	aren't enough. Therefore, the following doesn't have to decide
+	in advance how big the path could be:
+		pathbuffer = getcwd(NULL,0);
+
+	ANSI offsetof(type,identifier) macro added to stddef.h.
+
+	If you are using the EMM functions, it is important to note
+	that when the program exits, EMM pages that are allocated are
+	not automatically freed like regular allocated memory is.
+	Therefore, it is important to find all routes by which the
+	program can be terminated, and add in a call to free up and
+	terminate use of EMM pages. The ways a program can terminate are:
+		1. Return from main().
+		2. Calling exit().
+		3. Calling _exit(), _assert(), abort() or raise(SIGABRT).
+		4. Control C or Control Break.
+		5. Heap corruption or Floating point not loaded errors
+		   from the runtime library.
+	Case 4 can only be handled by intercepting the control break
+	interrupt (0x23). Case 5 is a program crash anyway.
+
+	The symptoms of not freeing up EMM memory are that programs run
+	later will not find any available EMM pages to allocate. This will
+	persist until a program is run that frees up EMM, or the system
+	is rebooted.
+
+	If you are using EMM via handles, this is already taken care of
+	by the runtime library. Cases 1 and 2 are handled by setting
+	up a static destructor. Case 4 is done by chaining into the
+	control break interrupt. Case 3 is not dealt with.
+-------------------------------------------------
+SYMBOLIC DEBUG INFO
+	Limitations and problems:
+	o	In order to conserve the size of the symbol table,
+		typedefs and enums are not emitted. Only the minimal
+		type information for variables actually used is emitted.
+	o	Because the optimizer moves variables and sections of code
+		around, there becomes only one scope per function. Thus,
+		avoid using the same variable names in nested scopes
+		if you want to use the debugger on them.
+	o	Use the -S switch to cause the code generator to always
+		generate a stack frame for each function if you want
+		symbolic debugging. CodeView seems to expect this.
+		ZTC.COM will automatically invoke -S if the -g or -gs
+		switch was specified.
+-------------------------------------------------
+There are two ways to find the version of the compiler you are using:
+	1. Compile a file with -v.
+	2. Run ZTCPP1, etc., with no arguments.
+
+-------------------------------------------------
+THIRD PARTY LIBRARIES
+
+Many people have asked if modules compiled with Zortech C or C++ can be
+linked with Microsoft runtime libraries or 3rd party libraries for Microsoft
+C. The answer is probably not. The reasons are:
+	1. The Zortech 'compiler helper' functions are not the same
+	   as Microsoft's. Compiler helper functions are things like
+	   long multiply. Zortech's are different because Microsoft's
+	   cannot be used to generate .COM files.
+	   Workaround: Include the 'compiler helper' functions needed.
+	2. Zortech's floating point is different. Zortech's floating
+	   point is reentrant.
+	   Workaround: Pass a parameter that is a pointer to the return
+	   value.
+	3. The layout of the _iob struct defined in stdio.h is different,
+	   therefore the buffered I/O functions cannot be compiled with
+	   one stdio.h and linked with functions compiled with another
+	   stdio.h.
+	   Workaround: Avoid using stdio functions, or compile with
+	   the same stdio.h.
+	4. Structure returns when the structure <= 4 bytes is different,
+	   though I intend to fix this.
+	   Workaround: Avoid returning small structs.
+	5. The same comments apply to Turbo C.
+	6. By default, ZTC aligns struct members on 16 bit boundaries.
+	   MSC's do not align them by default. Therefore, compile with
+	   the -a switch to suppress struct member alignment if
+	   binary compatibility is desired.
+It is still possible to create a library that will link with Zortech C,
+Microsoft C and Turbo C, by avoiding the problems listed above. The FG
+graphics library is an example of this, but this is a job for an expert.
+-------------------------------------------------
+LIBRARY SOURCE
+	Added files to support ROM code development:
+	ROMASM	 BAT	Replace ASM module in rom libs
+	ROMC	 BAT	Replace C module in rom libs
+	CROM	 ASM	Sample ROM startup code
+	The BUILDLIB.BAT file can be used to make all four rom libraries.
+-------------------------------------------------
+C PROGRAMMING TOOLS
+	Please look in the subdirectory GENERAL for a description of these
+	useful utilities.
+-------------------------------------------------
+VIRTUAL FUNCTION POINTER TABLES
+	A table of pointers to functions is created for each class that
+	has virtual functions or is derived from a class with virtual
+	functions. Because of separate compilation, sometimes redundant
+	copies of the tables are created, even leading to excessive
+	consumption of space in DGROUP. It turns out that the only time
+	the code needs a virtual function pointer table (vtbl) is within
+	the body of a constructor. So a vtbl for a class is only actually
+	generated when the body of a constructor that needs a vtbl is
+	instantiated. A maximum of one vtbl per class per object module
+	is generated.
+
+	This suggests a technique for minimizing vtbl generation:
+	1. Avoid inline constructors.
+	2. Group all the definitions for constructors for a class into
+	   one source file.
+	This will create a maximum of one vtbl per class per program.
+
+	Other C++ implementations use command line switches to cause
+	vtbls in some modules to be global, in others external. This
+	can get rather complex, the above technique is simpler and more
+	reliable.
+
+===========================================================================
+Existing problems and workarounds
+===========================================================================
+
+****************** MAKE ****************
+-----------------------------------------
+Should have a -k switch to cause make to continue after errors
+occur attempting to make targets not depending on the one that failed.
+-----------------------------------------
+Make cannot figure out more than one level of implicit rules.
+I.e. this doesn't work:
+
+.c.obj: ;ztc -c $<
+.obj.exe: ;ztc $<
+hello.exe: hello.c
+
+-----------------------------------------
+
+****************** C COMPILER ****************
+-----------------------------------------
+The macros:
+    #define STR(a) NXSTR(a)
+    #define NXSTR(a) #a
+    #define A 1
+    if (STR(A)[0] == '1')
+result in:
+    if ("A"[0] == '1')
+instead of:
+    if ("1"[0] == '1')
+-----------------------------------------
+If a, b and c are structs, the following generates a syntax error:
+	a = blah ? b : c;
+To work around, write as:
+	if (blah)
+	    a = b;
+	else
+	    a = c;
+-----------------------------------------
+If a and b are structs, the following fails:
+	func(a = b);
+To work around, write as:
+	a = b;
+	func(a);
+-----------------------------------------
+Conversions between doubles and unsigned longs are handled
+as if they are conversions between doubles and signed longs.
+-----------------------------------------------------
+Expecting void functions to return values gets ZTC2 bugs in the following
+case:
+
+    {
+	extern void func();
+
+	i = h() ? g() : func();
+    }
+-----------------------------------------------------
+The preprocessor line
+
+	#line 47 "FILE.C"
+
+does not set the module name to file.c.
+-----------------------------------------------------
+If there is an error writing the .OBJ file, the .OBJ file is not
+deleted. If the error is because the disk is full, there remains a
+partial corrupted .OBJ file.
+-----------------------------------------------------
+Initializations that determine the size of an array, as in:
+	static char abc[] = "fred";
+still represent the size of the array as 0 to CodeView, instead of 5.
+This problem does not occur with the C++ compiler.
+-----------------------------------------------------
+The type 'long double' is not distinguished from type 'double'.
+-----------------------------------------------------
+The expression:
+	float f1,f2;
+	f1 + f2;
+has type double instead of type float (because all floating point
+expressions are implicitly converted to double).
+-----------------------------------------------------
+The floating point emulation does not yet conform to the IEEE standard.
+-----------------------------------------------------
+Switch statements with longs are not supported.
+-----------------------------------------------------
+A near pointer is converted to a far pointer by putting DS, SS or CS into
+the segment portion as appropriate. The bug is if the near pointer is NULL,
+the resulting far pointer gets a non-zero segment value! When converting,
+always testing for 0 before loading the segment would cause a lot of
+inefficiencies. Note that MSC 5.1 has the same bug, I haven't checked
+TC for it.
+-----------------------------------------------------
+
+****************** C++ COMPILER ****************
+-------------------------------------------
+All the current bugs in the C compiler (!).
+-------------------------------------------
+Classes derived from an abstract class are not checked to make sure that
+all pure virtual functions are defined or redefined as pure.
+-------------------------------------------
+When the compiler internally generates an X& X::operator=(X&), and
+X has a virtual base class V that appears N times in the inheritance DAG,
+the function V& V::operator=(V&) is called N times instead of once.
+-------------------------------------------
+When the compiler internally generates an X& X::operator=(X&), and
+X has a member that is an array of class Y, a bit copy is done of the
+array instead of a loop calling Y& Y::operator=(Y&).
+-------------------------------------------
+Inline functions that contain any whiles, dos,
+fors or switches are not inlined. The code will still compile and
+execute correctly, however. This is not a bug.
+-------------------------------------------
+If a class name is hidden in a lower level scope, you still
+can't access it even if you prefix it with 'struct' or 'class'.
+-------------------------------------------
+This will fail:
+
+    struct A;
+    struct B;
+
+    struct A {
+	    friend void B::func(void);	// forward reference to B::func
+	    int a;
+    };
+
+    struct B {
+	    void func(void);
+    };
+
+-------------------------------------------
+There are cases where a lot of look-ahead is required in order for the
+compiler to figure out what the parse tree really is. Zortech C++ isn't
+always as clever as ATT C++ is with some bizarre cases (though ATT's
+compiler doesn't do all of the cases correctly either!). Unfortunately,
+C++ also isn't a context-free grammar, making things worse.
+Here's an example of how things can go wrong:
+
+    struct fgtest {
+	int c;
+	fgtest();
+    };
+
+    main() {
+    #if 1
+	fgtest A;	// this works as expected
+    #else
+	fgtest A();	// this doesn't (parser thinks that A is a function
+			// returning an fgtest)
+    #endif
+	A.c = 3;	// now we discover that A should be a variable!
+    }    
+-------------------------------------------
+Pointers to members are not implemented.
+-------------------------------------------
+The anachronistic member access syntax on the last page of the C++ book:
+	int cl.fct() { /* ... */ }
+is not supported. Use instead:
+	int cl::fct() { /* ... */ }
+-------------------------------------------
+Implicit conversions from void* to another type are allowed, like
+in ANSI C. AT&T's C++ disallows them, an explicit cast must be used.
+Methinks this is a difference in philosophy between AT&T and Zortech.
+-------------------------------------------
+Compiler should issue warning when a non-virtual method in a sub-class hides
+a virtual method in the base class.  (Tony Hagen, James Coggins, 
+Bjarne Stroustrup, et. al. suggest it.) The other way around, too.
+-------------------------------------------
+Deleting a NULL pointer to a class with a destructor still calls the
+destructor. A crash could result, especially if the destructor is virtual.
+-------------------------------------------
+Variadic Pascal and C++ functions that return structures return them in a static
+temporary rather than on the stack, thus they are not reentrant and more
+than one cannot be used in the same expression.
+-------------------------------------------
+If a class or a struct has no tag name, the compiler will generate one of
+the form "_C%d", where %d increments with each new name generated. This
+is necessary for the name mangling to work. Unfortunately, if you have
+structs like this defined in header files, and include the files in
+different orders in different files, the names will come out different.
+This can cause errors at link time due to the name mangling and typesafe
+linkage not lining up. Because of this, the compiler generates a warning
+if there is no tag name.
+-------------------------------------------
+The iostream stuff invented by AT&T for 2.0 is not implemented.
+-------------------------------------------
+The asm() statement is not supported.
+-------------------------------------------
+To make the name mangling work out, all classes and enums should
+have tag names.
+-------------------------------------------
+struct s { f(); };
+static s::f() {}	// diagnosed as an error by cfront
+
+ZTC++ allows member functions to be local to a file, i.e. static. Cfront
+does not allow this.
+-------------------------------------------
+Arrays with non-constant initializer expressions are not supported
+(but arrays of structs with constructors can be statically initialized).
+Static variables can have non-constant initializer expressions.
+-------------------------------------------
+The -J switch causes declarations like:
+	char *p;
+to be interpreted as:
+	unsigned char *p;
+Thus, this will cause syntax errors if functions are overloaded like:
+	int func(char *);
+	int func(signed char *);
+	int func(unsigned char *);	// causes syntax error if -J
+Also, -J does not affect the behavior of library functions (like strcmp()).
+-----------------------------------------------------
+
+****************** C LIBRARY ****************
+-----------------------------------------------------
+The int package uses a local stack for the interrupt service routine (isr).
+If there are overlapping interrupts to the same isr, the program will
+crash because the stacks overlap!
+If you use 0 for the stack size parameter to int_intercept(), no local
+stack will be allocated for the isr. Thus, overlapping interrupts have
+a chance of working (if the original stack is big enough).
+-----------------------------------------------------
+The stat() function uses findfirst(). So if you are in the middle of a
+findfirst-findnext sequence, you cannot use stat().
+-----------------------------------------------------
+
+****************** BLINK ****************
+-----------------------------------------------------
+If a .OBJ file is corrupted, BLINK may crash instead of issuing
+an error message.
+-----------------------------------------------------
+BLINK sometimes is reported to produce the message about VM.TMP and a
+bad file handle. If anyone is able to produce a test case which reliably
+duplicates this, please send it in. I've never seen that message!
+-----------------------------------------------------
+Reported to have problems if the pagesize of the library is not 16 (which is
+the default). I haven't verified this.
+-----------------------------------------------------
+Problem with complex LIDATA records (generated by MASM
+when it sees a DUP).
+
+******************** MANUAL ERRATA **************************
+
+C++ COMPILER REFERENCE MANUAL
+
+Page 222
+	The parameter conversions described in 11.1.11 are incorrect.
+	The example given is incorrect.
+
+	Parameter promotions are now ANSI. For instance,
+		int func(c,f)
+		char c;
+		float f;
+		{}
+	is now equivalent to:
+		int func(i,d)
+		int i;
+		double d;
+		{	char c = i;
+			float f = d;
+		}
+
+Page 246 is intentionally blank.
+This is an artifact of starting each new letter on a right-hand page.
+
+******************** BUG REPORTS **************************
+
+Occasionally, you may run across a suspected problem with the compiler.
+If you send in a bug report, please do the following:
+1. Try to determine the smallest possible program that exhibits the problem.
+   Sending in a 10,000 line program with a message that "it doesn't work"
+   doesn't help much. Also, frequently the process of determining that
+   smallest program reveals the problem to be something other than a compiler
+   bug. At the least, an easy workaround to keep you going becomes obvious.
+2. Include all the #include'd .h and .hpp files. Better yet, boil it all
+   down to 1 source file that demonstrates the problem without #include'ing
+   anything.
+3. Include a READ.ME file describing the problem, and what command was
+   issued to the compiler to cause it.
+4. Check to make sure it isn't one of the following problems. A large
+   number of the bug reports we get are really variations on these,
+   even experts frequently make these mistakes:
+
+Common error #1: Assigning beyond the end of alloc'd data.
+
+	p = malloc(4);
+	for (i = 0; i <= 4; i++)
+		p[i] = value;
+
+	The bug is that when i==4, assigning to p[4] will cause a
+	probable program crash.
+
+	Another common manifestation of this is:
+
+	p = malloc(strlen(s));
+	strcpy(p,s);		/* didn't leave room for terminating 0! */
+
+Common error #2: Returning a reference to a variable that goes out of scope.
+
+	int &func()
+	{	int a;
+		...
+		return a;
+	}
+
+-------------------------------------------------------------------------------
+ZED
+One extra feature was added to ZED too late to be put into the manual.
+
+This a new option Configure on the File menu. It allows the editor
+configuration to be changed. A mouse is now supported for editor configuration.
+
+************************ ZORTECH BBS *************************
+
+Zortech operates a free bulletin board system for Zortech customers
+and anyone else who is interested in C++. There is no registration,
+just dial up and use it. There are many files of interest to C++
+programmers to download, and message areas where you can have conversations
+with other C++ users. The phone number is:
+
+	(206) 822-6970 USA
+         01 855 3286   UK
+
+

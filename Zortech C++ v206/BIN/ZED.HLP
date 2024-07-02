@@ -1,0 +1,672 @@
+0
+                        Zortech ZED Default Keybindings
+ ษอออออออออออออออออออออออออออหอออออออป ษออออออออออออออออออออออออออออออออออออออป
+ บ        Function keys      บ  Esc  บ บ              Cursor keys             บ
+ ฬอออออออออออออหอออออออออออออฮอออออออน ฬอออออออออออออหอออออออออออหออออออออออออน
+ บF1 ZED HELP  บF2 Undo      บ Abort บ บStart of lineบUp a line  บUp a page   บ
+ บ   #C++ HELP บ   #Save All บ       บ บ^Top of page บ           บ^Top of fileบ
+ ฬอออออออออออออฮอออออออออออออฮอออออออผ ฬอออออออออออออฮอออออออออออฮออออออออออออน
+ บF3 Hold->Buf บF4 Blk->Hold บ         บChar->left   บ           บChar->right บ
+ บ   #Edit New บ   #Save     บ         บ^Word->left  บ           บ^Word->rightบ
+ ฬอออออออออออออฮอออออออออออออน         ฬอออออออออออออฮอออออออออออฮออออออออออออน
+ บF5 Tag<->CursบF6 Place Tag บ         บEnd of line  บDown a lineบDown a page บ
+ บ             บ   #System   บ         บ^End of page บ           บ^End of fileบ
+ ฬอออออออออออออฮอออออออออออออน       ษอสอออออออออออออสออออออหออออสออออออหอออออผ
+ บF7 Search FwdบF8 Search Bwdบ       บToggle insert/OvertypeบDelete charบ
+ บ   #Find     บ   #Replace  บ       บ                      บ           บ
+ ฬอออออออออออออฮอออออออออออออน       ศออออออออออออออออออออออสอออออออออออผ         
+ บF9 Compile   บF10 Debug    บ             Upper label = unshifted key
+ บ   #Make     บ    #Print   บ            #Lower label = shift & key        
+ ศอออออออออออออสอออออออออออออผ            ^Lower label = control & key                
+                                           
+ฺฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤยฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤยฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤยฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฟ
+ณ20Help index ณ16Alternate keys ณ17Control keys ณ10Macro function keys ณ
+ภฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤมฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤมฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤมฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤู
+1
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                FILES MENU                                    บ
+บ                                                                              บ
+บ When a file is edited, the old version of the file is kept as a backup.      บ
+บ If required, all old versions may be kept on a single directory (see         บ
+บ Configuring Zed) with the the same name as the original. Otherwise the old   บ
+บ version has the same name as the original, but with an extension of "BAK".   บ
+บ                                                                              บ
+บ Edit      (Shift-F3) Saves the current file (if any), then prompts for a new บ
+บ           file to edit. You may use a full pathname if required.             บ
+บ Save      (Shift-F4) Save any changes made to disk, and continue editing.    บ
+บ Abort     (Alt-Q) Abandon changes made since the last save, clear the buffer.บ
+บ Read      (Alt-I) Read the contents of a file at the cursor position.        บ
+บ Write     (Alt-W) Write part of the current buffer to a disk file.           บ
+บ Configure Change the editor configuration, quick-keys, colors etc.           บ
+บ Exit      (Alt-X) Leave the editor. If the current buffer has been edited    บ
+บ           since the last save, prompts to see if you wish to save the buffer.บ
+บ           If any other buffers have been edited since the last save, displaysบ
+บ           them and prompts to see if you want to save them.                  บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ15 Entering file names 25 Configuring Zed 2 Buffers 20 Help index     บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+2
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                  BUFFERS                                     บ
+บ                                                                              บ
+บ The editor has 5 edit buffers, each of which can hold a file being edited.   บ
+บ The current buffer no. is shown after the file name at the end of line 2.    บ
+บ Each buffer has its own cursor position and text markers.                    บ
+บ To change or select a different buffer, use the keys Alt 1 to Alt 5          บ
+บ                                                                              บ
+บ The COMPARE function (Alt-O or Alt-C O) enables you to compare the           บ
+บ contents of any two buffers.                                                 บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ12 Comparing buffers 16 Alternate Keys 20 Help index                    บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+3 
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                 MOVES MENU                                   บ
+บ                                                                              บ
+บ As well as the normal move functions (Start/End of line,page,buffer), you    บ
+บ can also move directly to a given line number in the text (Alt-N), to        บ
+บ the end of a program block (AltJ when the cursor is not on a bracket), to    บ
+บ the bracket which corresponds to the one the cursor is on (AltJ), or to any  บ
+บ one of ten text markers (Alt-M A and enter the number).                      บ
+บ                                                                              บ
+บ There is also a TAG marker, which can be used to move back and forth between บ
+บ two places in the buffer - when you press (Alt-M T or F5), the TAG and cursorบ
+บ are exchanged.Pressing (Alt-M T or F5) again returns you to where you were.  บ
+บ                                                                              บ
+บ To place the TAG at the current cursor position, use (Alt-B T or F6). The TAGบ
+บ can also be used as a block delimiter (all text between the cursor and the   บ
+บ TAG counts as the block).                                                    บ
+บ                                                                              บ
+บ You can also move to the start and end block markers (Alt-B B and Alt-B K).  บ
+บ Note that moving to a marker is the only way of finding out where it is.     บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ6 Block Menu 20 Help index                                                บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+4
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                COMPILATION - Zortech C and C++ Compilers                     บ
+บ                                                                              บ
+บ The F9 key or the compile option of the Compile menu (Alt-C C) is used to    บ
+บ start a compilation. You will first be prompted for any compiler flags       บ
+บ which you may wish to use. You may enter these in the same way that you wouldบ
+บ when doing a command line compilation, for example:                          บ
+บ                                                                              บ
+บ       -ml -c -g       (large memory model, compile only, include debug info) บ
+บ                                                                              บ
+บ You may also include other object file names and libraries by entering them  บ
+บ here:                                                                        บ
+บ       -ml myprog.obj mylib.lib                                               บ
+บ                                                                              บ
+บ Compilation will stop at the first error, and the cursor will be placed on   บ
+บ or near the source code which caused the error to occur. If it is a Warning, บ
+บ you may press Enter to continue, or Esc to abort.                            บ
+บ                                                                              บ
+บ If you have a Ramdisk, or you keep some compiler files on another directory, บ
+บ you can use the configuration program ZCONFIG to set up these directories.   บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ21 Compiler flags 22 Debugging flags 18 Entering Strings 20 Help indexบ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+5
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                            EDITING MENU & UNDO                               บ
+บ Insert   Enter Insert mode. Any characters you type will be inserted at the  บ
+บ          cursor position. Pressing Enter inserts a new line.                 บ
+บ Overtype Enter Overtype mode. Characters typed will replace the character at บ
+บ          the cursor, unless at the end of line, when they will be added.     บ
+บ Rest     Also F2 (UNDO). Restore the last item deleted at the cursor positionบ
+บ          The editor remembers up to 100 items deleted (max 10000 characters).บ
+บ Lower    Convert part of the buffer to lower case (calls the Size menu).     บ
+บ Upper    Convert part of the buffer to lower case (calls the Size menu).     บ
+บ Graphic  (Alt-7) Insert Ascii graphic character (e.g. for printer control).  บ
+บ Setseq   Set sequence number to initial value.                               บ
+บ seQ      Insert current value of sequence number in buffer. Increment number.บ
+บ          (Useful in #define's for consecutive numbering).                    บ
+บ Comment  (Alt-U) Right-justifies the C++ or C comment on this line           บ
+บ +        (Alt-0) Move part of the buffer right 1 tab stop.                   บ
+บ -        (Alt-9) Move part of the buffer left one tab stop. These two        บ
+บ          functions are useful for indenting blocks of C++ code.              บ
+บ Auto     (Shift-Tab) Toggle auto-indent. Auto-indent automatically inserts   บ
+บ          tabs and spaces to start each new line level with the one above.    บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ13 Size menu 20 Help index                                                บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+6
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                              BLOCK MENU & TAG                                บ
+บ To tag an area of text to delete, print etc., move the cursor to one end of  บ
+บ the area, press F6 or (Alt-B T), then move the cursor to the other end. Then บ
+บ perform the function, selecting TAG from the size menu. To move a tagged areaบ
+บ mark it as above, and press F4 or (Alt-B S) to move it to the block buffer.  บ
+บ Move to the destination, and press F3 or (Alt-B R) to copy into position.    บ
+บ                                                                              บ
+บ Alternatively, you may wish to use the Wordstar-compatible block move        บ
+บ system. Mark the start of the block with (Alt-B B) or (^K B), the end with   บ
+บ (Alt B K) or (^K K), and then use block Move (Alt-B M) or                    บ
+บ (^K V), Copy (Alt-B C) or (^K C), or Delete (Alt-B D) or (^K Y).             บ
+บ                                                                              บ
+บ Every time you copy, move or delete a block or tagged area, the text is also บ
+บ saved in the block hold buffer. You can always copy the block hold buffer    บ
+บ into the text using (Alt-B R). You can always copy any sized piece of text toบ
+บ the block hold buffer using the Yank command (Alt Y), useful for copying     บ
+บ between different files. If you need to see where the current block is, you  บ
+บ can Hilite it (Alt H), (Alt-B H) or (^K H). Pressing a second time removes   บ
+บ the highlighting. There are also 9 text markers which can be set (Alt-B P).  บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ 20 Help index                                                              บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+7
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                          SYSTEM COMMANDS & PRINTING                          บ
+บ                                                                              บ
+บ System    (Shift-F6) you may execute any Operating System command provided   บ
+บ           you have sufficient memory available. When the command has been    บ
+บ           completed, you will be back in the editor. You may even temporarilyบ
+บ           exit to the operating system, by entering an empty command - to    บ
+บ           return to the editor, type EXIT at the OS prompt.                  บ
+บ                                                                              บ
+บ           The last command used is presented as the default. To use this,    บ
+บ           simply press Enter. You may also use the normal editing keys to    บ
+บ           edit it, or press Esc to abort.                                    บ
+บ                                                                              บ
+บ Printing  (Shift-F10) You may print any part of the buffer. Which part is    บ
+บ           printed depends on your response to the size menu.                 บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ13 Size menu 18 Entering strings 20 Help index                          บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+8
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                DELETE MENU                                   บ
+บ You may delete any part of the buffer. Which part depends on the size menu : บ
+บ Word        - (^T) From the cursor position to the end of the next word.     บ
+บ End of line - (^U) From the cursor position to the end of the current line.  บ
+บ Line        - (^Y) The whole of the current line.                            บ
+บ Paragraph   - From the cursor position until the next completely blank line. บ
+บ Block       - The marked block.                                              บ
+บ Tag         - Everything between the cursor and the TAG marker.              บ
+บ ]           - Everything between the cursor and the next corresponding '}'.  บ
+บ All buffer  - The whole buffer (careful, you may not be able to UNDO this)   บ
+บ No of lines - Specify how many lines.                                        บ
+บ                                                                              บ
+บ Single character delete functions may be carried out using the following keysบ
+บ Del  : Delete character under cursor                                         บ
+บ Bksp : Delete character to left of cursor.                                   บ
+บ Everything you delete is saved in the UNDO stack, and may be recalled by     บ
+บ pressing F2.                                                                 บ
+บ NOTE ***** Only up to 10000 characters can be saved in this way - If you     บ
+บ delete a block bigger than this, it cannot be recalled.                      บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ20 Help index                                                               บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+9
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                SEARCH MENU                                   บ
+บ                                                                              บ
+บ Find    (Shift-F7) Set up a string to search for.                            บ
+บ Case    (Alt-K) Set up search string (ignore upper/lower case distinctions)  บ
+บ Next    (F7) Find next occurrence                                            บ
+บ Last    (F8) Find previous occurrence                                        บ
+บ Replace (Shift-F8) Replace found item with string                            บ
+บ Global  (Alt G) Replace throughout file without asking                       บ
+บ Exit    (Esc) return to editing                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ18 Entering strings 14 Wordstar search 20 Help index                    บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+10
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                         MACROS (RECORD & PLAY MENUS)                         บ
+บ                                                                              บ
+บ You may save a combination of keystrokes in a MACRO. Press Ctrl & a function บ
+บ key to start recording keystrokes. Press Ctrl and the same function key to   บ
+บ stop recording. Press Alt and the function key to replay the saved keystrokesบ
+บ on that function key. Macros are also available on the Record and Play menus บ
+บ for completeness. You may save all the macros to a file for next time by     บ
+บ using (Alt-R W) to save, or (Alt-R R) to read back your macros. (If you are  บ
+บ not sure of the required file name, enter an ambiguous name like *.* to      บ
+บ allow selection from a list.) You may save up to 63 key depressions on a     บ
+บ particular function key.                                                     บ
+บ                                                                              บ
+บ If you want to save longer macros, you may record keystrokes in a file, by   บ
+บ using (Alt-R L) to start and stop recording, and (Alt-P L) to play back the  บ
+บ file. (If you are not sure of the file name, use *.* to get a pick list).    บ
+บ                                                                              บ
+บ On the Play menu, there is an option (Number) to repeat a macro any number   บ
+บ of times. If you want to stop the macro repeating once it has started, hold  บ
+บ down the Esc key.                                                            บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ15 Entering file names 20 Help index                                      บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+11
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                TEXT MENU                                     บ
+บ                                                                              บ
+บ Lmarg       Set the left margin : default 1                                  บ
+บ Rmarg       Set the right margin (0 = no right margin) : default 0           บ
+บ Tabs        Set tab stops every n positions : default 8                      บ
+บ Update      Refresh screen (in case of bugs)                                 บ
+บ Format      (^B)   Tidy up the layout of part of the buffer, within the      บ
+บ             specified left and right margins (right margin must be non-zero).บ
+บ Spaces      Convert tabs to spaces in part of the buffer                     บ
+บ tAbs        Convert spaces to tabs (where possible) in part of the buffer    บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ13 Size menu 20 Help index                                                บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+12
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                COMPILE MENU                                  บ
+บ                                                                              บ
+บ cOmpile   (F9) Compile the program in this buffer.                           บ
+บ Debug     (F10) Debug the program in this buffer.                            บ
+บ Make      (Shift-F9) Call MAKE with a specified makefile (default 'makefile')บ
+บ           Any target file can be specified after the makefile separated by a บ
+บ           space. Make flags can be specified in the same way.                บ
+บ           Unlike the -k or -K flags this prompts to save buffers first.      บ
+บ Compare   (Alt-C) Compare the contents of two buffers.                       บ
+บ System    (Shift-F6) Enter an operating system command or run an external    บ
+บ           program.                                                           บ
+บ Print     (Shift-F10) Print part of the buffer. A menu will appear to allow  บ
+บ           the part of the buffer that is to be printed to be selected.       บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ13 Size menu 18 Entering commands 15 File names 20 Help index         บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+13
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                             SELECTING TEXT                                   บ
+บ                                                                              บ
+บ Size menu : When a function operates on part of the buffer the size menu     บ
+บ allows you to select which part :                                            บ
+บ                                                                              บ
+บ Word        - From the cursor position to the end of the next word.          บ
+บ End of line - From the cursor position to the end of the current line.       บ
+บ Line        - The whole of the current line.                                 บ
+บ Paragraph   - From the cursor position until the next completely blank line. บ
+บ Block       - The marked block.                                              บ
+บ Tag         - Everything between the cursor and the TAG marker.              บ
+บ ]           - Everything between the cursor and the next corresponding '}'.  บ
+บ All buffer  - The whole buffer                                               บ
+บ No of lines - Specify how many lines.                                        บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ20 Help index                                                               บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+14
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                         WORDSTAR (TM) COMPATIBLE SEARCH                      บ
+บ                                                                              บ
+บ ^QF     Search for string                                                    บ
+บ         Enter the string, and then either press Return to start searching,   บ
+บ         or enter some options followed by return.                            บ
+บ ^QA     Search for string, and replace.                                      บ
+บ         Enter the string and the replacement string, and then either press   บ
+บ         Return to start searching, or enter some options followed by return. บ
+บ                                                                              บ
+บ Options :                                                                    บ
+บ B       Search backwards towards start of file.                              บ
+บ U       Ignore case (upper and lower case match each other).                 บ
+บ <no>    A number causes search (and replace) to be repeated that no of times.บ
+บ N       If replacing, don't ask for confirmation each time.                  บ
+บ G       If replacing, replace every occurrence in rest of file.              บ
+บ                                                                              บ
+บ Entering options : The last options used are presented as the default.       บ
+บ To use them, press Enter. You may use the normal editing keys to edit them,  บ
+บ or press Esc to abort.                                                       บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ18 Entering options 9 Search & Replace 20 Help index                    บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+15
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                           ENTERING FILE NAMES                                บ
+บ                                                                              บ
+บ The last file name used is presented as the default. To use this, press      บ
+บ Enter. You may use the normal editing keys to edit it, or press Esc to abort.บ                        
+บ                                                                              บ
+บ Obtaining a file picking list:                                               บ
+บ ------------------------------                                               บ
+บ If you are not sure of the required file name, enter an ambiguous name like  บ
+บ *.* to allow selection from a list, for example *.c will list all C source   บ
+บ files as a picking list.                                                     บ
+บ                                                                              บ
+บ Using the filename picking list:                                             บ
+บ --------------------------------                                             บ
+บ Use the cursor keys, Home, End ^Home and ^End to move the highlighted bar to บ
+บ the file name required. Press Return to select the highlighted file.         บ
+บ                                                                              บ
+บ If the file you require is not displayed, press Escape to return to the      บ
+บ filename prompt. You may use the mouse within a picking list.                บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ18 Entering names 20 Help index                                           บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+16
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                              ALTernate Keys                                  บ
+บ A mArk the start of a block (Alt-B B)  S *Search Menu                        บ
+บ B *Block Menu                          T *Text Menu                          บ
+บ C *Compile Menu                        U right-jUstify comment (Alt-E C)     บ
+บ D *Delete Menu                         V saVe and exit editor (^K X)         บ
+บ E *Edit Menu                           W Write to file (Alt-F W)             บ
+บ F *File Menu                           X Exit the editor (Alt-F X)           บ
+บ G Global replace string (Alt-S G)      Y Yank a block to the hold buffer     บ
+บ H Toggle Hilite of marked block        Z mark end of blocK (Alt-B K)         บ
+บ I Input (read) file (Alt-F R)          1 edit buffer 1                       บ
+บ J move to corres. bracket (Alt-M [)    2 edit buffer 2                       บ
+บ K Search for a string (ignore case)    3 edit buffer 3                       บ
+บ L set Left margin (Alt-T L)            4 edit buffer 4                       บ
+บ M *Move Menu                           5 edit buffer 5                       บ
+บ N move to line Number (Alt-M N)        6 not used                            บ
+บ O Compare two buffers (Alt-C O)        7 Insert graphic character            บ
+บ P *Play Menu                           8 Toggle block hilite                 บ
+บ Q Quit current buffer (Alt-F A)        9 move text left 1 tab stop (Alt-E -) บ
+บ R *Record Menu                         0 move text right 1 tab stop (Alt-E +)บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ20 Help index                                                               บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ   
+17
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                         WORDSTAR (TM) COMPATIBLE KEYS                        บ
+บ                                                                              บ
+บ ^S   char left   ^A   word left   ^G  delete char   ^L  find/replace again   บ
+บ ^D   char right  ^F   word right  ^T  delete word   ^Q  Quick move menu      บ
+บ ^E   line up     ^R   page up     ^Y  delete line   ^K  Block/file menu      บ
+บ ^X   line down   ^C   page down   ^V  Toggle insert ^N  Insert line          บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ12 Alternate Keys 14 Wordstar search 20 Help index                      บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+18
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                     ENTERING STRINGS ON THE INPUT LINE                       บ
+บ                                                                              บ
+บ The last string used in this type of command is presented as the default.    บ
+บ To use this, press Enter. You may use the following keys to edit it :-       บ
+บ                                                                              บ
+บ Left arrow     Left 1 character       ณ ^Left arrow     Left 1 word          บ
+บ Right arrow    Right 1 character      ณ ^Right arrow    Right 1 word         บ
+บ Home           Beginning of string    ณ End             End of string        บ
+บ Del            Deletes character      ณ ^T              Deletes the next wordบ
+บ ^U             Deletes to end of line ณ ^Y              Deletes whole line   บ
+บ Ins            Toggles Insert mode    ณ Esc             Abort current commandบ
+บ Return         Accepts the string as displayed (no matter where the cursor isบ
+บ Backspace      If the cursor is at the end of the string, or you are in      บ
+บ                insert mode, Backspace deletes the character to the left of   บ
+บ                the cursor Otherwise, Backspace just moves the cursor left.   บ
+บ                                                                              บ
+บ Note : If you wish to type a completely different string, press ^Y first     บ
+บ to clear the default. If you forget to do this, and the old string is longer บ
+บ than the new one, you should press ^U before pressing Return.                บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ20 Help index                                                               บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+19
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                           OTHER COMPILER FLAGS                               บ
+บ                                                                              บ
+บ -cpp         use the C++ compiler even on file with a .C extension           บ
+บ -v           verbose output from compiler                                    บ
+บ -d<id>=<tx>  #define macro <id> with a value <tx>                            บ
+บ -e           show the effect of pre-processor during compilation             บ
+บ -u           suppress the generation of automatic macros                     บ
+บ -l<list>     generate a list file called <list>                              บ
+บ -i<path>     search for include files on the supplied path <path>            บ
+บ -C           (C++) disable the production of inline code for functions       บ
+บ -o+<flag>    use the global optimizer and pass it the flag <flag>            บ
+บ -f           generate inline 8087 code (won't run without a 80x87 chip)      บ
+บ -S           always generate stack frame (for stack tracing utilities)       บ
+บ -o<file>     produce an output file called <file>.exe                        บ
+บ -j           use asian language (two byte) characters                        บ
+บ -J           char defaults to unsigned char (normal default is signed char)  บ
+บ -w           Suppress compiler warning messages                              บ
+บ -gs          produce only symbolic information for debugging                 บ
+บ -gl          produce only line number information for debugging              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ21 Major Flags 22 Debugging flags 18 Entering Strings 20 Help index   บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ    
+20
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                                Help Index                                    บ
+ฬออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออน
+บ1 Aborting current edit  16Alternate keys         5  Auto-indent        บ
+บ6 Block menu             2 Buffers                5  C++ Comments       บ
+บ12Comparing buffers      4 Compiling              5  Changing case      บ
+บ25Configuring ZED        11Converting tabs/spaces 22 Debugging flags    บ
+บ8 Delete menu            7 System Commands        5  Edit menu          บ
+บ1 Editing another file   18Entering command string15 Entering file namesบ
+บ1 Exiting from the editor1 Files menu             11 Format text        บ
+บ0 Function & cursor keys 5 Graphics characters    20 Help index         บ
+บ5 Indentation            5 Insert mode            10 Macros             บ
+บ21Major Compiler flags   11Margin settings        3  Move menu          บ
+บ19Other Compiler Flags   5 Overtype mode          10 Playing keystrokes บ
+บ7 Printing               1 Read another file      10 Record keystrokes  บ
+บ1 Saving current file    9 Search & replace       13 Selecting text     บ
+บ5 Sequence number        13Size menu              11 Tab settings       บ
+บ6 Tag                    11Text formatting        11 Text menu          บ
+บ5 Undoing a mistake      24Using a Mouse          23 Using the Debugger บ
+บ17Wordstar keys          14Wordstar search        1  Write block to fileบ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ    Use the cursor keys to select the item you want help on and press Enter   บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+21
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                           MAJOR COMPILER FLAGS                               บ
+บ Compiler flags may be any of:                                                บ
+บ -a      align all structure members on byte boundaries                       บ
+บ -A      enforce strict ANSI C compatibility                                  บ
+บ -b      use big compiler (slower but can handle very large programs)         บ
+บ -c      compile to object only (don't link)                                  บ
+บ -r      strict prototyping (functions without a prototype generate an error) บ
+บ -s      include stack overflow checking                                      บ
+บ -W      compile and link for Microsoft(tm) Windows                           บ
+บ -p      turn auto-prototyping off (-r flag does this automatically)          บ
+บ -o      use the global optimizer - this takes a lot longer                   บ
+บ -L      use Microsoft(tm) Link instead of Blink for the linking stage        บ
+บ -g      include full debugging information in the .exe file                  บ
+บ -m<m>   set memory model - <m> may be one of : T TI S SI M MI C CI L LI      บ
+บ         T - tiny S -small M - medium C - Compact L - Large I - Integer only  บ
+บ                                                                              บ
+บ Special flags valid in ZED only :                                            บ
+บ -k<file>  Run MAKE using <file> as the project file (default is makefile)    บ
+บ -K<file>  Like -k, but don't compile the program you are editing first       บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ19 Minor flags 22 Debugging flags 18 Entering Strings 20 Help index   บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+22
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                            DEBUGGING FLAGS                                   บ
+บ                                                                              บ
+บ ZED compiler flags for debugging are:                                        บ
+บ -g      Full debugger information         -gs Symbol information only        บ
+บ -gl     line number information only                                         บ
+บ                                                                              บ
+บ To produce an .EXE file for debugging with either the Zortech C++ Debugger orบ
+บ Microsoft CodeView(tm) use:  -g -C                                           บ
+บ                                                                              บ
+บ Other debugging Flags are:                                                   บ
+บ -l<list>  Generate List file list.       -L  Use Microsoft(tm) Link          บ
+บ -co       link for debugging             -C  Disable inlining of functions   บ
+บ -S        Always generate stack frame                                        บ
+บ                                                                              บ
+บ Note:    If you use a -g, -gs, or -gl flag you do NOT need to add the -S,    บ
+บ          -co flags, these will be used automatically.                        บ
+บ                                                                              บ
+บ                                                                              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ 
+บ23 Using the Debugger 18 Entering Strings 20 Help index                 บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+23
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                            USING THE DEBUGGER                                บ
+บ                                                                              บ
+บ To debug a program from within the editor using the Zortech C++ Debugger     บ
+บ use F10 or the Debug menu option of the Compile menu (Alt-C D).              บ
+บ                                                                              บ
+บ You can enter debugger flags if required:                                    บ
+บ   /2 Use secondary display         /c Clear file related debugging info      บ
+บ   /e Use expanded memory           /m[size] allow size for debugger          บ
+บ   /n prevent screen snow           /o allow direct screen writes             บ
+บ   /p ignore mouse if fitted        /s[path] use this directory               บ
+บ   /t[size] allow size tracing      /x use screen page flipping               บ
+บ Any flag can be turned off by adding a -, e.g. /e-                           บ
+บ                                                                              บ
+บ If  the attempt to invoke the debugger fails, possible reasons are:          บ
+บ 1.  The -g flag was not used to compile the file.                            บ
+บ 2.  The Zortech C++ Debugger cannot be found on your path.                   บ
+บ 3.  There is insufficient memory, remove any TSR's and try again.            บ
+บ                                                                              บ
+บ NB: This option will only work with v2.0 and above of the Zortech Debuggers  บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ22 Debugging flags 18 Entering Strings 20 Help index                    บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+24
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                               USING A MOUSE                                  บ
+บ                                                                              บ
+บ Using a Microsoft(tm) compatible mouse with ZED requires the mouse driver.   บ
+บ                                                                              บ
+บ Menus          Activated by moving the mouse pointer to the required menu on บ
+บ                the top display line and clicking the left hand mouse button. บ
+บ Menu options   Move the mouse cursor over the options and click the left     บ
+บ                mouse button. Menus are exited by clicking the left mouse     บ
+บ                button outside of the menu, or by means of the Exit option.   บ
+บ Moving the     Place the mouse cursor where you wish the text cursor to be   บ
+บ text cursor    and click the left mouse button. The text cursor will move    บ
+บ                to that position.                                             บ
+บ Scrolling      Hold the left mouse button down and drag the mouse button to  บ
+บ                the edge of the text area, in the direction opposite to that  บ
+บ                you wish to the screen to scroll.                             บ
+บ Block Marking  Press and hold the right mouse button at the start of the     บ
+บ                area you wish to block, and release it at the end of the      บ
+บ                block. In circumstances you may need to use (Alt-H) or        บ
+บ                (^K H) to hilite the marked block.                            บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ16 Alternate keys 17 Wordstar Commands 6 Block Menu 20 Help Index     บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+25
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                              Configuring ZED                                 บ
+บ                                                                              บ
+บ ZED is configured by selecting the Configure option of the File menu, or     บ
+บ using the stand alone program ZCONFIG. Many of the features of the editor    บ
+บ can be changed including keybindings and colors. Just select from the menus  บ
+บ displayed (as bar menus). To get help on any option press the F1 key.        บ
+บ                                                                              บ
+บ This version of ZED has been modified to bring it more closely into line     บ
+บ The IBM SAA and Common User Access guidelines. If you prefer ZED to behave   บ
+บ in the same way as previous versions, rename the configuration file z26.cfg  บ
+บ to zed.cfg and use this. Zed will the behave in much the same way as version บ
+บ 2.6x. You will still have access to operations using the mouse. In the 2.6x  บ
+บ emulation mode the menus operate differently from the 3.0 mode. ZED decides  บ
+บ which mode is in use by looking to see if the File menu is assigned to Alt F.บ
+บ If it is not, 2.6x emulation is assumed to be in effect.                     บ
+บ                                                                              บ
+บ Please note that ZED supports the EGA/VGA enhanced text modes as well as the บ
+บ extra modes supported by the Video 7 VEGA(tm) VGA. Select the Screen option  บ
+บ of ZCONFIG and press F1 (HELP) for more information.                         บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ20 Help Index                                                               บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+26
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                             Using Project Make                               บ
+บ                                                                              บ
+บ ZED allows the Zortech Project Make facility to be used without exiting the  บ
+บ debugger. The make facility has only a few thousand bytes less available to  บ
+บ it than when it is executed from the command line. The make facility is      บ
+บ selected using the Make option of the Compile menu (Shift+F9).               บ
+บ                                                                              บ
+บ The user is prompted for a project file name, with the last name used in the บ
+บ current directory provided as default. If this is cleared using Ctrl+Y and   บ
+บ return pressed, the default 'makefile' is used. If a project file name is    บ
+บ entered the user may optionally append the name of a target file to build andบ
+บ any MAKE command line switches required seperated by spaces, thus:           บ
+บ     proj.mak -s test.exe                                                     บ
+บ will use the project file proj.mak to build test.exe without echoing make    บ
+บ rules to the display.                                                        บ
+บ                                                                              บ
+บ Make macros can also be appended. If a target or switch is required for the  บ
+บ default project file 'makefile' the project file must be named.              บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ27 Project Make Switches 20 Help Index                                    บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+27
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ                            Project Make Switches                             บ
+บ                                                                              บ
+บ The following switches are available in the integrated Project Make facility:บ
+บ                                                                              บ 
+บ      -d     Output debugging information                                     บ
+บ      -i     Ignore errors from executing make rules                          บ
+บ      -l     Show macro expansions from the project file                      บ
+บ      -n     Do not execute make rules, write them to stdout                  บ
+บ      -q     Return with error if rules would be executed                     บ
+บ      -s     Do not echo rules as they are executed                           บ
+บ      -t     Update time stamps on files that are out of date                 บ
+บ                                                                              บ
+บ In addition Make macros can be specified in the form   macro=text            บ
+บ                                                                              บ
+บ A target file to be built may also be specified.                             บ
+บ                                                                              บ
+บ For more information on Project Make refer to the chapter on this subject in บ
+บ the C++ Compiler Reference.                                                  บ
+บ                                                                              บ
+วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+บ27 Using Project Make 20 Help Index                                       บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ

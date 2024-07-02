@@ -1,0 +1,28 @@
+#
+#	makefile to build examples for Zortech Debugger
+#
+CFLAGS	= /Zi /Od
+AFLAGS	= /Zi /MX /DI8086S /R
+
+.c.exe:
+	cl $(CFLAGS) $*.c
+
+exam6a.obj: exam6a.asm
+	masm $(AFLAGS) exam6a;
+
+exam1.exe:
+
+exam2.exe:
+
+exam3.exe:
+
+exam4.exe:
+
+exam5.exe: exam5.c exam5a.c exam5b.c
+	cl $(CFLAGS) exam5.c exam5a.c exam5b.c
+
+exam6.exe: exam6.c exam6a.obj
+	cl $(CFLAGS) exam6.c exam6a.obj
+
+exam7.exe:
+

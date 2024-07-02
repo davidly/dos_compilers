@@ -1,0 +1,14 @@
+#define ENOMEM 1
+#define EEMPTY 2
+#define EBADARG 3
+#define ENOCREAT 4
+#define ENOTOPEN 5
+#define EBADREAD 6
+#define EBADWRITE 7
+#define EFLUSHERR 8
+#define ENOTOPENI 9
+#define EBADREADI 10
+#define EWINDEX 11
+#define EOUTBOUND 12
+#define EINCONST 13
+#define EINTVEC 14

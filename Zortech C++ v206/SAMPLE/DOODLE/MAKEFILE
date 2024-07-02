@@ -1,0 +1,14 @@
+## Makefile for the shapes example.
+
+.cpp.obj :
+ ztc $* -c -r
+
+doodle.exe : doodle.obj custom.obj shapedef.obj shapes.obj gmouse.obj coord.obj
+ blink doodle+custom+shapedef+shapes+gmouse+coord,,,fg/noi
+
+doodle.obj : shapedef.hpp shapes.hpp gmouse.hpp coord.hpp
+custom.obj : shapedef.hpp shapes.hpp gmouse.hpp coord.hpp
+shapedef.obj : shapedef.hpp shapes.hpp gmouse.hpp coord.hpp
+shapes.obj : shapes.hpp coord.hpp
+gmouse.obj : gmouse.hpp coord.hpp
+coord.obj : coord.hpp

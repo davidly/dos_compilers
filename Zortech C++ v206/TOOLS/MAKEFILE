@@ -1,0 +1,68 @@
+# MAKEFILE for C++ Tools Libraries
+# Copyright (C) Zortech Ltd 1988 - 1989
+# All Rights Reserved
+# Written by Steve Teale (9/28/88)
+# Modified 10/12/89
+# Modified 11/21/89
+
+# use
+# make MODEL=x
+# where x = S, M, C, L (if S MODEL may be ommited)
+
+MODEL=S
+CFLAGS=-m$(MODEL)
+MASM=masm -Z -MX -DI8086$(MODEL) -R
+HOST=DISP
+
+A1 = bcdlow.obj
+
+CPP1 = slist.obj dlist.obj dynarr.obj bintree.obj datedit.obj usdate.obj
+CPP2 = hash.obj bcd.obj bcdlow.obj vma.obj vms.obj time.obj rtc.obj
+CPP3 = fname.obj intvec.obj criterr.obj sedit.obj deferr.obj
+CPP4 = event.obj eq.obj money.obj dir.obj window.obj text.obj
+
+.asm.obj :
+    $(MASM) $*;
+
+.cpp.obj :
+    ztc $* -m$(MODEL) -c
+
+
+library : cppt$(MODEL).lib
+
+cppt$(MODEL).lib : $(CPP1) $(CPP2) $(CPP3) $(CPP4) $(A1) cppt$(MODEL).cmd
+    del cppt$(MODEL).lib
+    zorlib @cppt$(MODEL).cmd
+
+cppt$(MODEL).cmd : makefile
+    echo cppt$(MODEL).lib/C >cppt$(MODEL).cmd
+    echo +deferr+slist+dlist+dynarr+bintree+hash+bcd+bcdlow& >>cppt$(MODEL).cmd
+    echo +vma+vms+time+rtc+dir+fname+intvec+criterr+sedit& >>cppt$(MODEL).cmd
+    echo +datedit+usdate+window+text+money+event+eq >>cppt$(MODEL).cmd
+    echo cppt$(MODEL).lst; >>cppt$(MODEL).cmd
+
+clean :
+    del *.bak
+
+slist.cpp : slist.hpp errn.hpp
+dlist.cpp : dlist.hpp errn.hpp
+dynarr.cpp : dynarr.hpp errn.hpp
+bintree.cpp : bintree.hpp errn.hpp
+hash.cpp : hash.hpp errn.hpp
+bcd.cpp : bcd.hpp errn.hpp
+vma.cpp : vma.hpp errn.hpp
+vms.cpp : vms.hpp errn.hpp
+time.cpp : time.hpp errn.hpp
+rtc.cpp : rtc.hpp errn.hpp
+dir.cpp : dir.hpp errn.hpp
+fname.cpp : dir.hpp errn.hpp
+intvec.cpp : intvec.hpp errn.hpp
+criterr.cpp : criterr.hpp errn.hpp
+sedit.cpp : sedit.hpp errn.hpp
+window.cpp : window.hpp errn.hpp
+datedit.cpp : datedit.hpp errn.hpp
+text.cpp : text.hpp errn.hpp
+money.cpp : money.hpp
+event.cpp eq.cpp : event.hpp
+deferr.cpp : errn.hpp
+

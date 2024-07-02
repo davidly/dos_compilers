@@ -1,0 +1,83 @@
+C++ Tools  Version 2.0
+
+24 November 1989
+
+
+slist/ gslist
+
+slist::clear() used to delete the object that the linked
+list node pointed at as well as the node.  This was
+an error if the object was not created via new!  The
+clear function now has an int argument defaulted to
+zero.  If the argument is non-zero, then slist::clear() does
+delete the attched objects.  If zero - i.e. normally - it
+leaves them intact.  Only use the non-zero argument if ALL
+the objects in the list were allocated dynamically.  If
+you want to clean up like this call clear explicitly rather
+than leaving it to the destructor.  An equivalent function
+
+void gslist(type)::flush(int = 0);
+
+is provided in the generic gslist class.  Call this with a
+nonzero argument to purge the list nodes AND associated objects.
+
+dlist/ gdlist
+
+The doubly linked list code was similar,  so functions
+
+void slist::setdel(int = 0);
+void gdlist(type)::setflush(int = 0);
+
+have been added to allow cleanup of the objects on the list as
+well as the list nodes.  This also allows objects removed from
+the list by gdlist(type)::update() to be automatically deleted.
+To switch on deletion of objects as well as nodes, call setflush()
+with a non-zero argument.  If flushing has been set, the
+destructor will purge nodes and associated objects - otherwise
+just nodes.
+
+
+text
+
+A call to gdlist(type)::setflush() - with a non-zero argument
+has been added to the constructor for test, so that the objects
+on the list - in this case lines of text - are cleaned up in
+updates and by the destructor.
+
+Event
+
+The declaration of Event::get() in event.hpp has been tweaked
+to get round a compiler bug.  The original code is still there
+commented out, and should be replaced s soon as the compiler
+recovers.  The test program event1.cpp is disabled by the same bug.
+
+Version 2.01
+____________________________________________________________________________
+
+Modified makeall.bat for libraries to chech for presence of .HPP
+files.
+
+Modified makefile to generate correct library names.
+
+Modified WINDOW.CPP to avoid multiple deletion of buffer,  and
+to search in the correct direction in window::close().
+
+int window::close()
+{
+    if (!buffer)
+        return 1;   // closed already
+    if (ws->overlapped) {
+        for ((ws->wl).end(); (long) (ws->wl)() != (long) this; (ws->wl) -= 1)
+// was previously += 1 !!!!
+            if (!(ws->wl)()->suspended)
+                return 0;       // embedded can't close it
+    }
+    if (!suspended)
+        disp_pokebox(buffer,tlr,tlc,brr,brc);
+    delete buffer;
+    buffer = 0;     // close is also called by the destructor
+    *(ws->wl);      // link it out
+    return 1;
+}
+
+

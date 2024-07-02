@@ -1,0 +1,293 @@
+#_ makefile   Tue Jun 20 1989   Modified by: Walter Bright */
+# $Header$
+# Copyright (C) 1985-1989 by Walter Bright
+# All Rights Reserved
+# Written by Walter Bright
+
+# makefile for the library ZLmodel.LIB, and for rom libraries ROMmodel.LIB
+
+MODEL=S
+OS2= -DMSDOS
+MASM= masm -MX -Z $(OS2) -DI8086$(MODEL) -R
+#ZTC= ztc -c -m$(MODEL)
+ZTC= ztc -c -r -o+space $(OS2) -m$(MODEL)
+
+#### ASSEMBLY SOURCES ####
+A1 = frexp.obj ldexp.obj atoi.obj atol.obj sysint.obj exec2.obj clock.obj
+A2 = parall.obj peek.obj getenv.obj farptr.obj port.obj inter.obj
+A3 = lmath.obj getdos.obj float.obj alloc.obj io.obj disp.obj jmp.obj sound.obj
+A6 = msmouse.obj math87.obj sbrk.obj getcwd.obj find.obj bios.obj rot.obj
+A8 = cputype.obj page.obj handle.obj emm.obj _8087.obj cinit.obj setargv.obj
+A9 = dosdate.obj doserr.obj dosfil.obj filelen.obj locking.obj tsrinit.obj
+
+#### ASSEMBLY ROUTINES FROM STRINGS.ASM ####
+A4 = memset.obj index.obj strlen.obj strcat.obj strncat.obj strcmpl.obj memicmp.obj
+A5 = strcpy.obj strncpy.obj strcmp.obj strncmp.obj memcpy.obj memcmp.obj
+
+#### ASSEMBLY ROUTINES FROM TIME2.ASM ####
+A7 = time2.obj utime.obj
+
+#### C SOURCES ####
+C1 = printf.obj scanf.obj matherr.obj far.obj
+C2 = ungetc.obj stat.obj tmpnam.obj
+C3 = flush.obj ctype.obj fputc.obj ecvt.obj
+C4 = atof.obj system.obj qsort.obj
+C5 = stack.obj rand.obj okbigbuf.obj ztsr.obj
+C10 = strtol.obj strtod.obj signal.obj cxferr.obj
+
+#### C SOURCES FROM IS.C ####
+C6 = toascii.obj toupper.obj tolower.obj isprint.obj
+C7 = isgraph.obj isascii.obj isupper.obj
+C8 = ispunct.obj islower.obj isdigit.obj isxdigit.obj
+C9 = isalnum.obj isspace.obj isalpha.obj iscntrl.obj
+
+MATHOBJ = MATH1.obj TRIG.obj SQRT.obj ATRIG.obj HYPER.obj _TRIGERR.obj
+
+#### FROM FCLOSE.C #####
+FCLOSE = fopen.obj freopen.obj _fopen.obj iob.obj fclose.obj fflush.obj
+FCLOSE2 = atexit.obj exit.obj flushall.obj fcloseal.obj fmacros.obj
+
+#### FROM TIME.C ####
+TIME = asctime.obj ctime.obj loctime.obj mktime.obj sleep.obj strf.obj time3.obj
+
+#### FROM FREAD.C ####
+FREAD = fread.obj fwrite.obj puts.obj gets.obj fgets.obj fputs.obj
+
+#### FROM DISP2.C ####
+DISP2 = dprintf.obj disp2.obj
+
+#### FROM LOCALE.C ####
+LOCALE = setlc.obj lconv.obj
+
+#### FROM PERROR.C ####
+PERROR = assert.obj perror.obj
+
+#### FROM STRINGS2.C ####
+
+STRINGS2A = memchr.obj strcspn.obj strpbrk.obj strrchr.obj strspn.obj
+STRINGS2B = strtok.obj strdup.obj strlwr.obj strupr.obj strnset.obj strrev.obj
+STRINGS2C = strset.obj swab.obj strstr.obj itoa.obj
+
+.c.obj:
+	$(ZTC) $*
+
+.asm.obj:
+	$(MASM) $*;
+
+library: ct.obj int.obj zl$(MODEL).lib _main$(MODEL).obj rom$(MODEL).lib
+
+zl$(MODEL).lib : $(A1) $(A2) $(A3) $(A4) $(A5) $(A6) $(A7) $(A8) $(A9) \
+	 $(C1) $(C2) $(C3) $(C4) $(C5) $(C6) $(C7) $(C8) $(C9) $(C10) \
+	 $(FCLOSE) $(FCLOSE2) $(TIME) $(STRINGS2A) $(STRINGS2B) $(STRINGS2C) \
+	 c.obj $(FREAD) $(DISP2) $(LOCALE) $(PERROR) $(MATHOBJ) zl$(MODEL).cmd
+	del zl$(MODEL).lib
+	zorlib @zl$(MODEL).cmd
+
+$(A1) $(A2) $(A3) $(A6) $(A8) $(A9) : $(INCLUDE)\macros.asm
+
+ct.obj : $(INCLUDE)\macros.asm c.asm
+	masm -MX -Z -R -DI8086T c,ct;
+
+$(A4) $(A5) : $(INCLUDE)\macros.asm strings.asm
+	$(MASM) -DA$* strings,$*;
+
+$(A7) : $(INCLUDE)\macros.asm time2.asm
+	$(MASM) -DA$* time2,$*;
+
+$(TMP)is.c : is.c
+	copy is.c $(TMP)is.c
+
+$(C6) $(C7) $(C8) $(C9) : $(TMP)is.c
+	$(ZTC) -dA$* $(TMP)is -o$*.obj
+
+$(MATHOBJ) : $(INCLUDE)\stdio.h $(INCLUDE)\errno.h $(INCLUDE)\math.h \
+	$(INCLUDE)\float.h math.c
+	$(ZTC) -d$* math -o$*.obj
+
+$(FCLOSE) $(FCLOSE2) : $(INCLUDE)\stdio.h $(INCLUDE)\io.h $(INCLUDE)\fcntl.h \
+	$(INCLUDE)\string.h $(INCLUDE)\process.h $(INCLUDE)\stdlib.h fclose.c
+	$(ZTC) -dA$* fclose -o$*.obj
+
+$(FREAD) : $(INCLUDE)\stdio.h fread.c
+	$(ZTC) -dA$* fread -o$*.obj
+
+$(DISP2) : $(INCLUDE)\stdio.h $(INCLUDE)\disp.h $(INCLUDE)\stdarg.h disp2.c
+	$(ZTC) -dA$* disp2 -o$*.obj
+
+$(LOCALE) : $(INCLUDE)\locale.h $(INCLUDE)\limits.h $(INCLUDE)\string.h locale.c
+	$(ZTC) -dA$* locale -o$*.obj
+
+$(PERROR) : $(INCLUDE)\stdio.h $(INCLUDE)\errno.h $(INCLUDE)\assert.h \
+	$(INCLUDE)\string.h $(INCLUDE)\stdlib.h perror.c
+	$(ZTC) -dA$* perror -o$*.obj
+
+$(TIME) : $(INCLUDE)\stdio.h $(INCLUDE)\dos.h $(INCLUDE)\time.h \
+	$(INCLUDE)\errno.h $(INCLUDE)\string.h time.c
+	$(ZTC) -dA$* time -o$*.obj
+
+$(STRINGS2A) $(STRINGS2B) $(STRINGS2C) : $(INCLUDE)\stdio.h $(INCLUDE)\ctype.h \
+	$(INCLUDE)\stddef.h \
+	$(INCLUDE)\string.h strings2.c
+	$(ZTC) -dA$* strings2 -o$*.obj
+
+_main$(MODEL).obj : $(INCLUDE)\stdio.h $(INCLUDE)\dos.h _main.c
+	$(ZTC) _main -o_main$(MODEL).obj
+
+zl$(MODEL).cmd	: makefile
+	echo zl$(MODEL) >zl$(MODEL).cmd
+# Use the next line if you have a linker version >= 2.30, or our linker.
+# This will create libraries that are considerably smaller.
+	echo zl$(MODEL)/pagesize:16 >zl$(MODEL).cmd
+	echo yes >>zl$(MODEL).cmd
+	echo +printf+scanf+matherr+c& >>zl$(MODEL).cmd
+	echo $(FCLOSE)& >>zl$(MODEL).cmd
+	echo $(FCLOSE2)& >>zl$(MODEL).cmd
+	echo $(FREAD)& >>zl$(MODEL).cmd
+	echo $(DISP2)& >>zl$(MODEL).cmd
+	echo $(LOCALE)& >>zl$(MODEL).cmd
+	echo $(TIME)& >>zl$(MODEL).cmd
+	echo $(PERROR)& >>zl$(MODEL).cmd
+	echo $(MATHOBJ)& >>zl$(MODEL).cmd
+	echo $(STRINGS2A)& >>zl$(MODEL).cmd
+	echo $(STRINGS2B)& >>zl$(MODEL).cmd
+	echo $(STRINGS2C)& >>zl$(MODEL).cmd
+	echo $(A7)& >>zl$(MODEL).cmd
+	echo $(A8)& >>zl$(MODEL).cmd
+	echo $(A9)& >>zl$(MODEL).cmd
+	echo +flush+frexp+ldexp+atoi+atol+ctype+fputc& >>zl$(MODEL).cmd
+	echo +$(C2)& >>zl$(MODEL).cmd
+	echo +ecvt+sysint+atof+system+exec2& >>zl$(MODEL).cmd
+	echo +toascii+toupper+tolower+isprint+isgraph+isascii& >>zl$(MODEL).cmd
+	echo +isupper+memset+index+strlen+strcat+strncat+strcpy& >>zl$(MODEL).cmd
+	echo +strncpy+strcmp+strncmp+ispunct+islower+isdigit& >>zl$(MODEL).cmd
+	echo +isxdigit+isalnum+isspace+isalpha+iscntrl+okbigbuf& >>zl$(MODEL).cmd
+	echo +parall+peek+memcpy+memcmp+memicmp+getenv+find+getcwd& >>zl$(MODEL).cmd
+	echo +port+disp+qsort+inter+jmp+clock& >>zl$(MODEL).cmd
+	echo +strcmpl+sound+msmouse+math87+sbrk+rot& >>zl$(MODEL).cmd
+	echo +strtod+strtol+signal+far+cxferr+bios& >>zl$(MODEL).cmd
+	echo +stack+lmath+rand+getdos+float+alloc+io+farptr >>zl$(MODEL).cmd
+	echo zl$(MODEL).lst >>zl$(MODEL).cmd
+
+#################### ROM Support Stuff ####################
+
+ROMOBJ= crom.obj introm.obj sysrom.obj
+
+introm.obj : inter.asm $(INCLUDE)\macros.asm
+	$(MASM) -DROM inter,introm;
+
+sysrom.obj : sysint.asm $(INCLUDE)\macros.asm
+	$(MASM) -DROM sysint,sysrom;
+
+rom$(MODEL).lib : $(ROMOBJ) rom$(MODEL).cmd
+	del rom$(MODEL).lib
+	lib @rom$(MODEL).cmd
+
+rom$(MODEL).cmd	: makefile
+	echo rom$(MODEL) >rom$(MODEL).cmd
+# Use the next line if you have a linker version >= 2.30
+	echo rom$(MODEL)/pagesize:16 >rom$(MODEL).cmd
+	echo yes >>rom$(MODEL).cmd
+	echo +$(ROMOBJ) >>rom$(MODEL).cmd
+	echo rom$(MODEL).lst >>rom$(MODEL).cmd
+
+###################### Miscellaneous ##########################
+
+cleanc:
+	del _main$(MODEL).obj
+	for %f in ($(C1)) do del %f
+	for %f in ($(C2)) do del %f
+	for %f in ($(C3)) do del %f
+	for %f in ($(C4)) do del %f
+	for %f in ($(C5)) do del %f
+	for %f in ($(C6)) do del %f
+	for %f in ($(C7)) do del %f
+	for %f in ($(C8)) do del %f
+	for %f in ($(C9)) do del %f
+	for %f in ($(C10)) do del %f
+	for %f in ($(FCLOSE)) do del %f
+	for %f in ($(FCLOSE2)) do del %f
+	for %f in ($(FREAD)) do del %f
+	for %f in ($(DISP2)) do del %f
+	for %f in ($(LOCALE)) do del %f
+	for %f in ($(PERROR)) do del %f
+	for %f in ($(TIME)) do del %f
+	for %f in ($(MATHOBJ)) do del %f
+	for %f in ($(STRINGS2A)) do del %f
+	for %f in ($(STRINGS2B)) do del %f
+	for %f in ($(STRINGS2C)) do del %f
+
+clean:
+	for %f in ($(C1)) do del %f
+	for %f in ($(C2)) do del %f
+	for %f in ($(C3)) do del %f
+	for %f in ($(C4)) do del %f
+	for %f in ($(C5)) do del %f
+	for %f in ($(C6)) do del %f
+	for %f in ($(C7)) do del %f
+	for %f in ($(C8)) do del %f
+	for %f in ($(C9)) do del %f
+	for %f in ($(C10)) do del %f
+	for %f in ($(FCLOSE)) do del %f
+	for %f in ($(FCLOSE2)) do del %f
+	for %f in ($(FREAD)) do del %f
+	for %f in ($(DISP2)) do del %f
+	for %f in ($(LOCALE)) do del %f
+	for %f in ($(PERROR)) do del %f
+	for %f in ($(TIME)) do del %f
+	for %f in ($(MATHOBJ)) do del %f
+	for %f in ($(STRINGS2A)) do del %f
+	for %f in ($(STRINGS2B)) do del %f
+	for %f in ($(STRINGS2C)) do del %f
+	del *.bak
+	for %f in ($(A1)) do del %f
+	for %f in ($(A2)) do del %f
+	for %f in ($(A3)) do del %f
+	for %f in ($(A4)) do del %f
+	for %f in ($(A5)) do del %f
+	for %f in ($(A6)) do del %f
+	for %f in ($(A7)) do del %f
+	for %f in ($(A8)) do del %f
+	for %f in ($(A9)) do del %f
+	for %f in (c.obj $(ROMOBJ)) do del %f
+	del *.lst
+
+# Rebuild modules from MATH.C
+mathobj:
+	for %f in ($(MATHOBJ)) do del %f
+	$(ZTC) -dMATH1 math -oMATH1.obj
+	$(ZTC) -dTRIG math -oTRIG.obj
+	$(ZTC) -dSQRT math -oSQRT.obj
+	$(ZTC) -dATRIG math -oATRIG.obj
+	$(ZTC) -dHYPER math -oHYPER.obj
+	$(ZTC) -d_TRIGERR math -o_TRIGERR.obj
+	lib zl$(MODEL) -+math1 -+trig -+sqrt -+atrig -+hyper-+_trigerr;
+
+########################## Dependencies ######################
+
+atol.obj : $(INCLUDE)\macros.asm atol.asm
+fputc.obj : $(INCLUDE)\macros.asm stdio.asm fputc.asm
+inter.obj : $(INCLUDE)\macros.asm inter.asm
+rot.obj : $(INCLUDE)\macros.asm rot.asm
+
+atof.obj : $(INCLUDE)\stdlib.h $(INCLUDE)\ctype.h atof.c
+ctype.obj : $(INCLUDE)\ctype.h ctype.c
+cxferr.obj : $(INCLUDE)\stdio.h cxferr.c
+ecvt.obj : $(INCLUDE)\stdlib.h ecvt.c
+far.obj : $(INCLUDE)\stdio.h $(INCLUDE)\dos.h far.c
+flush.obj : $(INCLUDE)\stdio.h $(INCLUDE)\stdlib.h $(INCLUDE)\io.h flush.c
+matherr.obj : $(INCLUDE)\stdio.h $(INCLUDE)\errno.h $(INCLUDE)\math.h \
+	$(INCLUDE)\string.h matherr.c
+printf.obj : $(INCLUDE)\stdio.h $(INCLUDE)\stdarg.h printf.c
+rand.obj : $(INCLUDE)\stdlib.h rand.c
+scanf.obj : $(INCLUDE)\stdio.h $(INCLUDE)\stdarg.h $(INCLUDE)\ctype.h scanf.c
+signal.obj : $(INCLUDE)\signal.h $(INCLUDE)\errno.h $(INCLUDE)\dos.h signal.c
+stat.obj : $(INCLUDE)\sys\stat.h $(INCLUDE)\dos.h $(INCLUDE)\string.h \
+	$(INCLUDE)\errno.h $(INCLUDE)\time.h $(INCLUDE)\io.h stat.c
+strtod.obj : $(INCLUDE)\stdlib.h $(INCLUDE)\ctype.h $(INCLUDE)\limits.h strtod.c
+strtol.obj : $(INCLUDE)\ctype.h $(INCLUDE)\errno.h $(INCLUDE)\stdlib.h strtol.c
+system.obj : $(INCLUDE)\stdio.h $(INCLUDE)\errno.h $(INCLUDE)\stdlib.h \
+	$(INCLUDE)\process.h system.c
+ungetc.obj : $(INCLUDE)\stdio.h $(INCLUDE)\io.h ungetc.c
+ztsr.obj : $(INCLUDE)\tsr.h ztsr.c
+
+

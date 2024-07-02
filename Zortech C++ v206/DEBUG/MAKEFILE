@@ -1,0 +1,19 @@
+#_ makefile   Mon Oct 16 1989   Modified by: Samuel Druker */
+#
+#	makefile to build examples for the Zortech Debugger
+#
+MEM	=	S
+
+all : exam1.exe exam2.exe exam3.exe exam4.exe exam5.exe exam6.exe 
+
+exam5.exe : exam5.c exam5a.c exam5b.c
+	ztc -g -m$(MEM) exam5 exam5a exam5b
+
+exam6.exe : exam6.c exam6a.obj
+	ztc -g -m$(MEM) exam6 exam6a.obj
+
+.asm.obj :
+	MASM /Zi /MX /Z /DI8086$(MEM) $*.asm;
+
+.c.exe :
+	ztc -g -m$(MEM) $*

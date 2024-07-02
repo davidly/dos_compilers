@@ -1,0 +1,109 @@
+C++ Tools Version 2
+
+These disks contain the following files.
+
+C++ Tools Disk 1
+ \
+
+    PACKING.LST     - This file
+    INSTALL.BAT
+    
+\lib
+
+    CPPTS.LIB       - Ready built libraries, small
+    CPPTM.LIB       - medium,
+    CPPTC.LIB       - compact,
+    CPPTL.LIB       - large
+    
+C++ Tools Disk 2
+
+\
+    INSTALL.BAT
+    
+\tools
+
+    MAKEFILE        - You only need use these if you have made
+    MAKEALL.BAT     - alterations to the sources.
+    READ.ME         -   ***   Please read this file   ***
+    TESTP.BAT
+    
+\tools\source   - Class source and test files
+
+    SLIST.CPP
+    DLIST.CPP
+    DYNARR.CPP
+    BINTREE.CPP
+    HASH.CPP
+    BCD.CPP
+    VMA.CPP
+    VMS.CPP
+    TIME.CPP
+    RTC.CPP
+    DIR.CPP
+    FNAME.CPP
+    INTVEC.CPP
+    CRITERR.CPP
+    SEDIT.CPP
+    DATEDIT.CPP
+    WINDOW.CPP
+    TEXT.CPP
+    USDATE.CPP
+    DEFERR.CPP
+    EVENT.CPP
+    EQ.CPP          - global event queue
+    MONEY.CPP
+
+    BCDLOW.ASM      - Low level stuff for BCD
+ 
+    BVTEST.CPP      - Demo programmes
+    SLTEST.CPP  
+    QSTEST.CPP  
+    DLTEST.CPP  
+    DYNTEST.CPP 
+    BINTEST.CPP     - Needs a text file argument to run the test
+    HSHTEST.CPP     - ditto
+    BCDTEST.CPP  
+    VMATEST.CPP
+    VMSTEST.CPP
+    TIMTEST.CPP
+    RTCTEST.CPP
+    DIRTEST.CPP
+    FNTEST.CPP
+    IVTEST.CPP
+    CETEST.CPP
+    SETEST.CPP
+    WINTEST.CPP
+    DATTEST.CPP
+    TEXTTEST.CPP
+    ETEST1.CPP
+    ETEST2.CPP      - Event class demos
+    MONTEST.CPP     - Money demo
+
+\include  - Class header files
+
+    BITVEC.HPP
+    SLIST.HPP
+    DLIST.HPP
+    DYNARR.HPP
+    BINTREE.HPP
+    HASH.HPP
+    BCD.HPP
+    VMA.HPP
+    VMS.HPP
+    TIME.HPP
+    RTC.HPP
+    DIR.HPP
+    FNAME.HPP
+    INTVEC.HPP
+    CRITERR.HPP
+    SEDIT.HPP
+    DATEDIT.HPP
+    WINDOW.HPP
+    TEXT.HPP
+    EVENT.HPP
+    MONEY.HPP
+    ERRN.HPP        - Error numbers
+
+Packing.lst ends.
+
+

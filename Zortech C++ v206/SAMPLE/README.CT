@@ -1,0 +1,48 @@
+Zortech C++ Compiler Version 2.xx Sample Code Disk.
+
+ZTCSETUP will not install this sample code disk at present. It may be installed
+using the DOS XCOPY command.
+
+This is a collection of packages that are extremely useful for
+C programming. They are:
+
+TOOLKIT.H	General definitions for all packages.
+HOST.H		For compilers other than Zortech.
+TOOLKIT.MAK	Build MAKEDEP.COM and MENU.EXE.
+
+FILE.H		Various common operations on files.
+FILE.C
+FILESPEC.H	Manipulate path and file names.
+FILESPEC.C
+LIST.H		Singly linked lists.
+LIST.C
+MAKEDEP.C	Demo program: makefile dependency list generator
+MAKEDEP.COM	Executable
+MEM.H		Shell around malloc/free to add extensive debugging support.
+MEM.C
+MENU.H		Simple menuing system. Works with keyboard and mouse.
+MENU.C		Implementation of menuing system.
+MENU.EXE	Demo program for menus.
+VEC.H		Arrays of bits.
+VEC.C
+
+These are not put into the ZL?.LIB libraries because they are not
+part of ANSI C, and adding everything in would make the libraries
+unbearably large. Feel free, however, to put them in if you want to.
+
+The most useful one by far is MEM. With it, you can catch up to 75%
+of common mistakes in using dynamic memory allocation.
+
+Additional notes:
+Due to space requirements, the following utilities have been moved to
+this directory.  These are the standard "simple" but useful user programs (SD, 10/14/89)
+
+MAKEFILE	Build the following utilities
+WC.C		Word, char, line count.
+DUMP.C		Dump hex file to screen.
+DUMPOBJ.C	Dump object file records.
+CHMOD.C		Change file permissions
+ZCMORE.C 	Replacement for MORE
+TIMER.C		Time executions
+FREQ.C		Word Frequency counter.  Handle demo!
+

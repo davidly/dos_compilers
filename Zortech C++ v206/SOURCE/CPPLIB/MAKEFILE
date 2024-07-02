@@ -1,0 +1,74 @@
+#_ makefile   Fri Apr 14 1989   Modified by: Walter Bright */
+# Copyright (C) 1988-1989 by Walter Bright
+# All Rights Reserved
+# Written by Walter Bright
+# Makefile for C++ libraries
+
+MODEL=S
+
+CC= ztc
+CFLAGS= -m$(MODEL) -r
+
+.c.obj:
+	$(CC) -c -o+space -cpp $(CFLAGS) $*
+
+.cpp.obj:
+	$(CC) -c -o+space $(CFLAGS) $*
+
+.asm.obj:
+	$(CC) -c $(CFLAGS) $*
+
+OBJ1= _new.obj vector.obj _delete.obj _handler.obj #ctdtptr.obj ctdt.obj
+OBJ2= form.obj filebuf.obj stream.obj fg.obj
+IN1= in1.obj in2.obj in3.obj in4.obj in5.obj in6.obj in7.obj
+IN2= in8.obj in9.obj in10.obj in11.obj in12.obj in13.obj
+IN3= in14.obj in15.obj in16.obj in17.obj in18.obj in19.obj in20.obj
+OUT= out1.obj out2.obj out3.obj out4.obj out5.obj out6.obj out7.obj out8.obj
+
+OBJ= $(OBJ1) $(OBJ2) $(IN1) $(IN2) $(IN3) $(OUT)
+
+pl$(MODEL).lib: pl$(MODEL).cmd $(OBJ)
+	del pl$(MODEL).lib
+	lib @pl$(MODEL).cmd
+
+pl$(MODEL).cmd: makefile
+#	echo pl$(MODEL) >pl$(MODEL).cmd
+# Use the next line if you have a linker version >= 2.30
+# This will create libraries that are considerably smaller.
+	echo pl$(MODEL)/pagesize:16 >pl$(MODEL).cmd
+	echo yes >>pl$(MODEL).cmd
+	echo $(OBJ1)& >>pl$(MODEL).cmd
+	echo $(OBJ2)& >>pl$(MODEL).cmd
+	echo $(IN1)& >>pl$(MODEL).cmd
+	echo $(IN2)& >>pl$(MODEL).cmd
+	echo $(IN3)& >>pl$(MODEL).cmd
+	echo $(OUT) >>pl$(MODEL).cmd
+	echo pl$(MODEL).lst >>pl$(MODEL).cmd
+
+$(IN1) $(IN2) $(IN3) : in.cpp $(INCLUDE)\stream.hpp
+	$(CC) -c $(CFLAGS) -DA$* in -o$*.obj
+
+$(OUT) : out.cpp $(INCLUDE)\stream.hpp
+	$(CC) -c $(CFLAGS) -DA$* out -o$*.obj
+
+clean:
+	for %f in ($(OBJ1)) do del %f
+	for %f in ($(OBJ2)) do del %f
+	for %f in ($(IN1)) do del %f
+	for %f in ($(IN2)) do del %f
+	for %f in ($(IN3)) do del %f
+	for %f in ($(OUT)) do del %f
+
+################################
+# Dependencies
+
+_new.obj : _new.c
+vector.obj : vector.c
+_delete.obj : _delete.c
+_handler.obj : _handler.c
+#ctdt.obj : ctdt.c
+#ctdtptr.obj : ctdtptr.c
+form.obj : form.c
+filebuf.obj : filebuf.cpp $(INCLUDE)\stream.hpp
+stream.obj : stream.cpp $(INCLUDE)\stream.hpp
+

@@ -1,0 +1,24 @@
+                    ZDB - The Zortech C++ Debugger
+                    ==============================
+
+Version : V2.00 First Formal Release of ZDB
+Date    : 14/10/89
+
+-f Flag
+-------
+The default for the debugger has been changed so that the retention of expanded
+automatic variables between function calls is not automatic. This change has
+been made to avoid problems with running out of memory. If you want expanded 
+variables to be retained when a function is re-entered, you will need to specify
+the -f flag to ZDB. This will have an impact on the size of program you can
+debug.
+
+Warning - This behavior may be different to that outlined in the Technical Notes
+
+Note
+----
+If you are running ZDB on a system that simulates a CGA screen in monochrome,
+you should use the dos command MODE BW80 before running the debugger.
+
+EOF
+
