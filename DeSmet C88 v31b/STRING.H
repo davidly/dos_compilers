@@ -1,0 +1,30 @@
+typedef unsigned size_t;
+
+void *memccpy( void *, void *, char, size_t );
+void *memchr( void *, int, size_t );
+int memcmp( void *, void *, size_t );
+void *memcpy( void *, void *, size_t );
+int memicmp( void *, void *, size_t );
+void *memmove( void *, void *, size_t );
+void *memset( void *, char, size_t );
+
+char *strcat(char *, char *);
+char *strchr(char *, char);
+int strcmp(char *, char *);
+int strcmpi(char *, char *);
+char *strcpy(char *, char *);
+unsigned strcspn(char *, char *);
+char *strdup(char *);
+int stricmp(char *, char *);
+unsigned strlen(char *);
+char *strlwr(char *);
+char *strncat(char *, char *, unsigned int);
+int strncmp(char *, char *, unsigned int);
+char *strncpy(char *, char *, unsigned int);
+char *strrchr(char *, int);
+char *strrev(char *);
+char *strset(char *, int);
+unsigned strspn(char *, char *);
+char *strstr(char *, char *);
+char *strtok(char *, char *);
+char *strupr(char *);
