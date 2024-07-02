@@ -1,0 +1,34 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 5.0                        }
+{       Overlay Interface Unit                          }
+{                                                       }
+{       Copyright (C) 1987,88 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Overlay;
+
+{$D-,I-,S-}
+
+interface
+
+const
+  ovrOk = 0;
+  ovrError = -1;
+  ovrNotFound = -2;
+  ovrNoMemory = -3;
+  ovrIOError = -4;
+  ovrNoEMSDriver = -5;
+  ovrNoEMSMemory = -6;
+
+var
+  OvrResult: Integer;
+
+procedure OvrInit(FileName: String);
+procedure OvrInitEMS;
+procedure OvrSetBuf(Size: LongInt);
+function OvrGetBuf: LongInt;
+procedure OvrClearBuf;
+

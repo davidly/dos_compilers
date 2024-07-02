@@ -1,0 +1,19 @@
+
+{*******************************************************}
+{                                                       }
+{       Turbo Pascal Version 5.0                        }
+{       Printer Interface Unit                          }
+{                                                       }
+{       Copyright (C) 1987,88 Borland International     }
+{                                                       }
+{*******************************************************}
+
+unit Printer;
+
+{$D-,I-,S-}
+
+interface
+
+var
+  Lst: Text;
+

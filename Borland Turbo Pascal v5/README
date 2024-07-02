@@ -1,0 +1,503 @@
+                   WELCOME TO TURBO PASCAL 5.0
+                   ---------------------------
+
+This README file contains important, last minute information
+about Turbo Pascal 5.0. The HELPME!.DOC file also answers many
+common Technical Support questions.
+
+
+TABLE OF CONTENTS
+-----------------
+
+  1.  Installation
+  2.  New Utilities
+      2.1  THELP gives you Turbo Pascal help from ANY program
+      2.2  TINSTXFR transfers your 4.0 customizations to 5.0
+  3.  Important Additions
+  4.  Notes and Restrictions
+  5.  Turbo Pascal 5.0 and the Toolboxes
+  6.  Listing of Files on the Disks
+
+
+
+1. INSTALLATION
+---------------
+
+A new program, INSTALL.EXE, sets up Turbo Pascal on your system.
+INSTALL works on both floppy-based and hard disk systems. To use
+INSTALL on Drive A, for example, place the disk labeled
+INSTALL/COMPILER in Drive A and type
+
+  A:INSTALL
+
+If you are using a hard disk, INSTALL will copy all Turbo Pascal
+files onto your hard disk and put them into subdirectories. The
+default subdirectories are:
+
+  Turbo Pascal Directory:                      C:\TP
+  Graphics Subdirectory:                       C:\TP
+  Documentation Subdirectory:                  C:\TP\DOC
+  Example Subdirectory:                        C:\TP
+  Turbo Pascal 3.0 Compatibility Subdirectory: C:\TP\TURBO3
+
+By default, separate subdirectories are created for the
+documentation files (*.DOC and HELPME!.DOC), and the Turbo3
+compatibility files (UPGRADE, TURBO3.TPU, GRAPH3.TPU, TURBO3.DOC,
+etc.). All other files from the distribution disks are placed in
+the Turbo Pascal Directory. If you would rather separate graphics
+and example programs into their own subdirectories as well, edit
+the default paths for those files before selecting START
+INSTALLATION.
+
+The BGI/DEMOS/DOC/TURBO3 disk contains several files with an .ARC
+file extension: BGI.ARC, DEMOS.ARC, DOC.ARC, MCALC.ARC, and
+TURBO3.ARC. These files actually contain several other files that
+have been compressed and placed inside an archive. You can
+dearchive them yourself by using the UNPACK.COM utility.
+
+For example:
+
+  unpack demos
+
+unpacks all the files stored in the DEMOS.ARC archive into the
+current directory.
+
+INSTALL gives you a choice of copying the .ARC files intact, or
+dearchiving and copying all of the individual files onto your
+hard disk during the installation process. Note that INSTALL does
+not unpack the BGIEXAMP.ARC file stored in BGI.ARC. BGIEXAMP.ARC
+contains all of the BGI examples from the reference chapter in
+the manual. If you want to unpack the examples from this file, go
+to the directory that contains both UNPACK.COM and BGIEXAMP.ARC
+and type:
+
+  unpack bgiexamp
+
+This will unpack all 69 examples from BGIEXAMP.ARC.
+
+  Special Notes
+  -------------
+  o If you use INSTALL's Upgrade option, 5.0 files will overwrite
+    any version 4.0 files that have the same names. If you have
+    INSTALL copy 5.0 files into your 4.0 subdirectory, some 4.0
+    files may still be left on disk and will not be overwritten.
+    In this case, you should delete any obsolete 4.0 files after
+    running INSTALL. This is especially important if you have
+    INSTALL build separate subdirectories for 5.0 file groups
+    (DOC, BGI, TURBO3, etc.).
+
+    Note that INSTALL's Upgrade option will run TINSTXFR.EXE for
+    you.
+
+  o If you install the graphics files into a separate
+    subdirectory (C:\TP\BGI, for example), remember to specify
+    the full path to the driver and font files when calling
+    InitGraph
+
+      InitGraph(Driver, Mode, 'C:\TP\BGI');
+
+    If GRAPH.TPU is not in the current directory, you'll need to
+    add its location to the Unit Directories in order to compile
+    a BGI program.
+
+  o If you have difficulty reading the text displayed by the
+    INSTALL or TINST programs, they will both accept an optional
+    command-line parameter that forces them to use black and
+    white colors:
+
+      a:install /B      - Forces INSTALL into BW80 mode
+      a:tinst /B        - Forces TINST into BW80 mode
+
+    Specifying the /B parameter may be necessary if you are using
+    an LCD screen or a system that has a color graphics adapter
+    and a monochrome or composite monitor. See the comments on
+    LCD screens in section (4) below.
+
+
+2. NEW UTILITIES
+----------------
+
+  2.1  THELP
+  ----------
+  THELP is a memory-resident utility program that gives you
+  access to Turbo Pascal's context-sensitive help system from any
+  program. You don't need to use THELP if you're in the
+  Integrated Development Environment, but it is especially useful
+  if you use the command-line compiler and your own text editor,
+  or if you are debugging with the standalone Turbo Debugger. To
+  use THELP, load THELP.COM into memory by typing at the DOS
+  command line
+
+    thelp
+
+  You activate ("pop-up") THELP by typing its hot key -- by
+  default numeric keypad <5>. All Turbo Pascal help commands
+  apply (F1, Ctrl-F1, Alt-F1). For a complete description of
+  THELP, refer to THELP.DOC in the Documentation Subdirectory.
+
+
+  2.2  TINSTXFR
+  -------------
+  The TINSTXFR (Tinst Transfer) utility copies installation data
+  from Turbo Pascal 4.0 to 5.0. TINSTXFR is especially useful if
+  you used TINST to customize your 4.0 colors or editor commands
+  and you do not wish to reinstall them in 5.0. TINSTXFR takes
+  two parameters
+
+    tinstxfr \tp4\turbo \tp\turbo
+
+  The first is the path to your version 4.0 TURBO.EXE. The second
+  is the path to your version 5.0 TURBO.EXE.
+
+  Note that it is not necessary to use TINSTXFR; it is provided
+  as a convenience for programmers upgrading from 4.0 to 5.0. In
+  fact, if you use the INSTALL program's UPGRADE option, it will
+  run TINSTXFR for you.
+
+
+3. IMPORTANT ADDITIONS
+----------------------
+
+The following features were added after the manual went to print:
+
+o {$A} COMPILER DIRECTIVE. A new compiler directive, {$A}, has
+  been added that switches between byte and word alignment of
+  variables and typed constants. Word alignment, {$A+}, is the
+  default. When you choose word alignment, all variables and
+  typed constants larger than 1 byte are aligned on a
+  machine-word boundary (an even numbered address). If required,
+  unused bytes are inserted between variables to achieve word
+  alignment. When you choose byte alignment, no alignment
+  measures are taken, and variables and typed constants are
+  placed at the next available address, regardless of their size.
+
+  This compiler directive is equivalent to the
+  Options/Compiler/Align Data menu command (in the Integrated
+  Environment) and the /$A command-line parameter (for use with
+  TPC.EXE). Note that if you are recompiling programs using the
+  Editor Toolbox, make sure to compile all programs that use the
+  toolbox with {$A-}.
+
+o /P PARAMETER FOR TURBO.EXE. A new command-line switch controls
+  palette swapping on EGA video adapters. Using this switch
+
+    turbo /p myprog
+
+  is only recommended when the user program modifies the EGA
+  palette registers. When /P is specified, the EGA palette is
+  restored each time the screen is swapped. In general, you don't
+  need to use this switch unless your program modifies the EGA
+  palette registers, or unless your program uses BGI to change
+  the palette.
+
+o NEW LIBRARY ROUTINES. The following table lists functions and
+  procedures that have been modified or added to Turbo Pascal's
+  run-time library. Refer to the reference section of your manual
+  for more information:
+
+    Name                                Unit
+    ----                                ----
+    DosVersion function                 Dos
+    EnvCount function                   Dos
+    EnvStr function                     Dos
+    FExpand function                    Dos
+    FillEllipse procedure               Graph
+    FSearch function                    Dos
+    FSplit procedure                    Dos
+    GetCBreak procedure                 Dos
+    GetDefaultPalette function          Graph
+    GetDriverName function              Graph
+    GetEnv function                     Dos
+    GetMaxMode function                 Graph
+    GetModeName function                Graph
+    GetPaletteSize function             Graph
+    GetVerify procedure                 Dos
+    InstallUserDriver function          Graph
+    InstallUserFont function            Graph
+    OvrClearBuf procedure               Overlay
+    OvrGetBuf function                  Overlay
+    OvrInit procedure                   Overlay
+    OvrInitEMS procedure                Overlay
+    OvrSetBuf procedure                 Overlay
+    RunError procedure                  System
+    Sector procedure                    Graph
+    SetAspectRatio procedure            Graph
+    SetCBreak procedure                 Dos
+    SetRGBPalette procedure             Graph
+    SetUserCharSize procedure           Graph    (modified)
+    SetVerify procedure                 Dos
+    SetWriteMode procedure              Graph
+    SwapVectors procedure               Dos
+
+o NEW COMPILER ERROR MESSAGES.  The following compiler error
+  messages are no longer reported or have been replaced by new
+  error messages: 108, 109, 110, 111, 115, 119, and 125. The
+  following new compiler error messages have been added:
+
+    133 Cannot evaluate this expression
+    134 Expression incorrectly terminated
+    135 Invalid format specifier
+    136 Invalid indirect reference
+    137 Structured variables are not allowed here
+    138 Cannot evaluate without System unit
+    139 Cannot access this symbol
+    140 Invalid floating-point operation
+    141 Cannot compile overlays to memory
+    142 Procedure or function variable expected
+    143 Invalid procedure or function reference
+    144 Cannot overlay this unit
+    145 Too many nested scopes (not in manual)
+
+  For detailed descriptions, please refer to the reference
+  section of the manual. Compiler error message 145 is a late
+  addition and is not in the manual.
+
+    145 Too many nested scopes
+
+    Your program has too many nested scopes. Each project can
+    have no more than 512 nested scopes with no more than 128
+    nested scopes in each module. Each unit in a uses clause,
+    each nested record type declaration, and each nested "with"
+    context count toward the total number of nested scopes.
+
+o NEW RUN-TIME ERROR MESSAGES. The following new run-time error
+  messages have been added:
+
+    208 Overlay manager not installed
+    209 Overlay file read error
+
+  For detailed descriptions, please refer to the reference
+  section of the manual.
+
+o STRING OPTIMIZATION. Two optimizations to string code
+  generation were made. When assigning or testing for a null
+  string value, optimal code is now generated for the following:
+
+    (1)  StringVar := '';
+    (2)  if StringVar = '' then...
+
+  Note that some 4.0 programmers used tricks to have the compiler
+  generate optimized code in place of the above:
+
+    (1)  StringVar[0] := #0;
+         Length(StringVar) := 0;
+
+    (2)  if Length(StringVar) = 0 then ...
+
+  These tricks are now unnecessary. (In fact, a function call on
+  the left-hand side of an assignment now--correctly--generates a
+  syntax error.)
+
+
+4. NOTES AND RESTRICTIONS
+-------------------------
+
+o REBUILD 4.0 TPUs. The TPUs from all 4.0 programs must be
+  rebuilt in order to use them with Turbo Pascal 5.0. You'll need
+  all the source code in order to rebuild a program. If you are
+  using the Integrated Development Environment, load the main
+  program and select the Compile/Build menu command. If you are
+  using the command-line compiler, type:
+
+    tpc /b ProgramName
+
+  Appendix A in the manual discusses 3.0 and 4.0 compatibility
+  issues.
+
+o LCD SCREENS. If you are using a laptop computer and have
+  difficulty reading the text displayed by the Integrated
+  Environment, use TINST and change MODE FOR DISPLAY to LCD OR
+  COMPOSITE. This will force the Integrated Environment to use
+  black and white colors. The same advice applies if your system
+  has a color graphics adapter and a monochrome or composite
+  monitor. In all cases, you can use TINST to customize the
+  colors for your system.
+
+o DEBUGGING INT 9 HANDLERS. A program that takes over interrupt
+  9 cannot be debugged in the Integrated Environment (use the
+  standalone Turbo Debugger instead).
+
+o EMS 3.2 SUPPORT. If your system has EMS and you want Turbo
+  Pascal to take advantage of it, both the Integrated Environment
+  and the overlay manager require EMS 3.2 or later.
+
+o BGI & ZENITH Z-449. When using the BGI on a Zenith Z-449 card,
+  the 640x480 enhanced EGA mode will always be selected by the
+  autodetection code. If you are using the Z-449 with a monitor
+  that is not compatible with this mode, select a different mode
+  in the InitGraph call.
+
+o CAN'T FIND RUN-TIME ERRORS. Turning Debug/Integrated Debugging
+  OFF also disables finding run-time errors in the Integrated
+  Environment.
+
+o USER SCREEN. The Integrated Development Environment no longer
+  displays the message "Press any key to return to Turbo
+  Pascal..." when your program terminates. Instead, at the end of
+  your program, the User Screen is replaced by the Integrated
+  Development Environment. To view the User Screen, press Alt-
+  F5 or select the Run/User Screen menu command. Then, you can
+  press any key to return to the Integrated Development
+  Environment.
+
+  Note that you can toggle between the Output and Watch windows
+  by switching to the "lower" window and pressing Alt-F6.
+
+o EXEC WITH NOVELL NETWORK. Versions of the Novell network system
+  software earlier than 2.01-2 do not support a DOS call used by
+  the Exec procedure (from the Dos unit). If you are using the
+  Integrated Development Environment to run a program that does
+  an Exec, and you have early Novell system software, set
+  Compile\Destination to Disk and run your program from DOS (you
+  can use File\OS Shell).
+
+
+5. TURBO PASCAL 5.0 AND THE TOOLBOXES
+-------------------------------------
+
+The source code from the Turbo Pascal Tutor and all the Turbo
+Pascal toolboxes is fully compatible with 5.0. Version 5.0
+changes some compiler directives, however, and these should be
+modified in the source code before recompiling the following
+toolboxes:
+
+o Database Toolbox files:
+
+  TAINST.PAS and TABUILD.PAS
+
+    Add {$A-} to the top of the file.
+
+
+o Editor Toolbox files:
+
+  EDDIRECT.INC & MSDIRECT.INC
+
+    Add {$A-} to the top of the file.
+    Delete {$T+} from the file.
+    Add {$L+} after the line that contains {$D+}.
+
+
+  EDINST.PAS, MSINST.PAS, & INSTALL.PAS
+
+    Add {$A-} before the line {$V-}.
+
+  BINED.PAS
+
+    Add {$A-} before the line {$I-}.
+
+The TPUs from all toolboxes must be rebuilt in order to use them
+with Turbo Pascal 5.0.
+
+
+6. LISTING OF FILES ON THE DISKS
+--------------------------------
+
+  INSTALL/COMPILER
+  ----------------
+  INSTALL  EXE  - Installs Turbo Pascal on your system
+  README   COM  - Program to display README file
+  TURBO    EXE  - Turbo Pascal Integrated Development Environment
+  TURBO    TPL  - Resident units for Turbo Pascal
+  TPC      EXE  - Command-line version of Turbo Pascal
+  THELP    COM  - Memory-resident help utility
+  README        - This file!
+
+
+  HELP/UTILITIES
+  --------------
+  TURBO    HLP  - Turbo Pascal Help File
+  TINST    EXE  - Customization program for TURBO.EXE
+  TPUMOVER EXE  - Unit mover utility
+  MAKE     EXE  - Utility for managing projects
+  GREP     COM  - Utility to search text files for strings
+  TOUCH    COM  - Utility to change the dates and times of files
+  BINOBJ   EXE  - Utility to convert a binary file to an .OBJ
+  TPCONFIG EXE  - .TP to .CFG conversion utility
+  TINSTXFR EXE  - Utility to transfer 4.0 options to 5.0
+
+
+  BGI/DEMOS/DOC/TURBO3
+  --------------------
+  UNPACK   COM  - Utility to unpack .ARC files
+
+  BGI      ARC  - Packed file that contains graphics documentation,
+                  drivers, fonts, and examples
+
+    GRAPH    DOC  - Interface section listing for the Graph unit
+    GRAPH    TPU  - Borland Graphics Interface (BGI) Graph unit
+    ATT      BGI  - Graphics device driver for AT&T 6300
+    CGA      BGI  - Graphics device driver for CGA and MCGA
+    EGAVGA   BGI  - Graphics device driver for EGA and VGA
+    HERC     BGI  - Graphics device driver for Hercules mono
+    PC3270   BGI  - Graphics device driver for 3270 PC
+    IBM8514  BGI  - Graphics device driver for IBM 8514
+    GOTH     CHR  - Gothic font character set
+    LITT     CHR  - Small font character set
+    SANS     CHR  - Sans serif font character set
+    TRIP     CHR  - Triplex font character set
+    BGIDEMO  PAS  - Graph unit demo
+    ARTY     PAS  - Graph unit demo
+    BGILINK  PAS  - Graph unit demo that shows how to link font and
+                    driver files into an .EXE file
+    DRIVERS  PAS  - Example unit for use with BGILINK.PAS
+    FONTS    PAS  - Example unit for use with BGILINK.PAS
+    BGILINK  MAK  - Make file for use with BGILINK.PAS
+    BGIEXAMP ARC  - Packed file that contains all of the graphics
+                    examples listed in the manual's reference chapter.
+
+  DEMOS    ARC  - Packed file that contains example programs
+
+    EXECDEMO PAS  - Executes a child program (DOS unit)
+    DIRDEMO  PAS  - Displays directory, uses procedural types
+    CRTDEMO  PAS  - Crt unit demo
+    OVRDEMO  PAS  - Overlay unit demo
+    OVRDEMO1 PAS  - Example unit for OVRDEMO.PAS
+    OVRDEMO2 PAS  - Example unit for OVRDEMO.PAS
+    CIRCULAR PAS -  Demos the USES clause in implementation section
+    DISPLAY  PAS  - Example unit for CIRCULAR.PAS
+    ERROR    PAS  - Example unit for CIRCULAR.PAS
+    QSORT    PAS  - QuickSort example
+    LISTER   PAS  - Printer unit demo
+    HILB     PAS  - Floating-point demo
+    FIB8087  PAS  - Recursive example that uses the 8087 math
+                    coprocessor and avoids 8087 stack overflow
+    PROCVAR  PAS  - Simple procedural types demo
+    EMS      PAS  - Example program that shows how to use expanded
+                    memory from your programs
+    CPASDEMO PAS  - Example program that shows how to link TURBO C .OBJ
+                    files into Turbo Pascal programs
+    CPASDEMO C    - C program for use with CPASDEMO.PAS
+    CTOPAS   TC   - Turbo C configuration file to use with TC.EXE
+                    for producing .OBJ files that can be linked with
+                    Turbo Pascal (see CPASDEMO.PAS)
+    TURBOC   CFG  - Turbo C configuration file to use with TCC.EXE for
+                    producing .OBJ files that can be linked with Turbo
+                    Pascal (see CPASDEMO.PAS)
+
+  DOC      ARC  - Interface section listings for system units
+
+    THELP    DOC  - Documentation for memory-resident help utility
+    SYSTEM   DOC  - Interface section listing for the System unit
+    DOS      DOC  - Interface section listing for the Dos unit
+    CRT      DOC  - Interface section listing for the Crt unit
+    PRINTER  DOC  - Interface section listing for the Printer unit
+    OVERLAY  DOC  - Interface section listing for the Overlay unit
+
+  MCALC    ARC  - Packed file with complete source code to
+                  MicroCalc example program
+
+  TURBO3   ARC  - Turbo 3.0 compatibility files
+
+    UPGRADE  EXE  - Program that converts 3.0 programs to 5.0
+    UPGRADE  DTA  - Data file for UPGRADE.EXE
+    TURBO3   TPU  - TURBO3 compatibility unit
+    GRAPH3   TPU  - GRAPH3 compatibility unit (turtle graphics)
+    TURBO3   DOC  - Interface section listing for the Turbo3 unit
+    GRAPH3   DOC  - Interface section listing for the Graph3 unit
+    BCD      PAS  - Unit to convert Turbo Pascal 3.0 BCD reals to
+                    Turbo Pascal 5.0 floating point numbers
+
+  HELPME!  DOC  - Text file with the answers to many common
+                  questions. Please read HELPME!.DOC before
+                  contacting Technical Support.
+
