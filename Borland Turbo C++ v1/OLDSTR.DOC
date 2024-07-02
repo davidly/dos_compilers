@@ -1,0 +1,1108 @@
+HOW TO USE THIS FILE: This file has a table of contents and
+an index that refer to "pages" in this file. If your editor
+has a search facility, you can use it to search for the page
+numbers listed in either the table of contents or in the index.
+The phrase "Page n" (where n represents the actual page number)
+appears at the bottom left of the "page" it refers to. Thus, at
+the bottom of page 1, you'll find "Page 1" as the last item on
+that "page."
+
+                   C++ VERSION 1.2 STREAMS
+                      TABLE OF CONTENTS
+___________________________________________________________________
+
+Overview                       1       Get functions . . . . . .  8
+Output . . . . . . . . . . . . 1       Putback (function)  . . .  8
+  Built-in types . . . . . . . 2       Controlling whitespace
+  Put functions  . . . . . . . 2       skipping  . . . . . . . .  9
+  Built-in formatting                User-defined types  . . . . 10
+  functions  . . . . . . . . . 2     Initializing streams  . . . 10
+    Numeric conversion . . . . 3     Output streams  . . . . . . 10
+    Character string                 Input streams . . . . . . . 11
+    conversion . . . . . . . . 4   File I/O  . . . . . . . . . . 12
+    General Formatting . . . . 5   Buffering streams . . . . . . 15
+  User-defined types . . . . . 6   String I/O  . . . . . . . . . 16
+Input  . . . . . . . . . . . . 6   Stream states . . . . . . . . 18
+  Built-in types . . . . . . . 7
+  Controlling whitespace . . . 7   Index                         19
+
+
+OVERVIEW
+
+This file describes C++ version 1.2 stream I/O. If you are planning
+to program using or converting over to version 2.0 streams, see
+Chapter 3, "C++ streams," in the Programmer's Guide.
+
+Stream I/O in C++ is used to convert typed objects into readable text,
+and vice-versa. It provides an easier and more intelligent alternative
+to printf and scanf, and allows you to define input/output functions
+which are then used automatically for corresponding user-defined
+types. To access stream I/O, use the directive #include <stream.h>.
+
+C++ programs start with three predefined open streams. These are
+called cin, cout, and cerr. They correspond to the standard input,
+output and error (stdin, stdout, and stderr) files of standard I/O
+in C. You can reassign these standard names to other files or
+character buffers after program startup.
+
+
+Output
+
+Stream output is accomplished via the << (put to) operator, which
+is overloaded for stream output. Its left operand is an object
+whose type is class ostream. Its right operand is any type for
+which stream output has been defined (more about this later).
+Stream output is predefined for built-in types. For example,
+
+   cout << "Hello\n"
+
+writes the string "Hello" to cout (normally the standard output
+file) followed by a newline.
+
+The << operator binds left to right and returns its left operand,
+so that several output operations may be combined in one statement.
+For example,
+
+  void function display(int i, double d)
+  {
+     cout << "i = " << i << ", d = " << d << "\n";
+  }
+
+Page 1
+
+will write something like
+
+   i = 8, d = 2.34
+
+to standard output.
+
+
+  Built-in types
+
+The types directly supported for output, as in the example above,
+are the built-in types char (both signed and unsigned), short, int,
+long, char * (treated as a string), float, long double, and double.
+Integral types are converted according to the default rules for the
+ANSI C function printf. That is, for example, given the declara-
+tions int i; long l;, the two statements
+
+  cout << i << " " << l;
+  printf("%d %ld", i, l);
+
+produce the same result.
+
+Similarly, floating-point types are converted according to the
+default rules for the %g conversion. That is, for example, given
+the declaration double d, the statements
+
+  cout << d;
+  printf("%g", d);
+
+produce the same result. With character types,
+
+  cout << 'a';
+
+produces a, not 97.
+
+
+   Put functions
+
+The member function
+
+   ostream& ostream::put(char c);
+
+writes the character c to an ostream as a character.
+
+
+        Built-in
+      formatting
+       functions
+
+The following functions are defined in stream.h to aid in output
+formatting. Each of these functions returns a pointer to a string
+stored in a circular, or cyclical, static buffer. The buffer is
+large enough to support reasonable sequences of output conversions,
+
+Page 2
+
+but the pointers returned should not be saved for later use--the
+characters they point to may change in the meantime.
+
+
+         Numeric
+      conversion
+
+Here are the three numeric conversion functions:
+
+  char * dec(long val, int width = 0);
+
+  char * hex(long val, int width = 0);
+
+  char * oct(long val, int width = 0);
+
+Each of these functions takes an integral value val and returns a
+pointer to a string corresponding to its decimal, hexadecimal, or
+octal representation. The optional width parameter specifies the
+number of characters in the returned string. If you omit this pa-
+rameter or set it to zero, the exact number of characters required
+will be used. Otherwise the string will be truncated on the right
+or blank-filled on the left as needed.
+
+Note that each of the statements
+
+  cout << i;
+  cout << dec(i);
+  cout << dec(i, 0);
+
+produce identical results.
+
+
+ANSI C equivalent
+
+The numeric conversion routines have equivalents in ANSI C. For
+example, the C++ statement
+
+   cout << dec(val, width);
+
+is equivalent to the ANSI C statement
+
+  (width==0 ?
+     printf("%ld", (long) val) :    /* convert to natural length */
+     (sprintf(t, "%ld", (long) val),     /* else convert and */
+     printf("%*.*s, width, width, t)));  /* possibly truncate */
+
+where t is a temporary character array. C++ does not strictly
+follow the ANSI printf conventions. In particular, passing a
+negative value for width is the same as passing 0, unlike printf,
+which takes a negative width value with * as a left-justify flag
+(-), followed by a positive width.
+
+Page 3
+
+The hex and oct routines have similar equivalents, using the printf
+%lx and %lo conversions, respectively.
+
+
+Character string
+      conversion
+
+Here are the two character string conversion functions:
+
+  char * chr(int ch, int width = 0);
+  char * str(const char *s, int width = 0);
+
+Function chr returns a pointer to a string version of the input
+character value. Function str takes a string pointer and returns a
+string pointer. For both functions, the optional width parameter
+specifies the number of characters in the returned string. If this
+parameter is omitted or is zero, the exact number of characters
+required will be used. Otherwise the string will be truncated on
+the right or blank-filled on the left as needed.
+
+For example, the expressions
+
+  chr(0)
+  str("")
+
+are equivalent, and each returns an empty string.
+
+Function chr is the third way to print a character as a character.
+The previous example using the put function (on page 2) could also
+be written as
+
+   cout << int('A') << " represents " << chr('A');
+
+again resulting in "65 represents A".
+
+Function str called with no width parameter (or with a 0 width)
+returns a copy of the input string, but one with an undependable
+lifetime. If it is called with width greater than 0, it returns a
+string of the specified size, appropriately truncated or blank-
+padded.
+
+
+C equivalent
+
+These string conversion routines have equivalents in C. The
+following pairs of expressions are equivalent.
+
+Page 4
+
+___________________________________________________________________
+
+  C++                       C
+___________________________________________________________________
+
+  cout << chr(ch, width);   (width==0 ?
+                              printf("%c", ch) :
+                              printf("%*c", width, ch));
+
+
+  cout << str(s, width);    (width==0 ?
+                              (void) printf("%s", s) :
+                              (void) printf("%*.*s",
+                                            width, width, s));
+___________________________________________________________________
+
+
+         General
+      Formatting
+
+This function provides general formatting:
+
+   char * form (char * format ...);
+
+As with the other conversion functions, it returns a pointer to a
+static area which could be overwritten at a later time.
+
+ANSI C equivalent
+
+The form function is essentially the same as the ANSI C sprintf
+function. The two differences are in the calling sequence.
+
+1. The first argument of sprintf is a pointer to a character vector
+   to be written; form omits this argument and uses a static circu-
+   lar buffer instead.
+
+2. sprintf returns the number of characters written; form returns a
+   pointer to the output character vector.
+
+The form function can thus be used as part of an output specifica-
+tion where the basic formatting is not adequate. For example:
+
+   cout << "pi = " << form ("%1.10f", pi); // show 10 decimal
+places
+
+The format string and additional parameters (if any) to form are
+identical to those of sprintf. A C++ expression like
+
+   form (format, params)
+
+is equivalent to the ANSI C expression
+
+   (sprintf(s, format, params), s)
+
+Page 5
+
+where s is a static character vector. Refer to the definition of
+sprintf in the online help for more details.
+
+
+    User-defined
+           types
+
+You can write your own output functions for your own defined types
+simply by further overloading the << operator. For example, suppose
+you have a type
+
+  typedef struct {
+     char *name;
+     double val;
+     char *units;
+  } info;
+
+You could then define a function
+
+  ostream& operator << (ostream& s, info& m)
+  {
+     s << m.name << " = " << m.val << " " << m.units;
+     return s;
+  }
+
+Then a simple reference such as
+
+   cout << m;
+
+would produce output like "capacity = 1.25 liters".
+
+
+Input
+
+Stream input is accomplished via the >> (get from) operator, which
+is overloaded for stream input. Its left operand is an object whose
+type is class istream. Its right operand is any type for which
+stream input has been defined. Stream input is predefined for
+built-in types.
+
+The >> input operator skips whitespace (as defined by the isspace
+function in ctype.h), then reads in characters appropriate to the
+type of the input object. (Actually, whitespace skipping can be
+turned off; this is described below.)
+
+The >> operator binds left to right and returns its left operand,
+so that several input operations can be combined in one statement.
+For example, consider
+
+  int i;
+  double d;
+  cin >> i >> d;
+
+Page 6
+
+This statement will cause whitespace to be skipped, digits read in
+and converted to internal binary form and saved in variable i, more
+whitespace to be skipped, and finally a floating-point number read
+in and saved in variable d.
+
+
+  Built-in types
+
+For types short, int, and long, the effect of operator >> is to
+skip whitespace and convert an integral value, reading input char-
+acters until one is found which cannot be part of the representa-
+tion of the type. The format of integral values recognized is the
+same as that of integer constants in C++, excluding integer
+suffixes. That is, a leading 0x or 0X denotes hexadecimal
+representation, a leading 0 not followed by x or X denotes octal
+representation, and a leading 1 through 9 denotes decimal
+representation. A trailing l, L, u, or U is not part of the value
+and is not removed from the input stream.
+
+For types float and double, the effect of operator >> is to skip
+whitespace and convert a floating-point value, reading input
+characters until one is found which cannot be part of a floating-
+point representation. The format of floating-point values recog-
+nized is the same as that of floating-point constants in C++,
+excluding floating suffixes. That is, a trailing f, F, l, or L is
+not part of the value and is not removed from the input stream.
+
+For all numeric types, if the first non-whitespace character is not
+a sign or digit (or decimal point for floating-point conversion),
+the stream enters the _fail state (described on page 18) and no
+further input will be done until the condition is cleared.
+
+For type char, the effect of operator >> is to skip whitespace and
+store the next (non-whitespace) character.
+
+For type char * (treated as a string), the effect of operator >> is
+to skip whitespace and store the next (non-whitespace) characters
+until another whitespace character is found.
+
+In all cases, if end of input occurs before any non-whitespace
+character is found, nothing is stored in the target object. That
+is, if the target was uninitialized, it will still be
+uninitialized.
+
+
+     Controlling
+      whitespace
+
+A whitespace character is one for which function isspace (in
+ctype.h) returns a nonzero value. These are presently the blank
+(' '), tab (\t), carriage-return (\r), newline (\n), formfeed (\f),
+and vertical tab (\v).
+
+Page 7
+
+A standard object called WS of type struct whitespace is predefined
+as a "sink" for (place to discard) whitespace characters. For
+example,
+
+   cin >> WS;
+
+will skip consecutive whitespace characters from the standard
+input. The next character input will not be whitespace. This is
+useful in routines reading user-defined types in conjunction with
+one of the get member functions, or when skipping is turned off. We
+discuss this in more detail later.
+
+
+   Get functions
+
+As noted above, the >> operator for built-in types reads and
+discards whitespace. The two get member functions in class istream
+provide a way to read and process whitespace characters.
+
+1. istream& istream::get (char& c);
+
+   This function reads the next character, whatever it is, into its
+   parameter.
+
+2. istream& istream::get (char *buf, int max, int term='\n');
+
+   This function reads characters from the input stream into the
+   character vector pointed to by buf until max characters have
+   been read, or until the character term has been encountered,
+   whichever comes first. The default termination character (which
+   need not be specified) is the newline. The termination character
+   is not part of the characters read, and is not removed from the
+   input stream. The character vector buf must be larger than max,
+   since it must also hold the terminating null.
+
+   If we simply use s >> p instead, we would not be able to control
+   the number of characters read nor the termination character.
+
+These are member functions, and so must be called in relation to
+the input stream they are to read. See the example in the next
+section.
+
+
+         Putback
+      (function)
+
+The member function
+
+   void istream::putback(char c);
+
+Page 8
+
+pushes back one character into the input stream. putback pushes
+back one (and only one) character onto the input stream; extras are
+silently ignored. You cannot push back EOF.
+
+Here is a simple routine which reads a C++ style identifier.
+
+  void getident (char *s /* where to put ident */)
+  {
+     char c = 0;                     // guard against EOF
+
+     cin >> c;                       // skips leading whitespace
+     if (isalpha(c)  ||  c == '_')
+         do {
+            *s++ = c;
+            c = 0;                   // guard against EOF
+            cin.get(c);
+         } while (isalnum(c) ||  c == '_');
+     *s = 0;                         // terminate the string
+     if (c)
+        cin.putback(c);              // we always get one too many
+  }
+
+
+     Controlling
+      whitespace
+        skipping
+
+Input streams skip whitespace by default. However, you can
+initialize an input stream to not skip whitespace. In addition, you
+can turn the skipping on and off via the member function
+
+   int istream::skip (int doskip);
+
+This function turns off the whitespace skipping state if parameter
+doskip is zero, and turns it on otherwise. It returns the previous
+skipping state.
+
+When whitespace skipping is off, default input to the numeric,
+character, and string types will fail if the next input character
+is whitespace. Sending input to the WS object will discard
+whitespace.
+
+For example, suppose you want special processing for fields which
+are separated by nonblank whitespace, such as tabs and newlines,
+and normal processing for fields separated by blank characters.
+
+  char string[MAX], c;
+  int old_skip = cin.skip(0);     // skipping off
+  while (cin.good()) {
+     do {
+      cin.get(c);
+
+Page 9
+
+     }  while (c == ' ');        // skip blank characters
+     if (isspace(c))
+        special();                // nonblank whitespace
+     else {
+        cin.putback(c);           // replace printable character
+        cin >> string;            // get field and process
+        process(string);
+     }
+  }
+  cin.skip(old_skip);             // restore old skip state
+
+
+    User-defined
+           types
+
+You can write your own input functions for your own defined types
+in the same way as for output functions. Here is a simple example
+with no error checking to read in type info defined above.
+
+  istream& operator >> (istream& s, info& m)
+  {
+     s >> m.name >> m.val >> m.units;
+     return s;
+  }
+
+An input line of text like "capacity 1.25 liters" can then be read
+with a simple reference like
+
+   cin >> m;
+
+
+    Initializing
+         streams
+
+The streams cin, cout, and cerr are initialized and open at program
+start, and are connected to, respectively, the standard input,
+standard output, and standard error files.
+
+Initializing (constructing) a stream means associating it with a
+stream buffer. We discuss input and output streams separately.
+
+
+  Output streams
+
+Class ostream provides these three constructors.
+
+1. ostream::ostream (streambuf *s);
+
+   This associates a named output stream with a stream buffer
+   (class streambuf or its derived classes, such as class filebuf).
+
+Page 10
+
+2. ostream::ostream (int fd);
+
+   This associates a named output stream with a file already
+   opened, and assigns a stream buffer to it. The normal use for
+   this is first to open a file as described below, and then imme-
+   diately to initialize a stream associated with it.
+
+3. ostream::ostream (int size, char *buf);
+
+   This associates a named output stream with a character vector.
+   All "output" to the stream will be written to the vector. This
+   is described below.
+
+The destructor for class ostream
+
+  ostream::~ostream()
+
+flushes the output stream via the member function
+
+  ostream::flush()
+
+You can also call this member function explicitly if you want, as
+in this example:
+
+   cout << stuff; cout.flush();
+
+
+   Input streams
+
+Class istream provides these three constructors.
+
+1. istream::istream (streambuf *s, int skip = 1, ostream *t = 0);
+
+   This associates a named input stream with a stream buffer (class
+   streambuf).
+
+   Optional parameter skip specifies whether whitespace should be
+   skipped in input operations. The default is to skip.
+
+   Optional parameter t specifies an output stream to which this
+   input stream should be "tied". When two streams are tied, the
+   output stream is always flushed before anything is read from the
+   input stream. Standard streams cin and cout are tied.
+
+2. istream::istream (int fd, int skip = 1, ostream *t = 0);
+
+   This associates a named input stream with a file already opened,
+   and assigns a stream buffer to it. The normal use for this is
+   first to open a file as described below, and then immediately to
+   initialize a stream associated with it.
+
+   The optional skip and t parameters are as described above.
+
+Page 11
+
+3. istream::istream (int size, char *buf, int skip = 1);
+
+   This associates a named input stream with a character vector.
+   All "input" from the stream will be read from the vector, as
+   described below.
+
+   The optional skip parameter is as described above.
+
+Class istream includes member function
+
+   ostream * istream::tie (ostream *to);
+
+Calling tie with the address of an output stream ties these two
+streams together. Only one output stream may be tied to an input
+stream. Calling tie again with a different output stream breaks the
+previous tie and establishes a new one. Calling tie again with the
+same output stream has no effect. Calling tie with an argument of
+zero breaks the tie and associates no output stream with the input
+stream.
+
+Function tie returns the output stream previously associated, or
+zero if there was none. For example, cin and cout are tied by
+default. The statement
+
+   ostream *old_tie = cin.tie(0);
+
+breaks the tie and allows asynchronous input and output with cin
+and, presumably, cout. The statement
+
+   cin.tie(old_tie);
+
+re-establishes the previous tie (presumably to cout) and ensures
+that pending output is flushed before any input is requested from
+cin. If cin and cout are connected to the user's terminal, you
+would want them tied so that an output prompt would always appear
+on the terminal before input was attempted.
+
+
+File I/O
+
+Apart from the files associated with standard streams cin, cout,
+and cerr, you can associate an external file with class filebuf,
+derived from class streambuf. Once you do this, you can associate
+this file buffer with a stream to accomplish stream I/O on the
+file.
+
+Class filebuf has these four constructors:
+
+1. filebuf::filebuf();
+
+   This only allocates a file buffer, without yet tying it to an
+   external file.
+
+Page 12
+
+2. filebuf::filebuf (FILE *f);
+
+   This associates a file buffer with an ANSI C standard I/O file
+   already open. This allows you to mix C standard I/O with stream
+   I/O in the same program. In the present implementation, all file
+   I/O is done via C standard I/O; in fact, using filebuf::open()
+   creates a C standard I/O file.
+
+3. filebuf::filebuf (int fd);
+
+   This associates a file buffer with a file already open, such as
+   via the library function open. If input or output has already
+   taken place on this file, it is not guaranteed that further I/O
+   will work as desired. Stream I/O can't be mixed with low-level
+   read and write functions in particular.
+
+4. filebuf::filebuf (int fd, char *buf, size len);
+
+   As above, this associates a file buffer with a file already
+   open. It further uses the supplied buffer specified by buf and
+   len for any file buffering, rather than allocating its own
+   buffer.
+
+The class destructor, filebuf::~filebuf(), invokes member function
+close, described below. Class filebuf includes the following five
+public member functions:
+
+1. filebuf * filebuf::open (char *name, open_mode om);
+
+   This member function opens a named file according to enumerated
+   type open_mode. It returns a pointer to the filebuf on success,
+   or zero on error.
+
+   Type open_mode is defined by enumerated type open_mode as
+   follows:
+
+     enum open_mode { input, output, append };
+
+   Mode append is for extending an existing output file. There is
+   no way to open a stream for both input and output (update mode).
+
+2. int filebuf::close();
+
+   This member function closes the associated file and does any
+   other housekeeping actions required. It returns zero if the file
+   was closed successfully, and nonzero otherwise.
+
+3. virtual int filebuf::snextc();
+
+   This gets and returns the next character from the input stream
+   buffer, or returns EOF on end of input.
+
+Page 13
+
+4. virtual int filebuf::sputc (int c);
+
+   This writes c, converted to a char, to the output stream buffer.
+   It returns C if successful, EOF on error.
+
+5. virtual void filebuf::sputbackc(char c);
+
+   This pushes back one character into the (input) stream buffer.
+   You can always push back at least one character before reading a
+   character again. If you try to push back too many characters,
+   the extras are silently ignored. You cannot push back EOF. (That
+   is, the attempt to push back EOF is ignored.)
+
+Associating a named file with a stream normally follows a sequence
+such as this:
+
+  #include <stream.h>
+  filebuf inf;
+  if (inf.open(name, input) == 0) {
+     ...error condition: exit
+  }
+  istream indata(&inf);
+
+  filebuf outf;
+  if (outf.open(name, output) == 0) {
+     ...error condition: exit
+  }
+  ostream outdata(&outf);
+
+If, for example, the input file were already open, we could replace
+the first part of the code with
+
+  extern int fd;
+  filebuf inf(fd);
+  istream indata(&inf);
+
+Be sure to call open to set up fd. Don't confuse open and
+filebuf::open.
+Or even more simply:
+
+  extern int fd;
+  istream(fd);
+
+which includes allocating the file buffer.
+
+Alternatively, we could open either file as a C standard I/O file.
+
+  FILE *f;
+  if ((f = fopen(name, "r")) == 0) {
+     ...error condition: exit
+  }
+  filebuf inf(f);
+
+Page 14
+
+  istream indata(&inf);
+
+Finally, suppose a file has already been opened for C standard I/
+ O. We can associate a stream buffer with it like this:
+
+  extern FILE *f;
+  filebuf inf(f);
+  istream indata(&inf);
+
+
+Buffering streams
+
+Streams implement buffered text I/O. A stream is always associated
+with a stream buffer, which is an object of class streambuf. This
+class provides the basic buffering mechanisms independent of the
+kind of device which might be physically associated with the
+stream.
+
+Class streambuf has the following two constructors:
+
+1. streambuf::streambuf();
+
+   This only allocates a streambuf, with no buffer space reserved.
+
+2. streambuf::streambuf (char *buf, int len);
+
+   This allocates a streambuf, using the given buffer address and
+   length. This is particularly useful for a stream attached to a
+   string.
+
+Class streambuf has the following two protected member functions.
+These are available for use by derived classes, but not by ordinary
+user functions. (Notice that equivalent functions are provided by
+derived classes istream and ostream where appropriate.)
+
+1. int streambuf::allocate();
+
+   This allocates a 512 byte buffer (via new) for use by this
+   stream if one has not already been allocated. It returns zero if
+   all is well, and EOF to indicate that no buffer could be
+   allocated. If this mechanism allocates a buffer, the buffer is
+   automatically deleted by the class destructor
+   streambuf::~streambuf().
+
+2. streambuf * streambuf::setbuf(char *buf, int len,
+   int offset = 0);
+
+   This assigns a user-supplied buffer to the streambuf. Any
+   previously-assigned buffer is disassociated. If the previous
+   buffer had been assigned via the allocate mechanism, it is
+   deleted. The optional parameter offset specifies where the next
+   free byte in the buffer is located. This allows a full or
+
+Page 15
+
+   partially full buffer to be assigned to a streambuf, and is the
+   only way for a string to be usefully assigned to an input
+   stream. This member function always returns the streambuf.
+
+The following three virtual functions are also protected:
+
+1. virtual int streambuf::overflow(int c = EOF);
+
+   The derived class is responsible for providing a suitable
+   function for overflow. The overflow function should empty the
+   stream buffer, place c in the buffer, and return c, except
+   return EOF. This member function cannot empty a buffer (since
+   there is no place to put the data), so it just returns EOF.
+
+2. virtual int streambuf::underflow();
+
+   The derived class is responsible for providing a suitable
+   function for underflow. This function always returns EOF.
+
+3. virtual void streambuf::terminate();
+
+   This routine terminates the buffer with a null byte without
+   advancing the pointer.
+
+The following three virtual functions are public.
+
+1. virtual int streambuf::snextc();
+
+   This gets and returns the next character from an input stream
+   buffer, or EOF on end of input.
+
+2. virtual int streambuf::sputc (int c);
+
+   This writes c, converted to a char, to an output stream buffer.
+   It returns c if ok, EOF on error.
+
+3. virtual void streambuf::sputbackc(char c);
+
+   This pushes back one character into the (input) stream buffer.
+   You can always push back at least one character before reading a
+   character again. If you try to push back too many characters,
+   the extras are silently ignored. You cannot push back EOF.
+
+
+String I/O
+
+You can tie an input or output stream to a character vector instead
+of a file. For input, the null byte terminating the string is taken
+as end of file. For output, the ostream mechanism knows how big the
+vector is, and will never write past the end.
+
+Page 16
+
+For input, an initializing part of a program can tie the input
+stream to standard input, to a file, or to a string, and the rest
+of the program simply does stream I/O without needing to know the
+source of the input.
+
+For output, a string can be formatted by a hierarchy of routines
+which do not need to know whether they are writing to a file or to
+a string, and which do not need to keep track of the current end of
+the string or check for overflow.
+
+In the following example, the main program can be invoked with a
+literal string to process (flagged by "-" as the first program
+parameter), with one or more file names to process, or with no
+arguments, signifying that standard input is to be processed.
+
+  #include <stream.h>
+
+  // function "process" deals only with input streams,
+  // regardless of the actual source
+  void process (istream&);
+
+  main (int argc, char *argv[])
+  {
+     if (argc == 1) {
+        // no name given: use standard input
+        process(cin);
+     }
+     else if (argc == 3 && strcmp(argv[1], "-") == 0) {
+        // use the string
+        istream inp(strlen(argv[2]), argv[2]);
+        process(inp);
+     }
+     else {
+        for (int i = 1;  i < argc;  ++i) {
+           // process each file name
+           filebuf f; // new filebuf each iteration
+           if (f.open(argv[i], input) == 0) {
+              cerr << "Can't open " << argv[i] << '\n';
+           }
+           else {
+              istream inp(&f); // new istream each iteration
+              process(inp);
+           }
+           // automatically close and destruct at end of each
+  iteration
+        }
+     }
+  }
+
+Page 17
+
+Stream states
+
+Each istream and ostream has a "state" associated with it, along
+with public member functions to read and change the state. The
+state is defined by enumerated type stream_state as follows:
+
+   enum stream_state { _good, _eof, _fail, _bad };
+
+Don't rely on any particular numerical values for these state
+names.
+
+State _good means that the last I/O operation succeeded, and the
+next one might succeed. State _eof means that no more input is
+available from an input stream. State _fail means that the last
+operation failed, and no further operations will succeed (no I/O
+will be attempted once the _fail state is reached). State _bad
+means that not only is the stream in a failed state, but that the
+stream has been corrupted, meaning characters were lost.
+
+The following five member functions are defined for both class
+istream and ostream for testing the state:
+
+1. enum stream_state rdstate();   // return the state
+
+2. int eof();                     // return nonzero if _eof
+
+3. int fail();                    // return nonzero if _failed or
+   _bad
+
+4. int bad();                    // return nonzero if _bad
+
+5. int good();                   // return nonzero if _good
+
+The following member function can be used to set the state of a
+stream. The default is to set the state to _good. Obviously, you
+should use this function with care.
+
+   void clear (enum stream_state val = _good);
+
+Finally, you can test a stream itself, with a nonzero return only
+if the state is _good. This allows loops like
+
+  // process each item in file
+  while (cin >> val)
+     process(val);
+
+or
+
+  // copy file, stripping all whitespace
+  char str[BIG_ARRAY];
+  while (cin >> str)
+     if (! (cout << str))
+        break;               // error in output
+
+Page 18
+___________________________________________________________________
+
+INDEX
+
+>> (get from) operator                input 6-12
+  concatenation 6                       data types supported 7
+  overloading                           user-defined 10
+    user-defined types and 10         member functions
+<< (put to) operator                    pushing characters into
+  concatenation 1                       input stream 8
+  overloading                           put 2
+    user-defined types and 6            putback 8
+<< operator                             skip 9
+  streams and 1                       numbers
+>> operator                             converting
+  streams and 6                           ANSI C and 3
+                                        converting and conversions
+                                        3
+A                                         C++ 3
+allocate (member function) 15         operators
+ANSI                                    >> (get from)
+  C standard                              overloading 10
+    C++ numeric conversion                streams and 6
+    routines and 3                      << (put to)
+    C++ string conversion                 concatenation 1
+    routines and 4                        overloading 6
+ASCII codes                               streams and 1
+  printing as characters              operators (get from)
+    C++ 2                               >>
+                                          concatenation 6
+                                      output 1-6
+C                                       data types supported 2
+C++                                     formatting 2
+  characters                            user-defined 6
+    converting 4                      streams
+      C and 4                           << operator and 1
+  concatenation                         >> operator and 6
+    << (get from) operator 1            buffering 15-16
+    >> (put to) operator 6              cout
+  constructors                            printf and 2
+    filebuf 12                          initializing 10-12
+    istream and ostream 10, 11          using 1-19
+    streambuf 15                      strings
+  destructors                           converting 4
+    ~filebuf 13                           C and 4
+  files                                 input and output 16-17
+    input and output 12-15            whitespace in
+  identifiers                           controlling 7
+    reading 9
+
+Page 19
+
+characters                          D
+  converting                        data types
+    C++ 4                             C++
+  input                                 input and 7
+    C++ 7, 8                            output and 2
+  output
+    C++ 2
+  pushing onto C++ input stream     F
+    8                               floating point
+classes                               input
+  filebuf                               C++ 7
+    close member function 13          output
+    constructors 12                     C++ 2
+    destructor 13                   form (function)
+    open member function 13           sprintf and 5
+    snextc member function 13       format specifiers
+    sputbackc member function         C++ and 2
+    14                              formatting
+    sputc member function 14          C++
+  istream and ostream                   form function and 5
+    constructors 10, 11                 output 2
+    member functions 18
+    states 18
+    tie member function 12          I
+  streambuf 15                      integers
+    allocate member function 15       input
+    constructors 15                     C++ 7
+    overflow member function 16       output
+    setbuf member function 15           C++ 2
+    snextc virtual member
+    function 16
+    sputbackc virtual member        O
+    function 16                     open (member function) 13
+    sputc virtual member            overflow
+    function 16                       member function 16
+    terminate virtual member
+    functions 16
+    underflow virtual member        P
+    functions 16                    printf (function)
+close (member function) 13            cout and 2
+conversions                         putback (member function) 8
+  C++ 3
+    ASCII code to characters 2
+  character                         S
+    C++ 4                           setbuf (member function) 15
+  numeric                           skip (member function) 9
+    C++ 3                           snextc (member function) 13, 16
+  strings                           sprintf (function)
+    C++ 4                             form function and 5
+                                    sputbackc (member function) 14,
+                                      16
+                                    sputc (member function) 14, 16
+
+Page 20
+
+strings                             U
+  converting                        underflow
+    C++ 4                             member function 16
+
+
+T                                   W
+terminate (member function) 16      whitespace
+tie (member function) 12              C++ and 7
+                                        skipping 9
+
+Page 21
+
+

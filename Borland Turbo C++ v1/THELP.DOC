@@ -1,0 +1,182 @@
+                      TURBO HELP UTILITY
+                      ------------------
+
+This file explains how to use THELP.COM. THELP is a memory-resident
+utility that provides online help for Turbo Pascal and Turbo C++. If you
+are using Turbo Debugger, for example, you can load THELP, then run
+the debugger and get online help for Pascal or C while you are
+debugging.
+
+
+Table of Contents
+-----------------
+1.  Starting THELP
+2.  Command-line Options Summary
+3.  Detailed Explanation of Keys Used When THELP is Active
+4.  Detailed Explanation of Command line Options
+
+
+1.  Starting THELP
+------------------
+
+Load THELP at the DOS command line simply by typing THELP. Make sure
+the Turbo help file is in the current directory or use the /F command
+line option described below. The INSTALL program on the distribution
+disks inserts the correct path information in THELP.
+
+
+Memory Usage   - THELP requires about 20K bytes.
+
+Default hotkey - The default hotkey is Numeric-Keypad-5 (scan
+                 code 4ch, shift state 00h).
+
+Paste speed    - The default pasting speed is FAST. You'll have
+                 to experiment if it pastes too quickly for your
+                 editor. Note that you should turn off autoindent
+                 in the integrated environment before using the
+                 paste feature.
+
+If you are using SideKick Plus or SideKick 1.x, make sure you
+load THELP before you load SideKick.
+
+
+2. Command-line Options Summary
+-------------------------------
+
+  USAGE:  THELP [options]
+
+Here is a summary of the command line options. If you use more
+than one option, they must be separated by spaces.
+
+  /Fname    Full path and filename of help file
+  /H,/?,?   Display this help screen
+  /Kxxyy    Change hotkey: xx=shift state(hex),
+            yy=scan code(hex)
+  /Px       Pasting speed: 0=slow, 1=medium, 2=fast
+  /S+       Enable snow checking for video (useful for older CGA adapters).
+  /S-       Disable snow checking for video (for snappier displays).
+  /U        Remove THELP from memory
+  /W        Write Options to THELP.COM and exit
+
+
+3. Detailed Explanation of Keys Used When THELP is Active
+---------------------------------------------------------
+
+  Arrow keys:  Moves the cursor.
+  PgUp/PgDn:   Moves the cursor.
+
+  Shift-Arrow keys:  Moves the cursor while marking a block.
+
+  TAB:         Moves the cursor to the next keyword.
+  Shift-TAB:   Moves the cursor to the previous keyword.
+
+  HOME:        Go to the beginning of the line.
+  END:         Go to the end of the line.
+
+  ENTER:       Select help entry for the item highlighted in the
+               current help screen.
+
+  ESC:         End Help.
+
+  F1:          Help Index. F1 from any help screen brings up
+               the Help Index.  You can search for a specific keyword
+               incrementally.  For example, you can find "printf" by
+               typing p r i.  With each letter you type, the list
+               jumps to the keyword that starts with p, then to pr,
+               then to pri, etc.
+
+  ALT-F1:      Displays in reverse order the last 20 screens you
+               have reviewed.
+
+  CTL-F1:      Bring up help screen for THELP's hot keys.
+
+  CTRL-P key:  Paste the example text into the application.
+
+
+
+4.  Detailed Explanation of Command-line Options
+------------------------------------------------
+
+/Fname   -- Full path and filename of help file
+
+The name that follows the /F option should be the full
+drive/directory pathname of the help file to use; e.g.,
+
+    THELP /FC:\TP\TURBO.HLP
+    THELP /FC:\TURBOC\TCHELP.TCH
+
+By default, THELP looks for the help file on the logged drive and
+directory.
+
+
+/H,/?,?  -- Display help screen
+
+This option displays a summary of THELP's command-line options
+
+
+/Kxxyy   -- Change hotkey: xx=shift state, yy=scan code
+
+Virtually any shift state/scan code combination may be selected. A
+quick summary of some common shift-states and scan codes follows:
+
+  Shift States (may be OR'ed together)
+
+    right shift    01h
+    left shift     02h
+    control        04h
+    alt            08h
+
+  Scan Codes
+
+    A   --- 1eh     N   --- 31h     0   --- 0bh     F1  --- 3bh
+    B   --- 30h     O   --- 18h     1   --- 02h     F2  --- 3ch
+    C   --- 2eh     P   --- 19h     2   --- 03h     F3  --- 3dh
+    D   --- 20h     Q   --- 10h     3   --- 04h     F4  --- 3eh
+    E   --- 12h     R   --- 13h     4   --- 05h     F5  --- 3fh
+    F   --- 21h     S   --- 1fh     5   --- 06h     F6  --- 40h
+    G   --- 22h     T   --- 14h     6   --- 07h     F7  --- 41h
+    H   --- 23h     U   --- 16h     7   --- 08h     F8  --- 42h
+    I   --- 17h     V   --- 2fh     8   --- 09h     F9  --- 43h
+    J   --- 24h     W   --- 11h     9   --- 0ah     F10 --- 44h
+    K   --- 25h     X   --- 2dh
+    L   --- 26h     Y   --- 15h
+    M   --- 32h     Z   --- 2ch
+
+
+  Enhanced Keyboards only (may not work with all computers, keyboards)
+
+    F11 --- 57h
+    F12 --- 58h
+
+
+/Px      -- Pasting speed: 0=slow, 1=medium, 2=fast
+
+Some editors do not accept characters pasted into the keyboard buffer
+as fast as THELP can put them there. By setting an appropriate paste
+speed, virtually all possible configurations of editors may be used.
+FAST speed pastes as many characters as will fit on every timer tick;
+MEDIUM pastes up to four characters per tick; and SLOW pastes a single
+character into the buffer ONLY when the buffer is empty.
+
+/S       -- Controls snow checking logic for video.
+
+Some older CGA have a tendency to produce a "snow" effect when
+software tries to write directly into their memory space.  If you see
+this snow you should start up THELP with /S+ to enable the snow
+checking code.  You may want to use the /W switch (see below) to make
+it permanent.  Snow checking takes time and it is better to live
+without it.  To disable snow checking use /S-; this is the default.
+
+/U       -- Remove THELP from memory
+
+This option is used to remove THELP from memory. If other TSRs have
+been loaded after THELP, make sure to remove them before removing
+THELP.
+
+
+/W       -- Write Options to THELP.COM and exit
+
+The /W parameter is used to create a new version of THELP that uses
+the options you desire as a default. All options, including may be
+specified and made 'permanent'.
+

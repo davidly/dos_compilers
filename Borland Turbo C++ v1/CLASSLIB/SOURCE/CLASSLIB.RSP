@@ -1,0 +1,20 @@
++ARRAY     &
++DBLLIST   &
++LIST      &
++SORTARRY  &
++CONTAIN   &
++OBJECT    &
++STACK     &
++QUEUE     &
++DEQUE     &
++HASHTBL   &
++ABSTARRY  &
++ASSOC     &
++COLLECT   &
++LDATE     &
++LTIME     &
++DICT	   &
++STRNG     &
++SORTABLE  &
++SET       &
++BAG

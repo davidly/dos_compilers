@@ -1,0 +1,1647 @@
+
+
+
+
+
+
+               Turbo C++ Class Library Definition
+
+            Copyright (C) 1990, Borland International
+
+
+                                                                     i
+
+
+
+
+
+
+
+
+
+                          Contents
+
+
+
+     Chapter 1  Abstract Classes in an Object-Based
+                Hierarchy                                  5
+        1.1  Class Object  . . . . . . . . . . . . . . . . 5
+        1.2  Class Error . . . . . . . . . . . . . . . . . 6
+        1.3  Class Sortable  . . . . . . . . . . . . . . . 7
+        1.4  Class Association . . . . . . . . . . . . . . 8
+
+     Chapter 2  Container Classes                          9
+        2.1  Object Ownership  . . . . . . . . . . . . . . 9
+        2.2  Class Container . . . . . . . . . . . . . .  10
+           2.2.1  Function Prototype for Arguments to
+                  forEach  . . . . . . . . . . . . . . .  10
+           2.2.2  Function Prototype for Arguments to
+                  firstThat  . . . . . . . . . . . . . .  10
+        2.3  Sequence Grouping . . . . . . . . . . . . .  11
+           2.3.1  Class Stack  . . . . . . . . . . . . .  11
+           2.3.2  Class Queue  . . . . . . . . . . . . .  12
+           2.3.3  Class Deque  . . . . . . . . . . . . .  12
+
+     Chapter 3  Collection Hierarchy                      15
+        3.1  Class Collection  . . . . . . . . . . . . .  15
+        3.2  Derived Classes of Collection . . . . . . .  16
+           3.2.1  Unordered Collections  . . . . . . . .  16
+              3.2.1.1  Class HashTable . . . . . . . . .  16
+              3.2.1.2  Class Bag . . . . . . . . . . . .  17
+              3.2.1.3  Class Set . . . . . . . . . . . .  18
+              3.2.1.4  Class Dictionary  . . . . . . . .  18
+              3.2.1.5  Class List  . . . . . . . . . . .  19
+              3.2.1.6  Class DoubleList  . . . . . . . .  19
+           3.2.2  Ordered Collections  . . . . . . . . .  20
+              3.2.2.1  Class AbstractArray . . . . . . .  21
+              3.2.2.2  Class Array . . . . . . . . . . .  21
+              3.2.2.3  Class SortedArray . . . . . . . .  22
+
+     Chapter 4  Classes in the ContainerIterator
+                Hierarchy                                 25
+
+     Chapter 5  Class Library Directory Stucture          29
+        5.1  Directory INCLUDE . . . . . . . . . . . . .  29
+        5.2  Directory SOURCE  . . . . . . . . . . . . .  29
+        5.3  Directory LIB . . . . . . . . . . . . . . .  30
+        5.4  Directory EXAMPLES  . . . . . . . . . . . .  30
+
+
+                                                                    ii
+
+
+
+     Chapter 6  Conventions Used In Class Libraries       31
+        6.1  File Naming . . . . . . . . . . . . . . . .  31
+        6.2  Source Naming   . . . . . . . . . . . . . .  31
+        6.3  Commenting Style  . . . . . . . . . . . . .  32
+           6.3.1  Module Header  . . . . . . . . . . . .  32
+           6.3.2  Dependencies . . . . . . . . . . . . .  32
+           6.3.3  Type Header  . . . . . . . . . . . . .  33
+           6.3.4  Function Header  . . . . . . . . . . .  33
+           6.3.5  Body Comments  . . . . . . . . . . . .  34
+
+     Index                                                35
+
+
+
+                                                                     2
+
+
+                                                                     3
+
+
+
+
+
+
+
+
+
+                          Introduction
+
+
+This document may be read on-line or printed.   To  increase  the
+readability of the printed form,  we  have  included  page breaks
+between chapters.  When reading the document in its on-line form,
+you may see the page breaks as the character '^L'.
+
+This document is an  introductory  guide  to  the Turbo C++ class
+libraries.  In this  document,  we  assume  that you are familiar
+with the syntax and semantics of C++ and with the  basic concepts
+of object-oriented  programming.  If you want more information on
+Turbo C++, see chapters 5 and 6 and the bibliography in the Turbo
+C++ manual User's Guide and chapters 1 through 5 in the  Turbo C++
+Programmer's Guide.
+
+The lists of class  members  are for general reference only.  For
+the exact contents  of  each class, including private members and
+the types and parameters for members, see the source code itself.
+
+The Turbo C++ class library defines a basic set of classes.   You
+can use these classes as they  are,  or you can extend and expand
+them to produce an object-oriented software  package  specific to
+your needs.
+
+The  set  of classes is made up of two trees.   These  trees  are
+rooted by the abstract base classes Object and ContainerIterator.
+Each of these base  classes  is explored in a separate chapter in
+this document.
+
+
+                                                                     4
+
+
+                                                                     5
+
+
+
+
+
+
+
+
+
+                            Chapter 1
+
+          Abstract Classes in an Object-Based Hierarchy
+
+
+An object-based hierarchy  includes  data  items  derived  from a
+single  abstract  base  class.  In the Turbo C++ class libraries,
+the class Object serves as the root the hierarchy.   This chapter
+describes  the characteristics of the class  Object  and  of  the
+abstract classes derived from this class.
+
+An abstract class is one from which you can create other classes,
+but one from which you  would not normally create usable objects.
+Conversely, a  non-abstract class, or instance class, is one from
+which you can create usable objects.  An example of this class is
+the String class.  In other words, instance classes are  one step
+removed from  usable objects, whereas abstract classes are two or
+more steps removed from usable objects.
+
+
+1.1  Class Object
+
+
+Since Object is  an  abstract  class,  there are no data items of
+this type.  Since most data items are derived from  this abstract
+class,  however,  the  class  provides  a  basic   mechanism  and
+structure for  type checking and encapsulation.  The class Object
+provides a minimal set definition  for what a derived object must
+do.  An object must:
+
+   1.  Return the class to which an object belongs.    The member
+       function isA() does this.
+
+   2.  Return a  character representation of the class name.  The
+       member function nameOf() does this.
+
+   3.  Display the contents of an object in a format suitable for
+       that object. The member function printOn() does this.
+
+   4.  Return  a  unique  key  based  on the object.  The  member
+       function hashValue() does this.
+
+   5.  Iterate through each part  which  makes  up an object. The
+       member function forEach() does this.
+
+   6.  Find  the  first  or  last  part  or  whole  object  which
+       satisfies  a  given   condition.    The  member  functions
+       firstThat() and lastThat() do this.
+
+
+                                                                     6
+
+
+
+   7.  Determine whether the object is equal  to  another object.
+       The member function isEqual() provides this capability.
+
+   8.  Determine whether the object can be  sorted,  i.e. whether
+       it  is  derived  from  the  class  Sortable.   The  member
+       function isSortable() does this.  For more  information on
+       class Sortable, see the section entitled Class Sortable on
+       page 7.
+
+   9.  Determine whether the object is  part  of  an association,
+       i.e. whether it is  derived  from  the  class Association.
+       The member function isAssociation  does  this.    For more
+       information on class Association, see the section entitled
+       Class Association on page 7.
+
+  10.  Construct, destroy, and copy on to another object.
+
+  11.  Allocate a new object.
+
+The implementation of these functions is provided by each derived
+class; those  implementations  identify  that  class.  The  class
+Object has the following public members:
+
+Data members:
+   ZERO
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   isEqual
+   isSortable
+   isAssociation
+   operator new
+   forEach
+   firstThat
+   lastThat
+   printOn
+
+The  parameters  to  each of these member functions are listed in
+the header file for  each  class.    The three functions forEach,
+firstThat,  and  lastThat  take a pointer  to  a  function  as  a
+parameter.  The prototypes for  these functions is listed on page
+10.
+
+
+1.2  Class Error
+
+
+The class Error is a special instance class of the  class Object.
+There  is  exactly  one  instantiation  of  class  Error,  namely
+theErrorObject. Pointing to  this  global  object  is  the static
+object  pointer   Object::ZERO.   The   macro   NOOBJECT  defines
+Object::ZERO. The operator Object::operator new returns a pointer
+
+
+                                                                     7
+
+
+
+to theErrorObject if an attempt  to allocate an object fails. You
+may test the return value of the new operator against NOOBJECT to
+see whether the allocation failed.
+
+Derived from:  Object
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   printOn
+   isEqual          Inherited from Object.
+   isSortable       Inherited from Object.
+   isAssociation    Inherited from Object.
+   operator new     Inherited from Object.
+   forEach          Inherited from Object.
+   firstThat        Inherited from Object.
+   lastThat         Inherited from Object.
+
+
+1.3  Class Sortable
+
+
+The first abstract class consists of the class  of  objects which
+are  sortable.  Membership  in  this  class is limited  to  those
+objects that can be tested for order. You can derive objects from
+it and place these derived objects into ordered collections, such
+as  trees.  An  object which has  been  derived  from  the  class
+Sortable must define isLessThan, in addition  to  those functions
+required of the class  Object.  (Remember  that class Sortable is
+derived from class Object and therefore  inherits  the properties
+of that class.)
+
+Derived from: Object
+
+Public member functions:
+   isSortable
+   isLessThan
+   isA              Inherited from Object
+   nameOf           Inherited from Object.
+   isEqual          Inherited from Object.
+   hashValue        Inherited from Object.
+   isAssociation    Inherited from Object.
+   operator new     Inherited from Object.
+   forEach          Inherited from Object.
+   firstThat        Inherited from Object.
+   lastThat         Inherited from Object.
+   printOn          Inherited from Object.
+
+
+                                                                     8
+
+
+
+1.4  Class Association
+
+
+Like  the  abstract  class  Sortable,  the  class  Association is
+another example of a  class  of objects which are used as members
+of another object (in this case, a Dictionary class object).  For
+more  information  on  the  class  Dictionary,  see  the  section
+entitled Class Dictionary.    The  class  Association  provides a
+logical grouping for a key and a value.
+
+Derived from:  class Object
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   printOn
+   isEqual
+   isAssociation
+   key
+   value
+   isSortable       Inherited from Object.
+   operator new     Inherited from Object.
+   forEach          Inherited from Object.
+   firstThat        Inherited from Object.
+   lastThat         Inherited from Object.
+
+
+                                                                     9
+
+
+
+
+
+
+
+
+
+                            Chapter 2
+
+                        Container Classes
+
+
+The  classes  in  the class Object hierarchy are divided into two
+logical  sets:  those  classes  which  contain  objects  of other
+classes and those classes which do  not.  We call the first set a
+Container class.  An  Array  class,  for  instance,  maintains an
+ordering on a  collection  of  objects.  Thus an Array class is a
+derivation of a Container class.
+
+This chapter describes the  Container  class  and  a group of its
+derivatives,  known  collectively  as  the sequence grouping. The
+remainder of the derivatives of the Container class are discussed
+in the chapter entitled "Collection Hierarchy."
+
+
+2.1  Object Ownership
+
+
+Before  we  introduce  you  to  the  class  Container,  you  must
+understand  the  concept  of object ownership. As in real life, a
+container in C++ starts out empty and must be filled with objects
+before  the  objects  can be said to be in the container.  Unlike
+the  real  world,  however,  once  objects  are  placed into  the
+container, they are owned by the container. This is true of class
+library containers. If this  were  not the case, you could add an
+object to  a container, then destroy the object yourself, without
+the container knowing it had been destroyed. This would leave the
+container in a very confused state.
+
+When  the container owns an object, you  must  not  destroy  that
+object without first removing that object from the container. Or,
+you can ask  the  container  to  destroy the object for you. This
+restriction is based  on  the scoping rules and memory allocation
+in C++.
+
+If you declare an  automatic  object (that is, an object which is
+local  to  your  routine), and place  that  object  in  a  global
+container, your local  object  will be destroyed when the routine
+leaves the scope in  which  it was declared. To prevent this, you
+must  only add heap objects (objects that  aren't  local  to  the
+current scope)  to  containers.  Similarly,  when  you  remove an
+object  from  a  global  container,  you own that object and  are
+responsible for destroying it and freeing the space  in  which it
+resides.
+
+
+                                                                    10
+
+
+
+2.2  Class Container
+
+
+The  Container  class  is an abstract class  derived  from  class
+Object. The class Container does the following:
+
+   1.  It includes all classes which  can  contain  zero  or more
+       instances of other objects.
+
+   2.  It provides  a method of determining whether there are any
+       objects present in the container and, if so,  a  method of
+       iterating through the objects which are present.
+
+   3.  It defines  a method for displaying the objects present in
+       the container in a formatted way.
+
+Derived from: Object
+
+Public member functions:
+   printOn
+   isEqual
+   isEmpty
+   initIterator
+   forEach
+   firstThat
+   lastThat
+   printHeader
+   printSeparator
+   printTrailer
+   getItemsInContainer
+   isA                  Inherited from Object
+   nameOf               Inherited from Object
+   hashValue            Inherited from Object
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+2.2.1  Function Prototype for Arguments to forEach
+
+The  function  passed  to  the  member function forEach  has  the
+following prototype.
+
+   void( *iterFuncType )( Object&, void *parameterList );
+
+This  allows  a  parameter list to  be  passed  to  the  iterator
+function. The  parameter list may be null. Each iterator function
+must provide the means  of  parsing  the  parameter list into the
+parameters required by that function.
+
+2.2.2  Function Prototype for Arguments to firstThat
+
+The  function  passed  to  the  member  functions  firstThat  and
+lastThat has the following prototype.
+
+
+                                                                    11
+
+
+
+     int( *condFuncType )( Object&, void *parameterList );
+
+This  prototype defines a function which will  return  1  if  the
+given object satisfies a condition.  The function  must  return 0
+otherwise.
+
+
+2.3  Sequence Grouping
+
+
+The classes Stack, Queue, and  Deque  are  collectively  known as
+sequences.  A sequence defines a group  of  objects  that  follow
+these rules:
+
+   1.  Objects can be inserted and removed.
+
+   2.  The order of insertions and deletions is significant.
+
+   3.  Insertions and deletions occur at the appropriate point or
+       points, as defined by the individual class.
+
+Sequences provide a mechanism for determining  whether  there are
+any  members  of  the  group.  This  is  done with  the  function
+isEmpty().
+
+The sequence grouping is not a class itself  because  the classes
+which make  up  the  grouping  do  not  share enough in common to
+warrant a separate base class. However, you may  find  it helpful
+to  consider  the  classes  together  when  reviewing  the object
+hierarchy.
+
+2.3.1  Class Stack
+
+Class  Stack  is  a member of the sequence grouping of Container-
+derived classes. The class provides the  usual  stack operations,
+such as isEmpty(), push(),  and  pop().  In addition, class Stack
+provides a method for referencing and changing the top element of
+the  stack  without  popping the stack. This method, top(), is an
+exception to the container ownership rule, in that  it  returns a
+reference  to  an  object  which  is  still  owned by  the  stack
+container.  You must be careful not  to  destroy  the  referenced
+object, as this  will  disrupt the internal mechanism for storing
+the stack.
+
+Derived from: Container
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   push
+   pop
+   top
+   isEmpty
+
+
+                                                                    12
+
+
+
+   initIterator
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+2.3.2  Class Queue
+
+Class Queue implements  a  FIFO  container  and  associated queue
+methods.  Objects  are  inserted at the left and removed from the
+right.  You can use the member function  peek()  to  examine  the
+object which will be  removed  next.  Note  that peek() returns a
+reference  to  an  object which is  still  owned  by  the  queue;
+therefore  you  must  be careful not to  destroy  the  referenced
+object. For  a discussion of container ownership, see the section
+entitled "Object Ownership" at the beginning of this chapter.
+
+Derived from: Container
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   peekLeft
+   peekRight
+   get
+   put
+   initIterator
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+2.3.3  Class Deque
+
+Class Deque (pronounced  "deck") implements a double-ended queue.
+Objects  can be inserted and removed at both  the  left  and  the
+
+
+                                                                    13
+
+
+
+right  ends.  You  can use the member  functions  peekLeft()  and
+peekRight() to examine the objects  currently at the left and the
+right  ends.  The  same caveats apply to  the  object  references
+returned  from these functions as to the  returns  of  peek()  in
+class  Queue  and top() in class Stack.  That  is,  you  must  be
+careful  not to destroy the object  referenced  by  the  returned
+value.  See  the  section  entitled  "Object  Ownership"  at  the
+beginning of the chapter for a discussion of this restriction.
+
+Derived from: Container
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   peekLeft
+   peekRight
+   getLeft
+   getRight
+   putLeft
+   putRight
+   initIterator
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+
+                                                                    14
+
+
+                                                                    15
+
+
+
+
+
+
+
+
+
+                            Chapter 3
+
+                      Collection Hierarchy
+
+
+This chapter introduces the  abstract  class  Collection  and its
+derived classes.
+
+
+3.1  Class Collection
+
+
+Derived classes  of the abstract class Collection are the classes
+you'll be using the most. For instance, since collections provide
+a way of gathering objects  together and operating upon them, you
+could start by designing a  particular section of a project using
+the abilities  provided by a Collection class. Later, when you've
+learned more about  the  characteristics of the design, you could
+decide upon the specific implementation of  Collection  class you
+desired.
+
+The  Collection  class  provides the ability to  use  objects  of
+different  derived  classes,  such  as  Arrays,  Sets,  and Bags,
+interchangeably, as long as the functions are restricted to those
+available for  a Collection. A Collection is distinguished from a
+class  in  the  sequence  grouping  by the ability  to  determine
+whether an object is a member of the Collection.
+
+Derived from: public Container
+
+Public member functions:
+   add
+   destroy
+   detach
+   hasMember
+   findMember
+   initIterator         Inherited from Container.
+   isA                  Inherited from Container.
+   nameOf               Inherited from Container.
+   hashValue            Inherited from Container.
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+
+
+                                                                    16
+
+
+
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+
+3.2  Derived Classes of Collection
+
+
+The classes derived from the class Collection are:
+
+   HashTable
+      Bag
+         Set
+            Dictionary
+   List
+   DoubleList
+   AbstractArray
+     Array
+     SortedArray
+
+3.2.1  Unordered Collections
+
+An unordered collection is a  class  derived  from  Collection in
+which  the  ordering  of  the  objects  in  the   class   is  not
+discernible.  Since the unordered collection class requires  only
+that  an  object  can be tested for membership in the collection,
+objects of any class derived  from the abstract base class Object
+can be put into an unordered collection.
+
+3.2.1.1  Class HashTable
+
+The class HashTable provides an implementation of a collection in
+which  there  is  no  provision  for ordering of objects.   Class
+HashTable serves as a base class for the classes  Bag,  Set,  and
+Dictionary, which  are  all  unordered  collections  of  objects.
+Class HashTable was chosen as a base class because  each  of  the
+classes derived from this class are  implemented  using HashTable
+access methods.  You may notice that a derivation  of  this  sort
+differs  from the conceptual derivation in  other  areas  of  the
+hierarchy.  The difference exists  because you may find it easier
+to understand the  relationship  if that relationship is based on
+the implementation of the classes.
+
+Derived from: Collection
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   add
+   destroy
+   detach
+
+
+                                                                    17
+
+
+
+   hasMember
+   findMember
+   initIterator
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.1.2  Class Bag
+
+The class Bag defines a  collection of objects which is identical
+to a HashTable. A Bag is a collection that may contain  more than
+one  of  the  same object. This  is  also  permissible  within  a
+HashTable.  We provide class Bag as a renamed  version  of  class
+HashTable.  You may  choose  which  class  name better suits your
+application.
+
+Derived from: HashTable
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   add                  Inherited from HashTable.
+   destroy              Inherited from HashTable.
+   detach               Inherited from HashTable.
+   hasMember            Inherited from HashTable.
+   findMember           Inherited from HashTable.
+   initIterator         Inherited from HashTable.
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+
+                                                                    18
+
+
+
+3.2.1.3  Class Set
+
+The  class Set is derived from the class  Bag.  A  Set  restricts
+membership  of objects in a collection to  one  of  each  object.
+Other than a difference in the method for adding a member,  a Set
+and a Bag are identical.
+
+Derived from: Bag
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   add
+   destroy              Inherited from HashTable.
+   detach               Inherited from HashTable.
+   hasMember            Inherited from HashTable.
+   findMember           Inherited from HashTable.
+   initIterator         Inherited from HashTable.
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.1.4  Class Dictionary
+
+A  dictionary is an unordered collection  of  objects  which  are
+derived  from  the  class  Association.    The  class  Dictionary
+inherits all of the properties of its parent class, Set, and adds
+a  lookup function.  This function allows  you  to  retrieve  the
+value portion of an association stored in the  dictionary  if you
+supply the key.
+
+Derived from: Set
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   lookup
+   add                  Inherited from HashTable.
+   destroy              Inherited from HashTable.
+   detach               Inherited from HashTable.
+   hasMember            Inherited from HashTable.
+   findMember           Inherited from HashTable.
+
+
+                                                                    19
+
+
+
+   initIterator         Inherited from HashTable.
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.1.5  Class List
+
+The  class List provides an implementation  of  a  collection  in
+which objects are linked together to form a chain. Objects can be
+added and removed only at the head of the chain. You can traverse
+the list to examine the objects. The traversal starts at the head
+and continues until no more objects are found in the list.
+
+Derived from: Collection
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   peekHead
+   add
+   detach
+   initIterator
+   destroy              Inherited from Collection.
+   hasMember            Inherited from Collection.
+   findMember           Inherited from Collection.
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.1.6  Class DoubleList
+
+The class DoubleList provides a  method of placing objects on two
+lists while maintaining only one object. You can  add  and remove
+
+
+                                                                    20
+
+
+
+objects at  the  two  ends  of  the  lists.  Furthermore, you can
+traverse the list in  either  direction,  beginning at either the
+head or the tail, and reversing direction in the  middle  of  the
+iteration  process.    The  member  function  initReverseIterator
+begins the iteration process at the tail of the list.   To permit
+direction  reversal,  the  operator  --()  is  defined   for  the
+DoubleListIterator  class.  For a complete  list  of  the  member
+functions  of  the  DoubleListIterator  class,  see  the  chapter
+entitled "Classes In the  ContainerIterator  Hierarchy,"  on page
+25.
+
+Derived from: Collection
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   add
+   detach
+   detachFromHead
+   detachFromTail
+   peekAtHead
+   peekAtTail
+   addAtHead
+   addAtTail
+   destroyFromHead
+   destroyFromTail
+   initIterator
+   initReverseIterator
+   destroy              Inherited from Collection.
+   hasMember            Inherited from Collection.
+   findMember           Inherited from Collection.
+   printOn              Inherited from Container.
+   isEqual              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.2  Ordered Collections
+
+This section  describes the group of classes which called ordered
+collections. A class which is  an ordered collection must be made
+up of objects for  which  there  are ordering operations defined;
+that is, they must be derived from class Sortable.
+
+
+                                                                    21
+
+
+
+3.2.2.1  Class AbstractArray
+
+The class AbstractArray has random  access to the elements of the
+collection. For an object to be an array implies that you can use
+an index to access the elements of that object.
+The  reason  that  the  AbstractArray  class exists is  that  the
+derived classes SortedArray and  Array  have  enough in common to
+warrant combining the common  properties  into  an  abstract base
+class for classes.  Since the derived classes differ only  in the
+implementation  of  the  member  function  add,  detach,  and the
+subscript  operator, the remaining functions can be  encapsulated
+in the AbstractArray base class.
+
+Derived from: Collection
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   add
+   detach
+   initIterator
+   lowerBound
+   upperBound
+   arraySize
+   isEqual
+   destroy              Inherited from Collection.
+   hasMember            Inherited from Collection.
+   findMember           Inherited from Collection.
+   printOn              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.2.2  Class Array
+
+The instance  class Array is derived from class AbstractArray. An
+Array object defines  an  array  in  which  the  ordering  of the
+elements is undefined.  That  is,  the  element at index i of the
+array has no relationship to the element at index i + 1.
+
+The  Array  class  adds  the  member  function  addAt()  and  the
+subscript  operator  the  its  parent class, class AbstractArray.
+While the inherited member function add()  (inherited  from class
+Collection) stores a given object in the first available space in
+the array, the addAt() member  function store the given object at
+
+
+                                                                    22
+
+
+
+a specified  index.  Similarly, the subscript operator returns an
+lvalue to which you may assign an object reference.
+
+Derived from: AbstractArray
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   addAt
+   operator []
+   add
+   detach
+   initIterator         Inherited from AbstractArray
+   lowerBound           Inherited from AbstractArray
+   upperBound           Inherited from AbstractArray
+   arraySize            Inherited from AbstractArray
+   isEqual              Inherited from AbstractArray
+   destroy              Inherited from Collection.
+   hasMember            Inherited from Collection.
+   findMember           Inherited from Collection.
+   printOn              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+3.2.2.3  Class SortedArray
+
+The class SortedArray defines an array in which the objects which
+make up the  array  are  sorted  in ascending order. That is, the
+object at index n is less  than  or  equal to the object at index
+n+1. Note that the  operator  < must be defined for comparing any
+objects in the array.
+
+The differences between the  class  Array  and  class SortedArray
+are:
+
+   1.  The method for adding an object at a given index, addAt(),
+       which is provided by class Array, is not provided in class
+       SortedArray.
+
+   2.  Unlike the subscript operator  for  the  class  Array, the
+       subscript operator in class SortedArray, operator [], does
+       not  return  an  lvalue.  This  restriction  prevents  any
+       additions to the array  which  my  disrupt the ordering of
+       objects in the array.
+
+
+                                                                    23
+
+
+
+Derived from: AbstractArray
+
+Public member functions:
+   isA
+   nameOf
+   hashValue
+   operator []
+   add
+   detach
+   initIterator         Inherited from AbstractArray
+   lowerBound           Inherited from AbstractArray
+   upperBound           Inherited from AbstractArray
+   arraySize            Inherited from AbstractArray
+   isEqual              Inherited from AbstractArray
+   destroy              Inherited from Collection.
+   hasMember            Inherited from Collection.
+   findMember           Inherited from Collection.
+   printOn              Inherited from Container.
+   isEmpty              Inherited from Container.
+   forEach              Inherited from Container.
+   firstThat            Inherited from Container.
+   lastThat             Inherited from Container.
+   printHeader          Inherited from Container.
+   printSeparator       Inherited from Container.
+   printTrailer         Inherited from Container.
+   getItemsInContainer  Inherited from Container.
+   isSortable           Inherited from Object.
+   isAssociation        Inherited from Object.
+   operator new         Inherited from Object.
+
+
+                                                                    24
+
+
+                                                                    25
+
+
+
+
+
+
+
+
+
+                            Chapter 4
+
+           Classes in the ContainerIterator Hierarchy
+
+
+Each class in the class  Object-based hierarchy must have a means
+of iterating  through any sub-objects contained in the class. The
+ContainerIterator-based hierarchy fulfills this requirement.  The
+abstract  base  class of this  hierarchy,  ContainerIterator,  is
+declared  as a friend of the abstract  base  class  Object.  This
+relationship means that  you  can apply iterators to every object
+in  the  class  Object  hierarchy  without  having  to  know  the
+derivation of the object which you are iterating.
+
+Iterators  occur  frequently  in  programs  written   in   C.  To
+illustrate  this  situation,  we  give  an example of the use  of
+iterators in C and translate that example to C++. The following C
+code fragment uses an iterator to step through the elements of an
+array of strings.
+
+   char *text[] = { "this", "is", "some", "text", 0 };
+   char **cur = text;
+
+   while ( *cur != 0 )
+   {
+      . . .
+      cur++;
+   }
+
+The steps of the iterations are:
+
+   1.  Initialize the iterator. This  occurs  in  the declaration
+       and initialization statement which begins 'cur *text[] = {
+       . . . .'
+
+   2.  Test the iterator for completion of the iterating process.
+       This occurs in the  conditional  of  the  while statement,
+       'while ( *cur != 0 ).'
+
+   3.  Increment the iterator.  This  is  done  by  the statement
+       'cur++.'
+
+We  extend this form in C++. The above  example  can  be  written
+using an instantiation of an iterator class as follows.
+
+   Array myArray( . . . );
+   ContainerIterator myIterator = myArray.initIterator();
+
+
+                                                                    26
+
+
+
+   while ( myIterator != 0 )
+   {
+      . . .
+      myIterator++;
+   }
+
+To be an iterator, therefore, a class must do the following:
+
+   1.  Overload   the   preincrement   operator,  operator  ++().
+       Operator ++() should return a reference to the next object
+       in the iteration sequence.
+
+   2.  Provide an operator which  converts  the  iterator  to the
+       predefined type int.    This  conversion  is  necessary to
+       inform  users  of  the  iterator  that there are  no  more
+       objects left in the iteration sequence.
+
+   3.  Provide a function to restart the iteration process at any
+       time after a program creates the iterator.
+
+The iterators available in  the  class  library are listed below,
+along  with  their  member functions.   You  may  note  that  the
+DoubleListIterator  class  defines  the  predecrement   operator,
+operator --(), in addition to the other required functions.  This
+operator appears in class DoubleListIterator since it is possible
+to traverse a DoubleList in either direction.
+
+Class ContainerIterator:
+
+Public member functions:
+   operator ++
+   operator int
+   restart
+
+
+Class ArrayIterator, derived from ContainerIterator
+
+Public member functions:
+   operator ++
+   operator int
+   restart
+
+
+Class DoubleListIterator, derived from ContainerIterator
+
+Public member functions:
+   operator ++
+   operator --
+   operator int
+   restart
+
+
+Class ListIterator, derived from ContainerIterator
+
+
+                                                                    27
+
+
+
+Public member functions:
+   operator ++
+   operator int
+   restart
+
+
+                                                                    28
+
+
+                                                                    29
+
+
+
+
+
+
+
+
+
+                            Chapter 5
+
+                Class Library Directory Stucture
+
+
+When you load Turbo C++ on to your disk, the  files  in the class
+library are set up in the following directory structure:
+
+                         CLASSLIB\
+                            |
+    +-----------+-----------+------------+------------+
+    |           |           |            |            |
+ INCLUDE\    SOURCE\   CLASSLIB.DOC     LIB\      EXAMPLES\
+
+The  CLASSLIB  directory  itself is a subdirectory of the TC root
+directory.  This will usually be directory \TC, if you have taken
+the default options when installing Turbo C++.   The  contents of
+the directories in the class library are discussed in more detail
+in the following sections.
+
+
+5.1  Directory INCLUDE
+
+
+The directory INCLUDE  contains  the  header  files  necessary to
+compile a program  which  uses  the  class library.  You must put
+this directory on the include search path when  you  compile your
+program.
+
+
+5.2  Directory SOURCE
+
+
+The directory SOURCE contains the  source  files  which implement
+many  of  the  member  functions  of the classes in the  library.
+These source files are provided as a guide  for  implementing new
+classes.
+
+You also need these source files  if  you want to build a library
+in a different memory model than the one provided on  the release
+diskette.    The  supplied batch file BUILD.BAT  builds  a  class
+library of the specified memory  model and places that library in
+the LIB directory.    To  build  a library using the large memory
+model, type BUILD L in the  SOURCE  directory.  When you do this,
+the batch file will invoke the Turbo C++ compiler  to  build  all
+the files  in  the  class  library  using  large model.  Then the
+library file archiver, TLIB, will create a library TCLASSL.LIB in
+the LIB subdirectory of the CLASSLIB directory.
+
+
+                                                                    30
+
+
+
+An important note:  When you  use  a library which you have built
+in one of the sample projects, you must change the  library which
+is included in your project to be the one which  you  built.  You
+must also be sure to compile your project with precisely the same
+switches and options with which you built the library.  If you do
+not have the same options, you will get warnings from  the linker
+when the .EXE file is built.
+
+
+5.3  Directory LIB
+
+
+The directory LIB contains the compiled  source  modules archived
+into a  library.    You  must  put  this directory on the library
+search path when you  link  your program.  If you build different
+memory  models  of  the class library, you will put the resulting
+libraries in this directory.
+
+
+5.4  Directory EXAMPLES
+
+
+The directory EXAMPLES contains the  example  programs  and their
+project files.   You  may  compile  these programs to see how the
+parts  of  the  class  library  may  be  put  together to form an
+application.  Most of the example  use  one or two of the classes
+in the hierarchy.  Other examples are more complex.   The example
+programs, and the classes which they use, are listed below.
+
+   1.  STRNGMAX:  A very simple example which uses class String.
+
+   2.  REVERSE:  An intermediate example which  uses  class Stack
+       and class String.
+
+   3.  LOOKUP:     An  intermediate  example  which  uses   class
+       Dictionary and class Association.
+
+   4.  QUEUETST:  An intermediate example which uses  class Queue
+       and introduces a non-hierarchical class, class Time.
+
+   5.  DIRECTRY:   An advanced example which illustrates  derived
+       user classes and uses class SortedArray.
+
+
+                                                                    31
+
+
+
+
+
+
+
+
+
+                            Chapter 6
+
+               Conventions Used In Class Libraries
+
+
+To provide a consistent interface to the code in  the  C++  class
+libraries, we have adopted the following conventions.  We suggest
+that  you  also  follow  these  conventions, so as to reduce  the
+possibility of name conflicts and other problems.
+
+
+6.1  File Naming
+
+
+Files which  contain class definitions are named after the class,
+with some alterations necessary due to the MS-DOS eight-character
+file  name  limit.  The  file  SET.H,  therefore,   contains  the
+definition for the  class  Set.  Additionally,  the  file SET.CPP
+contains the implementation of  member  functions  for  the class
+Set. If no member functions are needed, the .CPP file for a class
+is omitted.
+
+Header files contain  preprocessor directives to prevent multiple
+inclusion.  Each  header  file  tests  for   the   definition  of
+__<filename>_H, and if this  symbol is not defined, defines it.
+
+
+6.2  Source Naming
+
+
+Class  names  in  the library begin with  an  upper-case  letter.
+Likewise, each word within a class name begins with an upper-case
+letter (for example, class  DoubleList).  Member  functions  of a
+class begin with a  lower-case  letter,  but any subsequent words
+begin with upper-case letters (for example, printOn).
+
+Names of the private parts of  a  class are made up of lower-case
+letters only. Class  member  functions  and  parameter  names are
+chosen based on their ability to convey their meaning efficiently
+and  correctly.  For  example, unless it is desirable to hide the
+fact  that  a  data item is a pointer, all pointer names end with
+Ptr, such as aPtr.
+
+Types names in  the  class library also follow these conventions.
+All type names follow the rules for member function names and end
+with the word Type; for example, hashValueType. Pointer types end
+with PtrType.
+
+
+                                                                    32
+
+
+
+6.3  Commenting Style
+
+
+If you have looked at the source code for  the  class  libraries,
+you may have noticed that the style used to comment the  files is
+different from the style with which you are  familiar.   Although
+the  style  may  seem  confusing  at first, it has an  underlying
+structure and organization which makes the job of documenting and
+maintaining of  large programs easier.  In addition, the comments
+help  the  reader  who is unfamiliar with the capabilities of the
+library make sense of the overwhelming amount of code available.
+
+The following paragraphs outline the  structure  of  each  of the
+major divisions which make up a source file.  You  are encouraged
+to  examine  the  source  code  to learn how these divisions  fit
+together in a source file.
+
+6.3.1  Module Header
+
+Each  file,  or  module, in the class library contains an initial
+header which comes  immediately  after the copyright notice.  The
+format of this module header is:
+
+// Module //
+
+// Contents ------------------------------------------------
+//
+//   The functions, variables, classes, types, etc. which
+//   make up this module are listed here.
+//
+// Description
+//
+//   A brief description of what the module contains and how
+//   it relates to the other classes in the library is
+//   given here.
+//
+// End -----------------------------------------------------
+
+6.3.2  Dependencies
+
+An  important  part of any C or C++ source file is  the  list  of
+files which are included as part of this source file.  The source
+file is then said to depend upon those files.    This  dependency
+occurs  in  two  cases.  In the first, a function or class within
+the file may include in its prototype a type which is  defined in
+another file.  This dependency is called an interface dependency,
+since it  affects the prototype, or interface, information of the
+source file.  Dependencies of this type are put in  the interface
+dependency division, which is formatted as:
+
+// Interface Dependencies ----------------------------------
+
+#includes go here, or // None if there are no interface
+dependencies.
+
+
+                                                                    33
+
+
+
+// End Interface Dependencies ------------------------------
+
+The  second  case  of dependency is  when  the  statements  of  a
+function require a definition which is in another  file,  such as
+the declaration of a local variable of a type which is defined in
+stdlib.h.   These  dependencies  are  put  in  the implementation
+dependency region, which has the following format.
+
+// Implementation Dependencies -----------------------------
+
+#includes go here, or // None if there are no implementation
+dependencies.
+
+// End Implementation Dependencies -------------------------
+
+6.3.3  Type Header
+
+Each type, class,  and  structure  definition  has  an associated
+header which comes  after  the definition.  This header describes
+the  item and how it might be used and defines the members of the
+structure or class.  The class header has the following format:
+
+// Class // (or Type, Structure)
+
+class definition goes here
+
+// Description ---------------------------------------------
+//
+//        A brief description of the item and how to use it.
+//
+// Members of the class or structure are listed here.
+//
+// End -----------------------------------------------------
+
+6.3.4  Function Header
+
+Each  function,  constructor,  destructor,  member  function,  or
+friend has a  header  which  comes  after  the  prototype  of the
+function  and  before  the  implementation  body.     The  header
+summarizes the function, lists and  describes  the  parameters to
+the function, describes the return value, describes  the internal
+workings of the  function,  and lists remarks about side effects,
+assumptions, and general warnings and  cautions.  The format of a
+function header is given below.
+
+// Function // (or Member Function, Constructor, etc.)
+
+function prototype
+
+// Summary -------------------------------------------------
+//
+//        A brief summary of the function.
+//
+// Parameters
+
+
+                                                                    34
+
+
+
+//
+//        A description of each of the parameters to the
+//        function and how they are used.
+//
+// Return Value
+//
+//        A description of the value returned to the
+//        function's caller.
+//
+// Functional Description
+//
+//        A description of the overall flow and operation
+//        of the function.
+//
+// Remarks
+//
+//        A list of side effects, assumptions, warnings,
+//        and cautions.
+//
+// End -----------------------------------------------------
+
+6.3.5  Body Comments
+
+Comments which occur within the body of a function are called
+body comments.  Body comments guide the reader through the
+details of the implementation of a function.  A body comment has
+the following form:
+
+// Body Comment
+//
+//        Comment goes here.
+//
+// End
+
+
+                                                                    35
+
+
+
+
+
+
+
+
+
+                              Index
+
+
+       .EXE linking 29             L
+                                   Linker warning messages
+       A                              29
+       Association 6, 8, 30
+                                   M
+       B                           Memory Model
+       Bag 17                         building libraries
+       body comments 34               29
+                                   module header 32
+       C
+       class header 33             N
+       classes                     NOOBJECT 6
+          abstract
+             defined 5             O
+       Collection 15               Object (class) 5
+       commenting style 32         object-based hierarchy
+       Container 9, 10                defined 5
+       ContainerIterator 25        object ownership 9
+                                   ordered collection 20
+       D
+       Deque 12                    Q
+       Dictionary 30               Queue 30
+       double-ended queue 12       queue 12
+
+       E                           S
+       Error (class) 6             sequence 11
+                                   Set 18
+       F                           sortable 7
+       function header 33          SortedArray 30
+                                   Stack 30
+       H                           stack 11
+       HashTable 16                String 30
+       hierarchy
+          object-based             T
+             defined 5             theErrorObject 7
+
+       I                           U
+       implementation              unordered collection 16
+          dependency 33
+       interface dependency 32     Z
+       iterator 25                 ZERO 6
+

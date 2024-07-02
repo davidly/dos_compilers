@@ -1,0 +1,328 @@
+                   Welcome to Turbo C ++
+                   ---------------------
+
+This README file contains important information about Turbo C++.
+For the latest information about Turbo C++, the accompanying
+programs, and the manuals, read this file in its entirety.
+
+
+TABLE OF CONTENTS
+-----------------
+1.  How to Get Help
+2.  Installation
+3.  Features
+4.  Important Information
+5.  Testing Your Expanded Memory
+6.  Corrections to the Documents
+7.  TCTOUR
+
+
+ 1. HOW TO GET HELP
+-------------------
+
+  If you have any problems, please read this file, the HELPME!.DOC
+  file, and the Turbo C++ manuals first. If you still have a question
+  and need assistance, help is available from the following sources:
+
+  1. Type GO BPROGB on the CompuServe bulletin board system for
+     instant access to the Borland forums with their libraries of
+     technical information and answers to common questions.
+
+     If you are not a member of CompuServe, see the enclosed special
+     offer, and write for full details on how to receive a free
+     IntroPak containing a $15 credit toward your first month's on-
+     line charges.
+
+  2. Check with your local software dealer or users' group.
+
+  3. Write to us at the following address:
+
+     Borland International
+     Turbo C Technical Support
+     1800 Green Hills Road
+     P.O. Box 660001
+     Scotts Valley, CA  95066-0001
+
+     Please remember to include your serial number or we will be
+     unable to process your letter.
+
+  4. If you have an urgent problem that cannot wait and you have sent
+     in the license agreement that came with the package, you may
+     call the Borland Technical Support Department at (408) 438-5300.
+     Please have the following information ready before calling:
+
+     a. Product name and serial number on your original distribution
+        disk.  Please have your serial number ready or we will be
+        unable to process your call.
+
+     b. Product version number. The version number for Turbo C++
+        can be displayed by pressing Alt-Space/A.
+
+     c. Computer brand, model, and the brands and model numbers of
+        any additional hardware.
+
+     d. Operating system and version number. (The version number can
+        be determined by typing VER at the MSDOS prompt.)
+
+     e. Contents of your AUTOEXEC.BAT file.
+
+     f. Contents of your CONFIG.SYS file.
+
+
+2. INSTALLATION
+---------------
+
+  You MUST use the INSTALL program to install Turbo C++.
+  The files on the distribution disks are all archived and
+  have to be properly assembled.  You cannot do this by
+  hand!
+
+  To start the installation, change your current drive to the one
+  that has the install program on it and type INSTALL.  You will
+  be given instructions in a box at the bottom of the screen for
+  each prompt. For example, if you will be installing from drive
+  A:, type:
+
+    A:
+    INSTALL
+
+  You should read the rest of this README file to get further
+  information about this release before you do the installation.
+
+3. FEATURES
+-----------
+
+  - C++!  Turbo C++ offers you the full power of C++ programming,
+    implementing the entire C++ 2.0 language as defined by the AT&T
+    specification.  To help you get started, we're also including
+    C++ class libraries.
+
+  - ANSI C!  A 100% implementation of the ANSI C standard.
+
+  - Borland's Programmer's Platform. The Programmer's Platform belongs
+    to the next generation of user interfaces; it goes beyond the old
+    integrated environment (IDE) to provide access to the full range of
+    programs and tools on your computer. It includes:
+
+    -- mouse support
+
+    -- multiple overlapping windows
+
+    -- a multi-file editor
+
+    -- user-configurable menu entries to run other programs
+       without leaving Turbo C++
+
+  - VROOMM (overlay manager): VROOMM lets you overlay your code
+    without complexity. You select the code segments for
+    overlaying; VROOMM takes care of the rest, doing the work
+    needed to fit your code into 640K.
+
+  - An online tour of the Programmer's Platform.
+
+  - Online hypertext help, with copy-and-paste program examples
+    for practically every function.
+
+  - Many indispensable library functions, including heap checking
+    functions and a complete set of complex and BCD math functions.
+
+  -  Note: The list of files is now contained in a separate file
+     called FILELIST.DOC, which will appear in the target
+     directory you specify during installation.
+
+4. IMPORTANT INFORMATION
+------------------------
+
+  C++ STREAM I/O
+
+  The standard libraries have all the functions needed for
+  the IOSTREAM libraries defined in the AT&T 2.0 spec.  If
+  you have code that uses the STREAM libraries from the 1.0
+  spec, you must link with the appropriate OLDSTRMx.LIB
+  file, where 'x' is replaced by the letter for the
+  appropriate memory model:
+
+    oldstrms.lib -- small model
+    oldstrmc.lib -- compact model
+    oldstrmm.lib -- medium model
+    oldstrml.lib -- large model
+    oldstrmh.lib -- huge model
+
+  EXAMPLE PROGRAMS
+
+  When you are running any example programs that come with
+  .PRJ files, if you didn't use the standard directories when
+  you installed Turbo C++ you will have to change the .PRJ file
+  to reflect your actual directory setup.  Do this from inside the
+  Turbo C++ IDE with Alt-O|D.
+
+  Included in this release is source code to the GREP2MSG and
+  TASM2MSG filter programs (in EXAMPLES), which give an example of
+  how to write your own custom filter programs to use with the
+  Transfer Menu.
+
+  COMPILER AVAILABLE MEMORY
+
+  To achieve better capacity and flexibility, Turbo C++ uses VROOMM,
+  which means that the reported "available memory" number (both with
+  the standalone compiler and in the integrated development environment)
+  reflects the actual amount of RAM available to VROOMM for the entire
+  compiler. What this means is that even when the reported available
+  memory approaches or is equal to zero, much larger files can still
+  be compiled at the expense of compilation speed. In the Programmer's
+  Platform, when memory available for VROOMM reaches zero, the compile
+  box will show "Swapping ...." as the amount of available memory; the
+  standalone compiler will merely report "Available memory 0" in this case.
+
+  OVERLAYS AND ASSEMBLY LANGUAGE
+
+  Just as all "C" modules to be linked into an overlaid executable must
+  be compiled with the -Y compiler switch, all assembly language modules
+  need to be assembled with the -O TASM switch. If an assembly file is
+  the result of a TCC compilation, TCC automatically passes -O to the
+  assembler whenever -Y is used. Modules written entirely in assembly
+  language must be assembled with the -O switch (using TASM version 2.0
+  or newer) if they are to be linked into an overlaid executable. Failure
+  to follow these rules may result in the overlaid program failing
+  unpredictably when run.
+
+  LINKING C++ WITH C
+
+  Linking C++ modules with C modules requires the use of a linkage
+  specification.  Prototypes for C functions within C++ modules must
+  be in one of the following forms:
+    extern "C" declaration
+    extern "C" { declarations }
+  For example, if a C module contains functions "char *SCopy(char*, char*);"
+  and "void ClearScreen(void)", they must be declared in a C++ module in
+  one of the following ways:
+    extern "C" char *SCopy(char*, char*);
+    extern "C" void ClearScreen(void);
+  or
+    extern "C" {
+        char *SCopy(char*, char*)
+        void ClearScreen(void);
+    }
+  Failure to do so will result in "Undefined symbol" errors during link.
+  For further examples, see the standard header files. There's also a more
+  in-depth explanation in the Programmer's Guide.
+
+  IMPORTANT NOTES
+
+  - If you use inline assembler in C++, TASM 1.0 may not be able
+    to assemble the generated code.  If you run into this problem,
+    you will need to update to version 2.0 of TASM.
+
+  - Functions that return structures now take a hidden
+    parameter that contains the address where the returned
+    structure is to be placed.  If you are writing assembler
+    code to link with C code you must be sure to allow for
+    this extra parameter.
+
+  - When debugging a mouse application the Options|Debugging|Display
+    Swapping option should be set to "Always" for best results.
+
+  - When running under DOS versions 2.0 or 2.1, you should not rename
+    TC, TCC, or TLINK.  They need to know their names to be able to
+    load their overlays.
+
+  - TEMC will not allow a macro to contain multiple commands that return
+    exit codes.
+
+  - If you have selected Save Desktop in the Turbo C++ Programmer's
+    Platform, everything that you put into the clipboard will be saved
+    as part of the desktop.  After several sessions this may make
+    starting the Programmer's Platform take longer.  If this happens
+    to you (you will see the message "Loading Desktop" while the
+    Programmer's Platform is loading), you can speed things up by
+    deleting unneeded things from the clipboard.  Just select Alt-E|S
+    to show the clipboard, and start deleting.
+
+  - In some rather unusual situations when stepping through
+    a program in the IDE you may get a message saying "Line
+    too complex".  This means that the Programmer's Platform
+    can't step past the line it is currently on.  To continue
+    stepping, you should move the cursor to the next line in
+    the program and press F4 (Go to Cursor).  If the line where
+    this message occurs is the last line in a function, use
+    the Call Stack (Ctrl-F3 or Alt-D|C) to see where the function
+    was called from, select the calling function (by moving the
+    highlight to it and pressing Enter), move the cursor to the
+    next line, and press F4.
+
+  - If you change your keyboard settings using the Editor Commands
+    choice in TCINST, you may lose some key assignments.  To avoid
+    this, use the following procedure:
+        1)  don't save the modifications to the EXE; instead invoke
+            TCINST with the name of your configuration file, by default
+            TCCONFIG.TC.
+        2)  create a file containing the following line:
+               Tab: SmartTab;
+            and invoke TEMC with the name of that file and the name
+            of your configuration file as arguments.
+    As an example, you can follow these exact steps:
+             CD \TC\BIN
+             TCINST TCCONFIG.TC
+             <make changes, save, and exit TCINST>
+             COPY CON TEMP.TEM
+             Tab: SmartTab;
+             <Ctrl-Z>
+             TEMC TEMP.TEM TCCONFIG.TC
+
+  - If a directory contains only one project file, invoking Turbo C++ without
+    any parameters will open that project.  If this behavior is not
+    desired, a second 'dummy' project file must be placed in that
+    directory or the current project file must be removed.
+
+  - Using the 'registerbgidriver' function may result in the following
+    link error:  "Segment _TEXT exceeds 64K".  In order to avoid this,
+    it is recommended that the 'registerfarbgidriver' function be used
+    instead.  Please see UTIL.DOC for a more complete discussion of this
+    subject.
+
+5. Testing Your Expanded Memory: EMSTEST.COM
+--------------------------------------------
+
+  Included with Turbo C++ is a program to test your Expanded Memory
+  hardware and software. If you have problems using Turbo C++ with
+  your EMS, type EMSTEST at the DOS prompt and follow the instructions.
+
+6.  Corrections to the Documents
+--------------------------------
+
+    There are no corrections needed currently.
+
+7. TCTOUR
+---------
+
+  TCTOUR is a visual introduction to the Programmer's Platform.
+  Since the Programmer's Platform is Borland's newest interface,
+  taking the tour is time well spent even if you are already familiar
+  with other Borland products.
+
+  To start the tour, type "TCTOUR" from the DOS prompt.
+
+  - TCTOUR remembers what lessons a user has completed, and if
+    you quit a lesson before completing it, what screen # you last saw.
+    This information is stored in a .USR file, and can be recalled by
+    starting TCTOUR again and typing your user name at the prompt just
+    after the color rainbow.
+  
+    Lessons that a user has completed should show up without shading
+    on the main TCTOUR menu.  Only new users (no .USR file) get the
+    excursion through "Using Tour."
+
+  - The Navigator can be pulled up within any lesson file and within
+    "Using TCTOUR", but nowhere else.  It is pulled up by pressing the
+    Control key, which allows you to move forward, backward, to the
+    beginning of a lesson, to the end of a lesson, to the lesson summary,
+    to the main menu, to get a reminder, to quit. Ctrl-B (backwards) is
+    disabled when you are on the first slide of a lesson.
+
+  - Hints (or Reminders) pop up in any lesson files and in "Using TCTOUR".
+    They pop up if:
+        1) you wait 30 - 60 seconds before doing any action
+        2) you press Ctrl-R
+        3) you make an incorrect action
+
+

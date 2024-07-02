@@ -1,0 +1,1093 @@
+=================================================================
+                    Turbo Editor Macros
+=================================================================
+
+
+The Turbo Editor Macro Language (TEML) is a powerful utility that you
+can use to enhance or change the Turbo C++ editor. Using the 140-odd
+built-in macros, you can define new ones that perform sophisticated
+editing tasks and that can bind keystrokes to these tasks.
+
+
+Operation
+
+In order to use TEML, you first write a macro script in a text
+editor. You then compile the script using the Turbo Editor Macro
+Compiler (TEMC). The compiled file is used as a configuration file
+in Turbo C.
+
+The Turbo Editor Macro Compiler expects as input an ASCII file
+containing definitions and binding conforming to the TEML
+specification. The output is placed in a configuration file that
+can be used by the IDE. The changes from TEMC are incremental; this
+means that if you just change the definition of one key, only that
+key will be changed in the configuration file. Everything else will
+stay as it was.
+
+Here is the syntax for the TEMC utility:
+
+   TEMC scriptfile outputconfigfile
+
+You can use any text editor (including Turbo C++'s) to create the ASCII
+scriptfile. You use the outputconfigfile by naming it TCCONFIG.TC
+and placing it in the directory you will be in when starting
+TC.EXE.
+
+
+Editor macro language syntax
+
+TEML has a simple syntax based on Pascal and C. Here are the basic
+syntax rules of the macro language:
+
+1.  Statements in a script file are separated with a semicolon.
+
+2.  Reserved words in TEML are
+
+      ALT     BEGIN    SHIFT
+      CTRL    END
+      MACRO   SCRIPT
+
+3.  Comments are designated in the C style between /* and */ marks.
+
+4.  In strings, the user can place any legal C backslash (\) sequence;
+    for example, "\xD".
+
+The rest of this section describes how each possible component of
+the syntax fits into the overall scheme. In this list, the symbol
+::= means that the object on the left side is composed of the
+objects on the right side. If the list of objects on the right side
+of the ::= begins with the | symbol, then the object on the left
+can be composed of nothing or one of the listed items.
+
+Script             ::=
+                   ScriptName ScriptItems
+
+ScriptName         ::=
+                   |
+                   SCRIPTIdentifier ;
+
+ScriptItems        ::=
+                   |
+                   ScriptItems ScriptItem
+
+ScriptItem         ::=
+                   KeyAssignment | MacroDefinition
+
+KeyAssignment      ::=
+                   KeySequence : Command ;
+
+KeySequence        ::=
+                   KeySpecifier|KeySequence + KeySpecifier|KeySequence +
+                   ^ KeySpecifier
+
+KeySpecifier       ::=
+                   Key | KeyModifier Key
+
+Key                ::=
+                   Number | Identifier | END
+
+KeyModifier        ::=
+                   | CTRL - | ALT - | SHIFT -
+
+Command            ::=
+                   BEGIN CommandList OptSemicolon END|MacroCommand
+
+CommandList        ::=
+                   Command |
+                   CommandList ; Command
+
+MacroCommand       ::=
+                   CommandName |
+                   CommandName (ParamList)
+
+CommandName        ::=
+                   Identifier
+
+ParamList          ::=
+                   Param |
+                   ParamList , Param
+
+Param              ::=
+                   Number | String
+
+MacroDefinition   ::=
+                   MACRO CommandName CommandList OptSemicolon END ;
+
+OptSemicolon       ::=
+                   | ;
+
+Number             ::=
+                   Digit | Number Digit
+
+Digit              ::=
+                   0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+Identifier         ::=
+                   Letter | Identifier LetterDigit
+
+Letter             ::=
+                   A to Z | a to z | _
+
+LetterDigit        ::=
+                   Letter | Digit
+
+String             ::=
+                   " AnyCharacterNotQuote "
+
+
+Example scripts
+
+This example sets up a host of WordStar-like keyboard shortcuts.
+
+  Script WordStar;
+  Macro NewLine
+    RightOfLine;
+    InsertText("\xD");
+  End;
+
+  /* Key Assignments */
+    Ctrl-A      : WordLeft;
+    Ctrl-C      : PageDown;
+    Ctrl-D      : CursorCharRight;
+    Ctrl-E      : CursorUp;
+    Ctrl-F      : WordRight;
+    Ctrl-G      : DeleteChar;
+    Ctrl-H      : BackSpaceDelete;
+    Ctrl-J      : CursorDown;
+    Ctrl-K+^B   : SetBlockBeg;
+    Ctrl-K+^C   : CopyBlock;
+    Ctrl-K+^H   : ToggleHideBlock;
+    Ctrl-K+^K   : SetBlockEnd;
+    Ctrl-K+^Q   : Exit;
+    Ctrl-K+^R   : ReadBlock;
+    Ctrl-K+^V   : MoveBlock;
+    Ctrl-K+^W   : WriteBlock;
+    Ctrl-K+^Y   : DeleteBlock;
+    Ctrl-K+1    : SetMark(1);
+    Ctrl-K+2    : SetMark(2);
+    Ctrl-K+3    : SetMark(3);
+    Ctrl-L      : RepeatSearch;
+    Ctrl-N      : BreakLine;
+    Ctrl-O      : NewLine;       /* This is not a WordStar keystroke */
+    Ctrl-P      : LiteralChar;
+    Ctrl-Q+^A   : Replace;
+    Ctrl-Q+^B   : MoveToBlockBeg;
+    Ctrl-Q+^C   : EndCursor;
+    Ctrl-Q+^D   : RightOfLine;
+    Ctrl-Q+^E   : TopOfScreen;
+    Ctrl-Q+^F   : GetFindString;
+    Ctrl-Q+^K   : MoveToBlockEnd;
+    Ctrl-Q+^P   : MoveToPrevPos;
+    Ctrl-Q+^R   : HomeCursor;
+    Ctrl-Q+^S   : LeftOfLine;
+    Ctrl-Q+^X   : BottomOfScreen;
+    Ctrl-Q+^Y   : DeleteToEol;
+    Ctrl-Q+1    : begin
+                    MoveToMark(1);
+                    CenterFixScreenPos;
+                  end;
+    Ctrl-Q+2    : begin
+                    MoveToMark(2);
+                    CenterFixScreenPos;
+                  end;
+    Ctrl-Q+3    : begin
+                    MoveToMark(3);
+                    CenterFixScreenPos;
+                  end;
+    Ctrl-R      : PageUp;
+    Ctrl-S      : CursorCharLeft;
+    Ctrl-T      : DeleteWord;
+    Ctrl-V      : ToggleInsert;
+    Ctrl-W      : ScrollDown;
+    Ctrl-X      : CursorDown;
+    Ctrl-Y      : DeleteLine;
+    Ctrl-Z      : ScrollUp;
+    Home        : LeftOfLine;
+    UpAr        : CursorUp;
+    PgUp        : PageUp;
+    LfAr        : CursorCharLeft;
+    RgAr        : CursorCharRight;
+    End         : RightOfLine;
+    DnAr        : CursorDown;
+    PgDn        : PageDown;
+    Ins         : ToggleInsert;
+    Ctrl-End    : BottomOfScreen;
+    Ctrl-PgDn   : EndCursor;
+    Ctrl-Home   : TopOfScreen;
+    Ctrl-PgUp   : HomeCursor;
+
+
+MakeFuncText
+
+MakeFuncText creates a commented area for descriptive text associa-
+ted with a function, assumes the cursor is positioned immediately
+after the name, and the name is at the left of the screen.
+
+  Script util;
+
+  macro MakeFuncText
+      InsertText("\n\n");        /* add some whitespace */
+      CursorUp;
+      CursorUp;
+      LeftOfLine;                /* go before beginning of
+                                    intended function name */
+      SetBlockBeg;               /* mark function name */
+      WordRight;
+      SetBlockEnd;
+      LeftOfLine;
+      CursorDown;
+      CopyBlockRaw;              /* copy for prototyping */
+      CursorUp;
+      LeftOfLine;
+      InsertText("\nFunction "); /* add "Function" to comment area */
+      RightOfLine;
+      InsertText(":");           /* .. and colon at end */
+      CursorUp;                  /* put in comment lines fore and aft */
+      LeftOfLine;                /* add comment divider lines */
+      InsertText("/*********");
+      InsertText("*********");
+      CursorDown;
+      RightOfLine;
+      InsertText("\n");
+      InsertText("\tDescription:\n");
+      InsertText("**********");
+      InsertText("*********/\n");
+      CursorDown;                /* go back to end of name */
+      RightOfLine;
+  end;                           /* MakeFuncText */
+
+  Alt-T        : MakeFuncText;
+
+
+MakeStub 
+
+MakeStub creates a stub, based on a user-entered function name; it
+assumes the cursor is positioned immediately after the name, and
+the name is at the left of the screen.
+
+  macro MakeStub
+      LeftOfLine;            /* go before beginning of intended
+                                function name */
+      InsertText("void ");   /* put in void return type and param */
+      RightOfLine;
+      InsertText("( void )\n{\n");
+      InsertText("\t");
+      InsertText("printf(\"This is "); /* start printf statement */
+      CursorUp;                        /* go back to function name */
+      CursorUp;
+      LeftofLine;
+      WordRight;
+      SetBlockBeg;                  /* mark function name */
+      WordRight;
+      CursorLeft;
+      CursorLeft;
+      SetBlockEnd;
+      CursorDown;                   /* go back to printf statement */
+      CursorDown;
+      RightofLine;
+      InsertText(" ");
+      CopyBlockRaw;                 /* put it in printf statement */
+      SetBlockBeg;
+      SetBlockEnd;                  /* clear marked block */
+      RightofLine;
+      InsertText("\\n\");");
+      InsertText("\n}");            /* add newline and closing brace */
+  end;                              /* MakeStub */
+
+
+  Alt-S       : MakeStub;
+
+  /* This one doesn't conflict with default assignments */
+
+
+Built-in commands
+
+The names of the built-in commands describe their actions. Commands
+with the word screen in them generally only affect the screen.
+Similarly, commands that have the word raw in them perform fewer
+housekeeping tasks than their "raw-less" counterparts. For example,
+in a long macro, using raw commands saves time in that they don't
+constantly update the screen display to reflect each change in
+cursor position. However, you would only use the raw macros as
+intermediate steps in combination with other macros.
+
+Macro names are not case sensitive. A few macros require parameters
+in parentheses, as discussed in the descriptions.
+
+Remember, you can use these primitive macros to build more
+complicated ones.
+
+
+Functional index
+
+This section lists the built-in macros by function. The following
+section is a straight alphabetical list.
+
+
+Block macros
+
+These macros affect blocks of text.
+
+You should use SetPrevPos or FixScreenPos, or both, at the end of
+the raw macros for housekeeping purposes.BlockEnd
+CopyBlock                          MoveToBlockEndRaw
+DeleteBlock                        ReadBlock
+DeleteBlockRaw                     SetBlockBeg
+HighlightBlock                     SetBlockEnd
+MoveBlock                          ToggleHideBlock
+MoveToBlockBeg                     WriteBlock
+
+
+Deletion/insertion
+
+These macros delete, undelete, and insert text.
+
+BackspaceDelete                    DeleteLine
+ClipClear                          DeleteToEOL
+ClipCopy                           DeleteWord 
+ClipCut                            RawEditMenu
+ClipPaste                          InsertText
+ClipShow                           LiteralChar
+DeleteBlock                        RestoreLine
+DeleteBlockRaw                     SetInsertMode
+DeleteChar                         ToggleInsert
+
+
+Search macros
+
+These macros deal with searching.
+
+GetFindString                      RepeatSearch
+MatchPairBackward                  Replace
+MatchPairForward                   SearchMenu
+
+
+Hot key macros
+
+These macros duplicate the hot keys in the IDE.
+
+AddWatch                           OpenFile
+CloseWindow                        PrevError
+CompileFile                        ResetProgram
+Help                               RunProgram
+HelpLine                           RunToHere
+Inspect                            SaveFile
+LastHelp                           SetBreakpoint
+MakeProject                        Step
+Menu                               Trace
+Modify                             ViewCallStack
+NextError                          ViewUserScreen
+NextWindow                         ZoomWindow
+
+
+Menu macros
+These macros pull down the various menus in the IDE.
+
+CompileMenu                        OptionsMenu
+DebugMenu                          RunMenu
+EditMenu                           SearchMenu
+FileMenu                           SystemMenu
+HelpMenu                           WindowMenu
+
+
+Screen movement
+
+These macros control cursor movement and screen movement.
+
+BottomOfScreen                     MoveToPrevPos
+BottomOfScreenRaw                  PageDown
+CenterFixScreenPos                 PageUp
+CursorCharLeft                     PageScreenDown
+CursorCharRight                    PageScreenUp
+CursorDown                         RightOfLine
+CursorLeft                         ScrollDown
+CursorRight                        ScrollUp
+CursorUp                           ScrollScreenDown
+EndCursor                          ScrollScreenUp  
+EndCursorRaw                       SetMark
+FixCursorPos                       SetPrevPos
+FixScreenPos                       SwapPrevPos
+HomeCursor                         TopOfScreen
+HomeCursorRaw                      TopOfScreenRaw
+LeftOfLine                         WordLeft
+MoveToMark                         WordRight
+
+
+System macros
+
+These macros affect certain system functions.
+
+Exit                               Quit
+FullPaintScreen                    SmartRefreshScreen
+PaintScreen
+
+
+Window macros
+
+These macros affect windows in the IDE.
+
+CloseWindow                        GotoWindow7
+GotoWindow1                        GotoWindow8
+GotoWindow2                        GotoWindow9
+GotoWindow3                        SwapWindows
+GotoWindow4                        WindowList
+GotoWindow5                        WindowMenu
+GotoWindow6                        ZoomWindow
+
+
+Alphabetical reference
+
+This section is an alphabetical list of all the built-in macros. If
+you need to see how the macros are grouped by function, refer to
+the preceding section.
+
+
+AddWatch
+This macro is the same as pressing Ctrl-F7 or Debug|Watches|Add
+Watch.
+
+
+BackspaceDelete
+Moves the cursor back one character and deletes it (typically
+defined to be Backspace).
+
+
+BottomOfScreen
+Moves the cursor position to the lower left corner of the screen.
+This macro automatically sets the starting cursor position so that
+you can go back there with the MoveToPrevPos macro.
+
+
+BottomOfScreenRaw
+Moves the cursor to the lower left corner of the screen. As opposed
+to the BottomOfScreen macro, this command does not change the
+"previous cursor" location, which you access with the SwapPrevPos
+and MoveToPrevPos macros.
+
+
+CenterFixScreenPos
+Corrects the screen image position relative to the cursor. This
+command moves the screen image so that the cursor is in the middle
+of it.
+
+
+ClipClear
+Removes the selected text but does not change the Clipboard. This
+macro is the same as pressing Ctrl-Del or choosing Edit|Clear.
+
+
+ClipCopy
+Copies the selected text so you can paste a copy of it elsewhere.
+This macro is the same as pressing Ctrl-Ins or choosing Edit|Copy.
+
+
+ClipCut
+Cuts the selected text. This macro is the same as pressing Shift-
+Del or choosing Edit|Cut.
+
+
+ClipPaste
+Pastes the last-cut or last-copied text. This macro is the same as
+pressing Shift-Ins or choosing Edit|Paste.
+
+
+ClipShow
+Opens the Clipboard window.
+
+
+CloseWindow
+Closes the current window. This macro is the same as pressing Alt-
+F3 or choosing the Window|Close command.
+
+
+CompileFile
+Compiles the current file. This macro is the same as pressing Alt-
+F9 or choosing the Compile|Compile to OBJ command.
+
+
+CompileMenu
+Pulls down the Compile menu.
+
+
+CopyBlock
+Inserts a copy of the current block at the cursor position. Unlike
+the CopyBlockRaw macro, this macro highlights the new block.
+
+
+CursorCharLeft
+Moves the cursor one character to the left. (If the cursor is at
+the beginning of a line, this command makes it wrap to the previous
+printing character.)
+
+
+CursorCharRight
+Moves the cursor one character to the right. (If the cursor is at
+the end of a line, this command makes it wrap to the next printing
+character.)
+
+
+CursorDown
+Moves the cursor one line down, keeping it in the same column.
+
+
+CursorLeft
+Moves the cursor one column to the left.
+
+
+CursorRight
+Moves the cursor one column to the right (even if there are no
+characters there). If the cursor is at the edge of the screen, this
+command moves the cursor off the visible screen.
+
+CursorUp
+Moves the cursor one line up, keeping it in the same column.
+
+
+DebugMenu
+Pulls down the Debug menu.
+
+
+DeleteBlock
+Deletes the current block. Unlike the DeleteBlockRaw macro,
+DeleteBlock leaves the cursor fixed in one spot on the screen (it
+doesn't move when the block is deleted).
+
+
+DeleteBlockRaw
+Deletes the current block. Unlike the DeleteBlock macro, this "raw"
+macro doesn't fix the cursor in one spot on the screen (it can move
+when the block is deleted).
+
+
+DeleteChar
+Deletes the character at the cursor position.
+
+
+DeleteLine
+Deletes the line the cursor is on.
+
+
+DeleteToEOL
+Deletes from the cursor position to the end of the line.
+
+
+DeleteWord
+Deletes the word the cursor is on plus the space characters after
+it.
+
+
+EditMenu
+Pulls down the Edit menu.
+
+
+EndCursor
+Moves the cursor to the end of the file. This macro automatically
+sets the previous cursor position so that you can go back there
+with the MoveToPrevPos macro.
+
+
+EndCursorRaw
+Moves the cursor to the end of the file. As opposed to the
+EndCursor macro, this command does not reset the "previous cursor"
+location, which you access with the SwapPrevPos and MoveToPrevPos
+macros.
+
+
+Exit
+Exits from the editor. Warning: This command won't save your
+changes.
+
+
+FileMenu
+Pulls down the File menu.
+
+
+FixCursorPos
+Corrects the cursor position in respect to the screen. This command
+moves the cursor to the visible screen by making the least amount
+of movement possible, the result being that the cursor appears at
+the start or the end of the screen.
+
+
+FixScreenPos
+Corrects the screen position in respect to the cursor. This command
+moves the screen image to the cursor by making the least amount of
+movement possible, the result being that the screen appears above
+or below the cursor position.
+
+
+FullPaintScreen
+Forces a full refresh of the screen. This paints out to the edge of
+the screen; it is slower than PaintScreen.
+
+
+GetFindString
+Opens the Find dialog box so you can search for a text string. The
+search begins at the current cursor position.
+
+
+GotoWindow1, GotoWindow2, ..., GotoWindow9
+Makes the specified window active (the window number is in the
+upper right corner). These macros are the same as pressing Alt-1,
+Alt-2, and so on.
+
+
+Help
+Opens the Help window, just like the Help|Table of Contents
+command. This macro is the same as pressing F1.
+
+
+HelpMenu
+Pulls down the Help menu.
+
+
+HighlightBlock
+Highlights the current marked block.
+
+
+HomeCursor
+Moves the cursor position to the beginning of the file. This macro
+automatically sets the starting cursor position so that you can go
+back there with the MoveToPrevPos macro.
+
+
+HomeCursorRaw
+Moves the cursor to the beginning of the file. As opposed to the
+HomeCursor macro, this command does not change the "previous
+cursor" location, which you access with the SwapPrevPos and
+MoveToPrevPos macros.
+
+
+InsertText("string")
+Inserts string at the current cursor position. The double quotes
+are required around string; string can be up to 256 characters
+long.
+
+
+Inspect
+This macro is the same as pressing Alt-F4 or Debug|Inspect.
+
+
+LastHelp
+Opens the Help window that was last viewed, just like the Help|
+Previous Topic command. This macro is the same as pressing Alt-F1.
+
+
+LeftOfLine
+Moves the cursor to the beginning of the line (typically defined to
+be Home).
+
+
+LiteralChar
+Inserts the next key pressed verbatim into the file (such as Ctrl-
+P).
+
+
+MakeProject
+This macro is the same as pressing F9.
+
+
+MatchPairBackward
+Finds the matching delimiter character that complements the one at
+the current cursor position. Searches backward (to the beginning)
+in the file.
+
+
+MatchPairForward
+Finds the matching delimiter character that complements the one at
+the current cursor position. Searches forward (to the end) in the
+file.
+
+
+Menu
+Makes the menu bar active. This macro is the same as pressing F10.
+
+
+Modify
+This macro is the same as pressing Ctrl-F4 or Debug|Evaluate/
+Modify.
+
+
+MoveBlock
+Moves the current block to the cursor position; it highlights the
+new block.
+
+
+MoveToBlockBeg
+Moves the cursor to the beginning of the current block. Unlike the
+MoveToBlockBegRaw macro, this macro updates the cursor on the
+screen and changes the "previous cursor" location, which you access
+with the SwapPrevPos and MoveToPrevPos macros.
+
+
+MoveToBlockBegRaw
+Moves the cursor to the beginning of the current block. Unlike the
+MoveToBlockBeg macro, this "raw" macro doesn't update the cursor
+onscreen and doesn't change the "previous cursor" location, which
+you access with the SwapPrevPos and MoveToPrevPos macros.
+
+
+MoveToBlockEnd
+Moves the cursor to the end of the current block. Unlike the
+MoveToBlockEndRaw macro, this macro updates the cursor onscreen and
+changes the "previous cursor" location, which you access with the
+SwapPrevPos and MoveToPrevPos macros.
+
+
+MoveToBlockEndRaw
+Moves the cursor to the end of the current block. Unlike the
+MoveToBlockEnd macro, this "raw" macro doesn't update the cursor
+onscreen and doesn't change the "previous cursor" location, which
+you access with the SwapPrevPos and MoveToPrevPos macros.
+
+
+MoveToMark(number)
+Moves the cursor to the location designated by the SetMark(number)
+macro. You can set 10 marks by passing SetMark a parameter of 0 to
+9. You move the cursor to any of the 10 marks by passing the
+corresponding number (0-9) to the MoveToMark(number) macro.
+
+
+MoveToPrevPos
+Moves the cursor to the position designated by the SetPrevPos
+macro.
+
+
+NextError
+Moves to the next error position. This macro is the same as
+pressing Alt-F8 or choosing the Search|Next Error command.
+
+
+NextWindow
+Makes the next window active, just like the Window|Next command.
+This macro is the same as pressing F6.
+
+
+OpenFile
+Displays the Open dialog box. This macro is the same as pressing
+F3.
+
+
+OptionsMenu
+Pulls down the Options menu.
+
+
+PageDown
+Scrolls both the screen and cursor down one page.
+
+
+PageScreenDown
+Moves the screen down one screenful, possibly moving the cursor out
+of view (typically defined to be PgDn).
+
+
+PageScreenUp
+Moves the screen up one screenful, possibly moving the cursor out
+of view (typically defined to be PgUp).
+
+
+PageUp
+Scrolls both the screen and cursor up one page. (Typically defined
+to be PgUp.)
+
+
+PaintScreen
+Forces a full refresh of the screen. PaintScreen only paints lines
+from the buffer; it assumes it knows how to blank end-of-lines.
+It's faster than FullPaintScreen.
+
+
+PrevError
+Moves to the previous error position. This macro is the same as
+pressing Alt-F7 or choosing the Search|Previous Error command.
+
+
+Quit
+Exits from the IDE. If you've made changes you haven't saved,
+you'll be given a chance to save them before quitting. This macro
+is the same as pressing Alt-X.
+
+
+ReadBlock
+Lets you open a text file and insert it at the cursor position. The
+ReadBlock macro automatically opens the Open dialog box so you can
+choose a file to open.
+
+
+RepeatSearch
+Searches for the text string that was last entered in the find
+dialog box using the GetFindString macro.
+
+
+Replace
+Opens the Replace dialog box so you can search for and replace
+text.
+
+
+ResetProgram
+Reset the current program. This macro is the same as pressing
+Ctrl-F2 or choosing Run|Program Reset.
+
+
+RestoreLine
+Inserts the line deleted with the DeleteLine macro. If the cursor
+has moved to another line since the DeleteLine macro, this macro
+does nothing.
+
+
+RightOfLine
+Moves the cursor to the end of the line (typically defined to be
+End).
+
+
+RunMenu
+Pulls down the Run menu.
+
+
+RunProgram
+Runs the current program. This macro is the same as pressing Ctrl-
+F9 or choosing the Run|Run command.
+
+
+RunToHere
+Runs a program up to the line containing the cursor. This macro is
+the same as pressing F4 or choosing Run|Go to Cursor.
+
+
+SaveFile
+Saves the file in the current window. This macro is the same as
+pressing F2 or choosing the File|Save command.
+
+
+ScrollDown
+Scrolls the screen down one line. This macro will not allow the
+cursor to scroll out of view.
+
+
+ScrollScreenDown
+Moves the screen down one line, leaving the cursor at the same
+relative position in the file. This command will allow the cursor
+to scroll out of view.
+
+
+ScrollScreenUp
+Moves the screen up one line, leaving the cursor at the same
+relative position in the file. This command will allow the cursor
+to scroll out of view.
+
+ScrollUp
+Scrolls the screen up one line. This command will not allow the
+cursor to scroll out of view.
+
+SearchMenu
+Pulls down the Search menu.
+
+SetBlockBeg
+Marks the current cursor position as the beginning of a block; it
+highlights the new block.
+
+
+SetBlockEnd
+Marks the current cursor position as the end of a block. Unlike the
+SetBlockEndRaw macro, this macro highlights the new block.
+
+
+SetBreakpoint
+Sets a breakboint at the cursor position. This macro is the same as
+pressing Ctrl-F8 or choosing Debug|Toggle Breakpoint.
+
+
+SetInsertMode
+Turns insert mode on. To turn it off, type
+
+  BEGIN SetInsertMode; Toggle Insert END;
+
+
+SetMark(number)
+Sets the current cursor position so that you can return to it using
+the MoveToMark(number) macro. You can set number to any number from
+0 to 9. You move the cursor to any of the 10 marks by passing the
+corresponding number (0-9) to the MoveToMark(number) macro.
+
+
+SetPrevPos
+Marks the current cursor position as the place to return to when
+you use the SwapPrevPos or MoveToPrevPos macros. Many macros
+implicitly set the "previous position" (the notable exceptions are
+"raw" macros).
+
+
+SmartRefreshScreen
+Refreshes only the parts of the screen that have changed.
+
+
+Step
+Runs a program one statement at a time but stepping over
+subroutines. This macro is the same as pressing F8 or choosing Run|
+Step Over.
+
+
+SwapPrevPos
+Switches the current cursor position with the spot designated by
+the SetPrevPos macro.
+
+
+SystemMenu
+Pulls down the System menu.
+
+
+ToggleHideBlock
+Highlights or hides the current marked block.
+
+
+ToggleInsert
+Switches insert modes, from Insert to Overwrite or from Overwrite
+to Insert.
+
+
+TopOfScreen
+Moves the cursor to the upper left corner of the screen. This macro
+automatically sets the previous cursor position so that you can go
+back to it with the MoveToPrevPos macro.
+
+
+TopOfScreenRaw
+Moves the cursor to the upper left corner of the screen. As opposed
+to the TopOfScreen macro, this command does not change the
+"previous cursor" location, which you access with the SwapPrevPos
+and MoveToPrevPos macros.
+
+
+Trace
+Runs a program one statement at a time, moving into subroutines as
+necessary. This macro is the same as pressing F7 or choosing Run|
+Trace Into.
+
+
+ViewCallStack
+This macro is the same as pressing Ctrl-F3 or Debug|Call Stack.
+
+
+ViewFullOutput
+Switches views to the User Screen. This macro is the same as
+pressing Alt-F5 or choosing the Window|User Screen command.
+
+
+WindowList
+Displays a list of all open windows. This macro is the same as
+pressing Alt-0.
+
+
+WindowMenu
+Pulls down the Window menu.
+
+
+WordLeft
+Moves the cursor one word to the left, placing it on the first
+character of that word.
+
+
+WordRight
+Moves the cursor one word to the right, placing it on the first
+character of that word.
+
+
+WriteBlock
+Lets you save the current block to a file. The WriteBlock macro
+automatically opens the Write Block to File dialog box so you can
+enter a file name.
+
+
+ZoomWindow
+Resizes the current window to be as large as possible, or--if the
+window is already zoomed--to be its original size. This macro is
+the same as pressing F5.
+
+
+Error messages
+
+While coding your macros, you may encounter certain errors. Knowing
+the compiler capacity may help you avoid some of those errors,
+which are given after this list of memory requirements.
+
+* each macro invocation takes 1 byte
+
+* each integer parameter takes 2 bytes
+
+* each character parameter takes (number_of_characters_in_string + 1)
+  bytes
+
+* each macro requires 1 byte for end
+
+Cannot allocate memory for file.
+  Not enough memory is available to process the file. TEMC needs
+  about 100K of available space to compile a file.
+
+Expected item.
+  The line indicated is most likely missing the specified item.
+
+File filename could not be created.
+  The file specified for output cannot be created. Either the disk
+  is full or you do not have rights to the current network drive or
+  the name specified is not legal.
+
+File filename is empty.
+  The file passed to TEMC to compile has nothing in it.
+
+File filename larger than 64K.
+  The script file is larger than the maximum 64K in size.
+
+File filename not found.
+  The file specified does not exist.
+
+Invalid key.
+  Key specified is not valid.
+
+Invalid symbol symbol.
+  The symbol specified is not a valid TEMC symbol.
+
+Out of memory.
+  Not enough memory is available to process the file. TEMC needs
+  about 100K of available space to compile a file.
+
+Read error on file filename.
+  TEMC could not read the file source file.
+
+Redefinition of key.
+  This key is defined elsewhere in the file.
+
+Redefinition of macro macro.
+  This macro is defined elsewhere in the file.
+
+Parameters to a macro call illegal.
+  Macros cannot have parameters. Trying to pass a parameter to a
+  macro is, therefore, illegal.
+
+Script too complex.
+  One or more of the following conditions need to be corrected:
+
+    Too many keys defined
+
+    String parameter is too long (the maximum string length is 256 characters)
+
+    Too many parameters
+
+    Macro size may be too large (the maximum size allowed is 1,024 bytes)
+
+Undefined symbol symbol.
+  The symbol specified has not yet been defined.
+
+Unexpected item.
+  The indicated line most likely would be correct if the item
+  specified was deleted or changed.
+
+Unexpected end of file.
+  The last macro or BEGIN/END pair was not terminated.
+
+
+Warning message
+
+Redefinition of environment hot key.
+  The key being defined is a hot key in the environment. Redefining
+  a hot key in the script will change its meaning in the editor
+  only.
