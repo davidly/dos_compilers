@@ -1,0 +1,105 @@
+                     Power C - Version 2.2
+
+-- Bonus --
+The Power C disk(s) contain a copy of the Power C Shell from Tay-Jee
+software.  This is a shareware program that provides an integerated
+environment for Power C programming.  When you install Power C, a
+sub-directory named pcshell will be created.  This contains the
+Power C shell, its documentation, and a small text editor.  You can
+learn more about the shell by reading the .doc files that are installed
+with it.  If you find the Power C Shell useful, please register it.
+-----------
+
+Power C is now supplied on one 3 1/2" or two 5 1/4" diskette(s).
+Due to an increase in size, the Power C files are now stored in a
+packed (ie. compressed) format.  Rather than copy the files (as
+described in the Getting Started section of the Power C manual), you
+should now install the Power C files by simply executing the
+INSTALL.EXE program on this diskette.  Corrections to the Power C
+manual and descriptions of new features are contained in the file:
+Powerc.doc.  This file will be unpacked when you install Power C.
+Be sure to read powerc.doc to find out about the new features.
+
+The INSTALL program unpacks the files to a directory on your hard
+disk or to floppies.  It does not alter the environment, CONFIG.SYS or
+AUTOEXEC.BAT.  If you are installing to 5 1/4" diskettes, you will need
+4 formatted blank diskettes.  If you are installing to 3 1/2" diskettes,
+you will need 2 formatted blank diskettes.  If you are installing to a
+hard disk, you will need approximately 1 Meg (1000k) of disk space.
+
+To run the INSTALL program, insert this diskette into one of your
+floppy drives and type x:INSTALL, where x is the letter of the drive
+containing this floppy diskette.  If you have 5 1/4" release diskettes,
+the INSTALL program will tell you when to insert release disk 2 of 2.
+For example, type the following if this diskette is in drive A.
+
+    A:INSTALL
+
+The INSTALL program will ask you a series of questions.  At the end of
+each question, the default answer is displayed inside square brackets (ie.
+[default answer]).  If the default answer is suitable, you may select it
+by simply pressing the enter key.  By default, it is assumed that you have
+placed the master disk in drive [A], that you wish to install the files on
+a hard disk [h], and that the directory to contain the files is [c:\powerc]
+(note: the INSTALL program will create the directory if it does not already
+exist).
+
+If you install to 5 1/4" floppies rather than a hard drive, then the
+following files will be copied to your four blank formatted diskettes.
+
+ Disk 1 of 4         Disk 2 of 4        Disk 3 of 4       Disk 4 of 4
+  Compiler             Linker            Examples          Libraries
+_______________________________________________________________________
+ HEADERS  HHH        PCL      EXE       READ     ME       PCLIBS   MIX
+ PC       EXE        PCLIB    MIX        *       H        PCLIB2S  MIX
+ PCO      EXE        PCLIB2   MIX       SYS\*    H        PCLIBL   MIX
+                     PCAUTO   MIX       BARCHART C        PCLIB2L  MIX
+                     PC87     MIX       PIECHART C
+                     PCIEEE   MIX       SCREEN   C
+                     PCDMY    MIX       PATTERNS C
+                     FASTHDR  EXE       PIECHART PRJ
+                     MERGE    EXE
+                     MIX      EXE
+                     PCMAC    ASM
+
+Disk 1 of 4 contains everything you need for compiling.  Disk 2 of 4
+contains everything you need for linking.  Disk 3 of 4 contains the
+individual .H header files and sample programs.  Disk 4 of 4 contains
+the small and large memory model libraries.
+
+If you install to 3 1/2" floppies rather than a hard drive, then the
+files listed above under Compiler and Linker are copied to the first
+blank formatted diskette (Disk 1 of 2), and the files listed under
+Examples and Libraries are copied to the second blank formatted
+diskette (Disk 2 of 2).
+
+The MIXC.MIX file that is listed in the Power C manual is no longer
+distributed.  The following new files are not listed in the Power C
+manual:
+
+    HEADERS.HHH: This file contains all of the Power C header (.H) files
+                 in a pre-tokenized format for faster compiling.  This
+                 file may be used in place of all the .H files.  In other
+                 words, the .H files are not needed if the HEADERS.HHH
+                 file is present.
+
+    FASTHDR.EXE: This program is used to create pre-tokenized header
+                 files such as the HEADERS.HHH file described above.
+
+    MERGE.EXE:   This program is used for library management.  It merges
+                 multiple object files, creating a single object file
+                 library.
+
+    PCLIBS.MIX:  This is the small memory model version of PCLIB.MIX.
+
+    PCLIB2S.MIX: This is the small memory model version of PCLIB2.MIX.
+
+    PCLIBL.MIX : This is the large memory model version of PCLIB.MIX.
+
+    PCLIBL2.MIX: This is the large memory model version of PCLIB2.MIX.
+
+**********************************************************************
+*  When install completes, please type the PowerC.doc file to see a  *
+**********************************************************************
+*  description of new features.                                      *
+**********************************************************************

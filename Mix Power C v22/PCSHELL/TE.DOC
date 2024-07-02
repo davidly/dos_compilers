@@ -1,0 +1,594 @@
+
+
+
+
+
+                             TEXT EDITOR 2.5 USER'S GUIDE
+
+                                   January 20, 1991
+
+         INTRODUCTION
+
+         Text Editor (TE) 2.5 is a public domain, full screen ASCII text
+         editor for the IBM PC and close compatibles which uses commands
+         similar to those used in WordStar and Sidekick.  Features include:
+
+           o  Display primary commands on pop-up help screen.  Prompt
+              for subcommands.
+           o  Insert, delete, split, join a line.
+           o  Copy, delete, move, read, write, shift, hide, display
+              a marked block of partial or whole lines.
+           o  Print a file/block to LPT1-LPT3.
+           o  Enter any ASCII code.
+           o  Find/replace a phrase.
+           o  Temporary return to DOS.
+           o  Set left/right margins and page length.
+           o  Word wrap.
+           o  Format (justify) a paragraph.
+           o  Program size of 29,904 bytes.
+
+         Primary uses for TE are to create/edit batch files, generate
+         forms, edit files captured by telecommunications programs, write
+         E-mail and simulate a "smart" typewriter.
+
+         The file to be edited must be able to fit into available CPU
+         memory.  The ASCII file must consist of lines of characters that
+         end with the CR character (ASCII 13).  If the line contains more
+         than 255 characters or doesn't end with a CR, the first 255
+         characters are retrieved and another line is started.  EOF
+         characters (ASCII 26) found before the true end of the file are
+         ignored.
+
+         INSTALLATION
+
+         TE consists of one file TE.EXE with a size of 29,904 bytes.  To
+         load TE from any drive/directory, place TE.EXE in a directory that
+         is listed in the DOS PATH statement.  TE.EXE display colors,
+         laptop display colors, cursor size, default margins, and default
+         page length can be changed with utility program TEMOD.EXE.
+
+         COMMAND SUMMARY
+
+         The symbols c-, s-, a- mean press the Ctrl, Shift or Alt key
+         simultaneously with the next key.  Letters may be entered as upper
+         or lower case.
+
+
+                                       - 2 -
+
+         +----------------------------------------------------------------+
+         |                 TEXT EDITOR 2.5 COMMAND SUMMARY                |
+         +-------------------------------+--------------------------------+
+         |       TE [Path][FileName]     |    c- Ctrl  s- Shft  a- Alt    |
+         +-------------------------------+--------------------------------+
+         |                             File                               |
+         +----------------------------------------------------------------+
+         |         c-KD, c-KQ, F4   Save file and quit editor             |
+         |         c-KE, F2         Save and/or load another file         |
+         +----------------------------------------------------------------+
+         |                        Cursor Movement                         |
+         +-------------------------------+--------------------------------+
+         |  c-S, Left    Char left       |  c-QS, Home    Line begin      |
+         |  c-D, Rt      Char right      |  c-QD, End     Line end        |
+         |  c-A, c-Left  Prev word       |  c-QE, c-Home  Screen top      |
+         |  c-F, c-Rt    Next word       |  c-QX, c-End   Screen bottom   |
+         |  c-E, Up      Prev line       |  c-QR, c-PgUp  File start      |
+         |  c-X, Dn      Next line       |  c-QC, c-PgDn  File end        |
+         |  c-W          Scroll up       |  c-QB          To block start  |
+         |  c-Z          Scroll down     |  c-QK          To block end    |
+         |  c-R, PgUp    Up 23 lines     |  Tab      Next word, prev line |
+         |  c-C, PgDn    Dn 23 lines     |  s-Tab    Prev word, prev line |
+         |  c-Q4     To specified line   |  c-Kn     Set line mark n=0-3  |
+         |  c-QP     Dn page len lines   |  c-Qn     To line mark n=0-3   |
+         +-------------------------------+--------------------------------+
+         |                         Insert/Delete                          |
+         +-------------------------------+--------------------------------+
+         |  c-V, Ins  Insert/Replace     |  c-H, BkSp  Delete left char   |
+         |  Entr      Split/Insert line  |  c-G, Del   Del char/join line |
+         |  c-N, F9   Insert line        |  c-T        Del next word      |
+         |  c-Y, F10  Delete line        |  c-QY       Del to end line    |
+         +-------------------------------+--------------------------------+
+         |                             Block                              |
+         +-------------------------------+--------------------------------+
+         |  c-KB, F7  Mark block start   |  c-KC     Copy block           |
+         |  c-KK, F8  Mark block end     |  c-KY     Delete block         |
+         |  c-KH      Hide/display block |  c-KV     Move block           |
+         |  c-KI      Block right 1 char |  c-KR     Read block from disk |
+         |  c-KU      Block left 1 char  |  c-KW     Write block to disk  |
+         +-------------------------------+--------------------------------+
+         |                         Miscellaneous                          |
+         +----------------------------------------------------------------+
+         |  F1         Display summary of Text Editor commands            |
+         |  c-QF       Find phrase (1-31 chars) in file or block          |
+         |  c-QA       Find/replace phrase (1-31 chars) in file or block  |
+         |  c-KP, F5   Print file or block to LPT1, LPT2, or LPT3         |
+         |  a-Xa-Ya-Z  ASCII code XYZ = 32-255 on keypad                  |
+         |  c-P        Then a-Xa-Y on keypad for ASCII XY = 1-31          |
+         |  c-KS, F3   Temporary return to DOS.  Back to TE:  EXIT        |
+         |  c-QM       Set left/right margins, page length                |
+         |  c-B        Format paragraph to left/right margins             |
+         +----------------------------------------------------------------+
+
+
+                                       - 3 -
+
+                           TEXT EDITOR 2.5 USER'S GUIDE
+
+         STATUS LINE
+
+         The top screen line provides status information for the file being
+         edited.
+
+           o  F1-Help.  Where to find a pop-up screen of all TE commands.
+           o  Line and column position of the cursor.
+           o  Insert/Ovrwrite.  If Insert mode, an entered character will
+              be added at the cursor by moving the character at the
+              cursor to the right.  If Ovrwrite mode, an entered character
+              will replace the character at the cursor.  Press the Ins key
+              to toggle between Insert and Ovrwrite.
+           o  The drive, directory, and name of the file currently being
+              edited.
+           o  An asterisk "*" if character(s)/line(s) have been added or
+              deleted.
+
+         The status line and the next line are temporarily used for
+         additional prompts required by some commands.
+
+         STARTING TE
+
+         TE is started by entering TE on the DOS command line.  After TE is
+         loaded, TE asks "File to edit:".  If only the Enter key is
+         pressed, TE will terminate and return to DOS.  The drive/directory
+         must be included if the file is not located in the current
+         directory.  The file name can be edited with the Home, End,
+         Left/Right arrow, Del and Bksp keys as it is entered.  If the file
+         can't be found, TE asks "(file name) not found.  New file (Y/N)?".
+         Enter Y or N (upper or lower case).  Pressing Enter after Y or N
+         is not required.  If Y, data may be entered into the new file.  If
+         N, TE asks "Enter another file name (Y/N)?".  If Y, enter the file
+         name.  If N, TE will terminate.
+
+         TE can also be started by entering TE and including the file name
+         with optional drive/directory on the command line.  For example:
+         TE C:\DOC\234.DOC will load the TE program and file 234.DOC from
+         drive/directory C:\DOC.
+
+         FILE/QUIT COMMANDS
+
+         Two primary file load, file save/no save , quit commands are
+         available.  Each command provides prompts for various options.
+
+         c-KD or c-KQ or F4   Save File And Quit Editor
+         ----------------------------------------------
+         c-KD means press the Ctrl and K (upper or lowercase) keys
+         together.  Then press D (upper or lowercase).  If no changes have
+         been made to the file, TE asks "File has NOT been modified.  Quit
+         editor (Y/N)?".  If Y, TE will terminate and return to DOS.  If N,
+         TE can continue to be used with the current file.
+
+
+                                       - 4 -
+
+                           TEXT EDITOR 2.5 USER'S GUIDE
+
+         If changes have been made to the file, TE asks "Save file as:
+         (file name) (Y/N)?".  If N, TE asks "Quit editor (Y/N)?".  If Y,
+         TE will terminate.  If N, TE can continue to be used with the
+         current file.  To save changes made to the file, TE asks "Save
+         file with current file name (Y/N)?".  If Y, the file will be saved
+         with the current name and TE will terminate.  If N, the current
+         drive/directory and file name may be changed with the Home, End,
+         Left/Right arrow, Del and Bksp keys.  Press Enter to have TE save
+         the new file name and terminate.
+
+         Trailing spaces are stripped from the end of each line before the
+         file is saved.  If the message "Drive not ready or can't save
+         file.  Quit (Y/N)?" appears, it could mean the file is read-only.
+         It is not possible to save changes to a read only file until the
+         read-only attribute is removed by temporarily returning to DOS (F3
+         or c-KS command) and removing the read-only attribute with the DOS
+         ATTRIB command.
+
+         If a non-ASCII file (.COM, .EXE, .WK1, etc. ) or an ASCII file
+         that contains more than 255 characters per line is loaded into TE,
+         DON'T SAVE THE FILE!.  TE will corrupt the saved file since TE
+         loads all characters to the CR (ASCII 13) or the first 255
+         characters of each line and then starts another line.  When the
+         file is saved, trailing spaces (ASCII 20) are stripped and CR, LF
+         (ASCII 13,10) characters are inserted.
+
+         c-KE or F2   Save File And/Or Load Another File
+         -----------------------------------------------
+         The c-KE (F2) command adds to c-KD (c-KQ, F4) the question
+         "Continue editing same file (Y/N)?".  If Y, the current file may
+         continue to be edited.  If N, TE asks "File to edit:".  Enter a
+         file name with optional drive/directory.  If TE can't find the
+         file, TE asks "(file name) not found.  New file (Y/N)?".  If Y,
+         enter the new file name.  If only the Enter key is pressed, TE
+         will terminate and return to DOS.  If N, TE asks "Enter another
+         file name (Y/N)?".  If Y, enter the file name.  If N, TE will
+         terminate.
+
+         CURSOR MOVEMENT
+
+         Tab and s-Tab
+         -------------
+         Tab or s-Tab moves the cursor to a position which is equivalent to
+         the next or previous word on the previous line.  Tab and s-Tab
+         commands do not insert tab characters (ASCII 9) into the file.  If
+         the file contains tab characters, they will be displayed as an "o"
+         with the sides open.  Tabs are not converted to spaces.  Use the
+         the c-QA Find/Replace command to convert a Tab character to 8
+         (typically) spaces.
+
+
+                                       - 5 -
+
+                            TEXT EDITOR 2.5 USER'S GUIDE
+
+         c-QP   Down Page Length
+         -----------------------
+         The cursor is moved down page length lines.  The standard default
+         value is 62 lines.  It can be changed with the c-QM Set Left/Right
+         Margins and Page Length command.  This command is used to add
+         headers, footers, page numbers, etc.  at specified line intervals
+         in the file.
+
+         c-Qn   To Line Mark n=0-3
+         -------------------------
+         Position cursor on the line previously set by c-Kn where n is
+         marker 0, 1, 2, 3.  The default line marks are 20%, 40%, 60% and
+         80% of the max lines in the file.  If the file contains less than
+         5 lines, the default mark is line 1.
+
+         c-Q4   To Specified Line
+         ------------------------
+         Position the cursor at the line number entered when TE asks
+         "To line:".
+
+         The other cursor movement commands listed in the Command Summary
+         section are self explanatory.
+
+         INSERT/DELETE COMMANDS
+
+         Insert/delete commands always operate on the line with the cursor.
+
+         Ins or c-V   Insert/Replace
+         ---------------------------
+         Toggle between character Insert and Ovrwrite (Replace) modes.
+         Refer to the explanation in the Status Line section.
+
+         Entr   Split/Insert Line
+         ------------------------
+         Split the line at the cursor position and move all characters over
+         and to the right of the cursor to the next line.  The cursor is
+         positioned to the left margin of the next line.
+
+         c-N or F9   Insert Line
+         -----------------------
+         Move the line with the cursor down and insert a blank line.  The
+         cursor is moved to the left margin of the new line.  If the
+         current line is the last line in the file, a new blank line is
+         added after the last line.
+
+         c-Y or F10   Delete Line
+         ------------------------
+         Delete the line containing the cursor.  The cursor is moved to the
+         left margin of the next line.
+
+         BkSp or c-H   Delete Left Character
+         -----------------------------------
+         Delete the character to the left of the cursor.
+
+
+                                      - 6 -
+
+                           TEXT EDITOR 2.5 USER'S GUIDE
+
+         Del or c-G   Delete Character/Join Line
+         ---------------------------------------
+         Delete the character over the cursor.  If the cursor is beyond the
+         end of the line, the next line is joined to the current line at
+         the cursor position unless the current line is the last line in
+         the file.
+
+         c-T  Delete Next Word
+         ---------------------
+         Delete all characters from the cursor position to the next space
+         character.  If the cursor position is at a space, all spaces will
+         be deleted up to the next non-space character.  If the cursor is
+         beyond the end of the line, the next line is joined to the current
+         line.
+
+         c-QY   Delete Characters To End Of Line
+         ---------------------------------------
+         Delete all characters from the current cursor position to the end
+         of the line.  If the cursor is at the beginning of the line, the
+         line is made blank and not deleted.
+
+         Word Wrap
+         ---------
+         Word wrap occurs when characters entered beyond the right margin
+         or column 253 cause a word (all preceding characters up to the
+         next blank character) to be moved to the next line.  Word wrap is
+         generated by the c-B Format Paragraph command (See Miscellaneous
+         Commands section).  The left/right margins are set with the c-QM
+         command.  The standard default left/right margins are columns
+         1/252 (See Miscellaneous Commands section).
+
+         BLOCK COMMANDS
+
+         Block commands mark, copy, move, delete, read, write, print,
+         indent and unindent one or more partial/whole lines.
+
+         c-KB or F7   Mark Block Start
+         -----------------------------
+         Mark (high lite) the block start line and column at the current
+         cursor position.  The block will be default marked to the end of
+         the current line.
+
+         c-KK or F8   Mark Block Stop
+         ----------------------------
+         Mark (high lite) all lines from the start block line and column,
+         marked with c-KB or F7, to the line and column containing the
+         current cursor position.
+
+         c-KH   Hide/Display Block
+         -------------------------
+         Toggle between hide (remove high lite) or display (restore high
+         lite) a marked block.  If a block is hidden, the block can't be
+         copied, moved, deleted, written, or printed.
+
+
+                                      - 7 -
+
+                           TEXT EDITOR 2.5 USER'S GUIDE
+
+         c-KC   Copy Block
+         -----------------
+         Copy the marked block to the current cursor position.  The copied
+         block is high lited.  If part or all of a single line is marked, TE
+         asks "Insert (Y) or Overwrite (N)?".  If Y, the single line block
+         will be added to the line by moving the characters at the cursor
+         position to the right.  If N, existing characters to the right of
+         the cursor will be replaced.  Multiple line blocks are always
+         inserted at the cursor position.  If a copy into a marked block is
+         attempted, the operation will be canceled.  If a combined line
+         will contain more than 253 characters, the operation will be
+         canceled.  Use c-B Format Paragraph to justify text to left/right
+         margins.
+
+         c-KV   Move Block
+         -----------------
+         Move the marked block to the current cursor position.  The moved
+         block is high lighted.  Otherwise the operation is the same as
+         Copy Block.
+
+         c-KY   Delete Block
+         -------------------
+         Delete the marked block.  For multiple line blocks,  the start
+         line will be deleted if the start column is at the left margin.
+
+         c-KR   Read Block From Disk
+         ---------------------------
+         Read a specified file (block) from disk and insert at the line
+         with the cursor.  Text on the line with the cursor is moved after
+         the inserted file.  If the file is not found, the command will be
+         canceled.  The command remembers the last entered block read or
+         block write file name.
+
+         c-KW   Write Block To Disk
+         --------------------------
+         Write a marked block to disk.  If the specified file already
+         exists, it will be replaced with the contents of the marked block.
+         If the disk (drive) is not ready, the command will be canceled.
+         The command remembers the last entered block read or block write
+         file name.
+
+         c-KI and c-KU  Move Block Right/Left One Character
+         --------------------------------------------------
+         Move all lines of the marked block right (c-KI) or left (c-KU) one
+         character position from the block start column.  Characters will
+         be lost if they are moved right, beyond column 253 or left, beyond
+         column 1.  The block end column is ignored.
+
+
+                                      - 8 -
+
+                           TEXT EDITOR 2.5 USER'S GUIDE
+
+         MISCELLANEOUS COMMANDS
+
+         F1   Display Summary Of TE Commands
+         -----------------------------------
+         The TE commands, remaining CPU memory and version number are
+         listed.  Press any key to return to the file being edited.  This
+         command can't be issued in the middle of another command.
+
+         c-KP or F5    Print File Or Block To LPT1, LPT2, or LPT3
+         --------------------------------------------------------
+         TE asks "Print File (Y) or Block (N)?".  If Y, the complete file
+         will be printed.  If N, the marked block will be printed.  Next,
+         TE asks "Printer LPT1, LPT2, LPT3 or Cancel (123C)?".  Enter 1, 2,
+         or 3 for printer number or C to cancel the print operation.  If
+         the printer is not ready (out of paper, off line, etc), TE asks
+         "Continue (Y/N)?".  Find the cause for the printer not ready, then
+         answer Y.  Otherwise, answer N to cancel the print operation.
+
+         a-Xa-Ya-Z    Enter ASCII Code 32-255 On Keypad
+         ----------------------------------------------
+         ASCII codes, 32-255, that are not on the keyboard (i.e. line
+         drawing characters) can be entered into the file by pressing the
+         Alt key while simultaneously entering the 2 or 3 digit code on the
+         keypad.  The equivalent symbol will be displayed on the screen.
+
+         c-Pa-Xa-Y    Enter ASCII Code 1-31 On KeyPad
+         --------------------------------------------
+         ASCII codes, 1-31, that can't be entered directly from the
+         keyboard (form feed, Esc) can be entered by pressing c-P.  Then
+         press the Alt key simultaneously with a 2 digit code on the
+         keypad.  The equivalent symbol will be displayed on the screen.
+
+         c-QF   Find Phrase
+         ------------------
+         When prompted with "Find:", enter a phrase of 1 to 31 characters.
+         To prevent finding an embedded phrase, enter a space before and
+         after the phrase.  For example, enter <sp>the<sp> to prevent
+         finding the word "other".  Cancel the operation by pressing the
+         Enter key only.  TE asks for answers to the following options.
+
+           o  "File (Y) or Block (N)?".  If Y, the search begins at the
+               current cursor column, line.  If N, the search begins at the
+               start column, line of the marked block.
+           o  "Case sensitive (Y/N)?".  If Y, the upper/lower case pattern
+              of the letters in the phrase will be matched.  If N, case
+              sensitivity will be ignored.  For example, the phrase "the"
+              will find "The" and "the" if N.
+
+         After each find, TE asks "Repeat (Y/N)?".  If Y, the search
+         continues until another find or the end of the file or marked block
+         is reached.  If N, the operation will be terminated.
+
+
+                                      - 9 -
+
+                          TEXT EDITOR 2.5 USER'S GUIDE
+
+         c-QA   Find And Replace Phrase
+         ------------------------------
+         The find/replace phrase command is similar to find phrase (c-QF)
+         except a replace phrase of 1 to 31 characters must be entered in
+         addition to "Find:" when prompted with "Replace:".  Cancel the
+         operation by pressing the Enter key only.  In addition to the
+         "File (Y) or Block (N)?" and "Case sensitive (Y/N)?" options, TE
+         asks "Confirm replace (Y/N)?".  If N, the replace phrase will be
+         substituted for the find phrase until the end of the file or block
+         is reached.  If Y, the next two questions are asked each time the
+         find phrase is found.
+
+           o  TE asks "Replace (Y/N)?".  If Y, the replace phrase at the
+              cursor will be substituted for the find phrase.  If N, the
+              find phrase will not be replaced.
+           o  TE asks "Repeat (Y/N)?".  If Y, the search will continue.
+              If N, the find and replace operation will be terminated.
+
+         c-QS or F3   Temporary Return To DOS
+         ------------------------------------
+         Return to DOS without removing TE from CPU memory (RAM).  Run the
+         DOS command or program that will fit in remaining memory.  Type
+         EXIT on the DOS command line to return to TE.  Exercise caution
+         when using this command.  Other programs could corrupt RAM
+         currently allocated to TE or crash the computer causing a loss of
+         all data changes made to the file since it was last saved.
+
+         c-QM   Set Right/Left Margins and Page Length
+         ---------------------------------------------
+         TE prompts for answers to Left Margin, Right Margin, Page Length.
+         The current values are displayed.  The current values may be
+         accepted by pressing Enter or the cursor keys may be used to
+         edit/change the values.  The standard defaults are: Left/right
+         margin - Column 1/252, Page Length - 62 lines.
+
+         c-B   Format Paragraph
+         ----------------------
+         A paragraph is formated with one space between each word, two
+         spaces after each period and each line left justified to fit the
+         maximum number of whole words between the current left/right
+         margin columns until a blank line or end of file is reached.  The
+         command is ignored if the right margin is the default value 252.
+         For example, the following paragraph will be processed as shown.
+
+            Now is the            time      for  everyone            to
+         come to the party. The time is      now.
+
+                    Now is the time for everyone to come to
+                    the party.  The time is now.
+
+         The Format Paragraph command doesn't work correctly if a whole
+         word is longer than the number of columns between the left and
+         right margins.
+
+
+                                      - 10 -
+
+                           TEXT EDITOR 2.5 USER'S GUIDE
+
+         c-Kn  Set Line Mark n=0-3
+         -------------------------
+         Set line mark n, where n is mark 0-3, to the line that currently
+         contains the cursor.  Use c-Qn to position the cursor to the
+         specified mark n = 0-3.
+
+         TE CHANGES FROM VERSION 2.2 TO 2.3
+
+         Blocks can be marked with start/stop columns as well as start/stop
+         lines.  The Block Right/Left Character commands (c-KI/c-KU) move
+         all lines of the marked block one character position from the
+         start block column instead of column 1.  The following function
+         key assignments have been added:  F3 - Temporary return to DOS
+         (c-KS), F5 - Print file or block (c-KP), F9 - Delete line (c-N).
+
+         TE CHANGES FROM VERSION 2.3 TO 2.4
+
+         The Mark Block Stop command now works correctly if the stop
+         location is before the Mark Block Start location.  The Block Write
+         command now remembers the last Block Write file name as well as
+         the last Block Read file name.  The status line cursor is placed
+         at the beginning of the default/last entry instead of at the end.
+
+         TE CHANGES FROM VERSION 2.4 TO 2.5
+
+         Added commands Delete Next Word (c-T) and To Specified Line
+         (c-Q4).
+
+
+
+         ----------------end-of-author's-documentation---------------
+
+                         Software Library Information:
+
+                    This disk copy provided as a service of
+
+                           Public (software) Library
+
+         We are not the authors of this program, nor are we associated
+         with the author in any way other than as a distributor of the
+         program in accordance with the author's terms of distribution.
+
+         Please direct shareware payments and specific questions about
+         this program to the author of the program, whose name appears
+         elsewhere in  this documentation. If you have trouble getting
+         in touch with the author,  we will do whatever we can to help
+         you with your questions. All programs have been tested and do
+         run.  To report problems,  please use the form that is in the
+         file PROBLEM.DOC on many of our disks or in other written for-
+         mat with screen printouts, if possible.  PsL cannot debug pro-
+         programs over the telephone, though we can answer questions.
+
+         Disks in the PsL are updated  monthly,  so if you did not get
+         this disk directly from the PsL, you should be aware that the
+         files in this set may no longer be the current versions. Also,
+         if you got this disk from another vendor and are having prob-
+         lems,  be aware that  some files may have become corrupted or
+         lost by that vendor. Get a current, working disk from PsL.
+
+         For a copy of the latest monthly software library newsletter
+         and a list of the 3,000+ disks in the library, call or write
+
+                           Public (software) Library
+                               P.O.Box 35705 - F
+                            Houston, TX 77235-5705
+
+                                 Orders only:
+                                1-800-2424-PSL
+                              MC/Visa/AmEx/Discover
+
+                          Outside of U.S. or in Texas
+                          or for general information,
+                              Call 1-713-524-6394
+
+                          PsL also has an outstanding
+                          catalog for the Macintosh.
+
+
+

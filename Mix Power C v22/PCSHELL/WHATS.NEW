@@ -1,0 +1,40 @@
+
+Version 2.12 -- 28 March 1992
+
+   1st "bundled" release with Power C compiler
+   
+
+Version 2.11 -- 22 December 1992
+
+   Adds support for Power C Trace through the Operations Menu
+   
+
+Version 2.02 -- 10 October 1992
+
+   Adds a real-time clock display to the menu bar
+
+
+Version 2.01 -- 28 August 1992
+
+   Corrects a minor bug in the DOS Shell feature
+   
+
+Version 2.0 -- 10 August 1992
+
+   The program has been completely rewritten, with a new, user-friendly
+   interface featuring pull-down menus and dialog boxes.
+  
+   Up to seven individual source files can now be open and worked on
+   at one time.  Support is provided for automatically combining several
+   source files into a single project using Power C's integrated make
+   facility.
+  
+   Users can change directories from within the program.
+  
+   A "shell to DOS" feature has been added.
+  
+   Support is provided for designating an external object library.
+  
+   Supports project include file for multi-file projects.
+
+

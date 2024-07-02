@@ -1,0 +1,488 @@
+   **********************************************************
+   *   Corrections to the Power C manual and New Features   *
+   **********************************************************
+
+Some instructions in the Getting Started section of the Power C manual
+are now incorrect.
+
+In the Arranging Files on a Hard Disk sub-section, you should ignore the
+MD and COPY commands since the INSTALL program takes care of making the
+directories and copying the files.  However, you should execute the
+MD MYFILES command on page 6 to create a directory for storing your own
+programs, since the INSTALL program does not create the MYFILES directory.
+
+In the Arranging Files on Floppies sub-section, if you have 5 1/4"
+drives, you should substitute disk 3 of 4 where it mentions copying
+the sample programs from disk 2 of 2 on page 7.  The disk 2 of 2 is
+correct if you are using 3 1/2" diskettes.
+
+In the remaining sub-sections of the Getting Started section, if you
+have 5 1/4" diskettes, disk 1 of 2 is now disk 1 of 4 and disk 2 of 2
+is now disk 2 of 4.  If you have 3 1/2" diskettes, you should substitute
+disk 1 of 2 everywhere disk 2 of 2 appears since the INSTALL program
+copies both the compiler and the linker onto the same diskette.
+
+
+NEW FEATURES IN VERSION 2.0
+
+   Memory models:
+      Memory models are a reflection of the addressing modes of the
+      8086 family of processors.  The 8086 family uses 64k segments.
+      Special techniques are required to exceed the 64k limits on code
+      and data.  A simple (16 bit) address is confined to one 64k
+      segment.  These are called "near" addresses.  It is also
+      possible to use an address that occupies 32 bits.  These "far"
+      addresses are normally stored as a segment number and a
+      corresponding offset.
+
+      In small memory model, the code resides in a single 64k or
+      smaller segment.  Calls to functions use "near" addresses.
+      The data in small model is also located in a single 64k or
+      smaller segment.  Data references also use "near" pointers.
+      The advantage of small memory model is that the code is
+      smaller than the other models since function calls use 3
+      bytes instead of 5 bytes.
+
+      In medium memory model, the code can occupy more than 64k of
+      memory.  All function calls use "far" addresses.  In Power C,
+      each function starts a new segment.  This allows any function to
+      be up to 65520 bytes in length.  The data in medium model is
+      located in a single 64k or smaller segment.  Data references use
+      "near" pointers.  Medium model is usually the best choice for
+      most programs.  Code size is not limited and any large blocks of
+      data can be declared as far if 64k of data is not enough.
+
+      Large memory model uses unlimited code space like medium memory
+      model.  Data in large memory model can occupy more than 64k of
+      memory.  References to data in large model are with "far"
+      pointers.  Large model is the least efficient of the memory
+      models.  Each reference to a pointer takes more time and
+      generates more code.  Large model is a good choice for programs
+      originally developed for larger computers that do not use
+      segmentation.
+
+   Large memory model
+      Large memory model is selected with the /ml compiler switch.
+      In large memory model, all pointers are far by default.  You
+      can still use near pointers by including the "near" keyword.
+      Near pointers can only point to objects that are "near" or
+      auto.
+
+      Global variables may be near or far depending on their size.
+      Small variables (less than 256 bytes) are stored in near
+      memory by default.  This allows them to be accessed more
+      quickly.  Larger variables are stored in far memory.  You
+      can always override the storage class with the "near" or
+      "far" keyword.  Also, you can change the default size for
+      far variables with the /z compiler switch.
+
+      Addressing is done using near addresses whenever the variable
+      is auto or is in near memory.  If a pointer or address is
+      passed to a function, it is automatically converted to a far
+      pointer.
+
+   Small memory model
+
+      Small memory model is selected with the /ms compiler switch.
+      In small memory model you are limited to 64k of code.  Small
+      model is a good choice for programs that do not need more than
+      64k.  The program will be smaller and slightly faster in small
+      model.
+
+   Far and huge data
+
+      Far and huge data is supported by Power C in all memory models.
+      You can declare a variable to be far or huge by including the
+      far or huge keyword in the declaration.  To specify the storage
+      for a variable, the keyword should be immediately before the
+      variable name.  Examples:
+
+            char far a[200];        /* far array of 200 characters */
+            char * far b[200];      /* far array of 200 pointers to char */
+            char far * far c[200];  /* far array of 200 far pointers */
+            char far *d[10];        /* near array of 10 far pointers */
+            int huge e[40000];      /* huge array of 40000 integers */
+
+      Huge arrays and structures can be as large as available memory will
+      allow.  Huge variables can be larger than 64k bytes.  Since
+      addressing a huge array or structure requires calculating both
+      a segment value and an offset, access to huge objects is slower
+      than access to far objects.  You should use huge variables and
+      huge pointers only when you need the ablity to have an object
+      larger than 64k.
+
+   New pragma:
+      #pragma library "libname"
+         Allows you to specify a library to be searched when the
+         program is linked.  The library name can contain '?' or
+         '*' to specify memory models.  Any '?' character will be
+         replaced with the letter: 'S', 'M' or 'L' depending on
+         the memory model.  A '*' character will be replaced by
+         'L' for large model 'S' for small model, and deleted for
+         medium model.  This option is especially useful in headers.
+         For example, the header for a database library can include
+         the library name for linking.
+
+               #pragma library "\\c\\db\\isam*.lib"
+               #pragma library "\\c\\db\\cbt*.lib"
+
+
+   New warnings:
+      226 Array is too small to store terminating '\0' character
+         An array was declared with a specific size and then
+         initialized with a string literal.  The size of the array
+         is equal to the size of the string without the '\0' terminator.
+         This array should not be used with string functions such as
+         strlen().  Example:
+
+            char a[3] = "abc";
+
+      227 Syntax error in #pragma
+         A pragma was specified but did not have the correct arguments.
+         For example, #pragma library requires the name of a library
+         as a string.
+
+      228 Function exit without a return value
+         The function returns a value (is not void) but does not
+         contain a return statement at the end.
+
+      229 Type conversion may cause overflow
+         An assignment or passing an argument to a function causes
+         a conversion of a larger type to a smaller one (such as
+         int to char).  This conversion may lose information since
+         the smaller type cannot represent all possible values of
+         the larger.  If you know that the conversion will not
+         overflow, you should use a type cast to perform it.
+
+      230 Item has the same name as a macro
+      231 Macro name already used for a variable or type
+         This warning indicates that a macro has the same name as a
+         variable or function.  Although this is legal, it can be a
+         source of confusion.
+
+      232 Assignment of double to float may cause overflow
+         An expression of type double is assigned to a variable of
+         type float.  This may result in an overflow or loss of
+         precision.  This warning is only enabled if warning 229 is
+         also enabled.  The /w switch (with no arguments) does not
+         turn on this warning.  To enable it, you should use /w+232.
+
+New compiler switches:
+   /ms, /ml specify small or large memory model
+   /z       gives the threshold size for far variables in large
+            memory model.  Global variables less than or equal to
+            this size are placed in near memory, and larger variables
+            are placed in far memory.  The /z may be followed by a
+            size as a decimal number.  A size of zero, makes all global
+            variables far unless they have a near keyword.  /z is
+            equivalent to /z0.  The default threshold size is 256 bytes.
+
+   /a       Adjust variable addresses to word or double word boundaries.
+            /a or /aw places all 2 byte or larger variables at an even
+            address.  /ad places all 4 byte or larger variables at an
+            address that is a multiple of 4, and all 2 byte variables
+            at an even address.  This option will improve speed on
+            computers with a 16 bit or wider memory bus (such as the
+            IBM AT or other 80286 base machines).
+
+Predefined macros
+
+   __POWERC - value is the version of power C.  Versions less than 1.2
+              have the value "1".  Version 1.2 is "120", 1.3.0 is "130"
+              and version 2.0.0 is "200".
+
+   M_I86SM  - defined if small memory model
+   M_I86MM  - defined if medium memory model
+   M_I86LM  - defined if large memory model
+   __LINE__ - current compiler line number
+   __FILE__ - name of source file
+   __DATE__ - compile date
+   __TIME__ - compile time
+   __STDC__ - standard C, "1" if extended keywords are disabled,
+              "0" if extended keywords are enabled.
+
+New library functions
+
+void getimage(int left, int top, int right, int bottom,
+             void far *buffer);
+
+   Stores a bit image of a section of the graphics screen in a
+   buffer.  The image can then be placed anywhere on the screen
+   using putimage().  The coordinates of the upper left (left,top)
+   and lower right (right,bottom) corners determine the area saved.
+   The size of buffer needed can be determined by calling imagesize().
+
+void putimage(int left, int top, void far *buffer, int operation);
+
+   Copies a bit image to the screen.  The image must have been
+   previously saved with getimage().  The image is placed on the
+   screen with its upper left corner at the coordinate given by
+   (left,top).  The size of the image was stored as the first two
+   words of the buffer by getimage().   When the image is placed
+   on the screen, each pixel of the image can be combined with the
+   previous screen contents as specified by the operation.  The
+   operations are:
+
+         COPY_PUT   0   copy the image over the previous contents
+         XOR_PUT    1   exclusive or with the previous contents
+         OR_PUT     2   inclusive or with the previous contents
+         AND_PUT    3   logical and with the previous contents
+         NOT_PUT    4   copy the inverse of each image pixel
+
+long imagesize(int left, int top, int right, int bottom);
+
+   Returns the size of the buffer needed to store an image.
+
+Setting the background color for plots and plotch:
+   The background of characters is controlled by the variable _v_bkgd.
+   It can be declared as:
+
+      extern int near _v_bkgd;
+
+   Setting _v_bkgd to a color sets the background color for characters.
+   Setting _v_bkgd to TRANSPARENT causes the background to be unchanged
+   and the previous contents of the screen to show in areas behind the
+   character.
+
+Graphics using the bios:
+   For extended video modes and machines where the graphics do not match
+   the IBM PC memory mapping, you can force all graphics routines to use
+   the BIOS.  To do this, set the variable _vusemem to 0.  Example:
+
+         extern int near _vusemem;
+         _vusemem = 0;
+
+
+Mix.exe
+
+   The conversion utility now has a switch to eliminate extra underscore
+("_") characters from the beginning of external names.  Some compilers
+generate an extra leading underscore character on all external names.
+If you are converting an assembly function originally written for
+one of these compilers, you can use the "/_" switch to eliminate the
+extra underscore.
+
+
+New Features in version 1.3
+
+   Power C now supports pre-compiled headers.  Much of the time in
+compiling a C program is spent compiling the standard headers that the
+program includes to declare standard functions.  Power C will allow the
+headers to be pre-compiled into a header library.  The pre-compiled
+headers are much faster than compiling the source for the headers.
+
+   By default, the compiler will search for a header library named
+headers.hhh.   A library by this name containing the standard headers
+is supplied on your release disk.  The header library can be found
+in the default directory or any directory that would normally be
+searched for headers.  You can also specify a header library on the
+command line by including the switch "/h" or "-h" followed by the
+name of the library.  An option of "/h" or "/h-" will disable the
+header library feature.
+
+   Header libraries and pre-compiled header files are created and
+maintained by the program "fasthdr.exe" supplied on your release
+disk.  This program can add, delete or replace headers in a library.
+It can also create individual pre-compiled header files.  The
+default is to create a header library named "headers.hhh" in the
+current default directory.  The command line can contain a list of
+headers (including wild cards).  For example:
+
+         fasthdr a:*.h a:sys\*.h
+
+   If the disk in drive A contains the Power C release disk 1, the above
+command will create a header library file named headers.hhh in the current
+directory.  The headers.hhh file will contain all of the standard
+header files.  If the header.hhh file already exists, the above command
+would simply add the specified headers to the library and replace any
+previously stored headers having the same name.
+
+   The /d switch is used to delete headers from the library.  You can
+give a list of headers to delete.  Wild cards are not supported.  For
+example, the following command will delete time.h and math.h from the
+library.
+
+         fasthdr /d time.h math.h
+
+   The /o switch allows you to specify a file or directory in which
+the compiled headers will be stored.  If the /o is followed by a file
+name (with or without a directory prefix), then the headers are compiled
+and stored in the specified library file.  If the /o is followed by a
+directory name only, then rather than create a single library file,
+the fasthdr program creates a separate compiled header file for each
+header file specified on the command-line and stores them in the specified
+directory.  In this case, the compiled header files will have the same
+name as the original header files, so the directory specified for the
+compiled header files should not be the same as the directory containing
+the original header files.
+
+   The /f switch specifies that you want each header converted to
+a separate file.  The pre-compiled header will have the same name
+as the original header and the original header will be renamed with
+the extension ".hxt".  Use /f switch rather than the /o switch if
+you want the compiled header files to be stored in the same directory
+with the original header files.
+
+   The /l switch gives a listing of the headers in a library.
+
+--------
+
+   Power C (versions 1.2 and later) generate names up to 31 characters in
+length for use by Power Ctrace version 1.2.  Use of names longer than 8
+characters requires version 1.2 or later of Power Ctrace.  If you have an
+earlier version of Power Ctrace, you must use the new /t8 compile option
+rather than the /t option for debugging.
+
+--------
+
+   Compiler error messages are now displayed differently than
+described in the Power C manual.  The example compile error described
+on page 625 will now be displayed as follows.  Notice that the
+file name test.C precedes the line number rather than being displayed
+on a separate line.
+
+        test.C(1):main() {printf("hello world\n")}
+        *********                                ^ 14
+               14: ';' expected
+
+--------
+
+   Some warning messages have been added to the compiler.  The warnings
+are displayed to indicate that something is dangerous and possibly
+incorrect but not strictly illegal.  When warnings are issued, the
+compiler generates the correct code for the source as written.
+In many cases warnings can be disabled or ignored.
+
+   Warnings are disabled by default.  Warning messages are enabled
+with the "/w" or "-w" switch on the command line.  Use /w to enable
+all of the warnings or /w- to disable them.  Individual
+warnings can be turned on (or off) with /w+n (or /w-n) where n is
+the warning number.  For example "/w+221" causes the compiler to check
+the types of pointers.  In this case, a message will be diplayed if a
+pointer to int is assigned to a pointer to char (unless a cast is present).
+
+   Warnings can also be controlled within the source file with
+#pragma warning.  Examples:
+
+         #pragma warning         /* enable all warnings */
+         #pragma warning -224    /* don't report unused variables */
+         #pragma warning  221    /* check pointer types */
+
+The warnings are:
+
+   220 - unknown pragma
+   221 - assignment or argument passing with pointers of different types
+   222 - assignment or argument passing with a pointer when a scalar
+         (int, unsigned ... etc) is expected, or use of a scaler when
+         a pointer is expected.  (use a cast to override)
+   223 - A variable was defined but not used in the function
+   224 - Call to an undeclared function.  The compiler assumes that
+         the function is of type int.
+   225 - #undef was used to undefine a symbol that is not a macro
+
+--------
+
+   An additional preprocessor directive has been added:
+
+      #error message
+             causes the compiler to issue an error message
+             and stop the compilation
+
+--------
+
+Corrections to the manual:
+
+   Page 344: farmalloc does NOT initialize the allocated memory
+             to 0.  Use farcalloc if you want the memory initialized.
+
+   Page 367: _fmalloc does NOT initialize the allocated memory to 0.
+             Note that _fmalloc allocates first from the far heap.  If
+             the far heap is used up, _fmalloc will allocate from the
+             near heap.  Because of this you must use _ffree to release
+             memory allocated with _fmalloc.  Do NOT use farfree for
+             this purpose as it requires that the memory be from the
+             far heap.
+
+--------
+
+Additions to the manual:
+=======================
+
+
+                             The MERGE Program
+                             _________________
+
+
+       The MERGE program is used to create a single library file from
+       several object files.  It can also be used to add new functions to
+       an existing library or replace existing functions with new
+       versions.
+
+           Usage:   merge libraryfile updatefile1 updatefile2 ...
+            or      merge libraryfile @controlfile
+
+       MERGE accepts the name of a library followed by the names of one
+       or more update files.  The names must be separated by commas or
+       blanks.  The default extension for all file names is MIX.  If the
+       library file (ie.  first file name) does not exist, it will be
+       created.  All of the functions in the list of update files are
+       added to the library.  If any function already exists in the
+       library, it is replaced by the new copy.
+
+       If the list of update files is too long to specify on the
+       command-line, you may specify the name of a control file.
+       The name of the control file must be prefixed by the @ symbol.
+       The control file may contain one or more lines of update file
+       names separated by blanks or commas.
+
+       When an existing library file is updated with new functions,
+       the new functions will appear at the beginning of the
+       library file.  This can cause the library file to be searched
+       more than once if other functions appearing later in the
+       library reference one or more of the new functions that appear
+       at the beginning of the library. To control the order of
+       functions in the standard libraries so that they can always
+       be searched in one pass, the batch files delete the old copy
+       of the library before creating a new one.
+
+       Note: When the MERGE program is executed, there must be
+             enough free disk space to temporarily store two
+             copies of the library file.
+
+       By default, the MERGE program creates a library in a compressed
+       format that is smaller than a standard object file as created
+       by the compiler.  These compressed libraries can be searched
+       much faster than an object file.  If you wish to create a library
+       that is compatable with versions of Power C earlier than 1.2,
+       you should use the -1 switch when you execute merge.
+
+--------
+
+   The linker (PCL.EXE) recognizes an additional environment variable.
+The variable LIBNAMES specifies a list of libraries that you want
+searched in addition to the standard libraries.  Multiple library
+names must be separated by a semicolons.  Libraries specified by
+the LIBNAMES environment variable are searched after the libraries
+specified on the command line and before the standard libraries.  For
+example, if you are linking a set of programs that need functions from
+a windows library:
+      set libnames=windows
+      pcl program
+
+is equivalent to:
+
+      pcl program;windows
+
+   The libraries specified by LIBNAMES may contain drive and/or
+directory prefixes.  A prefix is not required if the library
+is in one of the directories specified by either the LIBRARY
+or PATH environment variable.
+
+   The linker has an additional command line option.  The /c option
+causes the linker to ignore case in all function and variable
+names.  Use of this switch is discouraged, but it can be useful
+when linking with functions written in assembly language.  The
+default in MASM is to convert all external names to upper case.
+A better solution is to assemble with the /Ml MASM switch.
+
+                     --- end of file ---

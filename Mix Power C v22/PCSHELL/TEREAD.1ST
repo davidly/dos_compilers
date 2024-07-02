@@ -1,0 +1,26 @@
+                              TEXT EDITOR 2.5
+
+Text Editor (TE) 2.5 is a public domain, full screen ASCII text editor for the
+IBM PC and close compatibles which uses commands similar to those used in
+WordStar and Sidekick.  Primary uses for TE are to create/edit batch files,
+generate forms, edit files captured by telecommunications programs, write
+E-mail and simulate a "smart" typewriter.
+
+Features include: 1) Program size of 29,904 bytes.  2) Edit file size as large
+as available memory.  3) Display commands on pop-up help screen, prompt for
+subcommands.  4) Insert, delete, split, join a line.  5) Copy, delete, move,
+read, write, shift, hide, display a marked block.  6) Print a file/block to
+LPT1-LPT3.  7) Enter any ASCII code.  8) Find/replace a phrase.  9) Temporary
+return to DOS.  10) Set left/right margins and page length.  11) Word wrap.
+12) Format (justify) a paragraph.
+
+This archive contains the following files:
+  TEREAD.1ST   This file.
+  TE.EXE       The actual Text Editor program.
+  TE.DOC       TE 2.5 User's Guide (10 pages).
+  TEMOD.EXE    Utility to change TE.EXE colors, cursor size, margins, etc.
+  TEG.HLP      TE 2.5 Command Summary (1 page).
+
+Written by John Haluska, 310 W. Imperial Ave. #6, El Segundo, CA 90245.
+CompuServe 74000,1106
+

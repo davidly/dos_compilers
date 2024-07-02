@@ -1,0 +1,916 @@
+
+
+
+
+
+
+        
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            _______
+                       ____|__     |               (TM)
+                    --|       |    |-------------------
+                      |   ____|__  |  Association of
+                      |  |       |_|  Shareware
+                      |__|   o   |    Professionals
+                    -----|   |   |---------------------
+                         |___|___|    MEMBER
+        
+        
+                              POWER C SHELL
+                              VERSION  2.12
+        					  
+        Copyright 1991-1993 by Chuck Steenburgh & Tay-Jee Software
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 1
+
+
+
+
+
+        
+        
+        
+        
+                          TABLE OF CONTENTS
+        
+        Definition of Shareware .  .  .  .  .  .  .  .  .  .  3
+        
+        Distribution Limitations.  .  .  .  .  .  .  .  .  .  3
+        
+        ASP Ombudsman  .  .  .  .  .  .  .  .  .  .  .  .  .  3
+        
+        Disclaimer  .  .  .  .  .  .  .  .  .  .  .  .  .  .  3
+        
+        Starting Power C Shell Version 2.12 .  .  .  .  .  .  6
+        
+           Environment variables                              6
+           Running Power C Shell                              7
+           Configuring PCS                                    8
+           Installing PCS                                     8
+        
+        Power C Shell Display.  .  .  .  .  .  .  .  .  .  .  9
+        
+        Power C Shell Menu Options .  .  .  .  .  .  .  .  . 10
+        
+           Files Menu                                        10
+           Operations Menu                                   11
+           Configuration Menu                                12
+           Quit Menu                                         14
+        
+        Help  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 15
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 2
+
+
+
+
+
+        			
+        DEFINITION OF SHAREWARE
+        
+        Shareware distribution gives users a chance to try software
+        before buying it. If you try a Shareware program and continue
+        using it, you are expected to register. Individual programs
+        differ on details -- some request registration while others
+        require it, some specify a maximum trial period. With
+        registration, you get anything from the simple right to continue
+        using the software to an updated program with printed manual.
+        
+        Copyright laws apply to both Shareware and commercial software,
+        and the copyright holder retains all rights, with a few specific
+        exceptions as stated below. Shareware authors are accomplished
+        programmers, just like commercial authors, and the programs are
+        of comparable quality. (In both cases, there are good programs
+        and bad ones!) The main difference is in the method of
+        distribution. The author specifically grants the right to copy
+        and distribute the software, either to all and sundry or to a
+        specific group. For example, some authors require written
+        permission before a commercial disk vendor may copy their
+        Shareware.
+        
+        Shareware is a distribution method, not a type of software. You
+        should find software that suits your needs and pocketbook,
+        whether it's commercial or Shareware. The Shareware system makes
+        fitting your needs easier, because you can try before you buy.
+        And because the overhead is low, prices are low also. Shareware
+        has the ultimate money-back guarantee -- if you don't use the
+        product, you don't pay for it.
+        
+        DISTRIBUTION LIMITATIONS:  This is a copyrighted shareware
+        program.  You have a limited license to try out this soft-
+        ware on a single computer for a period of 30 days.  If you
+        continue to use the software after this 30-day trial period,
+        you must become a registered user.
+        
+        OMBUDSMAN
+        
+          This program is produced by a member of the Association of
+        Shareware Professionals (ASP).  ASP wants to make sure that
+        the shareware principle works for you.  If you are unable to
+        resolve a shareware-related problem with an ASP member by
+        contacting the member directly, ASP may be able to help.  The
+        ASP Ombudsman can help you resolve a dispute or problem with
+        an ASP member, but does not provide technical support for 
+        members' products.  Please write to the ASP Ombudsman at 545
+        Grover Road, Muskegon, MI 49442 or send a CompuServe message
+        via CompuServe Mail to ASP Ombudsman, 70007,3536.
+        
+        DISCLAIMER
+        
+           The program described in this documentation is guaranteed 
+        to do absolutely nothing!  It has, however, in my experience
+
+                                     Page 3
+
+
+
+
+
+        performed essentially as described herein.  The author will 
+        not be responsible for any loss or damages caused through
+        the use of these programs.  No warranty, express or implied,
+        is provided for this software's performance, merchantability,
+        or fitness for a particular purpose.
+        
+           All trademarks are property of their respective owners.  In
+        particular, "Power C" is a registered trademark of MIX Software.
+        
+           The program and documentation are Copyright 1991-193 by Chuck
+        Steenburgh & Tay-Jee Software.  You are encouraged to distribute
+        these programs provided the conditions specified in the
+        VENDOR.DOC file are met.
+        
+           You may evaluate this program for up to 30 days on a free
+        trial basis.  After 30 days, you should register your use of
+        the program.  The registration fee is $20, payable to Tay-Jee
+        Software at the address given below.  Please see the file
+        REGISTER.FRM on the distribution disk/archive.
+        
+           Registration does have its advantages:
+        
+           - We are improving the program all the time.  Registration
+             will get you IMMEDIATELY a disk with the latest version.
+        
+           - While we can't promise to include everyone's suggestions
+             in program updates, you can bet we'll listen to registered
+             users before any of you scrounges out there.
+        
+           - You will also get an evaluation copy of our text file for-
+             matting program (used to produce the margins in this doc-
+             ument), and any other electronic creations we have decided
+             to unleash on a foolish, unsuspecting world.
+           
+           - Registered users can obtain the source code for the program
+             at the cost of an additional $10.
+        
+           Send comments/registrations to:
+        
+                Tay-Jee Software
+                Post Office Box 835
+                Lexington, VA 24450
+                (703)464-5290
+                
+                !!!VIRGINIA RESIDENTS ADD 4.5SALES TAX!!!
+        
+                CIS 72330,1776 (we haunt the IBMSYS and IBMPRO forums)
+        
+        Now that the semi-legal mumbo-jumbo is out of the way, welcome
+        to POWER C SHELL Version 2.12.  This program began as a simple 
+        aid to Power C programmers and blossomed into a much more am-
+        bitious project.  POWER C SHELL Version 2.12 has the following 
+        features:
+        
+
+                                     Page 4
+
+
+
+
+
+             - Simplifies editing, compiling, and debugging
+             of POWER C programs without having to fool with
+             the DOS command line
+        	
+             - Customizable editor and viewer (use your favorites),
+             or use the very handy TDE public domain editor in-
+             cluded in the package
+        	
+             - Customizable compile & link options for Power C 
+             compiler (with help screens to explain them all)
+             
+             - Interface includes support of Power C Trace inter-
+             active debugging utility, available separately from
+             Mix Software.
+        	
+             - Ability to review C.ERR error listing without
+             leaving the shell
+        	
+             - Test run your executable programs without
+             leaving the shell
+             
+             - Easy, one-step loading of complete projects
+             
+             - Customizable screen colors
+             
+             - Context-sensitive help (although the program is so
+             simple, I doubt you'll need it)
+         	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 5
+
+
+
+
+
+        STARTING POWER C SHELL VERSION 2.12
+        
+           Power C Shell itself requires approximately 135K of free
+        memory to run.  To this amount, however, you must add the 
+        greater of the memory required by your editor, viewer, and 
+        whatever C program you happen to be working on.  Power C Shell
+        remains in memory when these programs are executing.  The
+        Power C compiler, version 2.x, requires about 256K of free
+        memory.  Basically, a 512K machine or better is a safe bet, al-
+        though you might get by with only 384K available.  If you wish
+        to use Power C Trace with Power C Shell, you will need much more
+        available memory: 150k for Power C Trace, 135k for Power C
+        Shell, and whatever memory is required the program which you are
+        working on.
+        
+        
+        
+        	Environment Variables
+        	=====================
+        	
+           Power C Shell can configure itself through the use of
+        environment variables. Power C Shell understands the following
+        environment variables:
+        
+             PCEDIT:     complete path of your editor
+             PCEDITP:    any command line parameters used by your editor
+             PCVIEW:     complete path of your viewer
+             PCVIEWP:    any command line parameters used by your viewer
+             PCOPTIONS:  default compile options to be used by PC.EXE
+             PCLINK:     default link options to be used by PCL.EXE
+        	
+           Environment variables are established by use of the DOS
+        SET command.  To set the name of your viewer to C:\LIST.COM,
+        simply type the following at the DOS command line:
+        
+             SET PCVIEW=C:\LIST.COM
+        	
+           Use a similar procedure to set the other variables.  To
+        set your default compile options to "/e/ms" (link file, use
+        small memory model), type the following on the DOS command 
+        line:
+        
+             SET PCOPTIONS=/e/ms
+        	
+           If, while entering your environment variables, you get
+        the message "Out of environment space" or something similar,
+        you need to edit your CONFIG.SYS file.  Look for a state-
+        ment similar to the following:
+        
+             SHELL=c:\dos\command.com c:\dos /p
+        	
+           To increase the environment space, change the statement
+        to something like this:
+        
+
+                                     Page 6
+
+
+
+
+
+             SHELL=c:\dos\command.com c:\dos /p /e:384
+        	
+           In the example above, 384 is the new number of bytes re-
+        served for the environment (160 is the default).  DOS will 
+        always round this number to a multiple of 16.  384 bytes 
+        should be enough for most users, although you may need more.
+        The limit is 32,768, although there should never be a need 
+        for more than 1 or 2K.   See your DOS manual for more de-
+        tails on setting the environment size.  Note that you must 
+        reboot your computer after editing your CONFIG.SYS file for
+        any changes to take effect.
+        
+           The PCEDITP and PCVIEWP parameter variables assume that
+        your editor and viewer accept command line switches AFTER the 
+        filename to edit/view.  For example:
+        
+             <PCEDIT> (filename) <PCEDITP>
+             edit   program.c   -x -e
+        	  
+           If your editor/viewer only accept parameters and switches
+        BEFORE the filename, enter them as part of the PCEDIT or 
+        PCVIEW varaibles.  For example:
+        
+             <PCEDIT>     (filename)
+             edit -x -e   program.c
+        	
+           you would enter the following command on the DOS command 
+        line prior to starting Power C Shell:
+        
+             SET PCEDIT=edit -x -e
+        
+           Environment variables will override any options contained
+        in the PCSHELL.CFG configuration file.
+        
+        	
+             Running Power C Shell
+             =====================
+        	
+             The syntax for starting Power C Shell is as follows:
+        	
+               PCS2 [filename] [/D-] [/H]
+        	   
+               [filename] optional parameter specifying complete
+                          name of source file to work on
+               
+               [/D-]      optional parameter telling PCS to ignore its
+                          configured starting directory and use the
+                          current directory
+               
+               [/H]       display a brief help screen
+             
+        
+        
+             
+
+                                     Page 7
+
+
+
+
+
+             Configuring PCS
+             =========== ===
+             
+           Prior to using PCS, you will have to configure it.  You may
+        do this either through the environment variables described above
+        or through the Configuration pull-down menu detailed below.  At
+        a minimum, you will need to specify the name of your editor and
+        any compile options you would like used with the Power C.
+        
+               
+             Installing PCS
+             ========== ===
+           
+           It is recommended, but not necessary, to copy the PCS2.EXE
+        program file to the same directory containing your Power C com-
+        piler.  If you would like to be able to use PCS from any direc-
+        tory, make sure the PCS2.EXE file is placed in a subdirectory
+        contained in your DOS PATH.
+        
+           If you would like to use the TDE editor with PCS, place the
+        TDE program files in a directory accessible to PCS.  If this
+        directory is not also on your DOS PATH, you will have to specify
+        the COMPLETE path for TDE when you configure PCS.
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 8
+
+
+
+
+
+        
+        POWER C SHELL DISPLAY
+        
+             Project Board
+             
+           The main display is divided up into three areas.  The largest
+        area, in the upper left portion of the screen, is the "project
+        board" which lists information regarding the current project
+        being worked on.
+        
+           Space here is used to list all currently open source files
+        (up to seven), the name of the project make file, the name of
+        the executable file being linked to, the current working dir-
+        ectory, the name of any object library specified, and the name
+        of the project include file.
+        
+             
+             Memory Management Display
+             
+           To the right of the "project board" is the memory management
+        display, showing current allocations of stack, heap, and far
+        heap memory.
+        
+        
+             Status Board
+           
+           In the bottom area of the screen is the "status board."  This
+        area is used to display current Power C Shell settings such as
+        the name of the editor and viewer and their switches, and any
+        command line switches in effect for the Power C compiler, link-
+        er, and trace program.
+        
+        
+             Other Display Features
+           
+           The bottom line of the display is used by the passive help
+        system (described below) and a copyright message.  The top line
+        of the display contains the pull-down menu bar and a real-time
+        24-hour clock.
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 9
+
+
+
+
+
+        
+        POWER C SHELL MENU OPTIONS
+        
+             Files Menu
+             ===== ====
+        
+           Pressing the Alt-F key combination will activate the Files
+        pull-down menu, which contains the following options:        	
+        
+        
+             Open 
+             
+           Selecting this menu choice will allow you to open a file for
+        editing and/or compiling.  Up to seven files, all belonging to
+        the same project, may be open at one time in PCS v2.12.  After
+        selecting this item, you'll be asked to enter a wildcard file
+        specification.  The default is *.C; however, you may enter any
+        value you like.  A list of all files matching the entered wild-
+        card pattern will be displayed in a box centered on the screen.
+        Using the cursor keys, position the highlight bar over the name
+        of the file you would like to open and then press <Enter>.
+        
+           If you open a Power C project file with a .PRJ extension, all
+        of the associated source files of the project will be opened.
+        NOTE:  This project file MUST be in PCS 2.12 format for this to
+        work properly.  If you open a project file while other files are
+        open, they will be closed first and then the project will be
+        loaded.
+        
+           If more than one file is open, you will be asked to choose an
+        "active file."  The active file is the file which is loaded by
+        the "Edit" menu choice described below.  Enter the file number
+        (1-7) of the file which you would like to be active.  A pair
+        of flashing exclamation points appears next to the name of the 
+        active file.
+        
+        
+             New file
+             
+           Selecting this menu item will allow you to type the name of a
+        new C source file on upon which to begin work.  Do NOT enter the
+        name of a project (*.PRJ) file.  Again, if multiple files are
+        open, you will be asked to select the active file.
+        
+        
+             Switch
+           
+           Selecting this item will allow you to change the active file.
+        	
+        
+             Edit
+        	
+           Selecting this menu item will invoke your editor and load the
+        currently active file for editing.
+
+                                     Page 10
+
+
+
+
+
+        
+        
+             Close
+           
+           This option allows you to remove a file from the list of
+        open source files.  Type the number of the file you wish to
+        close in the dialog box.  If more than one file remains open,
+        you will be asked to designate a new active file.
+        
+        
+             All Close
+           
+           This option will remove ALL files from the open list.
+           
+           
+             Print
+           
+           This option allows you to print one or more files associated
+        with the current project.  In the dialog box that appears, press
+        "A" to print all source files, "I" to print the project #include
+        file (*.H), or the number of a single open file.  Next, you'll
+        be asked to specify which printer port (LPT1-3) to print to.
+        
+           If there is an error, PCS will inform you of the nature of the
+        problem and provide you with the opportunity of correcting it or
+        aborting the print operation.
+        
+        
+             Directory
+           
+           This option allows you to change the current working direc-
+        tory.  Enter a drive letter, directory, or complete path, as
+        appropriate, into the dialog box.  Any open files will be closed
+        upon changing directories.
+        
+        
+             Operations Menu
+             ========== ====
+             
+           Pressing the Alt-O key combination activates the Operations
+        pull-down menu, which contains the following options:
+        
+        
+             Compile
+           
+           Selecting this item invokes the Power C compile and compiles
+        the currently open source file(s).  Any compile options speci-
+        fied through the PCS configuration file or environment variables
+        will eb in effect for the compilation.
+        
+           The compile listing will appear on the screen and you will
+        have the opportunity to view it prior to return to PCS.  To pre-
+        vent the listing from scrolling off the screen, include the
+        #pragma pagesize preprocessor directive in your program source.
+
+                                     Page 11
+
+
+
+
+
+        
+        
+             Link
+           
+           The current project or source file will be linked, using the
+        options specified through the configuration file or environment
+        variable.  The executable file produced will have the same name
+        as the first open file, with the extension .EXE.
+        
+        
+             Header
+             
+           Selecting this option will invoke your editor and load the
+        project #include (*.H) file.  Using such a file is an easy way
+        to declare external variables by using the #include file in
+        supplementary project source code modules.
+        
+        
+             View C.ERR
+             
+           This option will invoke your viewer and allow you to see the
+        contents of the most recent compile listing (contained in the
+        C.ERR file generated by PC.EXE).
+        
+        
+             Trace
+           
+           Selecting this menu item will invoke Power C Trace, a program
+        available separately from Mix Software.  The PCT.EXE program
+        must be located in a directory on the DOS PATH, or in the cur-
+        rent directory.  You should also have compiled your program with
+        the /T switch, and subsequently linked it, prior to running the
+        trace program.
+        
+        
+             DOS Shell
+           
+           This option allows you to return momentarily to the DOS com-
+        mand line without exiting PCS 2.12.  A reminder will appear in
+        your prompt informing you to type "exit" to return to PCS.  
+        While you are in the DOS Shell, keep in mind that your total
+        free memory is reduced by approximately 135k.
+        
+        
+             Configuration Menu
+             ============= ====
+             
+           Pressing the Alt-C key combination will activate the Con-
+        figuration pull-down menu, which includes the following op-
+        tions:
+        
+        
+             Editor
+           
+
+                                     Page 12
+
+
+
+
+
+           Selecting this option will allow you to enter the name of
+        your editor.  In the first dialog box, enter the complete path
+        and file name of your editor program.  In the second dialog box,
+        enter any command line parameters (switches) required by your
+        editor, if any.  The editor name and switches will then appear
+        on the appropriate line in the status area at the bottom of the
+        screen.
+        
+        
+             Viewer
+           
+           This option allows you to configure your viewer program.
+        Follow the steps above for the editor, this time typing the
+        path and switches for the viewer.
+        
+        
+             Compile Options
+             
+           This option will allow you to select which switches are to be
+        used by the Power C compiler.  The PC.EXE file's help screen 
+        will be displayed and a small dialog box will appear at the bot-
+        tom of the screen.  Enter your choice into the box.
+        
+        
+             Link Options
+           
+           This menu choice will allow you to specify link options.  A
+        small help screen explaining the available switches will be
+        presented.  Enter your switch(es) in the dialog box.
+        
+        
+             Memory Allocations
+             
+           With this option you can control the size of the stack, heap,
+        and far heap of your program.  Enter values for each of these
+        items in the dialog box just as you would enter them on the com-
+        mand line.  For example, if you want 16k of memory for the stack
+        enter "16k"; if you want 800 bytes allocated for the heap, enter
+        "800."
+        
+        
+             Object Library
+           
+           Select this option to enter the name of an object file to be
+        linked as a library.  This can be a library of your own creation
+        or a third-party library.  Make use of the "?" wildcard to spec-
+        ify different library names for the three memory models.  For
+        example, PCS is linked with the library CJSLIBM.MIX, a library
+        of functions developed by Tay-Jee Software.  By entering the
+        name "CJSLIB?.MIX" as an object library, the files CJSLIBS.MIX,
+        CJSLIBM.MIX, or CJSLIBL.MIX will be linked depending upon which
+        memory model is in effect.  (See the Power C README file for a
+        further discussion of libraries and wildcards.)
+        
+
+                                     Page 13
+
+
+
+
+
+        
+             Trace Options
+           
+           This option allows you to specify command line arguments for
+        Power C Trace.  A brief desctiption of the available switches is
+        shown in the dialog box; simply type the switch(es) you wish to
+        have included on the command line when you use Power C Trace.
+        
+        
+             Program Colors
+           
+           Selecting this option activates the program color selection
+        process.  Nine screen elements can have their screen attributes
+        individually configured.  Enter the number of the screen color
+        you wish to modify, then position the flashing star character
+        over the appropriate color combination, then press <Enter>.
+        Once you are through selecting colors, enter "0" instead of a
+        color number.  In the dialog box which appears, type N to put
+        your newly selected colors into effect, O to ignore the new
+        colors and use the colors in currently in effect, or D to
+        revert to the program's default color scheme.  In the unreg-
+        istered version, while you can change the colors selected, you
+        cannot save these changes in the configuration file.
+        
+        
+             Quit
+             ====
+        	
+           Select this option to leave Power C Shell and return to 
+        DOS.  Three options are available:  "Yes" exits PCS immediately;
+        "Save" updates the PCSHELL.CFG file with the current settings,
+        then returns to DOS; and "No" returns you to PCS.
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 14
+
+
+
+
+
+        
+        HELP
+        
+           Context-sensitive help is available from within the PCS
+        menu system (only).  From the main PCS screen, or from within
+        any pull-down menu, pressing <F1> activates the help system.
+        A box will appear on the middle of the screen containing the
+        help information for the currently selected menu operation.
+        Use the cursor movement keys to scroll the help text up and
+        down through the box.  Pressing <Esc> returns you to PCS.
+        
+           A passive help system also exists for all menu items.  Look
+        at the bottom line on the screen for a brief description of the
+        currently highlighted menu item.
+        
+           A short help line appears for most dialog boxes in PCS.  Most 
+        "basic" editing functions, such as Insert/Delete and Backspace 
+        work normally in dialog boxes.  In addition, the <Tab> key can 
+        be used to DELETE all information in a dialog box which lies to 
+        the right of the cursor.
+        
+        
+           This document formatted with MARGARINE 3.1, a utility program
+        I created using Power C 2.2.0 and Power C Shell.  Look for it
+        in IBM Systems/Utilities Forum (IBMSYS) on CompuServe (found
+        in the New Uploads or General Utilities Library as MARGAR.ZIP).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Page 15

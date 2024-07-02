@@ -1,0 +1,59 @@
+
+
+
+
+
+         ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+         บ                 TEXT EDITOR 2.5 COMMAND SUMMARY                บ
+         ฬอออออออออออออออออออออออออออออออหออออออออออออออออออออออออออออออออน
+         บ       TE [Path][FileName]     บ    c- Ctrl  s- Shft  a- Alt    บ
+         ฬอออออออออออออออออออออออออออออออสออออออออออออออออออออออออออออออออน
+         บ                             File                               บ
+         วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+         บ         c-KD, c-KQ, F4   Save file and quit editor             บ
+         บ         c-KE, F2         Save and/or load another file         บ
+         ฬออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออน
+         บ                        Cursor Movement                         บ
+         วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤยฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+         บ  c-S, Left    Char left       ณ  c-QS, Home    Line begin      บ
+         บ  c-D, Rt      Char right      ณ  c-QD, End     Line end        บ
+         บ  c-A, c-Left  Prev word       ณ  c-QE, c-Home  Screen top      บ
+         บ  c-F, c-Rt    Next word       ณ  c-QX, c-End   Screen bottom   บ
+         บ  c-E, Up      Prev line       ณ  c-QR, c-PgUp  File start      บ
+         บ  c-X, Dn      Next line       ณ  c-QC, c-PgDn  File end        บ
+         บ  c-W          Scroll up       ณ  c-QB          To block start  บ
+         บ  c-Z          Scroll down     ณ  c-QK          To block end    บ
+         บ  c-R, PgUp    Up 23 lines     ณ  Tab      Next word, prev line บ
+         บ  c-C, PgDn    Dn 23 lines     ณ  s-Tab    Prev word, prev line บ
+         บ  c-Q4     To specified line   ณ  c-Kn     Set line mark n=0-3  บ
+         บ  c-QP     Dn page len lines   ณ  c-Qn     To line mark n=0-3   บ
+         ฬอออออออออออออออออออออออออออออออฯออออออออออออออออออออออออออออออออน
+         บ                         Insert/Delete                          บ
+         วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤยฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+         บ  c-V, Ins  Insert/Replace     ณ  c-H, BkSp  Delete left char   บ
+         บ  Entr      Split/Insert line  ณ  c-G, Del   Del char/join line บ
+         บ  c-N, F9   Insert line        ณ  c-T        Del next word      บ
+         บ  c-Y, F10  Delete line        ณ  c-QY       Del to end line    บ
+         ฬอออออออออออออออออออออออออออออออฯออออออออออออออออออออออออออออออออน
+         บ                             Block                              บ
+         วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤยฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+         บ  c-KB, F7  Mark block start   ณ  c-KC     Copy block           บ
+         บ  c-KK, F8  Mark block end     ณ  c-KY     Delete block         บ
+         บ  c-KH      Hide/display block ณ  c-KV     Move block           บ
+         บ  c-KI      Block right 1 char ณ  c-KR     Read block from disk บ
+         บ  c-KU      Block left 1 char  ณ  c-KW     Write block to disk  บ
+         ฬอออออออออออออออออออออออออออออออฯออออออออออออออออออออออออออออออออน
+         บ                         Miscellaneous                          บ
+         วฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤถ
+         บ  F1         Display summary of Text Editor commands            บ
+         บ  c-QF       Find phrase (1-31 chars) in file or block          บ
+         บ  c-QA       Find/replace phrase (1-31 chars) in file or block  บ
+         บ  c-KP, F5   Print file or block to LPT1, LPT2, or LPT3         บ
+         บ  a-Xa-Ya-Z  ASCII code XYZ = 32-255 on keypad                  บ
+         บ  c-P        Then a-Xa-Y on keypad for ASCII XY = 1-31          บ
+         บ  c-KS, F3   Temp return to DOS.  Back to TE: EXIT              บ
+         บ  c-QM       Set left/right margins, page length                บ
+         บ  c-B        Format paragraph to left/right margins             บ
+         ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+
+
