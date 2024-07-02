@@ -1,0 +1,292 @@
+                                M++
+
+This is version 3.0.
+
+Zortech has a policy of continuous improvement to our products. This
+means that changes will have been made since completion of the
+documentation. Therefore, please examine the readme files closely.
+-----------------------------------
+Version:      V3.0r1
+Release Date: June 25, 1991
+
+-----------------------------------
+
+        M++ v3.0 is improved in several areas as
+        compared to previous versions. Here are some
+        of the improvements and additions:
+
+TEMPORARY HANDLING
+
+        M++ operations now delete and manage there own temporary
+        variables.  In previous versions (and with most array 
+        class designs) the statement,
+
+                C = A+B*(cos(D)+sin(E));   // A,B,C,D, and E are Array 
+                                           // objects
+
+        would result in a least 4 temporary values and a copy for the
+        assignment. This could mean wasted storage throughout the
+        remainder of the scope of these objects.
+        With M++ 3.0 only one data memory allocation is required
+        for this statement. And the assignment overhead is avoided
+        since M++ now recognizes the right side as a temporary value
+        and adopts it.
+
+
+IMPROVED SUB-ARRAY HANDLING
+
+        Previously the M++ library used a typeSubArray class to
+        provide sub-array operations.  The capability of this
+        class is now provided in the more general 
+        typeArray classes.
+
+NEW CLASSES
+        
+        Special array classes provide greater flexability and
+        stronger typing for numeric programming.  Vector, matrix
+        symmetric matrix, and triangular matrix classes for all
+        floating-point types are now provided.  
+
+FULL LINEAR SYSTEM AND EIGENSYSTEM ANALYSIS
+
+        M++ 3.0 now has more classes for  
+        linear system and eigensystem analysis.  Both real
+        and complex systems are solved.  These are the
+        linear and eigensystem classes now available:
+
+                typeChol
+                typeDPF
+                typeQR
+                typeSVD
+                typeLU
+
+                typeEigenVal
+                typeEigen
+                typeSymEigenVal
+                typeSymEigen
+
+ERRATA
+
+LIBRARY NAMES
+
+        To facilitate linking the M++ library has been split into
+        three libraries.  
+
+                zmppEXf.lib  // contains Index, base classes
+                             // intArray, floatArray,doubleArray
+                             // classes and all other floating-point
+                             // related classes.
+                             // 
+                             // This library is always required. 
+                             //
+                             // E designates either e or 87 for 
+                             // emulated or inline floating
+                             // point libraries. 
+                             // X is either l or x
+                             // for x model or l model libraries.
+
+                zmppEXi.lib  // contains the remaining integral
+                             // classes charArray, ucharArray,
+                             // unsignedArray, longArray
+                             // and ulongArray
+
+                zmppEXc.lib  // contains complex and complexArray
+                             // classes and all related linear
+                             // and eigensystem classes.
+
+        The makefile contained in the \zortech\mpp directory
+        can be used to create other libraries using other compiler
+        options.
+
+WEITEK 3167, 4167 AND INTEL 80x87 SUPPORT
+
+        The M++ library does automatic run-time detection of the
+        Weitek and Intel math coprocessors and uses loop engines
+        specifically designed for these processors.  
+
+        The use of the Weitek chip can improve the speed of 
+        many M++ floating-point operations 2-5 over inline 
+        Intel 80x87 times. M++ also optimizes for the Intel 
+        coprocessors and can yield 2-7 times
+        the time for those requiring emulation for portability but
+        who are using a coprocessor, and 1.2 - 1.5 times inline 8087
+        C timings.
+        
+        These special optimizations are currently only available 
+        for the large model libraries.  Those using the
+        Weitek chip with large model programs require a Weitek-aware 
+        memory manager such as Qualitas 386-to-the-Max.
+
+class typeChol:
+
+        The class documented as typeCholPD is now typeChol and 
+        contains two additional constructors:
+
+SUMMARY
+
+            typeChol( const typeSymMatrix &, pivot = PIVOTING );
+            typeChol( const typeSymMatrix & A, const intArray & p);
+
+DESCRIPTION
+
+        The first constructor requests pivoting and is useful
+        for determining the rank of a positive semidefinite matrix.
+
+        The second constructor computes the R'R Cholesky factorization
+        with pivoting defined by intArray p.  Elements of the
+        pivot vector control pivoting based on the following:
+
+                p(k)  > 0    A(k,k) is an initial element 
+                p(k)  = 0    A(k,k) is a free element 
+                p(k)  < 0    A(k,k) is a final element 
+
+        Prior to computing the factorization the initial elements 
+        are moved to the leading portion of the matrix and final
+        elements to the trailing portion of the matrix. During the
+        computation only rows and columns corresponding to free
+        elements are moved.
+
+REFERENCE
+
+        Dongarra, Moler, et. al. LINPACK User's Guide
+        SIAM, Philadelphia, Pennsylvania, 1979. Chapter 8.
+
+
+class typeDPF:
+
+        The class typeChol is now named class typeDPF (diagonal pivoting
+        factorization) and computes a UDU' factorization and 
+        not a R'R Cholesky factorization as indicated by the manual.
+
+SUMMARY
+
+        class typeDPF{
+        public:
+               typeDPF(const typePDF &);
+               typeDPF(const typeSymMatrix &);
+
+               type recipCond();
+               typeDPF operator = ( const typeDPF & );
+
+               friend type det(const typeDPF &);
+               friend type logDet(const typeDPF &);
+        }; 
+
+
+DESCRIPTION
+
+        The class typeDPF computes the UDU' (diagonal pivoting factorization)
+        of a full symmetric real matrix or full Hermitian complex matrix
+        and estimates its reciprocal condition number.  The typeDPF
+        class can factor both positive-definite and indefinite symmetric
+        matrices.  If a matrix is known to be positive definite, a small
+        savings in time and code-size is achieved by using class typeChol.
+
+
+REFERENCE
+
+        Dongarra, Moler, et. al. LINPACK User's Guide
+        SIAM, Philadelphia, Pennsylvania, 1979. Chapter 5.
+
+
+
+ARRAY CONSTRUCTIONS
+
+        Since the printing of the manual an implimentation change
+        has been made that improves construction of the M++ array
+        classes.  A copy construction of an M++ array now returns
+        a distinct copy and not a reference as the manual states.
+
+        An example follows which illustrates this change:
+
+                doubleArray A = B;   // not an alias but a distinct
+                                     // copy
+
+
+                // correctly documented in manual
+                doubleArray A = B(all,1);  // the compiler uses the
+                                           // temporary value (view of B)
+                                           // as A.  This is how you
+                                           // form a view or sub-array
+                                           // of another array
+
+GENERALIZED INNER PRODUCT
+
+        The generalized inner product ::inner(f,g, const typeArray &)
+        is esoteric and is no longer supported.  This in no-way effects
+        support for the methods inner and product which provide full
+        multi-dimensional inner-product capabilities.
+
+
+SORT FUNCTION
+
+        A sorting function has been added to the library but it is
+        not documented in the manual.
+
+
+
+NAME
+        sort - computes a sorted Index from an input vector.
+
+SUMMARY
+
+        #include <tarray.h>
+
+        Index sort(const typeArray &);
+
+        i = sort(v);
+
+INPUTS
+        typeArray v   Vector input - if not a vector it will be
+                      vectorized for sorting.
+
+RETURN VALUE
+
+        Index i       Index instance containing the sorted
+                      indices of the vector v.
+        
+DESCRIPTION
+
+        The sort function returns an Index instance that if
+        used to index the input vector will order it in a
+        accending order.  The same Index may be used to 
+        order other arrays, saving the sorting time.
+
+EXAMPLE
+
+        #include <darray.h>
+
+        main()
+        {
+           doubleArray a(10,3);
+           a.randUniform();
+
+           Index i = sort(a(all,0));
+
+           cout << a(i,all); // output a sorted on
+                             // column 0   
+        }          
+
+MANUAL EXAMPLES
+
+        The manual examples from the User Guide and Reference
+        sections of the manual are available in source form in
+        the directories \zortech\mpp\examples\user and
+        \zortech\mpp\examples\ref respectively.  A makefile
+        is available in each directory for building each
+        example program.  Please note that some of the examples
+        issue error messages or have no output displayed.
+
+        Page 8 of the M++ Programming Guide specifies the library
+        zmppex.lib for compiling sample.cpp. This should be replaced
+        by zmppexf.lib.
+
+PROBLEM REPORTS
+
+        We welcome and appreciate comments and suggestions.  If you have
+        a problem or suspect a bug please contact us.  We are committed
+        to providing quality technical support and continuous improvement
+        to M++.
+
+EOF
+

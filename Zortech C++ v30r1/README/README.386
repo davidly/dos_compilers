@@ -1,0 +1,476 @@
+		ZORTECH 386 C AND C++ COMPILERS
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of the 32 bit code generator. You should read this file before continuing. 
+-----------------------------------
+Version : V3.0r1 Release
+Date    : June 19, 1991
+
+-----------------------------------
+IMPORTANT
+When linking DOSX programs the warning: 'no stack segment' will be
+generated. This is quite normal. DOSX programs do not have a separate
+stack segment. Simply ignore this warning.
+-----------------------------------
+SYSTEM REQUIREMENTS
+	o	Zortech C++ 3.0 Developer's Edition
+	o	A 386 or 486 machine
+	o	If you wish to use DOSX (Zortech's 386 DOS Extender),
+		you need:
+		Nothing else - It's all included!
+		No royalties or licensing fees!
+	o	If you wish to use Pharlap's 386 DOS Extender, you need:
+		386LINK.EXE
+		386DEBUG.EXE
+		BIND386.EXE
+		RUN386B.EXP
+		The last two only come when you purchase a redistribution
+		license from Pharlap. ZTC.COM expects these to be available
+		when linking, so if you don't have them, you will need to
+		link manually, and then use Pharlap's RUN386 to run your
+		program.
+	o	A 32 bit assembler is nice to have, Pharlap's 386ASM or
+		Microsoft's MASM 5.1 will work. (Warning: we've had trouble
+		with the symbolic debug records output by MASM 5.1 for
+		32 bit segments, they aren't right.)
+
+	Note:	Do not confuse the 32 bit executables (the X versions)
+		with the 32 bit code generator. The X versions can all 
+		be used	to generate 16 bit code too.
+-----------------------------------
+BUILDING A DOSX EXECUTABLE
+	o	Use the -mx (DOSX memory model) switch.
+	o	The predefined macro DOS386 will be generated, so your code
+		can be #ifdef'd where necessary. For examples, see the 
+		library	source code in SOURCE\CLIB.
+	o	ZTC.COM can be used to do the linking, as in:
+		ZTC -mx test1.obj test2.obj -otest.exe
+	o	To link by hand, the DOSX startup code CX.OBJ must be linked 
+		in first, similar to the way a .COM file is linked.
+		BLINK \zortech\lib\cx+test1+test2,tmp;
+
+	Note that you must use BLINK, not Microsoft LINK, for 32 bit links.
+-----------------------------------
+BUILDING A PHARLAP DOS EXTENDER EXECUTABLE
+	o	Use the -mp (Pharlap memory model) switch.
+	o	The predefined macro DOS386 will be generated, so your code
+		can be #ifdef'd where necessary. For examples, see the 
+		library source code in SOURCE\CLIB. (The DOS386 macro is 
+		also used for DOSX code.)
+	o	When you use the -mp or -O flags to ZTC.COM, Pharlap's 386ASM
+		assembler will be run instead of MASM.
+	o	ZTC.COM can be used to do the linking, as in:
+		ZTC -mp test1.obj test2.obj -otest.exe
+	o	Do not use BLINK or Microsoft LINK to do the linking, you'll
+		need to use Pharlap's 386LINK linker.
+		386LINK test1.obj test2.obj -tc -l zps.lib -e test.exp
+		BIND386 run386b.exe test.exe
+		(When ZTC.COM is doing the link, it does the bind automatically.)
+-----------------------------------
+STRANGE BUG
+	With Pharlap, the first function in the first object module
+	linked in gets placed at offset 0 in the resulting executable!
+	This means that a near pointer to it looks like a null pointer.
+	Moral: never take the address of the first function in the
+	first object module, never have it be a constructor, never
+	have it be a virtual function.
+
+	Another workaround is to use the switch to the Pharlap linker
+	that offsets the start of the load image away from offset 0.
+-----------------------------------
+USING SPAWN, EXEC OR SYSTEM
+	These are not currently supported under DOSX.
+
+	Under Phar Lap, memory needs to be available for these to work.
+	See the manual on the Pharlap linker for how to reserve space
+	for programs to be spawned. (Use the maxreal flag.)
+-----------------------------------
+ZORLIB
+	Zorlib can create library files for use with the Pharlap linker.
+	No special switches are necessary.
+-----------------------------------
+REAL MODE CODE
+	Pharlap requires that any real mode code be linked to the beginning
+	of the .EXP file.  If you need your own real mode code and use FG or
+	msm_signal() then you will need REALMODE.OBJ. It is best if it is
+	the first object module specified to the linker.
+-----------------------------------
+OBJECT FILE FORMATS
+	Unfortunately, there are two different 32 bit object file formats.
+	The first is Pharlap's, and the second is Microsoft's. (Microsoft's
+	32 bit format is the one used with their SCO Unix tools.)
+	Rather than decide which to support, we support both. The 32
+	bit code generator will generate Microsoft format by default, and
+	with the -O flag will generate Pharlap format.
+
+	When using Pharlap tools, it is best to stick with Pharlap's
+	obj format. When you use Microsoft tools, you must use Microsoft's
+	obj format because Microsoft tools do not recognize Pharlap's
+	format. Zortech's tools (BLINK, ZORLIB, OBJTOASM, DUMPOBJ) will read
+	both formats transparently to the user.
+
+	The 32 bit library, ZPS.LIB, is compiled for the Pharlap format.
+-----------------------------------
+LIBRARIES
+	There is only the one library, ZPS.LIB, for both DOSX and Pharlap
+	386 DOS Extenders. The link and bind step is different for each.
+
+	Added int86_real() and int86x_real()
+-----------------------------------
+UNIMPLEMENTED FUNCTIONALITY
+	Due to time constraints, the following functionality is
+	not yet implemented.
+
+	Pharlap:
+		dos_abs_disk_read()
+		dos_abs_disk_write()
+
+		int86() and int86x() work under Pharlap 2.2, but not
+		with Pharlap 3.0. The problem is under investigation
+		by Pharlap.
+	DOSX:
+		dos_abs_disk_read()
+		dos_abs_disk_write()
+		Flash Graphics
+		Weitek coprocessor support
+-----------------------------------
+DOSX NOTES
+
+	Libraries provided
+	------------------
+	zps.lib and cx.obj are the only things needed.	x386.lib is inside
+	zps.lib and is included as source for rebuilding zps.lib.
+	
+	Debugger Support
+	----------------
+	The next release of DOSX will have a debugger and support for spawn
+	and exec, no definite schedule yet.
+	
+	DPMI Hosts
+	----------
+	Special considerations for DPMI hosts such as Microsoft windows in
+	386 enhanced mode.	If you intend to hook interrupts such as 8 - fh
+	or 70 - 77h, 1bh, 23h, 24h or use msm_signal, all code, data and
+	stack which might be accessed by the handler must be locked. (This
+	is to prevent the interrupt handler from being swapped out to disk.)
+	This can be done with the function __x386_memlock().  Memory can be
+	unlocked with __x386_memunlock().  These functions can be called
+	even if the program is not running under DPMI, in which case they
+	will always return success.
+
+	Under DPMI all hardware interrupt handlers and handlers for ints 0x1C,
+	0x23, and 0x24 need to lock both code and data that may be used.  This
+	includes the stack.  This also means msm_signal and associated stuff.
+	Use the functions _x386_memlock() and _x386_memunlock().
+
+	Windows 3.0
+	-----------
+	Windows 3.0 in 386 enhanced mode does not reliably run protected mode
+	programs from anything but the DOS prompt when it has only 1 Mb of
+	extended memory available.
+	
+	DOS 5
+	-----
+	When running EMM386 do not run with the no EMS flag.
+
+	Memory Available
+	----------------
+	Under plain MSDOS or XMS, the maximum extended memory is limited by
+	the BIOS function calls to ffffh * 1024	or just under 64 megabytes.
+	With VCPI it is limited to 32 megabytes. The DOSX DPMI interface
+	will handle up to 3 Gb (It allocates 3/4 of available extended
+	memory), although there is currently no host that comes even
+	remotely close to supporting that much virtual memory.
+-----------------------------------
+DOSX COMPATIBILITY WITH PHARLAP
+	The Zortech 32 bit dos extender does emulate some of the Pharlap
+	function calls.  In some cases the emulation is not exact and is
+	only compatible within the context in which the Zortech libraries
+	use the function calls.  There are many Pharlap functions which are
+	not yet implemented and many which will never be implemented.  We
+	have not yet provided documentation on the many differences between
+	the Pharlap extender and DOSX.	If the user is using the library
+	functions, he/she shouldn't be bothered with any of this except that
+	a few functions do not yet work with DOSX such as spawn and exec.
+	The assembly language programmer may run into function calls such as
+	2516h which are not implemented in DOSX or 2509h which is
+	implemented but is not compatible with Pharlap. Functions which are
+	not implemented will return EAX = A5A5A5A5H with the carry flag set,
+	this is the Pharlap convention for functions which are not
+	implemented.  One of the things we intend to do as soon as possible is
+	to document the differences and the similarities between Pharlap and
+	DOSX and describe assembly language programming with the DOSX
+	extender.
+-----------------------------------
+INTERFACING TO REAL MODE FUNCTIONS
+	Use begcode_16 and endcode_16 macros found in x386mac.asm to enclose
+	real mode code.  Real mode code must return with a far return.	To
+	call the real mode procedure:
+
+	mov AX,250eh
+	mov EBX,		; seg:offset of real mode procedure
+	mov ECX,		; number of words to copy from protected 
+				; stack to real mode stack
+	int 21h
+	
+	ECX must not be greater than 63 words, these are 2 byte words so
+	there is a max of 126 bytes that can be transfered, making it zero
+	will make the call slightly faster and preserve real mode stack
+	space.	The real mode procedure receives control with a stack of
+	about 300 bytes in size, the dword return address is immediately on
+	the stack and any copied parameters above that.  All general
+	registers are preserved in the protected to real call and the real
+	to protected return.  The real mode procedure receives ds = cs all
+	other segment regs undefined.  Upon return to protected mode, all
+	general registers are as they were left by the real mode code, segs
+	as they were prior to the int 21h, the stack will be unchanged even
+	if the real mode procedure changed the values of the parameters on
+	the real mode stack, the real mode procedure cannot return values on
+	the stack.
+	
+	This sounds easy but there is one catch, it is difficult to get the
+	real mode segment value since there are no segment fixups in the
+	protected mode code. To get the segment of the real mode code:
+	
+	mov  ax,2509h		;get system segments and selectors
+	int  21h
+	
+	All general registers will be destroyed and filled with various real
+	and protected mode segments and selectors, most of which we don't
+	care to document at this time.	The one you are interested in is the
+	real mode code segment which is returned in BX.  The following
+	program demonstrates the use of a real mode procedure:
+	
+	
+	include macros.asm
+	include x386mac.asm
+	
+	begcode_16		;define start of real mode code segment
+	
+	real_proc proc far
+		mov  EAX,[ESP+4]	;mov first parameter into EAX
+		retf
+	real_proc endp
+	
+	endcode_16		;end of real mode code segment
+	
+	begcode
+	public _main
+	_main proc near
+		push 12345678h		;parameter to send to real mode code
+		mov  AX,2509h		;get system segments and selectors
+		int  21h		;get real mode segment in BX
+		rol  EBX,16		;put segment in high word of EBX
+		mov  BX,offset real_proc	;EBX now = cs:ip
+		mov  ECX,2		;copy two words or one dword
+		mov  AX,250eh
+		int  21h		;call real mode procedure
+	
+	;make a general protection fault to examine registers.
+		push CS
+		pop  SS
+	; illegal value in SS will terminate program and 
+	; dump registers to screen. EAX should equal 12345678h
+	
+	_main endp
+	endcode
+	end
+	
+	While function call 250eh is similar to Pharlap's function 250eh, it
+	is not identical, function 2509h used above is totally different
+	from Pharlap and Pharlap function 2510h which allows the caller to
+	specify all registers is not supported yet in DOSX.  There will
+	probably be some changes made to make some of this work smoother and
+	perhaps to make it more Pharlap compatible, we will attempt to keep
+	it backward compatible with version 3.0 of DOSX although we would
+	like to make it easier to work between protected and real.  Other
+	relevant Pharlap like function calls which DOSX supports are as
+	follows:
+	
+	2502 - 2507	dealing with real and protected mode interrupt 
+			vectors
+	2508		get base address of selector
+	250c		get hardware interrupt vectors
+	250d		get real mode data buffer address and real mode 
+			call back device address
+	2511		execute interrupt in real mode
+	252b		subfunctions 5 and 6, lock and unlock virtual 
+			memory (useful under DPMI)
+	
+	The real mode data buffer (function 250d) is shared with the dos
+	extender and is overwritten during disk io or screen io so it should
+	only be used for temporary storage.  The normal size of this buffer
+	is 16 K bytes but it may be smaller if there is insufficient
+	conventional memory.  By next release we hope to have all of this
+	better documented and perhaps have some new functions which will be
+	easier to use from C.
+	
+	Keep in mind that realmode libraries will have some difficulty 
+	accessing protected mode data...
+
+	Some testing on the speed of the realmode switching:
+
+	On one of our machines (25 MHz 386) with
+	ECX == 0, EBX == void foo(void){return;}
+
+	Normal DOS:		 55 uSec per 'round trip'
+	VCPI (386 Max 5.1):	142 uSec per 'round trip'
+	DPMI (Windows 3.0):	330 uSec per 'round trip'
+
+	Your mileage will vary...
+-----------------------------------
+ADDITIONAL INFORMATION ON _x386_ FUNCTIONS
+The only functions below which can be used under Pharlap are _x386_memlock
+and _x386_memunlock.
+ 
+List of X386 functions with brief description:
+ 
+Definitions
+-----------
+physical address	The actual location which the processor addresses 
+			to access memory.
+ 
+linear address		The apparent location of memory from the 
+			applications point of view which may be very 
+			different from the physical address due to use 
+			of the 80386 paging mechanism.
+ 
+Unless otherwise specified, all addresses below refer to linear address.
+ 
+_x386_mk_protected_ptr(unsigned base_addr)
+	Returns a protected mode far pointer to the absolute address
+	specified.  The pointer is normally a selector with an offset of
+	zero, if all selectors are in use, it returns a selector that 
+	points to absolute zero with an offset = base_addr.  The linear 
+	address requested maps 1 for 1 with the physcial physical memory 
+	in the first megabyte only.  Above the first megabyte linear 
+	address = the mapping found in the protected mode page tables, 
+	you cannot address ramdisks since that memory is not mapped into 
+	the page tables. You can address video memory in the first 
+	megabyte with this feature.
+ 
+_x386_free_protected_ptr(far pointer)
+	Frees up a pointer allocated with the above call.
+ 
+_x386_get_abs_address(seg,offset)
+	Returns the absolute address of the seg and offset, this is a 
+	linear address as it is mapped into the page tables (this is 
+	as the app sees memory), not the actual physical address of 
+	memory.  Again it is mapped 1 to 1 in the first megabyte 
+	(physical = linear), but is remapped very differently above 
+	1 megabyte (physical != linear).
+
+_x386_memlock(far pointer,length)
+	Locks a block of memory when operating under a virtual memory
+	environment.  This must be used to lock all data, code and stack
+	accessed by hardware interrupt handlers, int 23 handlers such as 
+	the controlc package, int 24 handlers like the cerror package, 
+	and int 1ch handlers.	This function can be called in all 
+	environments but only does something when running under DPMI 
+	since that is the only virtual memory currently supported.
+ 
+ _x386_memunlock(far pointer,length)
+	Undoes the action of the above function.
+-----------------------------------
+COMMON QUESTIONS
+Question:
+	Can I use a protected mode pointer to access memory not assigned
+	to my program (such as video memory).	Will I get a GP fault?  
+ 
+Answer:
+	Yes you can use these pointers to access anything in the first
+	megabyte whether you own that memory or not.  Anything above the 
+	1 meg boundary which you do not own is protected except under 
+	DPMI where Windows defeats some of the protection features.  
+	We have set things up so that you cannot access any memory which 
+	you do not own with near pointers (with the default ds,ss and cs 
+	values) except under DPMI which defeats many of the 80386 protection 
+	mechanisms, or more correctly uses them to help crash the system 
+	rather than using them to help prevent a crash.
+-----------------------------------
+DOSX RUNTIME ERROR MESSAGES
+
+	'Fatal error, 80386 processor is required'
+		Indicates that an 80286 or below was detected. (DOSX 
+		requires an 80386 or above)
+
+	'Previously installed software is neither VCPI nor DPMI compatible'
+		A TSR has been run on the machine which has left the 
+		processor in "V86 mode".  That TSR does not support the 
+		VCPI or the DPMI standard and so DOSX has no way of running 
+		a 32 bit application.  This TSR may be an expanded memory 
+		emulator or some other device which accesses extended memory.
+		Remove any suspicious items from the config.sys and 
+		autoexec.bat files, reboot the machine and test the program 
+		again.
+
+	'XMS error # X' where X is a XMS error number.
+		This message means that a call to the XMS memory manager 
+		has failed, this may be a call to enable the A20 line in 
+		the computer or some other required function call.
+
+	'Cannot enable the A20 line, XMS memory manager required'
+		This message indicates that no XMS, VCPI or DPMI host is 
+		present so DOSX was attempting to enable the A20 line without 
+		the help of a host and has failed.  This is an indication 
+		that the computer has non standard A20 enabling hardware. 
+		Call Zortech and report the manufacturer and model of the 
+		computer so that the hardware incompatibility can be 
+		investigated.  Install an XMS memory manager such as 
+		Microsoft himem.sys which may be compatible with the 
+		computer in question, alternatively a VCPI host such as 
+		Qualitas 386 max version 5.0 or above, or a DPMI host which 
+		is compatible will also enable DOSX programs to	operate on 
+		the machine.  It may be difficult to find XMS, VCPI
+		or DPMI hosts that are compatible with the machine if DOSX
+		fails.
+
+	'Insufficient conventional memory to run program'
+		There is insufficient conventional memory for the 16 bit 
+		code, data, stack and required DOSX data structures. 
+		DOSX programs normally require a minimum of about 35 kbytes 
+		of conventional memory.
+
+	'Insufficient extended memory to run program'
+		There is insufficient extended memory for the 32 bit code, 
+		data, stack and required DOSX data structures.
+
+	'16 bit code is too large'
+		DOSX adds some code to the 16 bit code segment above what the
+		linker puts in at link time, during this process, the 16 bit
+		code segment has exceeded 64 kbytes.  This can only happen if
+		large amounts of user supplied 16 bit code are linked into 
+		the application.
+
+	'Fatal error allocating DOS memory'
+		This message is printed out in two situations: If there is 
+		some type of error when allocating dos memory with dos 
+		function 4ah, or if the sum of 16 bit code, data and stack 
+		exceed 64 kbytes. The second situation can only occur if a 
+		large amount (about 45 kbytes) of user supplied real mode 
+		code and data is linked in to the application.
+
+	'Fatal error reading disk'
+		Indicates that DOSX was unable to read its own executable 
+		file from disk.
+
+	'Fatal error, DPMI host does not support 32 bit applications'
+		This message means that the DPMI host installed on the 
+		machine does not support 32 bit applications.  At the time 
+		of writing, there are no DPMI hosts which do not support 
+		32 bit applications.
+
+	'DPMI failed to enter protected mode'
+		DOSX has requested the DPMI host to switch the processor to
+		protected mode, the DPMI host failed the function call.
+
+	'DPMI operating system error'
+		Any fatal failure of the DPMI host other than the one 
+		mentioned above will cause this message to be output to 
+		screen.  This message and the one above are usually 
+		indications that the host has been seriously corrupted, 
+		rebooting the machine will usually fix the problem.
+-----------------------------------
+EOF

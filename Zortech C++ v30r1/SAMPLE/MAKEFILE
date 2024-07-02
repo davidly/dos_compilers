@@ -1,0 +1,22 @@
+#_ makefile   Thu May 19 1988   Modified by: Walter Bright */
+#	Make file for utility programs
+#		Assume environment variables LIB, TMP, INCLUDE, PATH 
+#		are set.
+
+LIB=..\lib
+
+.c.com :
+	ztc -mti $*
+
+all : dump.com zcmore.com timer.com chmod.com dumpobj.com wc.com freq.exe
+	del *.obj
+	del *.map
+	
+wc.com	: wc.c
+	ztc -mti wc $(LIB)\_mains.obj
+
+chmod.com : chmod.c
+	ztc -mti chmod $(LIB)\_mains.obj
+
+freq.exe : freq.c
+	ztc -ml freq $(LIB)\_mainl.obj

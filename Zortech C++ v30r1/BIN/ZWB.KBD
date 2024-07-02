@@ -1,0 +1,215 @@
+1   ³File|Create               ³ô^
+1   ³File|Create               ³
+2   ³File|Open                 ³ëh
+2   ³File|Open                 ³
+3   ³File|Visit                ³çn
+3   ³File|Visit                ³
+4   ³File|Filename             ³çf
+4   ³File|Filename             ³
+5   ³File|Read                 ³çr
+5   ³File|Read                 ³
+6   ³File|Insert               ³çi
+6   ³File|Insert               ³
+7   ³File|Save                 ³çs
+7   ³File|Save                 ³
+8   ³File|Save As              ³ça
+8   ³File|Save As              ³
+9   ³File|Save All             ³çk
+9   ³File|Save All             ³
+12  ³File|Unmodify             ³Â
+12  ³File|Unmodify             ³
+14  ³File|Exit                 ³çx
+14  ³File|Exit                 ³
+15  ³File|Save&Exit            ³çy
+15  ³File|Save&Exit            ³Á
+15  ³File|Save&Exit            ³
+16  ³File|Shell                ³À
+16  ³File|Shell                ³
+17  ³File|Spawn                ³ô!
+17  ³File|Spawn                ³
+18  ³Edit|Copy                 ³çc
+18  ³Edit|Copy                 ³ëw
+18  ³Edit|Copy                 ³
+19  ³Edit|Cut                  ³çt
+19  ³Edit|Cut                  ³
+20  ³Edit|Paste                ³çp
+20  ³Edit|Paste                ³
+21  ³Edit|Copy&Append          ³ôa
+21  ³Edit|Copy&Append          ³
+22  ³Edit|Cut&Append           ³ôt
+22  ³Edit|Cut&Append           ³
+23  ³Edit|Block Mode           ³íb
+23  ³Edit|Block Mode           ³
+24  ³Edit|Set Beg Mark         ³Ü
+24  ³Edit|Set Beg Mark         ³çb
+24  ³Edit|Set Beg Mark         ³
+25  ³Edit|Remove Mark          ³çh
+25  ³Edit|Remove Mark          ³
+26  ³Edit|Swap Mark            ³ôx
+26  ³Edit|Swap Mark            ³
+27  ³Edit|Upper Case           ³u
+27  ³Edit|Upper Case           ³
+28  ³Edit|Lower Case           ³l
+28  ³Edit|Lower Case           ³
+29  ³Edit|Capitalize           ³z
+29  ³Edit|Capitalize           ³
+30  ³Search|Find               ³íf
+30  ³Search|Find               ³
+31  ³Search|Replace            ³ír
+31  ³Search|Replace            ³
+32  ³Search|Again              ³è
+32  ³Search|Again              ³
+33  ³Search|Goto Line          ³æ
+33  ³Search|Goto Line          ³
+34  ³Search|Pair Match         ³m
+34  ³Search|Pair Match         ³º
+34  ³Search|Pair Match         ³
+35  ³Window|Only One           ³ëo
+35  ³Window|Only One           ³
+36  ³Window|Zoom               ³ëz
+36  ³Window|Zoom               ³
+37  ³Window|Maximize           ³ëm
+37  ³Window|Maximize           ³
+38  ³Window|Location           ³ël
+38  ³Window|Location           ³
+40  ³Window|Kill               ³ëc
+40  ³Window|Kill               ³
+41  ³Window|Split X            ³ëx
+41  ³Window|Split X            ³
+42  ³Window|Split Y            ³ëv
+42  ³Window|Split Y            ³
+43  ³Window|Resize             ³ës
+43  ³Window|Resize             ³
+44  ³Window|Next               ³ën
+44  ³Window|Next               ³
+45  ³Window|Prev               ³ëp
+45  ³Window|Prev               ³
+46  ³Window|Cascade            ³êc
+46  ³Window|Cascade            ³
+47  ³Window|Tile               ³êt
+47  ³Window|Tile               ³
+49  ³Window|Hi Res             ³êh
+49  ³Window|Hi Res             ³
+50  ³Compile|Compile           ³àc
+50  ³Compile|Compile           ³
+51  ³Compile|Make .obj         ³
+52  ³Compile|Make              ³àm
+52  ³Compile|Make              ³
+53  ³Compile|Debug             ³àd
+53  ³Compile|Debug             ³
+54  ³Compile|Run Program       ³àr
+54  ³Compile|Run Program       ³
+55  ³Compile|Disassemble .obj  ³
+56  ³Compile|Compile Options   ³
+57  ³Compile|Make Options      ³
+58  ³Compile|Debug Options     ³
+59  ³Options|File Stats        ³ês
+59  ³Options|File Stats        ³
+60  ³Options|Begin Macro       ³ô(
+60  ³Options|Begin Macro       ³
+61  ³Options|End Macro         ³ô)
+61  ³Options|End Macro         ³
+62  ³Options|Execute Macro     ³ôe
+62  ³Options|Execute Macro     ³
+63  ³Options|Inc Indent        ³êi
+63  ³Options|Inc Indent        ³
+64  ³Options|Dec Indent        ³êl
+64  ³Options|Dec Indent        ³
+65  ³Options|Spaces to Tabs    ³
+66  ³Options|Tabs to Spaces    ³
+67  ³Options|Editor Config.    ³
+68  ³Options|Edit Keybindings  ³
+69  ³Options|Color Config.     ³
+70  ³Browse|GREP Browse        ³àg
+70  ³Browse|GREP Browse        ³
+71  ³Browse|C Tag Browse       ³àb
+71  ³Browse|C Tag Browse       ³
+72  ³Browse|Browse Using       ³
+83  ³Help|Help on Help         ³
+84  ³Help|About                ³
+85  ³Beg Of File               ³<
+85  ³Beg Of File               ³Ø
+85  ³Beg Of File               ³
+86  ³End Of File               ³>
+86  ³End Of File               ³Ù
+86  ³End Of File               ³
+87  ³Beg Of Page               ³Ú
+87  ³Beg Of Page               ³
+88  ³End Of Page               ³Û
+88  ³End Of Page               ³
+89  ³Beg Of Line               ³Ò
+89  ³Beg Of Line               ³
+90  ³End Of Line               ³Ó
+90  ³End Of Line               ³
+91  ³Fwd Page                  ³
+92  ³Bck Page                  ³
+93  ³Fwd Line                  ³ò
+93  ³Fwd Line                  ³
+94  ³Bck Line                  ³á
+94  ³Bck Line                  ³
+95  ³Fwd Char                  ³
+96  ³Bck Char                  ³
+97  ³Fwd Delete Char           ³
+98  ³Bck Delete Char           ³
+99  ³Fwd Word                  ³f
+99  ³Fwd Word                  ³â
+99  ³Fwd Word                  ³
+100 ³Bck Word                  ³b
+100 ³Bck Word                  ³Ý
+100 ³Bck Word                  ³
+101 ³Fwd Del Word              ³d
+101 ³Fwd Del Word              ³ð
+101 ³Fwd Del Word              ³
+102 ³Bck Del Word              ³î
+102 ³Bck Del Word              ³
+103 ³Delete to End Of Line     ³½
+103 ³Delete to End Of Line     ³
+104 ³Open Line                 ³
+105 ³Twiddle                   ³êw
+105 ³Twiddle                   ³
+106 ³Search Forward            ³í>
+106 ³Search Forward            ³
+107 ³Search Backward           ³í<
+107 ³Search Backward           ³
+108 ³Search Always Replace     ³
+109 ³Search Query Replace      ³
+110 ³Home                      ³êb
+110 ³Home                      ³
+111 ³End                       ³êe
+111 ³End                       ³
+112 ³Refresh Window Display    ³
+113 ³Scroll Up                 ³ó
+113 ³Scroll Up                 ³
+114 ³Scroll Down               ³n
+114 ³Scroll Down               ³ö
+114 ³Scroll Down               ³
+115 ³Scroll Left               ³ô<
+115 ³Scroll Left               ³
+116 ³Scroll Right              ³ô>
+116 ³Scroll Right              ³
+117 ³Undelete Line             ³j
+117 ³Undelete Line             ³ñ
+117 ³Undelete Line             ³
+118 ³Delete Line               ³àl
+118 ³Delete Line               ³
+119 ³Line Select               ³
+120 ³Word Select               ³s
+120 ³Word Select               ³
+121 ³Word Capitalize           ³ôc
+121 ³Word Capitalize           ³
+122 ³Cursor is Top Line        ³ô{
+122 ³Cursor is Top Line        ³
+123 ³Cursor is Bottom Line     ³ô}
+123 ³Cursor is Bottom Line     ³
+124 ³Cursor is Middle Line     ³ô-
+124 ³Cursor is Middle Line     ³
+125 ³Spawn                     ³ô@
+125 ³Spawn                     ³
+126 ³Quote Char                ³ê"
+126 ³Quote Char                ³
+127 ³Remove blank lines        ³
+128 ³Remove white space        ³
+129 ³Toggle Insert Mode        ³
+130 ³Compiler Code Options     ³
+131 ³Compiler Source Options   ³
+132 ³Compiler Output Options   ³

@@ -1,0 +1,11 @@
+;------------------------------------
+; ZTCPM.DEF module definition file
+;------------------------------------
+
+NAME           ZTCPM   WINDOWAPI
+
+DESCRIPTION    'A short demonstration using Zortech C++ (C) Zortech, 1989'
+PROTMODE
+HEAPSIZE       1024
+STACKSIZE      8192
+EXPORTS        CLIENTWNDPROC

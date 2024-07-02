@@ -1,0 +1,143 @@
+___oppv__3ABCNv
+_add__Nii
+_print__6serialNipc
+__add__6serialNi
+_abc__FA3pc
+_abc__FA3A4c
+_abc__FpA3i
+_abc__FCppc
+_abc__FpCpc
+_abc__CFv
+
+__new_handler
+___nw__NUi      
+__vec_delete__NpvUiUipNv_ii
+__vec_new__NpvUiUipNv_pv
+___dl__Npv      
+_set_new_handler__NpNv_v          
+
+_chr__Nii
+_dec__Nli
+_form__BpCce
+_hex__Nli
+_oct__Nli
+_pin
+_pout
+_str__NpCci
+
+_overflow__7circbufNi
+_underflow__7circbufNv
+___ct__7circbufNv
+___dt__7circbufNv
+
+_close__7filebufNv
+_open__7filebufNpc9open_mode
+_overflow__7filebufNi
+_underflow__7filebufNv
+___ct__7filebufNi
+___ct__7filebufNipci
+___ct__7filebufNp6_iobuf
+___ct__7filebufNv
+___dt__7filebufNv                 
+
+_doallocate__9streambufNv         _overflow__9streambufNi
+_setbuf__9streambufNpciii         _underflow__9streambufNv
+___ct__9streambufNpci             ___ct__9streambufNv
+___dt__9streambufNv               
+
+_attrbg__2Fg    _clear__6FgDispNUc                _deffg__2Fg
+_display__2Fg   _drawc__11FgThickLineNPCi         _drawc__15FgFilledPolygonNPCi
+_drawc__5FgArcNPCi
+_drawc__6FgCharNPCi
+_drawc__9FgEllipseNPCi            _drawc__9FgFillBoxNPCi
+_drawc__9FgPolygonNPCi            _draw__2FgNv    _erasec__11FgThickLineNPCi
+_erasec__15FgFilledPolygonNPCi    _erasec__5FgArcNPCi
+_erasec__5FgBoxNPCi               _erasec__5FgDotNPCi
+_erasec__6FgCharNPCi              _erasec__6FgLineNPCi
+_erasec__8FgCircleNPCi            _erasec__8FgMatrixNPCi
+_erasec__8FgStringNPCi            _erasec__9FgEllipseNPCi
+_erasec__9FgFillBoxNPCi           _erasec__9FgPolygonNPCi
+_erase__2FgNv   _inside__6FgDispNii               _setmatrix__8FgMatrixNpCc
+_setpolygon__9FgPolygonNUipCi     _setstring__8FgStringNpc
+_setvertex__9FgPolygonNUiii       _translate__11FgThickLineNii
+_translate__5FgDotNii             _translate__6FgLineNii
+_translate__9FgPolygonNii         __mask__2Fg     __mode__2Fg
+__type__6FgLine ___as__8FgMatrixNRC8FgMatrix      ___as__8FgStringNRC8FgString
+___as__9FgPolygonNRC9FgPolygon    ___ct__11FgThickLineNiiiii
+___ct__11FgThickLineNPCii         ___ct__2FgNv    ___ct__5FgBoxNiiii
+___ct__5FgBoxNPCi                 ___ct__5FgDotNii___ct__6FgCharNiici
+___ct__6FgLineNiiii               ___ct__6FgLineNPCi
+___ct__8FgMatrixNiiPCipci         ___ct__8FgMatrixNRC8FgMatrix
+___ct__8FgStringNiipci            ___ct__8FgStringNRC8FgString
+___ct__9FgFillBoxNiiii            ___ct__9FgFillBoxNPCi
+___ct__9FgPolygonNRC9FgPolygon    ___ct__9FgPolygonNUipCii
+___dt__2FgNv    ___dt__8FgMatrixNv                ___dt__8FgStringNv
+___dt__9FgPolygonNv               
+
+_cin            _cin_file       __STDin_cpp_    __STIin_cpp_
+
+_eatwhite__7istreamNv             
+
+___rs__7istreamNR10whitespace     
+
+___rs__7istreamNpc                
+
+___rs__7istreamNRc                
+
+___rs__7istreamNRi                
+
+___rs__7istreamNRl                
+
+___rs__7istreamNRf                
+
+___rs__7istreamNRd                
+
+___rs__7istreamNR9streambuf       
+
+_get__7istreamNpcic               
+
+_putback__7istreamNc              
+
+_get__7istreamNR9streambufc       
+
+_get__7istreamNRc                 
+
+_tie__7istreamNp7ostream          
+
+___ct__7istreamNipci              
+
+___ct__7istreamNp9streambufip7ostream               
+
+___ct__7istreamNiip7ostream       
+
+_skip__7istreamNi                 
+
+___dt__7istreamNv                 
+
+_abs__NRC7complex                 _pow__NdRC7complex
+_pow__NRC7complexd                _pow__NRC7complexi
+_pow__NRC7complexT1               _sqrt__NRC7complex
+
+___dv__NdRC7complex               ___dv__NRC7complexT1
+
+___ls__NR7ostreamRC7complex       ___rs__NR7istreamR7complex
+
+_acosh__NRCd    _acos__NRC7complex                _asinh__NRCd
+_asin__NRC7complex                _atanh__NRCd    _atan__NRC7complex
+
+_caux           _caux_file      _cerr           _cerr_file
+_cout           _cout_file      _cprn           _cprn_file
+__STDout_cpp_   __STIout_cpp_   
+
+___ls__7ostreamNd                 
+
+___ls__7ostreamNl                 
+
+___ls__7ostreamNR9streambuf       
+
+___ls__7ostreamNpCc               
+_put__7ostreamNc
+___ct__7ostreamNi
+___ct__7ostreamNipc
+___ct__7ostreamNp9streambuf       
+___ls__7ostreamNc                 

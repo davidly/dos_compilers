@@ -1,0 +1,28 @@
+		The Zortech C++ OS/2 Compiler
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of the OS/2 compiler. You should read this file before continuing.
+-----------------------------------
+Version : V3.0r1 Release
+Date	: July 7, 1991
+
+-----------------------------------
+OS/2 VERSIONS SUPPORTED
+This compiler supports OS/2 versions 1.x only. Contact Zortech for 
+information about forthcoming support for OS/2 2.0.
+-----------------------------------
+SAMPLE PROGRAMS
+The OS/2 sample programs can be found in the directory SAMPLE\PMEXAM.
+-----------------------------------
+ICON FILES
+ZTC.ICO and ZWB.ICO are provided in the PBIN directory. These should be
+picked up automatically when the executable are installed in the program
+manager.
+-----------------------------------
+ERROR IN PM SOFTSET
+There is an error in the Presentation Manager Softset include file
+BSEDEV.H. Change the line #ifndef INCL_MOU to read #ifdef INCL_MOU.
+-----------------------------------
+EOF

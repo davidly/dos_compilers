@@ -1,0 +1,184 @@
+	                ZCV - Zortech Class Viewer
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of ZCV. You should read this file before continuing.
+-----------------------------------
+Version : V3.0r1 Release
+Date    : June 19, 1991
+
+-----------------------------------
+EXAMPLE FILES
+The example files can be found in SAMPLE/ZCV
+
+ZCVTEST.CPP     - Sample Test program
+ZCVTEST.OUT     - Output from ZCV on ZCVTEST.CPP
+ZCVTEST.RSP     - Example response file
+!ZCV.TAG        - Tag file generated if -t option is also specified
+-----------------------------------
+NEW FEATURES NOT DOCUMENTED
+
+- Added the capability to pass arguments via the environment variable ZCV.
+
+- Added a new switch '-m' which includes members in the search for classes.
+
+  Class Members of other Classes are displayed in one of three different ways
+  either:
+	1.  {Name},  or
+	2.  {Name*}  if a pointer, or
+	3.  {Name&}  if a reference to class/struct Name.
+
+- Added file name and line number information to warning errors so that
+  they are browsable.
+
+- Allowed options to be specified with either '-' or '/'.
+
+- The following default symbols have been added to the definition
+  list:
+       _cplusplus
+       __ZTC__
+
+- Flag -d can now optionally take a value to associate with a symbol
+  e.g. -d__ZTC__=0
+
+What is ZCV?
+------------
+ZCV is a small utility which quickly scans source code and header files
+for any of the following keywords:
+
+    class, struct, enum, and union
+
+It then displays all the names associated with these keywords to the screen.
+
+In the case of structs and classes it displays these in a hierarchical form.
+
+For example given the following code (ZCVTEST.CPP):
+--------------------------------------------------
+class Root{};
+class Another
+{
+	Another *anp;	
+};
+class Derived1: virtual public Root, private Another
+{
+protected:
+	Root *rp;
+};
+class Derived2: virtual public Root
+{
+friend class Derived1;
+};
+class Top: public Derived1, public Derived2
+{
+private:
+	Root &rr;
+public:
+	Another one;
+};
+
+-------------------------------------------
+
+Typing the command:
+
+ZCV zcvtest -m -f
+
+will produce the following output (ZCVTEST.OUT):
+-----------------------------------------------
+
+Classes:
+ÄÄÄÄÄÄÄ
+
+ZCVTEST.CPP 2 1 AnotherÄ{Another*}
+
+ZCVTEST.CPP 6 1 Derived1Ä(Root)
+                ÃÄÄÄÄÄÄÄÄ[Another]Ä{Another*}
+                ÀÄÄÄÄÄÄÄÄ{Root*}
+
+ZCVTEST.CPP 11 1 Derived2Ä(Root)
+
+ZCVTEST.CPP 1 1 Root
+
+ZCVTEST.CPP 15 1 TopÄÄDerived1ÄÄ(Root)
+                 ³    ÃÄÄÄÄÄÄÄÄÄ[Another]Ä{Another*}
+                 ³    ÀÄÄÄÄÄÄÄÄÄ{Root*}
+                 ÃÄÄÄÄDerived2ÄÄ(Root)
+                 ÃÄÄÄ{Root&}
+                 ÀÄÄÄ{Another}ÄÄ{Another*}
+
+Friends:
+ÄÄÄÄÄÄÄ
+
+ZCVTEST.CPP 13 1 Derived1 is a friend of Derived2
+
+
+-------------------------------------------
+
+Explanation of access symbols:
+-----------------------------
+
+        () implies virtual
+        [] implies private
+        <> implies protected
+		
+The default is public access. 
+
+Members from other classes are enclosed in {}.
+
+ZCV Usage
+---------
+
+        ZCV [flags] file(s) [@file]
+
+file(s) can be any number of C/C++ source and header files. If no
+extension is supplied then the default is '.CPP'
+
+A response file may instead be specified to read the arguments.
+
+Wildcards are allowed. All arguments are position independent.
+
+If present ZCV will include arguments stored in the environment variable
+ZCV.
+
+'flags' can any combination of the following and are case-insensitive:
+
+-Ipath[;path] - searches specified path(s) in addition to the INCLUDE
+                environment variable for header files.  More than one
+                I flag may be specified.
+-c            - scans files for keyword 'class' (default scan)
+-dSYM[=val]   - defines SYM with optional value (default 1)
+-e            - scans files for keyword 'enum'
+-f            - scans files for keyword 'friend'
+-l            - display hierarchy in one long list
+-m	      - include members in search
+-n            - disable browse information. When graphical representation
+                of the hierarchy is displayed, the name of the file and the
+                line the keyword was found is also displayed (see below)
+-s            - scans files for keyword 'struct'
+-t            - generate tag file (!ZCV.TAG)
+-u            - scans files for keyword 'union'
+-v[0|1|2]     - scan is performed in various verbose modes:
+                1. For any -v mode the number of classes, enums, friends,
+                   structs, and unions found is displayed along with the
+                   execution time.
+                2. For -v, -v1, -v2 the include files scanned are displayed.
+                3. For -v, -v2 the hierarchy is displayed in a non-
+                   graphical form.
+-w            - turn off warning messages (e.g.Redefinition of symbols)
+-?            - display ZCV usage
+
+And finally
+-----------
+ZCV's main assumption is that the code to be scanned can be compiled with-
+out errors! It does not attempt to check that your code is syntactically
+correct.
+
+The preprocessor is VERY lean and mean if you find that ZCV can not find
+some of your tokens then compile your code with -e and -l flags and run
+ZCV on the list file.
+
+If you have any suggestions that would improve ZCV or indeed have any
+problems then please contact your nearest Zortech Office or leave a message
+on our BBSs.
+
+End of read me.

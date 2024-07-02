@@ -1,0 +1,26 @@
+
+Classes:
+ÄÄÄÄÄÄÄ
+
+ZCVTEST.CPP 2 1 AnotherÄ{Another*}
+
+ZCVTEST.CPP 6 1 Derived1Ä(Root)
+                ÃÄÄÄÄÄÄÄÄ[Another]Ä{Another*}
+                ÀÄÄÄÄÄÄÄÄ{Root*}
+
+ZCVTEST.CPP 11 1 Derived2Ä(Root)
+
+ZCVTEST.CPP 1 1 Root
+
+ZCVTEST.CPP 15 1 TopÄÄDerived1ÄÄ(Root)
+                 ³    ÃÄÄÄÄÄÄÄÄÄ[Another]Ä{Another*}
+                 ³    ÀÄÄÄÄÄÄÄÄÄ{Root*}
+                 ÃÄÄÄÄDerived2ÄÄ(Root)
+                 ÃÄÄÄ{Root&}
+                 ÀÄÄÄ{Another}ÄÄ{Another*}
+
+Friends:
+ÄÄÄÄÄÄÄ
+
+ZCVTEST.CPP 13 1 Derived1 is a friend of Derived2
+

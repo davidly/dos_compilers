@@ -1,0 +1,2 @@
+..\debug\vector.cpp -i..\debug
+-m -c -e -u -f -s -n -v0

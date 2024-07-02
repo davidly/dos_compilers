@@ -1,0 +1,14 @@
+#-------------------
+# ZTCPM make file
+#-------------------
+
+ztcpm.exe:ztcpm.cpp
+     ztc ztcpm
+     
+clean:
+     del *.obj
+     del *.exe
+     del *.bak
+     
+
+

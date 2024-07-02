@@ -1,0 +1,1197 @@
+!1! 56 9
+File|Create
+
+Creates a new file in the current directory and places
+it into the active window. This command will create the
+file even if a file with the same name exists on the
+SOURCE or INCLUDE paths. It will not create a new file
+if one of the same name exists in the current directory.
+Preceding the file name with a ':' will accomplish the
+same thing from other File Commands or the Command Line.
+!2! 39 11
+File|Open Window
+
+Opens a window on the specified file
+cascaded down from the current window.
+Unlike [File|Visit] it does not change
+any of the other windows.
+
+This command is the cascading window
+version of [File|Visit].
+
+See also: [File|Read]
+!3! 44 11
+File|Visit
+
+Splits the selected window into two windows,
+along the Y axis, and read's the specified
+file into the upper window so that both
+files can be viewed at the same time.
+
+This command is the tiled window version of
+[File|Open Window].
+
+See also: [File|Read]
+!4! 39 5
+File|Filename
+
+Changes the name of the file in the
+current window. Changes will not be
+saved until an explicit save performed.
+!5! 45 14
+File|Read
+
+Reads the specified file into the current
+window. If the file does not exist ZWB will
+create it. ZWB will look for the file in
+the current directory, and then along the
+the SOURCE & INCLUDE environment variables.
+
+NOTE: ZWB's search along the environment
+      variables is configurable. It can
+      also be overridden by preceding the
+      file name with a ':' which temporarily
+      inhibits the environment variable
+      search.
+!6! 44 6
+File|Insert
+
+Inserts the specified file into the current
+window at the current cursor position.
+
+See also: [File|Read]
+!7! 54 4
+File|Save
+
+Saves the file in the active window to disk, if it has
+been modified.
+!8! 45 7
+File|Save As
+
+Saves the current file or marked block under
+the specified name. If the file and been
+saved previously under its old name, both
+files will now exist. The new file name will
+be used for the copy remaining in the window.
+!9! 41 5
+File|Save All
+
+Saves all the currently loaded files that
+have been modified. ZWB does this auto-
+matically before compiling or debugging.
+!12! 51 4
+File|Unmodify
+
+Allows a modified file to be marked as unmodified,
+so that changes made to the file will not be saved.
+!14! 44 8
+File|Exit
+
+Exits ZWB. If there are files that have been
+modified in any of the windows or icons, ZWB
+will request confirmation before exiting.
+
+NOTE: Killing the last Window, when no Icons
+      are present will also exit ZWB.
+!15! 33 4
+File|Save&Exit
+
+Saves any modified files to disk,
+then exits ZWB.
+!16! 42 9
+File|Shell
+
+Allows the user to exit to the OS without
+losing the current session of ZWB. You can
+perform any OS command or run any program
+within in the shell except TSR's. ZWB
+unloads itself from memory during a shell
+and will not be able to resume if a TSR is
+blocking it when it tries to return.
+!17! 41 8
+File|Spawn Pipe
+
+Allows a command to be run using the
+operating system while remaining within
+ZWB. The output of the command is sent
+to a new window within ZWB, or if the
+pipe option is turned off, the output
+is sent to the regular OS screen.
+!18! 34 9
+Edit|Copy
+
+Copy makes a copy of the marked
+(highlighted) text in the current
+window, and places it into the
+Clipboard for later use. It erases
+the previous contents of the
+Clipboard. The contents of the
+current window remain unchanged.
+!19! 37 9
+Edit|Cut
+
+Cut removes marked text from the
+current window and places it in the
+Clipboard for later use. It erases
+the previous contents of the
+Clipboard. The keyboard delete key
+has the same effect if there is a
+marked block.
+!20! 38 9
+Edit|Paste
+
+Paste will take whatever is presently
+stored in the Clipboard by Cut, Copy,
+Copy & Append, or Cut & Append, and
+insert it into the current window,
+at the current cursor position. The
+contents of the Clipboard are not
+not effected by this command.
+!21! 39 11
+Edit|Copy&Append
+
+Copy & Append makes a copy of the
+marked text in the current window,
+and places it in the Clipboard for
+later use, appending it to any
+existing contents of the Clipboard.
+The current window remains unchanged.
+
+NOTE: This command is not supported
+      for block mode.
+!22! 37 10
+Edit|Cut&Append
+
+Cut & Append removes the marked text
+from the file, and places it in the
+Clipboard for later use, appending it
+to any existing contents of the
+Clipboard.
+
+NOTE: This command is not supported
+      for block mode.
+!23! 35 10
+Edit|Block Mode
+
+Block mode controls whether or not
+regions are marked line by line or
+rectangular. Block mode is invoked
+on a window by window basis. A 'b'
+in the lower left corner of the
+screen indicates that rectangular
+marking is in effect in that for
+that window.
+!24! 37 13
+Edit|Set Beg Mark
+
+Set Mark begins marking text to be
+copied or cut. Select Set Mark, move
+the cursor keys to highlight the
+desired text, and then select Copy or
+Cut. Any command may be executed
+while marking text, including
+searches. The mouse can also be used
+to mark text by pressing down the
+left mouse button, moving the mouse
+around to select the required text
+and releasing the left button.
+!25! 33 5
+Edit|Remove Mark
+
+Remove Mark causes a previously
+marked block of text to become
+unmarked.
+!26! 52 9
+Edit|Swap Mark
+
+In a previously marked section of text, Swap Mark
+exchanges the cursor and the mark position. This
+always you to quickly extend the block being marked
+in either direction without starting the process
+over again. This can be accomplished with the mouse
+by point at the mark and pressing the left mouse
+button.
+!27! 36 4
+Edit|Upper Case
+
+Changes every letter in the word
+or marked region to upper case.
+!28! 35 4
+Edit|Lower Case
+
+Changes every letter in the word
+or marked region to lower case.
+!29! 35 7
+Edit|Capitalize
+
+Capitalizes the first letter and
+changes all the following letters
+to lower case. This command either
+works on the next word or the
+marked region.
+!30! 35 6
+Search|Find   
+
+Searches for the specified text
+pattern within the current window,
+starting from the current cursor
+position.
+!31! 34 7
+Search|Replace
+
+Replaces all occurrences of the
+specified text pattern with the
+replacement text pattern within
+the current window, starting
+from the current cursor position.
+!32! 34 4
+Search|Again
+
+Repeats the last search. It does
+not repeat the last replace.
+!33! 34 4
+Search|Goto Line
+
+Goes to the specified line in the
+current window.
+!34! 36 12
+Search|Pair Match
+
+When the cursor is on one of the
+following symbols: (),{},[] it
+moves to the matching one. If the
+cursor is on the # of a conditional
+preprocessor directive such as #if,
+#else, or #endif it will move to
+the matching directive. If none of
+these conditions is met, it moves
+forward to the next occurrence of
+the character the cursor is on.
+!35! 38 8
+Window|Only One
+
+Closes all windows in ZWB except for
+the currently active one. If there
+are modified files in the windows to
+be closed, ZWB will request
+confirmation and provide the option
+to save each before proceeding.
+!36! 38 12
+Window|Zoom
+
+Causes the currently selected window
+to expand to fill the screen except
+for the menu bar. Unlike Only One,
+The other ZWB windows will still be
+open behind the  main window, and can
+be examined at any time. Pressing
+Zoom again will put the window back
+to its former size and location.
+Toggling Hi Res mode (see later) will
+return the window to its former size.
+!37! 38 16
+Window|Maximize
+
+Causes the active window to expand to
+a full screen borderless window. The
+menu bar will be obscured. Most
+Border commands only work when the
+border is visible. Pressing Maximize
+again will reduce the window to its
+former size and location. The other
+ZWB windows will still be open behind
+the maximized window, and can be
+examined at any time. Maximize can be
+used to get every possible line of
+source on the screen. Toggling Hi Res
+mode (see Window Hi Res) will return
+the window to its former size.
+!38! 48 15
+Window|Location
+
+This allows the location of the window to be
+changed by means of the arrow keys. The Home,
+PageUp, PageDown, and End keys can also be
+used to move the window to the upper left,
+upper right, lower left, and lower right
+corners of the screen respectively. The window
+can also be moved using the mouse. The mouse
+cursor is placed on any window border except a
+scroll bar, window corner or another Border
+command and the left mouse button pressed and
+held down while the window is moved with the
+mouse. Releasing the mouse button fixes the
+window in the desired position.
+!40! 38 12
+Window|Kill
+
+Closes the selected window. If the
+file in the window has been modified,
+ZWB requests confirmation and
+provides the option to save the file
+before closing the window. If the
+modified file exists in another open
+window, ZWB will simply close the
+window immediately. If there is only
+one window on the screen, closing
+that window causes ZWB to exit.
+!41! 38 5
+Window|Split X
+
+Splits the selected window into two
+windows along the window's X
+coordinate.
+!42! 38 5
+Window|Split Y
+
+Splits the selected window into two
+windows along the window's Y
+coordinate.
+!43! 38 16
+Window|Resize
+
+Allows the size of the window to be
+changed with the arrow keys. The
+Home, PageUp, PageDown, and End keys
+can also be used to size the windows
+into the upper left, upper right,
+lower left, and lower right corners
+of the screen respectively. Mouse
+users can resize the window by
+placing the mouse cursor on any
+corner of the border, pressing and
+holding down the left mouse button
+then moving the mouse. Releasing the
+mouse button fixes the new window
+size.
+!44! 38 8
+Window|Next
+
+If there are multiple windows on the
+screen, Next changes the active
+window to the next window in the
+window list. This list is built by
+ZWB in the order in which the windows
+are created.
+!45! 38 8
+Window|Previous
+
+If there are multiple windows on the
+screen, Previous changes the active
+window to the previous window in the
+window list. This list is built by
+ZWB in the order in which the windows
+are created.
+!46! 38 4
+Window|Cascade
+
+Rearranges the windows into a deck so
+all of the file names are visible.
+!47! 40 4
+Window|Tile
+
+Rearranges the windows into a matrix so
+they are all the same size and visible.
+!49! 38 8
+Window|Hi Res
+
+Toggles between low resolution mode
+(25 lines per screen) and high
+resolution mode (43 or 50 line per
+screen.) Any windows that have been
+zoomed will be returned to their
+previous size.
+!50! 38 11
+Compile|Compile
+
+Compiles the file in the active
+window using the current compiler
+settings. The Compile Options
+sub-menu is used to change
+compilation conditions such as the
+memory model used (see Compile
+Compile Options). ZWB automatically
+saves all modified files before
+invoking the compiler.
+!51! 38 10
+Compile|Make .obj
+
+Invokes Make, using the name of the
+file in the active window with the
+extension changed to .obj.This is a
+useful way of checking that
+alterations that have been made to a
+source file have not introduced any
+syntax errors before a complete Make
+is attempted.
+!52! 38 6
+Compile|Make
+
+Run Make. The make file can be
+changed using the Make Commands
+dialog box (see Compile Make Command
+Line). The default is makefile.
+!53! 37 7
+Compile|Debug
+
+Debug the file in the currently
+selected window. The debugger
+configuration used is that set up
+using the Compile Debug options
+sub-menu.
+!54! 44 3
+Compile|Run Program
+
+Runs the program and options specified.
+!55! 40 9
+Compile|Disassemble .obj
+
+Produces a .cod file from a .obj file.
+The .cod file contains the assembler
+instructions present in the .obj file
+as well as pretty printed codeview
+information, if those debug records
+are present. The .cod file can be
+assembled with minor editing.
+!56! 40 6
+Compile|Compile Options
+
+Used to control how the compiler builds
+.obj files from source files compiled
+within ZWB. It does not effect the
+compilers behavior during MAKE.
+!57! 45 6
+Compile|Make Options
+
+Provides a method of specifying additional
+Make commands. These commands are retained
+until changed. Can be use to define a macro
+or specify a target.
+!58! 54 4
+Compile|Debug Options
+
+Provides a method of specifying additional debugger
+commands. These commands are retained until changed.
+!59! 37 7
+Options|File Stats
+
+Statistics for the file shown in
+the current window will be displayed
+on the top line of the screen. They
+include the cursor row and column
+position, and the number of lines.
+!60! 42 14
+Options|Begin Macro
+
+Macros are a very useful way of
+repeatedly executing the same series
+of commands. The storage of a macro
+is initiated by selecting Begin
+Macro. All subsequent commands are
+stored until End Macro is selected
+(see below). The stored sequence of
+commands can be executed at any time
+by selecting Execute Macro.
+
+NOTE: The MOUSE will not be active
+      while you are recording a macro.
+!61! 42 5
+Options|End Macro
+
+Signals that the storage of commands,
+initiated by Begin Macro, is to
+cease.
+!62! 42 5
+Options|Execute Macro
+
+Executes the last set of commands
+specified using the Begin Macro and
+End Macro commands.
+!63! 36 8
+Options|Inc Indent
+
+Moves each line of code in a marked
+block, or on the cursor line if no
+block is marked, two spaces to the
+right. Inc Indent can be executed
+repeatedly to indent text by more
+than two spaces.
+!64! 38 8
+Options|Dec Indent
+
+Moves each line of code in a marked
+block, or on the cursor line if no
+block is marked, two spaces to the
+left. Dec Indent can be executed
+repeatedly to unindent text by more
+than two spaces.
+!65! 39 9
+Options|Spaces to Tabs
+
+Converts any sequences of spaces that
+are equivalent to the current tab
+setting into tabs. This may reduce
+the size of the file slightly. If
+there is a currently marked block the
+conversion is restricted to it,
+otherwise the whole file is converted.
+!66! 38 8
+Options|Tabs to Spaces
+
+Converts all tabs into sequences of
+spaces with the same length as the
+current tab setting. If there is a
+currently marked block the conversion
+is restricted to it, otherwise the
+whole file is converted.
+!67! 30 4
+Options|Editor Configuration
+
+Allows you to configure ZWB
+to your personal tastes.
+!68! 32 4
+Options|Editor Keybindings
+
+Allows you to reconfigure
+ZWB's key bindings.
+!69! 32 5
+Options|Color Configuration
+
+Allows you to change the colors
+of every display object used by
+ZWB.
+!70! 55 17
+Browse|GREP Browse
+
+The grep browser requests the string to search for
+and the files to search. If the files entry field is
+left blank ZWB will automatically search all C and
+C++ source files including .h and .hpp files. For
+example, if stdio.h is input at the Search for prompt
+and return pressed at the Files prompt, ZWB will
+display a list of all the C and C++ files in the
+current and the SOURCE directories which contain
+the text stdio.h. Browse Next (Alt+N) and Browse
+Prev (Alt+P) are used to step through the displayed
+browse list, automatically displaying the files and
+where a match was found. The Shifted Arrow keys or
+the Jump (Alt+J) command can be used to scroll the
+browser source window to a new location, allowing
+non-sequential perusing of the browse list.
+!71! 52 18
+Browse|C Tag Browse
+
+The C Tag Browser is a source level browser for C
+and C++ which functions similarly to the GREP
+Browser. It requires the source file to have been
+compiled previously for browsing (see Compile|
+Compile Options|Code Generation). If the cursor is
+on a symbol in the C or C++ text being edited, the
+C Tag Browser will find all declarations and
+definitions of that symbol. It will then pop up a
+window displaying the first declaration or
+definition and the surrounding text. If there is
+more than one declaration or definition for the
+symbol, it will create a picking list which can
+be browsed using Browse Next and Browse Prev.
+The C Tag Browser works with defines, macros,
+typedefs, functions, classes, and any other
+symbols used in C or C++. See: [Browse|GREP Browse]
+!72! 52 8
+Browse|Browse Using
+
+Browse Using will make a browser window set using
+the current window for the browser source. You
+can execute this command from your C++ source
+file and browse the #include files. You can also
+read in a list of files and line numbers generated
+by any program and browse through them.
+!83! 40 6
+Help|Help
+
+A context sensitive help facility which
+provides a help window to display
+usage information about the highlighted
+menu option or current dialog box.
+!84! 38 5
+Help|About...
+
+Displays the model and version number
+of ZWB along with acknowledgements to
+the authors.
+!85! 31 4
+Beg Of File
+
+Moves the cursor to the top
+of the file.
+!86! 31 4
+End Of File
+
+Moves the cursor to the bottom
+of the file.
+!87! 31 4
+Beg of Page
+
+Moves the cursor to the top
+line of the window.
+!88! 31 4
+End of Page
+
+Moves the cursor to the bottom
+line of the window.
+!89! 31 8
+Beg of Line
+
+Moves the cursor to the start
+of the current line. If the
+cursor is at the start of the
+line it will move the cursor
+to the start of the previous
+line.
+!90! 30 7
+End of Line
+
+Moves the cursor to the end
+of the current line. If the
+cursor is at the end of the
+line it will move the cursor
+to the end of the next line.
+!91! 30 6
+Fwd Page
+
+Moves the window view forward
+one page. (A page is one less
+than the size of the window
+so context will not be lost.)
+!92! 30 6
+Bck Page
+
+Moves the window view back
+one page. (A page is one less
+than the size of the window
+so context will not be lost.)
+!93! 33 4
+Fwd Line
+
+Move the cursor down one line
+perserving the cursor position.
+!94!
+Bck Line
+
+Move the cursor up one line
+perserving the cursor position.
+!95! 36 7
+Fwd Char
+
+Move the cursor one position to
+the right. If the cursor is at the
+end of a line, the cursor will be
+repositioned at the start of the
+next line down.
+!96! 37 7
+Bck Char
+
+Move the cursor one position to
+the left. If the cursor is at the
+start of a line, the cursor will be
+repositioned at the end of the
+previous line.
+!125! 41 9
+Spawn
+
+Allows a command to be run using the
+operating system while remaining within
+ZWB. The output of the command is sent
+to the regular OS screen unless the
+pipe option is turned on, in which case
+the output is sent to a new window
+within ZWB.
+!121! 35 1
+No Help exists for this function.
+!119! 35 1
+No Help exists for this function.
+!128! 35 1
+No Help exists for this function.
+!129! 35 1
+No Help exists for this function.
+!118! 35 1
+No Help exists for this function.
+!112! 35 1
+No Help exists for this function.
+!97! 35 1
+No Help exists for this function.
+!98! 35 1
+No Help exists for this function.
+!103! 35 1
+No Help exists for this function.
+!104! 31 8
+Open Line
+
+A new line is started at the
+current cursor position, but
+the cursor remains at the end
+of the previous line. This
+command is equivalent to <CR>
+<LEFTARROW>
+!105! 37 7
+Twiddle
+
+This command swaps the character
+the cursor is on with the character
+immediately preceding it. If the
+cursor is at the start of a line it
+has no effect.
+!99! 30 4
+Fwd Word
+
+Moves the cursor forward to
+the start of the next word.
+!100! 30 4
+Bck Word
+
+Moves the cursor back to the
+start of the previous word.
+!101! 30 5
+Fwd Del Word
+
+Moves the cursor forward to
+the start of the next word
+and then deletes that word.
+!102! 30 5
+Bck Del Word
+
+Moves the cursor back to the
+start of the previous word,
+and then deletes it.
+!106! 41 5
+Search Forward
+
+Does a forward search for the specified
+text within the current window, starting
+from the current cursor position.
+!107! 42 5
+Search Backward
+
+Does a backward search for the specified
+text within the current window, starting
+from the current cursor position.
+!108! 38 11
+Search Replace
+
+Search Replace starts at the current
+cursor position in the current window
+and moves forward replacing every
+occurrence of the specified search
+text with the replacement text. It
+stops when the end of the file is
+reached. The cursor position is
+restored after this command is
+executed.
+!109! 38 8
+Search Query Replace
+
+Query is similar to Replace, except
+that it requests confirmation before
+each replacement. Query also starts
+at the cursor position and continues
+until the end of the file in the
+selected window is reached.
+!110! 36 11
+Home
+
+The Home command move the cursor
+to the beginning of the line, if it
+is not already their. The next
+consecutive home command will move
+the cursor to the beginning of the
+page, if it is not already their.
+The third consecutive home command
+will move the cursor to the begin-
+ning of the file.
+!111! 34 11
+End
+
+The End command move the cursor
+to the end of the line, if it
+is not already their. The next
+consecutive end command will move
+the cursor to the end of the
+page, if it is not already their.
+The third consecutive end command
+will move the cursor to the end
+of the file.
+!113! 32 6
+Scroll Up
+
+Scrolls the text in the window
+down one line, making the line
+at the top of the window the
+second line in the window.
+!114! 32 5
+Scroll Down
+
+Scrolls the text in the window
+up one line, making the second
+line in the window the top one.
+!115! 30 6
+Scroll Left
+
+Scrolls the window one column
+to the left. It has no effect
+if the window is already
+displaying the first column.
+!116! 31 7
+Scroll Right
+
+Scrolls the window one column
+to the right. It has no effect
+if the window is already
+displaying the end of the
+longest line in the window.
+!117! 36 5
+Undelete Line
+
+Inserts the line that was last
+deleted above the current
+cursor line.
+!120! 33 3
+Word Select
+
+Marks the word the cursor is on.
+!122! 29 5
+Cursor is Top Line
+
+Makes the line the cursor is
+on the first line shown in
+the window.
+!123! 29 5
+Cursor is Bottom Line
+
+Makes the line the cursor is
+on, the last line shown in
+the window.
+!124! 30 6
+Cursor is Middle Line
+
+Makes the line the cursor is
+on the middle line of the
+window. (i.e. it centers the
+cursor in the window.)
+!126! 34 7
+Quote char
+
+Causes the next keystroke to be
+interpreted literally, rather
+than as a command. This is useful
+for putting control codes into
+your files.
+!127! 31 4
+Deblank
+
+Deletes all of the blank lines
+around the cursor.
+!152! 37 9
+Key Bindings Menu               F9
+
+The Key Definitions Menu contains a
+list of the keybindings for common
+commands. The keybindings listed are
+not rebindable. Most of them are
+dictated by the CUA/SAA standard and
+the rest are a logical extrapolation
+of that specification.
+!130! 33 2
+All compiler options controlling
+the generation of .OBJ files.
+!131! 33 3
+All compiler options controlling
+the interpretation of source
+files.
+!132! 33 4
+All compiler options controlling
+the names and types of extra
+output that can be generated by
+the compiler.
+!133! 25 1
+Don't change this match.
+!134! 19 1
+Change this match.
+!135! 28 2
+Change everything from here
+to the end of the file.
+!136! 27 3
+Change this occurrence and
+then quit Query Search and
+Replace.
+!137! 31 1
+Quit Query Search and Replace.
+!197! 47 12
+Here the compiler is directed how to build
+the program.
+
+The Memory Model option determines how much
+    memory your program can and will use.
+The OS Support option determine which
+    Operating System your program will run
+    on.
+The Optimize options can be ignored until
+    the final build.
+The Compiler Version should only be changed if
+    if the compiler is running out of memory.
+!198! 47 17
+This dialog box is an extension of the basic
+code generation dialog box.
+
+The Linker option determines if the compiler
+    should build only .OBJ files, .OBJ files
+    and browse (.TAG) files, or an .EXE.
+The Browser check box must be set if in order
+    to use the C Tag Browser and ZTAG must
+    be run on the resulting .OBJ files.
+The Instruction Set option tells the compiler
+    which microprocessor your program will
+    require to run.
+The Debugger check boxes give you more control
+    over the type of debug information the
+    compiler is generating. This is useful if
+    you are running out of memory to debug
+    your program in.
+!199! 49 10
+The Source Restrictions are mutually exclusive.
+For example, you could not have strict ANSI C
+conformity and also assume all source files were
+C++. To select an option move the highlight bar
+to it, or use the accelerator key to jump to it,
+and then press the space bar. If the item has a
+check mark in front of it, it is activated.
+
+Predefined Macros, such as __ZTC__ are inhibited
+when the check box is empty.
+!200! 47 8
+The information output from the compiler can
+be controlled from here. The names of the
+.obj file, .lst file, and .cod file, which
+contains an assembly listing of the compilers
+output can be specified. If the file check
+boxes are marked and no file name is specified
+then the name of the source file will be used
+with the appropriate extension.
+!193! 35 4
+The make command line is available
+from here.
+
+Do not type "make" over again.
+!194! 54 5
+Command line options entered here are passed to the
+debugger, not to the program being debugged. If there
+is a check in the EMS Pages field the debugger's use
+of EMS is limited to the number of 16K pages
+specified.
+!190! 40 7
+Enter the text to be searched for.
+The search will progress either forward
+or backward from the current cursor
+position. Once the end of the file is
+reached, using the Search|Again command
+will cause it to restart from the
+opposite end of the file.
+!191! 40 11
+Enter the text to be searched for and
+the desired replacement pattern.
+The search will progress either forward
+or backward from the current cursor
+position. If the Query Replace option
+has been checked, ZWB will ask you
+before it makes a replacement.
+
+NOTE: If you use a blank replacement
+      string, ZWB will prompt you for
+      verification.
+!188! 43 8
+Enter the desired filename. Precede the
+filename with a ':' if the environment
+search feature is not desired. Wildcard
+characters will be interpreted explicitly.
+
+NOTE: You can permanently disable the
+      environment search from
+      Options|Editor Configuration.
+!201! 39 8
+Enter the pattern to be searched for.
+If you do not specify any file spec,
+ZWB will search all of the source
+files in the environment.
+
+NOTE: The GREP Browser does not use
+      regular expressions. All symbols
+      will be interpreted literally.
+!202! 40 7
+Enter the desired symbol and ZWB will
+provide a list of all the definitions.
+The C Tag Browser works on all symbols,
+including #define's and typedefs. You
+must have compiled your source files
+for browsing and ran ZTAG on the .OBJ
+files.
+!206! 41 9
+ZWB maintains three separate color
+palettes, which have been preconfigured
+for EGA/VGA color monitors, Monochrome
+monitors, and Monochrome VGA monitors.
+You can edit the colors in any one of
+these by selecting it. To change the
+colors used by ZWB you must press the
+OK button in the Color Editing Dialog
+Box which follows this selector.
+!207! 41 9
+The Color being changed is controlled by
+selecting the group on the right hand
+side of the dialog box, and then the
+detail in the center of the dialog box,
+and final the attribute, by using the
+Coloring Box on the right hand side of
+the dialog box. The color should change
+in the example window, to show you how
+it will look in use.
+!203! 39 12
+The Default ZWB Keybindings option
+will restore ZWB to its original
+keybindings. If you want to customize
+the keybindings, ZWB maintains three
+keybinding configuration files. They
+are based on EMACS and WordStar but
+they can be edited into what ever
+configuration is desired. To change
+the keybindings used by ZWB you must
+press the OK button in the Compile
+Keybindings Dialog Box which follows
+this selector.
+!204! 42 11
+Use RETURN to end the current keybinding
+session. ZWB does not allow keys that are
+defined by the SAA/CUI specification to
+be rebound. It does not allow BACKSPACE
+to be rebound either. ZWB also does auto-
+matic translation of the second key in
+a two key sequence. If you bind ^X R and
+^X ^R to different commands ZWB will
+respect it. However, if you only bind
+^X R, ZWB will automatically bind ^X ^R
+to the same command.
+!205! 20 1
+CONFIGURATION
+!192! 36 2
+Enter the number of the line the
+cursor is to be positioned on.
+!139! 36 7
+File Menu
+
+The File Menu contains the editor
+commands most commonly used to
+manipulate files in ZWB. It also
+contains the commands used to
+interact with the operating system.
+!140! 36 15
+Edit Menu
+
+The Edit Menu contains the editor
+commands most commonly used to
+manipulate regions of text. ZWB
+can manipulate blocks of text as
+well as strings of characters.
+
+Many of the Edit Menu commands use
+the Clipboard. This is a hidden
+storage area in which text that has
+been cut or copied is kept. New
+commands can either replace the
+current contents of the Clipboard
+or append their data to it.
+!141! 43 10
+Search Menu
+
+The Search Menu contains all the editor
+commands which concern search and replace
+operations. The Search Menu options can be
+used from the menu, or if there is a
+accelerator key available (shown on the
+right hand side of the menu option), this
+key sequence can be used without going
+through the menu at all.
+!142! 53 11
+Window Menu
+
+The Window Menu contains all the editor commands
+which concern windows, such as Open, Zoom,
+Location and Resize.
+
+The Window Menu options can be used from the menu,
+or if there is a accelerator key available (shown on
+the right hand side of the menu option), this key
+sequence can be used withoutgoing through the menu
+at all.
+!143! 53 11
+Compile Menu
+
+The Compile Menu contains all the commands
+concerning compilation and debugging. It also
+contains the commands which allow you to take
+advantage of make.
+
+The Compile Menu options can be used from the menu,
+or if there is a accelerator key available (shown on
+the right hand side of the menu option), this key
+sequence can be used without going through the menu.
+!144! 53 12
+Options Menu
+
+This Menu contains extra features of the
+editor, including file stats, macros, and
+increment and decrement indents, and all
+editor configuration.
+
+The menu options can be used from the menu itself,
+or if there is a accelerator key available (shown on
+the right hand side of the menu option), this key
+sequence can be used without going through the menu
+at all.
+!145! 44 6
+Browse Menu
+
+The Browse Menu is used to invoke the GREP
+Browser, the C Tag Browser, or a generic
+browser which uses what ever file is in the
+current window as the browser source.
+!148! 32 4
+Help Menu
+
+Provides access to information
+about ZWB.
+!189! 40 8
+Allows a command to be run using the
+operating system while remaining within
+ZWB. The output of the command is sent
+to the output screen or if the pipe
+option is set, the output is sent to
+a new window within ZWB. The pipe
+option is set when the check box has
+an 'X' in it.
+!195! 48 5
+The name of the program to be executed must
+be entered on the line, just as if you were
+executing the program from the operating
+system. This command line will also be used in
+in conjunction with the debugger.
+!196! 50 5
+This command turns .obj files into .cod files.
+A .cod file contains an assembler source listing
+of the code segments within the .obj file. The
+.cod files also contain pretty printed CodeView
+records if those records were in the .obj file.
+!208! 48 6
+Executing OVERWRITE will replace the existing
+ZWB configuration file with a new one which is
+compatible with this version of ZWB. Executing
+CANCEL will leave the old configuration file
+unchanged. ZWB will not remember any changes
+that have been made to its configuration.

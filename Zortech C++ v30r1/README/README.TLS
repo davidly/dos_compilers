@@ -1,0 +1,99 @@
+                      Zortech C++ Tools
+                      -----------------
+
+This is version 3.0 of C++ Tools
+
+This file contains any last minute information concerning the V3.0 version
+of ZCV. You should read this file before continuing.
+-----------------------------------
+Version : V3.0r1 Release
+Date    : June 19, 1991
+
+-----------------------------------
+CHANGE NOTES
+Modified disp_peekbox/ disp_pokebox references for new prototypes.
+
+Modified zEQ::pending to deal with bioskey(1) return value of -1
+as a special case (is this a DOS4+ innovation?).
+
+Modified zBitVec to add extra operator= functions to avoid compiler
+generated ones.
+
+Modified zMoneyNN to minimise rounding errors on division/ multiplication
+by doubles with no fractional part.
+-----------------------------------
+KNOWN PROBLEMS
+PharLap does not handle chained interrupts correctly. RTCTEST will fail
+unless RTC.CPP is modified to eliminate chaining.  This will then hold
+out any pop-up TSR's which use the timer tick.
+
+There appear to be problems with our dos extender and the mouse if some
+other interrupt is happening frequently.  In ETEST0 the mouse will
+sometimes die during the period before the timer expires.  The timer
+uses the clock tick.  A keyboard interrupt seems to start the mouse
+stuff working again.
+-----------------------------------
+MAKING LIBRARIES
+We have supplied large and small model libraries for MSDOS and OS/2
+(not Dos & Windows Edtion) to make additional libraries, move to
+the TOOLS\SOURCE subdirectory and type:
+
+For MSDOS use:
+MAKEALL <.BAT>         to make all of the libraries
+or
+MAKE MODEL=L OS=__MSDOS__          to make the large model library alone.
+
+For OS/2 use:
+MAKEALL <.CMD>         to make all of the libraries
+or
+MAKE A=^^^& MODEL=C OS=__OS2__     to make the compact model library alone.
+
+Most prototypes have been changed from int to INT16. This is a define
+in tools.hpp. On DOS386 it is defined to short, on MSDOS and OS/2 it
+is defined to int.
+-----------------------------------
+MSDOS VERSION
+There are some changes from the description in the manual which
+are largely to do with maintaining a uniform interface under DOS
+and OS/2.
+
+The Text User Interface classes no longer use class zTextMouse.
+Instead, all of these classes include EVENT.HPP, and thus pull
+in the event queue which now initializes the mouse.
+
+The event queue now also attempts to record the state of the shift
+keys for keyboard events. It will not be able to do this if you
+have typed ahead, but for deliberate commands - like SHIFT+ESC -
+or something of the sort, it should be fine. Test program ETEST0.CPP
+has been added.
+
+The event queue now has functions zEQ.hidemouse() and zEQ.showmouse().
+These may be used instead of calls to the Zortech library mouse
+package, though you can use the direct calls to the mouse package
+if you prefer.
+-----------------------------------
+OS/2 VERSION
+There are some changes from the description in the manual which
+are largely to do with maintaining a uniform interface under DOS
+and OS/2.
+
+The Text User Interface classes no longer use class zTextMouse.
+Instead, all of these classes include EVENT.HPP, and thus pull
+in the event queue which now initializes the mouse.
+
+The event queue now has functions zEQ.hidemouse() and zEQ.showmouse().
+These should be used instead of calls to the Zortech library mouse
+package, which should NOT be used with the text user interface classes.
+Similarly the disp package from the C library should NOT be used with
+the event queue or the text user interface classes. Use the facilities
+provided by zScreenArea, or if you need to go to a lower level, use the
+OS/2 Vio functions etc. For examples see the zScreenArea source code.
+
+The event queue now also records the state of the shift keys for keyboard
+events so you can decipher key strokes like SHIFT+ESC etc.
+
+The classes which mess with the interrupt vectors are not supported
+at present under OS/2, that is the real time clock class, the critical
+error handler class, and the interrupt vector class.
+-----------------------------------
+EOF

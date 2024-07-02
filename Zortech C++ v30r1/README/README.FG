@@ -1,0 +1,143 @@
+	                FG - Zortech Flash Graphics
+
+This is version 3.0
+
+This file contains any last minute information concerning Flash Graphics
+You should read this file before continuing.
+-----------------------------
+Version : V3.0r1 Release
+Date    : June 15, 1991
+
+-----------------------------
+COMPLETE LIST OF BOARDS AND MODES SUPPORTED
+
+MSDOS, Zortech DOSX, Phar Lap and Rational systems:
+
+ATI Wonder+         640 x 400 x 256 colors (mode 0x61).
+ATI Wonder+         640 x 480 x 256 colors (mode 0x62).
+ATI Wonder+         800 x 600 x 256 colors (mode 0x63).
+Hercules mono       1 or 2 display pages 720x348x2 colors.
+CGA Med res         320x200x4 colors (mode 0x03).
+                    Note!  Autodetect uses mode 0x06.
+CGA High res        640x200x2 colors (mode 0x06).
+IBM EGA             With color display 320x200x16 colors (mode 0x0D).
+                    Note!  Autodetect uses mode 0x0E.
+IBM EGA             With color display 640x200x16 colors (mode 0x0E).
+IBM EGA             With TTL mono monitor 640x350x4 colors (mode 0x0F).
+IBM EGA             With enhanced color display 640x350x16 colors (mode 0x10).
+IBM VGA             IBM VGA in 640x480x1 color (mode 0x11).
+IBM VGA             IBM VGA in 640x480x16 colors (mode 0x12).
+IBM VGA             IBM VGA in 320x200x256 colors (mode 0x13).
+Orchid Pro Designer With multi-freq monitor, 800x600x16 colors (mode 0x29).
+Paradise VGA Plus   With multi-freq monitor, 800x600x16 colors (mode 0x58).
+Trident 8900        With multi-freq monitor, 800x600x16 colors (mode 0x5B).
+Video 7 VEGA VGA    With multi-freq monitor, 800x600x16 colors (mode 0x62).
+Diamond Flower Inst With multi-freq monitor, 800x600x16 colors (mode 0x64).
+
+All VESA modes except 0x6A are not supported by the Rational Systems version.
+VESA (multi vendor) With multi-freq monitor, 800x600x16 colors (mode 0x6A).
+VESA (multi vendor) With multi-freq monitor, 640x400x256 colors (mode 0x100).
+VESA (multi vendor) With multi-freq monitor, 640x480x256 colors (mode 0x101).
+VESA (multi vendor) With multi-freq monitor, 800x600x16 colors (mode 0x102).
+VESA (multi vendor) With multi-freq monitor, 800x600x256 colors (mode 0x103).
+VESA (multi vendor) With multi-freq monitor, 1024x768x256 colors (mode 0x105).
+VESA (multi vendor) With multi-freq monitor, 1280x1024x256 colors (mode 0x107).
+Everex EVGA         With multi-freq monitor, 800x600x16 colors (mode 0x70).
+TIGA 2.0            Tested with Number Nine GX ISA Level 3.  256 (8 bit 
+                    pixels) simultaneous colors only.  Not supported by
+                    Rational Systems or Zortech DOSX.
+Toshiba T/J-3100    640x400x2 colors, note T and J.  Note!  No autodetect.
+
+
+MSDOS Only, some BIOS restrictions:
+IBM 8514A           Resolution and colors 8514 dependent.
+                    Uses 8514 API, does not drive 8514 directly.
+
+OS/2:
+CGA High res        640x200x2 colors (mode 0x06).
+IBM EGA             With TTL mono monitor 640x350x4 colors (mode 0x0F).
+IBM EGA             With enhanced color display 640x350x16 colors (mode 0x10).
+IBM VGA             IBM VGA in 640x480x1 color (mode 0x11).
+IBM VGA             IBM VGA in 640x480x16 colors (mode 0x12).
+
+SCO UNIX:
+IBM EGA             With color display 640x200x16 colors (mode 0x0E).
+IBM EGA             With enhanced color display 640x350x16 colors (mode 0x10).
+IBM VGA             IBM VGA in 640x480x16 colors (mode 0x12).
+IBM VGA             IBM VGA in 320x200x256 colors (mode 0x13).
+
+-----------------------------
+NEW FEATURES AND IMPROVEMENTS
+FGGIF has been speeded up dramatically.  I used fg_writebox() instead of 
+fg_drawdot().  Also -- Compuserve's copyright notice has now been included.
+Try this with the new VESA 256 color modes -- it looks great!
+
+Some VGA high resolution 256 color modes are now supported:
+
+256 color VESA modes:
+int _cdecl _FAR fg_init_vesa0();
+int _cdecl _FAR fg_init_vesa1();
+int _cdecl _FAR fg_init_vesa3();
+int _cdecl _FAR fg_init_vesa5();
+int _cdecl _FAR fg_init_vesa7();
+
+256 color ATI modes:
+int _cdecl _FAR fg_init_ati61();
+int _cdecl _FAR fg_init_ati62();
+int _cdecl _FAR fg_init_ati63();
+
+The VESA terminate and stay resident program for your board is required for
+all of the VESA modes except 0x6A and 0x102.
+
+fg_blit(), fg_save() and vertical lines for the VGA 256 color modes are up 
+to speed.  fg_drawmatrix() (and therefore fg_putc() and fg_puts()) are 
+currently slow (along with non-horizontal, non-vertical lines) so the auto 
+detection is disabled for now.  Set the environment variable FG_DISPLAY if 
+you want one of these modes (see fg.h for values).
+
+fg_getcolormap() and fg_setcolormap() are no longer supported.  Their 
+functions are replaced by fg_setpalette() and fg_getpalette().
+
+Fixed:
+
+8514/A support has been upgraded.  fg_setpalette() and fg_getpalette() were
+added.  The initialization routine now searches for the highest resolution 
+mode available with 256 simultaneous colors.  16 color modes are not
+supported. fg_writebox() and fg_readbox() now read/write the data in the 
+proper orientation.
+
+Fixed a bug in the THICK_X type fill pattern data.
+
+TIGA is supported with Phar Lap DOS extender.
+
+Some of the functions for VGA mode 0x13 were sped up: fg_drawline() for 
+horizontal lines, fg_readdot(), fg_drawmatrix(), fg_putc(), and fg_drawdot().
+This mode is now being converted to assembly and is the same code that will 
+be used for the other VGA 256 color modes. 
+-----------------------------
+KNOWN BUGS
+
+fg_drawellipse() with large radii (> 700 pixels) ellipses may sometimes give 
+erroneous output.
+
+The last few characters (out of the 256 char set) with the 8 x 16 VGA font 
+will cause a protection violation with Rational Systems 286 DOS extender.
+-----------------------------
+SUSPECTED BUGS
+
+8514/A fg_setpalette() and fg_getpalette() may have blue and green swapped 
+with some API's.  It works correctly with the API that comes with the ATI 
+Ultra (V 1.03A).  But this is different from the documentation that we have 
+available. ATI has not yet been able to verify the bug or provide us with 
+correct documentation.
+
+fg_blit() for EGA/VGA 16 color modes has been reported to trash the 
+destination but we have not been able to reproduce the problem.  If found 
+please send us some simple code that demonstrates the problem.
+
+New functions:
+
+int _cdecl _FAR fg_init_ati61();
+int _cdecl _FAR fg_init_ati62();
+int _cdecl _FAR fg_init_ati63();
+

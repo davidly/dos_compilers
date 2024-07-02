@@ -1,0 +1,146 @@
+		The Zortech C++ Windows Support
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of WINC and other information related to Microsoft Windows. You should read
+this file before continuing.
+-----------------------------------
+Version : V3.0r1 Release
+Date	: July 7, 1991
+
+-----------------------------------
+SETTING UP THE ZORTECH GROUP FILE
+
+Select File|New in Program Manager and Select Group File
+then type the required title for the program manager group, we
+suggest 'Zortech C++ v3.0' and then press TAB and enter the group
+file name, ZTC30R1.GRP and select OK or press ENTER.
+
+When ZWB is selected a dialog box is displayed for default parameters
+if this is not required edit the zwb.pif file in the Windows directory
+and remove the '?' in the 'Optional Parameters' field.
+-----------------------------------
+SERVERS AND CLIENTS
+To create a WINC server, the macro SERVER must be defined when compiling
+winc.cpp, use -DSERVER=1. To create a dedicated WINC client that can only
+be run as from a WINC server, use -DCLIENTONLY=1 when compiling winc.cpp.
+Examine the makefiles for WS.EXE and ZDIFFW.EXE for examples of these
+types of application.
+-----------------------------------
+RESOURCES
+There is no need to use the Zortech Resource Compiler ZRC, or the Microsoft
+Resource Compiler RC, to mark an executable as Windows 3.0 compatible, or
+to bind a previously compiled resource into an executable file. Both these 
+operations can be carried out by the Zortech Linker BLINK.
+
+If BLINK is used to link a Windows application, it will automatically mark
+that application as Windows 3.0 compatible. In addition BLINK can take a
+compiled resource file as an additional command line argument, and bind it
+to the executable it is constructing.
+
+If the ZTC control program is used, it can take both .rc and .res files as
+arguments and will produce a finished executable with bound resources.
+
+It is recommended that resources are compiled with ZRCC or RCC and that the
+linker is used to bind them into the executable. This is especially true if
+you intend to use the Zortech Debugger for Windows since it ensures that the
+resource are present before the debugger is started.
+
+The Microsoft Resource Compiler is provided with this release to make it
+simpler to convert existing projects to Zortech C++.
+-----------------------------------
+NEW FUNCTIONS
+Two new functions have been added to the STDIO routines to allow control of
+the fonts used when STDIO is being redirected within Windows. StdIOFontSet 
+allows a font handle to be specified for use during STDIO output, StdIOFontGet
+returns the font handle currently being used. Four macros are provided:
+
+void StdOutFontSet(HFONT hFont);
+HFONT StdOutFontGet(void);
+void StdErrFontSet(HFONT hFont);
+HFONT StdErrFontGet(void);
+
+Example:
+	HFONT hFont;
+        LOGFONT lf;
+        
+        memset(&lf,0,sizeof(lf));
+        strcpy((char *)lf.lfFaceName,"Times Rmn");
+	hFont = StdOutFontGet();
+        StdOutFontSet(CreateFontIndirect(&lf))
+        if (hFont != StdErrFontGet())
+	        DeleteObject(hFont);	 // if not also being used by stderr
+        ....
+        
+-----------------------------------
+WINC AND C++ STREAMS
+The iostreams library is incompatible with Microsoft Windows due to
+problems with type checking restrictions. However, the oldstreams library 
+is compatible and is provided in the Windows libraries. At present only
+cout and cerr are available, and you must first provide a default
+window using the STDIO functions.
+-----------------------------------
+WINC EXAMPLES
+There are a number of example programs provided that demonstrate the use
+of the WINC libraries. First, there is an additional makefile 'toolkit.win'
+in the SAMPLE directory. This creates WINC versions of the utilities -
+archive, update and makedep as archivew, updatew and makedepw.
+
+There are also three subdirectories of SAMPLE that contain examples of one
+of each type of WINC programs. To create each example switch to the
+appropriate directory and type MAKE.
+
+They are:
+
+	ZGREPW		- a stand-alone WINC client
+	WS		- a general purpose WINC server
+	ZDIFFW		- a dedicated WINC client
+-----------------------------------
+SAMPLE ICON AND RESOURCE FILES
+The WINC directory contains a number of sample icon and resource files.
+To use them just copy the appropriate icon file and winc.rc to your
+directory, change the name of the icon file to winc.ico, or edit the .rc
+file to the correct icon file name, and add winc.rc to your ztc command line.
+If you are using zwb, add winc.rc in the command line options edit box.
+
+The files are:
+
+	winc.rc		- a default WINC resource file with about box
+	winc.ico	- icon for a stand-alone WINC application
+	winc_sv.ico	- icon for a WINC server
+	winc_cl.ico	- icon for a WINC client
+
+Feel free to modify winc.rc as required.
+-----------------------------------
+NEW FEATURES NOT DOCUMENTED
+
+Display Menu
+------------
+WINC applications have an additional menu - the Display Menu. This allows
+control of the character set used to display stdio output and allows the
+courier font to be used if installed. By default WINC applications use the
+OEM character set rather than the ANSI character set normally used by
+Windows. This is so that applications that use the IBM extended characters
+will display them correctly. The Display Menu allows you to change this to
+the ANSI character set if required.
+
+'DOS' commands
+--------------
+The WINC command line now accepts some 'DOS' commands. These can be entered
+as normal. Commands currently available are
+
+	cd	- Change drive and directory.
+	dir	- Display a directory of the specified path
+	cls	- Clear the display
+	type	- type the specified file to the display
+ 
+Note that typing cd without arguments will display the path of the current
+directory. Be aware that these command may behave slightly differently
+to their DOS equivalents due to differences in behavior between DOS and
+Windows.
+
+The WINC command line also allows the syntax 'd:' to change the currently
+active drive.
+-----------------------------------
+EOF

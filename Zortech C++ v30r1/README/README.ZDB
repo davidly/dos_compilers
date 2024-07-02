@@ -1,0 +1,513 @@
+			The Zortech C++ Debugger
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of ZDB. You should read this file before continuing.
+-----------------------------------
+Version : V3.0r1 Release
+Date    : July 4th, 1991
+
+-----------------------------------
+GENERAL INFORMATION
+Information in this file is
+coded as follows:
+
+	A	- Applies to all versions
+	D	- Applies to ZDB for DOS
+	R	- Applies to ZDB -br for DOS
+	P	- Applies to ZDB -bp for DOS
+	W	- Applies to ZDBW for Windows
+	O	- Applies to ZDB for OS/2
+-----------------------------------
+EXAMPLE FILES
+Demonstration and example files can be found in the DEBUG directory.
+They are as follows:
+
+	MAKEFILE	DOS examples makefile
+	EXAM*.C		¿
+	EXAM6A.ASM	³
+	VECTEST.CPP	³ example programs
+	VECTOR.CPP	³
+	VECTOR.HPP	Ù
+
+	DLL.MAK	Windows DLL example makefile
+	DLL.C		¿
+	DLLEXEC.C	³
+	DLLTEST.C	³ DLL examples
+	*.DEF		³
+	*.RC		Ù
+
+	WINDOWS.MAK	Windows examples makefile
+	MSC.MAK		MSC makefile
+	PHARLAP.MAK	Phar Lap makefile
+-----------------------------------
+DOSX PROGRAMS - IMPORTANT
+
+The Zortech Debugger is currently unable to debug DOSX programs. DOSX does
+not include debugger support at present. This will be remedied in a later 
+DOSX release, Registered users will be informed of its availability.
+-----------------------------------
+Version : V3.0r1
+Date	: 04/07/91
+
+New Features
+
+001W  Converting Windows Messages into WM_ Text
+	ZDBW's expression handler has been modified to recognise a 
+	special form of variable known as the 'WM' variable. If ZDBW 
+	detects a WM variable it will compare the variables value with 
+	the known list of WM_xxxx message types such as WM_CREATE. If 
+	found it will display this text rather than the variables 
+	integer value. Values greater or equal to WM_USER are shown as 
+	'WM_USER+xxxx'. Only the standard set of types in the range 
+	0x0000 to 0x03ff as given in 'windows.h/hpp' are supported.
+
+	To use this facility you should edit an expression to cast an 
+	integer	variable (int,unsigned etc) to the WM type. The most 
+	obvious place to do this is for the parameter 'message' that 
+	is used extensively in Windows functions. Thus the parameter 
+	should be edited to read '(WM)message'. When ZDBW sees this 
+	expression it reports its value as 'WM_xxxx'.
+
+	This is very useful, and therefore ZDBW goes one step further
+	and adds the '(WM)' cast to any parameter with the name 'message'.
+	Thus you will always be able to see the message type without 
+	performing the suggested edit. This system can be easily abused, 
+	however, if you use the	name 'message' for parameters that are not 
+	Windows messages. To see the original integer value edit the text 
+	back to 'message'.
+
+	A further example of using this facility is in tracing Windows 
+	messages. Set up a trace expression that reads '(WM)message' and 
+	set a trace point at the start of the Windows function or functions 
+	you wish to monitor. The trace buffer will then contain a list of 
+	the most recent	messages in easy to read text form.
+
+002W  Using Windows WM_ Message types in expressions
+	To complement the 'WM' variable type ZDBW's expression handler now
+	accepts WM_xxxx message text such as WM_CREATE where an integer would
+	normally be expected. This allows for easy conditional breakpoints 
+	in call back functions such as 'message==WM_DESTROY' etc. Note that 
+	this works on any integer, not just a '(WM)' casted variable. Thus 
+	the expression 'WM_CREATE' will show a value of '1' and the 
+	expression '(WM)WM_CREATE' will show a value of 'WM_CREATE'. Only 
+	the standard set of types in the range 0x0000 to 0x03ff as given 
+	in 'windows.h' or 'windows.hpp' are supported.
+
+	For example, to stop every time a certain message is received 
+	anywhere in the program, set a conditional breakpoint of 
+	'message==WM_CREATE' or	whatever you wish to trap. Then use the 
+	menu command 'Break/Set/Func/All' to set this breakpoint at the start 
+	of every function. Run the program. For those functions that do not 
+	have a 'message' parameter the expression will return FALSE. For 
+	those that do have 'message' it will be tested until a match is found 
+	at which point execution will halt.
+
+003W  ZDBWs DLL and loaded EXE Support
+
+	Preparation
+	-----------
+
+	ZDBW now supports the debugging of DLL's and loaded EXE's. It does
+	this within the mapper, as all debugging information must be 
+	available to ZDBW at the start of a debugging session regardless of 
+	whether the DLL has been loaded or not.
+	
+	In order to debug a program that loads a DLL or EXE file, first
+	compile both programs with debugging information. Do NOT run the
+	debugger or mapper on the DLL or EXE, this is done automatically
+	when the debugger is invoked for the base program.
+	
+	If your program was linked with any libraries then ZDBW searches 
+	for an equivalent DLL file in the current directory or PATH. If 
+	one is found and it contains debug data then this is loaded and used. 
+
+	It is also possible to directly specify a DLL required by means of 
+	the '/d' flag, which has the form '/d<filename>'. Up to 7 DLLs or 
+	EXEs can be provided by the repeated use of '/d'. If you do not want 
+	to debug a DLL that is automatically used, either recompile it 
+	without debug data, or use the '/l-' to exclude debug data from 
+	libraries.
+
+	It should be noted that any included DLL/EXE file should contain its
+	original debug information as generated by the linker. If the EXE 
+	has already been debugged by ZDBW then it must be regenerated as 
+	the original debug records will have been overwritten, an error will 
+	be reported if this occurs. An alternative is to make a copy of the
+	DLL or EXE before running the debugger for the first time, and copy 
+	it back over that being debugged as required. If no debug records at 
+	all are found then the DLL/EXE is simply ignored.
+
+	ZMAPW also accepts the '/d' flag. If you use ZMAPW manually you must 
+	to use the '/d' flag to the mapper rather than in ZDBW.
+
+	Use of static naming
+	--------------------
+
+	Debugging DLLs can get very confusing if there are any functions,
+	variables or files that have the same name as in the main program. To
+	avoid this all functions and variables belonging to a DLL will be
+	treated as static and hence will have the name of the file appended
+	separated by a '#'. Note this is only ZDBWs use of static, it will 
+	not affect your programming. As for a normal static, ZDBW will accept 
+	the short form of name in expressions where the scope is obvious, use 
+	the full '#' name to get at specific instances. If there are files 
+	with the same name then ZDBW will only give you access to the first 
+	instance detected (i.e. don't use the same file names!).
+
+	Cautions
+	--------
+
+	A) When debugging a master program and its DLLs all debug information 
+	is stored in the master program, not distributed among the DLLs. Thus 
+	if you recompile and link a DLL it is necessary to also relink the 
+	master program and then remap the master program again to include the
+	new debugging information. For safety you should always relink and 
+	remap all parts of your system when any module changes to guarantee 
+	valid debugging data.
+
+	B) If a DLL or EXE file is unloaded by Windows then the debugger will 
+	no longer be able to debug these modules. If they are reloaded during 
+	the life of the current program you can only debug them if they	are 
+	loaded at the same address, something Windows does not guarantee.
+	They will, however, continue to execute.
+
+	Examples
+	--------
+
+	As a trivial example of DLL generation and debugging we have included
+	DLLTEST which can be built using the makefile 'DLL.MAK' as follows:
+
+	to build the files	: make -fdll.mak
+	to debug		: make -fdll.mak debug
+
+	If the DLL/EXE is not yet loaded then data will show a value of '?' 
+	and source files cannot be inspected at the assembler level. 
+	Breakpoints and Tracepoints can be used as usual and will be set 
+	as required when the DLL/EXE is loaded.
+
+004W  Exiting ZDBW and Killing A Program
+	When ZDBW is exited the program being debugged is allowed to
+	continue executing rather than being terminated. If the program 
+	has already terminated then no further action is required. The 
+	rationale for leaving the program running is that to exit the 
+	program in mid-execution may cause corruption of internal Windows 
+	data structures.
+
+	It is possible to terminate a Windows program in mid-execution 
+	by forcing it to generate an Unrecoverable Application Error. This 
+	causes Windows to believe that the program has crashed fatally and 
+	must be removed from the system.
+
+	The 'Kill Program' menu command under the Program menu will do this. 
+	This command forcibly terminates the user program by simulating an 
+	Unrecoverable Application Error. The error message generated by 
+	Windows is cleared by pressing a key. This command can also be 
+	accessed by Alt-K.
+
+	Note that if you reload a program that is still running with the 
+	Alt-L command then ZDBW will forcibly kill the program for you 
+	before starting	up a new version of the program. Again, press any 
+	key to clear the Windows error message.
+
+005A  New Floating point expressions
+	The symbols INFINITY, NAN and NANS are now accepted by ZDB in
+	expressions and are equivalent to the same macros found in FLTPNT.H.
+	Thus expressions such as 'f==INFINITY' can be used.
+
+006A  ZDB.CFG and ZDB.HLP
+	All versions of ZDB now use the same configuration file name, 
+	ZDB.CFG, and the same help text file name, ZDB.HLP. 
+	In the OS/2 version, you can ensure that a separate global 
+	configuration file is used by supplying a different directory 
+	through the INIT environment variable.
+
+007A  The /cc Flag - Ignore ZDB.CFG
+	The '/cc' flag has been added to tell ZDB to ignore any ZDB.CFG files
+	it may find and to use its built-in defaults instead. This is useful
+	when switching between ZDBW and ZDB, say, where ZDBW may have been 
+	run on a secondary monochrome monitor. When ZDB is next used it will 
+	pick up all the monochrome settings from the ZDBW usage. Using '/cc' 
+	will let you start from the beginning without regard to where ZDB.CFG
+	is stored.
+
+008A  Exiting Menus
+	Most menu commands will now return to window command mode. This is
+	contrary to the sequences specified in the tutorial section in the 
+	manual.
+
+009A  Display Graphical Characters
+	When displaying a signed variable as a character then characters in 
+	the range 0x00 to 0x1f and 0x80 to 0xff will be shown as their 
+	graphic	equivalent rather than '\xnn' as described in the manual. 
+	Unsigned characters will be shown in hexadecimal.
+
+	For numerical display of a signed character press TAB to cycle 
+	through	the display formats. Note that strings will still be shown 
+	using the '\xnn' format.
+
+010DR  Saving All Interrupt Vectors
+	Due to popular demand the '/i' switch has been added to the real
+	mode DOS debuggers ZDB and ZDB -br. This causes all 256 interrupt 
+	vectors	to be saved upon startup and restored upon exit from the 
+	debugger (normally only the first 64 are saved). The setting is 
+	stored in ZDB.CFG and can be turned off with '/i-'.
+
+	This flag is used when you suspect your program may corrupt some of
+	these interrupt vectors or when your program is using these vectors 
+	and you wish to guard against the case of exiting the debugger 
+	without	restoring the original interrupt vectors.
+
+011A  Debugging Files with no debug data
+	If ZDB attempts to debug a file with no debug data then it will now
+	report a fault in ZMAP. This is to catch those instances where debug
+	data has been mistakenly left out.
+
+	If you know that there is no debug data available but still wish to
+	debug the file (in assembler mode of course) then you must use the 
+	'/g' flag. This flag may be given to ZDB when it is first used on a 
+	file or	to ZMAP if this program is being used standalone.
+
+012DRP	Extended lines on alternate monitor
+	It is not possible for ZDB to handle the 43/50 line mode on EGA 
+	and VGA screens if it is being used as a secondary monitor with 
+	the /2 switch.	ZDB is unable to instruct the video BIOS to 
+	reprogram the correct adapter. It is possible, however, to set 
+	up ZDB so that 43/50 line mode can be used, it just requires a 
+	litte care.
+
+	1)	Starting with the EGA/VGA monitor as the current one, 
+		set it to 43 or 50 line mode.
+	2)	Now issue the command 'mode mono' to switch to the Mono 
+		monitor.
+	3)	Use the command 'zdb /2x prog' to debug with ZDB in 43/50 
+		line mode on the EGA/VGA screen and the program running 
+		on the Mono screen.
+
+	Note this uses a new flag setting, '/2x'. This should only be used 
+	when the secondary monitor is set up previously in 43/50 line mode. 
+	It is saved in ZDB.CFG.
+
+013A  Forcing Source Mode On Start Up
+	ZDB will only come up in source mode automatically if the functions
+	'main()' or 'WinMain()' are detected. If you are debugging assembly 
+	language programs that do not contain these functions or exclude 
+	these function with partial debugging then you will come up in 
+	assembly language mode.
+
+	If you wish to override this facility then use the '/a-' flag. This 
+	will force ZDB to use source mode and it will stop at the first line
+	it reaches in source mode.
+
+	WARNING: ZDB will execute your program and will not stop until it
+	reaches a codeline. If your program does not contain any codelines 
+	or the codelines present are not reached at program startup this 
+	flag will cause your program to execute without first stopping 
+	debugger.
+
+	Note the '/a' flag is NOT stored in the configuration file and 
+	must be	used explicitly every time it is required. This means 
+	that ALT-L for reloading will not work correctly if you require 
+	the use of this flag.
+
+014W  The Alt-F8 Window - Windows Debug Messages
+	If you are using the debug kernel (supplied in the Microsoft Windows
+	SDK) or you wish to use the function OutputDebugString to pass text 
+	strings to the debugger, ZDBW handles these messages via the Alt-F8 
+	window,	called the 'Windows text' window.
+
+	This can store up to 32 messages, deleting the oldest when this
+	number is exceeded. By default ZDBW will also halt and display a 
+	warning	message if a debug message is detected. This is shown by the 
+	title of the AF8 window showing 'AF8 - Window text = halt'. This 
+	setting may be modified within the AF8 window by pressing TAB so 
+	that the title reads 'AF8 - Window text = run'. When set like this 
+	ZDBW will store all debug messages but continues executing.
+
+	This setting is stored in the configuration file.
+
+015A  Copying Expressions Into The EXAM Window
+	An expression may be copied from the AUTOMATICS window or the DATA
+	window into the EXAM window by placing the cursor over the 
+	expression required and pressing ALT-I.
+
+	The inserted expression will be placed at the end of the EXAM 
+	window and may be edited and refered to normal.
+
+016A  Dumping Debug Data
+	The /?[d] flag has been added for dumping debug data. This will 
+	generatea file called <program>.dbg that gives an ASCII dump of 
+	the current debug data. This is useful when hunting bugs in the 
+	debugger over the phone. /?d dumps raw data, /? dumps a prettier 
+	form of data. This will make life easier for Technical Support.
+
+017A  Missing Source Files
+	When ZDB is loading it attempts to locate all source files that are
+	available for debugging. The manual states that an error message is
+	generated for each source file that cannot be found. This has now 
+	been changed to give only the one error message indicating how many 
+	source	files were not found. This then removes the need to press a 
+	key many times when a large number of source files are missing.
+
+	The FILE window can then be used to see which source files were not
+	found. Use the '#' key to edit the file paths to locate the source 
+	files manually as described in the manual.
+-----------------------------------
+LIMITATIONS
+
+001R  Using ZDB -br under Windows
+	ZDB -br fails to run under Windows 3 correctly, usually aborting with a
+	protection register dump. This is due to a problem with the Rational 
+	Systems	DOS extender that is still to be resolved.
+
+002W  Saving Assembler breakpoints and Write Protection
+	In ZDBW assembler breakpoints and write protect ranges are not saved
+	across debugging sessions or on reloading as Windows does not 
+	guarantee that they will be loaded at the same addresses. They
+	will, therefore, disappear across debugging sessions or a reload.
+
+003P  VDISK failure with ZDB -bp
+	It has been reported that some versions of QEMM386.SYS cause ZMAPPH 
+	and ZDB -bp to fail with a warning message about VDISK usage. If 
+	this occurs, you will need an environment variable 'set DOSX=-VDISK' 
+	in your	autoexec.bat. This tells Phar Lap that the VDISK usage it 
+	detected is correct and should be allowed for.
+
+004P  386LINK problem with large debug data
+	There was a fault in 386LINK that causes CodeView data greater 
+	than 64k in any one module to blow up ZMAPPH or ZDB -bp. This may 
+	have already been fixed by Phar Lap but if not use partial debugging 
+	or remove '-g' from offending module.
+
+005P  -NOPAGE debugging
+	ZDB -bp will not work with programs linked with the -NOPAGE switch.
+
+006P  Debugging mouse handlers with ZDB -bp
+	In ZDB -bp mouse handling does not allow for the user grabbing the 
+	mouse event handler with a int 33h, ax=12. This is because this must 
+	be done	in real mode and ZDB -bp can not monitor what occurs in real 
+	mode. If this is a problem then use the /p switch to disable mouse 
+	use by ZDB -bp.
+
+007P HIMEM.SYS and less than V3.0 Phar Lap
+	The Phar Lap 386|DOS V2.2d extender is not compatible with the DPMI
+	standard for extended memory sharing as used by Windows 3.0. You will
+	need to remove HIMEM.SYS when using ZDB -bp to debug programs
+	using V2.2d or less. An out-of-memory error messages results if you
+	forget to do this.
+
+008P  Use of -OFFSET with ZDB -bp
+	If you use the -OFFSET switch with 386LINK then you must use an 
+	offset that is a multiple of 4K such as 1000h, 8000h etc, otherwise
+	The program will fail to load for debugging.
+
+009P  Debugging V2.2d Phar Lap (or less)
+	ZDB -bp was written using V3.0 Phar Lap but will debug programs 
+	written	for V2.2d (or less) Phar Lap. To do this requires that 
+	the file DBGLIB.REX be present somewhere on your PATH. This file 
+	is normally supplied with V3 or greater of the Phar Lap DOS 
+	Extender SDK and you should use the most uptodate version available. 
+	We have included this file for those users who have yet to upgrade 
+	to V3.0 Phar Lap.
+
+010P  Debugging .EXP files with ZDB -bp
+	ZDB -bp will debug either the '.exe' file (searched for first) 
+	and then the '.exp' file. Use 'zdb -bp prog.exp' or 
+	'zdbph -bp prog.exe' to	select a specific file if required. Be 
+	warned, if you have a '.exe' file around and then build a new 
+	'.exp' without updating the '.exe' file then 'zdb -bp prog' 
+	will debug the old '.exe', not the new '.exp'.
+
+011W  ZDBW and SVGA display modes
+	The Zortech Debugger for Windows will work correctly for most SVGA
+	screen drivers that use 16 colors up to 800x600, although 
+	compatibility with anything other than the standard VGA driver cannot
+	be guaranteed. ZDBW has not been tested with 1024x768 color modes.
+
+	If ZDBW is used in single monitor mode then it is only able to save 
+	the color palette if Windows is using a 16 color VGA or SVGA mode.
+
+012W  Using RC after ZDB
+	If you mistakenly run ZDB on a windows exe file before running the 
+	Microsoft RC program to mark it as a Windows 3 app then RC will 
+	either refuse to manipulate the file or will delete the existing 
+	debug data. You must then relink the exe file, run RC and then 
+	continue with ZDB.
+	
+	This is not a problem when using the Zortech linker BLINK, since RC 
+	is not then required.
+
+013A  CodeView Data
+	It will be obvious to those of you who use the CodeView debugger that
+	ZDB in fact takes the original CodeView records and converts these to a
+	more managable form. This process is carried out by ZMAP and its
+	derivatives and involves replacing the CodeView records 
+	with ZDB records.
+ 
+	This is not a problem normally *unless* you wish to also use 
+	CodeView, or another utility that uses CodeView information,
+	on the same program. If you have already used ZDB on it then 
+	you will have to regenerate the CodeView data by relinking. 
+	If you know in advance that this will be the case, you can use 
+	the '/f' switch of ZMAP to cause ZMAP to generate a new file 
+	for debugging rather than overwriting the original. See the 
+	reference section of the manual for details on how to do this.
+
+014W  Program Termination
+	As explained under the new 'Kill Program' command, if your 
+	program has yet	to terminate ZDBW will not terminate your 
+	program upon exiting. This means that exiting ZDBW will 
+	then return you to your running program	as if debugging was 
+	not selected.
+
+	It is therefore important that you understand your programs
+	current execution state and the possible consequences of 
+	continued execution. If the program has a fault that could 
+	cause problems then it should be terminated with the 
+	'Kill Program' (Alt-K) command first.
+
+	The 'Kill Program' command is automatically selected if you 
+	reload the program with 'Alt-L'.
+-----------------------------------
+Manual Errata
+
+001   ZDB -bv
+	The virtual debugger accessed with the -bv flag has been removed from
+	this release due to its incompatability with various extended memory
+	system (i.e. VCPI, DPMI, XMS).
+
+	In almost all cases its use can be replaced with the -br switch which
+	has the added advantage of working on a 80286 as well. Disadvantanges
+	are the footprint of the debugger is somewhat higher and the memory
+	protection scheme is unable to use the paging mechanism and is hence
+	slightly slower.
+
+002   WINDEBUG.386
+	This is the enhanced mode driver for the SysReq key under Windows. If
+	you have it installed then ZDBW will use it but we are not able to
+	supply it ourselves.
+
+	Those of you without WINDEBUG.386 (and those with for that matter) 
+	will find that interrupting a Windows program is best achieved by 
+	setting aconditional breakpoint on MainWndProc of 
+	'message==WM_RBUTTONDOWN'. Pressing the right mouse button will 
+	then enter the debugger.
+
+003   Use of Menus
+	In various examples the use of the ESC key is mentioned to exit from
+	certain menu commands. In many cases this will no longer be required
+	as most commands now exit directly as described in the new features 
+	section.
+
+	Also note that the line editor will delete the default text if a non
+	cursor control character is the first thing typed.
+
+004   Debugging files without debug information
+	As described in the new features list, this is now inhibited
+	rather than just generating a warning message as described in 
+	the manual. A new flag, '/g', has been added to ZDB and ZMAP 
+	which forces debugging of a program that has no debug data.
+
+=============================================================================
+EOF
