@@ -25,7 +25,7 @@ The benchmarks include:
   * ttt: proves you can't win at tic-tac-toe if the opponent is competent
   * tm: test malloc. This calls malloc/calloc/free in the C runtime to measure performance. It's C only and many compilers can't run it.
 
-To run the compilers on Windows, use the m.bat script in each folder, e.g.:
+To run the compilers on Windows, use the m.bat script in each folder. Sometimes m.bat is in a subfolder named "bin" or "code". For example:
   * m sieve
   * m e
   * m ttt
@@ -44,4 +44,4 @@ If you're running Linux or MacOS and see perplexing compilation errors, it could
 
 Here are runtimes for the benchmarks in milliseconds for a 4.77Mhz 8086 (not 8088) as emulated by [NTVDM](https://github.com/davidly/ntvdm)
 
-![runtimes](https://github.com/davidly/dos_compilers/assets/1497921/b096de83-81d8-4c8c-8f1a-39f697c2c472)
+![runtimes](https://github.com/davidly/dos_compilers/assets/1497921/0acd359d-b283-4c54-a6d0-a976e3698c10)
