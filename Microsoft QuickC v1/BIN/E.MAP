@@ -1,0 +1,38 @@
+
+ Start  Stop   Length Name                   Class
+ 00000H 016FCH 016FDH _TEXT                  CODE
+ 016FEH 016FEH 00000H C_ETEXT                ENDCODE
+ 01700H 01741H 00042H NULL                   BEGDATA
+ 01742H 01959H 00218H _DATA                  DATA
+ 0195AH 01967H 0000EH CDATA                  DATA
+ 01968H 01968H 00000H XIFB                   DATA
+ 01968H 01968H 00000H XIF                    DATA
+ 01968H 01968H 00000H XIFE                   DATA
+ 01968H 01968H 00000H XIB                    DATA
+ 01968H 01968H 00000H XI                     DATA
+ 01968H 01968H 00000H XIE                    DATA
+ 01968H 01968H 00000H XPB                    DATA
+ 01968H 01969H 00002H XP                     DATA
+ 0196AH 0196AH 00000H XPE                    DATA
+ 0196AH 0196AH 00000H XCB                    DATA
+ 0196AH 0196AH 00000H XC                     DATA
+ 0196AH 0196AH 00000H XCE                    DATA
+ 0196AH 0196AH 00000H XCFB                   DATA
+ 0196AH 0196AH 00000H XCF                    DATA
+ 0196AH 0196AH 00000H XCFE                   DATA
+ 0196AH 01975H 0000CH CONST                  CONST
+ 01976H 0197DH 00008H HDR                    MSG
+ 0197EH 01A4BH 000CEH MSG                    MSG
+ 01A4CH 01A4DH 00002H PAD                    MSG
+ 01A4EH 01A4EH 00001H EPAD                   MSG
+ 01A50H 01A75H 00026H _BSS                   BSS
+ 01A76H 01A76H 00000H XOB                    BSS
+ 01A76H 01A76H 00000H XO                     BSS
+ 01A76H 01A76H 00000H XOE                    BSS
+ 01A80H 01E7FH 00400H c_common               BSS
+ 01E80H 0267FH 00800H STACK                  STACK
+
+ Origin   Group
+ 0170:0   DGROUP
+
+Program entry point at 0000:00D6
