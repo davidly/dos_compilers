@@ -1,3 +1,6 @@
-../../ntvdm -u -t TPC.EXE $1.PAS -\$S- -GD
+str=${1^^}
 
+ntvdm -r:.. -u TPC.EXE $str.PAS -\$S- -GD
+
+rm $str.MAP 2>/dev/null
 
