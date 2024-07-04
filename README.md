@@ -23,7 +23,7 @@ The benchmarks include:
   * sieve: The classic from BYTE Magazine that counts prime numbers.
   * e: Computes the irrational number e to 192 digits.
   * ttt: proves you can't win at tic-tac-toe if the opponent is competent
-  * tm: test malloc. This calls malloc/calloc/free in the C runtime to measure performance. It's C only and many compilers can't run it.
+  * tm: test malloc. This calls malloc/calloc/free in the C runtime to measure performance. It's C-only and many C compilers can't run it.
 
 To run the compilers on Windows, use the m.bat script in each folder. Sometimes m.bat is in a subfolder named "bin" or "code". On Linux or MacOS use m.sh. For example:
   * m sieve
@@ -36,7 +36,7 @@ To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag
   * ntvdm -c -p e
   * ntvdm -c -p ttt
     
-The Borland Pascal (v1 through v3) and BASIC products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for QuickBASIC v2 and v3. for QuickBASIC v2 you must use some emulator other than NTVDM to build; that version directly accesses keyboard hardware in a way that's not emulated.
+The Borland Pascal (v1 through v3) products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for QuickBASIC v2 and v3. for QuickBASIC v2 you must use some emulator other than NTVDM to build; that version directly accesses keyboard hardware in a way that's not emulated. DOSBOX works great.
 
 If you're running Linux or MacOS and see perplexing compilation errors, it could be your source files don't have cr/lf line separators. Use unix2dos to add them; some of these compilers require them. Some compilers require a ^Z / 0x1a at the end of files; CB86 is an example. Again, if you see build errors this may be the problem.
 
