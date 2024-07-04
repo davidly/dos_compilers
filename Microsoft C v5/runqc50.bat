@@ -1,3 +1,3 @@
-ntvdm -r:. -C:50 -t -h -e:include=inc,lib=lib qc ttt.c
+ntvdm -r:. -C:50 -h -e:include=inc,lib=lib qc ttt.c
 
 
