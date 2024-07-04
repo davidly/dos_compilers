@@ -1,4 +1,4 @@
 @echo off
 setlocal
 
-ntvdm -r:. -t qpl %1.pas
+ntvdm -r:. qpl %1.pas
