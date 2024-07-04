@@ -1,4 +1,4 @@
-str=${1^^}
+str=$(tr '[a-z]' '[A-Z]' <<< $1)
 
 rm $str.ERR 2>/dev/null
 rm $str.R86 2>/dev/null

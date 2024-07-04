@@ -1,4 +1,4 @@
-str=${1^^}
+str=$(tr '[a-z]' '[A-Z]' <<< $1)
 
 rm $str.SYM 2>/dev/null
 rm $str.OBJ 2>/dev/null
