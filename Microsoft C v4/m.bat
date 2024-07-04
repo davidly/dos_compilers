@@ -9,7 +9,7 @@ ntvdm -r:. cl /Ox /DDOSTIME /AS /Gs /Ze -I inc -I inc\sys -L lib %1.c
 if %ERRORLEVEL% NEQ 0 goto alldone
 
 rem use "ntvdm link /help" to get command-line arguments
-ntvdm -r:. -e:lib=lib -h -t link %1,,%1,slibfp
+ntvdm -r:. -e:lib=lib -h link %1,,%1,slibfp
 if %ERRORLEVEL% NEQ 0 goto alldone
 
 ntvdm -r:. -p %1
