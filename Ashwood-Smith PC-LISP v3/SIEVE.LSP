@@ -1,11 +1,8 @@
 ; BYTE magazine's Sieve benchmark
 
 (setq size 8190)
-(setq sizep1 (+ size 1))
-(array a t sizep1)
+(array a t (+ size 1))
 (setq count 0)
-(setq i 0)
-(setq l 0)
 
 (defun runsieve() (prog ()
     (setq i 0)
@@ -25,11 +22,11 @@
                       (setq k (+ i prime))
                       (prog ()
                           _nextk_
-                          (cond ((< k size)
-                                 (a nil k)
-                                 (setq k (+ k prime))
-                                 (go _nextk_))
-                          )
+                              (cond ((< k size)
+                                     (a nil k)
+                                     (setq k (+ k prime))
+                                     (go _nextk_))
+                              )
                       )
                       (setq count (add1 count)))
                )
@@ -56,6 +53,5 @@
 ))
 
 (main)
-
 (exit)
 
