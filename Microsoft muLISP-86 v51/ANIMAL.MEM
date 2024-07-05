@@ -1,0 +1,205 @@
+;File:	ANIMAL.MEM		08/27/85	Animal game data base
+
+
+("Does it nurse its young with milk"
+ ("Does it have legs"
+  ("Does it have a shell"
+   ("Does it have suckers on its arms"
+    ("Is it boneless"
+     ("Does it swim"
+      SNAKE
+      ("Is it a ferocious meat eating fish"
+       ("Is it a type of salmon"
+	("Can you wear it on your leg"
+	 GUPPY
+	 "GARTER SNAKE")
+	CHINOOK)
+       PIRANHA) )
+     "SEA CUCUMBER")
+    OCTOPUS)
+   ("Does it live in water"
+    SNAIL
+    CLAM) )
+  ("Does it have a beak"
+   ("Is it soft and squishy"
+    ("Does it go through metamorphosis"
+     ("Does it breathe fire"
+      ("Does it live in a colony"
+       ("Does it have claws"
+	("Does it suck blood"
+	 ("Is it an insect"
+	  ("Does it live in a cavern"
+	   ("Does it have horns"
+	    GECKO
+	    RAM)
+	   WUMPUS)
+	  ("Does it annoy housewives"
+	   ("Does it fly"
+	    GRASSHOPPER
+	    BUTTERFLY)
+	   COCKROACH) )
+	 ("Does a clock do it too"
+	  FLEA
+	  TIC) )
+	("Does it walk sideways"
+	 LOBSTER
+	 CRAB) )
+       ANT)
+      DRAGON)
+     ("Does it live in a hive"
+      ("Is it an insect"
+       FROG
+       ("Does it suck blood"
+	("Does it live in a nest"
+	 FLY
+	 WASP)
+	MOSQUITO) )
+      BEE) )
+    ("Do ants farm them"
+     ("Is it a reptile"
+      ("Does it have eight legs"
+       ("Does it have wings"
+	CATERPILLAR
+	COCKROACH)
+       SPIDER)
+      ("Does it eat mice"
+       SKINK
+       "MONITOR LIZARD") )
+     APHID) )
+   ("Does the male have a pretty tail"
+    ("Does it fly"
+     ("Does it have eight arms"
+      ("Is it the largest flightless bird"
+       MYNAH
+       ("Is it extinct"
+	OSTRICH
+	"DODO BIRD") )
+      OCTOPUS)
+     ("Does it have webbed feet for swimming"
+      ("Is it a scavenger"
+       ("Does it coo"
+	("Does it have long legs"
+	 KIWI
+	 HERON)
+	DOVE)
+       VULTURE)
+      ("Is it a large stately swimming bird with a curved neck"
+       ("Does it honk"
+	DUCK
+	GOOSE)
+       SWAN) ) )
+    ("Does the male have a comb"
+     ("Does it sometimes talk"
+      PEACOCK
+      PARROT)
+     CHICKEN) ) ) )
+ ("Does it have a long neck"
+  ("Does it live in trees"
+   ("Does it oink"
+    ("Is it wild"
+     ("Does it have claws"
+      ("Does it talk"
+       COW
+       HUMAN)
+      ("Does it bark"
+       CAT
+       DOG) )
+     ("Is it a member of the cat family"
+      ("Does it hibernate"
+       ("Would Lloyd Bridges be scared of it"
+	("Does it have a trunk"
+	 ("Does it have antlers"
+	  ("Does it hop"
+	   ("Does it have a bill"
+	    ("Does it have stripes"
+	     ("Does it abandon sinking ships"
+	      ("Does it like cheese"
+	       ("Do they sometimes walk off cliffs en masse"
+		("Is it the largest of the apes"
+		 ("Does the male have a face marked in blue and scarlet"
+		  ("Is it a fabulous animal with a single long horn"
+		   ("Does it have a mask"
+		    ("Is one named RIKI TIKI TAVI"
+		     ("Is it a weasel"
+		      ("Does it live in the water"
+		       WOLF
+		       ("Can it walk on land"
+			WHALE
+			HIPPO) )
+		      WEASEL)
+		     MONGOOSE)
+		    RACCOON)
+		   UNICORN)
+		  MANDRILL)
+		 GORILLA)
+		LEMMING)
+	       MOUSE)
+	      RAT)
+	     ZEBRA)
+	    PLATYPUS)
+	   KANGAROO)
+	  ("Is it a large handsome African antelope"
+	   MOOSE
+	   KUDU) )
+	 ("Is it hairy and extinct"
+	  ELEPHANT
+	  "WOOLY MAMMOTH") )
+	("Does it repel enemies with smell"
+	 ("Does it breathe air"
+	  SHARK
+	  ("Does it have an airhole on its head"
+	   ("Can it be mistaken for a mermaid"
+	    ("Does it live in the Himalayas"
+	     HIPPOPOTAMUS
+	     "ABOMINABLE SNOWMAN")
+	    MANATEE)
+	   PORPOISE) )
+	 SKUNK) )
+       ("Is it covered with spines"
+	("Does it live underground and eat twice its weight every day"
+	 ("Does it emerge from hibernation to see his shadow"
+	  BEAR
+	  GROUNDHOG)
+	 SHREW)
+	PORCUPINE) )
+      ("Does it have spots"
+       ("Does it have stripes"
+	("Do its ears have tufts"
+	 LION
+	 LYNX)
+	TIGER)
+       ("Is it the fastest running animal"
+	LEOPARD
+	CHEETAH) ) ) )
+    PIG)
+   ("Does it fly"
+    ("Does it have a long tail"
+     ("Is it a sluggish two or three toed animal that hangs upside down"
+      KOALA
+      SLOTH)
+     ("Is it related to the raccoon"
+      ("Does it feign death when caught"
+       MONKEY
+       OPOSSUM)
+      ("Did Davy Crockett make a hat from its hide"
+       KINKAJOU
+       RACCOON) ) )
+    BAT) )
+  ("Does it have a pouch"
+   ("Do people ride it"
+    ("Does it have stripes"
+     ("Does it swim in the ocean"
+      ("Is it wooly and live in South America"
+       GIRAFFE
+       LLAMA)
+      ("Can it clap"
+       WALRUS
+       SEAL) )
+     ZEBRA)
+    ("Does it have a hump or two"
+     ("Is it usually found in South America"
+      HORSE
+      LLAMA)
+     CAMEL) )
+   KANGAROO) ) )
+

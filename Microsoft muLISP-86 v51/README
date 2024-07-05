@@ -1,0 +1,46 @@
+    This is a summary of muLISP-86 features not yet incorporated into
+the Reference Manual:
+
+The file HELP.LSP provides a help facility for muLISP primitives.
+After it is read in, commands of the form (HELP name) or (? name)
+show <name>'s arguments, primitive type, and page number in
+Chapter 5 of the Reference Manual.
+
+The file STRUCTUR.LSP contains a structure facility (DEFSTRUCT) and
+an array facility (MAKE-ARRAY, AREF, ARRAY-RANK, ARRAY-DIMENSION,
+ARRAY-DIMENSIONS, ARRAY-TOTAL-SIZE, and ARRAY-IN-BOUNDS-P).
+See the file and Chapters 17 and 19 of Common LISP by Steele for
+documentation.
+
+The function DOS, defined in COMMON.LSP, simplifies the calling of
+the MS-DOS command processor.  For example:  (DOS "DIR B:/W").
+
+The function GENSYM, defined in COMMON.LSP, creates new symbols.
+(GENSYM) returns a new symbol.  If <n> is a nonnegative integer,
+(GENSYM n) sets the gensym counter to <n>.  (GENSYM symbol) sets
+the gensym prefix to <symbol>.
+
+A "backquote" macro character, defined in COMMON.LSP, facilitates
+defining macros using DEFMACRO.  See the file and pages 349-351 of
+Common LISP by Steele for documentation.
+
+The functions STRING-TRIM, STRING-RIGHT-TRIM, and STRING-LEFT-TRIM,
+defined in MULISP.COM, can now accept either a list or a symbol
+as its first argument (in accordance with Common LISP).
+
+The function STACK-LIST, defined in MULISP.COM, returns a list of
+the values currently on the muLISP variable stack.
+
+The muLISP editor command  Ctrl-Q L  repeats the last search and
+replace command until the end of the text is reached.
+
+If the muLISP editor control variable *CASE-IGNORE* is nonNIL,
+case is ignored when searching for a string.
+
+The muLISP editor variable *WINDOW-SHAPE* controls the initial
+dimensions of the edit window.  F for full screen, V for vertical
+split, H for horizontal split.
+
+A native code compiler for muLISP is now available from Soft
+Warehouse, Inc.  Write Soft Warehouse for details.
+

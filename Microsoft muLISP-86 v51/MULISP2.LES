@@ -1,0 +1,518 @@
+File:  MULISP2.LES  (c)		12/27/85	Soft Warehouse, Inc.
+
+CLRSCRN
+This is the second of a series of on-line lessons designed to teach the
+fundamentals of LISP programming using the muLISP dialect of LISP.
+
+The first lesson explained in detail the 5 primitive functions in pure muLISP.
+In this lesson you will learn how to add your own functions to the basic
+primitives.
+
+
+CONTINUE
+Like primitive functions, user-defined functions are called with arguments and
+return a single value based upon the arguments.  Naturally a function must be
+defined before it is called with specific arguments.  Thus, there must be some
+means of referring to each of the arguments within the function definition
+before the actual arguments are known.
+
+The name used within a function definition to refer to an as yet unspecified
+ACTUAL ARGUMENT is called a FORMAL ARGUMENT.  A list of a function's formal
+arguments is included at the beginning of its definition.
+
+The next screen will show how formal arguments are used in a definition.
+
+
+CONTINUE
+In pure muLISP, expressions of the following form
+
+   (DEFUN name (arg1 arg2 ...)
+	task1
+	task2
+	 ...  )
+
+are used to define the function named <name>.  The atoms <arg1>, <arg2>, etc.
+are the formal argument names used for referring to the function's actual
+arguments.  The body of the function is made up of one or more tasks.  DEFUN
+stands for DEfine FUNction.
+
+We will postpone a full discussion of the component parts of function
+definitions until a later lesson.  For now, we will show how to define
+functions by example beginning with the next screen.
+
+
+CONTINUE
+Some people prefer a more mnemonic name than CAR for the function that returns
+the first element of a list.  This situation can be easily corrected by the
+following definition:
+
+$ (DEFUN FIRST (LST)
+    (CAR LST) )
+
+Note that the function being defined is named FIRST, that the function takes a
+single argument, that the argument can be referred to by the name LST within
+the function body, and that the function body consists of a single task which
+returns the CAR of the argument.
+
+User-defined functions are called in exactly the same way as the primitive
+functions.  For example:
+
+$ (FIRST '(DOG CAT COW PIG))
+
+
+CONTINUE
+No need to stop with selecting the FIRST element of a list.  Here is a
+definition for selecting the SECOND element of a list:
+
+$ (DEFUN SECOND (LST)
+    (CAR (CDR LST)) )
+
+During this break, using the functions CAR and CDR define the function THIRD
+and try out the functions FIRST, SECOND, and THIRD on some lists.  When
+entering multi-line muLISP expressions, like function definitions, you cannot
+edit the previous line once the <RETURN> key has been pressed.  Thus, make
+sure each line of a definition is correct before continuing to the next.  When
+you are ready to continue the lesson, type (RETURN) and press the <RETURN>
+key.
+
+BREAK
+Here is our definition for THIRD:
+
+$ (DEFUN THIRD (LST)
+    (CAR (CDR (CDR LST))) )
+
+$ (THIRD '(DOG CAT COW PIG))
+
+CONTINUE
+In lesson #1 we learned that the atom NIL is used to represent the empty list.
+NIL was also the atom returned by the functions EQL and ATOM to indicate a
+false truth value.  Since NIL is clearly a very special muLISP atom, it is
+important to be able to recognize it.
+
+What we need is a recognizer function called NULL that returns T if its
+argument is the empty list (i.e. NIL); otherwise it should return NIL.  (From
+now on we will say the "null list" rather than the "empty list".)
+
+During this Break, define the function NULL (you only need to use one of the
+5 primitive functions), and then try your new function out on various atoms
+and lists.
+
+BREAK
+Here is our definition for NULL.  Note that it is not necessary to quote NIL
+in the definition, since the value of NIL is NIL.  If you used () instead of
+NIL in the definition, () does not have to be quoted.
+
+$ (DEFUN NULL (OBJ)
+    (EQL OBJ NIL) )
+
+$ (NULL '(A B C))
+
+$ (NULL ())
+
+CONTINUE
+Up till now each user-defined function has been essentially just an
+abbreviation for the single task that makes up the function body.  But, the
+real power of functions comes from their ability to choose between courses of
+action based upon their arguments.
+
+Currently we have at our disposal three functions that can be used for
+testing arguments.  They are EQL, ATOM, and NULL.  Functions used for testing
+are often called PREDICATES.
+
+The next screen describes how to use predicates to make decisions within
+function definitions.
+
+
+CONTINUE
+As you may recall, a function body consists of one or more tasks.  In pure
+muLISP, tasks can be divided into two classes: simple tasks and conditional
+tasks.  A task which is an atom or a list whose CAR (i.e. first element) is an
+atom is a SIMPLE task.  For example:
+
+		(CONS ATM LST)
+
+The tasks in the functions defined thus far have all been simple tasks.  A
+task which is a list whose CAR is NOT an atom is a CONDITIONAL task.  For
+example:
+
+	 ((ATOM EXPN) (CONS EXPN LST))
+
+The CAR of a conditional task is the conditional's predicate.  If the
+predicate returns NIL, the value of task is also NIL and evaluation of the
+function body proceeds with the next task, if any.  If the predicate returns
+any value other than NIL, the remaining tasks in the function body are ignored
+and evaluation proceeds using the CDR of the conditional task as the remaining
+tasks.
+
+The examples in the next several screens should make this clearer.
+
+CONTINUE
+We already have the function ATOM that returns T if and only if its argument
+is an atom.  However, pure muLISP does not have a similar primitive recognizer
+function for lists.  Why not?  Because we can write our own if we need it.
+
+Since our new function will be a LIST Predicate, let's name it LISTP.  If its
+argument is an atom, LISTP should return NIL.  If the argument is not an atom,
+it must be a list and LISTP should return T.
+
+$ (DEFUN LISTP (OBJ)
+    ((ATOM OBJ) NIL)
+    T )
+
+You can think of the body of this definition as saying:  "If OBJ is an atom,
+return NIL; otherwise return T".
+
+After trying LISTP out on several objects including the null list, redefine
+LISTP so it returns T when given the null list.
+
+BREAK
+Here is LISTP modified to handle the null list:
+
+$ (DEFUN LISTP (OBJ)
+    ((NULL OBJ))
+    ((ATOM OBJ) NIL)
+    T )
+
+$ (LISTP 'DOG)
+
+$ (LISTP '())
+
+$ (LISTP '(DOG CAT COW))
+
+Note that, since the call on NULL in the first line of LISTP returns T as its
+value, there is no need to put a T following (NULL OBJ).
+
+
+CONTINUE
+If you have created a long list of names, you may want to find out if someone
+is member of the list.  Using the comparator EQL you can compare the name you
+are looking for with each name on the list.  Tentatively, you might start your
+definition like this:
+
+	(DEFUN MBR (NAM LST)
+	  ((EQL NAM (FIRST LST)))
+	  ((EQL NAM (SECOND LST)))
+	  ((EQL NAM (THIRD LST)))
+	  ((EQL NAM (THIRD (CDR LST))))
+		    ...
+
+Not only is this getting messier by the line, but there is no end to it.
+After all, you had hoped to use your new function MBR on lists of arbitrary
+length.  So let's consider another approach.
+
+
+CONTINUE
+Given a name and a list, consider the following facts:
+
+1.  If the list is null (i.e. has no elements), the name is NOT a member of
+    the list.
+
+2.  If the name is EQL to the CAR of the list, the name is a member of the
+    list.
+
+3.  If the name is not EQL to the CAR of the list, the name is a member of
+    the list if and only if it is a member of the CDR of the list.
+
+It is absolutely essential that you fully understand and accept the above
+facts.  The first two facts should be fairly straight-forward.
+
+The third fact is slightly more subtle.  It means that if a name is not equal
+to the first element of a list, then to determine whether or not the name is a
+member of the list, all you have to do is determine whether or not the name is
+a member of the CDR of the list.
+
+
+CONTINUE
+Let's convert our three facts into a three step procedure for finding out if a
+name is a member of a list:
+
+1.  If the list is NULL, return NIL.
+2.  If the name is EQL to the CAR of the list, return T.
+3.  Otherwise, use this procedure to find out if the name is a member of the
+    CDR of the list and return the value the procedure returns.
+
+This is called a recursively defined procedure since step #3 tells us to use
+the very procedure we are defining to find out if the name is a member of the
+CDR of the list.  The procedure can be easily transformed into a recursive
+muLISP function definition as follows:
+
+$ (DEFUN MBR (NAM LST)
+    ((NULL LST) NIL)
+    ((EQL NAM (CAR LST)) T)
+    (MBR NAM (CDR LST)) )
+
+Use MBR to see if DOG is a member of (CAT COW DOG PIG).
+
+BREAK
+CLRSCRN
+In lesson #1 we mentioned that EQL was only good for comparing atoms, since
+NIL is returned if lists are compared.  For example:
+
+$ (EQL '(DOG CAT COW) '(DOG CAT COW))
+
+Using the techniques you learned from MBR, let's define a function called
+EQLIST that returns T if two lists of atoms are equal; otherwise EQLIST
+returns NIL.  Consider the following recursive procedure for EQLIST and
+convince yourself of its validity:
+
+1.  If NULL the first list, return NULL the second list.
+2.  If NULL the second list, return NIL.
+3.  If NOT EQL the CAR of the first list to the CAR of the second, return NIL.
+4.  Return EQLIST the CDR of the first list to the CDR of the second.
+
+During this break define EQLIST and try it out on some examples.  If you
+follow the above procedure, you will also need to define NOT, a predicate
+function that returns T if its single argument is NIL.
+
+BREAK
+Here is our definitions for EQLIST and NOT and an example:
+
+$ (DEFUN EQLIST (LST1 LST2)
+    ((NULL LST1) (NULL LST2))
+    ((NULL LST2) NIL)
+    ((NOT (EQL (CAR LST1) (CAR LST2))) NIL)
+    (EQLIST (CDR LST1) (CDR LST2)) )
+
+$ (DEFUN NOT (OBJ)
+    (EQL OBJ NIL) )
+
+$ (EQLIST '(DOG CAT COW) '(DOG CAT COW))
+
+Note that the definition of NOT is identical to the definition of NULL that we
+defined earlier.  This is because, as you will recall from lesson #1, muLISP
+uses the atom NIL to designate both the null list and the truth value false.
+
+CONTINUE
+So far the user-defined functions we have written have been either selector
+functions or predicates.  Let's try our hand at a constructor function.
+Specifically, a function for appending two lists together.
+
+CONS should immediately spring to mind as the prime candidate for building
+lists.  However, here is what happens if CONS is naively called with two lists
+as arguments:
+
+$ (CONS '(DAVE JOAN AL) '(KAREN ANN JOE))
+
+Instead of being a 6 element list, the result is a 4 element list whose first
+element is a 3 element list.  The result we wanted would have to be CONSed
+together as follows:
+
+$ (CONS 'DAVE (CONS 'JOAN (CONS 'AL '(KAREN ANN JOE))))
+
+Although multiple uses of CONS gives the desired result, what we want is a
+single function that returns the result when given two arbitrary length lists
+as arguments.
+
+CONTINUE
+Consider the problem of defining the function APPEND in terms of the 5
+primitive muLISP functions and the user-defined functions that will be defined
+by the time APPEND is called.  Remember APPEND itself qualifies as "a user-
+defined function that will be defined by the time APPEND is called" (in other
+words APPEND can be recursively defined).
+
+Begin by breaking the problem up into cases starting with the simplest case.
+Given the lists LST1 and LST2,
+
+1.  If LST1 null, return LST2.
+
+2.  Otherwise, CONS the CAR of LST1 onto the list you get by APPENDing the CDR
+    of LST1 onto LST2.
+
+The next screen defines APPEND and provides more justification for the above
+procedure.  However, if you feel ambitious, try defining APPEND during this
+break.
+
+BREAK
+CLRSCRN
+$ (DEFUN APPEND (LST1 LST2)
+    ((NULL LST1) LST2)
+    (CONS (CAR LST1) (APPEND (CDR LST1) LST2)) )
+
+$ (APPEND '(DAVE JOAN AL) '(KAREN ANN JOE))
+
+To understand this recursive definition, consider individually the two
+arguments to CONS in the last line of the definition.  The first argument,
+(CAR LST1), is simply the first element of LST1.  In the above example, the
+first argument to CONS is the atom DAVE.
+
+Assuming our APPEND is working correctly, the second argument to CONS,
+(APPEND (CDR LST1) LST2), is the list resulting from appending everything but
+the first element of LST1 to LST2.  Note that this is an acceptable use of
+recursion since each time APPEND calls itself it is with a shorter LST1 so
+eventually LST1 will be the null list and the recursion will halt.  In the
+above example, the second argument to CONS is the list
+(JOAN AL KAREN ANN JOE).
+
+CONTINUE
+Now its your turn to write some recursively defined constructor functions.
+Define the function REMBER (REMove memBER) that removes only the first
+occurrence of an atom from a list.  For instance, the call
+
+      (REMBER 'DOG '(CAT DOG COW DOG))
+
+should return the list (CAT COW DOG).  The definition should be of the
+following form:
+
+      (DEFUN REMBER (OBJ LST)
+	((NULL LST) ...)
+	((... OBJ ...) ...)
+	(CONS ... (REMBER ... ...)) )
+
+BREAK
+CLRSCRN
+REMBER can be defined as follows:
+
+$ (DEFUN REMBER (OBJ LST)
+    ((NULL LST) NIL)
+    ((EQL OBJ (CAR LST)) (CDR LST))
+    (CONS (CAR LST) (REMBER OBJ (CDR LST))) )
+
+$ (REMBER 'DOG '(CAR DOG COW DOG))
+
+If you had trouble with REMBER, you can redeem yourself by defining the
+function REMBER-ALL.  Instead of just the first occurrence,
+REMBER-ALL removes all occurrences of an atom from a list.  Thus
+
+       (REMBER-ALL 'DOG '(CAT DOG COW DOG))
+
+should return the list (CAT COW).  Hint: you need only make a small change to
+REMBER to get REMBER-ALL.
+
+BREAK
+CLRSCRN
+REMBER-ALL can be defined as follows:
+
+$ (DEFUN REMBER-ALL (OBJ LST)
+    ((NULL LST) NIL)
+    ((EQL OBJ (CAR LST))
+      (REMBER-ALL OBJ (CDR LST)) )
+    (CONS (CAR LST) (REMBER-ALL OBJ (CDR LST))) )
+
+$ (REMBER-ALL 'DOG '(CAR DOG COW DOG))
+
+Note the use of indentation in the above definition to highlight the flow of
+control within the definition.  Although we have not stated it explicitly, it
+should be clear that muLISP is a free format language (i.e. the spacing of the
+atoms in lists, including function definition lists, is not critical).  As you
+must have discovered by now, what is critical in muLISP is the proper
+balancing of parentheses!
+
+
+CONTINUE
+The last function we shall discuss in Lesson #2 is the constructor function
+REVERSE.  Its effect is simple enough:
+
+	  (REVERSE '(DOG CAT COW PIG))
+
+results in the list (PIG COW CAT DOG).  But REVERSE is tricky.
+
+During this break, see if you can define REVERSE.  If you can't figure it out,
+the next screen gives a hint without giving away the answer.
+
+BREAK
+Don't forget that in addition to the 5 primitives, you are free to use all the
+functions you have already defined including APPEND to write REVERSE.
+
+The next screen gives a more substantial hint.
+
+BREAK
+If you still haven't figured out how to write REVERSE, you may need to work on
+your RQ (Recursive Quotient)!  Using recursion, you can REVERSE the CDR of LST
+by the call
+
+		  (REVERSE (CDR LST))
+
+Then to REVERSE the whole LST, all that remains is to APPEND the REVERSE of
+the CDR of LST to the single element list
+
+		  (CONS (CAR LST) NIL)
+
+Give REVERSE one last try during this break.
+
+BREAK
+REVERSE can be defined as follows:
+
+$ (DEFUN REVERSE (LST)
+    ((NULL LST) NIL)
+    (APPEND (REVERSE (CDR LST)) (CONS (CAR LST) NIL)) )
+
+$ (REVERSE '(DOG CAT COW PIG))
+
+Although this is a logically acceptable definition of REVERSE, it is an
+extremely inefficient one.  This is because APPEND is called for each element
+of the list to be reversed.
+
+Let's take a whole new approach in our effort to define REVERSE more
+efficiently.  During this break, think about how you would reverse the order
+of a stack of sheets of paper.
+
+CONTINUE
+The simplest way to reverse a stack of paper is to repeatedly take the top
+sheet (i.e. the CAR) of the stack and put it on a second stack until the first
+stack is empty.  The second stack should start out empty.
+
+Given a list and a null list, this is the translation of the above process
+into a recursive procedure to REVERSE the first list:
+
+1.  If NULL the first list, return the second list.
+
+2.  Otherwise, CONS the CAR of the first list onto the second list and REVERSE
+    the CDR of the first list.
+
+Based on this procedure, you should now be able to define an efficient REVERSE
+during this break.
+
+BREAK
+REVERSE can be efficiently defined as follows:
+
+$ (DEFUN REVERSE (LST1 LST2)
+    ((NULL LST1) LST2)
+    (REVERSE (CDR LST1) (CONS (CAR LST1) LST2)) )
+
+$ (REVERSE '(DOG CAT COW PIG))
+
+Note that although REVERSE is defined with TWO formal arguments, it was called
+with only ONE actual argument.  In general, extra formal arguments are
+assigned the value NIL, which is often convenient.
+
+CONTINUE
+In this lesson you have learned how to extend pure muLISP by defining
+functions.  The following summarizes the major concepts presented in the
+lesson:
+
+1.  The parts of a definition including the function name, the formal argument
+    list, and the tasks comprising the function body.
+
+2.  Two types of tasks including simple tasks and conditional tasks.  Based on
+    the value returned by a predicate function, conditional tasks are used to
+    make decisions when functions are evaluated.
+
+3.  The power and elegance of recursive function definitions.  Recursive
+    function definitions are acceptable as long as the arguments in the
+    recursive call are closer to the termination condition.
+
+
+CONTINUE
+Congratulations on completing muLISP Lesson #2.  Although this concludes our
+discussion of pure muLISP, it by no means exhausts the potential number of
+functions that can be written in this subset of muLISP.  The following are few
+functions you might try defining:
+
+1.  (EQUAL list1 list2)  an equality comparator of <list1> and <list2>, but
+    unlike EQLIST, it works even if the elements of the lists are not atoms.
+    For example, on the list ((A B (C D)) (E F)).
+
+2.  (SUPER-REVERSE list)  reverses all levels of all lists in <list>.  For
+    example, ((A B (C D)) (E F)) goes to ((F E) ((D C) B A)).
+
+3.  (UNION set1 set2)  returns the set-theoretic union of <set1> and <set2>.
+    (Sets are lists in which no element occurs more than once).
+
+4.  (INTERSECTION set1 set2)  returns the intersection of two sets.
+
+5.  (SUBST new old list)  replaces all occurrences of <old> with <new> in
+    <list>.
+
+CONTINUE
+$ (RDS)
+

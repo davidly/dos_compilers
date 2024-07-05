@@ -1,0 +1,341 @@
+File:  MULISP1.LES  (c)		12/27/85	Soft Warehouse, Inc.
+
+CLRSCRN
+This is the first of a series of on-line lessons designed to teach the
+fundamentals of LISP programming using the muLISP dialect of LISP.
+
+muLISP is a powerful programming language rich in control constructs and
+functions for operating on user created data structures.  However there is a
+small subset of muLISP, hereafter called pure muLISP, that illustrates many of
+the fundamental programming concepts required to understand muLISP.
+
+The first two programming lessons are devoted to teaching pure muLISP.  A
+systematic presentation of the full power of muLISP begins with the third
+lesson.
+
+
+CONTINUE
+muLISP is a symbolic programming language.  Most conventional programming
+languages are primarily designed for numerical processing.  Rather than
+manipulating numerical data structures (like numbers and arrays), muLISP
+programs typically manipulate symbolic data structures (like words and
+sentences).
+
+In muLISP virtually any symbolic data structure can be represented as an
+object.  We will begin these lessons by describing what constitutes an object
+and how objects can be used to represent symbolic data structures.  After
+that, we will describe how to use muLISP to manipulate these objects.
+
+
+CONTINUE
+Data objects can be either simple or composite.  Simple data objects are
+called atoms.  In pure muLISP, atoms are indivisible in the sense that they
+cannot be divided into sub-components.  Like people, atoms are referred to by
+name.  Atom names consists of a string of characters.  The following are four
+typical atom names:
+
+       APPLE    RABBIT    54321    -41
+
+Composite data objects are called lists.  Lists are made up of zero or more
+objects, each of which can be simple or composite.  Lists are entered and
+displayed with their elements enclosed in parentheses.  The following is a
+list consisting of four elements:
+
+	   (THE QUICK BROWN FOX)
+
+
+CONTINUE
+We stated earlier that muLISP is a symbolic programming language because it
+manipulated symbolic data structures.  muLISP is also a functional programming
+language because functions are used to manipulate the symbolic data
+structures.
+
+Given an ordered set of data objects, a muLISP function will return a unique
+value based upon the data objects it is given.  Pure muLISP provides 5
+primitive functions for manipulating the primitive data objects (i.e. atoms
+and lists).  Writing muLISP "programs" consists of defining additional
+functions to perform some desired task.
+
+We will begin the lessons by showing the mechanics of interacting with muLISP.
+Then we examine the use of each of the 5 primitive functions.  Once you have
+mastered the use of these primitives, you will be ready to begin lesson 2 to
+learn how to define your own functions in terms of the primitive functions.
+
+
+CONTINUE
+In some ways interacting with muLISP is much like using a pocket calculator.
+First you enter an expression following the dollar sign prompt, then muLISP
+reads the expression, evaluates it, and displays the result.  To prevent the
+evaluation of an expression, you must precede the expression with a SINGLE
+QUOTE MARK (also called the apostrophe or accent mark).  Do not confuse this
+with the BACK ACCENT mark found on some keyboards.  The following shows what
+happens when the atom name APPLE is entered:
+
+$ 'APPLE
+
+If an atom name is entered without the quote mark, the value of the atom is
+returned.  In pure muLISP atoms evaluate to themselves.  Therefore the quote
+mark before atoms is often not necessary:
+
+$ APPLE
+
+To enter atom names of your own, select the Break option by pressing B.  When
+you are ready to return to the lesson, following the dollar sign prompt, type
+(RETURN) and press the <RETURN> key.
+
+BREAK
+CLRSCRN
+Lists are entered by enclosing the elements within matching parentheses.  The
+following shows how to enter a list:
+
+$ '(CAT COW DOG PIG)
+
+The elements of a list can themselves be lists.  For instance, the following
+list might be part of a data structure describing someone:
+
+$ '((HEIGHT 72) (WEIGHT 175) (EYES BLUE) (HAIR BLOND))
+
+If you should forget to precede the list with a single quote mark, you will
+invoke an "Undefined Function" error.  If this should occur, select the
+Continue option by pressing C and the error will be ignored.
+
+Press B and try entering some lists of your own.  When you are ready to return
+to the lesson, type (RETURN) and press the <RETURN> key.
+
+BREAK
+CLRSCRN
+LISP is an acronym for LISt Processing language.  Thus as you might expect,
+muLISP provides primitive functions for operating on lists of objects.  One of
+the most common operations is the extraction or selection of one the members
+of a list so that it can be examined independently.  Functions that perform
+this service are called selector functions.
+
+Two of the five primitive pure muLISP functions are selector functions.  The
+CAR function returns the first element of a list.  The CDR (pronounced
+could-er) function returns everything except the first element of a list.
+
+The nonmnemonic names of these two functions is derived from the original
+implementation of LISP on an IBM 704 computer in the early 1960's.  As we
+shall see in later lessons, these function names turn out to be convenient
+despite their now irrelevant origin.
+
+
+CONTINUE
+In muLISP, functions calls are made using the format
+
+		  (name arg1 arg2 ...)
+
+where <name> is the function's name, <arg1> is the first argument, <arg2> is
+the second, etc.
+
+Note that the left parenthesis precedes the function's name rather than
+following it as is customary in mathematics and other programming languages.
+This notational peculiarity alone has probably caused more grief for the
+novice LISP programmer than any other single thing.  However, as you become
+more familiar with LISP the justification for this unusual notation will
+become apparent and seem quite natural.
+
+
+CONTINUE
+Remember that the function CAR returns the first element of a list.  Rather
+than say "the first element of" a list, most LISP programmers say "the CAR of"
+a list.
+
+The following example shows how to find the CAR of the list (DOG CAT COW PIG):
+
+$ (CAR '(DOG CAT COW PIG))
+
+During this Break use the function CAR to determine the CAR of the list
+((RAM 256) (ROM 64) (DISK 322)).  Be sure to i) type the function CAR using
+all capital letters, ii) precede the list with a single quote mark, and iii)
+balance your parentheses.  muLISP ignores extra RIGHT parentheses so you can
+include a few extra at the right end of an expression.
+
+When you are ready to return to the lesson, type (RETURN) and press the
+<RETURN> key.
+
+BREAK
+CLRSCRN
+The function CDR returns everything but the CAR of a list.  The phrase "the
+CDR of" a list is used instead of the more cumbersome "everything but the
+first element of" a list.
+
+The following example shows how to find the CDR of the list (DOG CAT COW PIG):
+
+$ (CDR '(DOG CAT COW PIG))
+
+During this break use the function CDR to determine the CDR of the list
+((HEIGHT 72) (WEIGHT 175) (HAIR BLOND)).
+
+When you are ready to return to the lesson, type (RETURN) and press the
+<RETURN> key.
+
+BREAK
+CLRSCRN
+Up to now the arguments given to functions have been quoted objects.  However,
+there is no reason the value returned by one function call cannot be used as
+the argument to another function call.
+
+Consider how to select the second element of a list.  The CDR of a list is a
+list consisting of everything but the first element of the original list.
+Thus the CAR of the CDR of a list is the second element of the list.  The
+following shows how to find the second element of the list (DOG CAT COW PIG):
+
+$ (CAR (CDR '(DOG CAT COW PIG)))
+
+Using combinations of CAR and CDR extract from the list
+((HEIGHT 72) (WEIGHT 175) (HAIR BLOND))  the sublist (WEIGHT 175)  [note that
+(WEIGHT 175) is the second element of the list].  Then try to extract from the
+same list just the atom 175 [note that 175 is the second element of the second
+element of the list].
+
+BREAK
+In case you had trouble, here is how to get the 175:
+
+$ (CAR (CDR (CAR (CDR '((HEIGHT 72) (WEIGHT 175) (HAIR BLOND)) ))))
+
+
+CONTINUE
+CAR and CDR are called selector functions because they are used to select or
+extract the parts of an object.  Constructor functions perform the
+complementary operation of constructing composite objects from simpler
+objects.
+
+One of the five primitive pure muLISP functions is the constructor function
+CONS.  CONS is used to add objects to the front of an existing list.  Its
+first argument is the object to be added; its second argument is the existing
+list.  For example:
+
+$ (CONS 'DOG '(CAT COW PIG))
+
+Try adding (EYES BROWN) to ((HEIGHT 72) (WEIGHT 175) (HAIR BLOND)).  Make sure
+you balance the parentheses around each argument to CONS.
+
+BREAK
+CLRSCRN
+Note that the CAR of the result returned by CONS will always be the first
+argument to CONS.  Similarly the CDR of the result will always be the second
+argument.  For example:
+
+$ (CAR (CONS 'DOG '(CAT COW PIG)))
+
+$ (CDR (CONS 'DOG '(CAT COW PIG)))
+
+See if you can CONS the CAR of the list (A B C) onto the CDR of the list
+(X Y Z) resulting in the list (A Y Z).  Again make sure you balance the
+parentheses around each argument to CONS.
+
+BREAK
+The correct answer to the last problem is:
+
+$ (CONS (CAR '(A B C)) (CDR '(X Y Z)))
+
+
+CONTINUE
+In order to make some sense out of muLISP programs it is essential that you
+learn to "read" function compositions such as the one above.  This example
+should be read as "the CONS of the CAR of the list (A B C) onto the CDR of the
+list (X Y Z)".
+
+Use muLISP to find the CONS of the CAR of the CDR of the list
+(A B C) onto the list (X Y Z).  Don't forget to balance those parentheses.
+
+BREAK
+The correct answer to the last problem is:
+
+$ (CONS (CAR (CDR '(A B C))) '(X Y Z))
+
+
+CONTINUE
+As mentioned earlier, a muLISP data object is either an atom or a list.  Also
+we explained that the CAR of a list is the first element of the list.  What
+then is the CAR of an atom?  Although it is a well-defined operation that does
+not cause an error, in pure muLISP CAR should not be called with an atomic
+argument.
+
+For this and other reasons, we need some way of recognizing whether an object
+is an atom or a list.  The fourth primitive muLISP function we shall discuss
+is the recognizer function ATOM.  ATOM is a function of one argument.  If its
+argument is an atom, ATOM returns the atom T for true; otherwise ATOM returns
+the atom NIL for false.  For example:
+
+$ (ATOM 'APPLE)
+
+$ (ATOM '(DOG CAT COW PIG))
+
+Use the ATOM function to see whether numbers are atoms or not.
+
+BREAK
+CLRSCRN
+Consider the following ATOM test:
+
+$ (ATOM '())
+
+As should be evident by the above example, the empty "list" is not a list at
+all, but an atom!  In fact, muLISP represents the empty list by the atom NIL.
+Thus:
+
+$ '()
+
+Try using muLISP to find the CDR of the single element list '(APPLE).
+
+BREAK
+CLRSCRN
+The last primitive pure muLISP function is EQL.  It is a comparator function
+useful for determining if its two atomic arguments are the same atom.  For
+example:
+
+$ (EQL 'ROM 'RAM)
+
+$ (EQL (CAR '(DOG CAT COW)) (CAR (CDR '(HORSE DOG PIG))))
+
+Using the functions CAR, CDR, and EQL, see if the weight specified in the
+list ((HEIGHT 72) (WEIGHT 175) (HAIR BLOND))  [i.e. the second element of
+the second element of the list]  is 175.  Note that there is no need to
+quote numbers in muLISP, although it is acceptable.
+
+BREAK
+Here is how to check the weight equal to 175:
+
+$ (EQL 175 (CAR (CDR (CAR (CDR '((HEIGHT 72) (WEIGHT 175) (HAIR BLOND)))))))
+
+
+CONTINUE
+As stated when EQL was introduced, EQL is useful only for comparing
+atomic arguments (this statement is not always true in "impure" muLISP).  If
+given lists as arguments (except of course the empty list, which is an atom
+anyway), EQL will always return NIL.  For example:
+
+$ (EQL '(DOG CAT COW) '(DOG CAT COW))
+
+One of the projects in the next lesson will be to define a function called
+EQLIST that is useful for determining the equality of two lists.
+
+
+CONTINUE
+In this lesson we have discussed what constitutes muLISP atoms and lists.
+Collectively these objects are used to make up the symbolic data structure
+that muLISP functions operate on.  Pure muLISP provides the following five
+primitive functions for operating on objects:
+
+1.  (CAR list)  the selector function that returns the first element of
+    <list>;
+
+2.  (CDR list)  the selector function that returns everything but the first
+    element of <list>;
+
+3.  (CONS object list)  the constructor function that returns the list whose
+    CAR is <object> and whose CDR is <list>;
+
+4.  (EQL atom1 atom2)  the comparator function that returns T if <atom1> and
+    <atom2> are the same atom, otherwise it returns NIL;
+
+5.  (ATOM object)  the recognizer function that returns T if <object> is an
+    atom, otherwise it returns NIL.
+
+Congratulations on successfully completing muLISP lesson #1!  In lesson #2 you
+will learn how to write your own muLISP functions.
+
+CONTINUE
+$ (RDS)
+

@@ -1,0 +1,459 @@
+File:  MULISP4.LES  (c)		12/27/85	Soft Warehouse, Inc.
+
+CLRSCRN
+This is muLISP programming lesson #4.  It requires about 50 minutes to
+complete.  In this lesson we shall discuss the following subjects:
+
+1.  Selector functions, used to select a component part of a binary tree
+    structured data object.
+
+2.  Constructor functions, used to construct binary trees from simpler data
+    objects.
+
+3.  Iterative versus applicative programming in muLISP.
+
+
+CONTINUE
+In our discussion of pure muLISP we described the most basic selector
+functions CAR and CDR in relation to lists.  The CAR of a list is the first
+element of the list.  The CDR of a list is everything but the first element
+of the list.  For example:
+
+$ (CAR '(MARS VENUS MERCURY))
+
+$ (CDR (CAR (CDR '((VOLUME 90) (DIMENSIONS 3 5 6) (WEIGHT 2000)))))
+
+Since lists are just a special way of thinking about binary trees, the
+functions CAR and CDR can also be used on such trees.
+
+
+CONTINUE
+As mentioned in the previous lesson, the left branch of a tree is called the
+CAR branch and the right the CDR branch.  Thus as you might expect, the
+functions CAR and CDR respectively extract the left and right branches of a
+binary tree.  Here are some examples of their use:
+
+$ (CAR '(GREEN . BLUE))
+
+$ (CDR '(GREEN . BLUE))
+
+$ (CAR (CDR '(YELLOW . (RED . BROWN))))
+
+During this break, extract the renewable energy sources from the binary tree
+assigned to the variable ENERGY:
+
+$ (SETQ ENERGY '((OIL . (COAL . SOLAR)) . (WOOD . NUCLEAR)))
+
+When you are ready to return to the lesson, type (RETURN) and press the
+<RETURN> key.
+
+BREAK
+CLRSCRN
+In addition to CAR and CDR, compositions of CAR and CDR are primitively
+defined in muLISP.  These functions are named using the middle letters of CAR
+and CDR to indicate the particular composition.  For example, the function
+CADR is equivalent to the CAR of the CDR of a list.  For example:
+
+$ (CAR (CDR '(DOG CAT COW)))
+
+$ (CADR '(DOG CAT COW))
+
+All other compositions of two, three, and four calls on CAR and CDR are also
+primitively defined in muLISP.  They are named CDAR, CAAR, CDDR, CAAAR, CAADR,
+CADAR, CDAAR, etc. in the obvious manner.  These functions are more efficient
+than using compositions of CAR and CDR and require less typing.
+
+During this break, redefine the functions SECOND and THIRD using the
+composition functions and try them out on some examples.
+
+BREAK
+Here is SECOND and THIRD defined using the composition functions:
+
+$ (DEFUN SECOND (LST)
+    (CADR LST) )
+
+$ (DEFUN THIRD (LST)
+    (CADDR LST) )
+
+$ (SECOND '(APPLE ORANGE LEMON PEAR))
+
+$ (THIRD '(APPLE ORANGE LEMON PEAR))
+
+
+CONTINUE
+Thus far we have always accessed a list beginning from the left end.
+Sometimes it may be necessary to access the last element of a list.
+
+During this break, recursively define the selector function LAST-ELEMENT that
+returns the last element of a list and test it out on some lists.
+
+BREAK
+This a recursive definition of LAST-ELEMENT.  Note that the case where LST
+is the null list must be handled as a special case:
+
+$ (DEFUN LAST-ELEMENT (LST)
+    ((NULL LST) NIL)
+    ((NULL (CDR LST))
+      (CAR LST) )
+    (LAST-ELEMENT (CDR LST)) )
+
+$ (LAST-ELEMENT '(THE QUICK BROWN FOX))
+
+
+CONTINUE
+Up to this point the lessons have taught the APPLICATIVE style of programming.
+This style emphasizes expression evaluation, functional composition, and
+recursion.
+
+muLISP also supports the ITERATIVE style of programming.  This style
+emphasizes iterative control constructs, variable assignments, and sequential
+processing.  The function LOOP is the primary muLISP iterative control
+construct.  LOOP takes any number of arguments, which are sequentially
+evaluated like the tasks of a function body, except:
+
+1.  After LOOP's last argument is evaluated, control returns back to the first
+    task in the loop.
+
+2.  When a nonNIL conditional task is evaluated in a loop, the value of the
+    conditional is returned as the value of the loop, and evaluation proceeds
+    with the task immediately following the loop, if any.
+
+There can be any number of conditional exits anywhere within a loop.  If there
+is no such exit, the loop will continue indefinitely.
+
+CONTINUE
+To illustrate the use of the LOOP control construct,  here is an alternative
+to the recursive definition of LAST-ELEMENT given earlier:
+
+$ (DEFUN LAST-ELEMENT (LST)
+    ((NULL LST) NIL)
+    (LOOP
+      ((NULL (CDR LST))
+	(CAR LST) )
+      (SETQ LST (CDR LST)) ) )
+
+$ (LAST-ELEMENT '(THE QUICK BROWN FOX))
+
+During this break, define MBR iteratively using LOOP.  (MBR atom list) returns
+T if <atom> is EQL to any element of <list>; otherwise it returns NIL.
+
+BREAK
+An iterative definition of MBR:
+
+$ (DEFUN MBR (ATM LST)
+    (LOOP
+      ((NULL LST) NIL)
+      ((EQL ATM (CAR LST)))
+      (SETQ LST (CDR LST)) ) )
+
+$ (MBR TED '(BOB CAROL TED ALICE))
+
+
+CONTINUE
+As you might suspect, muLISP has a primitively defined function, named LAST,
+for accessing the right end of a list.  However, unlike the function
+LAST-ELEMENT, LAST returns the last cons of a list rather than the last
+ELEMENT.  For example:
+
+$ (LAST '(TOKYO WASHINGTON LONDON PARIS))
+
+LAST-ELEMENT can be defined in terms of LAST as follows:
+
+$ (DEFUN LAST-ELEMENT (LST)
+    (CAR (LAST LST)) )
+
+$ (LAST-ELEMENT '(TOKYO WASHINGTON LONDON PARIS))
+
+During this break, guess what the LAST of the following data object is and
+verify your guess by a call on LAST:
+
+		(23 54 -23 15 . 27)
+
+BREAK
+CLRSCRN
+The primitive selector function NTH is useful for extracting the nth element
+of a list.  If <n> is a nonnegative integer, (NTH n list) returns the <n>th
+element of <list>.  muLISP uses ZERO BASED INDEXING to refer to the elements
+of a list.  Therefore, the first element (i.e. the car) of a list is referred
+to as the 0th element of the list.  For example:
+
+$ (NTH 0 '(BOOK PENCIL PAPER PEN))
+
+$ (NTH 2 '(BOOK PENCIL PAPER PEN))
+
+During this break, use NTH to define the function INDEXER such that if <list2>
+is a list of numbers, then (INDEXER list1 list2) returns a list of the
+elements of <list1> corresponding to the indices in <list2>.  Thus, the call
+
+		(INDEXER '(A B C D E F G) '(6 2 4 0))
+
+should return the list (G C E A).
+
+BREAK
+Here is our definition for INDEXER and an example:
+
+$ (DEFUN INDEXER (LST1 LST2)
+    ((NULL LST2) NIL)
+    (CONS (NTH (CAR LST2) LST1) (INDEXER LST1 (CDR LST2))) )
+
+$ (INDEXER '(A B C D E F G) '(6 2 4 0))
+
+
+CONTINUE
+Whereas NTH returns an element of a list, the primitive selector function
+NTHCDR returns a tail of a list.  If <n> is a nonnegative integer,
+(NTHCDR n list) returns the <n>th cdr of <list>.  For example:
+
+$ (NTHCDR 0 '(BOOK PENCIL PAPER PEN))
+
+$ (NTHCDR 2 '(BOOK PENCIL PAPER PEN))
+
+$ (NTHCDR 5 '(BOOK PENCIL PAPER PEN))
+
+
+Note that both NTH and NTHCDR return NIL if there are not enough elements
+in the list.
+
+CONTINUE
+Next we shall discuss the primitive muLISP constructor functions.
+
+In the pure muLISP lessons we described the constructor function CONS in terms
+of building lists.  CONS can also be described in terms of creating binary
+trees.  CONS creates a single cons, the CAR of which is the first argument to
+CONS and the CDR of which is the second argument.  For example:
+
+$ (CONS 'AGE 43)
+
+If you want some practice creating binary tree structures, during this break,
+CONS together the following binary tree:
+
+     (((IBM . PC) . (APPLE . MACINTOSH)) . (TANDY . TRS-80))
+
+BREAK
+The computer company tree:
+
+$ (CONS (CONS (CONS IBM PC) (CONS APPLE MACINTOSH)) (CONS TANDY TRS-80))
+
+As was explained in the previous lesson, binary trees are displayed using
+mixed DOT and LIST notation.
+
+
+CONTINUE
+Suppose we need to make a list of the values assigned to the variables
+FIRSTNAME, LASTNAME, and ADDRESS.  For example, if the variables were assigned
+the following values:
+
+$ (SETQ FIRSTNAME 'Jane)
+
+$ (SETQ LASTNAME 'Smith)
+
+$ (SETQ ADDRESS '(Honolulu Hawaii))
+
+we can construct the desired list by multiple uses of CONS:
+
+$ (CONS FIRSTNAME (CONS LASTNAME (CONS ADDRESS NIL)))
+
+
+CONTINUE
+Rather than having to call CONS for each variable, the primitive function LIST
+achieves this effect more conveniently.  LIST can have any number of
+arguments.  It returns a list of its arguments.  For example:
+
+$ (LIST FIRSTNAME LASTNAME ADDRESS)
+
+
+CONTINUE
+Although we defined the function APPEND in an earlier lesson, actually it is a
+primitively defined muLISP function.  APPEND's machine language definition is
+somewhat more flexible than the user-defined definition, in that the machine
+language version appends any number of lists together.  For example:
+
+$ (APPEND '(DOG CAT COW) '(SNAKE LIZARD CROCODILE) '(TROUT SALMON TUNA))
+
+
+CONTINUE
+The distinction between the three primitive constructor functions we have
+discussed thus far often leads to some confusion.  We can show the effect of
+the functions CONS, LIST, and APPEND by calling them with the same argument as
+follows:
+
+$ (CONS '(DOG CAT) '(COW PIG))
+
+$ (LIST '(DOG CAT) '(COW PIG))
+
+$ (APPEND '(DOG CAT) '(COW PIG))
+
+
+CONTINUE
+In the pure muLISP lessons, we defined REVERSE efficiently by using an
+ACCUMULATION variable.  The resulting definition was:
+
+$ (DEFUN REVERSE (LST1 LST2)
+    ((NULL LST1) LST2)
+    (REVERSE (CDR LST1) (CONS (CAR LST1) LST2)) )
+
+$ (REVERSE '(A B C D E))
+
+During this break, define REVERSE iteratively using the LOOP control
+construct.  You can use the same accumulation variable technique.
+
+BREAK
+An iterative definition of REVERSE:
+
+$ (DEFUN REVERSE (LST1 LST2)
+    (LOOP
+      ((NULL LST1) LST2)
+      (SETQ LST2 (CONS (CAR LST1) LST2))
+      (SETQ LST1 (CDR LST1)) ) )
+
+$ (REVERSE '(A B C D E))
+
+
+CONTINUE
+Often while sequentially processing the elements of a list in a loop, we refer
+to the CAR of the list, then shorten the list by one.  This operation is
+analogous to "popping" the first element off the top of a stack.
+
+The primitive muLISP function POP facilitates such operations.  If <stack> is
+a symbol whose value is a list, (POP stack) returns the CAR of the list and
+sets the value of <stack> to the CDR of the list.  For example, the last two
+tasks in the iterative definition of REVERSE,
+
+		(SETQ LST2 (CONS (CAR LST1) LST2))
+		(SETQ LST1 (CDR LST1))
+
+could be shortened using POP to the single task
+
+		(SETQ LST2 (CONS (POP LST1) LST2))
+
+
+CONTINUE
+Another operation commonly used while building a list within a loop is to CONS
+an object onto the front of a list by an assignment of the form
+
+		 (SETQ stack (CONS object stack))
+
+The primitive function PUSH can shorten such expressions to
+
+			(PUSH object stack)
+
+During this break, redefine REVERSE iteratively using PUSH and POP.
+
+BREAK
+Here is REVERSE defined using PUSH and POP:
+
+$ (DEFUN REVERSE (LST1 LST2)
+    (LOOP
+      ((NULL LST1) LST2)
+      (PUSH (POP LST1) LST2) ) )
+
+$ (REVERSE '(A B C D E))
+
+After having written at least four different versions of REVERSE, I hesitate
+to tell you that REVERSE is actually a primitively defined muLISP function!
+Naturally, the machine language version is the most efficient.
+
+
+CONTINUE
+When a function has completed execution and is ready to return a value, muLISP
+automatically restores the environment that existed at the time the function
+was called.  This means that you can change the value of the function's formal
+arguments without being concerned with saving the former values of the formal
+arguments.  For this reason, functions can be regarded as "black boxes" that
+have no effect on the environment other than their returned value.  If it
+should be necessary for a function to return more than a single value, it can
+create and return a list of the values.
+
+Another way a function can affect the outside environment is to make
+assignments within the function body to variables that are NOT included in its
+formal argument list.  Such variables are called "special", "fluid", or
+"global" variables.  The disadvantage is that it is easy to overlook such
+hidden communication channels when making program changes, thus making it easy
+to introduce bugs.
+
+
+CONTINUE
+Both the recursive and iterative definitions of REVERSE take time proportional
+to the length of their argument.  But for long lists, the iterative version is
+perhaps 20 percent faster, depending upon the computer and amount of memory
+available.  However, the recursive version is more compact.  When there is
+such a trade-off between speed and compactness, a good strategy is to program
+for speed in the most heavily used functions, and program for compactness
+elsewhere.
+
+Another consideration when choosing between iteration and recursion is the
+amount of storage required to perform a given task.  Each time a function is
+called, addresses of the return point and the former values of the formal
+arguments must be stored on a STACK so that the former environment can be
+restored when the function returns.
+
+Since recursion involves repeated nesting of function calls, a recursive
+function can exhaust all available memory before completing its task.  This
+would invoke the "Memory Space Exhausted" error trap.  The use of iteration in
+such situations might permit the computation to proceed to completion.
+
+
+CONTINUE
+muLISP has three primitive logical functions designed to combine truth values
+returned by predicate functions.  The function OR takes any number of
+arguments and evaluates them from left to right until a nonNIL value is
+encountered or no arguments are left.  If a nonNIL argument is found, OR
+returns that argument's value; otherwise, OR returns NIL.
+
+You can rely on the fact that subsequent arguments of OR will not be evaluated
+after a nonNIL value is encountered.  A nonNIL value does not have to be T, so
+the returned value isn't restricted to T or NIL.  For program control
+purposes, muLISP treats any nonNIL value as T, which is a great programming
+convenience.
+
+Remember that a muLISP atom is either a symbol OR a number.  Thus, the
+recognizer function could be defined as:
+
+$ (DEFUN ATOM (U)
+    (OR (SYMBOLP U) (NUMBERP U)) )
+
+
+CONTINUE
+Analogous to OR, there is a built-in AND function that takes any number of
+arguments.  AND evaluates its successive arguments until a NIL value is
+encountered or no arguments are left.  AND returns the value of the last
+argument that was evaluated.  Thus you can rely on the fact that subsequent
+arguments will not be evaluated after a NIL value is encountered.  For
+example:
+
+$ (AND (SYMBOLP 'frog) (NUMBERP 7))
+
+CONTINUE
+The primitive function NOT returns T if its argument is NIL; otherwise, it
+returns NIL.  For example:
+
+$ (NOT (ATOM '(SODIUM . CHLORIDE)))
+
+As we mentioned earlier, the definition of NOT is identical to NULL.  NULL
+should be used when testing for empty lists.  NOT should be used when testing
+the truth value returned by predicate functions.
+
+
+CONTINUE
+The following points summarize what we have learned in this lesson:
+
+1.  The use of the 28 primitively defined compositions of CAR and CDR (CADR,
+    CDDR, CAAAR, etc.) for extracting the components of binary trees.
+
+2.  The use of the functions NTH and NTHCDR to index into a list.
+
+3.  The use and distinction between the three primitive constructor functions
+    CONS, LIST, and APPEND.
+
+4.  Iterative programming using the LOOP control construct and the PUSH and
+    POP "stack" functions.
+
+5.  The logical functions AND, OR, and NOT that are used to logically combine
+    the truth values returned by predicate functions.
+
+This concludes muLISP lesson #4.
+
+
+CONTINUE
+$ (RDS)
+

@@ -1,0 +1,518 @@
+File: MULISP3.LES  (c)		12/27/85	Soft Warehouse, Inc.
+
+CLRSCRN
+This is muLISP lesson #3.  Estimated completion time is 50 minutes.
+
+The first two lessons taught the fundamentals of muLISP programming using
+pure muLISP.  Everything you learned about pure muLISP is of course true
+of full muLISP; however, there is much that was left unsaid.  With this
+lesson we shall commence describing the full capabilities of muLISP.
+
+In Lesson #3 we will examine each of the three primitive muLISP data objects
+in detail.  This lesson is primarily informative in nature and does not
+provide a lot in the way of interesting problems for you to solve.  However,
+it does provide an essential foundation for the later lessons.
+
+
+CONTINUE
+There are three types of primitive data objects in muLISP:  Symbols, Numbers,
+and Conses.
+
+muLISP provides numerous functions for recognizing, comparing, combining, and
+operating on these primitive data objects.  This allows you to construct
+complex data structures that can accurately model in the computer virtually
+any real world problem.  Therefore, we begin our discussion of muLISP with a
+description of the three basic data objects.
+
+As you may recall, pure muLISP has only two types of data objects: Atoms and
+Lists.  In full muLISP, atoms are further subdivided into Symbols and Numbers.
+In full muLISP, lists are only a subset of the more general structures called
+binary trees made up of Conses.
+
+
+CONTINUE
+The first type of data object we shall discuss is the symbol.  Associated with
+each muLISP symbol are 4 attributes:
+
+1.  Print name string:  A unique string of ASCII characters used by the system
+    to identify the symbol on input and to display the symbol on output.  A
+    symbol's print name string cannot be changed.
+
+2.  Current value:  A symbol's value can be any muLISP data object, including
+    itself.  The default value of a symbol is the symbol itself.
+
+3.  Property list:  The property list contains the symbol's property values
+    indexed on property keys.  See the muLISP lesson on property values for
+    more information about using properties.  The default property list of a
+    symbol is the null list.
+
+4.  Function definition:  A symbol's function definition is applied to the
+    arguments given when the symbol is called as a function.  The default
+    function definition invokes the "Undefined Function" error break.
+
+
+CONTINUE
+The recognizer function SYMBOLP returns T if its single argument is a symbol;
+otherwise it returns NIL.  For example:
+
+$ (SYMBOLP 'XYZ)
+
+$ (SYMBOLP 41)
+
+$ (SYMBOLP '(DOG CAT COW))
+
+During this break, see whether the null list, (), is a symbol or not.  To
+return to the lesson, type (RETURN) and press the <RETURN> key.
+
+BREAK
+CLRSCRN
+As discussed in an earlier lesson, the comparator function EQL is used to
+determine if two symbols are the same.  For example:
+
+$ (EQL 'APPLE (CAR '(APPLE ORANGE LEMON)))
+
+
+CONTINUE
+Since blank spaces, parentheses, and some other special characters have
+special significance to the muLISP, a quoted string must be used to create a
+symbol with such characters in its print name string.  Simply enclose the
+string containing such characters within double quotes to create such a
+symbol.  For example:
+
+$ "This is a (single) symbol!"
+
+Normally the double quotes around symbols containing special characters are
+NOT displayed when the symbol is output.  (Note: Double quote marks are
+automatically displayed around such symbols if the value of the control
+variable PRIN1 is NIL.)
+
+The empty string, entered as "", is also a symbol.  For example:
+
+$ (SYMBOLP "")
+
+CONTINUE
+The double quote mark itself can be included in a print name string by
+entering a backslash and a quote mark for each desired quote mark in the
+string.  For example:
+
+$ "She said, \"I am learning muLISP.\""
+
+When entering symbols using double quote marks, it is essential to balance the
+quote marks.  After entering a quote mark, muLISP will continue to think you
+are entering a single symbol until a matching quote mark is read.
+
+During this break, see what happens when you enter a symbol with an unmatched
+double quote mark and press the <RETURN> key.  To return to the lesson, you
+will need to balance the quote marks so you will get the dollar sign prompt.
+
+BREAK
+CLRSCRN
+A symbol can be assigned a value.  The value can be any muLISP data object
+including itself.  The default value of most muLISP symbols is the symbol
+itself.
+
+SET is the primitive function used to set the value of a symbol (SET's first
+argument) to a value (SET's second argument).  Of secondary importance is the
+fact that SET returns its second argument as its value.  For example:
+
+$ (SET 'FRUITS '(APPLES ORANGES LEMONS PEARS))
+
+$ FRUITS
+
+During this break, SET the symbol VOWELS to a list of the 5 vowels in the
+alphabet.
+
+BREAK
+CLRSCRN
+Generally the first argument to SET will be a quoted symbol.  Rather than
+having to explicitly quote the symbol, the function SETQ (SET Quote) can be
+used instead.  SETQ automatically quotes its first argument but NOT its
+second.  For example, rather than using SET to assign a list to 'VOWELS, you
+could use SETQ as follows:
+
+$ (SETQ VOWELS '(A E I O U))
+
+During this break, use SETQ to add the letter Y to VOWELS by CONSing it onto
+the current value of VOWELS.
+
+BREAK
+The following adds Y to the list of vowels:
+
+$ (SETQ VOWELS (CONS 'Y VOWELS))
+
+
+CONTINUE
+The second type of muLISP data object we shall discuss are Numbers.  Numbers
+are further subdivided into integers and ratios.  Integers are entered as a
+contiguous series of digits, optionally preceded by a minus sign.
+
+Since the value of a number is the number itself, there is no need to quote
+numbers:
+
+$ 41
+
+$ -75
+
+The comparator function EQL is used to test for the equality of two numbers:
+
+$ (EQL 3 4)
+
+$ (EQL 0 -0)
+
+
+CONTINUE
+Ratios can be entered using either decimal or slash notation (i.e. as two
+series of digits separated by a decimal point or a slash character, optionally
+preceded by a minus sign).  By default, ratios are displayed using decimal
+notation:
+
+$ 3/4
+
+$ -0.34
+
+$ (EQL 0.4 2/5)
+
+
+CONTINUE
+If the control variable *POINT* is NIL, muLISP displays ratios using slash
+notation instead of decimal notation.  Note that ratios are automatically
+reduced to lowest terms.  Also ratios having a denominator of one are
+automatically converted to integers.
+
+$ (SETQ *POINT* NIL)
+
+$ -5/7
+
+$ 0.33333333
+
+$ 12/9
+
+$ 5/1
+
+
+CONTINUE
+If the control variable *POINT* is zero or a positive integer, muLISP
+displays ratios using decimal notation to a maximum of POINT digits:
+
+$ (SETQ *POINT* 3)
+
+$ 2/3
+
+$ (SETQ *POINT* 7)
+
+$ 2/3
+
+
+CONTINUE
+The primitive recognizer function INTEGERP returns T if its argument is an
+integer; otherwise it returns NIL.  For example:
+
+$ (INTEGERP 100)
+
+$ (INTEGERP 'FIVE)
+
+$ (SETQ PRIMES '(2 3 5 7 11))
+
+$ (INTEGERP (CAR PRIMES))
+
+
+CONTINUE
+The primitive recognizer function NUMBERP returns T if its argument is a
+number (i.e. either an integer or ratio); otherwise it returns NIL.  For
+example:
+
+$ (NUMBERP 100)
+
+$ (NUMBERP 457.23)
+
+$ (NUMBERP -23/7)
+
+
+During this break, use NUMBERP and SYMBOLP to see if a sequence of digits
+enclosed in double quotes (e.g. "137") is a number or a symbol.
+
+BREAK
+The following two tests show that "137" is a symbol rather than a number:
+
+$ (NUMBERP "137")
+
+$ (SYMBOLP "137")
+
+
+CONTINUE
+Symbols and numbers are collectively called ATOMs to suggest their
+indivisibility by ordinary means.  The primitive recognizer function ATOM
+returns T if its argument is an atom (i.e. either a symbol or a number);
+otherwise is returns NIL.  For example:
+
+$ (ATOM 'APPLE)
+
+$ (ATOM 123)
+
+$ (ATOM '(DOG CAT COW))
+
+$ (ATOM '())
+
+
+CONTINUE
+Sometimes you may wish to refer to a symbol itself rather than its value.  In
+muLISP, the apostrophe character is used as a quote mark to suppress the
+evaluation of a symbol.  For example:
+
+$ (SETQ FOO 1492)
+
+$ FOO
+
+$ 'FOO
+
+Note that the apostrophe is different from the "back accent" or "accent grave"
+character, `, which also occurs on some terminals.
+
+During this break, use SETQ and the quote mark to set the value of FOO back to
+itself (i.e. make it be an auto-quoted symbol).
+
+BREAK
+The following restores the value of FOO to be itself:
+
+$ (SETQ FOO 'FOO)
+
+$ FOO
+
+
+CONTINUE
+The third primitive muLISP data object we shall discuss are Conses.  A cons
+is a nonatomic data object that points to two other data objects.  The name
+"cons" comes from the constructor function CONS discussed in the earlier
+lessons.
+
+Data can be stored in the computer's memory.  The location where a data item
+is stored is called its ADDRESS.  An address is analogous to a street address
+on a mailbox.  The data stored there is analogous to mail in the mailbox.  As
+with mailboxes, the contents of computer memory can change over time.
+
+Suppose we wish to represent the cons consisting of the symbol BILBO and his
+age 31.  We could store the symbol BILBO beginning at location 7, his age 31
+at location 2, and beginning at location 4 we could store a cons consisting
+of the pair of addresses 7 and 2:
+
+ Address:     1     2     3     4     5     6     7
+	   +-----+-----+-----+-----+-----+-----+-----+---
+Contents:  |     |  31 |     |  7  |  2  |     |BILBO|
+	   +-----+-----+-----+-----+-----+-----+-----+---
+
+CONTINUE
+muLISP manages the specific placement of data within memory automatically, so
+all we care about is the specific primitive symbols and numbers together with
+the way they are connected.  muLISP keeps track of addresses such as 7 and 2
+in our example, but for us they are a distraction.
+
+The following "box-car" representation of a cons suppresses such irrelevant
+detail:
+
+		    +-----+-----+
+		    |  .  |  .  |
+		    +-/---+---\-+
+		    /		\
+		  /		  \
+	       BILBO		  31
+
+
+CONTINUE
+If you have seen one box-car, you have seen them all.  So, to reduce clutter,
+I henceforth represent conses by a dot at the vertices in my diagrams.  For
+example:
+
+			       .
+			      / \
+			    /     \
+			 BILBO     31
+
+Since each cons has exactly two "branches", such diagrams are called binary
+trees.
+
+
+CONTINUE
+Although a linked collection of conses is best envisioned by humans as a
+binary tree structure, a linearized representation of conses is more suitable
+for a computer programming language.
+
+One of the linear representations recognized by muLISP is the so-called DOT
+notation.  In this notation, a cons is represented by a left parenthesis, a
+data item, a period, a data item, and a right parenthesis.  For example, the
+cons
+
+			       .
+			      / \
+			    /     \
+			 BILBO     31
+
+is represented in DOT notation as:
+
+			 (BILBO . 31)
+
+CONTINUE
+The left element of a cons is called the CAR of the cons.  The right element
+is called the CDR of the cons.  The elements of a cons can be any data object
+including another cons.  For example, BILBO's last name can be included in our
+binary tree as:
+
+			     .
+			    / \
+			  /     \
+			.	31
+		       / \
+		     /     \
+		  BILBO  BAGGINS
+
+The equivalent dot notation representation of this tree is:
+
+	      ((BILBO . BAGGINS) . 31)
+
+
+CONTINUE
+Let's add the fact that BILBO is a hobbit to our binary tree:
+
+			     .
+			    / \
+			  /     \
+			.      HOBBIT
+		       / \
+		     /     \
+		   .	   31
+		  / \
+		/     \
+	     BILBO  BAGGINS
+
+Before continuing think how this three cons binary tree would be represented
+using dot notation.
+
+CONTINUE
+The tree is represented in dot notation as:
+
+	 (((BILBO . BAGGINS) . 31) . HOBBIT)
+
+An alternative binary tree structure for this information is the one
+corresponding to:
+
+	 ((BILBO . BAGGINS) . (31 . HOBBIT))
+
+Sketch the corresponding binary tree diagram on a piece of paper, then hold it
+close to my face so I can check it out.
+
+			_____
+		       /     \
+		      >| O.O |<
+		       | \=/ |
+			\___/
+
+CONTINUE
+Oh well, my eyes must be getting bad.  It should have looked something like
+this:
+		       .
+		      / \
+		    /     \
+		  /	    \
+		.	     .
+	       / \	     / \
+	     /     \       /     \
+	  BILBO BAGGINS  31     HOBBIT
+
+
+From this discussion it should be clear that linked conses can be used to
+represent virtually any tree structured data.
+
+
+CONTINUE
+It is often most natural to represent a collection of conses as a LIST of data
+objects rather than as a deeply nested binary tree.  For example, the elements
+of a set are usually displayed as a list.
+
+muLISP represents a list as a linked collection of conses whose CAR cells
+point to the members of the lists and whose CDR cells point to the next cons.
+The linked list is terminated by a CDR cell that points to NIL.  For example:
+		  .
+		 / \
+	       /     \
+	   object1     .
+		      / \
+		    /     \
+		object2     .
+			      .
+				.
+			       / \
+			     /     \
+			 objectN   NIL
+
+CONTINUE
+When this binary tree is rotated 45 degrees counterclockwise, it is easier to
+see why it can be used to represent a list of data objects:
+
+     .--------.--- . . . ---.----- NIL
+     |	      |		    |
+     |	      |		    |
+  object1  object2       objectN
+
+The linear structure of lists suggests an external printed representation that
+is much more readable than the equivalent dot notation representation.  Thus
+muLISP will automatically display the above object using LIST notation:
+
+	 (object1 object2 ... objectN)
+
+rather than using dot notation:
+
+    (object1 . (object2 . ... (objectN . NIL) ...))
+
+CONTINUE
+The muLISP object display functions use list notation where possible and dot
+notation where necessary.  Thus, a structure of the form
+		 .
+		/ \
+	      /     \
+	 object1      .
+		     / \
+		   /     \
+	      object2      .
+			     .
+			       .
+			      / \
+			    /     \
+		       objectN    atom
+
+where <atom> is not the symbol NIL, is displayed in a mixed notation as:
+
+    (item1 item2  - - -  itemN . atom)
+
+
+CONTINUE
+The muLISP input reader function accepts list notation, dot notation, and
+mixed notation.  Moreover, any of the elements of a list can themselves be
+either lists or more general expressions.  The following examples show how
+muLISP displays a few expressions:
+
+$ '(DOG . (CAT . (COW . PIG)))
+
+$ '((AGE . 34) . (HOBBIES . (SWIMMING . THINKING)))
+
+
+CONTINUE
+During this lesson we have described the three primitive muLISP data objects:
+Symbols, Numbers, and Conses.  The following are the main points to remember:
+
+1.  Symbols:  Each symbol has an associated print name string, a value, a
+    property list, and a function definition.  Symbols containing special
+    characters can be entered using quoted strings.  SETQ is the function
+    most commonly used to assign a value to a symbol.
+
+2.  Numbers:  A number is a positive or negative rational number.  NUMBERP
+    is used to recognize numbers.  Numbers are subdivided into integers or
+    ratios.  INTEGERP is used to recognize integers.
+
+3.  Conses:  Conses are used to form binary tree structures that can be
+    represented using dot notation, list notation, or mixed notation.
+
+This concludes muLISP lesson #3.
+
+
+CONTINUE
+$ (RDS)
+
