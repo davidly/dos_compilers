@@ -1,4 +1,5 @@
-program e;
+(*$DEBUG-   added, of course  *)
+program e( output );
 
 const
    DIGITS = 200;
@@ -32,11 +33,10 @@ begin
             n := n - 1;
         end;
 
-        Write( x );
+        if x >= 10 then write( x:2 ) else write( x:1 );
     end;
 
     writeln;
     writeln( 'done' );
 end.
 
-

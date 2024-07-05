@@ -1,0 +1,29 @@
+                            MEMO
+To:     MS-DOS Users of MS-Pascal
+From:   Microsoft OEM Support
+Date:   January 5, 1982
+
+Files on this distribution:
+        README          This Memo
+        PAS1.EXE        Pascal Compiler Pass 1
+        PAS2.EXE        Pascal Compiler Pass 2
+        LINK.EXE        Microsoft Linker for .OBJ files
+        M86.EXE         Microsoft MACRO-86 assembler
+        C86.EXE         Assembler cross-reference generator
+        LIB.EXE         Microsoft library manager (note: same as
+                        LIB86.EXE specified in User Manual)
+        PASCAL.LIB      MS-Pascal runtime library
+        PASKEY          MS-Pascal predeclarations
+        FINU            Declarations of low level file system
+                        routines (the Unit U interface)
+        FINK            Declaration of the common fields of the
+                        generic file control block type, FCBFQQ
+        FINKXM          Declaration of the version specific file
+                        control block
+        ENTX6L.ASM      Assembler source of the execution control
+                        module which initializes and terminates
+                        every program
+        PASCAL.MAP      Map of the MS-Pascal runtime library
+        PRIMES.PAS      Prime number generator program
+   
+
