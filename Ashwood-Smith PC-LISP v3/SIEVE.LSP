@@ -8,7 +8,7 @@
     (setq i 0)
     (setq count 0)
     _nexti_
-        (cond ((< i size)
+        (cond ((<= i size)
                (a t i)
                (setq i (add1 i))
                (go _nexti_))
@@ -16,13 +16,13 @@
 
     (setq i 0)
     _nexti2_
-        (cond ((< i size)
+        (cond ((<= i size)
                (cond ((a i)
                       (setq prime (+ i i 3))
                       (setq k (+ i prime))
                       (prog ()
                           _nextk_
-                              (cond ((< k size)
+                              (cond ((<= k size)
                                      (a nil k)
                                      (setq k (+ k prime))
                                      (go _nextk_))
