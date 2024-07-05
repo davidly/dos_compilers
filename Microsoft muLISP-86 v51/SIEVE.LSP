@@ -36,6 +36,7 @@
 ))
 
 (defun main() (prog ()
+    (clear-screen)
     (princ "running...")
     (setq startTime (time))
 

@@ -199,6 +199,7 @@
 
 (clear-screen)
 (setq startTime (time))
+(princ "running...")
 (dotimes (z 10) (runall))
 
 (write-string "moves: ") (princ moves) ; should be 6493
