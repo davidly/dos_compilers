@@ -25,7 +25,7 @@ The benchmarks include:
   * ttt: proves you can't win at tic-tac-toe if the opponent is competent
   * tm: test malloc. This calls malloc/calloc/free in the C runtime to measure performance. It's C-only and many C compilers can't run it.
 
-To run the compilers on Windows, use the m.bat script in each folder. Sometimes m.bat is in a subfolder named "bin" or "code". On Linux or MacOS use m.sh. For example:
+To run the compilers on Windows, use the m.bat script in each folder. Sometimes m.bat is in a subfolder named "bin" or "code". On Linux or MacOS use m.sh. You may need to "chmod 777 m.sh" before you can invoke it. For example:
   * m sieve
   * m e
   * m ttt
