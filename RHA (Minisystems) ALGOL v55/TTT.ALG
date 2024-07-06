@@ -137,7 +137,6 @@ BEGIN
     movecount := movecount + 1;
 
     IF depth >= 4 THEN BEGIN
-comment winner2 is faster than winner        
         p := winner2( move );
         IF p # 0 THEN BEGIN
             IF p = 1 THEN value := 6
