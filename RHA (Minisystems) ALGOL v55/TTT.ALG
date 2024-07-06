@@ -12,7 +12,6 @@ COMMENT pieceBlank    0    ;
 
 INTEGER movecount;
 INTEGER ARRAY board[0:8];
-INTEGER ARRAY isodd[0:8];
 
 INTEGER PROCEDURE winner;
 BEGIN
@@ -148,7 +147,7 @@ BEGIN
     END;
 
     IF value = 0 THEN BEGIN
-        IF 1 = isodd[ depth ] THEN BEGIN
+        IF 1 = ( depth MOD 2 ) THEN BEGIN
             value := 2;
             pm := 1;
         END
@@ -164,7 +163,7 @@ BEGIN
                 score := minmax( alpha, beta, depth + 1, p );
                 board[ p ] := 0;
             
-                IF 1 = isodd[ depth ] THEN BEGIN
+                IF pm = 1 THEN BEGIN
                     IF score > value THEN BEGIN
                         value := score;
                         IF ( ( value = 6 ) OR ( value >= beta ) ) THEN
@@ -212,14 +211,6 @@ BEGIN
         board[ i ] := 0;
     END;
 
-    FOR i:=0 STEP 2 UNTIL 8 DO BEGIN
-        isodd[ i ] := 0;
-    END;
-    
-    FOR i:=1 STEP 2 UNTIL 7 DO BEGIN
-        isodd[ i ] := 1;
-    END;
-    
     FOR i:=0 STEP 1 UNTIL 9 DO BEGIN
         movecount := 0;
         findsolution( 0 );
