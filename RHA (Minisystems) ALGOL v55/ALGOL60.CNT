@@ -1,0 +1,107 @@
+
+1 Introduction
+2 Licence agreement - please read this first=Sec_1_1
+2 History=Sec_1_2
+2 Document overview=Sec_1_3
+1 Z80 User manual
+2 Z80 manual introduction=Sec_2_1
+2 Language elements
+2 Identifiers and symbols=Sec_2_3
+2 Key words=Sec_2_4
+2 Pre-declared identifiers=Sec_2_5
+2 String literals=Sec_2_6
+2 Character literals=Sec_2_7
+2 The structure of an Algol program
+2 Program structure=Sec_2_9
+2 Blocks and declarations=Sec_2_10
+2 Program layout and style=Sec_2_11
+2 Conditional compilation=Sec_2_12
+2 Algol program variables
+2 Data types=Sec_2_14
+2 Arrays=Sec_2_15
+2 Array memory layout and bound checking=Sec_2_16
+2 Byte arrays=Sec_2_17
+2 Expressions
+2 Simple expressions=Sec_2_19
+2 Conditional expressions=Sec_2_20
+2 Statements
+2 Conditional statements=Sec_2_22
+2 Assignment statements=Sec_2_23
+2 FOR statements=Sec_2_24
+2 The CASE statement=Sec_2_25
+2 The WHILE statement=Sec_2_26
+2 The REPEAT statement=Sec_2_27
+2 Dummy statements=Sec_2_28
+2 Comments=Sec_2_29
+2 Labels, switches and GOTO statements=Sec_2_30
+2 Designational expressions=Sec_2_31
+2 Procedures
+2 Standard functions=Sec_2_33
+2 Operating system identification=Sec_2_34
+2 Procedures without parameters=Sec_2_35
+2 Procedures with parameters=Sec_2_36
+2 Numeric and Boolean parameters by value=Sec_2_37
+2 Variables called by name=Sec_2_38
+2 String and switch procedure parameters=Sec_2_39
+2 Labels and procedures as parameters=Sec_2_40
+2 Summary of points on procedures=Sec_2_41
+2 Differences from the Algol 60 report
+2 Differences from the Algol 60 report=Sec_2_43
+2 Language restrictions=Sec_2_44
+2 Language extensions=Sec_2_45
+2 The input/output mechanism
+2 Stream or device numbers=Sec_2_47
+2 ALGOL fixed stream numbers=Sec_2_48
+2 Printer position on streams 3 and 6=Sec_2_49
+2 Device names in command Lines=Sec_2_50
+2 Creating a command line for I/O streams=Sec_2_51
+2 Parsing the I/O command line=Sec_2_52
+2 Input/output directly to or from memory=Sec_2_53
+2 Switch lists on I/O selections=Sec_2_54
+2 Closing and deleting files=Sec_2_55
+2 Serial input/output procedures=Sec_2_56
+2 Formatted number output=Sec_2_57
+2 Random access files=Sec_2_58
+2 Input/output support routines=Sec_2_59
+2 Direct BDOS and BIOS CP/M calls=Sec_2_60
+2 Library procedures
+2 Library procedures=Sec_2_62
+2 Library inserts=Sec_2_63
+2 Example programs=Sec_2_64
+2 Compiling and running programs
+2 Compiling and running programs=Sec_2_66
+2 Compiling=Sec_2_67
+2 Compiler directives=Sec_2_68
+2 Character and bitstream compiler output files=Sec_2_69
+2 Pre-compiled libraries and the linker=Sec_2_70
+2 Runtime program=Sec_2_71
+2 Switches on the loader filename=Sec_2_72
+2 Long integer (32 bit) Algol=Sec_2_73
+2 The chaining mechanism=Sec_2_74
+2 Compiler error messages and diagnostic information
+2 Compiler error messages=Sec_2_76
+2 Compiler identifier table and identifier types=Sec_2_77
+2 Compiler representation of basic symbols=Sec_2_78
+2 Run time errors and diagnostic information
+2 Run time errors=Sec_2_80
+2 Recovery from run time errors=Sec_2_81
+2 Runtime error numbers=Sec_2_82
+2 Runtime stack organisation=Sec_2_83
+2 Runtime operation codes=Sec_2_84
+2 Summary of ioc() procedure calls=Sec_2_85
+2 Summary of pre-declared procedures=Sec_2_86
+2 Procedures in the library ALIB.ALG=Sec_2_87
+2 Distributed programs and files=Sec_2_88
+1 Rogalgol for the 80x86
+2 Overview of 80x86 Rogalgol=Sec_3_1
+2 Extra features available on the 80x86 versions
+2 Using extra data memory beyond 64K=Sec_3_3
+2 The Runtime Debugger=Sec_3_4
+2 File handling under PCDOS and MSDOS
+2 Overview of MSDOS file handling=Sec_3_6
+2 File Control Block usage=Sec_3_7
+2 The operating system interface
+2 Overview of BIOS and SYSTEM calls=Sec_3_9
+2 BDOS (system) calls under MSDOS/PCDOS=Sec_3_10
+2 BIOS calls under MSDOS/PCDOS=Sec_3_11
+2 Compiling and linking the 80x86 Rogalgol executables=Sec_3_12
