@@ -1,6 +1,7 @@
--- Note: The AI interpreter produces correct results.
---       The a86 compiler produces inconsistent offsets for accessing "board" and ttt fails to run properly.
---       I tried a variety of work-arounds, but they all failed to actually work.
+-- Note: this code passes "board" as an arguments instead of using a global variable because
+-- while the AI interpreter produces correct results both ways, the A86 compiler produces
+-- inconsistent offsets for accessing "board" as a global variable and ttt fails to run properly.
+-- Ada (well, this version) prohibits in+out arguments to functions, so procedures are used instead.
 
 with TEXT_IO; use TEXT_IO;
 
@@ -20,154 +21,144 @@ PieceBlank : Constant := 0;
 moves : integer;
 
 type TTTBoardType is array (integer range 0..8) of integer;
-board : TTTBoardType;
     
-function LookForWinner return integer is
-p : integer;
+procedure LookForWinner( board : in TTTBoardType; p : in out integer ) is
 begin
     p := board(0);
-    if ( PieceBlank /= p and p = board(1) and p = board(2) ) then return p; end if;
-    if ( PieceBlank /= p and p = board(3) and p = board(6) ) then return p; end if;
+    if ( PieceBlank /= p ) then 
+        if ( p = board(1) and p = board(2) ) then return; end if;
+        if ( p = board(3) and p = board(6) ) then return; end if;
+    end if;
 
     p := board(3);
-    if ( ( PieceBlank /= p ) and ( p = board(4) ) and ( p = board(5) ) ) then return p; end if;
+    if ( ( PieceBlank /= p ) and ( p = board(4) ) and ( p = board(5) ) ) then return; end if;
 
     p := board(6);
-    if ( ( PieceBlank /= p ) and ( p = board(7) ) and ( p = board(8) ) ) then return p; end if;
+    if ( ( PieceBlank /= p ) and ( p = board(7) ) and ( p = board(8) ) ) then return; end if;
 
     p := board(1);
-    if ( PieceBlank /= p and p = board(4) and p = board(7) ) then return p; end if;
+    if ( PieceBlank /= p and p = board(4) and p = board(7) ) then return; end if;
 
     p := board(2);
-    if ( PieceBlank /= p and p = board(5) and p = board(8) ) then return p; end if;
+    if ( PieceBlank /= p and p = board(5) and p = board(8) ) then return; end if;
 
     p := board(4);
-    if ( PieceBlank /= p and p = board(0) and p = board(8) ) then return p; end if;
-    if ( PieceBlank /= p and p = board(2) and p = board(6) ) then return p; end if;
+    if ( PieceBlank /= p ) then 
+        if ( p = board(0) and p = board(8) ) then return; end if;
+        if ( p = board(2) and p = board(6) ) then return; end if;
+    end if;
 
-    return PieceBlank;
+    p := PieceBlank;
 end LookForWinner;
 
-function pos0func return integer is
-x : integer;
+procedure pos0func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 0 );
-    if ( ( x = board(1) and x = board(2) ) or
-         ( x = board(3) and x = board(6) ) or
-         ( x = board(4) and x = board(8) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 0 );
+    if ( ( p = board(1) and p = board(2) ) or
+         ( p = board(3) and p = board(6) ) or
+         ( p = board(4) and p = board(8) ) ) then return; end if;
+    p := PieceBlank;
 end pos0func;
 
-function pos1func return integer is
-x : integer;
+procedure pos1func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 1 );
-    if ( ( x = board(0) and x = board(2) ) or
-         ( x = board(4) and x = board(7) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 1 );
+    if ( ( p = board(0) and p = board(2) ) or
+         ( p = board(4) and p = board(7) ) ) then return; end if;
+    p := PieceBlank;
 end pos1func;
 
-function pos2func return integer is
-x : integer;
+procedure pos2func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 2 );
-    if ( ( x = board(0) and x = board(1) ) or
-         ( x = board(5) and x = board(8) ) or
-         ( x = board(4) and x = board(6) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 2 );
+    if ( ( p = board(0) and p = board(1) ) or
+         ( p = board(5) and p = board(8) ) or
+         ( p = board(4) and p = board(6) ) ) then return; end if;
+    p := PieceBlank;
 end pos2func;
 
-function pos3func return integer is
-x : integer;
+procedure pos3func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 3 );
-    if ( ( x = board(4) and x = board(5) ) or
-         ( x = board(0) and x = board(6) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 3 );
+    if ( ( p = board(4) and p = board(5) ) or
+         ( p = board(0) and p = board(6) ) ) then return; end if;
+    p := PieceBlank;
 end pos3func;
 
-function pos4func return integer is
-x : integer;
+procedure pos4func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 4 );
-    if ( ( x = board(0) and x = board(8) ) or
-         ( x = board(2) and x = board(6) ) or
-         ( x = board(1) and x = board(7) ) or
-         ( x = board(3) and x = board(5) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 4 );
+    if ( ( p = board(0) and p = board(8) ) or
+         ( p = board(2) and p = board(6) ) or
+         ( p = board(1) and p = board(7) ) or
+         ( p = board(3) and p = board(5) ) ) then return; end if;
+    p := PieceBlank;
 end pos4func;
 
-function pos5func return integer is
-x : integer;
+procedure pos5func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 5 );
-    if ( ( x = board(3) and x = board(4) ) or
-         ( x = board(2) and x = board(8) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 5 );
+    if ( ( p = board(3) and p = board(4) ) or
+         ( p = board(2) and p = board(8) ) ) then return; end if;
+    p := PieceBlank;
 end pos5func;
 
-function pos6func return integer is
-x : integer;
+procedure pos6func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 6 );
-    if ( ( x = board(7) and x = board(8) ) or
-         ( x = board(0) and x = board(3) ) or
-         ( x = board(4) and x = board(2) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 6 );
+    if ( ( p = board(7) and p = board(8) ) or
+         ( p = board(0) and p = board(3) ) or
+         ( p = board(4) and p = board(2) ) ) then return; end if;
+    p := PieceBlank;
 end pos6func;
 
-function pos7func return integer is
-x : integer;
+procedure pos7func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 7 );
-    if ( ( x = board(6) and x = board(8) ) or
-         ( x = board(1) and x = board(4) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 7 );
+    if ( ( p = board(6) and p = board(8) ) or
+         ( p = board(1) and p = board(4) ) ) then return; end if;
+    p := PieceBlank;
 end pos7func;
 
-function pos8func return integer is
-x : integer;
+procedure pos8func( board : in TTTBoardType; p : in out integer ) is
 begin
-    x := board( 8 );
-    if ( ( x = board(6) and x = board(7) ) or
-         ( x = board(2) and x = board(5) ) or
-         ( x = board(0) and x = board(4) ) ) then return x; end if;
-    return PieceBlank;
+    p := board( 8 );
+    if ( ( p = board(6) and p = board(7) ) or
+         ( p = board(2) and p = board(5) ) or
+         ( p = board(0) and p = board(4) ) ) then return; end if;
+    p := PieceBlank;
 end pos8func;
 
-function MinMax( alphaarg : in integer; betaarg : in integer; depth : in integer;
-                 move : in integer ) return integer is
-alpha, beta, p, value, score, pieceMove : integer;
+procedure MinMax( alphaarg : in integer; betaarg : in integer;
+                  depth : in integer; move : in integer;
+                  board : in out TTTBoardType; score : out integer ) is
+sc, alpha, beta, p, value, pieceMove : integer;
 begin
---    Put( "Moves:      " ); Put( INTEGER'IMAGE( moves ) ); New_line;
---    Put( "  Depth:    " ); Put( INTEGER'IMAGE( depth ) ); New_line;
---    Put( "  Move:     " ); Put( INTEGER'IMAGE( move ) ); New_line;
---    ShowBoard;
-
     moves := moves + 1;
 
     if ( depth >= 4 ) then
-        -- p := LookForWinner;  -- this is much slower than the posXfunc solution
+        --LookForWinner( board, p );  -- this is much slower than the posXfunc solution
 
         case move is
-            when 0 => p := pos0func;
-            when 1 => p := pos1func;
-            when 2 => p := pos2func;
-            when 3 => p := pos3func;
-            when 4 => p := pos4func;
-            when 5 => p := pos5func;
-            when 6 => p := pos6func;
-            when 7 => p := pos7func;
-            when 8 => p := pos8func;
-            when others => Put( "invalid move!" );
+            when 0 => pos0func( board, p );
+            when 1 => pos1func( board, p );
+            when 2 => pos2func( board, p );
+            when 3 => pos3func( board, p );
+            when 4 => pos4func( board, p );
+            when 5 => pos5func( board, p );
+            when 6 => pos6func( board, p );
+            when 7 => pos7func( board, p );
+            when 8 => pos8func( board, p );
+            when others => Put( "invalid move!" ); -- the compiler needs a when others
         end case;
 
         if ( PieceBlank /= p ) then
-            if ( PieceX = p ) then return ScoreWin; end if;
-            return ScoreLose;
+            if ( PieceX = p ) then score := ScoreWin; return; end if;
+            score := ScoreLose;
+            return;
         end if;
 
-        if ( 8 = depth ) then return ScoreTie; end if;
+        if ( 8 = depth ) then score := ScoreTie; return; end if;
     end if;
 
     alpha := alphaarg;
@@ -184,39 +175,38 @@ begin
     for p in 0..8 loop
         if ( PieceBlank = board( p ) ) then
             board( p ) := pieceMove;
-            score := MinMax( alpha, beta, depth + 1, p );
+            MinMax( alpha, beta, depth + 1, p, board, sc );
             board( p ) := pieceBlank;
 
             if ( PieceX = pieceMove ) then
-                if ( score = ScoreWin ) then return ScoreWin; end if;
-                if ( score > value ) then
-                    if ( score >= beta ) then return score; end if;
-                    value := score;
+                if ( sc = ScoreWin ) then score := ScoreWin; return; end if;
+                if ( sc > value ) then
+                    if ( sc >= beta ) then score := sc; return; end if;
+                    value := sc;
                     if ( value > alpha ) then alpha := value; end if;
                 end if;
             else
-                if ( score = ScoreLose ) then return ScoreLose; end if;
-                if ( score < value ) then
-                    if ( score <= alpha ) then return score; end if;
-                    value := score;
+                if ( sc = ScoreLose ) then score := ScoreLose; return; end if;
+                if ( sc < value ) then
+                    if ( sc <= alpha ) then score := sc; return; end if;
+                    value := sc;
                     if ( value < beta ) then beta := value; end if;
                 end if;
             end if;
         end if;
     end loop;
 
-    return value;
+    score := value;
 end MinMax;
 
 procedure FindSolution( move : in integer ) is
-z, x, score : integer;
+board : TTTBoardType;
+score : integer;
 begin
-    for z in board'range loop
-        board( z ) := PieceBlank;
-    end loop;
+    board := ( others => PieceBlank );
     board( move ) := PieceX;
 
-    score := MinMax( ScoreMin, ScoreMax, 0, move );
+    MinMax( ScoreMin, ScoreMax, 0, move, board, score );
 end FindSolution;
 
 i, iterations : integer;
