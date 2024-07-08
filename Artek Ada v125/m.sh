@@ -11,7 +11,7 @@ ntvdm -r:. -u linklib $str
 ntvdm -r:. -u -c -p ai $str
 
 # native code. I've found a86 to be buggy.
-#    note: a86 produces bad code for ttt.ada. it uses inconsistent addresses for the "board" array.
-#    note2: a86 produces bad code for e.ada but the workaround to use more local variables worked.
+#    note: a86 produces bad code for the stock ttt.ada so the board is passed as an argument.
+#    note2: a86 produces bad code for the stock e.ada so more locals were added to reduce complexity.
 ntvdm -r:. -u a86 $str.axe /n
 ntvdm -r:. -u -c -p $str.exe
