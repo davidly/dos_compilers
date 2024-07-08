@@ -1,0 +1,1359 @@
+   README for Artek Ada version 1.25 (revised Jan. 22, 1987)
+
+   
+
+        Thank you very much for choosing Artek Ada.
+
+        This file  contains information  about additions and improve-
+        ments to Artek Ada.  Please read it carefully.
+
+   NOTICE TO USERS OF EARLIER RELEASES
+   -----------------------------------
+
+        You  cannot  use  libraries  (ADA.ALB  files)  from  previous
+        releases of  the compiler  with the  new 1.25  compiler.  You
+        will have  to recompile  your  library  units  with  the  new
+        compiler.  Any "old" units in the library will cause an error
+        message to  appear.   Also, old  AXE files cannot be executed
+        using the  new interpreter.   This  is because the A-code has
+        been modified slightly for better memory efficiency.
+
+        The file  LINKINFO.TMP is no longer generated or supported by
+        the compiler.   After  library subprograms  were  introduced,
+        this file lost its purpose, and because it has been confusing
+        users, we decided to remove it entirely.
+
+   USING THE COMPILER WITH TWO DISKETTE DRIVES
+   -------------------------------------------
+
+        Artek Ada  release 1.25  comes on  three diskettes instead of
+        two as described in the User's Guide.
+
+        The first  diskette, labeled  "Compiler",  and  the  diskette
+        marked "Utility 1" contain the Artek Ada compiler and associ-
+        ated files.   You  need only  these two  diskettes to use the
+        Artek Ada  system.   The third diskette, labeled "Utility 2",
+        contains Ada  demonstration and  sample source files.  You do
+        not need  to  install  this  diskette  in  your  two-diskette
+        system.
+
+        To use  Artek Ada  with two  diskette drives, just follow the
+        instructions  in   the  User's  Guide,  pretending  that  the
+        "Utility 2"  diskette does not exist.  Then, before using the
+        system for the first time, enter the command
+
+        path B:\ <ENTER>
+
+        This will  tell the  operating system  to look  for Artek Ada
+        system files on the B: drive as well as the A: drive.
+
+        Now, at the A> prompt, you can type apse <ENTER> just as nor-
+        mal, and  you are  in business.  The operating system and the
+        APSE will automatically switch between drives when necessary.
+
+        For your convenience, you may want to put the above path com-
+        mand in a batch file, preferably AUTOEXEC.BAT, so that you do
+        not need to enter it each time you want to use Artek Ada.
+
+        Your Ada files will be stored on drive A, where approximately
+        80 Kbytes  of diskette space are free.  If you want to have a
+        look at  some of  the Ada  source  files  on  the  Utility  2
+        diskette, just copy them over to drive A and compile the pro-
+        grams as usual.  Note, however, that they will not fit all at
+        once.
+
+   DEVIATIONS FROM THE STANDARD NOT LISTED IN APPENDIX F
+   -----------------------------------------------------
+
+        Most of the following deficiencies will be remedied in future
+        updates.   These updates will be made available to registered
+        users.
+
+        Main program parameters are ignored and should not be used.
+
+        Only the  first 16 characters of an identifier are considered
+        significant when distinguishing between identifier names.
+
+        The compiler maximum line length is 255 characters.  (This is
+        not a  deviation from Standard Ada, since any reasonable line
+        length is allowed by the Standard.)
+
+        Renaming is not allowed for packages.
+
+        Type conversions  are not  allowed as  OUT and IN OUT parame-
+        ters.
+
+        Ambiguous subprograms may be declared without error, but when
+        an attempt  is made  to call one of them, an error message is
+        generated.
+
+        Identical identifiers  introduced by  USE clauses do not hide
+        each other.
+
+        Use clauses  applied to  library units  are not  inherited in
+        secondary units  (except subunits).   This  means that if you
+        WITH and  USE TEXT_IO is a library package specification, you
+        will have  to re-USE TEXT_IO in the body (although you do not
+        have to re-WITH).
+
+        The attributes  IMAGE, VALUE,  PRED, SUCC  etc. cannot be re-
+        named as  functions or  be given as a default generic subpro-
+        gram parameter.
+
+        Files accessed  by DIRECT_IO  cannot  have  more  than  65535
+        records.  Each record can be up to 64K in size.
+
+        Artek Ada  requires the body of a generic subprogram or pack-
+        age to  be compiled  before the  subprogram or package is in-
+        stantiated.
+
+        Library generic  packages cannot  be instantiated at the out-
+        ermost level to give library packages.
+
+        Generic object parameters are not supported.
+
+   NEW PROGRAMS
+   ------------
+
+   NATIVE CODE TRANSLATOR
+
+        The Artek  Native Code  Translator is  now included  with the
+        compiler.   The Translator  is contained  in  a  file  called
+        A86.EXE, with  run-time libraries  being located in the files
+        AR-SMALL.SYS and AR-LARGE.SYS.  To access the translator from
+        the APSE,  use the T (translate) command, as explained in the
+        User's Guide (page 49).
+
+        The translator takes a linked-and-ready AXE file as input and
+        produces MS-DOS/PC-DOS  standard EXE files as output.  In the
+        current release,  it is  not possible  to generate OBJ files.
+        This will be included in a future release.
+
+        Programs should  behave  in  exactly  the  same  manner  when
+        executed  as   translated  EXE   files  as   they  did   when
+        interpreted, only  much faster.   The  only "incompatibility"
+        problem may  occur because the translated code uses a wee bit
+        more heap  space than the interpreted one; this is especially
+        apparent when you use constants of unconstrained types.
+
+        A tip to save disk and memory space:  The translator examines
+        your  program   to  see   whether  you   use   floating-point
+        calculations.  If you do not, the small run-time library (AR-
+        SMALL.SYS) is  linked with your program instead of the normal
+        one (AR-LARGE.SYS),  for a savings of about 11 K bytes.  This
+        is  because  the  floating-point  software  emulator  is  not
+        needed.   If your  program contains just a few floating-point
+        operations, you  may want  to consider  alternate programming
+        methods to  eliminate those  operations.   The  payoff  is  a
+        whopping 11 K bytes!
+
+        For speed-intensive  programs, you may want to consider using
+        the /n  (no checks)  compiler option  when you  compile final
+        releases.   This will  increase execution  speed  by  5-25  %
+        depending on  the nature  of your  program.  However, out-of-
+        bounds array  indices etc.  will not  be detected  if you use
+        this option.
+
+        The A86  translator program  can be invoked with command-line
+        options that are not documented in the User's Guide.  Most of
+        these options, alas, have no effect in the current release.
+
+        The command-line options are as follows:
+
+        /i - Inline 8087/80287 code generation
+
+        If this  switch is  used, the compiler generates 8087 opcodes
+        directly instead  of software emulator interrupts.  This will
+        improve the speed of your floating-point routines slightly.
+
+        On the  other hand,  translating  with  the  /i  switch  will
+        prevent your  program from running on a computer that doesn't
+        have an math co-processor.
+
+        The advantages  and disadvantages of the /i switch are summed
+        up in the following table:
+
+        FP programs      |  Without 8087/287 |  With 8087/287
+        -------------------------------------------------------------
+        no /i option     |  Slow math,       |  Fast math,
+                         |  11 Kb emulator   |  11 Kb emulator
+                         |  overhead         |  overhead
+        -------------------------------------------------------------
+        /i option used   |  Program bombs    |  Fastest math
+        -------------------------------------------------------------
+
+        /o - Object file generation
+
+        This  switch  will  be  used  in  a  future  version  of  the
+        translator to  instruct it to generate an OBJ file instead of
+        an EXE  file.   The OBJ file can then be linked with standard
+        MS-DOS linkers, to libraries which conform with the Microsoft
+        C or  Pascal calling conventions.  Currently, this option has
+        no effect.
+
+        /d - Debug information
+
+        When used  in conjunction  with the /o switch, this indicates
+        that debugging  information such as line numbers, etc. should
+        be included  in the  generated OBJ file.  This information is
+        required by debuggers such as SYMDEB and CodeView (trademarks
+        of Microsoft Corp.)  Currently, this option has no effect.
+
+        /n - No stack checking
+
+        This option is used to prevent the translator from generating
+        a run-time-system  call at  the start  of every subprogram in
+        order to  check for  stack or heap overflow.  Currently, this
+        option is  always assumed  to be present, and no special code
+        is generated  to check  for overflow.   The  run-time system,
+        however, senses  when the  heap and the stack collide, and in
+        this case raises STORAGE_ERROR.
+
+        /l - Large data model
+
+        The translator  by default  uses a  "P" memory  model.   This
+        means that programs can be up to 1 megabyte, while data space
+        is limited  to 64  Kbytes.   The limitation  on data space is
+        because the  a-code intermediate  language used  by Artek Ada
+        uses 16-bit  pointers only.  This will be expanded to 32 bits
+        in a  future release.   The  /l option will then specify that
+        32-bit pointers  should be  used in  the final EXE file also.
+        Currently, the option has no effect.
+
+        /1 - 80186 code generation
+
+        When  this   option  is  used,  the  compiler  will  optimize
+        generated code for the Intel 80186 microprocessor.  This will
+        result in  a space and time savings of 1-8 % depending on the
+        nature of  your program.   The  drawback is  that  a  program
+        compiled with  this switch  will not  run on  a 8088  or 8086
+        microprocessor.
+
+        /2 - 80286 code generation
+
+        This option is used to optimize code generation for the 80286
+        microprocessor.   This is  mainly advantageous  for  programs
+        which contain  tasking.   However, the  /2 switch  is at  the
+        moment equal  to the /1 switch, except that some optimization
+        is done  for the  80827 math co-processor if the /i switch is
+        also present.
+
+        /3 - 80386 code generation
+
+        This option is currently equal to the /1 option.
+
+        For pragma NATIVE writers
+        -------------------------
+
+        If you  write pragma  NATIVEs, you  need  to  know  that  the
+        calling environment  described in  the User's  Guide has been
+        extended somewhat.
+
+        Any pragma  NATIVEs you've  already written  will continue to
+        work on  the interpreter  as before.   However, they will not
+        work in  translated programs.   To create pragma NATIVEs that
+        are portable  between the  interpreter  and  the  translator,
+        please observe the calling conventions described below.
+
+        At the  time when the pragma NATIVE code gets control, the SI
+        register  is   loaded  with   the  address   of  the  current
+        procedure's first  parameter.   The DI  register contains the
+        address of  the current  procedure's  first  local  variable.
+        Additionally, the  DS, ES  and SS segment registers all point
+        to the  current data  segment, so  you do not have to use ES:
+        segment overrides  all the  time.   You may  destroy all data
+        registers in  your routine  except BP, which must be restored
+        to its original value if you overwrite it.  Segment registers
+        should also be restored to their original contents.
+
+        An example  is in  order here.   Take a look at the following
+        function:
+
+        function ADD (A, B : in INTEGER) return INTEGER is
+           RESULT : INTEGER;
+        begin
+           pragma NATIVE (...);
+           return RESULT;
+        end ADD;
+
+        Previously, your  assembly language  code might  have  looked
+        like this:
+
+        MOV AX, ES:[BP] ; Load A (at offset 0 in the current frame)
+        ADD AX, ES:[BP+2] ; Add B (at offset 2)
+        MOV ES:[BP+4], AX ; Store in RESULT (at offset 4)
+
+        The new, translator-portable code is as follows:
+
+        MOV AX, [SI] ; Load A (parameter at offset 0)
+        ADD AX, [SI+2] ; Add B (parameter at offset 2)
+        MOV [DI], AX ; Store in RESULT (variable at offset 0)
+
+        Or, even  better,  replace  the  last  line  with  the  STOSW
+        instruction.
+
+   AUTOMATIC RECOMPILATION FACILITY (ARF)
+
+        A new  utility program  is included in release 1.25.  This is
+        the Automatic Recompilation Facility, or ARF.
+
+        The ARF finds out which Ada programs and modules are obsolete
+        and must  be recompiled and/or relinked.  It will either pre-
+        sent you  with a  list of  the necessary  operations, write a
+        batch file  for you,  or automatically  compile and  link the
+        relevant files without further intervention.
+
+        The ARF uses time and date information in the ADA.ALB library
+        file, as well as MS-DOS file dates, to calculate its results.
+        You must  always set your system clock at boot-up for the ARF
+        to work  correctly.  (Of course, the best solution is to have
+        an automatic clock/calendar card in your computer.)
+
+        The ARF is invoked from the DOS command line by typing
+
+        ARF [/option]<ENTER>
+
+        where /option is one of the following:
+
+        /l : list the necessary operations to be performed
+        /b : create the batch file DOARF.BAT
+        /a : automatically compile and link all obsolete files.
+
+        If the option is omitted, the ARF is run in list (/l) mode.
+
+        Note that  1) running ARF in list mode and then typing in the
+        listed commands, 2) running ARF in batch mode and then typing
+        DOARF<ENTER>, and  3) running  ARF in  automatic mode are all
+        equivalent.
+
+        To accommodate the ARF, we added a new option ("Auto") to the
+        APSE.  Pressing the A key when the main APSE menu is shown on
+        the screen invokes the ARF in automatic mode.
+
+        The ARF  is a  time and  headache saver  when writing complex
+        software with many inter-module dependencies.
+
+        The ARF  is similar  in concept  to the  UNIX and MS-DOS MAKE
+        utilities, except that module dependencies are calculated au-
+        tomatically.  This means that you do not need to write a spe-
+        cial script file for the ARF to work.
+
+        A subtle point regarding source file names:  When you compile
+        a program  with Artek  Ada, the source file name and path are
+        stored in the program library.  This information is then used
+        by ARF  to determine  what the  name of  your original source
+        file was.   If  you rename source files or copy them from one
+        DOS subdirectory  to another,  ARF may have obsolete informa-
+        tion about your source file.  In this case, you should recom-
+        pile your  module manually,  and ARF  will remember  the  new
+        source file name and/or path.
+
+   COMPILER ENHANCEMENTS
+   ---------------------
+
+   TASKING PROGRAMS CAN BE SYNTAX-CHECKED
+
+        The 1.25  compiler will compile programs containing most task
+        declarations and  tasking statements.   It will, however, not
+        generate any code for tasking constructs.
+
+        Syntax errors  will be  spotted and limited semantic checking
+        is performed.
+
+        The syntax checking is not yet perfect, especially if complex
+        tasking programs are being compiled.
+
+   BETTER MEMORY MANAGEMENT
+
+        Users of  previous releases  discovered that complex programs
+        would sometimes  run out  of memory after having been running
+        for some  time.    This  was  because  the  heap  became  too
+        fractured, preventing  reuse of individual blocks, and slowly
+        filled all available memory space.
+
+        The 1.25  compiler has  a greatly  enhanced memory management
+        mechanism that  is designed to put an end to problems of this
+        kind.
+
+   DYNAMIC ARRAYS
+
+        Dynamic arrays  and dynamic aggregates are fully supported in
+        release 1.25.  (For an example of dynamic aggregates, see the
+        program SAMPLE11.ADA on the Utility 2 diskette.)
+
+   IMAGE AND VALUE FOR ENUMERATION TYPES
+
+        The IMAGE  and VALUE  attributes are  now fully  implemented.
+        The ENUMERATION_IO package is included in TEXT_IO.
+
+   LIBRARY GENERIC SUBPROGRAMS
+
+        Release 1.25 fully supports library generic subprograms.  Now
+        you can  write for the last time those sort and search proce-
+        dures you've  been writing  over and  over again in the past.
+        Make'em generic!
+
+   UNCHECKED PROGRAMMING
+
+        As a  consequence of  the addition of library generic subpro-
+        grams, we've  been able  to  add  UNCHECKED_DEALLOCATION  and
+        UNCHECKED_CONVERSION.   These two library generic subprograms
+        deallocate (dispose)  an access object, and convert an object
+        from one type to another, respectively.  UNCHECKED_CONVERSION
+        will only work if the two types are of the same size.  Other-
+        wise, it raises CONSTRAINT_ERROR.
+
+        In true  Artek fashion,  the source code to these two subpro-
+        grams is provided on the Utility 2 diskette under the name of
+        UNCHECK.ADA.
+
+   PRAGMA ACODE
+
+        If you  examine the source code for UNCHECK.ADA, you will see
+        that the  bulk of  the two  procedures is  written with a new
+        pragma, pragma  ACODE.   This pragma  is  similar  to  pragma
+        NATIVE, except  that it  allows you to directly insert A-code
+        into your program.
+
+        The ACODE  pragma takes  a list of integer constants as a pa-
+        rameter.  The first of these is interpreted as an A-code, and
+        the following integers are interpreted as data bytes.
+
+        To aid  you in  writing ACODE pragmas, we included the source
+        file ACODES.ADA.  ACODES is a package which contains constant
+        declarations for  all the  currently supported  A-codes.  You
+        will see how it is used in UNCHECK.ADA.
+
+        As an example, consider the following:
+
+        pragma ACODE (NOP, 00, 00, 00);
+        pragma ACODE (LOAD2);
+
+        This code fragment loads the 2-byte object at address 0,
+        level 0, onto the A-stack.
+
+   PRAGMA INCLUDE_BINARY
+
+        If you  want to  include long  assembly-language routines  in
+        your Ada  programs, you will quickly become tired of entering
+        long and  unreadable pragma  NATIVEs.   And there is indeed a
+        better way, called pragma INCLUDE_BINARY.
+
+        INCLUDE_BINARY allows  you to  tell the  compiler to  read  a
+        binary file  (most often a COM or BIN file) from the disk and
+        include it as if it were a gigantic pragma NATIVE.
+
+        The syntax is:
+
+        pragma INCLUDE_BINARY ("[filename.ext]");
+
+        The  file   name  can   include  a   drive  letter  and/or  a
+        subdirectory specification.   This pragma is allowed anywhere
+        a statement  is allowed.   The  file name  string must  be  a
+        constant and be enclosed within quotes or percent signs.
+
+        The file  you specify will be included in the generated code,
+        verbatim, byte by byte.
+
+        To prepare  a  file  for  use  with  INCLUDE_BINARY,  use  an
+        assembler and  the EXE2BIN  utility to convert your EXE files
+        into MS-DOS  COM or  BIN format  before you  compile the  Ada
+        program.  Don't use an ORG statement in your assembler source
+        file.
+
+        A typical  command sequence  to prepare  a  binary  file  for
+        inclusion in an Ada program is as follows:
+
+        MASM binfile;    -- Assuming the Microsoft(R) Macro Assembler
+        LINK binfile;    -- Ignore stack warning message from linker!
+        EXE2BIN binfile  -- Convert binfile.exe to binfile.bin
+        ADA adaprog
+
+        - assuming that adaprog.ada contains the line
+
+        pragma INCLUDE_BINARY ("binfile.bin");
+
+        If the  file you specify doesn't exist, the compiler gives an
+        error message and skips the pragma.
+
+        The same  considerations apply for INCLUDE_BINARY code as for
+        NATIVE  code,  with  regards  to  register  usage,  parameter
+        addresses, etc.
+
+   PRAGMA SUPPRESS
+
+        The compiler  now has  a pragma which suppresses all run-time
+        CONSTRAINT_ERROR checks.  This pragma is as follows:
+
+        pragma SUPPRESS (ALL_CHECKS);
+
+        The effect is equivalent to specifying the /n option when the
+        compiler is started (see User's Guide, page 29).
+
+        The pragma  SUPPRESS (NO_CHECKS)  will  reinstate  constraint
+        checking.
+
+   CONDITIONAL COMPILATION
+
+        The compiler  now optimizes  if-statements with static condi-
+        tions so  that no  code is  generated for  then/else-branches
+        that would always be skipped anyway.  This allows conditional
+        compilation of  program parts,  since you  can trust that the
+        code you  don't need won't be included in the final file.  As
+        an example of this consider
+
+        DEBUG : constant BOOLEAN := TRUE;
+
+        if DEBUG then
+           PUT_LINE ("VAR is" & INTEGER'IMAGE (VAR));
+        end if;
+
+        If DEBUG is not TRUE, no code at all is generated for the if-
+        statement.
+
+   ERRORLEVEL RETURN FOR BATCH PROCESSING
+
+        The compiler  now returns  a status  code when compilation is
+        finished.   This status  code can be interrogated with the IF
+        ERRORLEVEL n batch command.
+
+        The codes are as follows:
+
+        0 -  Compilation was  successful with  no errors and no warn-
+        ings.
+
+        2 - Warnings were given, but no errors were found.
+
+        4 - Errors were found.  Fix and recompile.
+
+        These return  codes are  compatible with  MS-Pascal  (R)  and
+        other common compilers.
+
+   BLINKING ASTERISK DURING COMPILATION
+
+        If you  do not  specify the  /listsource option when you com-
+        pile, the compiler can appear dead for a long period of time.
+        This is  because Artek  Ada utilizes  the available memory in
+        your computer  to the  fullest extent  to save  disk I/O.  To
+        assure you  that all  is well during compilation, an asterisk
+        blinks on your screen while the compiler is working.
+
+        Even if  the asterisk  stops blinking  momentarily, give  the
+        compiler a  chance.  Resolving the overloading in a very com-
+        plex expression can take up to 20 seconds on a PC.
+
+   VERSION 1.00 AC FILES NO LONGER REQUIRED
+
+        After library  subprograms were  introduced, the compiler was
+        changed so that all compiled subprograms are entered directly
+        into the  program library  instead of  being written to an AC
+        file.
+
+        Therefore, AC files are no longer required or supported.
+
+        Any library  subprogram can be linked to create an executable
+        file (AXE  file) by  typing LINKLIB  [name of  program].  You
+        should, however,  beware of  making  subprograms  which  have
+        parameters into AXE files.
+
+   AUTOMATIC DISPOSE
+
+        Dynamic data  are now automatically deallocated from the heap
+        when the  access type  in question  goes out  of scope.  Note
+        that this  means that  if you  have a  library package  which
+        declares an access type, objects of that type are never deal-
+        located, because  the type  never goes  out of  scope (except
+        when the  program finishes, of course.)  If you want to deal-
+        locate an object of such a type, use UNCHECKED DEALLOCATION.
+
+   SMALL BITS
+
+        The following  "small  bits"  have  been  implemented:  Block
+        names,  quotes  within  string  constants,  return  statement
+        within procedures  (previously only for functions), exit from
+        blocks inside  loops, very nice checking of CASE choices (Try
+        it sometime!   Write  a program with missing CASE choices and
+        watch how  the compiler  handles them),  no more "intermodule
+        fixup" errors  in generics,  increased accuracy  in  internal
+        math operations,  negative index  values in  constrained type
+        declarations, and more!.
+
+   LINKER ENHANCEMENTS
+   -------------------
+
+        Export and  import of  sublibraries has  been added,  a  full
+        library directory  facility,  deletion  of  modules  by  wild
+        cards, and more.  The additions are explained below.
+
+   MORE USER-FRIENDLINESS (we hope)
+
+        All linker/librarian  options may now be specified in full or
+        partially at  your discretion.   This means that you can type
+        linklib /delete  or linklib  /del or linklib /d; it all means
+        the same.
+
+        If you  don't remember  a linklib  command, just type linklib
+        /help (/h  will do) to obtain a full listing of the available
+        options.
+
+   LIBRARY MODULE DELETION
+
+        The Artek  Linker/Librarian has  an undocumented  option, /d,
+        which allows you to delete modules from the Ada library.
+
+        To delete a module called MODULENAME, enter
+
+        linklib MODULENAME /delete
+
+        Wild cards  can be used to specify multiple modules.  This is
+        explained below.  See "EXPORT AND IMPORT OF SUBLIBRARIES."
+
+   LIBRARY REORGANIZATION
+
+        Due to  the file  structure used for the library, the ADA.ALB
+        file does  not shrink in size even if you delete modules from
+        the library.   If  you want  to pack the library file down to
+        its REAL size, use the new switch on the linker:
+
+        linklib /reorg  -- This can be shortened to /r
+
+        This will  write a new ADA.ALB library file which contains no
+        empty space.  If the linker runs out of disk space during the
+        reorganization, it  will give  an error message and leave the
+        original file intact.
+
+   EXPORT AND IMPORT OF SUBLIBRARIES
+
+        In release  1.25 of Artek Ada, you can transfer a-code object
+        modules between  libraries.   This is  done by  using two new
+        options in the linker, /export and /import.
+
+        This feature  can be used to transfer object module libraries
+        between programmers,  or to  distribute modules for Artek Ada
+        in object  form, or  to save space in the main ADA.ALB.  Note
+        that the  1.25 compiler  can only  read and  write  the  main
+        library, ADA.ALB.
+
+        To export a module from the main ADA.ALB library, type
+
+        linklib   [modulename1+modulename2+...+modulenameN]   /export
+        <ENTER> (not including the square brackets; no spaces between
+        the module names and plus-signs)
+
+        A  new   library  file   will  be   created  with   the  name
+        [modulename1].ALB, containing  the module(s)  you  specified.
+        Any previous ALB file with the same name is overwritten.
+
+        If you  specify modules  that are  not found  in the library,
+        they are  simply  ignored  and  not  exported  to  the  final
+        library.   This can be used to name sublibraries, as shown in
+        the examples below.
+
+        The asterisk  ("*") is  allowed as  a "wild  card" in  module
+        names.   Thus, if you ask linklib to export gks*, it will put
+        all modules  whose name  begin with  "gks" in  the new subli-
+        brary.
+
+        To import a sublibrary into ADA.ALB, type
+
+        linklib [libraryname] /import <ENTER> (no square brackets)
+
+        This  will   import  the   library   whose   file   name   is
+        [libraryname].ALB into the main ADA.ALB library.  Any modules
+        which previously  existed in ADA.ALB with the same name as an
+        imported module  are deleted.    Only  one  library  name  is
+        allowed at  a time; you cannot string them together with plus
+        signs.
+
+        A few examples are in order:
+
+        linklib text_io /export
+
+        This command  will export  the text_io  module (specification
+        and body) into a new sublibrary called TEXT_IO.ALB.
+
+        linklib text_io+direct_io+sequential_io /e
+
+        This will  export all  the mentioned  i/o modules  into a new
+        sublibrary called TEXT_IO.ALB.
+
+        linklib iolib+text_io+direct_io+sequential_io /e
+
+        Assuming that  the module  iolib is not found in the library,
+        this will  copy text_io,  direct_io and  sequential_io into a
+        sublibrary called IOLIB.ALB.
+
+        linklib gks*+graphics* /e
+
+        This command exports all modules whose names begin with "gks"
+        or "graphics" into the sublibrary GKS.ALB.
+
+        linklib gks /import
+
+        This will  import the  sublibrary  GKS.ALB  back  again  into
+        ADA.ALB.
+
+   LDIR REPLACED BY LINKLIB /LIST
+
+        The old  LDIR command  to list library contents has been dis-
+        continued.   Now, its  function is  performed  by  the  /list
+        option on  the linker/librarian.   This change is transparent
+        to users  of the  APSE.   The M  (modules) command  works  as
+        before.   The difference  is  that  it  now  invokes  linklib
+        instead of ldir.
+
+        You can  now list the contents of sublibraries as well as the
+        main ADA.ALB  library.   To list the contents of a sublibrary
+        called GKS.ALB, type
+
+        linklib gks /l <ENTER>
+
+        If you don't specify a library name, ADA.ALB is assumed.
+
+   DEBUGGER ENHANCEMENTS
+   ---------------------
+
+        The Artek  Interpreter/debugger has  been  enhanced  greatly.
+        The main added features are the following:-
+
+        - Source-level debugging
+        - Post-mortem debugging
+        - Exception trapping
+        - Call stack display
+        - Heap block display
+
+        They are documented below.
+
+   SOURCE DEBUGGING
+
+        To enable source debugging for a particular compilation unit,
+        compile it with the /d (debugging) switch.  The compiler will
+        generate an  ADB file (Ada DeBug), which contains source line
+        numbering information.
+
+        To debug  a program,  just  invoke  the  interpreter/debugger
+        AI.EXE with  the /d  (debugging) switch, or use the D command
+        from the  APSE.   The debugger  will automatically locate and
+        load the  available debugging information.  You can see which
+        modules of  a program  have  source  debugging  available  by
+        entering the  M (modules)  command within  the debugger.  The
+        text "(source debug)" will appear after the names of all mod-
+        ules for which an ADB file is available.
+
+        If the  debugger finds  an ADB  file which  is older than the
+        corresponding source  file, it  will issue a warning.  If you
+        have indeed  edited the source file and subsequently compiled
+        it without the /d switch, the debugger may not be able to lo-
+        cate the  source information correctly.  In this case, either
+        recompile the  offending unit with a /d switch, or delete the
+        ADB file.   The  latter removes source debugging for the unit
+        in question.
+
+        Once the  debugger has been started, it shows you the current
+        source line  in high  intensity, as  well as the A-code to be
+        executed next.  You can single-step and trace, and the debug-
+        ger will  show you  the relevant source lines as the code for
+        them is executed.
+
+        Every time  the program  flow leaves  one module  and  enters
+        another, the  debugger displays  the name  of the  module en-
+        tered.
+
+        To view  the source code for a particular module, use the new
+        V (view)  command.  You will be asked for a module name and a
+        line number.   You  only have  to enter  enough characters to
+        make the module name unique.  When the correct module name is
+        shown on  the screen,  press ENTER  or a  colon (":").  Then,
+        enter the line number you want to view from.
+
+        The debugger will show a default module name and line number.
+        If you  want to  use either or both of those, press the ENTER
+        key immediately  instead of  entering data.  The default will
+        then be entered automatically.
+
+        The current  release of  the debugger  does not  support  the
+        Backspace key  while entering a module name.  If you press an
+        incorrect key, you'll have to start all over again.
+
+        To set  a breakpoint  at a  particular source line, use the B
+        (breakpoint) command.  Then follow a similar procedure to the
+        one described for the view command.
+
+        Note that in the current release, the debugger will sometimes
+        stop on  a breakpoint  one instruction earlier than expected.
+        This is  a minor  annoyance and will be corrected in a future
+        release.
+
+        The debugger  will display  a highlighted  "BP=>"  symbol  in
+        front of a line on which a breakpoint is set.
+
+        Note that you must have the ANSI.SYS driver installed in your
+        CONFIG.SYS file for highlighting and colors to work correctly
+        in the debugger.
+
+   POST-MORTEM DEBUGGING
+
+        Post-mortem debugging has also been added.  Now, after a pro-
+        gram has finished execution, either normally or because of an
+        exception, you  are presented  with the  post-mortem debugger
+        prompt "Post-mortem>".   You  are then allowed to use all the
+        normal debugger  commands except  Trace, Single-step  and Go.
+        These commands have no effect in post-mortem mode.
+
+        To exit to the operating system, use the Quit command.
+
+   EXCEPTION TRAPPING
+
+        The E command, for Exception trap toggle, has been added.  To
+        enable exception  trapping, give  the E  command while at the
+        debugger prompt.  To disable it, press the E key again.
+
+        Exception trapping, when enabled, causes the debugger to stop
+        execution whenever  an exception  is raised and wait for your
+        command.   It is  similar to  setting a  breakpoint at  every
+        RAISE statement  (but additionally,  implicit exceptions such
+        as division by zero are trapped).
+
+        When you are at an exception trap point, you can Single-step,
+        Trace or Go, as usual.
+
+        Exception trapping  is very  useful when  you have a spurious
+        exception appearing somewhere in your program and you want to
+        know exactly where it was originally raised.
+
+   CALL STACK DUMP
+
+        The C  ("Call stack dump") command has also been added to the
+        debugger.   This command  dumps the  current  procedure  call
+        stack on the screen.
+
+        A typical dump looks as follows:
+
+        Lv Address ExcH DynL SL
+        02 00 0134 0000 0049 01
+        01 01 872A 88C0 004B 00
+        00 00 0B4F 0000 0000
+
+        The first  column, Lv,  indicates the  current (dynamic) call
+        level.  The "02" in this case means that procedure nesting is
+        two levels deep at the moment.
+
+        The second  column, Address,  gives the number of the calling
+        module and  the return address in that module.  For a list of
+        currently active  modules and  their numbers, press M for the
+        Modules command.
+
+        The third  column gives  the address of the exception handler
+        which was in effect at the point of the call.
+
+        The fourth column, DynL, is the beginning of the frame of the
+        calling procedure.  This will probably only be of interest to
+        seasoned A-code hackers.
+
+        The last column, SL, gives the static link to the next stati-
+        cally enclosing  frame.  For a technical discussion about the
+        function of  the static link, we refer you to Niklaus Wirth's
+        book  Algorithms+Data   Structures=Programs  (Prentice  Hall,
+        1976).
+
+   HEAP BLOCKS DISPLAY
+
+        The H  (heap dump) command now displays heap data in an easy-
+        to-understand block  format, complete  with  block  size  and
+        linkage  information.     Each  block  is  marked  "Free"  or
+        "Temporary" if  it is  on the  system free-list or temporary-
+        list, respectively.    Blocks  on  the  free-list  have  been
+        disposed and  may be reused by the heap allocator.  Blocks on
+        the  temporary-list   are  for   intermediate  results   from
+        expression evaluation  and subprogram calls and will be freed
+        when no longer in use.
+
+   REGISTER DUMP
+
+        The r  (register dump)  command now  shows the  current  heap
+        pointer (the  address of  the beginning  of the heap) and the
+        amount of  free memory  remaining between  the stack  and the
+        heap.   Also, the number of free bytes within the heap itself
+        is displayed.
+
+   EDITOR ENHANCEMENTS
+   -------------------
+
+   WINDOWING
+
+        The Artek  Editor now  has multi-window,  multi-file  editing
+        capabilities.   To open a new window, use the ESC W O (window
+        open) command.   You  will be  asked whether  the new  window
+        should be  horizontal or  vertical.   Finally, you  are asked
+        where you  want the  new window  border to  be placed  on the
+        screen.
+
+        To close a window, type ESC W C.
+
+        A window  can be  moved by  using the  ESC W M command.  This
+        allows you  to use  the cursor to point to the window edge to
+        move.   When you  have selected  the edge, move the cursor to
+        the place where it should be placed and type ENTER.  The edi-
+        tor will move the window edge to the desired place.
+
+        To move  between windows,  press function  key F1 and use the
+        cursor keys to point to the window which you want to move to.
+
+        You can  select a  new buffer  for editing by typing ALT-N or
+        ESC N.  The next buffer in line will be displayed in the cur-
+        rent window.  There are 10 buffers available.
+
+        ESC P  or ALT-P can be used to select the previous buffer for
+        editing.
+
+        To load  a file into a new buffer, use the ESC F A (File Add)
+        command.   This will  load a file from disk into a previously
+        empty buffer.
+
+        The editor  always displays  the name of the current workfile
+        in the lower right corner of the screen.  It is preceded by a
+        digit and  a colon  (for example  0:example.ada).   The digit
+        indicates which buffer you are working on at the moment, from
+        zero to nine.
+
+   NEW EDITING FUNCTIONS
+
+        New editing  functions include  Cut to end of line, Move line
+        to center  of screen  and Delete  line.   They are  described
+        below.
+
+        To delete   ("cut")  the  text to  the right of the cursor in
+        the current line, press Alt and c simultaneously.
+
+        To move   the  current  line to  the center  of  the  screen,
+        scrolling the   screen  if necessary, press Alt-b.  This will
+        bring the surrounding program text into view.
+
+        To delete   the  current line and close up the vacated space,
+        press the Ctrl and BACKSPACE keys at the same time.
+
+        The Ada   Editor  now contains several Ada-specific features.
+        You can   comment  and  decomment a block, indent and outdent
+        blocks, and search for matching parenthesis.
+
+        To comment  an Ada  block, select the block in the normal way
+        using function key F6 and the cursor keys.  Then, type + (the
+        plus key).   There are two plus keys on the standard IBM key-
+        board; either one will do the trick.
+
+        You will  see that  the marked  block is commented out by in-
+        serting two hyphens at the start of every line.
+
+        To remove  the comment  hyphens from  a program block, select
+        the block and type - (the minus key).
+
+        To indent a program block, select the block and press the TAB
+        key.   The TAB key is located above the CTRL key on the stan-
+        dard IBM keyboard.
+
+        To "outdent"  a program  block, select  the block  and  press
+        SHIFT and TAB at the same time.
+
+        To find   corresponding  left  and  right  parenthesis  in  a
+        program, just   place  the  cursor on a parenthesis and press
+        F10.    The  editor  will automatically  highlight  the  text
+        between matching parenthesis.
+
+        As a   matter  of  fact, you can position the cursor anywhere
+        between a   pair  of  parenthesis and  press F10.  The editor
+        will still highlight the correct block of text.
+
+        If there   is  a  parenthesis mismatch  and the editor cannot
+        find a   corresponding  parenthesis, a beep will be heard and
+        the editor does not highlight a program block.
+
+   SCREEN SYNCHRONIZATION OPTIONAL
+
+        If you   have  a  color graphics card, it may produce flicker
+        and "snow"  on the  screen when text is scrolled.  To prevent
+        this, use   the  Screen  Sync field  in the editor Options as
+        detailed below.
+
+        After invoking   the  editor,  enter ESC  O  (letter  O)  for
+        Options, use  the CURSOR  DOWN key to move to the Screen Sync
+        field, and   set  it  to Y  (for Yes).  Note that after this,
+        the editor   will  slow down considerably, since it waits for
+        the screen's   vertical  retrace  to occur  everytime data is
+        written.
+
+   APSE ENHANCEMENTS
+   -----------------
+
+        Five commands  have been  added to  the APSE, and one command
+        has been  renamed.   The five  new commands  are:   Auto, for
+        invoking the  ARF; Fork,  for executing  DOS commands without
+        leaving  the  APSE;  Help,  for  displaying  a  help  screen;
+        Redirect, to output compiler listings etc. to a printer or to
+        a file;  and finally  setUp (invoked  by typing  U) to select
+        screen colors and other system defaults.  The renamed command
+        is Run, which is now called eXecute (invoked by typing X).
+
+        These additions and changes are documented below.
+
+   FORK COMMAND ADDED
+
+        You can  now execute  DOS commands  without leaving the APSE.
+        The F (fork) command has been added for this purpose.
+
+        After you  press F, the APSE will ask you for the DOS command
+        which you want to execute.  If you press ENTER without enter-
+        ing a  command, you  will be  taken into COMMAND.COM with the
+        drive> prompt.   (To  exit to  the APSE again, enter EXIT and
+        press the  ENTER key.)   If  you type a command, however, the
+        APSE will  execute the  command as if you had typed it at the
+        drive> prompt.
+
+   HELP SCREEN AVAILABLE
+
+        By typing  H for  Help while  inside the  APSE, you  can  now
+        obtain a screenful of information about the various APSE com-
+        mands, compiler options, and more.
+
+   SETUP ADDED IN APSE AND EDITOR
+
+        You can now decide once and for all which colors you want the
+        APSE and  the Editor  to use  for text  on the screen.  Also,
+        screen synchronization may be permanently set.
+
+        If you  don't want to use Artek's AE editor, you can set that
+        up in  the APSE, too.  Also, source and object file paths may
+        be defined to be something else than the default directory.
+
+        All this  is done  through the new setUp commands (invoked by
+        pressing U) in the APSE and the Editor.
+
+   REDIRECTION ADDED TO THE APSE
+
+        We have added the Redirect command to the APSE.  This command
+        allows you to specify a file into which compiler output is to
+        be redirected.  Also, the output of the Show and Modules com-
+        mands is redirected to this file.
+
+        This allows  you to list the compiler output to a printer, or
+        to a text file.
+
+        The Run  command had to be changed because of the naming con-
+        flict and is now called eXecute.  It is invoked by typing X.
+
+   DEFAULT ENTRY TO EDITOR AFTER UNSUCCESSFUL COMPILATION
+
+        If you  are using the APSE and the compiler finds an error in
+        your program,  you will be asked immediately after the compi-
+        lation terminates whether you want to invoke the editor or go
+        back to  the APSE.   By  pressing E, you will load the editor
+        without having  to go to the APSE first.  Press any other key
+        to return to the APSE as normal.
+
+   DISASSEMBLER ENHANCEMENTS
+   -------------------------
+
+   LIBRARY NAME NOT REQUIRED
+
+        The A-Code disassembler now always disassembles from the main
+        Ada library.   Therefore,  the optional library parameter has
+        been  removed   and  the  library  ADA.ALB  is  automatically
+        searched for the module you specify.
+
+   NEW INCLUDED SOFTWARE
+   ---------------------
+
+   MEMORY PACKAGE ALLOWS 640 K FOR DATA
+
+        We now  include a new package, MEMORY.ADA, with the compiler.
+        This is  a generic  package which  allows you  to use all the
+        available RAM in your computer (excluding MS-DOS and the run-
+        ning program itself) for data within Ada programs.
+
+        The package  functions similarly  to DIRECT_IO.  You begin by
+        instantiating it  for the  data type  you wish to use.  Then,
+        you call an ALLOCATE procedure to tell MEMORY how many pieces
+        of your  data record  you want  to be  able to  store.  After
+        these formalities have been fulfilled, you can READ and WRITE
+        data to  "records" in memory, just as if the memory were con-
+        figured as an array.  The only difference is that you have to
+        use READ and WRITE instead of normal assignment and indexing.
+
+        After use,  you can  DEALLOCATE the  memory, and you can even
+        MODIFY_ALLOCATION if you find that you need more or less mem-
+        ory than originally anticipated.
+
+        The MEMORY  package is  documented with comments and an exam-
+        ple.  See the source file MEMORY.ADA.
+
+        In the  future, it  is possible  to add  the  Lotus-Intel-Mi-
+        crosoft (trademarks)  Expanded Memory  Standard  and  IBM  AT
+        Extended memory  access in  the MEMORY package, while keeping
+        the same specification.
+
+   MATH PACKAGE
+
+        Release 1.25 includes a comprehensive package of basic mathe-
+        matical functions.   Included are square roots, exponentials,
+        logarithms, and  trigonometric functions complete with hyper-
+        bolic and inverse functions.
+
+        The specification  of the  MATH package  is derived  from Ada
+        Letters (the  publication of  ACM SigAda).   It  is a generic
+        package, ready to instantiate for your favorite FLOAT type.
+
+        Source code  is included  in the  file MATH.ADA.    You  will
+        notice that many of the functions are written with high-speed
+        pragma  NATIVEs.     The  MATH  library  uses  an  8087/80287
+        coprocessor if available or the emulation library if not.
+
+   ENHANCED DOS_INTERFACE
+
+        The DOS_INTERFACE package has been enhanced with several low-
+        level utility subprograms.  They are as follows:
+
+        function CURRENT_DATA_SEGMENT return WORD;
+        
+        This function returns the value of the DS segment register.
+        It is provided for convenience when assigning to the ES field
+        of the REG_8086 structure in certain DOS calls.
+
+        procedure MERGE_REGISTERS (LO, HI : in BYTE; REG : out WORD);
+        
+        Assigns a 16-bit register with two 8-bit register halves.
+        Example: MERGE_REGISTERS (16#00#, 16#4C#, REG . AX);
+        This will set AX to 16#4C00#.
+
+        procedure SPLIT_REGISTER (REG : in WORD; LO, HI : out BYTE);
+        
+        Splits a 16-bit register into two 8-bit halves. Example:
+        SPLIT_REGISTER (16#4C00#, LOWPART, HIGHPART);
+        This will set LOWPART to 16#00# and HIGHPART to 16#4C#.
+
+        procedure POKE (SEGMENT, OFFSET : in WORD; VALUE : in BYTE);
+        
+        Writes the VALUE to memory at address SEGMENT:OFFSET.  POKE
+        (16#B000#, 16#0000#, 65) will put an A at the start of IBM PC
+        screen memory.
+
+        procedure POKE_WORD
+           (SEGMENT, OFFSET : in WORD; VALUE : in WORD);
+        
+        Similar to POKE, except that a 16-bit value is written
+        instead of an 8-bit value.  The low 8 bits of the value are
+        written to offset OFFSET, and the high 8 bits are written to
+        OFFSET+1.
+
+        function PEEK (SEGMENT, OFFSET : in WORD) return BYTE;
+        
+        Reads an 8-bit BYTE value from memory at address
+        SEGMENT:OFFSET.  FIRSTBYTE := PEEK (16#B000#, 16#0000#); sets
+        FIRSTBYTE to the ASCII value of the first character in the
+        IBM PC screen memory.
+
+        function PEEK_WORD (SEGMENT, OFFSET : in WORD) return WORD;
+        
+        Similar to PEEK, except that a 16-bit value is read.  The low
+        8 bits of the value are read from SEGMENT:OFFSET, while the
+        high 8 bits are read from SEGMENT:OFFSET+1.
+
+        procedure PORT_OUT (PORT : in WORD; VALUE : in BYTE);
+        
+        Outputs a byte to the I/O port whose number is in PORT.  Port
+        numbers and values are very hardware-specific.
+
+        procedure PORT_OUT_WORD (PORT : in WORD; VALUE : in WORD);
+        
+        Outputs a word to the I/O port whose number is in PORT.
+
+        function PORT_IN (PORT : in WORD) return BYTE;
+        
+        Inputs a byte from the I/O port whose number is in PORT.
+
+        function PORT_IN_WORD (PORT : in WORD) return WORD;
+        
+        Inputs a word from the I/O port whose number is in PORT.
+
+        Also, a  new field  has been  added to  the REGS_8086 record.
+        This field,  ES, contains  the value  of the  ES segment reg-
+        ister.
+
+        The source  code for  DOS_INTERFACE can  be found in the file
+        DOSINT.ADA on the Utility 2 diskette.
+
+   SCREEN INPUT/OUTPUT PACKAGES AND SUBPROGRAMS
+
+        On the  Utility 2 diskette, we have included the library sub-
+        programs QPUT and QGET.  These subprograms have the following
+        specifications:
+
+        procedure QPUT (S : in STRING);
+
+        procedure QGET (C : in out CHARACTER);
+
+        QPUT uses  a special  DOS interrupt  to achieve  fast console
+        output.   QGET returns  a character typed at the console, in-
+        cluding extended  ASCII codes,  control characters,  etc.  No
+        filtering is done.
+
+        The package  CON_IO contains  several utility subprograms for
+        manipulating the  display.   Among others, cursor addressing,
+        video attributes  and colors  are supported  through calls to
+        this package.   Boxes can easily be drawn on the screen using
+        the BOX  procedure.  The file CONIO.ADA on Utility Diskette 2
+        contains commented  source code  for this  package.  Also, an
+        example of  its use  can be  found in  the  MAIL.ADA  program
+        described below.
+
+   SAMPLE ADA PROGRAMS
+
+        On the  Utility 2  diskette, you will find 12 sample Ada pro-
+        grams ready to compile.  This will get you started with Artek
+        Ada.  The samples are named SAMPLE1.ADA through SAMPLE12.ADA.
+
+        Also included  is a demonstration program, MAIL, which demon-
+        strates the  use of  the CON_IO  console I/O  package.   This
+        program allows  you to  enter, modify  and view  names  in  a
+        mailing list.
+
+   TECHNICAL NOTES
+   ---------------
+
+   "GOTCHA!" WITH LIBRARY SUBPROGRAM SPECIFICATIONS AND BODIES
+
+        Library subprograms  are stored in the program library in two
+        parts:   the specification  and the  body.  The specification
+        may be  separately compiled.   When  you submit  a subprogram
+        body for  compilation, the  compiler checks the library for a
+        corresponding specification.   If  a specification  is found,
+        there must  be an  exact match  between its  parameter names,
+        types and  modes, and  those of the body.  If this is not the
+        case, an error message is generated.  To get rid of the error
+        message, you must either delete the offending subprogram from
+        the  program  library  before  you  recompile,  or  insert  a
+        separate subprogram  specification before  the body  in  your
+        source file.
+
+        The same  gotcha can  also apply  if you have an old specifi-
+        cation in  your library  which has  WITHed some program units
+        you no longer use.  These units will be included in the final
+        AXE and/or EXE file, much to your annoyance.
+
+        The easiest way to find out whether any unwanted modules have
+        crept into  an AXE  file is  to invoke the debugger (with the
+        name of the file as a parameter) and use the Modules command.
+
+        The same  solution applies  as above:  delete the old subpro-
+        gram from  the library  before you recompile or write out the
+        subprogram specification  explicitly yourself  and include it
+        in the source file just before the body.
+
+   AUTO-SENSING OF 8087/80287 COPROCESSOR
+
+        The Artek  Interpreter now automatically detects the presence
+        of an 8087/80287 math coprocessor and uses it if present.  If
+        not, a software emulator executes math instructions.
+
+   ERRATA
+   ------
+
+        The following  errors have been found in the Artek Ada User's
+        Guide:
+
+   Page 24:
+
+        The editor  keys <CTRL  PGUP> and <CTRL PGDN> are juxtaposed.
+        Actually, <CTRL PGUP> stands for "Cursor to previous error in
+        file" and  <CTRL PGDN>  stands for  "Cursor to  next error in
+        file".
+
+   Pages 34 and 185:
+
+        The constant  SYSTEM .  STORAGE_UNIT is  incorrectly given as
+        16.   Since the  8086/88/186/286 family of microprocessors is
+        byte-addressable, we decided that it would be more convenient
+        if SYSTEM  . STORAGE_UNIT  were given  the value 8 instead of
+        16.   This affects for example the use of the SIZE attribute,
+        which returns  the size of its prefix in bits.  To obtain the
+        size in bytes, divide the result by SYSTEM . STORAGE_UNIT.
+
+   Page 65:
+
+        The IN  A-code has  its parameters listed in the wrong order.
+        The correct order is:
+
+        WORD Operand
+        WORD Lower bound of range
+        WORD Upper bound of range
+
+   Pages 79 and 106:
+
+        In the  text about  parameter passing with the CALL and LCALL
+        A-codes, "Mode in or out" should be "Mode in out or out".
+
+   Page 99:
+
+        The result for the DUP1 A-code lists only one "BYTE Operand".
+        The result is in fact twice "BYTE Operand".
+
+   Page 108:
+
+        The operation  of the  HCOPY A-code  has been  changed.   Its
+        description is now as follows:
+
+        Parameters:
+
+        List of BYTES Data to be copied to the heap
+        WORD Number of bytes to copy
+        WORD Link to next element in heap chain
+
+        Result:
+
+        WORD Heap address where the data was stored
+
+        Description:
+
+        Pops the  data bytes  off the  stack and  stores them  on the
+        heap.   Stores the  forward link in the link field of the in-
+        ternal heap  control block.   Returns the address in the heap
+        of the stored data.  These data must subsequently be accessed
+        with absolute memory addressing (level 255, see LOAD).
+
+   Page 116:
+
+        "This exception is emitted by..." should be "This instruction
+        is emitted by...".
+
+   Page 157:
+
+        The CVABS A-code is incorrectly documented.  The correct text
+        follows:
+
+        Parameters:
+
+        WORD Absolute address of data on stack
+
+        Result:
+
+        BYTE -1 (absolute level indicator)
+        WORD Absolute address of data
+
+        Description:
+
+        CVABS reads  a 16-bit  absolute address off the stack, pushes
+        an absolute  level indicator byte (-1) on the stack, and then
+        re-pushes the  address.  In effect, the instruction inserts a
+        -1 byte  in the stack just before the top word.  This is used
+        to quickly prepare a pointer value for use in a LOAD or STORE
+        instruction.
+
+   Page 186:
+
+        In the  example  about  the  use  of  address  representation
+        clauses, a  typo in  the PC's screen memory address causes it
+        to be incorrectly listed as 16#8000#:0000.  As seasoned hack-
+        ers know,  the address  is actually  16#B000#:0000.  That's a
+        letter B instead of a digit 8.
+
+        Unfortunately, this  is really  a moot  point, since  address
+        representation clauses  as detailed  here are not implemented
+        in release 1.25.
