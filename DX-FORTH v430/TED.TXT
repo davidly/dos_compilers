@@ -1,0 +1,79 @@
+
+                Text File Editor for DX-FORTH
+                -----------------------------
+
+TED is a resident text file editor.
+
+
+INSTALLATION:
+
+DX-FORTH for CP/M must be configured for your terminal before
+using the text file editor.  See DX-FORTH.TXT for further
+details.
+
+Users who prefer working with text files can replace the
+resident screen file editor in DX-Forth with TED.  To do this
+enter the following from the DOS command prompt:
+
+     A:FORTH-F - SYSTEM INCLUDE TED AKA TED EDIT SAVE DX BYE
+
+
+INVOKING:
+
+The text editor is invoked by typing TED.  If the editor is
+not resident it is automatically loaded from disk file TED.F
+
+If you mainly use text files you may want to add EDIT as a
+synonym for TED as previously described.
+
+     TED ( "filename[.F]" -- )
+
+Load and edit the text file "filename".  If no filename is
+given use the file specified by LASTFILE and LOADLINE.
+
+Note: Specifying a filename with TED is only available once
+TED has been loaded and the loader stub overwritten.
+
+A "load/size error" is reported if the file cannot be found,
+is write-protected or too large to fit in memory.
+
+Edits are confined to memory and only written to disk on
+exit with ^U (S)ave or when writing to another filename with
+^Z (W)rite.
+
+Lines can be up to 132 characters but only the leftmost are
+displayed and directly editable.  Tabs are converted to
+single spaces.
+
+
+COMMANDS:
+
+1. Cursor movement
+
+Ctrl-E   Move cursor up
+Ctrl-X   Move cursor down
+Ctrl-D   Move cursor right
+Ctrl-S   Move cursor left
+Ctrl-I   Move cursor to the next tab stop (TAB)
+
+2. Editing
+
+Ctrl-G   Delete character to the right of the cursor
+Ctrl-H   Delete character to the left of the cursor
+Ctrl-T   Erase all characters to the right of the cursor
+Ctrl-Y   Delete the current line. Lines below cursor are moved
+         up one position.
+Ctrl-M   Insert a blank line at the cursor position
+
+3. Miscellaneous
+
+Ctrl-C   Move to the next page
+Ctrl-R   Move to the previous page
+Ctrl-L   Restore the current line
+Ctrl-U   Exit the editor
+Ctrl-Z   Multi-function command
+         C - clear the text buffer
+         H - show help screen (if present)
+         R - read file from disk
+         W - write file to disk
+

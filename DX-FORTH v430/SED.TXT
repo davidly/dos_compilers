@@ -1,0 +1,152 @@
+                Full-Screen Editor for DX-FORTH
+                -------------------------------
+
+                      *** IMPORTANT ***
+
+  After editing a screen, Ctrl-K must be pressed to UPDATE
+  the changes.  This is a safeguard as there is no backup
+  copy of the source file being editing.  Until Ctrl-K is
+  pressed, the screen may be restored to its previous state
+  using Ctrl-L.
+
+
+INSTALLATION:
+
+DX-FORTH for CP/M must be configured for your terminal before
+using the full screen editor.  See DX-FORTH.TXT for further
+details.
+
+
+INVOKING:
+
+The screen editor is invoked typing SED.  If the editor is not
+resident it is automatically loaded from the disk file SED.SCR.
+
+If you mainly use screen files you may want to add EDIT as a
+synonym for SED e.g. AKA SED EDIT
+
+DX (COM or EXE) comes pre-loaded with the screen editor.
+
+
+COMMANDS:
+
+ SED  ( n | -- )
+
+   Enter the full screen editor, selecting screen n for
+   editing.  If no screen number is specified, then the screen
+   last LISTed is used or, in the case a LOAD error, the screen
+   and position where the error occured.
+
+   Note: If the screen number is out of range, then the highest
+   screen available is used.  If the size of the screen file
+   was zero when EDIT was called, it will be extended by one
+   block.
+
+ L  ( -- )          List
+
+   Lists the current screen.  The screen number is obtained
+   from the variable SCR which is set by LIST, EDIT or when a
+   LOAD error occurs.
+
+ N  ( -- )          Next
+
+   Increment the screen number in variable SCR then list it.
+
+ B  ( -- )          Back
+
+   Decrement the screen number in variable SCR then list it.
+
+ LS ( -- )          List Swap
+
+   Perform SWAP-FILE and list the screen specified by SCR.
+
+
+EDITOR COMMANDS:
+
+1. Cursor movement
+
+Ctrl-E   Move cursor up
+Ctrl-X   Move cursor down
+Ctrl-D   Move cursor right
+Ctrl-S   Move cursor left
+Ctrl-I   Move cursor 4 places to the right (TAB)
+Ctrl-Q   Move cursor to the upper left of the screen
+
+2. Editing
+
+Ctrl-G   Delete character to the right of the cursor
+Ctrl-H   Delete character to the left of the cursor
+Ctrl-T   Erase all characters to the right of the cursor
+Ctrl-O   Insert space at the current cursor position
+Ctrl-Y   Delete the current line. Lines below cursor are moved
+         up one position. Pop a line from circular buffer into
+         the bottom line
+Ctrl-N   Insert blank line. Lines below cursor are moved down
+         one position. Push bottom line to the circular buffer
+Ctrl-W   Split the current line at the cursor position
+Ctrl-F   Join the next line at the cursor position
+Ctrl-A   Copy the contents of the current line to the one-line
+         buffer
+Ctrl-P   Copy the contents of the one-line buffer to the
+         current line
+Ctrl-K   Update all changes made to the screen
+
+3. Miscellaneous
+
+Ctrl-C   Move to the next screen
+Ctrl-R   Move to the previous screen
+Ctrl-J   Jump to another screen
+Ctrl-B   Redraw the screen. Used if the screen has become
+         garbled e.g. after displaying blocks containing binary
+         data
+Ctrl-L   Reload the current file block
+Ctrl-V   Toggle between insert or overwrite mode
+Ctrl-U   Exit the editor
+Ctrl-Z   Multi-function command
+         S - clear the screen contents
+         B - clear the circular buffer contents
+         I - insert a blank screen at the current position
+         D - delete the current screen copying it to the buffer
+ESC      Toggle between normal and graphics mode
+
+4. Utilities
+
+The following commands are available from the EDITOR vocabulary
+
+ IMPORT  ( n1 n2 -- )
+
+   Copy screens n1 thru n2 from the secondary file inserting
+   them beginning at screen SCR of the current file.
+
+ EXPORT  ( n1 n2 -- )
+
+   Copy screens n1 thru n2 from the current file inserting
+   them beginning at screen SCR of the secondary file.
+
+IMPORT and EXPORT assume two screen files are currently open
+and SCR of the target file has been set (SCR may be viewed with
+FYI).  After the operation, target SCR is set to the last block
+written plus 1.
+
+5. Notes
+
+In the DOS version of the editor, the arrows keys, PgUp, PgDn,
+Home, Insert and Delete keys may be used in addition to the
+usual control-key sequences.
+
+COPY COPIES EXPAND (found in earlier versions of the editor)
+are redundant as the ability to insert or delete screens is now
+available from Ctrl-Z.
+
+To extend a screenfile, enter EDIT then jump to the desired
+screen number using Ctrl-J.  Alternatively, truncating/
+extending a screenfile may also be done from the Forth
+environment using FILEBLOCKS.
+
+A special graphics mode has been added.  It is toggled via the
+ESC key and allows graphic characters to be entered from the
+keyboard.  It is intended to allow the insertion of PC symbols
+or graphic characters into quoted strings.  Refer to
+DX-FORTH.TXT for a table of keys and their corresponding codes.
+To exit graphics mode, press ESC again.
+

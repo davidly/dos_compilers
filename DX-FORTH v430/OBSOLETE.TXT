@@ -1,0 +1,19 @@
+A note for users upgrading from previous versions of DX-Forth
+-------------------------------------------------------------
+
+Changes and improvements to DX-Forth may occasionally result in
+compatibility issues with previous application software.
+
+Usually the problem takes the form of an application either not
+loading successfully or (less common) not running - despite its
+compiling and running correctly on a previous version of DX-Forth.
+
+For the first case, the user should try loading OBSOLETE.SCR before
+loading the application.  In most cases this will fix the problem.
+OBSOLETE.SCR contains functions that once existed in DX-Forth but
+were removed due to obsolescence.
+
+Should the application compile but fail to execute correctly then
+the incompatibility is likely to be more subtle.  In this instance
+one should read CHANGES.TXT to ascertain what function behaviours
+have changed since the application was originally developed.

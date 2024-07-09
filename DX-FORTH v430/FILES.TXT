@@ -1,0 +1,64 @@
+The following files are included in the DX-Forth distribution:
+
+Executables -
+
+FORTH.EXE      DX-Forth compiler
+FORTH-F.EXE    DX-Forth compiler with floating point
+DX.EXE         FORTH-F.EXE with screen editor loaded
+LISTING.BAT    Make a formatted listing file from a screen file
+
+Documentation -
+
+WHATSNEW.TXT   Summary of additions/changes/fixes
+CHANGES.TXT    Important changes information
+DXFORTH.TXT    DX-Forth documentation
+DXFORTH.GLO    DX-Forth glossary of non-standard words
+DXFORTH.WDS    DX-Forth kernel words
+SED.TXT        Screen file editor
+TED.TXT        Text file editor
+ASM.TXT        8086/8087 assembler
+F87.TXT        80387 floating point
+OBSOLETE.TXT   When old DX-Forth applications no longer compile...
+MULTI.TXT      Multitasker
+FILES.TXT      Files list
+
+System source -
+
+MAKEF.BAT      Build DX-Forth binaries (needs Borland TASM)
+MAKEF87.BAT    Build 80387 floating point binaries
+KERNEL.ASM     MASM/TASM source for DX-Forth
+EXTEND.SCR     Extends kernel
+TOOLS.SCR      Resident extensions & utilities
+ASM.SCR        Forth 8086 assembler
+ASM87.SCR      8087 assembler extensions
+SED.SCR        Screen file editor
+TED.F          Text file editor
+
+Misc source -
+
+ASMCOND.SCR    Assembler structured conditionals
+ASMTEST.SCR    Test assembler
+OBSOLETE.SCR   Obsolete DX-Forth functions
+MULTI.SCR      Multitasker
+F87D.SCR       80387 double-precision f/p
+F87S.SCR       80387 single-precision f/p
+F87X.SCR       80387 extended-precision f/p
+F87DS.SCR      80387 double-precision f/p with separate stack
+FPOUT.F        Support for 80387 floating point
+OVERLAY.SCR    Overlay system
+STRINGS.SCR    Sample string package
+FCOPY.SCR      Sample filecopy utility
+TXT2BLK.SCR    Text to block conversion utility
+BLK2TXT.SCR    Block to text conversion utility
+BREAKGO.SCR    Debugging utility
+MISC.SCR       Miscellaneous function library
+SHOW.SCR       Print source files 6 screens per page
+SSED.SCR       Create stand-alone screen editor
+NEWAPP.SCR     Skeletal MS-DOS application
+DOSLIB.SCR     Function library and NEWAPP support
+STKCHK.SCR     Stack balance check utility
+LFN.SCR        Long filename support for Windows 95
+LOCALS.SCR     ANS locals
+HLOCALS.SCR    Hayes locals extension
+MISER.SCR      Miser Case extensions & demo
+

@@ -1,0 +1,609 @@
+DX-Forth 8086/87 Assembler
+--------------------------
+
+Contents:
+
+ 1. Assembler interface
+ 2. Instruction format
+ 3. Operands
+ 4. Data sizes
+ 5. Instruction aliases
+ 6. Register usage
+ 7. Local labels
+ 8. Structured conditionals
+ 9. Mixing code and high-level forth
+10. No-name code definitions
+11. Forth addresses
+12. Predefined macros
+13. Compiler security
+14. Miscellaneous tools
+15. 8087 support
+16. Error messages
+17. F83 differences
+
+
+1. Assembler interface
+
+Main words:
+
+  CODE <name>   Begin a code definition
+
+  LABEL <name>  As for CODE but instead of <name> executing the code
+                sequence, it returns the execution address (xt).
+
+  ;CODE         The code equivalent of DOES>.  Ends a high-level forth
+                defining sequence and begins a code sequence that will
+                be performed when a child word is executed.  Used in
+                the form:
+
+                  : <name> CREATE ... ;CODE ... END-CODE
+
+                At run-time the child's parameter field address is
+                placed on the stack.
+
+  END-CODE      End a CODE LABEL or ;CODE definition
+
+Macro support:
+
+  MACRO name    Begin an assembler macro definition
+
+  ENDM          End a macro assembler definition
+
+Mixing code and high-level forth:
+
+  C:            Switch from code to begin a forth sequence.  Register
+                SI is pushed to the return stack.
+
+  ;C            Switch from forth to begin a code sequence.  Register
+                SI popped from the return stack.
+
+Miscellaneous:
+
+  [ASM          Add ASSEMBLER to the search order.  Initialize the
+                assembler and enter interpret state.  Note: does
+                not clear local labels or initialize stack check.
+
+  ASM]          Remove ASSEMBLER from the top of the search order.
+                Note: does not exit interpret state.
+
+  READY         Clear local labels and initialize stack check.
+
+  CHECK         Check stack level and resolve labels since READY was
+                last issued.
+
+  -ASM          Discard the assembler and all subsequent words.
+
+
+2. Instruction format
+
+As with most forth assemblers, operands precede the instruction.
+The following examples show DX-Forth assembler syntax as compared
+with conventional Intel notation.
+
+    Intel                                     DX-Forth
+    -----                                     --------
+    CLI                                          CLI
+    IRET                                         IRET
+    REP                                          REP
+    REPNZ                                        REPNZ
+    CS:                                          CS:
+    POP  AX                                  AX  POP
+    PUSH AX                                  AX  PUSH
+    INT  37                                  37  INT
+    IN   AX,23                         23 #  AX  IN
+    IN   AX,DX                           DX  AX  IN
+    OUT  23,AL                         AL  23 #  OUT
+    OUT  DX,AL                           AL  DX  OUT
+    MOV  AX,BX                           BX  AX  MOV
+    CMP  AL,DL                           DL  AL  CMP
+    ROL  AX,1                                AX  ROL
+    ROL  AX,1                            AX  1   ROL
+    ROL  AX,CL                           AX  CL  ROL
+    ROL  CL,1                            CL  1   ROL
+    XCHG [BX],AX                     AX  0 [BX]  XCHG
+    XCHG AX,[BX]                     0 [BX]  AX  XCHG
+    MOV  AL,9                           9 #  AL  MOV
+    MOV  AX,1234                     1234 #  AX  MOV
+    MOV  AX,-1                         -1 #  AX  MOV
+    MOV  BX,AX                           AX  BX  MOV
+    MOV  [2344],AL                   AL  2344 )  MOV
+    MOV  AX,[1234]                   1234 )  AX  MOV
+    MOV  [BX],AL                     AL  0 [BX]  MOV
+    POP  [BX]                            0 [BX]  POP
+    MOV  [BX+9],AX                   AX  9 [BX]  MOV
+    MOV  [BX+SI+9],AX             AX  9 [BX+SI]  MOV
+    JMP  1234                            1234 )  JMP
+    JMP  [1122]                         1122 []  JMP
+    JMP  FAR [4455]                 4455 [] FAR  JMP
+    JMP  5678:1234              1234 5678 ) FAR  JMP
+    JNZ  HERE+5                        HERE 5 +  JNZ
+    JMP  SHORT HERE+5                  HERE 5 +  JU
+    RET                                          RET
+    RETF                                    FAR  RET
+    RET  14                                  14  +RET
+
+    CMPSB                                  BYTE  CMPS
+    CMPSW                                        CMPS
+    MOVSB                                  BYTE  MOVS
+    MOVSW                                        MOVS
+    SCASB                                  BYTE  SCAS
+    SCASW                                        SCAS
+    LODSB                                  BYTE  LODS
+    LODSW                                        LODS
+    STOSB                                  BYTE  STOS
+    STOSW                                        STOS
+
+
+3. Operands
+
+Operands to instructions may be registers, memory locations or
+immediate values.  When an operand is not a register, it must be
+followed by a symbol to indicate its type:
+
+    #    operand is an immediate number
+    )    operand is a memory location
+    []   operand is an indirect memory location for CALL/JMP
+
+Exceptions are the loop and short jump instructions - these do not
+use ) after the memory address.
+
+
+4. Data sizes
+
+When the syntax of the instruction does not make it clear, then
+the memory operand data size is assumed to be:
+
+- 16 bit integer for 8086 instructions
+- 64 bit real for 8087 instructions
+
+Valid overides are:
+
+BYTE   ( -- )  8 bit integer
+WORD   ( -- )  16 bit integer
+DWORD  ( -- )  32 bit integer or real
+QWORD  ( -- )  64 bit integer or real
+TBYTE  ( -- )  80 bit real
+
+Notes:
+
+- WORD DWORD QWORD TBYTE are present only when the 8087 assembler
+  extension is loaded.
+
+- BYTE must only be applied to instructions that require it.
+  Attempting to use BYTE on instructions which are implicitly 8-bit
+  e.g. BYTE AL DL MOV  may adversely affect subsequent instructions.
+
+
+5. Instruction aliases
+
+Several Intel 8086 instructions have alias names.  The table below
+lists the preferred DX-Forth name and the corresponding Intel alias.
+
+    DX-Forth    Intel            DX-Forth    Intel
+
+    JO          -                JPO         JNP
+    JNO         -                JL          JNGE
+    JC  JB      JNAE             JNL         JGE
+    JNC JNB     JAE              JG          JNLE
+    JA          JNBE             JNG         JLE
+    JNA         JBE              JU *        JMP SHORT
+    JZ          JE               LOOPZ       LOOPE
+    JNZ         JNE              LOOPNZ      LOOPNE
+    JS          -                REPZ REP    REPE
+    JNS         -                REPNZ       REPNE
+    JPE         JP               SHL         SAL
+
+*  "Jump Unconditional"
+
+
+6. Register usage
+
+Code words may use any 8086 cpu register except:
+
+    SI           forth interpretive pointer
+    BP           return stack pointer
+    CS DS SS
+
+Segment registers CS DS SS are initialised to the forth code
+segment CSEG.
+
+If any of these registers are to be used in a code definition for
+other purposes, their contents must be saved beforehand and restored
+afterwards.  Register ES is free for use as a scratch register.
+
+
+7. Local labels
+
+The DX-Forth assembler uses local labels to mark addresses for flow
+control.  Labels are assigned and referenced as follows:
+
+$:  ( n -- )        assign the address of the current dictionary
+                    location HERE to label n
+
+$   ( n -- addr )   return the address assigned to label n
+
+The maximum number of labels per definition is 20 and are numbered 1
+to 20.  The maximum number of forward references is 25.  These limits
+should be sufficient for most applications but can be increased by
+altering the assembler source and re-compiling.
+
+8086 instructions that may use forward references as operands includes
+jumps, calls and other instructions as determined empirically.
+
+The following demonstrates the use of labels to define the word 0= .
+It uses one label and one forward reference.
+
+    CODE 0= ( n -- flag )
+      AX AX SUB       \ load AX with false flag (0)
+      DX POP          \ pop n to DX
+      DX DX OR        \ test DX
+      1 $ JNZ         \ jump to label 1 if DX <> 0
+      AX DEC          \ change flag to true ($FFFF)
+    1 $:              \ define label 1
+      AX PUSH         \ push flag onto stack
+      'NEXT ) JMP     \ return to forth
+    END-CODE
+
+It can be simplified by the use of macros e.g.
+
+    CODE 0= ( n -- flag )
+      AX AX SUB
+      DX POP
+      DX DX OR
+      1 $ JNZ
+      AX DEC
+    1 $:
+      1PUSH           \ return to forth pushing AX onto stack
+    END-CODE
+
+
+8. Structured conditionals
+
+Structured conditionals are an alternative or adjunct to local labels.
+They include:
+
+IF  ELSE  THEN  BEGIN  WHILE  REPEAT  UNTIL  AGAIN  AHEAD
+
+Conditionals that perform a test i.e. IF  WHILE  UNTIL  must be
+preceeded by one of the following condition flags:
+
+U>=  U<  0<>  0=  U>  U<=  0>=  0<  >=  <  >  <=  CY  NC  OV  NO
+PO  PE  CXNZ  NEVER
+
+NEVER is used before a conditional test to create an unconditional
+jump.  E.g. AHEAD and AGAIN are macros for NEVER IF and NEVER UNTIL
+respectively.  N.B. Structured conditionals are restricted to short
+relative branches.
+
+Structured conditionals are restricted to short relative branches.
+
+Example
+
+    CODE 0= ( n -- flag )
+      AX AX SUB
+      DX POP
+      DX DX OR
+    0= IF
+      AX DEC
+    THEN
+      1PUSH
+    END-CODE
+
+Structured conditionals are not included by default and must be loaded
+before they can be used e.g. 1 FLOAD ASMCOND.SCR .  N.B. If using the
+8087 assembler extensions ensure these are loaded before the structured
+conditionals.
+
+
+9. Mixing code and high-level forth
+
+The assembler allows free mixing of machine-code and high-level forth.
+
+It is sometimes convenient to execute high-level forth words from
+within a code definition.
+
+Example - display a message within a code definition
+
+  CODE TEST  ( -- )
+    C:                     \ begin forth
+      ." Hi There!"
+    ;C                     \ end forth
+    NEXT
+  END-CODE
+
+Note: SI register is automatically pushed to the return stack before
+the forth sequence executes and restored afterwards.
+
+The reverse is also possible i.e execute machine code within high-
+level forth:
+
+  : TEST  ( -- )
+    5 0 DO
+      I
+      ;C                   \ begin code
+        AX POP  23 # AX ADD  AX PUSH
+      C:                   \ end code
+      .
+    LOOP ;
+
+See "Register usage" for a list of registers that must be preserved.
+
+
+10. No-name code definitions
+
+[ASM ASM] READY CHECK  allow the user to assemble code sequences for
+any imaginable situation.  Here is 0= coded as a nameless definition
+in the style of :NONAME .
+
+    HERE  ( start address of code routine )
+    [ASM READY
+      ( x -- flag )
+      AX AX SUB
+      DX POP
+      DX DX OR
+      1 $ JNZ
+      AX DEC
+    1 $:
+      1PUSH             \ return to forth pushing AX onto stack
+    CHECK ASM]
+
+    ( -- xt )           \ leaves xt address
+
+If local labels are not used or compiler security is not required
+then READY CHECK could be omitted.
+
+
+11. Forth addresses
+
+The following functions return addresses in the forth kernel which
+may be useful when writing code definitions.  See also 'Predefined
+macros'.
+
+'NEXT ( -- adr )  address of centralized NEXT
+UP    ( -- adr )  pointer to forth USER area
+FSP   ( -- adr )  pointer to separate floating-point stack
+DOCOL ( -- adr )  enter colon routine
+EXIT1 ( -- adr )  exit colon routine
+TOD   ( -- adr )  routine read BIOS tick timer AX:DX
+TSYNC ( -- adr )  routine wait for timer tick, exit AX:DX = TOD
+UPC   ( -- adr )  routine make AL uppercase
+
+
+12. Predefined macros
+
+The assembler defines several useful macros -
+
+  NEXT    compile in-line NEXT
+  1PUSH   push AX then jump to NEXT
+  2PUSH   push DX AX then jump to NEXT
+  USER#   calculate USER variable offset
+  [UP]    USER addressing mode
+
+1PUSH and 2PUSH make use of the centralized NEXT.  Users wanting
+maximum performance (at the expense of code size) may replace 1PUSH
+and 2PUSH with their in-line equivalents e.g.
+
+  AX PUSH  NEXT           ... instead of ... 1PUSH
+  DX PUSH  AX PUSH  NEXT  ... instead of ... 2PUSH
+
+USER# converts a USER variable address to its offset.  Equivalent
+to: UP @ -
+
+[UP] works like an assembler addressing mode taking a USER variable
+as an argument.  After the operation register DI holds the address
+of the specified user variable (unless DI was used as a destination).
+
+Examples:
+
+  BASE [UP] AX MOV     load AX with contents of BASE, DI = addr BASE
+  10 # BASE [UP] MOV   set BASE to decimal, DI = addr BASE
+  BASE [UP] PUSH       push BASE contents to stack, DI = addr BASE
+  BASE [UP] DI MOV     load DI with contents of BASE
+
+Note: The [UP] macro can be expensive since it generates three machine
+instructions each time it is invoked.  If your code routine requires
+access to several user variables it may be more efficient to load BX
+or DI with the USER base address and use USER# to supply the various
+offsets e.g.
+
+  UP ) DI MOV                point DI to the USER area
+  10 # BASE USER# [DI] MOV   set BASE to decimal
+  >IN USER# [DI] INC         increment >IN
+
+
+13. Compiler security
+
+As with colon definitions, the assembler employs stack checking to
+verify statements have been correctly written.  Normally very useful
+there may be occasions when one needs to turn off stack checking,
+albeit temporarily e.g.
+
+    CHECKING OFF
+
+    CODE TEST
+      ...
+      HERE ( adr )  \ push location onto the stack
+      ...
+      NEXT
+    END-CODE
+
+    CHECKING ON
+
+    ( adr )
+
+
+14. Miscellaneous tools
+
+When machine language is used extensively there can be a need for
+tools found in conventional assemblers.  Below are several the author
+has found useful.  They are not resident in the forth assembler but
+defined as needed.
+
+  SYSTEM
+
+  \ Adjust HERE to an even address padding with a NOP instruction
+  : EVEN ( -- )  HERE 1 AND IF $90 C, THEN ;
+
+  \ Name value x
+  : EQU ( x "name" -- )  SYS @ TUCK 0= SYS ! VALUE SYS ! ;
+
+  \ Name address at HERE and compile a 16-bit value
+  : DW ( 16b "name" -- )  HERE EQU , ;
+
+  \ Name address at HERE and compile a 8-bit value
+  : DB ( 8b "name" -- )  HERE EQU C, ;
+
+  APPLICATION
+
+
+15. 8087 support
+
+ASM87.SCR contain extensions to allow the assembly of 8087 floating
+point instructions.  Once loaded, the following instructions become
+available:
+
+Intel                              Forth
+-----                              -----
+F2XM1                              F2XM1
+FABS                               FABS
+FADD     m/r             m/r       FADD
+FADD     ST,ST(n)        ST(n) ST  FADD
+FADD     ST(n),ST        ST ST(n)  FADD
+FADDP    ST(n),ST        ST(n)     FADDP
+FBLD     m/r             m/r       FBLD
+FBSTP    m/r             m/r       FBSTP
+FCHS                               FCHS
+FCLEX                              FCLEX
+FCOM     m/r             m/r       FCOM
+FCOM     ST(n)           ST(n)     FCOM
+FCOMP    m/r             m/r       FCOMP
+FCOMP    ST(n)           ST(n)     FCOMP
+FCOMPP                             FCOMPP
+FCOS                               FCOS      **
+FDECSTP                            FDECSTP
+FDISI                              FDISI
+FDIV     m/r             m/r       FDIV
+FDIV     ST,ST(n)        ST(n) ST  FDIV
+FDIV     ST(n),ST        ST ST(n)  FDIV
+FDIVP    ST(n),ST        ST(n)     FDIVP
+FDIVR    m/r             m/r       FDIVR
+FDIVR    ST(n),ST        ST(n)     FDIVR
+FDIVRP   ST(n),ST        ST(n)     FDIVRP
+FENI                               FENI
+FFREE    ST(n)           ST(n)     FFREE
+FIADD    m/r             m/r       FIADD
+FICOM    m/r             m/r       FICOM
+FICOMP   m/r             m/r       FICOMP
+FIDIV    m/r             m/r       FIDIV
+FIDIVR   m/r             m/r       FIDIVR
+FILD     m/r             m/r       FILD
+FIMUL    m/r             m/r       FIMUL
+FINCSTP                            FINCSTP
+FINIT                              FINIT
+FIST                     m/r       FIST
+FISTP    m/r             m/r       FISTP
+FISUB    m/r             m/r       FISUB
+FISUBR   m/r             m/r       FISUBR
+FLD      m/r             m/r       FLD
+FLD      ST(n)           ST(n)     FLD
+FLD1                               FLD1
+FLDCW    m/r             m/r       FLDCW
+FLDENV   m/r             m/r       FLDENV
+FLDL2E                             FLDL2E
+FLDL2T                             FLDL2T
+FLDLG2                             FLDLG2
+FLDLN2                             FLDLN2
+FLDPI                              FLDPI
+FLDZ                               FLDZ
+FMUL     m/r             m/r       FMUL
+FMUL     ST,ST(n)        ST(n) ST  FMUL
+FMUL     ST(n),ST        ST ST(n)  FMUL
+FMULP    ST(n),ST        ST(n)     FMULP
+FNOP                               FNOP
+FPATAN                             FPATAN
+FPREM                              FPREM
+FPREM1                             FPREM1    **
+FPTAN                              FPTAN
+FRNDINT                            FRNDINT
+FRSTOR   m/r             m/r       FRSTOR
+FSAVE    m/r             m/r       FSAVE
+FSCALE                             FSCALE
+FSIN                               FSIN      **
+FSINCOS                            FSINCOS   **
+FSQRT                              FSQRT
+FST      m/r             m/r       FST
+FST      ST(n)           ST(n)     FST
+FSTCW    m/r             m/r       FSTCW
+FSTENV   m/r             m/r       FSTENV
+FSTP     m/r             m/r       FSTP
+FSTP     ST(n)           ST(n)     FSTP
+FSTSW    AX              AX        FSTSW     *
+FSTSW    m/r             m/r       FSTSW
+FSUB     m/r             m/r       FSUB
+FSUB     ST,ST(n)        ST(n) ST  FSUB
+FSUB     ST(n),ST        ST ST(n)  FSUB
+FSUBP    ST(n),ST        ST(n)     FSUBP
+FSUBR    m/r             m/r       FSUBR
+FSUBR    ST,ST(n)        ST(n)     FSUBR
+FSUBRP   ST(n),ST        ST(n)     FSUBRP
+FTST                               FTST
+FXAM                               FXAM
+FXCH     ST(n)           ST(n)     FXCH
+FXTRACT                            FXTRACT
+FYL2X                              FYL2X
+FYL2XP1                            FYL2XP1
+
+*   80287/80387 only
+**  80387 only
+
+Notes:
+
+WAIT instructions are not automatically encoded.  A WAIT should be
+inserted:
+
+  - before each floating point instruction (8087 only)
+  - after any floating point instruction that writes to memory
+
+Several Forth and Unix-derived 8087 assemblers are known to have
+bugs associated with the following instructions:
+
+    FSUBP
+    FSUBRP
+    FDIVP
+    FDIVRP
+    FSUB/FSUBR/FDIV/FDIVR ST(i),ST
+
+Programmers should therefore exercise care when using 8087 source
+code taken from third party or public domain sources.
+
+
+16. Error messages
+
+"definition incomplete"       Definition was not properly formed.
+"duplicate label"             Label number was previously used.
+"execution only"              Word may be used only during execution.
+"invalid label"               Incorrect label number or too many
+                              labels used.
+"branch out of range"         Exceeded the range of a short relative
+                              branch.
+"too many references"         Exceeded the maximum number of forward
+                              references to labels.
+"unresolved reference"        A label was referenced but never defined.
+
+Note: the assembler has limited error checking and it is possible to
+compile code using incorrect modes or operands without any warning
+given.  Take care!
+
+
+17. F83 differences
+
+The DX-Forth assembler is based on the 8086 assembler included with
+Laxen/Perry F83 Forth.  Differences from the F83 assembler are:
+
+  - Uses local labels rather than structured conditionals
+  - REP behaviour changed (in F83, REP functioned as REPNZ !)
+  - Alternate Intel names used for some conditional jump instructions
+  - ) and [] replaces #) and S#)
+  - Additional syntax forms for OUT, XCHG, rotate/shift instructions
+  - In DX-Forth ;CODE places the child's parameter field address
+    on top of the stack; in F83 the address was held at BX+2.

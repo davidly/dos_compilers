@@ -1,0 +1,92 @@
+F87 - Hardware Floating-Point for DX-Forth
+
+F87 requires an 80387 or compatible floating-point processor.  Applications
+compiled with F87 will check whether a suitable FPU is present and abort
+with an error if none is found.
+
+F87 models currently supported:
+
+F87S.SCR   single precision (32 bit) reals on data stack
+F87D.SCR   double precision (64 bit) reals on data stack
+F87DS.SCR  double precision (64 bit) reals on separate stack
+F87X.SCR   extended precision (80 bit) reals on data stack
+
+Compile the model of your choice e.g.  FORTH.EXE F87D 1 LOAD BYE
+
+While F87 includes several IEEE 754 features such as NaN/Inf, signed-zero,
+rounding modes etc. there is no attempt to be IEEE 754 compliant.
+
+Acknowlegements:
+
+F83 8087 FLOATING POINT 1984 by Steve Pollack
+
+
+F87 Glossary:
+
+FINIT ( -- )          Performs 80x87 FPU instruction 'finit' resetting the
+                      FPU hardware and rounding mode to "round to nearest/
+                      even". If a compatible FPU is not present an error
+                      message "requires 80387+ FPU" is issued and the
+                      application aborts. By default FINIT is executed by
+                      COLD.
+
+CW@ ( -- cw )         Get FPU control word
+CW! ( cw -- )         Set FPU control word
+
+SET-NEAR  ( -- )      Set FPU rounding to "nearest or even" (default)
+SET-FLOOR ( -- )      Set FPU rounding to "round down"
+SET-CEIL  ( -- )      Set FPU rounding to "round up"
+SET-TRUNC ( -- )      Set FPU rounding to "round towards zero" i.e. truncate
+
+FROUND ( r1 -- r2 )   Round to integral value using current rounding mode
+FNEAR  ( r1 -- r2 )   Round to integral value nearest or even
+FLOOR  ( r1 -- r2 )   Round to integral value nearest negative infinity
+FCEIL  ( r1 -- r2 )   Round to integral value nearest positive infinity
+FTRUNC ( r1 -- r2 )   Round to integral value nearest zero
+
+SIGNED-ZERO ( -- addr )  A VARIABLE which controls floating-point
+                      negative-zero display. Default is OFF.
+
+F0= ( r -- flag )     Return true if r is zero, or false otherwise. Does not
+                      differentiate between positive and negative zero.
+
+F= ( r1 r2 -- flag )  Return true if r1 and r2 are equal, or false otherwise.
+                      Does not differentiate between positive and negative
+                      zero.
+
+FLOG ( r1 -- r2 )     r2 is the base-ten logarithm of r1. An ambiguous
+                      condition exists if r1 is less than or equal to zero.
+
+FALOG ( r1 -- r2 )    Raise ten to the power r1, giving r2.
+
+FSIGNBIT ( r -- sign )  Return sign of r as indicated by the IEEE sign bit.
+
+FSIGN ( r -- sign )   As for FSIGNBIT except the sign of -0.0E is determined
+                      by variable SIGNED-ZERO.
+
+FCLASS ( r -- +n )    Return class of floating-point number r. +n is a
+                      positive non-zero value indicating NaN, infinite,
+                      normal, subnormal, zero or the 80x87 conditions
+                      unsupported and empty.
+
+FP-NORMAL ( -- +n )   CONSTANT representing f/p finite class
+FP-SUBNORMAL ( -- +n ) CONSTANT representing f/p subnormal class
+FP-ZERO ( -- +n )     CONSTANT representing f/p zero class
+FP-INFINITE ( -- +n ) CONSTANT representing f/p infinity class
+FP-NAN ( -- +n )      CONSTANT representing f/p NaN class
+
++INF ( -- r )         FCONSTANT returning f/p number '+Inf'
+-INF ( -- r )         FCONSTANT returning f/p number '-Inf'
++NAN ( -- r )         FCONSTANT returning f/p number '+NaN'
+-NAN ( -- r )         FCONSTANT returning f/p number '-NaN'
+
+>FLOAT ( c-addr u -- r true | false | other 1 )
+  Extend >FLOAT semantics to return 1 and the corresponding IEEE datum
+  if any of the case-insensitive strings "NaN" "Inf" "Infinity", with or
+  without sign, are present.
+
+REPRESENT ( r c-addr n1 -- n2 flag1 flag2 )
+  In addition to the semantics for REPRESENT (see DX-Forth glossary) when
+  flag2=false return a string "+NAN" "-NAN" "+INF" "-INF" or "BADFLT" in
+  the buffer at c-addr padded with trailing blanks (BL). n2 is reserved
+  and flag1=sign. Rounding direction is per current rounding mode.

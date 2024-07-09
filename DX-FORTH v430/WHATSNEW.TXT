@@ -1,0 +1,94 @@
+WHATSNEW.TXT - DX-FORTH for DOS
+
+Note: only significant changes/fixes are listed.
+
+! changed  + added  * fixed  - removed
+
+v4.30  2017-02-11
+
++  I' END BOUNDS
+!  EXIT made non-immediate
+!  MISC: Add MJD. Rename D/MOD to SD/REM
+-  (EXIT)
+
+v4.20  2016-10-07
+
++  EOL
+!  QUIT moved to Application
+!  Rename PARSE$ FREEZE PACKED to /PARSE PROTECT PACK
+
+v4.10  2016-07-13
+
++  (.) (U.)
+
+v4.09  2016-05-20
+
+!  Rename WORDS-LIKE to WORDS:
+
+v4.08  2016-01-16
+
+*  File not found error in INCLUDE displays wrong filename
+
+v4.07  2016-01-07
+
++  TRIM
+*  WARNING incorrectly disabled by consecutive -?
+
+v4.06  2015-07-26
+
++  LAST BAL
+!  CSP extended to 2 cells
+-  +BAL -BAL
+*  Turnkey initialization improperly wrote to high memory
+
+v4.05  2015-05-16
+
++  BINARY -BLANKS LASTFILE
++  Interpret numbers with % prefix as binary
++  TED text file editor
+!  APPLICATION moved to Application dictionary
+-  CTOGGLE (see MISC.SCR for alternative)
+
+v4.04  2015-04-12
+
++  #USER .FREE LS BOLD BRIGHT INVERSE
+!  ABORT" made state-smart
+!  Rename FILE? to SCREEN?
+!  Revised multitasker locals
+*  Fix ASMTEST to use -ALLOT
+
+v4.03  2015-01-07
+
++  -ALLOT
+!  ALLOT may no longer use negative values. See glossary.
+!  /MS is now DEFERed
+
+v4.02  2014-09-29
+
++  WAIT-TICK
+!  . and ? display unsigned when BASE not decimal
+*  LOCALS.SCR updated to compile with DX4
+
+v4.01  2014-07-22
+
+*  ASM: Fix bug in XCHG which caused subsequent instructions to be
+   assembled in BYTE mode
+
+v4.00  2014-07-19
+
++  2NIP @EXECUTE W>NAME CMDTAIL PARSE$ >FNAME TOKEN WORDS-LIKE CHAIN
++  CTOGGLE PACKED S.R SHOLD NHOLD LREAD LWRITE LINK, S, ?BLOCK
++  FPICK S>F F>S
++  READ-LINE recognizes CP/M EOF terminator ($1A)
+!  ADDR made state-smart
+!  OPEN now requires a file-access-method
+!  Rename >NEXT, FORWARD, BACK to 'NEXT, >MARK, <RESOLVE
+!  WORDS "pattern" now handled by WORDS-LIKE
+!  Improve compiler security
+!  MARKER is no longer ANS compatible
+!  Allow leading decimal point on float input
+*  INCLUDED didn't restore block contents
+*  TXT2BLK fixed to work with CP/M
+-  PARSE" ASCIIZ M/MOD
+-  ONLY ALSO PREVIOUS WORDLIST SEARCH-WORDLIST FORTH-WORDLIST ENVIRONMENT?
+

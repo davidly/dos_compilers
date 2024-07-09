@@ -1,0 +1,306 @@
+DX-Forth Multitasker
+--------------------
+
+1. Introduction
+2. Multitasking words
+3. Design considerations
+4. Semaphores
+5. Messages
+6. A multitasking example
+7. Turnkey applications
+8. Task Control Block
+
+
+1. Introduction
+
+A co-operative multitasker MULTI.SCR is provided with DX-Forth
+allowing several tasks to run concurrently within an application.
+
+Each task has its own stacks, user variables and (if required)
+PAD and HOLD buffer.  Tasks are linked in a 'round-robin' loop
+with switching occuring on each encounter of PAUSE.
+
+2. Multitasking words
+
+ TCB ( u s r "ccc" -- )  compiling
+     ( -- tcb )          run-time
+
+     Create a task control block named ccc.  u s r is the number
+     of bytes reserved for the task's user area, data and return
+     stacks respectively.  The task is initially put to sleep.
+     When ccc is executed, the address of the task control block
+     is placed on the data stack.
+
+     See: ACTIVATE
+
+ ACTIVATE ( tcb -- )
+
+     Initialize the stacks and wake task tcb.  Task execution
+     begins with the word following ACTIVATE.  ACTIVATE must be
+     used inside a definition.
+
+ HIS ( tcb user -- user' )
+
+     Get address of user variable belonging to task tcb.
+
+ PAUSE ( -- )
+
+     Save the current task state and pass control to the next
+     active task.
+
+ STOP ( -- )
+
+     Put the current task to sleep and switch to next active
+     task.
+
+ WAKE ( tcb -- )
+
+     Resume the task identified by tcb.
+
+ SLEEP ( tcb -- )
+
+     Suspend the task identified by tcb.
+
+ SINGLE ( -- )
+
+     Disable the multitasker.  Only the current task remains
+     active.
+
+ MULTI ( -- )
+
+     Enable the multitasker.
+
+     Note: MULTI does not enable individual tasks.  See
+     ACTIVATE.
+
+ GRAB ( sem -- )
+
+     Obtain the resource identified by the semaphore variable.
+     If owned by another task, repeatedly execute PAUSE until
+     the resource becomes available.
+
+ GET ( sem -- )
+
+     Same as GRAB but performs an initial PAUSE.
+
+ RELEASE ( sem -- )
+
+     Release the resource identified by the semaphore variable.
+     If the resource is owned by another task, do nothing.
+
+ /TASKER ( -- )
+
+     Initialize the multitasker links.  TURNKEYed applications
+     must execute /TASKER before launching the multitasker.
+
+ #FLOAT ( -- u )
+
+     A VALUE returning the size in bytes of the separate floating
+     point stack to be assigned for each task.  #FLOAT is preset
+     to the system default value but may be changed prior to
+     executing TCB.
+
+3. Design considerations
+
+3.1 Data and return stacks
+
+Sufficient data and return stack space must be allocated for each
+task.  Inadequate stack can cause mysterious crashes or unexpected
+behaviour and can be difficult to trace.  It is usually better to
+start with larger stack sizes during development and reduce it
+once the application is fully debugged.
+
+Note: Task switching consumes 3 cells (6 bytes) of data stack and
+must be included when calculating task data stack allocation.  If
+the task uses floating point on the data stack this must be
+included also.
+
+3.2 PAD and HOLD buffer
+
+Tasks are not automatically alloted a PAD or HOLD buffer.  If a
+PAD or HOLD buffer is required it must be allocated by assigning
+extra space to the data stack.  When defining a task control block,
+use the following calculation:
+
+     s (bytes) =  task data stack requirement +
+                  HOLD buffer size (default 68 bytes) +
+                  PAD size required
+
+Tasks that display numbers or use the pictured numeric operators
+<# ... #> HOLD etc. will require a HOLD buffer.  If a task requires
+PAD then a HOLD buffer (default 68 bytes) must also be provided.
+
+3.3 USER area
+
+The size of a task user area should be at least #USER bytes.  Tasks
+may begin defining their per-task user variables at offset #USER.
+
+3.4 Floating-point
+
+If a separate floating-point system is detected, each task is
+automatically allocated an f/p stack.  The size of the f/p stack
+is determined by #FLOAT.  If a task performs no floating-point
+then #FLOAT may be set to zero.
+
+3.5 PAUSE
+
+Each active task is required to PAUSE to give other tasks a chance
+to execute.  In DX-Forth PAUSE is automatically performed by KEY?
+KEY EMIT TYPE and MS.  If a task does not perform any of these
+function (or does so infrequently) then a PAUSE must be explicitly
+included in the program.
+
+3.6 Other
+
+Tasks are typically defined as an infinite loop e.g. within a BEGIN
+AGAIN construct.  If a task needs to terminate, use STOP.
+
+Tasks should not assume the initial contents of a user variable e.g.
+a task which uses BASE directly or indirectly must explicitly set
+BASE to the required number radix.
+
+To build a multitasking application, load MULTI.SCR from your
+application.  TURNKEY applications must execute /TASKER before
+starting the multitasker.
+
+During testing, do not FORGET tasks.  Instead use COLD and reload
+the application.  Do not use SAVE or TURNKEY while the multitasker
+is active.
+
+4. Semaphores
+
+Semaphores are used to prevent conflicts that may arise when
+several tasks access a common resource.  In DX-Forth a semaphore
+is simply a VARIABLE with the contents initialized to zero.
+
+Consider the case when two tasks send output to the screen.  Since
+PAUSE is built into EMIT this would result in a jumbled display.
+A solution is to enclose the display routine with SINGLE and MULTI.
+While this would work it has the disadvantage that the multitasker
+is disabled for all other tasks while printing takes place.
+
+A better way is with semaphores.  A semaphore is a variable which
+signals whether a resource is available.
+
+In the example below, tasks which display to the screen GET the
+resource making it unavailable to other tasks.  When the task has
+finished with the screen it is RELEASEd.  Tasks waiting for a
+resource automatically PAUSE until the resource becomes available.
+
+GET GRAB RELEASE are modelled after the Forth Inc. functions of
+the same name.
+
+  VARIABLE SCREEN    \ create a resource for the screen
+  SCREEN OFF         \ mark screen as available
+
+  \ TASK1
+    ...
+    SCREEN GET
+    10 10 AT-XY  ." Task 1"
+    SCREEN RELEASE
+    ...
+
+  \ TASK2
+    ...
+    SCREEN GET
+    50 10 AT-XY  ." Task 2"
+    SCREEN RELEASE
+    ...
+
+  \ TASK3
+    ...
+
+5. Messages
+
+Messages (also known as mailboxes) provide a way of passing data
+between tasks.  The following is an example of a simple message
+system.  While 16 bit data is assumed, the concept can be expanded
+to pass data of any type or size - strings, CP/M records etc.
+
+  \ Define a message variable
+  CREATE <name>  ( -- addr )
+    0 ,               \ flag 0=empty
+    1 CELLS ALLOT     \ storage space
+
+  \ Send message
+  : SEND  ( x addr -- )
+    BEGIN PAUSE DUP @ 0= UNTIL  DUP ON  CELL+ ! ;
+
+  \ Receive message
+  : RECEIVE  ( addr -- x )
+    BEGIN PAUSE DUP @ UNTIL  DUP OFF  CELL+ @ ;
+
+6. A Multitasking Example
+
+This simple example that shows how to write a task, launch it, turn
+it on and off, disable it and the multitasker altogether.
+
+First load the multitasker system:
+
+  USING MULTI.SCR  1 LOAD
+
+Create a task by entering the following definitions:
+
+  VARIABLE COUNTS
+
+  #USER 32 32 TCB COUNTING
+
+  : COUNTER  ( -- )
+    COUNTING ACTIVATE
+    BEGIN  PAUSE  1 COUNTS +!  AGAIN ;
+
+  : X  ( -- )  COUNTS @  U. ;
+
+We have created a task block called COUNTING and reserved #USER
+bytes of user area and 32 bytes each for data and return stacks.
+Since the task won't be outputting numbers or need a PAD we
+haven't allocated any space for them.
+
+The definition COUNTER embodies both the task initialization and
+its action.  COUNTING ACTIVATE resets the task stacks and wakes it.
+Task execution begins with the word immediately following ACTIVATE.
+
+Our example task is very simple - it simply increments the value
+held in COUNTS.  Since the task is defined as an endless loop,
+COUNTS will update automatically whenever the task is in control.
+Note there is a PAUSE within the loop - this is important as it
+allows other tasks a chance to execute.
+
+Should we want COUNTER to run once or stop looping after some
+event, a STOP can be included in the definition.
+
+The following shows how to start and control COUNTER.  You may
+type X at any time to see whether the task is running.
+
+To control the task we can use:
+
+  MULTI              ( start the multitasker )
+  COUNTER            ( start our task )
+
+  COUNTING SLEEP     ( put the task to sleep )
+  COUNTING WAKE      ( wake the task again )
+
+  SINGLE             ( stop the multitasker )
+  MULTI              ( restart the multitasker again )
+
+7. Turnkey applications
+
+It is important that /TASKER is executed by turnkey applications
+before the multitasker is invoked.
+
+8. Task Control Block
+
+R0   ;----------------------
+     ; return stack
+FS0  ;----------------------
+     ; fp-stack (if used)
+S0   ;----------------------
+     ; data stack
+     ;----------------------
+     ; PAD buffer (if used)
+PAD  ;----------------------
+     ; HOLD buffer (if used)
+HERE ;----------------------
+     ; user variables
+tcb  ;----------------------
+

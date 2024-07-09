@@ -1,0 +1,45 @@
+                          IMPORTANT CHANGES
+
+This document discusses changes to DX-Forth for DOS that may adversely
+affect previously written programs.  It is recommended users update their
+programs to the latest DX-Forth version.  See WHATSNEW.TXT for a summary
+of other changes and additions.
+
+
+v4.30
+
+   Removed immediate EXIT and renamed (EXIT) to EXIT.
+
+v4.07
+
+   -TRAILING ZCOUNT now use the SSEG segment.  See SSEG in the glossary
+   for details.
+
+v4.05
+
+   EDIT can no longer be used to load the editor from disk.  You must use
+   SED or TED for that.  Once the editor is loaded and saved as part of
+   the system, EDIT can be added as a synonym.
+
+v4.03
+
+   ALLOT has been changed (for the better).  Unlike Forth-94 ALLOT only
+   unsigned values may be used.  Applications which used negative values
+   with ALLOT should be changed to use -ALLOT instead.  Programs which
+   require Forth-94 behaviour can be accommodated with the following
+   redefinition:
+
+     : ALLOT ( n -- )  NEGATE -ALLOT ;
+
+   Note however that memory checking is not performed.
+
+v4.02
+
+   Functions '.' and '?' adopt the eForth behaviour i.e. when BASE is
+   decimal display signed; otherwise display unsigned.  Only these
+   functions and those which use them are affected.  Applications
+   requiring Forth-94 behaviour may redefine:
+
+     : . ( n -- )  S>D D. ;
+
+

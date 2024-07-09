@@ -1,0 +1,2740 @@
+
+DX-Forth for MS-DOS Extension Wordset Glossary
+----------------------------------------------
+
+The DX-Forth Extension Wordset is provided in addition to the FORTH-94
+Standard words.  Standard words that are implementation-specific, used
+for reference or other purpose may also be described.
+
+
+Attributes:
+
+I    Words that have the immediate flag set
+A    Words residing in the DX-Forth APPLICATION dictionary
+S    Words residing in the DX-Forth SYSTEM dictionary
+94   Words defined in the Forth-94 Standard
+83   Words defined in the Forth-83 Standard
+79   Words defined in the Forth-79 Standard
+FIG  Words defined in the fig-Forth model
+
+
+Stack notation:
+
+Note: The following naming conventions for addresses are used to
+maintain compatibility with the ANS-FORTH document.  As DX-Forth does
+not currently execute on architectures requiring address alignment,
+all address types may be used interchangeably.
+
+number    type                     stack cells    range
+-----     ----                     -----------    -----
+addr      address                       1         0..65535
+a-addr    aligned address               1         0..65535
+c-addr    character-aligned address     1         0..65535
+f-addr    float-aligned address         1         0..65535
+p-addr    CPU port address              1         0..65535
+h-addr    heads segment address         1         0..65535
+
+true      boolean true -1               1         -1
+false     boolean false 0               1         0
+flag      boolean true or false         1         -1 or 0
+ior       input/output result           1         0..255
+
+n         signed number                 1         -32768..32767
++n        positive number               1         0..32767
+u         unsigned number               1         0..65535
+x         unspecified number            1         -32768..65535
+d         signed double number          2         -2147483648..
+                                                    2147483647
++d        positive double number        2         0..2147483647
+ud        unsigned double number        2         0..4294697295
+xd        unspecified double number     2         -2147483648..
+                                                    4294697295
+r         real number                   2         +-5E-39..1E38
+c         character or byte             1         0..255
+
+ccc       any arbitrary blank-delimited character string or word name
+          parsed from the input stream
+
+"ccc"     same as for ccc; typically shown within a stack comment but
+          represents characters parsed from the input stream.
+
+
+Contents
+
+ 1. Disk File Interface
+ 2. Screen Files
+ 3. Tools
+ 4. DOS Interface
+ 5. Input/Output
+ 6. Arithmetic and Stack
+ 7. Conversion
+ 8. Strings and Memory
+ 9. Dictionary
+10. Facility
+11. Miscellaneous
+12. Floating Point
+13. Compiler Security
+14. Control Flow
+
+
+1. Disk File Interface
+----------------------
+
+Note: When a file function returns a non-zero ior then an error has
+occurred.  Refer to DXFORTH.TXT for a list of ior values and their
+corresponding DOS error.
+
+ +EXT  ( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 )         A
+
+     Conditionally append the extension c-addr2 u2 to the filename
+     string c-addr1 u1 to produce a temporary string c-addr3 u3 in the
+     filename buffer.  If addr1 u1 does not already contain an extension
+     (the '.' character is not present) then trailing blanks are removed
+     and c-addr2 u2 is appended.  Formerly named +FILENAME .
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+     See >FNAME
+
+ -EXT  ( c-addr u1 -- c-addr u2 )                      A
+
+     Delete any extension from the filename string c-addr u1.  The
+     resulting string is c-addr u2.  Formerly named -FILENAME .
+
+ -PATH  ( c-addr u1 -- c-addr u2 )                     A
+
+     Delete any path from the filename string c-addr u1.  The resulting
+     string is c-addr u2.
+
+ >FNAME  ( c-addr1 u -- c-addr2 )                      A
+
+     String c-addr1 u is converted to a temporary null-terminated
+     counted string in the filename buffer.  Leading and trailing blanks
+     are removed.  c-addr2 is the address of the counted string and
+     c-addr2+1 is the address of the null-terminated string.  A maximum
+     of two such filenames can exist in the filename buffer at one time.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+     DX-Forth functions that use >FNAME or the filename buffer include:
+     PATH +EXT OPEN-FILE CREATE-FILE DELETE-FILE RENAME-FILE FILE-STATUS
+
+     See LASTFILE
+
+ BIN  ( fam1 -- fam2 )                                 A I 94
+
+     Modify the file access method fam1 to additionally select a binary
+     - i.e. not line oriented - file access method, giving access method
+     fam2.  BIN is a no-operation in this implementation as all access
+     is binary.
+
+     See READ-LINE
+
+ CLOSE-FILE  ( fid -- ior )                            A 94
+
+     Close the disk file associated with file-handle fid.  If the file
+     could not be closed, ior is non-zero.
+
+     Note: Under CP/M files are a multiple of 128 bytes.  Partly
+     written records are padded with end-of-file character (1A hex).
+
+ CREATE-FILE  ( c-addr u fam -- fid ior )              A 94
+
+     Create and open a disk file specified by the filename c-addr u
+     using file access method fam.  Valid fam are R/W (read/write)
+     R/O (read-only) and W/O (write-only).
+
+     If a file with the same name already exists it will be erased.
+     The file-pointer is set to the start of the file.  If the file
+     could not be created, ior is non-zero.
+
+ DELETE-FILE  ( c-addr u -- ior )                      A 94
+
+     Delete the disk file specified by the string c-addr u.  If the
+     file could not be deleted, ior is non-zero.
+
+     Note: DELETE-FILE must not be performed on an open file.
+
+ FILE-POSITION  ( fid -- ud ior )                      A 94
+
+     Return the current position the file-pointer of the disk file
+     associated with the handle fid.  If an error occurs ior is
+     non-zero and ud is undefined.
+
+ FILE-SIZE  ( fid -- ud ior )                          A 94
+
+     Return the current size in bytes of the disk file associated
+     with handle fid.  If an error occurs ior is non-zero and ud is
+     undefined.
+
+     Note: Under CP/M files are a multiple of 128 bytes.  Partly
+     written records are padded with end-of-file character (1A hex).
+
+ FILE-STATUS  ( c-addr u -- x ior )                    A 94
+
+     Return the status of the file identified by c-addr u.  In DX-Forth
+     it is equivalent to MS-DOS function INT 21H AX=4300H.
+
+ FLUSH-FILE  ( fid -- ior )                            A 94
+
+     Flush any buffered data written to the disk file associated with
+     handle fid, updating size information in the directory if changed.
+     If an error occurs ior is non-zero.
+
+ OPEN-FILE  ( c-addr u fam -- fid ior )                A 94
+
+     Open the existing disk file specified by the filename c-addr u
+     using file access method fam.  Valid fam are R/W (read/write)
+     R/O (read-only) and W/O (write-only).  If the file could not be
+     opened, ior is non-zero.
+
+ PATH  ( u1 -- c-addr u2 ior )                         A
+
+     Get the full directory path for disk drive u1.  If an error occurs,
+     ior is non-zero.  The returned string c-addr u2 includes the drive
+     letter and a trailing backslash.  For the currently selected drive
+     u1 = 0, otherwise u1 = 1 for drive A, 2 for drive B etc.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+     See >FNAME
+
+ LREAD  ( seg offs u1 fid -- u2 ior )                  A
+
+     As for READ-FILE but uses the 8086 segment/offset as the
+     destination address.
+
+ LWRITE  ( seg offs u fid -- ior )                     A
+
+     As for WRITE-FILE but uses the 8086 segment/offset as the source
+     address.
+
+ READ-FILE  ( c-addr u1 fid -- u2 ior )                A 94
+
+     Read u1 bytes from the disk file associated with the current file-
+     handle into memory starting at c-addr.  If ior is zero, u2 is the
+     number of bytes received.  If physical end-of-file is reached
+     before any bytes are read, u2 is zero.
+
+     Note: Under CP/M files are a multiple of 128 bytes.  Partly
+     written records are padded with end-of-file character (1A hex).
+
+ READ-LINE  ( c-addr u1 fid -- u2 flag ior )           A 94
+
+     Read a line of text from the disk file associated with file-handle
+     fid into memory starting at address c-addr.  At most u1 characters
+     are read.  If ior is zero and flag is true, u2 is the number
+     characters received not including the line terminator.  If u2 = u1
+     then a line terminator was not yet received.  If an end-of-file
+     character (1A hex) is read or the end of the file is reached
+     before any other character is read then flag is false.  The line
+     terminator may be CRLF (CP/M and MS-DOS) or LF (UNIX).
+
+ REPOSITION-FILE  ( ud fid -- ior )                    A 94
+
+     Reposition the file-pointer of the disk file associated with the
+     file-handle fid to position ud.  If the file is positioned outside
+     the file boundaries or an error occured, ior is non-zero.  If
+     ud = 0 the file-pointer is positioned at the start of the file.
+
+ RENAME-FILE  ( c-addr1 u1 c-addr2 u2 -- ior )         A 94
+
+     Rename the disk file specified by c-addr1 u1 to the new name
+     c-addr2 u2.  If the file cannot be found or the new name already
+     exists then ior is non-zero.  Any drive/user prefix attached to
+     the new name is ignored and is assumed to be the same as the old
+     name.
+
+     Note: RENAME-FILE must not be performed on an open file.
+
+ WRITE-FILE  ( c-addr u fid -- ior )                   A 94
+
+     Write u bytes from memory starting at c-addr to the disk file
+     associated with the current file-handle.  If the disk was full
+     or an error occured, ior is non-zero.
+
+ WRITE-LINE  ( c-addr u fid -- ior )                   A 94
+
+     Write a line of text c-addr u followed by the CP/M line terminator
+     (CRLF) to the disk file associated with file-handle fid.  If the
+     disk was full or an error occured, ior is non-zero.
+
+
+2. Screen Files
+---------------
+In DX-Forth several source files may be open at any one time.  The most
+recently opened screen-file is termed "the current screen-file".
+
+Screen/block numbers are valid only in the range 0 to 8191.  Only one
+block buffer is allocated in memory, thus BLOCK and BUFFER always return
+the same physical address.
+
+DX-Forth also supports text source-files.  See the section 'Tools' for
+details.
+
+ #SCREENS  ( -- +n )                                   S
+
+     Return the number of screens (blocks) in the current screen-file.
+
+ ?BLOCK  ( -- )                                        S
+
+     If the contents of BLK is non-zero perform BLK @ BLOCK DROP .
+
+ B/BUF  ( -- u )                                       S FIG
+
+     A VALUE returning the number of bytes per block buffer.  Default
+     is 1024.
+
+     Note: Must be a multiple of 128 and a maximum of 1280.
+
+ C/L  ( -- u )                                         S FIG
+
+     A VALUE returning the number of characters per line in a screen
+     block.  Default is 64.
+
+ CLOSE  ( -- )                                         S
+
+     Flush and close the current screen-file.  No errors are reported
+     with this function.
+
+ CLOSE-ALL  ( -- )                                     S
+
+     Perform CLOSE on all open source-files beginning with the current
+     screen-file.  Any open text-files are also closed with this
+     function.
+
+ SCREEN?  ( -- flag )                                  S
+
+     Return true if the current screen-file is open otherwise return
+     false.  Formerly named FILE?
+
+ FILEBLOCKS  ( +n -- )                                 S
+
+     Resize the current screen-file to +n blocks.  If n is less than
+     the current size, the screen-file is truncated otherwise the file
+     is extended and the new blocks are filled with blanks.
+
+ FLOAD  ( +n "filename[.SCR]" -- )                     S
+
+     Save the current screen-file specification then open the specified
+     file and load block +n.  At completion of the load, close the file
+     and restore the previous file.  If the filename does not include
+     an extension then .SCR is assumed.  Screen-files may be nested.
+     Equivalent to: DUP GETFILENAME LOADED
+
+     Note: Read-only files cannot be opened with this function.
+
+ GETFILENAME  ( "filename" -- c-addr u )               S
+
+     Parse a filename string from the input stream returning c-addr u.
+     An error occurs if the string is empty.
+
+ LOADED  ( +n1 +n2 c-addr u -- )                       S
+
+     Save the current screen-file specification then open the
+     screen-file specified by c-addr u and load blocks +n1 thru +n2.
+     At completion close the file and restore the previous screen-file.
+     If the filename does not include an extension then .SCR is
+     assumed.  Screen-files may be nested.
+
+     Note: Read-only files cannot be opened with this function.
+
+     See FLOAD
+
+ LOADFILE  ( -- c-addr u )                             S
+
+     Return a string containing the name of the current source-file.
+     If no source-file is open or the input source is the console,
+     c-addr u is ambiguous.  Formerly named FNAME FILENAME .
+
+     See SCREEN? LASTFILE
+
+ OPEN  ( c-addr u fam -- ior )                         S
+
+     Open the specified disk file according to file access method fam
+     as the current screen-file.  If an error occurs, ior is non-zero.
+     If the filename does not include an extension then .SCR is
+     assumed.
+
+     Note: The programmer is responsible for closing or maintaining the
+     previous screen-file.
+
+     See SWAP-FILE CLOSE CLOSE-ALL USING
+
+ SWAP-FILE  ( -- )                                     S
+
+     Switch the current and 'swap' screen-files.  SCR is preserved
+     across swaps.
+
+     Note: SWAP-FILE causes the current block buffer to be unassigned.
+     The contents of the buffer, however, are not affected.
+
+     See FYI
+
+ USING  ( "filename[.SCR]" -- )                        S
+
+     Close the current screen-file.  Open or conditionally create the
+     specified disk file for read/write as the current screen-file.  If
+     the filename does not include an extension then .SCR is assumed.
+     If the file cannot be opened/created then ABORT is performed.
+     SCR is set to 0.
+
+     Note: Read-only files cannot be opened with this function.
+     The programmer is responsible for closing or maintaining the
+     previous current screen-file.
+
+     See SWAP-FILE CLOSE CLOSE-ALL
+
+
+3. Tools
+--------
+
+Note: Most of these words are available only after the file TOOLS.SCR
+has been loaded.
+
+ (*                                                    I S
+
+     Begin a block comment.  Parse and discard text delimited by the
+     token *) .  If the parse area is exhausted before the delimiter
+     is found refill the input buffer and resume the process.
+
+     An ambiguous condition exists if the delimiter is not found and
+     the parse area cannot be refilled.
+
+     Note: (* is primarily intended for text-files.  May be relocated
+     to the kernel if/when it gains greater popularity.
+
+ -TOOLS  ( -- a-addr )                                 S
+
+     A MARKER word used for deleting the tools utilities with FORGET.
+
+     See MARKER CHECKING
+
+ .FREE  ( -- )                                         S
+
+     Display the current dictionary segments and statistics.
+
+ .S  ( -- )                                            S
+
+     Display the values on the data and floating-point stacks.
+
+ ?  ( a-addr -- )                                      A
+
+     Display the single-cell value stored at a-addr.  Display as signed
+     number if BASE is decimal or unsigned otherwise.
+
+ B  ( -- )                                             S
+
+     Decrement variable SCR and list the screen.
+
+     See L N
+
+ DELETE  ( "filename" -- )                             S
+
+     Erase the specified file from disk.  DELETE must not be performed
+     on an open file.
+
+ DIR  ( "filename" -- )                                S
+
+     List the current disk directory.  Filename is required and may
+     include path and wildcards.
+
+ DUMP  ( addr u -- )                                   S
+
+     Dump u bytes of memory starting at the address addr.
+
+ EDIT                                                  S
+
+     A synonym for the resident editor SED or TED.  By default the
+     resident editor for DX.EXE is SED.  See TED.TXT for details
+     on how to make TED the default editor.
+
+     See SED TED
+
+ FYI  ( -- )                                           S
+
+     "For Your Information".  Display information about the current
+     forth environment including dictionary segments, vocabularies,
+     logged drive and open screen-files.  Formerly named MAP .
+
+     See .FREE VOCS ORDER
+
+ ICLOSE  ( -- )                                        S
+
+     Close the current text-file.
+
+     INCLUDEd text-files are automatically closed after loading.  If
+     an error occurs or loading is interrupted (e.g. QUIT was executed),
+     nested text-files may remain open preventing external editing or
+     cause difficulty loading ("too many files" error message).  Should
+     this occur use ICLOSE or CLOSE-ALL to restore proper operation.
+
+     See INCLUDE INCLUDED CLOSE-ALL
+
+ INCLUDE  ( "filename[.F]" -- )                        S
+
+     Compile the text-file specified by the filename.  If a filename
+     extension is not included then .F is assumed.  Text-files may be
+     nested.
+
+     Note: Uses the default DTA buffer at address $80.
+
+     See INCLUDED ICLOSE
+
+ INCLUDED  ( c-addr u -- )                             S
+
+     Compile the text-file specified by the filename given by c-addr u.
+     If a filename extension is not included then .F is assumed.
+     Text-files may be nested.
+
+     Note: Uses the default DTA buffer at address $80.
+
+     See INCLUDE ICLOSE
+
+ INDEX  ( +n1 +n2 -- )                                 S FIG
+
+     List line 0 of screens +n1 thru +n2 from the screen-file.  Line 0
+     typically contains a comment indicating the contents of the screen.
+
+     See QX
+
+ L  ( -- )                                             S
+
+     List the screen specified by variable SCR.
+
+     See N B
+
+ LASTFILE  ( -- c-addr u )                             S
+
+     Return a string containing the last filename processed by >FNAME.
+
+     Note: the string returned by LASTFILE remains valid for two
+     invocations of >FNAME e.g.
+
+         S" myfile"   >FNAME DROP  LASTFILE ( c-addr1 u1 )
+         S" yourfile" >FNAME DROP  LASTFILE ( c-addr2 u2 )
+         CR TYPE SPACE TYPE
+         yourfile myfile ok
+
+     See >FNAME LOADFILE LOADLINE
+
+ LDUMP  ( seg offs u -- )                              S
+
+     Intersegment DUMP.  Dump u bytes of memory starting at the address
+     specified by the 8086 segment/offset values.
+
+ LISTING  ( -- )                                       S
+
+     List all screens from the screen-file to the printer, formatted 3
+     screens to the page.  A form-feed character (0C hex) is output at
+     the end of each page.
+
+ LOADLINE  ( -- a-addr )                               S
+
+     A VARIABLE containing the current line number of the text-file
+     being INCLUDEd.  Starting line number is 1.
+
+     See LASTFILE
+
+ LS  ( -- )                                            S
+
+     Swap screen-files and list the screen specified by variable SCR.
+
+     See SWAP-FILE L
+
+ N  ( -- )                                             S
+
+     Increment variable SCR and list the screen.
+
+     See L B
+
+ ORDER  ( -- )                                         S
+
+     Display the context and current vocabularies.
+
+ QX  ( +n -- )                                         S
+
+     Quick index.  Starting with screen +n, list line 0 of 60 sequential
+     screens from the screen-file.  Line 0 typically contains a comment
+     indicating the contents of the screen.
+
+     See INDEX
+
+ RENAME  ( "oldfile" "newfile" -- )                    S
+
+     Rename the specified disk file with a new name.  RENAME must not
+     be performed on an open file.
+
+ SED  ( | scr -- )                                     S
+
+     Invoke the screen-file editor.  If SED is not resident then it is
+     first loaded.  If scr is not specified then editing begins at the
+     position where the last error occured.
+
+     See EDIT TED
+
+ SHOW  ( +n1 +n2 -- )                                  S
+
+     List screens +n1 through +n2 from the screen-file to the printer,
+     formatted 3 screens to the page.  A form-feed character (0C hex) is
+     output at the end of each page.
+
+ TED  ( | "filename[.F]" -- )                          S
+
+     Invoke the text-file editor.  If TED is not resident then it is
+     first loaded.  If a filename is not specified then editing begins
+     at the line and file where the last error occured.
+
+     See EDIT SED
+
+ VOCS  ( -- )                                          S
+
+     List all vocabularies beginning with the most recent.
+
+ WORDS  ( -- )                                         S
+
+     Lists the names of forth words in the first search wordlist
+     beginning with the most recent.  The color attribute is the same as
+     for .ID .  fig-Forth equivalent is VLIST.
+
+ WORDS:  ( "ccc" -- )                                  S
+
+     As for WORDS but takes a blank delimited string from the input
+     stream.  Only word names containing the specified string are
+     listed.  If the string is empty the result is the same as WORDS .
+     Formerly named WORDS-LIKE .
+
+
+4. DOS Interface
+----------------
+
+ BDOS  ( DX x -- AL )                                  A
+
+     Perform MS-DOS INT 21H function call.  Register DX holds the input
+     parameter.  Low-order byte of x is the function number and is
+     passed to AH.  The high-order byte of x is passed to AL.  BX and CX
+     are set to zero.  After the call the contents of AL is returned.
+
+     Note: This function has been superseded by DOSCALL.
+
+ CMDTAIL  ( -- c-addr u )                              A
+
+     Return the string representing the command tail entered at the DOS
+     prompt when the program was first initiated.  Leading and trailing
+     blanks are stripped.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+ CSEG  ( -- cseg )                                     A
+
+     Return the 8086 segment containing the DX-Forth code, data and
+     stacks.
+
+     See HSEG
+
+ DOSCALL  ( u -- )                                     A
+
+     Call MS-DOS Interrupt 21H function u.  DOSCALL is used similarly
+     to INTCALL with the exception that CPU registers AH and DS are
+     preloaded with function number u and DX-Forth segment CSEG
+     respectively.  Refer to INTCALL for further details.
+
+     Example: retrieve the MS-DOS version
+
+     $30 DOSCALL 'AH C@ 'AX C@ ( minor major )
+
+     See DOSERR? INTCALL
+
+ DOSERR?  ( -- ior )                                   A
+
+     Typically used following a DOSCALL or INTCALL to interrupt 21H.
+     MS-DOS generally uses the carry flag to report an error.  DOSERR?
+     interrogates the carry flag and, if set, returns an ior value
+     corresponding to the MS-DOS error code contained in register AX.
+     If the carry flag was not set, ior is zero.  In DX-Forth DOS
+     errors are returned as ior values in the range -511 to -257.  To
+     convert these back to the MS-DOS error code use: ( ior) 255 AND
+
+     Note: Not all MS-DOS functions use the carry flag to indicate an
+     error.  Refer to MS-DOS documentation to determine which functions
+     may use DOSERR? .
+
+     See INTCALL DOSCALL
+
+ DOSVER  ( -- minor major )                            A
+
+     Return DOS version number.
+
+ INTCALL  ( u -- )                                     A
+
+     Call 8086 interrupt u.  CPU register values are loaded into
+     variables before INTCALL and retrieved afterwards.  The variables
+     used to hold the CPU register values are:
+
+     'AH 'BH 'CH 'DH 'AX 'BX 'CX 'DX 'BP 'SI 'DI 'DS 'ES 'FLAGS
+
+     Example: display the MS-DOS version
+
+     $30 'AH C!        ( load AH = 30h )
+     $21 INTCALL       ( perform INT 21h )
+     'AX C@            ( get AL )
+     .                 ( display major version )
+
+     See DOSERR? DOSCALL
+
+ P@  ( p-addr -- x )                                   A
+
+     Perform the 8086 IN instruction on 16-bit port p-addr returning x.
+
+ P!  ( x p-addr -- )                                   A
+
+     Perform the 8086 OUT instruction sending x to the 16-bit port
+     p-addr.
+
+ PC@  ( p-addr -- x )                                  A
+
+     Perform the 8086 IN instruction on the 8-bit port p-addr returning
+     x.  The upper 8 bits of x are set to zero.  fig-Forth equivalent
+     is P@.
+
+ PC!  ( x p-addr -- )                                  A
+
+     Perform the 8086 OUT instruction sending x to the 8-bit port
+     p-addr.  fig-Forth equivalent is P!
+
+
+5. Input/Output
+---------------
+
+ (.)  ( n -- c-addr u )                                A
+
+     Convert the signed number n to a string c-addr u.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+ (D.)  ( d -- c-addr u )                               A
+
+     Convert the signed double number d to a string c-addr u.
+     Primitive for D.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+ (U.)  ( u -- c-addr u )                               A
+
+     Convert the unsigned number u to a string c-addr u.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+ .  ( x -- )                                           A
+
+     Display single number x in free-field format with a trailing space
+     as a signed number if BASE is decimal or unsigned otherwise.
+
+     Note: This function adopts eForth behaviour in respect of BASE and
+     is useful for debugging.  Applications requiring Forth-94 behaviour
+     may redefine:
+
+       : . ( n -- )  S>D D. ;
+
+ CONSOLE  ( -- )                                       A
+
+     Redirect EMIT to the console screen.
+
+ D.  ( d -- )                                          A
+
+     Display signed double number d in free-field format with a trailing
+     space.
+
+ EOL  ( -- c-addr u )                                  A
+
+     Return the address/length of the string representing the system-
+     dependent end-of-line terminator.  For CP/M and MS-DOS end-of-line
+     is CRLF ($0D $0A).
+
+     EOL DROP 1- ( -- c-addr )  returns a counted string
+     EOL DROP    ( -- c-addr )  returns a null-terminated string
+
+ SYS-VEC  ( -- addr )                                  A
+
+     Return the address of the system vector & parameter table.
+
+     offset      type  function            parameter        default
+
+     0   vKEY?   xt    KEY?                -- flag          ?terminal
+     2   vKEY    xt    KEY                 -- char          conin
+     4   vEMIT   xt    EMIT                char --          conout *
+     6   vCON    xt    CONSOLE out         char --          conout
+     8   vLST    xt    PRINTER out         char --          lstout
+     10  aINIT   addr  INIT patch          --               NOOP *
+     12  aIDENT  addr  IDENTIFY patch      --               NOOP *
+     14  aFNUMB  addr  FNUMBER patch       c-addr u -- ?|0  FALSE *
+     16  nFPS    u     fp-stack size
+     18  aNUMB   addr  NUMBER? patch       c-addr u -- ?|0  NUMBER?
+     20  nFPM    u     fp-stack min
+     22  nRTS    u     r-stack size
+     24  nUS     u     USER area size
+     26  nPNO    u     HOLD buffer size
+     28  nMSCON  u     MS timing constant
+     30  nTMODE  u     Timer 0 mode
+
+     * set according to mode or installed option
+
+     Sizes are expressed in bytes unless otherwise noted.
+
+ KEY  ( -- char )                                      A 94
+
+     Receive the next character from the console.
+
+     Note: IBM-PC two-byte extended keystrokes are translated to a code
+     having a value of 128 or greater.  Refer to DXFORTH.TXT for a
+     table of key codes.
+
+ KEY?  ( -- flag )                                     A 94
+
+     Return true if a console key has been pressed.  KEY is subsequently
+     used to retrieve the character.  fig-Forth equivalent is ?TERMINAL.
+
+ PRINTER  ( -- )                                       A
+
+     Redirect EMIT to the printer.
+
+ OUT  ( -- a-addr )                                    A FIG
+
+     A USER variable that contains the number of characters output by
+     EMIT or TYPE since the last CR.
+
+
+6. Arithmetic and Stack
+-----------------------
+
+ -ROLL  ( xu ... x1 x0 u -- x0 xu ... x1 )             A
+
+     Remove u.  Rotate xu ... x1 to the top of the stack pushing x0 to
+     the position vacated by xu.  The reverse of ROLL.
+
+ -ROT  ( x1 x2 x3 -- x3 x1 x2 )                        A
+
+     Rotate the top stack item to the third position.  The reverse of
+     ROT.
+
+ 2+  ( x1 -- x2 )                                      A 83 FIG
+
+     Add two (2) to n1|u1 giving the sum n2|u2.
+
+ 2-  ( x1 -- x2 )                                      A 83
+
+     Subtract two (2) to n1|u1 giving the sum n2|u2.
+
+ 2NIP  ( x1 x2 x3 x4 -- x3 x4 )                        A
+
+     Drop cell pair x1 x2 from the stack leaving x3 x4.
+
+ ><  ( x1 -- x2 )                                      A
+
+     Swap the high order byte (bits 8-15) with the low order byte
+     (bits 0-7) of x1.
+
+ FM/MOD  ( d n1 -- n2 n3 )                             A 94
+
+     Divide double number d by single n1, giving the floored quotient
+     n3 and the remainder n2.
+
+ LSHIFT  ( x1 u -- x2 )                                A 94
+
+     Perform a logical left shift of u bit-places on x1 giving x2.
+     Put zero into the least significant bits vacated by the shift.
+
+ M*  ( n1 n2 -- d )                                    A 94
+
+     Multiply n1 by n2 giving the double result d.
+
+ M*/  ( d1 n1 +n2 -- d2 )                              A 94
+
+     Multiply double number d1 by single n1 producing the triple
+     length intermediate result t.  Divide t by +n2 giving the
+     double quotient d2.
+
+ M+  ( d1 n -- d2 )                                    A 94
+
+     Add single length number n to double d1, giving the sum d2.
+
+ NIP  ( x1 x2 -- x2 )                                  A 94
+
+     Drop the first item below the top of stack.
+
+ NOT  ( x -- flag )                                    A 79
+
+     Reverse the boolean value of x.  Equivalent to: 0= .
+
+     Note: Do not confuse this function with FORTH-83 NOT which behaved
+     as INVERT.
+
+ RSHIFT  ( x1 u -- x2 )                                A 94
+
+     Perform a logical right shift of u bit-places on x1 giving x2.
+     Put zero into the most significant bits vacated by the shift.
+
+ SM/REM  ( d n1 -- n2 n3 )                             A 94
+
+     Divide d by n1, giving the single-cell remainder n2 and the single-
+     cell symmetric quotient n3.  An ambiguous condition exists if n1 is
+     zero.
+
+ TUCK  ( x1 x2 -- x2 x1 x2 )                           A 94
+
+     Copy the first (top) stack item below the second stack item.
+
+ U2/  ( x1 -- x2 )                                     A
+
+     x2 is the result of shifting x1 one bit toward the least-significant
+     bit, leaving the most-significant bit zero.  Functionally equivalent
+     to: 1 RSHIFT.
+
+ UMAX  ( u1 u2 -- u1 | u2 )                            A
+
+     Return the greater of two unsigned numbers.
+
+ UMIN  ( u1 u2 -- u1 | u2 )                            A
+
+     Return the lesser of two unsigned numbers.
+
+
+7. Conversion
+-------------
+
+ DPL  ( -- a-addr )                                    A 83
+
+     A USER variable containing the number of places to the right of
+     the decimal point following number input conversion.
+
+     In DX-Forth DPL is incremented for each character successfully
+     converted by >NUMBER.  Applications may use this feature to create
+     custom number conversion routines.
+
+     See NUMBER?
+
+ NUMBER?  ( c-addr u -- d true | false )               A
+
+     Convert the case-insensitive string c-addr u to a double number
+     according to the current base.  If successful, return double
+     number d and a true flag.  A leading '-' character signifies a
+     negative number.  If a punctuation character '.' occurs at the
+     end of the string then DPL is 0 otherwise it is -1.  If conversion
+     is unsuccessful or the string was empty or contained blanks then a
+     false flag is returned and DPL is meaningless.
+
+     See DPL SYS-VEC
+
+ UPCASE  ( c1 -- c2 )                                  A
+
+     Convert the character c1 to its uppercase equivalent c2.
+
+     Note: The name of this function is subject to change.
+
+ UPPER  ( c-addr u -- )                                A
+
+     Convert the character string c-addr u to uppercase.
+
+     Note: The name of this function is subject to change.
+
+
+8. Strings and Memory
+---------------------
+
+ !L  ( x seg offs -- )                                 A
+
+     Store cell x at the 8086 segment/offset.
+
+ +STRING  ( c-addr1 u1 c-addr2 u2 -- c-addr2 u3 )      A
+
+     Append the string c-addr1 u1 to the end of string c-addr2 u2
+     returning the resulting string c-addr2 u3.  It is the programmer's
+     responsibility to ensure sufficient room is available at c-addr2
+     to hold both strings.
+
+ ,"  ( "ccc<">" -- )                                   S
+
+     Parse the character string delimited by '"' and compile as a
+     counted string at HERE.  The delimiter character may be included
+     in the string by entering it twice.
+
+     Note: In DX-Forth the memory occupied by ," strings is exactly
+     count+1 characters with no terminating null or alignment.
+
+     See /PARSE S,
+
+ -BLANKS  ( c-addr1 u1 -- c-addr2 u2 )                 A
+
+     Remove leading and trailing blanks from string c-addr1 u1 in the
+     SSEG segment leaving c-addr2 u2.  Equivalent to: BL SKIP -TRAILING
+
+     See SSEG
+
+ -TRAILING  ( c-addr u1 -- c-addr u2 )                 A
+
+     Remove trailing blanks from string c-addr u1 in the SSEG segment
+     leaving c-addr u2.  Equivalent to: BL TRIM
+
+     See TRIM SSEG
+
+ /PARSE  ( char "ccc<char>" -- c-addr u )              S
+
+     Parse ccc delimited by char and store the string (255 characters
+     maximum) in a temporary buffer.  The delimiter character may be
+     included in the string by entering it twice.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+     /PARSE is used by S" .( and ," .  /PARSE and WORD share the same
+     buffer.  Simultaneous use is allowed provided the combined length
+     of the strings does not exceed 255+31 chars.  Formerly named
+     PARSE$ .
+
+ /STRING  ( c-addr1 u1 n -- c-addr2 u2 )               A 94
+
+     Truncate the string c-addr1 u1 by n characters.  The resulting
+     string c-addr2 u2 begins at c-addr1+n and has a length u1-n.
+     n may be negative.
+
+ 2!L  ( x1 x2 seg offs -- )                            A
+
+     Store the cell pair x1 x2 at the 8086 segment/offset.
+
+ 2@L  ( seg offs -- x1 x2 )                            A
+
+     Fetch the cell pair stored at the 8086 segment/offset.
+
+ @L  ( seg offs -- x )                                 A
+
+     Fetch the cell stored at the 8086 segment/offset.
+
+ C!L  ( char seg offs -- )                             A
+
+     Store the lower-order 8 bits of char at the 8086 segment/offset.
+
+ C@L  ( seg offs -- char )                             A
+
+     Fetch the lower-order 8 bits of the character at the 8086 segment/
+     offset.
+
+ CAPS  ( -- )                                          A
+
+     Causes the next occurrence of COMPARE or SEARCH to be performed as
+     if all characters in the source and destination strings were
+     uppercase.  Used in the form:
+
+              ( c-addr1 u1 c-addr2 u2 ) CAPS COMPARE
+              ( c-addr1 u1 c-addr2 u2 ) CAPS SEARCH
+
+     Note: The effect of CAPS is temporary.  It is automatically reset
+     by COMPARE SEARCH COLD, or when an error occurs and QUIT is
+     executed.
+
+ CELL-  ( a-addr1 -- a-addr2 )                         A
+
+     Subtract the size in address units of a cell to a-addr1, giving
+     a-addr2.
+
+ CMOVEL  ( seg1 offs1 seg2 offs2 u -- )                A
+
+     Copy u consecutive characters starting at the 8086 segment/offset
+     seg1 offs1 to seg2 offs2, proceeding character-by-character from
+     lower addresses to higher addresses.
+
+ COMPARE  ( c-addr1 u1 c-addr2 u2 -- -1 | 0 | 1 )      A 94
+
+     Compare string c-addr1 u1 in the SSEG segment with string c-addr2
+     u2.  Return 0 if  match, -1 if c-addr1 u1 is less than c-addr2 u2
+     or 1 if greater.
+
+     See CAPS SSEG
+
+ LFILL  ( seg offs u char -- )                         A
+
+     Store char in each of u consecutive characters of memory beginning
+     at the 8086 segment/offset.
+
+ MOVE  ( a-addr1 a-addr2 u -- )                        A 94
+
+     Move u bytes from a-addr1 to a-addr2.  Overlap allowed.
+
+ OFF  ( a-addr -- )                                    A
+
+     Clear all bits of the cell at a-addr.  Functionally equivalent to:
+     0 a-addr !
+
+ ON  ( a-addr -- )                                     A
+
+     Set all bits of the cell at a-addr.  Functionally equivalent to:
+     TRUE a-addr !
+
+ PACK  ( c-addr1 u c-addr2 -- c-addr2 )                A
+
+     Store the string c-addr1 u as a counted string at c-addr2 leaving
+     the destination address on the stack.  The source and destination
+     strings are permitted to overlap.  An ambiguous condition exists
+     if u is greater than 255 or the buffer at c-addr2 is less than
+     u+1 characters.  Formerly named PACKED .  Functionally equivalent
+     to:  2DUP 2>R CHAR+ SWAP CHARS MOVE 2R> TUCK C!
+
+     See PLACE
+
+ PAD  ( -- c-addr )                                    A
+
+     Return the address of a transient region that can be used to hold
+     data for intermediate processing.  PAD is at least 84 characters.
+
+     Note: In DX-FORTH PAD is located in the APPLICATION data-space
+     immediately above the pictured numeric output buffer.  The maximum
+     size of PAD is:  APPLICATION UNUSED PAD HERE - - U.
+
+ PLACE  ( c-addr1 u c-addr2 -- )                       A
+
+     Store the string c-addr1 u as a counted string at c-addr2.  The
+     source and destination strings are permitted to overlap.  An
+     ambiguous condition exists if u is greater than 255 or the buffer
+     at c-addr2 is less than u+1 characters.  Equivalent to: PACK DROP
+
+     See PACK
+
+ S"  ( "ccc<">" -- )                                   I S 94
+     ( -- c-addr u ) run-time                          A
+
+     Parse a string (255 characters maximum) from the input stream
+     delimited by '"' and compile into the current definition.  The
+     delimiter character may be included in the string by entering it
+     twice.  At run-time, leave the string address and count on the
+     stack.
+
+     S" is state-smart. When interpreting, the string is placed in a
+     transient region which may be overwritten by subsequent operations.
+
+     See /PARSE
+
+ S,  ( c-addr u -- )                                   S
+
+     Compile string c-addr u (255 characters maximum) as a counted
+     string at HERE.
+
+     Named STRING, $, in some Forth implementations.
+
+     Note: In DX-Forth the memory occupied by S, strings is exactly
+     count+1 characters with no terminating null or alignment.
+
+     See ,"
+
+ S.R  ( c-addr n1 n2 -- )                              A
+
+     Display string c-addr n1 right-aligned in a field n2 characters
+     wide.  If the number of characters required to display the string
+     is greater than n2, all characters are displayed with no leading
+     spaces in a field as wide as necessary.
+     Equivalent to: OVER - SPACES TYPE
+
+ SCAN  ( c-addr1 u1 char -- c-addr2 u2 )               A
+
+     Scan the string c-addr1 u1 in the SSEG segment for the character
+     char.  Leave match address c-addr2 and length remaining u2.  If
+     no match occurred then u2 is zero and c-addr2 is c-addr1 + u1.
+
+     See SSEG
+
+ SEARCH  ( c-addr1 u1 c-addr2 u2 --                    A 94
+           c-addr3 u3 -1 | c-addr1 u1 0 )
+
+     Search string c-addr1 u1 in the SSEG segment for the occurrence of
+     string c-addr2 u2.  If found, return -1 and the match address
+     c-addr3 with u3 characters remaining.
+
+     See CAPS SSEG
+
+ SKIP  ( c-addr1 u1 char -- c-addr2 u2 )               A
+
+     Skip leading occurrences of the character char in the string
+     c-addr1 u1 in the SSEG segment.  Leave the address of the first
+     non-matching character c-addr2 and length remaining u2.  If no
+     characters were skipped leave c-addr1 u1.
+
+     See SSEG
+
+ SLITERAL  ( c-addr1 u -- ) compilation                I S 94
+           ( -- c-addr2 u ) run-time
+
+     Compile the string c-addr u (255 characters maximum) into the
+     dictionary.  When later executed c-addr2 u is left on the stack.
+
+ SSEG  ( -- a-addr )                                   A
+
+     A VARIABLE containing the segment of the first string used by
+     COMPARE SEARCH SCAN SKIP TRIM -TRAILING and ZCOUNT.  By default
+     SSEG is set to the DX-Forth segment CSEG.
+
+     Note: The above words (and all that use them) will be affected
+     when SSEG is altered.  Programs may temporarily change SSEG
+     provided it is restored to CSEG immediately afterwards.  SSEG
+     is automatically reset by COLD or when an error occurs.
+
+     See CSEG
+
+ TRIM  ( c-addr u1 char -- c-addr u2 -- )              A
+
+     Exclude trailing occurences of the character char in the string
+     c-addr u1 in the SSEG segment.  Leave address c-addr and the
+     new length u2.  If no characters were removed leave c-addr u1.
+
+     See SSEG
+
+ ZCOUNT  ( c-addr -- c-addr u )                        A
+
+     Return the address and length of the null-terminated string at
+     c-addr in the SSEG segment.
+
+     See SSEG
+
+ ZPLACE  ( c-addr1 u c-addr2 -- )                      A
+
+     Store the string c-addr1 u as a null-terminated string placed at
+     c-addr2.  The move proceeds character by character starting with
+     the lower addresses.
+
+
+9. Dictionary
+-------------
+
+ (NAME)  ( nfa -- c-addr u )                           S
+
+     Return the string c-addr u representing the name of the forth word
+     whose name field address is nfa.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+ -?  ( -- )                                            S
+
+     Suppress redefinition and system compilation warnings for the next
+     definition only.
+
+     See WARNING
+
+ .ID  ( nfa | 0 -- )                                   S
+
+     Display the name of the forth word whose name field address is
+     nfa.  If the word is nameless (nfa is zero) then "[noname]" is
+     displayed.  Application words are shown with the NORMAL color
+     attribute while System words are in BOLD.  Immediate words have
+     the brightness bit toggled.  fig-FORTH equivalent is ID.
+
+ .NAME  ( xt -- )                                      S
+
+     Display the name of the forth word whose execution token address
+     is xt.  If the word is nameless or xt invalid then "[noname]" is
+     displayed.  If the word is an alias then the primary name is
+     displayed.  The color attribute is the same as for .ID
+
+ .VOC  ( wid -- )                                      S
+
+     Display the name associated with wordlist wid.  Wordlists may be
+     nameless in which case "[noname]" will be displayed.
+
+     See VOCABULARY W>NAME
+
+ APPLICATION  ( -- )                                   A
+
+     Place subsequent definitions into the Application dictionary.  The
+     application dictionary holds words that may be executed by TURNKEY
+     programs.  Equivalent to: FALSE SYS !
+
+     Note: APPLICATION is the default mode on boot-up or COLD.
+
+     See SYS SYSTEM
+
+ BEHEAD  ( "name1" "name2" -- )                        S
+
+     Search the first wordlist in the search order and make invisible
+     the words between name1 and name2 inclusively.  Beheaded words
+     will not be found in a wordlist search or displayed by WORDS.  The
+     behaviour of beheaded words is not affected.  An error message is
+     issued if the names reside in protected dictionary.  Formerly named
+     EXCISE .
+
+     See CHECKING
+
+ CHAIN  ( "name" -- )                                  S
+
+     Append vocabulary "name" to the base of the CURRENT wordlist.  An
+     error message is issued if "name" is not a vocabulary, is the same
+     as, already chained, or created later than, the CURRENT vocabulary.
+
+ CONTEXT  ( -- a-addr )                                S
+
+     Returns the address of a 3-cell array which determines the
+     dictionary search order.  The default search order in DX-Forth is
+     CONTEXT CURRENT FORTH.  If wid is zero FIND moves to the next cell
+     in the array.
+
+     a-addr  1 cell  wid  CONTEXT
+             1 cell  wid  CURRENT
+             1 cell  wid  FORTH
+
+     See VOCABULARY CHAIN
+
+ DP  ( -- a-addr )                                     A
+
+     A double USER variable containing pointers to the next free
+     address in the Application and System dictionaries respectively.
+     e.g.
+
+       DP @   ( -- appDP )
+       DP 2@  ( -- sysDP appDP )
+
+ DPH  ( -- a-addr )                                    S
+
+     A USER variable containing a pointer representing the next free
+     address in the heads dictionary segment.
+
+ EMPTY  ( -- )                                         S
+
+     Delete all definitions created since the last execution of COLD
+     or PROTECT.  Compilation wordlist is set to FORTH.
+
+     See REMEMBER
+
+ FORGET  ( "name" -- )                                 S 83 FIG
+
+     If word "name" is found in the compilation wordlist, delete it
+     and all words added to the dictionary after "name" was defined,
+     regardless of their wordlist.  An error message is issued if
+     "name" is an alias or the word is located in the protected
+     dictionary.
+
+     See REMEMBER CHECKING PROTECT
+
+ HSEG  ( -- hseg )                                     A
+
+     Return the 8086 segment containing the DX-Forth word headers.
+
+     See CSEG
+
+ HLIMIT  ( -- addr )                                   S
+
+     A CONSTANT that returns the upper limit address of the heads
+     dictionary segment.
+
+ LAST  ( -- a-addr )                                   S
+
+     A 2VARIABLE containing the name field and execution token address
+     of the latest definition.
+
+     LAST @ ( nfa )
+     LAST 2@ ( xt nfa )
+
+ LIMIT  ( -- addr )                                    A FIG
+
+     A CONSTANT that returns the upper limit address of the application
+     dictionary and the start of the System dictionary.
+
+     LIMIT for TURNKEY applications will be the upper memory limit
+     currently used by the forth compiler (usually $FFF0) unless set
+     to a user-specified value with SET-LIMIT.
+
+     See SET-LIMIT
+
+ LINK,  ( a-addr -- )                                  S
+
+     Add a node to linked list a-addr.  The node is created at HERE
+     and consists initially of one cell containing the address of the
+     previous node.  Equivalent to: HERE OVER @ , SWAP !
+
+ MARKER  ( "name" -- )                                 S
+
+     A defining word used in the form:
+              MARKER name
+     Typically used to mark the beginning of an application which may
+     later be removed by executing FORGET name.  "name" is placed in
+     the System dictionary.  Executing "name" is a no-operation.
+
+     Note: MARKER differs from the Forth-94 specification.
+
+ N>NAME  ( nfa1 -- nfa2 | 0 )                          S
+
+     Given the name field address of a word, return the nfa of the
+     previous word in the wordlist.  If the end of the wordlist is
+     reached then 0 is returned.
+
+ PROTECT  ( -- )                                       S
+
+     Protect the current state of the dictionary.  Existing definitions
+     can no longer be forgotten.  Formerly named FREEZE .
+
+     See CHECKING
+
+ REMEMBER  ( xt -- )                                   S
+
+     Append execution token xt to the REMEMBER list.
+
+     When words are discarded or the dictionary is otherwise reduced,
+     xt's in the REMEMBER list that lie outside the new dictionary
+     boundary will be executed beginning with the most recent.
+
+     Typically xt represents a function whose purpose is to restore
+     critical system values to their previous state.  Executed xt's
+     are automatically removed from the REMEMBER list.
+
+     Note: Functions executed from the REMEMBER list are run only after
+     the new dictionary boundary has been established.  Consequently
+     these functions may be residing in free memory when executed.
+
+     See FORGET EMPTY
+
+ SET-LIMIT  ( addr -- )                                S
+
+     Set the value of LIMIT for TURNKEY applications to addr.  If addr
+     does not lie on a 16-byte boundary, it is first rounded down.
+     Typically used prior to executing TURNKEY.
+
+     SET-LIMIT only affects applications saved with TURNKEY.  It is
+     the programmer's responsibility to ensure sufficient memory is
+     available for the demands of the application.  The address passed
+     to SET-LIMIT remains in effect until a new value is set, or is
+     cancelled by executing COLD in the forth environment e.g. rebooting
+     the system.
+
+     See LIMIT UNUSED
+
+ SYS  ( -- a-addr )                                    A
+
+     A VARIABLE that determines the compilation dictionary.  Definitions
+     will be compiled to the system dictionary if SYS is non-zero and to
+     the application dictionary if zero.
+
+     See APPLICATION SYSTEM
+
+ SYSTEM  ( -- )                                        S
+
+     Place subsequent definitions into the System dictionary.  The
+     System dictionary holds the compiler and other support functions
+     not generally required for TURNKEY applications.
+     Equivalent to: TRUE SYS !
+
+     See SYS APPLICATION
+
+ VOC-LINK  ( -- a-addr )                               S FIG
+
+     A USER variable containing a pointer to the most recently defined
+     wordlist.
+
+ VOCABULARY  ( "name" -- )                             S 83
+
+     Create a new empty wordlist.  When "name" is later executed replace
+     the first wordlist in the search order with the wordlist associated
+     with "name".  ADDR "name" @ returns the wordlist identifier wid.
+
+ W>NAME  ( wid -- nfa | 0 )                            S
+
+     Return the name field address of the most recently defined word in
+     wordlist wid.  If the wordlist is empty then zero is returned.
+
+ WARNING  ( -- a-addr )                                S
+
+     A VARIABLE that controls warning messages.  When set to zero, word
+     redefinition and System compilation warnings are disabled.  Users
+     may set WARNING to TRUE or FALSE (e.g. using ON or OFF ) - other
+     values must not be used.
+
+     See -?
+
+
+10. Facility
+------------
+
+ /MS  ( -- )                                           A
+
+     Adjust MS for correct operation.
+
+     Note: This function is executed at start-up by COLD and is not
+     normally required thereafter.  It is provided for applications
+     which switch Timer 0 between modes 2 and 3 thereby affecting
+     MS SOUND BEEP.  SYS-VEC holds the timer mode in use when /MS was
+     last executed.
+
+     Note: /MS is a DEFERed word.
+
+     See SYS-VEC
+
+ AT-XY  ( x y -- )                                     A 94
+
+     Move the cursor to the specified coordinates relative to the
+     current text window.
+
+     Note: No bounds checking of x,y is performed.
+
+     See GET-XY
+
+ ATTRIB  ( -- addr )                                   A
+
+     A byte variable containing the current text mode video attribute.
+     May be used to determine or modify the current screen colors and
+     blink mode.  Bitfields for the attribute byte are:
+
+     7      blink/intensity
+     6-4    background color 0-7
+     3-0    foreground color 0-15
+
+     Colors:
+
+     0 black        8  dark gray
+     1 blue         9  light blue
+     2 green        10 light green
+     3 cyan         11 light cyan
+     4 red          12 light red
+     5 magenta      13 light magenta
+     6 brown        14 yellow
+     7 light gray   15 white
+
+     Note: COLD resets ATTRIB to the video attribute in force when
+     the application was booted.  Executing QUIT or entering the forth
+     development environment causes ATTRIB to be set to the NORMAL
+     attribute as defined in COLOR-TABLE.
+
+     See RETURN
+
+ BEEP  ( -- )                                          A
+
+     Generate a bell sound.  Uses SOUND and MS.
+
+     Note: BEEP is a DEFERed word.
+
+ BACKGROUND  ( x -- )                                  A
+
+     Change the text window background to color x.  x = 0-7
+
+     See ATTRIB
+
+ BOLD  ( -- )                                          A
+
+     Begin 'bold' video mode.
+
+     See NORMAL COLOR-TABLE
+
+ BRIGHT  ( -- )                                        A
+
+     Begin 'bright' video mode.
+
+     See NORMAL COLOR-TABLE
+
+ CLEAR-LINE  ( -- )                                    A
+
+     Delete all characters from the current cursor position to the end
+     of the line.  The cursor position remains unchanged.
+
+ COLOR-TABLE  ( -- addr )                              A
+
+     Return the address of a 4-byte table containing text mode video
+     attributes NORMAL INVERSE BOLD BRIGHT.  The default values are
+     $07 $70 $03 $0B respectively.
+
+     Note: Used by the forth system.  Modification by applications is
+     discouraged - use ATTRIB instead.
+
+     See ATTRIB
+
+ DELETE-LINE  ( -- )                                   A
+
+     Delete the line at the current cursor position.  All subsequent
+     lines are moved up one position.  An empty line appears at the
+     bottom of the screen.
+
+ FOREGROUND  ( x -- )                                  A
+
+     Change the text window foreground to color x.  x = 0-15
+
+     See ATTRIB
+
+ GET-WINDOW  ( -- x1 y1 x2 y2 )                        A
+
+     Return the current text window boundary expressed as co-ordinates
+     of the default window.  Formerly named WINDOW? .
+
+     See SET-WINDOW
+
+ GET-XY  ( -- x y )                                    A
+
+     Return the current cursor position relative to the current text
+     window.  Formerly named AT-XY? .
+
+     See AT-XY
+
+ INSERT-LINE  ( -- )                                   A
+
+     Insert an empty line at the current cursor position.  All
+     subsequent lines in the text window are moved down one position.
+     The bottom line is lost.
+
+ INVERSE  ( -- )                                       A
+
+     Begin 'inverse' video mode.
+
+     See NORMAL COLOR-TABLE
+
+ MS   ( u -- )                                         A 94
+
+     Delay u milliseconds.  Uses Timer 0 and performs a PAUSE each 4mS.
+
+     Note: MS is a DEFERed word.
+
+     See /MS
+
+ NORMAL  ( -- )                                        A
+
+     Begin 'normal' video mode.  Used by QUIT and BYE .
+
+     See BOLD COLOR-TABLE
+
+ PAGE  ( -- )                                          A 94
+
+     For the console, clear the text screen window and place the cursor
+     at the upper left; otherwise output a formfeed character (0C hex).
+     In DX-Forth, PAGE is equivalent to: 12 EMIT
+
+     See CONSOLE PRINTER
+
+ SET-WINDOW  ( x1 y1 x2 y2 -- )                        A
+
+     Define a text window with an upper-left corner x1 y1 and lower-
+     right corner x2 y2.  Formerly named WINDOW .
+
+     See GET-WINDOW
+
+ SOUND  ( u1 u2 -- )                                   A
+
+     Generate a tone with a frequency of u1 hertz for a duration of
+     u2 milliseconds.  If u1 is less than 19 then only a delay of the
+     specified duration results.  Performs a PAUSE each 4mS.  Uses
+     Timer 2.
+
+     Note: SOUND is a DEFERed word.
+
+ TICKS  ( -- d )                                       A
+
+     Return time-of-day (TOD) i.e. the number of BIOS timer ticks
+     since midnight (0..1573039).  Each tick represents 54.9254 mS.
+
+ WAIT-TICK  ( -- )                                     A
+
+     Wait until the next BIOS timer tick.  Typically used to
+     synchronize program execution to the BIOS tick timer.
+
+     See TICKS
+
+
+11. Miscellaneous
+-----------------
+
+ #USER  ( -- +n )                                      S
+
+     A VALUE returning the number of bytes in the USER area reserved by
+     the forth system.  #USER marks the offset at which applications
+     may begin defining USER variables.
+
+     See USER
+
+ 'NEXT  ( -- addr )                                    A
+
+     Return the address of the centralized NEXT routine - the forth
+     "address interpreter".
+
+     Note: In DX-Forth for DOS, most code words use an in-line NEXT
+     for speed.
+
+ 'SOURCE  ( -- a-addr )                                S
+
+     A double variable containing the current parameters for SOURCE.
+     'SOURCE 2@ is the equivalent of SOURCE.
+
+ (EXIT)  ( -- )                                        A
+
+     Note: As of DX-Forth 4.30 this word has been renamed to EXIT.
+
+ -->  ( -- )                                           I S 83 FIG
+
+     Continue interpretation on the next sequential block.  May be
+     used within a colon definition that crosses a block boundary.
+
+ -ALLOT  ( u -- )                                      A
+
+     If u is greater than zero, release u address units of data space.
+     If u is zero, leave the data-space pointer unchanged.  No memory
+     checking is performed.  -ALLOT may be used within turnkey
+     applications.
+
+     See ALLOT
+
+ @EXECUTE  ( i*x a-addr -- i*y )                       A
+
+     Execute xt located at address a-addr.  If xt is zero then no
+     action is performed.  Other stack effects are due to the word
+     executed.
+
+     Named PERFORM in some Forth implementations.
+
+ ABORT  ( i*x -- ) ( R: j*x -- )                       A 94
+
+     Empty the data stack and perform the function of QUIT which
+     includes emptying the return stack.  No message is displayed.
+     For turnkey applications perform  1 RETURN .
+
+     In DX-Forth ABORT performs -1 THROW .
+
+     See QUIT
+
+ ABORT"  ( "ccc<">" -- )                               I S 94
+     ( i*x flag -- ) ( R: j*x -- ) run-time            A
+
+     If flag is non-zero display the character string delimited by '"'
+     and perform the function of ABORT.
+
+     In DX-Forth ABORT" performs -2 THROW and is state-smart.
+
+ ADDR  ( "name" -- a-addr )                            I S
+
+     "address of".  Return the data field address of the word "name".
+
+     An ambiguous condition exists if "name" was not created by VALUE
+     DEFER CREATE VARIABLE 2VARIABLE CONSTANT 2CONSTANT USER VOCABULARY
+     and other functions as may be specified.
+
+     Named &OF or & in some Forth implementations.
+
+     ADDR is state-smart.
+
+ AKA  ( "oldname" "newname" -- )                       S
+
+     "Also Known As".  Create an alias name "newname" for existing word
+     "oldname".  If oldname was immediate then newname will be
+     immediate.
+
+     Note: In DX-Forth aliases consume only header space, and the xt of
+     an alias is the same as the xt of the original word.  The function
+     appears in other Forth implementations albeit with different names
+     and usage e.g. SYNONYM ALIAS .
+
+ ALLOT  ( u -- )                                       A
+
+     If u is greater than zero, reserve u address units of data space.
+     space.  If u is zero, leave the data-space pointer unchanged.  An
+     error occurs if insufficient data space is available.  ALLOT may
+     be used within turnkey applications.
+
+     Note: Forth-94 permits ALLOT to use signed values.  As of DX-Forth
+     for DOS v4.03 only unsigned values (0 to 65535) may be used with
+     ALLOT.  Releasing data space is now done with -ALLOT.  This change
+     was necessary to permit robust memory checking within ALLOT.
+     Applications requiring Forth-94 behaviour may redefine:
+
+       : ALLOT ( n -- )  NEGATE -ALLOT ;
+
+     however no memory checking will be performed.
+
+     See -ALLOT UNUSED
+
+ BETWEEN  ( n1|u1 n2|u2 n3|u3 -- flag )                A
+
+     Perform a comparison of a test value n1|u1 with a lower limit
+     n2|u2 and an upper limit n3|u3, returning true if either (n2|u2
+     <= n3|u3 and (n2|u2 <= n1|u1 and n1|u1 <= n3|u3)) or (n2|u2 >
+     n3|u3 and (n2|u2 < n1|u1 or n1|u1 < n3|u3)) is true, returning
+     false otherwise.  An ambiguous condition exists if n1|u1, n2|u2,
+     and n3|u3 are not all the same type.
+
+     This is similar to WITHIN with the exception that the limits are
+     inclusive.
+
+     See WITHIN
+
+ BIOS-IO  ( -- )                                       A
+
+     Set console output and keyboard input to use BIOS calls.  BIOS-IO
+     provides color and window support without the need for ANSI.SYS.
+     BIOS-IO is the default mode and is reset when an error occurs and
+     QUIT is executed.
+
+     See DOS-IO
+
+ BOUNDS  ( addr1 u -- addr1+u addr1 )                  A
+
+     Convert the memory specified by addr1 u to start/end addresses
+     suitable for DO LOOP.
+
+ BUILD  ( xt "name" -- )                               S
+
+     Skip leading space delimiters.  Parse name delimited by a space.
+     Create a definition for name with the execution semantics specified
+     by xt.  When name is executed name's data field address is placed
+     on the data stack and execution proceeds according to the semantics
+     given by xt.
+
+     BUILD provides an alternative to CREATE ... DOES> .  Typical use:
+
+         SYSTEM
+         : CONSTANT  ['] @  BUILD , ;
+         APPLICATION
+
+     BUILD may be used outside a definition e.g.
+
+         \ return string representing end-of-line sequence
+
+         ' COUNT BUILD EOL ( -- c-addr u ) 2 C, $0D C, $0A C,
+
+         \ print a number in alternate radix
+         \ adapted from a posting by "Bee" on c.l.f.
+
+         :NONAME ( a-addr -- )
+           BASE @ >R C@ BASE ! U. R> BASE ! ; ( xt)
+
+         ( xt) DUP BUILD B. ( u -- )  2 C,
+               DUP BUILD O. ( u -- )  8 C,
+                   BUILD H. ( u -- ) 16 C,
+
+         \ interpret a number in an alternate radix
+
+         :NONAME ( "number" -- x )
+           BASE @ >R  C@ BASE !  TOKEN NUMBER?
+           R> BASE !  0= ABORT" bad radix"  DROP
+           STATE @ IF POSTPONE LITERAL THEN ; ( xt)
+
+         ( xt) DUP BUILD D#  10 C, IMMEDIATE
+               DUP BUILD B#   2 C, IMMEDIATE
+                   BUILD H#  16 C, IMMEDIATE
+
+ BYE  ( -- )                                           S 94
+
+     Perform CLOSE-ALL CONSOLE NORMAL then return to DOS with 0 RETURN.
+
+ CASE  ( C: -- mark )                                  I S 94
+
+     Mark the start of a CASE construct.  Used in the form:
+
+          CASE  x1
+            x2  OF ... ENDOF
+            x3  OF ... ENDOF
+            ( x1)
+          ENDCASE
+
+     In DX-Forth CASE is a synonym for COND .
+
+ CATCHER  ( -- a-addr )                                A
+
+     A USER variable containing the last exception handler.  If the
+     contents is zero no more exception frames (installed by CATCH)
+     are present.
+
+ CHAR  ( -- c )                                        S 94
+
+     Parse the next word in the input stream and return the ASCII
+     value of the first character.
+
+ COLD  ( -- )                                          A FIG
+
+     Cold restart the forth environment or turnkey application.
+
+ COMPILE                                               S 83
+
+     COMPILE is obsolete and should not be used directly in
+     applications.  COMPILE is a factor of POSTPONE and is present in
+     the dictionary as a named word for error handling purposes.
+
+ COND  ( C: -- mark )                                  I S
+
+     Mark the start of a COND construct.  Used in the form:
+
+          COND  x1
+            x2  OF ... ELSE
+            x3  OF ... ELSE
+            ( x1)
+          THENS
+
+          COND  x1
+            x2 EQUAL  x3 x4 RANGE  WHEN ... ELSE
+            ( x1)
+
+     See THENS "Miser's CASE" CASE
+
+ CONSTANT ( x "name" -- )                              S
+
+     Create a definition for name.  When "name" is later executed
+     the numeric value x is placed on the stack.
+
+     Note: In DX-Forth the parameter field of a CONSTANT may be less
+     than 16 bits.  Applications which read/write directly to the
+     parameter field of a CONSTANT should be modified to use VALUE
+     instead e.g. CONSTANT ... DOES> @  should be replaced with
+     VALUE ... DOES> @ .
+
+ DEFER  ( "name" -- )                                  S
+
+     Creates a deferred word whose action word may be subsequently
+     altered using the sequence: ' ccc IS name
+
+     Deferred words are used to create forward references that will be
+     resolved later.  A run-time error occurs if an attempt is made to
+     execute an uninitiated deferred word.
+
+     Note: The current action of a deferred word may be obtained
+     using
+
+       ' >BODY @  ( "name" -- xt )  or
+       ADDR @     ( "name" -- xt )
+
+     See IS
+
+ DOS-IO  ( -- )                                        A
+
+     Set console output and keyboard input to use DOS calls.  May be
+     used to support redirection, screen pausing and control-C/Break in
+     applications.
+
+     Note: Color and windowing functions do not function in DOS-IO mode.
+     Control-C/Break keys are not trapped and will cause an immediate
+     exit to DOS.
+
+     See BIOS-IO
+
+ DXFORTH  ( -- minor major )                           A
+
+     Return the DX-Forth version number.
+
+ END  ( -- ) ( C: orig -- )                            I S
+
+     Mark the end of an IF or other conditional that leaves an orig
+     on the control stack.  At run-time exit the current definition.
+     Equivalent to the sequence  EXIT THEN .
+
+     Example:
+
+     IF ... EXIT THEN
+
+     becomes
+
+     IF ... END
+
+ ENDCASE  ( x -- )                                     I S 94
+
+     Mark the end of a CASE construct.  Discard x.  In DX-FORTH ENDCASE
+     is equivalent to DROP THENS .
+
+     See CASE OF ENDOF THENS
+
+ ENDOF  ( -- )                                         I S 94
+
+     Mark the end of an OF ENDOF pair.  In DX-FORTH ENDOF is a synonym
+     for ELSE .
+
+     See CASE OF ENDCASE
+
+ EVALUATE  ( c-addr u -- )                             S 94
+
+     Save the current input source specification.  Make the string
+     described by c-addr u both the input source and input buffer,
+     set >IN to zero, and interpret.  When the parse area is empty,
+     restore the prior input source specification.
+
+ EXIT ( -- )                                           A 94
+
+     Exit the current colon definition and return control to the
+     calling definition.
+
+ FDB  ( -- a-addr )                                    S
+
+     Get the address of the next free file descriptor block.  If no more
+     free descriptors exist the function aborts with a "too many files"
+     error message.
+
+     Note: FDB is used by the system to load screen/text source-files
+     and is not normally an end-user function.
+
+ I'  ( -- x ) ( R: loop-sys -- loop-sys )              A
+
+     Copy the current (innermost) loop limit to the data stack.
+
+ INTERPRET  ( -- )                                     S FIG
+
+     Successively interpret forth text from the input stream until
+     exhausted, compiling or executing depending upon STATE.  If an
+     error occurs the process aborts with a message.
+
+     The interpreter recognizes the numeric prefixes # $ % for decimal,
+     hexadecimal and binary respectively.
+
+ IS  ( xt "name" -- )                                  I S
+
+     Used in the form:
+              ' ccc IS name
+     where "name" is a deferred word and ccc defines the new behaviour.
+
+     See DEFER
+
+ NHOLD  ( +n char -- )                                 A
+
+     Perform HOLD n times.  An ambiguous condition exists if n < 0.
+
+     See SHOLD
+
+ NOOP  ( -- )                                          A
+
+     No operation.  Typically used to set a null action e.g.
+
+              ' NOOP IS XXX
+
+     where XXX is a DEFERed word.
+
+ OF  ( x1 x2 -- )                                      I S 94
+
+     If x1 = x2, discard both values and perform the sequence between OF
+     and ENDOF.  Execution then continues after ENDCASE .  If x1 <> x2,
+     discard x2 and continue after the corresponding ENDOF.
+
+     Note: In DX-FORTH OF is functionally equivalent to the sequence
+     OVER = IF DROP  and thus may be used outside a CASE statement e.g.
+
+                : EOL? ( char -- 2|1|0 )
+                  $0D OF  2  END
+                  $0A OF  1  END
+                  DROP 0 ;
+
+     See CASE ENDOF ENDCASE COND THENS
+
+ PAUSE  ( -- )                                         A
+
+     Provides support for multitasking applications.  When the
+     multitasker is loaded and enabled, PAUSE passes control to the next
+     task.  Refer to the multitasking documentation for further details.
+
+     Note: PAUSE is automatically executed by KEY? KEY EMIT MS
+
+ QUIT  ( -- ) ( R: i*x -- )                            A 83
+
+     Empty the return stack, make the user input device the input
+     source and enter interpretation state.  No message is displayed
+     and the data stacks are not emptied.  For turnkey applications
+     perform the function  0 RETURN .
+
+     Like ABORT, QUIT may be used to terminate an application at any
+     nesting level.  Unlike ABORT, QUIT in DX-Forth is not considered
+     an error condition and cannot be intercepted with CATCH.
+
+     Note: Prior to DX-Forth 4.2 QUIT was a System word and could not
+     be used to exit turnkey applications.
+
+     See ABORT
+
+ R0  ( -- a-addr )                                     A FIG
+
+     A USER variable that contains the address of the top of the return
+     stack.
+
+ RETURN  ( x -- )                                      A
+
+     Restore initial drive/path then return to DOS with exit code x
+     where x is a value in the range 0 to 255.  Open files are not
+     closed.
+
+     Note: The MS-DOS version automatically restores the initial DOS
+     text colors; however to be effective the cursor must be located on
+     the bottom screen line when RETURN is called.  An alternative is
+     to simply type CLS from the DOS prompt when the application exits.
+
+     See ABORT QUIT BYE
+
+ RP!  ( addr -- )                                      A
+
+     Set the return stack pointer to addr.
+
+ RP@  ( -- addr )                                      A FIG
+
+     Return the address of the current return stack pointer.
+
+ S0  ( -- a-addr )                                     A FIG
+
+     A USER variable that contains the address of the top of the
+     data stack.
+
+ SAVE  ( "filename[.EXE]" -- )                         S
+
+     Save the current forth system image to disk including any new
+     definitions created.
+
+     See TURNKEY TURNKEY-SYSTEM
+
+ SHOLD  ( c-addr u -- )                                A
+
+     Add string c-addr u to the beginning of the pictured numeric
+     output string.
+
+     See NHOLD
+
+ SP!  ( addr -- )                                      A
+
+     Set the data stack pointer to addr.
+
+ SP@  ( -- addr )                                      A FIG
+
+     Return the address of the current data stack pointer.
+
+ THENS  ( C: mark -- )                                 I S
+
+     Resolve a COND/CASE construct.
+
+     Similar to ENDCASE but does not expect the case selector to be on
+     the stack.  Named END-CASE in some Forth implementations.
+
+     See COND "Miser's CASE"
+
+ TO  ( x "name" -- )                                   S 94
+
+     Set the contents of VALUE name to x.
+
+     See VALUE
+
+ TOKEN  ( "name" -- c-addr u )                         S
+
+     Parse a blank-delimited name token from the input stream.  A space,
+     not included in the length, follows the string.
+     Equivalent to: BL WORD COUNT
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+     See WORD
+
+ TURNKEY  ( "bootword" "filename[.EXE]" -- )           S
+
+     Save a standalone application to disk using the specified filename.
+     When the application is subsequently run, execution begins with
+     bootword and ends with  0 RETURN  if successful, or  1 RETURN  if
+     ABORT ABORT" or an uncaught error was encountered.
+
+     Note: System dictionary and word headers are not saved by TURNKEY
+     and therefore unavailable to the saved application.
+
+     See SAVE TURNKEY-SYSTEM
+
+ TURNKEY-SYSTEM  ( "bootword" "filename[.EXE]" -- )    S
+
+     Save a standalone application including the System dictionary and
+     heads to disk using the specified filename.  When the application
+     is subsequently run, execution begins with bootword and ends with
+     0 RETURN  if successful, or  1 RETURN  if ABORT ABORT" or an
+     uncaught error was encountered.
+
+     TURNKEY-SYSTEM is used for applications that require access to
+     words in the System dictionary.
+
+     See SAVE TURNKEY
+
+ UNNEST  ( -- ) ( R: nest-sys -- )                     A
+
+    Discard the calling definition specified by nest-sys.  Before
+    exiting the current definition, a program shall remove any
+    parameters the calling definition had placed on the return stack.
+    An ambiguous condition exists if the current or calling definition
+    uses locals.
+
+ UNUSED  ( -- u )                                      A 94
+
+     Return the amount of data space in bytes remaining in the region
+     addressed by HERE.  The calculation includes a 255 byte safety
+     margin.
+
+     See APPLICATION SYSTEM
+
+ UP  ( -- a-addr )                                     A
+
+     A VARIABLE that contains the base address of the current USER
+     area.
+
+ USER  ( +n "name" -- )                                S FIG
+
+     A defining word used in the form:
+              +n USER name
+     which creates a USER variable "name".  +n is the offset within
+     the user area where the value for "name" is stored.  Executing
+     "name" leaves the address of the variable in the user area.
+
+     USER variables with offsets #USER and higher are available for
+     use by applications.
+
+     Note: Offsets numbers are subject to change.  When an offset
+     is required by an application, it should be determined at
+     compile-time e.g.  [ BASE UP @ - ] LITERAL  will return the
+     offset for BASE .
+
+     See #USER
+
+ VALUE ( x "name" -- )                                 S 94
+
+     As for CONSTANT but with the exception the data field of a VALUE
+     is always 1 cell and the contents may be changed using TO.
+
+     See CONSTANT
+
+ WITHIN  ( x1 x2 x3 -- flag )                          A 94
+
+     Return true if x3 lies within the range x1 to x2-1, otherwise
+     return false.  x may be signed or unsigned.
+
+     See BETWEEN
+
+ WORD  ( char "ccc" -- c-addr )                        S 83
+
+     Parse a string from the input stream delimited by char leaving a
+     counted string at c-addr.  Leading instances of char are skipped.
+     A space, not included in the length, follows the string.
+
+     Note: The returned string resides in a transient region which may
+     be overwritten by subsequent operations.
+
+     See TOKEN
+
+ Y/N  ( -- flag )                                      A
+
+     Display '(y/n) N' and wait for a single console key.  Return
+     true if the 'Y' or 'y' key was pressed or false otherwise.
+
+ [CHAR]  ( -- c )                                      I S 94
+
+     Parse the next word in the input stream and compile the ASCII
+     value of the first character as a literal.
+
+ [DEFINED]  ( "name" -- flag )                         I S
+
+     Parse the next word in the input stream.  Return a true flag if
+     word was defined in the dictionary.
+
+ [IF]  [ELSE]  [THEN]                                  I S 94
+
+     These are the equivalents of IF ELSE THEN but may be used outside
+     a definition.
+
+ [UNDEFINED]  ( "name" -- flag )                       I S
+
+     Parse the next word in the input stream.  Return a true flag if
+     word was not defined in the dictionary.
+
+ \  ( -- )                                             I S 94
+
+     Skip the rest of the line and resume interpretation at the
+     beginning of the next line.
+
+ \\  ( -- )                                            I S
+
+     Parse and discard the remainder of the parse area.  If the source
+     is a text-file the remainder of the file is discarded.
+
+
+12. Floating Point
+------------------
+By default DX-Forth uses single precision software floating point.
+A real number occupies two cells (4 bytes) with a maximum precision
+of 7 digits and a dynamic range of 5E-39 to 1E38.
+
+The forth interpreter recognizes a number as floating point if it is
+in decimal mode and contains an exponent identifier 'E' e.g.  1.0E
+3.141952E  1e-12
+
+DX-Forth for DOS v2 and higher use a separate stack for floating point
+operations.  If a common stack floating point model is desired (as used
+in DX-Forth 1.0), it may be achieved by changing the 'fstack' equate
+to 'no' in the DX-Forth source code and re-assembling.  If you have
+Borland TASM simply execute MAKEF.BAT and it will generate both models
+without any need to alter the source.
+
+Notes:
+
+- In the common stack model, variables FS0 and FSP are dummies.  Their
+  contents are initialized as for S0 but are otherwise unused.
+
+- Available output modes
+
+  Compact   Formatted   String
+  -------   ---------   ------
+  F.        F.R         (F.)      Floating
+  FS.       FS.R        (FS.)     Scientific
+  FE.       FE.R        (FE.)     Engineering
+  G.        G.R         (G.)      General
+
+  In compact (floating-point) mode non-essential zeros and signs are
+  removed and the number of significant digits output is limited to a
+  maximum of PRECISION digits.  In formatted (fixed-point) mode the
+  number of places output after the decimal point is specified by the
+  user and PRECISION has no effect.  Output words that specify the
+  number of places after the decimal point may use the value -1 to
+  force compact mode.  F. FS. FE. G. always use compact mode.
+
+  The character string returned by (F.) (FS.) (FE.) (G.) resides in the
+  pictured-numeric output area.  An ambiguous condition exists if BASE
+  is not decimal or the character string exceeds the pictured-numeric
+  output area.
+
+ (F.)  ( r n -- c-addr u )                             A
+
+     Convert real number r to string c-addr u in fixed-point notation
+     with n places to the right of the decimal point.  If n = -1, non-
+     essential zeros and signs are removed.  Primitive used by F. F.R
+
+ (FE.)  ( r n -- c-addr u )                            A
+
+     Convert real number r to string c-addr u in engineering notation
+     with n places right of the decimal point.  If n = -1, non-essential
+     zeros and signs are removed.  Primitive used by FE.
+     FE.R
+
+ (FS.)  ( r n -- c-addr u )                            A
+
+     Convert real number r to string c-addr u in scientific notation
+     with n places right of the decimal point.  If n = -1, non-
+     essential zeros and signs are removed.  Primitive used by FS. FS.R
+
+ (G.)  ( r n -- c-addr u )                             A
+
+     Convert real number r to string c-addr u with n places right of
+     the decimal point.  Fixed-point notation is used if the exponent is
+     in the range -4 to 5 otherwise use scientific notation.  If n = -1,
+     non-essential zeros and signs are removed.  Primitive used by G.R G.
+
+ -FP  ( -- a-addr )                                    S
+
+     A MARKER word used to delete the floating-point with FORGET.
+
+     See MARKER CHECKING
+
+ >FLOAT  ( c-addr u -- r true | false )                A 94
+
+     Convert the string c-addr u to a real number.  If successful,
+     return the real number r and true or false otherwise.
+
+     Note: A zero length string or a string with leading blanks will
+     return the real number 0.0E and true.
+
+ D>F  ( d -- r )                                       A 94
+
+     Convert the double number to its real number equivalent.
+
+ F!  ( r f-addr --  )                                  A 94
+
+     Store r at f-addr.
+
+ F*  ( r1 r2 -- r3 )                                   A 94
+
+     Multiply r1 by r2, giving the product r3.
+
+ F**  ( r1 r2 -- r3 )                                  A 94
+
+     Raise r1 to the power r2.
+
+ F+  ( r1 r2 -- r3 )                                   A 94
+
+     Add r1 to r2, giving the sum r3.
+
+ F,  ( r -- )                                          S
+
+     Reserve one floating-point cell of data space and store r in the
+     cell.
+
+ F-  ( r1 r2 -- r3 )                                   A 94
+
+     Subtract r2 from r1, giving the difference r3.
+
+ F.  ( r -- )                                          A
+
+     Display r in floating-point notation followed by a space.
+     Non-essential zeros and signs are removed.
+
+ F.R  ( r n u -- )                                     A
+
+     Display r in fixed-point notation right-justified in a field
+     width u with n places right of the decimal point.  If n = -1,
+     non-essential zeros and signs are removed.
+
+ F/  ( r1 r2 -- r3 )                                   A 94
+
+     Divide r1 by r2, giving the quotient r3.
+
+ F0<  ( r -- flag )                                    A 94
+
+     Return true if r is less than zero, or false otherwise.
+
+ F0=  ( r -- flag )                                    A 94
+
+     Return true if r is equal to zero, or false otherwise.
+
+ F0>  ( r -- flag )                                    A
+
+     Flag is true if r is greater than zero.
+
+ F<  ( r1 r2 -- flag )                                 A 94
+
+     Return true if r1 is less than r2, or false otherwise.
+
+ F>  ( r1 r2 -- flag )                                 A
+
+     Flag is true if r1 is greater than r2.
+
+ F>D  ( r -- d )                                       A 94
+
+     Convert the integer part of r to its double number equivalent.
+
+ F>S  ( r -- n )                                       A
+
+     Convert the integer part of r to its single number equivalent.
+
+ F@  ( f-addr -- r )                                   A 94
+
+     Return the value of the real number stored at f-addr.
+
+ FABS  ( r1 -- r2 )                                    A 94
+
+     Return the absolute value of r1.
+
+ FATAN  ( r1 -- r2 )                                   A 94
+
+     r2 is the principal radian angle whose tangent is r1.
+
+ FCONSTANT  ( r -- ) compilation                       A 94
+            ( -- r ) run-time
+
+     Define a floating point constant having the value r.
+
+ FCOS  ( r1 -- r2 )                                    A 94
+
+     r2 is the cosine of the radian angle r1.
+
+ FDP  ( -- a-addr )                                    A
+
+     A VARIABLE that controls floating decimal point display.  If zero
+     then trailing decimal points are not shown; if non-zero a decimal
+     point is always shown.  Default is FDP ON.
+
+ FDROP  ( r --  )                                      A 94
+
+     Remove r from the stack.
+
+ FDUP  ( r -- r r )                                    A 94
+
+     Duplicate r.
+
+ FE.  ( r -- )                                         A
+
+     Display r in engineering notation followed by a space.  Non-
+     essential zeros and signs are removed.
+
+ FE.R  ( r n u -- )                                    A
+
+     Display r in engineering notation right-justified in a field width
+     u with n places to the right of the decimal point.  If n = -1,
+     non-essential zeros and signs are removed.
+
+ FEXP  ( r1 -- r2 )                                    A 94
+
+     Raise e to the power r1, giving r2.
+
+ FLITERAL  ( r -- ) compilation                        A 94
+           ( -- r ) run-time
+
+     Compile r into the dictionary.  When later executed r is left on
+     the stack.
+
+ FLN  ( r1 -- r2 )                                     A 94
+
+     r2 is the natural logarithm of r1.
+
+ FLOOR  ( r1 -- r2 )                                   A 94
+
+     Round r1 to an integral value using the "round toward negative
+     infinity" rule, giving r2.
+
+ FMAX  ( r1 r2 -- r3 )                                 A 94
+
+     r3 is the maximum of r1 and r2.
+
+ FMIN  ( r1 r2 -- r3 )                                 A 94
+
+     r3 is the minimum of r1 and r2.
+
+ FNEGATE  ( r1 -- r2 )                                 A 94
+
+     Negate r1, giving r2.
+
+ FOVER  ( r1 r2 -- r1 r2 r1 )                          A 94
+
+     Place a copy of r1 on top of the stack.
+
+ FPICK  ( ru ... r0 u -- ru ... r0 ru )                A
+
+     Remove u.  Copy ru to the top of the stack.
+
+ FRANDOM  ( r1 -- r2 )                                 A
+
+     If r1 is a positive non-zero number, return a pseudo-random number
+     r2 uniformly distributed in the range 0.0E to (but not including)
+     1.0E.  If r1 is zero, return the last random number generated.  If
+     r1 is negative, r1 is used to re-seed the random number generator.
+
+ FROT  ( r1 r2 r3 -- r2 r3 r1 )                        A 94
+
+     Rotate r1 to the top of the stack.
+
+ FROUND  ( r1 -- r2 )                                  A 94
+
+     Round r1 to an integral value using the "round to nearest" rule,
+     giving r2.
+
+ FS.  ( r -- )                                         A
+
+     Display r in scientific notation followed by a space.  Non-
+     essential zeros and signs are removed.
+
+ FS.R  ( r n u -- )                                    A
+
+     Display r in scientific notation right-justified in a field width
+     u with n places to the right of the decimal point.  If n = -1,
+     non-essential zeros and signs are removed.
+
+ FS0  ( -- a-addr )                                    A
+
+     A USER variable that contains the address of the top of the
+     separate floating point stack.
+
+     Note: Has no function in the common stack floating point model
+
+ FSIN  ( r1 -- r2 )                                    A 94
+
+     r2 is the sine of the radian angle r1.
+
+ FSP  ( -- a-addr )                                    A
+
+     A VARIABLE that returns the address of the current separate
+     floating point stack pointer.
+
+     Note: Has no function in the common stack model
+
+ FSQRT  ( r1 -- r2 )                                   A 94
+
+     r2 is the square root of r1.
+
+ FSWAP  ( r1 r2 -- r2 r1 )                             A 94
+
+     Exchange the top two floating point numbers.
+
+ FVARIABLE  ( -- ) compilation                         A 94
+            ( -- f-addr ) run-time
+
+     Define a floating point variable.
+
+ G.  ( r -- )                                          A
+
+     Display real number r in floating-point notation followed by a
+     space.  If the exponent is outside the range -4 to 5 then
+     scientific notation is used.  Non-essential zeros and signs are
+     removed.
+
+ G.R  ( r n u -- )                                     A
+
+     Display real number r right-justified in a field width u with n
+     places right of the decimal point.  Fixed-point notation is used
+     if the exponent is in the range -4 to 5 otherwise use scientific
+     notation.  If n = -1, non-essential zeros and signs are removed.
+
+ MAX-PRECISION  ( -- u )                               A
+
+     A CONSTANT returning the implementation-defined maximum PRECISION.
+
+     See SET-PRECISION
+
+ PI  ( -- r )                                          A
+
+     An FCONSTANT that returns the value for "pi" (3.141593..)
+
+ PRECISION  ( -- u )                                   A 94
+
+     Return the maximum number of significant digits currently used by
+     F. FS. FE. G. and in compact output mode F.R FS.R FE.R G.R (F.)
+     (FS.) (FE.) (G.) .
+
+ REPRESENT  ( r c-addr n1 -- n2 flag1 flag2 )          A 94
+
+     DX-Forth uses an enhanced REPRESENT.  It follows the Forth-94
+     definition with the following extensions:
+
+     - if n1 is zero the entire significand of r is rounded to one or
+       zero following the system's rounding rule; if n1 is negative
+       then r is rounded to zero.
+     - the buffer size allocated at c-addr shall be the greater of n1
+       or MAX-PRECISION.
+
+     See http://dxforth.netbay.com.au/Represent_33.txt
+
+ S>F  ( n -- r )                                       A
+
+     Convert the single number to its real number equivalent.
+
+ SET-PRECISION  ( u -- )                               A 94
+
+     Set the maximum number of significant digits used by F. FS. FE.
+     G. and in compact output mode F.R FS.R FE.R G.R (F.) (FE.) (FS.)
+     (G.) .  u is limited to MAX-PRECISION.
+
+
+13. Compiler Security
+---------------------
+
+ !CSP  ( -- )                                          S FIG
+
+     Save the current data stack position.  Equivalent to: SP@ CSP !
+
+     See ?CSP
+
+ ?BAL  ( flag -- )                                     S
+
+     Issue an error message 'definition unbalanced' and abort if flag
+     and CHECKING are not zero.
+
+     See CHECKING
+
+ ?CSP  ( -- )                                          S FIG
+
+     Issue an error message 'definition unbalanced' and abort if the
+     current data stack position does not match the value saved by !CSP
+     and CHECKING is not zero.
+
+     See CHECKING
+
+ ?COMP  ( -- )                                         S FIG
+
+     Issue an error message 'compilation only' and abort if not
+     compiling.
+
+ ?EXEC  ( -- )                                         S FIG
+
+     Issue an error message 'execution only' and abort if not
+     executing.
+
+ ?STACK  ( -- )                                        S FIG
+
+     Issue an error message and abort if a stack underflow or overflow
+     occurs.  Data, return and floating point stack (if present) are
+     tested.
+
+     Note: A non-System version of ?STACK is provided in MISC.SCR for
+     turnkey applications requiring run-time stack checking.
+
+ BAL  ( -- a-addr )                                    S
+
+     A VARIABLE containing the current control structure balance level.
+
+     Note: This replaces +BAL -BAL which incremented/decremented the
+     value in BAL respectively.
+
+ CHECKING  ( -- a-addr )                               S
+
+     A VARIABLE that controls compiler security - including control
+     structure balance, data stack level and protected dictionary.
+     If the contents are zero, checking is disabled.  Default is
+     CHECKING ON.
+
+     See ?BAL ?CSP BEHEAD FORGET
+
+ CSP  ( -- a-addr )                                    S FIG
+
+     A 2VARIABLE . The first cell contains the current data stack
+     pointer saved by !CSP .  The second cell (not FIG compatible)
+     contains the current control-flow stack base address.
+
+     See !CSP
+
+ SMUDGE  ( -- )                                        S FIG
+
+     Toggle the 'smudge' bit in the header of the last defined word.
+     If the smudge bit is set, the definition will not be found during
+     a dictionary search.
+
+
+14. Control Flow
+----------------
+
+In DX-Forth the control-flow stack is implemented on the data stack.
+Extension words CS-DROP CS-PUSH CS-POP CS-MARK CS-TEST are available
+when the 'cfs' equate in the kernel source is enabled.  See MISER.SCR
+for example of use.
+
+ <MARK  ( C: -- dest )                                 S 83
+
+     This function is not provided.  In DX-Forth use  POSTPONE BEGIN
+     instead.
+
+ <RESOLVE  ( C: dest -- )                              S 83
+
+     Compile a backward branch address in the dictionary using the
+     location left by BEGIN .  Formerly named BACK .
+
+ >MARK  ( C: -- orig )                                 S 83
+
+     Reserve space in the dictionary for a forward branch address
+     to be later resolved by THEN .  Formerly named FORWARD .
+
+ >RESOLVE  ( C: orig -- )                              S 83
+
+     This function is not provided.  In DX-Forth use  POSTPONE THEN
+     instead.
+
+ AHEAD  ( C: -- orig )                                 S 94
+
+     Put the location of a new unresolved forward reference orig
+     onto the control flow stack.  Similar to IF but compiles an
+     unconditional forward branch.
+
+ CS-PICK  ( C: xu..x0 -- xu..x0 xu ) ( S: u -- )       S 94
+
+     Remove u.  Place a copy of item xu on top of the control-flow
+     stack.
+
+ CS-ROLL  ( C: xu..x0 -- xu-1..x0 xu ) ( S: u --  )    S 94
+
+     Remove u.  Rotate item xu to the top of the control-flow stack.
+
+ CS-DROP  ( C: x -- )                                  S
+
+     Remove the top item from the control-flow stack.
+
+ CS-PUSH  ( C: xu..x1 x0 -- x0 xu..x1 )                S
+
+     Rotate items on the control-flow stack such that the top item
+     becomes the bottom.  An ambiguous condition exists if the control-
+     flow stack is empty before CS-PUSH is executed.
+
+ CS-POP  ( C: xu xu-1..x0 -- xu-1..x0 xu )             S
+
+     Rotate items on the control-flow stack such that the bottom item
+     becomes the top.  An ambiguous condition exists if the control-
+     flow stack is empty before CS-POP is executed.
+
+ CS-MARK  ( C: -- x )                                  S
+
+     Place a marker on the control-flow stack.  A marker occupies the
+     same width as an orig|dest but is distinguishable using CS-TEST.
+
+ CS-TEST  ( C: x -- x ) ( S: -- flag )                 S
+
+     Return a true flag if x is an orig|dest, or false if a marker.
+     x is not altered or removed.
+
+     If the control-flow stack is implemented using the data stack,
+     flag shall be the topmost item on the data stack.
+

@@ -1,0 +1,24 @@
+DX-Forth 4 - Forth compiler for MS-DOS
+--------------------------------------
+
+DX-Forth is a Forth language compiler and development system
+for MS-DOS 2.x and compatible disk operating systems.  It is
+intended to be a complete, easy to use, programming tool for
+the creation of DOS applications.
+
+Features include:
+
+ - ANS FORTH Standard (FORTH-94) *
+ - Fast direct-threaded code
+ - Generate turnkey applications without compiler overhead
+ - Fast floating point and trigonometric functions
+ - Forth-94 file I/O
+ - DOSLIB application library
+ - Multitasking
+ - ANS locals
+ - Overlays for large applications
+ - 8086/87 Forth assembler for CODE words
+ - Full source code included
+
+* DX-FORTH 4 generally follows the FORTH-94 Standard but
+  does not seek to be strictly compliant.

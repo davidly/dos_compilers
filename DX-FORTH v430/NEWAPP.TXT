@@ -1,0 +1,160 @@
+ 
+                         NEWAPP and DOSLIB
+
+                         *** IMPORTANT ***
+
+NEWAPP.SCR and DOSLIB.SCR are subject to change (really!)  There is
+no guarantee - or intent - that future versions will remain backward
+compatible.  When backing up or distributing application source code
+that uses DOSLIB.SCR, it is important to include a copy as later
+versions of DOSLIB may no longer be compatible.
+
+                           Introduction
+
+NEWAPP is a skeletal program that allows users to quickly develop a
+DOS application.  It provides often needed tasks including error
+handling, command-line parsing, file operations, buffered I/O, help
+screen, number and string functions.
+
+NEWAPP comprises two parts:
+
+  NEWAPP.SCR   skeletal main program
+  DOSLIB.SCR   function library
+
+NEWAPP is supplied as a functioning program which may be turnkeyed.
+Styled as a typical DOS command-line application it demonstrates
+how the various tasks are integrated to form a functioning program.
+Making NEWAPP perform a useful task can be as easy as adding one
+line.  In this instance it is line 6 of the definition (RUN) which
+turns NEWAPP into a simple filecopy utility.
+
+DOSLIB is a library of Forth and DOS functions in source form.
+While the primary role is support for NEWAPP, DOSLIB may be used
+by any application.  DOSLIB is organized as named modules.
+1 FLOAD DOSLIB  causes the names of all the modules contained in
+DOSLIB to be loaded into the dictionary.  Executing the name of a
+module causes the corresponding code to be loaded into memory.
+NEWAPP automatically loads DOSLIB and a default set of modules.
+
+New users are encouraged to examine and understand how NEWAPP works
+before attempting to create their own application.  The following
+notes should help with some of the less obvious aspects.  Unless
+otherwise stated all screen references refer to NEWAPP.SCR.
+
+First, an explanation of the function +IS which is used by NEWAPP.
++IS is similar to IS but instead of replacing the existing behaviour
+of a DEFERed word, it chains in a new action.  When the deferred word
+is eventually executed, all actions in the chain will be performed
+beginning with the most recently added.
+
+1. Setting the options
+
+   Screen 1 defines the title of the program, version, date and name
+   for the turnkey executable.
+
+   The programmer may optionally specify the upper limit of memory for
+   turnkey applications (Screen 1 line 10).  This is useful for
+   environments where memory is limited.  The calculation includes 256
+   bytes for PAD and data stack, plus any RESERVE bytes tallied at
+   compile-time.  Typically RESERVE holds the total number of bytes the
+   program will ALLOT or otherwise need at run-time.  By default LIMIT
+   is set to the maximum available memory i.e. the compiler's top of
+   memory address (usually $FFF0 for MS-DOS or CCP/BDOS base for CP/M).
+
+   Screen 2 loads the remainder of the application.  It also defines
+   and sets the action for several deferred words which are explained
+   below.
+
+   ONSTART is a deferred word.  Its function is to perform any system
+   initialization that may be required before the application begins.
+   Typically these will be "run once" tasks such as alloting buffers
+   or initializing memory management functions.  Actions are added to
+   ONSTART via +IS.
+
+   SET-IO is a deferred word that sets the console input/output method.
+   By default SET-IO is set to BIOS-IO.  Users needing DOS console I/O
+   redirection can do so either by selectively surrounding words with
+   DOS-IO ... SET-IO  pairs or by uncommenting the line:
+   ' DOS-IO IS SET-IO.
+
+   The DOSLIB disk read/write routines include a keyboard test.  If
+   ESC CTRL-C or CTRL-BREAK keys are detected, the user is given an
+   opportunity to abort the program.  The feature may be disabled by
+   commenting out the line: ' (?BREAK) IS ?BREAK.
+
+   ONERROR is the application's top-level error handler.  It intercepts
+   exceptions before the system's error handler deals with it.  ONERROR
+   permits the application to perform any necessary 'clean-up' tasks
+   before aborting.
+
+   ONERROR is a deferred word whose action is modified with +IS.  An
+   example is the DOSLIB 'files' module which extends ONERROR to
+   automatically close the default files should an error occur.
+
+   Note: If a function performed by ONERROR itself generates an exception
+   then the original exception that caused ONERROR to execute is likely
+   to be masked.
+
+2. Loading DOSLIB modules
+
+   Screen 3 of NEWAPP.SCR initializes the DOSLIB library then proceeds
+   to load the named modules.  This screen contains the support modules
+   typically needed by NEWAPP based applications. If your application
+   does not require a particular module and you wish to conserve space,
+   then you may comment out the line on which the module's name appears.
+
+3. Default files
+
+   The default files module simplifies much of the drudgery associated
+   with file handling e.g. display of filenames when opening, overwrite
+   checking, error messages when reading or writing files etc.
+
+   One input and one output file are supported which is sufficient for
+   most applications.  The usual file read/write functions are provided
+   including file position and reposition.  Output file overwrite
+   checking is enabled by default.  It may be turned off by uncommenting
+   the line:  WRTCHK OFF  on screen 2.
+
+   When an application aborts as a result of a fatal error, the default
+   files will be automatically flushed and closed.  If it is desired to
+   delete the default output file, it can be done by uncommenting the
+   line on screen 2:  ' DELOUTFILE +IS ONERROR
+
+   FLUSHWRITE is an optional function that works similarly to FLUSH-FILE.
+   Data written to the default output file is forced to disk updating
+   the directory.  Buffered output, if loaded, is also flushed.
+
+4. Buffered files
+
+   This is an optional extension to the default files and allows reading
+   and writing one character at a time.  For speed buffers are used to
+   hold the data.  Buffer refill and flushing is automatic and requires
+   no user intervention.  The default buffer size is 512 bytes and is
+   given by /INBUF /OUTBUF respectively.  Normally the buffers are
+   allocated at compile-time but this can be changed to run-time if
+   desired.
+
+   Example: Allocate the buffered output file at run-time and change
+   the buffer size to 1024 bytes.
+
+   Make the following changes to the copy of NEWAPP.SCR that will be
+   your application.
+
+   Step 1. Disable compile-time buffer allocation by setting /OUTFILE
+   to zero prior to executing _Bufoutfile.
+
+     ( Screen 3 Line 13)
+     0 to /OUTFILE  _Bufoutfile      \ buffered output file
+      
+   Step 2. Initialize output buffer at run-time by creating a word to
+   perform the task and appending it to deferred word ONSTART.
+
+     ( Screen 2 Line 13)
+     :noname ( -- )  #1024 to /OUTFILE  here to OUTFILE
+     /OUTFILE allot  resetoutbuf ; +is ONSTART
+
+   Note: Applications may apply this technique to any large buffer used
+   by the program.  It is useful for keeping turnkey executables small
+   and/or allocating buffers greater than would fit in memory at compile-
+   time.
+
