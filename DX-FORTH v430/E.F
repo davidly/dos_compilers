@@ -30,5 +30,5 @@ VARIABLE X                       ( var x : integer )
         X ?                      ( Write{ x }; )
     REPEAT
     CR                           ( writeln; )
-    ." done"                     ( writeln{ 'done' } )
+    ." done" CR                  ( writeln{ 'done' } )
     ;                            ( end. )

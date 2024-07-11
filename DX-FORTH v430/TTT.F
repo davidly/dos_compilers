@@ -1,11 +1,23 @@
-( prove you can't win at tic-tac-toe if the opponent is competent. expected visited board positions: 6493 )
+( Prove you can't win at tic-tac-toe if the opponent is competent. )
+( Expected visited board positions: 6493 )
 
+(  board: 0 1 2 )
+(         3 4 5 )
+(         6 7 8 )
+(  notes: )
+(      I tried using a DO loop in MINMAX but apparently "I" isn't preserved on recursion. )
+(      Also, breaking out of the DO loop broke out across recursion stack frames, which won't work. )
+(      That's why I use the "10 boardIndex !" hack to break out of the loop instead. )
+
+( true global variables )
 VARIABLE board 9 ALLOT
 VARIABLE moves
+VARIABLE recursionDepth
+
+( effectively locals in MINMAX )
 VARIABLE alpha
 VARIABLE beta
-VARIABLE recursionDepth
-VARIABLE piecemove
+VARIABLE pieceMove
 VARIABLE val
 VARIABLE boardIndex
 VARIABLE score
@@ -32,6 +44,15 @@ board 7 + CONSTANT B7
 board 8 + CONSTANT B8
 
 : LOOKFORWINNER
+    B4 C@
+    DUP pieceBlank <> IF
+        DUP B0 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+        DUP B1 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
+        DUP B2 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
+        DUP B3 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
+    THEN
+    DROP
+
     B0 C@
     DUP pieceBlank <> IF
         DUP B1 C@ = IF DUP B2 C@ = IF EXIT THEN THEN
@@ -39,26 +60,10 @@ board 8 + CONSTANT B8
     THEN
     DROP
 
-    B1 C@
-    DUP pieceBlank <> IF DUP B4 C@ = IF DUP B7 C@ = IF EXIT THEN THEN THEN
-    DROP
-
-    B2 C@
-    DUP pieceBlank <> IF DUP B5 C@ = IF DUP B8 C@ = IF EXIT THEN THEN THEN
-    DROP
-
-    B3 C@
-    DUP pieceBlank <> IF DUP B4 C@ = IF DUP B5 C@ = IF EXIT THEN THEN THEN
-    DROP
-
-    B6 C@
-    DUP pieceBlank <> IF DUP B7 C@ = IF DUP B8 C@ = IF EXIT THEN THEN THEN
-    DROP
-
-    B4 C@
+    B8 C@
     DUP pieceBlank <> IF
-        DUP B0 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
-        DUP B2 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
+        DUP B2 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
+        DUP B6 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
     THEN
     DROP
 
@@ -83,7 +88,8 @@ board 8 + CONSTANT B8
             pieceX = IF scoreWin ELSE scoreLose THEN
             val !
         ELSE
-            DROP recursionDepth @ 8 = IF scoreTie val ! THEN
+            DROP
+            recursionDepth @ 8 = IF scoreTie val ! THEN
         THEN
     THEN
 
@@ -98,19 +104,22 @@ board 8 + CONSTANT B8
 
         beta !
         alpha !
+        alpha @
+        beta @
         0 boardIndex !
 
         BEGIN boardIndex @ 9 < WHILE
             boardIndex @ board + C@ 0 = IF
                 pieceMove @ board boardIndex @ + C!
-                boardIndex @ piecemove @ val @ alpha @ beta @       \ save locals on stack
+                boardIndex @ pieceMove @ val @
                 1 recursionDepth +!
+
                 alpha @ beta @ RECURSE
+
                 -1 recursionDepth +!
                 score !
-                beta ! alpha ! val ! pieceMove ! boardIndex !       \ restore locals
-
-                pieceBlank  boardIndex @ board + C!
+                beta ! alpha ! val ! pieceMove ! boardIndex !
+                pieceBlank boardIndex @ board + C!
 
                 pieceX pieceMove @ = IF
                     score @ val @ > IF
@@ -134,8 +143,6 @@ board 8 + CONSTANT B8
             THEN
             1 boardIndex +!
         REPEAT
-    ELSE
-        DROP DROP
     THEN
 
     val @
@@ -143,28 +150,28 @@ board 8 + CONSTANT B8
 
 : RUNIT  ( move -- )
     pieceX
-    OVER board + C!               \ make the move
+    OVER board + C!       ( make the move )
     0 recursionDepth !
     scoreMin scoreMax MINMAX
 
     scoreTie <> IF ." there's a bug somewhere" THEN
+    DROP DROP             ( remove alpha and beta )
 
     pieceBlank
-    OVER board + C!               \ restore the board to the original state
-    DROP
+    SWAP board + C!       ( restore the board to the original state )
     ;
 
 : TTT
+    board 9 pieceBlank FILL
 
-    board 9 pieceBlank FILL           ( for i := 0 to 8 do board[i] := pieceBlank; )
-
+    ( all other first moves are reflections of these 3 )
     10 0 DO
         0 moves !
-        0 RUNIT                           ( runit{ 0 }; )
-        1 RUNIT                           ( runit{ 1 }; )
-        4 RUNIT                           ( runit{ 4 }; )
+        0 RUNIT
+        1 RUNIT
+        4 RUNIT
     LOOP
 
-    ." 10 iterations" cr
-    ." moves evaluated: " MOVES ? CR ( WriteLn{ 'moves evaluated:  ', evaluated }; )
+    ." 10 iterations" CR
+    ." moves evaluated: " moves @ . CR
 ;
