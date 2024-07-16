@@ -1,0 +1,218 @@
+
+                             README.DOC File
+
+   README File for Microsoft(R) CodeView for Windows, version 3.05,
+   Microsoft C Compiler, version  6.00AX.
+
+                (C) Copyright Microsoft Corporation, 1991
+
+==========================================================================
+This file contains information on the software on the Microsoft C
+Supplemental Tools diskette.  
+
+This file contains 4 major sections:
+  SECTION 1.  Information on installing the software on the Supplemental
+              Tools diskette (this diskette).
+  SECTION 2.  Information on Microsoft CodeView for Windows, version 3.05.
+  SECTION 3.  Information on the DOS-extended version of Microsoft C,
+              version 6.00AX.
+
+PLEASE READ ALL INFORMATION IN THIS FILE BEFORE INSTALLING ANY OF THE
+SOFTWARE ON YOUR MACHINE.  
+
+=======================================================================
+SECTION 1.  Supplemental Tools- installation instructions
+
+      NOTE: We strongly suggest that you copy the DOS-extended C Compiler
+            to a directory different than the location of Microsoft C, 
+            version 6.00A-- and use it from this new directory.
+
+
+Invocation of SETUP:
+    MS-DOS users:   use SETUP.BAT
+    OS/2 users:     use SETUP.CMD
+    Usage:
+      setup compiler-directory [CVW-directory]
+      Where:
+        compiler-directory: the path where you want the DOS-extended
+                            compiler to be placed
+        CVW-directory: the path where you want the single-monitor
+                           version of Microsoft CodeView for Windows
+                           to be placed.
+      Example:  SETUP c:\msc\c600ax c:\msc\cvw305
+             Will install the compiler in C:\MSC\C600AX directory
+             and CodeView for Windows in C:\MSC\CV305 directory
+
+Single file decompression:
+    Usage:
+         decomp src-filename dest-filename
+
+
+Files contained on this (these) diskettes:
+
+     Terminology:
+       "extender-ready": the .EXE is a protect-mode .EXE, but does not
+                         actually contain the DOS-extender.  These .EXEs
+                         are invoked (by default) from the CL.EXE 
+                         driver by using the new -EM switch.
+
+    C1L.EXE     -- extender-ready C Compiler- large-model 1st pass
+    C2L.EXE     -- extender-ready C Compiler- large-model 2nd pass
+    C3L.EXE     -- extender-ready C Compiler- large-model 3rd pass
+    CL.EXE      -- DOS extended C Compiler driver, version 6.00AX
+    CV.HLP      -- New help file for CodeView for Windows, version 3.05
+                  (replaces CVW.HLP from CodeView for Windows, version 3.00
+    CVW.EXE     -- Single-monitor capable CodeView for Windows, version 3.05
+    README.DOC  -- The file you are reading
+    VCV.386     -- driver required when running CVW.EXE on non-VGA
+                   systems
+    SETUP.BAT   -- Setup driver-- calls DECOMP.EXE to decompress the
+                   files
+    DECOMP.EXE  -- Decompression utility (this is bound so it will run
+                   on either DOS or OS/2
+    SETUP.CMD   -- OS/2 version of SETUP.BAT
+
+=======================================================================
+SECTION 2.  Microsoft CodeView for Windows, version 3.05
+
+This section contains information on the Microsoft CodeView for Windows
+debugger (CVW), version 3.05, with which you can use a single monitor
+for debugging  programs. Single-monitor debugging and other features
+new to CVW version 3.05 are described in this readme file. All other
+features work as described in chapter 7, "Debugging in Protected Mode:
+CodeView for Windows," in the Windows 3.0 Software Development Kit
+Tools Manual. 
+
+This section has five parts:
+
+Part   Note
+----   ----
+1      Requirements 
+2      Starting CVW
+3      The Output Command
+4      The Debugging Display
+
+----------------------< Part 1: Requirements >---------------------------
+
+These requirements are the same as for CVW version 3.0:
+
+   - At least 384K of extended memory. For applications with many symbols,
+     1 megabyte or more of extended memory is required.
+
+   - For 80386/486-based systems, the WINDEBUG.386 driver is recommended.
+     Place the driver in your Windows SYSTEM directory and add the
+     following entry to the [386enh] section of your Windows SYSTEM.INI
+     file:
+
+     device=windebug.386
+
+For single-monitor debugging, you must have one of the following:
+
+   - A VGA monitor. CVW directly supports single-monitor debugging with
+     a VGA monitor. No additional driver is needed.
+
+   - An EGA or other monitor with a 386/486-based system. With a non-VGA
+     monitor, you must install the VCV.386 driver. Place the driver in
+     your Windows SYSTEM directory and add the following entry to the
+     [386enh] section of your Windows SYSTEM.INI file:
+
+     device=vcv.386
+
+-----------------------< Part 2: Starting CVW >----------------------------
+
+The default startup is single-monitor. If you want to debug with two 
+monitors, include the /2 option described below.
+
+
+VGA Monitor 
+-----------
+
+If you are using a VGA monitor, start CVW as described in the section 
+"Starting a Debugging Session" of chapter 7, "Debugging in Protected
+ Mode: CodeView for Windows," in the Microsoft Windows SDK Tools manual. 
+
+
+Other Monitors
+--------------
+
+If you are not using a VGA monitor on a 386/486 system, start CVW 
+with /V command-line option.
+
+The /V option enables single-monitor debugging with any display. You must
+have the VCV.386 driver to use this option. 
+
+
+Two Monitors (the /2 option)
+----------------------------
+
+If you have installed the VCV.386 driver for single-monitor debugging, but
+you want CVW to use a second monitor for debugging, start CVW with the /2
+option. 
+
+(The /8 is still available and works as described in the section 
+"Starting a Debugging Session" of chapter 7, "Debugging in Protected
+Mode: CodeView for Windows," in the Microsoft Windows SDK Tools manual.)
+
+--------------------< Part 3: The Output Command >-------------------------
+
+The Output command on the CVW View menu allows screen exchange with a
+single monitor. You can also execute the command by pressing F4. 
+
+Press any key to return to the CVW screen.
+
+The Output command is not available if you do not use a VGA monitor or if
+you start CVW with the /V option. 
+
+-----------------< Part 4: The Debugging Display >--------------------------
+
+VGA (Without the /V Option)
+---------------------------
+
+The display is 50 lines only.
+
+
+With /V Option
+--------------
+
+The display is 25 lines only. 
+
+============================================================================
+SECTION 3. Information on DOS-extended Microsoft C Compiler, version 6.00AX
+
+Usage:  The DOS-extended C Compiler, version 6.00AX should be used
+only when you have encountered capacity limitation in Microsoft C Compiler
+version  6.00A.
+
+System Requirements:
+    - MS DOS 3.0 or higher
+    One of the following:
+       - Microsoft Windows, version 3.0; 386 enhanced-mode DOS shell
+         (DPMI server) with at least 1mb extended-memory available.
+       - VCPI compliant extended-memory manager, such as 386Max(tm) from
+         Qualitas or QEMM from Quarterdeck Systems)  with at least 1Mb
+         of extended-memory available.  
+       - Microsoft Corporation's HIMEM.SYS and EMM386.SYS (from Microsoft
+         Windows, version 3.0, package-- for example) with at least 1Mb
+         extended memory available.
+       - Microsoft HIMEM.SYS (sets aside first 64K of extended-memory as
+         "himem" area-- compiler uses the remainder.
+
+Invocation:   There is a single new switch to the CL driver which will
+cause the DOS-extended CL.EXE (and all three large-model compiler passes)
+to be invoked.  This new switch is:  -EM.
+Note: the -B[1|2|3] switch can still be used to ovveride the passes.
+
+    Example:
+       For a traditional MAKE file:
+                     cl -EM -AS -Gsw -Oas -Zpe generic.c
+       For a .MAK file, created from the Microsoft Programmer's WorkBench, 
+       change the global C flags to look like:
+                     CFLAGS_G  =  /EM /W2 /BATCH
+
+Performance:  You may notice that version C6.00AX takes slightly longer
+to compile than version 6.00A.  This is expected-- as the 2nd and 3rd 
+passes of the compiler are large-model programs (in C6.00A these are 
+medium-model) and, of course, a large-model program uses 32-bit 
+pointers, and can be slighty slower.  Therefore, only use the 
+DOS-extended compiler if you are encountering capacity limitations.
+

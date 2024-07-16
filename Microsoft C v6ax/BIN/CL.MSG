@@ -1,0 +1,96 @@
+C COMPILER OPTIONS
+-MEMORY MODEL-
+/AS small model (default)
+/AC compact model
+/AM medium model
+/AL large model
+/AH huge model
+/AT tiny model (.COM files)
+-OPTIMIZATION-
+/O enable optimization (same as /Ot)
+/Oa ignore aliasing
+/Od disable optimizations
+/Oe enable registers allocations
+/Og enable global optimization
+/Oi enable intrinsic functions
+/Ol enable loop optimizations
+/On disable "unsafe" optimizations
+/Op enable precision optimizations
+/Or disable in_line return
+/Os optimize for space
+/Ot optimize for speed (default)
+/Ow assume aliasing in function calls
+/Ox max. optimization (/Oegilt /Gs)
+-CODE GENERATION-
+/G0 8086 instructions (default)
+/G1  186 instructions
+/G2  286 instructions
+/Gm put strings in constant segment
+/Gc Pascal style function calls
+/Gr _fastcall type calls
+/Gs no stack checking
+/Gt[number] data size threshold
+/Gw Windows entry sequence
+-OUTPUT FILES-
+/Fa[assembly listing file]
+/Fb[bound executable file]
+/Fc[mixed source/object listing file]
+/Fe<executable file>
+/Fl[object listing file]
+/Fm[map file]
+/Fo<object file>
+/Fr[source browser info file]
+/FR[extended source browser info file]
+/Fs[source listing file]
+-PREPROCESSOR-
+/C don't strip comments
+/D<name>[=text] define macro
+/E preprocess to stdout
+/EP same as /E but no #line
+/I<name> add #include path
+/P preprocess to file
+/U<name> remove predefined macro
+/u remove all predefined macros
+/X ignore "standard places"
+-LANGUAGE-
+/Za disable extensions
+/Zd line number information
+/Ze enable extensions (default)
+/Zg generate declarations
+/Zi symbolic debugging information
+/Zl remove default library info
+/Zp[n] pack structs on n-byte boundary
+/Zs syntax check only
+-FLOATING POINT-
+/FPa calls with altmath
+/FPc calls with emulator
+/FPc87 calls with 8087 library
+/FPi inline with emulator (default)
+/FPi87 inline with 8087
+-SOURCE LISTING-
+/Sl<columns> set line width
+/Sp<lines> set page length
+/St<string> set title string
+/Ss<string> set subtitle string
+-MISCELLANEOUS-
+/B[123]<pass> to invoke different C[123]
+/c compile only, no link
+/H<number> external name length
+/J default char type is unsigned
+/qc use quick compile feature
+/Tc<file> compile file without .c
+/V<string> set version string
+/W<number> warning level
+-MASM SUPPORT-
+/MA<MASM switch>
+/Ta<file> assemble file without .asm
+/Fx[MASM's cross-reference file] 
+-LINKING-
+/F <hex_number> stack size (hex. bytes)
+/Lc link compatibility mode executable
+/Lr link compatibility mode executable
+/Lp link protect mode executable
+/link [linker_options_and_libraries]
+/ML link C runtime as part of DLL
+/MD use C runtime as DLL
+/MT support multi-thread
