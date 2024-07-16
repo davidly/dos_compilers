@@ -49,8 +49,8 @@ false      equ 0
 loops      equ 10
 arraysize  equ 8190
 
-dataseg segment para public 'data'
-    assume ds: dataseg
+tttdataseg segment para public 'sievedata'
+    assume ds: tttdataseg
 
     crlfmsg       db      13,10,0
     primesmsg     db      ' primes.',13,10,0
@@ -61,30 +61,33 @@ dataseg segment para public 'data'
     align 16
     flags         db      arraysize + 1 dup( ? )
     afterflags    db      0
-dataseg ends
+tttdataseg ends
 
 .code
 
 start:
-        mov      ax, dataseg
+        mov      ax, tttdataseg
         mov      ds, ax
-        mov      cx, 0              ; handy place for 0
-        mov      di, offset afterFlags   ; handy place for this constant
 
   iteragain:                        ; for ( iter = 1; iter <= 10; iter++ )
         mov      word ptr [ count ], 0   ; count = 0
 
         ; set all array entries to true:  for (i = 0; i <= SIZE; i++) flags[i] = TRUE;
-        xor      bx, bx
 
-  nexttrue:
-        mov      byte ptr [ offset flags + bx ], true
-        inc      bx
-        cmp      bx, arraysize
-        jle      nexttrue 
+        mov      ah, true
+        mov      al, true
+        mov      di, offset flags
+        mov      cx, ( arraysize + 2 ) / 2 ; 4095
+        push     ds
+        pop      es
+        cld
+        rep stosw
+        stosb
 
         ; iterate through array entries and count primes
 
+        mov      di, offset afterFlags   ; handy place for this constant
+        xor      cx, cx             ; handy place for 0
         xor      bx, bx             ; bx is "i" in the outer for loop
 
   nextprime:                        ; for (i = 0; i <= SIZE; i++) {
@@ -97,13 +100,15 @@ start:
         mov      si, offset flags
         add      si, bx             ; for (k = i + prime; k <= SIZE; k += prime)
 
-  kloop:                        
         add      si, ax             ; k += prime
-        cmp      si, di             ; is si >= offset afterFlags?
-        jge      inccount
+        cmp      si, di             ; is si >= offset afterFlags? (i.e. k <= size)
+        jge      inccount           ; redundant check to the one in the loop below but it saves a jump instruction in the loop
 
+  kloop:                        
         mov      byte ptr [ si ], cl ; flags[ k ] = false. use cl for 0 because it's faster than an immediate
-        jmp      kloop
+        add      si, ax             ; k += prime
+        cmp      si, di             ; is si >= offset afterFlags? (i.e. k <= size)
+        jl       kloop
 
   inccount:
         inc      word ptr [ COUNT ] ; count++
