@@ -1,0 +1,533 @@
+$V2_ERROR......rtim6          $V2_EXIT.......rtim6
+$V2_EXIT2......rtim6          $V2_OK.........rtim6
+A2DRQQ.........tsdr           A2SRQQ.........tsdr
+ABS4...........intrns         ABSTQQ.........intr7
+ACDRQQ.........tsdr           ACSRQQ.........tsdr
+ADPTQQ.........intr7          AGOEQQ.........fore
+AIDRQQ.........misr7          AINT4..........intrns
+AISRQQ.........misr7          ALLHQQ.........heah
+AMOD4..........intrns         ANDRQQ.........stdr
+ANINT4.........intrns         ANSRQQ.........stsr
+ASDRQQ.........tsdr           ASMGQQ.........misg6
+ASNEQQ.........erree          ASNGQQ.........misg6
+ASSRQQ.........tsdr           ATDRQQ.........tsdr
+ATSRQQ.........tsdr           AUXVQQ.........auxv
+AVAGQQ.........misg6          BADTQQ.........intr7
+BAKVQQ.........auxv           BASTQQ.........intr7
+BCDTQQ.........intr7          BCSTQQ.........intr7
+BDDTQQ.........intr7          BDSTQQ.........intr7
+BEGHQQ.........entx6l         BEGMQQ.........entx6l
+BEGOQQ.........miso           BEGXQQ.........entx6l
+BIDTQQ.........intr7          BISTQQ.........intr7
+BLDTQQ.........intr7          BLSTQQ.........intr7
+BMDTQQ.........intr7          BMSTQQ.........intr7
+BODTQQ.........intr7          BOSTQQ.........intr7
+BRDTQQ.........intr7          BRSTQQ.........intr7
+BRTEQQ.........misg6          BSDTQQ.........intr7
+BSSTQQ.........intr7          BTDTQQ.........intr7
+BTSTQQ.........intr7          BUFVQQ.........manv
+BZFVQQ.........manv           BZLVQQ.........manv
+CDDDQQ.........cmpd7          CDDRQQ.........cmpr7
+CDEDQQ.........cmpd7          CDERQQ.........cmpr7
+CESGQQ.........misg6          CESXQQ.........entx6l
+CHDRQQ.........tsdr           CHPRQQ.........comr7
+CHSRQQ.........tsdr           CHSTQQ.........intr7
+CINSQQ.........misg6          CLDUQQ.........filuxm
+CLNEQQ.........entx6l         CLOSE..........rtim6
+CLSGQQ.........misg6          CLSUQQ.........filuxm
+CLSVQQ.........manv           CMPWQQ.........forw6
+CNDRQQ.........tsdr           CNSRQQ.........tsdr
+CNVEQQ.........erree          COLVQQ.........manv
+CONUXM.........conuxm         CRCXQQ.........entx6l
+CRDXQQ.........entx6l         CREAT..........rtim6
+CRNVQQ.........manv           CSDDQQ.........cmpd7
+CSDRQQ.........cmpr7          CSEDQQ.........cmpd7
+CSERQQ.........cmpr7          CSXEQQ.........entx6l
+CTCR87.........oemr7          CURHQQ.........entx6l
+CUTHQQ.........mishm          DABS8..........intrns
+DATE...........tidgl          DDEC87.........dedr7
+DDECQQ.........dedr7          DDIM8..........intrns
+DEBEQQ.........debe           DENC87.........dedr7
+DENCQQ.........lonc           DGRMQQ.........entx6l
+DIFUQQ.........foruxm         DIG2...........tidgl
+DIM4...........intrns         DINT8..........intrns
+DMOD8..........intrns         DNINT8.........intrns
+DNRE87.........misg6          DNREQQ.........erree
+DOSEQQ.........entx6l         DOSXQQ.........entx6l
+DPCRQQ.........dedr7          DPROD8.........intrns
+DPSVQQ.........dpsv           DRPTQQ.........intr7
+DSIGN8.........intrns         DUPTQQ.........intr7
+DVPTQQ.........intr7          DZIEQQ.........erree
+DZNEQQ.........erree          DZRE87.........misg6
+DZREQQ.........erree          DZWEQQ.........erree
+EEDCQQ.........dedr7          EFEVQQ.........ermv
+EFLVQQ.........manv           EIGRQQ.........dedr7
+EMSEQQ.........erre           ENDHQQ.........entx6l
+ENDMQQ.........entx6l         ENDOQQ.........miso
+ENDUQQ.........conuxm         ENDX87.........comr7
+ENDXQQ.........entx6l         ENDYQQ.........misy
+ENFVQQ.........auxv           ENNCQQ.........lonc
+ENRVQQ.........manv           ENTEQQ.........debe
+EOFUQQ.........foruxm         EOFVQQ.........auxv
+EREVQQ.........ermv           ERFVQQ.........manv
+ERHVQQ.........erhv           ERLVQQ.........manv
+ERREQQ.........erre           ERRNO..........rtim6
+ERRVQQ.........manv           ERTEQQ.........misg6
+ERUVQQ.........manv           EXCX87.........oemr7
+EXDRQQ.........tsdr           EXIT...........rtim6
+EXPEQQ.........erree          EXSRQQ.........tsdr
+EXTEQQ.........debe           EXTVQQ.........ermv
+FDUVQQ.........manv           FIDRQQ.........intr7
+FIERQQ.........intr7          FILKQQ.........misy
+FILLC..........misg6          FILLSC.........misg6
+FILUQQ.........filuxm         FILVQQ.........manv
+FIWRQQ.........intr7          FLBUQQ.........filuxm
+FLBVQQ.........manv           FLGX87.........intr7
+FLRVQQ.........manv           FMDVQQ.........manv
+FMRC...........fmrc           FMRCQQ.........fmrc
+FMTVQQ.........fmtv           FNSUQQ.........filuxm
+FONG...........fong           FOREQQ.........fore
+FORUXM.........foruxm         FPSUQQ.........foruxm
+FRXDQQ.........mp2r7          GETHQQ.........heah
+GETUQQ.........filuxm         GETVQQ.........manv
+GFNUQQ.........filuxm         GFTVQQ.........fmtv
+GHIEQQ.........erree          GHSEQQ.........erree
+GHVEQQ.........erree          GLDVQQ.........liov
+GLFVQQ.........liov           GLIVQQ.........liov
+GOFVQQ.........fmtv           GOIVQQ.........fmtv
+GOUVQQ.........manv           GROHQQ.........mishm
+GTMVQQ.........manv           GTUVQQ.........manv
+GTYUQQ.........conuxm         HDRFQQ.........entx6l
+HDRVQQ.........entx6l         HEAHQQ.........heah
+I24IQQ.........rtim6          I2MSQQ.........msfr7
+I3EX87.........comr7          IABS2..........intrns
+IABS4..........intrns         IACVQQ.........liov
+IADVQQ.........rliv           IAIVQQ.........iliv
+IALVQQ.........lliv           IAMVQQ.........lliv
+IANVQQ.........iliv           IARVQQ.........rliv
+ICLRER.........erhv           IDIM2..........intrns
+IDIM4..........intrns         IDNIN2.........intrns
+IDNIN4.........intrns         IGETER.........erhv
+IINVQQ.........iinv           IIOVQQ.........manv
+ILIVQQ.........iliv           ILOVQQ.........ilov
+INARQQ.........dedr7          INIUQQ.........conuxm
+INIVQQ.........manv           INIX87.........intr7
+INPUQQ.........filuxm         INRE87.........misg6
+INREQQ.........erree          INTR87.........comr7
+IOCTL..........rtim6          IOCUQQ.........foruxm
+IOCVQQ.........manv           IOPVQQ.........iopv
+ISIGN2.........intrns         ISIGN4.........intrns
+ISIWQQ.........fong           ITCVQQ.........liov
+ITDVQQ.........rliv           ITIVQQ.........iliv
+ITLVQQ.........lliv           ITMVQQ.........lliv
+ITNVQQ.........iliv           ITRVQQ.........rliv
+KBBVQQ.........manv           KBPVQQ.........manv
+KBRVQQ.........manv           LADDOK.........long6
+LCWRQQ.........lscw7          LDCVQQ.........liov
+LDDRQQ.........tsdr           LDLG2..........dedr7
+LDNGQQ.........long6          LDSRQQ.........tsdr
+LINVQQ.........linv           LIOVQQ.........liov
+LLIVQQ.........lliv           LLOVQQ.........llov
+LMNGQQ.........long6          LMULOK.........long6
+LNDRQQ.........tsdr           LNEEQQ.........erree
+LNSRQQ.........tsdr           LNTEQQ.........debe
+LOCKED.........misg6          LONCQQ.........lonc
+LOPVQQ.........lopv           LRNGQQ.........long6
+LSEEK..........rtim6          LSOVQQ.........manv
+LSWRQQ.........lscw7          M2ISQQ.........msfr7
+MAXMQQ.........entx6l         MDDRQQ.........stdr
+MDSRQQ.........stsr           MIN8...........tidgl
+MINCQQ.........lonc           MISHQQ.........mishm
+MISOQQ.........miso           MISYQQ.........misy
+MNDRQQ.........stdr           MNNGQQ.........forw6
+MNSRQQ.........stsr           MOD2...........intrns
+MOD4...........intrns         MOVEL..........misg6
+MOVER..........misg6          MOVESL.........misg6
+MOVESR.........misg6          MP2DQQ.........mp2r7
+MP2SQQ.........mp2r7          MPBRQQ.........intr7
+MPDRQQ.........intr7          MPHRQQ.........intr7
+MPIRQQ.........intr7          MPPRQQ.........intr7
+MPSRQQ.........intr7          MTBUQQ.........misg6
+MUPTQQ.........intr7          MXDRQQ.........stdr
+MXNGQQ.........forw6          MXSRQQ.........stsr
+NANRQQ.........dedr7          NAOGQQ.........long6
+NDZGQQ.........long6          NEFUQQ.........foruxm
+NFMVQQ.........manv           NINT2..........intrns
+NINT4..........intrns         NOREQQ.........erree
+NSNWQQ.........fong           NXRVQQ.........manv
+NXTUQQ.........filuxm         OACVQQ.........liov
+OADVQQ.........rlov           OAIVQQ.........ilov
+OALVQQ.........llov           OAMVQQ.........llov
+OANVQQ.........ilov           OARVQQ.........rlov
+OEMS87.........oemr7          OEMX87.........oemr7
+OIFVQQ.........liov           ONERQQ.........dedr7
+OPEN...........rtim6          OPNUQQ.........filuxm
+OPNVQQ.........manv           OTCVQQ.........liov
+OTDVQQ.........rlov           OTIVQQ.........ilov
+OTLVQQ.........llov           OTMVQQ.........llov
+OTNVQQ.........ilov           OTRVQQ.........rlov
+OUTUQQ.........filuxm         OVIEQQ.........erree
+OVNEQQ.........erree          OVRE87.........misg6
+OVREQQ.........erree          OVWEQQ.........erree
+PBFUQQ.........conuxm         PBLVQQ.........manv
+PCCUQQ.........filuxm         PCTVQQ.........manv
+PERUQQ.........filuxm         PFNUQQ.........filuxm
+PIDRQQ.........tsdr           PISRQQ.........tsdr
+PLDVQQ.........liov           PLYUQQ.........conuxm
+PNUXQQ.........entx6l         POSVQQ.........dpsv
+PPMUQQ.........filuxm         PRDRQQ.........tsdr
+PREE87.........misg6          PREEQQ.........erree
+PRSRQQ.........tsdr           PSTVQQ.........fmtv
+PTUVQQ.........manv           PTYUQQ.........conuxm
+PUTUQQ.........filuxm         PUTVQQ.........manv
+PWRRQQ.........dedr7          PWTRQQ.........dedr7
+RACVQQ.........fmtv           RADTQQ.........intr7
+RADVQQ.........rinv           RAIVQQ.........iinv
+RALVQQ.........linv           RAMVQQ.........linv
+RANVQQ.........iinv           RARVQQ.........rinv
+RASTQQ.........intr7          RCDTQQ.........intr7
+RCSTQQ.........intr7          RDDTQQ.........intr7
+RDGVQQ.........manv           RDSTQQ.........intr7
+READ...........rtim6          RECEQQ.........entx6l
+REFEQQ.........entx6l         REPEQQ.........entx6l
+RESEQQ.........entx6l         RESX87.........comr7
+REWVQQ.........auxv           RFDR...........stdr
+RFSR...........stsr           RIDTQQ.........intr7
+RINVQQ.........rinv           RISTQQ.........intr7
+RLDTQQ.........intr7          RLIVQQ.........rliv
+RLOVQQ.........rlov           RLSTQQ.........intr7
+RLTTQQ.........intr7          RMDTQQ.........intr7
+RMSTQQ.........intr7          RNBX87.........intr7
+RNDCQQ.........rndc7          RNDRQQ.........rndc7
+RNPEQQ.........erree          RODTQQ.........intr7
+ROPVQQ.........ropv           ROSTQQ.........intr7
+RRDTQQ.........intr7          RRSTQQ.........intr7
+RSDTQQ.........intr7          RSSTQQ.........intr7
+RSTTQQ.........intr7          RTCVQQ.........fmtv
+RTDTQQ.........intr7          RTDVQQ.........rinv
+RTIVQQ.........iinv           RTLVQQ.........linv
+RTMVQQ.........linv           RTNVQQ.........iinv
+RTRVQQ.........rinv           RTSTQQ.........intr7
+S24IQQ.........rtim6          SADDOK.........misg6
+SADTQQ.........intr7          SAOGQQ.........misg6
+SASTQQ.........intr7          SBPTQQ.........intr7
+SCAC87.........dedr7          SCDTQQ.........intr7
+SCSTQQ.........intr7          SCWRQQ.........lscw7
+SDDTQQ.........intr7          SDSTQQ.........intr7
+SDZGQQ.........misg6          SEKUQQ.........filuxm
+SEKVQQ.........auxv           SHDRQQ.........tsdr
+SHRUQQ.........rtim6          SHSRQQ.........tsdr
+SIDTQQ.........intr7          SIGN4..........intrns
+SINEQQ.........erree          SISTQQ.........intr7
+SLDTQQ.........intr7          SLSTQQ.........intr7
+SLTTQQ.........intr7          SMDTQQ.........intr7
+SMSTQQ.........intr7          SMULOK.........misg6
+SNDRQQ.........tsdr           SNSRQQ.........tsdr
+SODTQQ.........intr7          SOSTQQ.........intr7
+SOVEQQ.........erree          SOVGQQ.........misg6
+SRDRQQ.........tsdr           SRDTQQ.........intr7
+SRPTQQ.........intr7          SRSRQQ.........tsdr
+SRSTQQ.........intr7          SRTEQQ.........erree
+SSDTQQ.........intr7          SSSTQQ.........intr7
+SSTTQQ.........intr7          SSWRQQ.........lscw7
+STBIQQ.........rtim6          STDTQQ.........intr7
+STKBQQ.........entx6l         STKHQQ.........entx6l
+STPRQQ.........dedr7          STPVQQ.........auxv
+STSTQQ.........intr7          TANEQQ.........erree
+TENRQQ.........dedr7          TFCUQQ.........conuxm
+TFDUQQ.........foruxm         THDRQQ.........tsdr
+THSRQQ.........tsdr           TICS...........tidgl
+TIDGQQ.........tidgl          TIME...........tidgl
+TNDRQQ.........tsdr           TNSRQQ.........tsdr
+TOORQQ.........dedr7          TRAEQQ.........debe
+TRMVQQ.........manv           TRTRQQ.........intr7
+TSIR87.........oemr7          TSRR87.........oemr7
+TUGRQQ.........intr7          U24IQQ.........rtim6
+UADDOK.........misg6          UAOGQQ.........misg6
+UDZGQQ.........misg6          UERE87.........misg6
+UEREQQ.........erree          UM46OK.........utlx
+UMULOK.........misg6          UNLINK.........rtim6
+UNLOCK.........misg6          UNRE87.........misg6
+UNREQQ.........erree          UPCX87.........entx6l
+UTLXQQ.........utlx           VASGQQ.........misg6
+WACVQQ.........fmtv           WADVQQ.........ropv
+WAIVQQ.........iopv           WALVQQ.........lopv
+WAMVQQ.........lopv           WANVQQ.........iopv
+WARVQQ.........ropv           WEFUQQ.........filuxm
+WRFVQQ.........fmtv           WRITE..........rtim6
+WRUVQQ.........manv           WTCVQQ.........fmtv
+WTDVQQ.........ropv           WTIVQQ.........iopv
+WTLVQQ.........lopv           WTMVQQ.........lopv
+WTNVQQ.........iopv           WTRVQQ.........ropv
+XTPRQQ.........dedr7          YTPRQQ.........dedr7
+Z4TRQQ.........dedr7          Z5TRQQ.........dedr7
+ZPIEQQ.........erree          ZPNEQQ.........erree
+ZPREQQ.........erree          
+
+mishm          Offset: 200H  Code and data size: A7
+ CUTHQQ         GROHQQ         MISHQQ        
+
+conuxm         Offset: 600H  Code and data size: 165
+ CONUXM         ENDUQQ         GTYUQQ         INIUQQ
+ PBFUQQ         PLYUQQ         PTYUQQ         TFCUQQ
+
+filuxm         Offset: A00H  Code and data size: E1A
+ CLDUQQ         CLSUQQ         FILUQQ         FLBUQQ
+ FNSUQQ         GETUQQ         GFNUQQ         INPUQQ
+ NXTUQQ         OPNUQQ         OUTUQQ         PCCUQQ
+ PERUQQ         PFNUQQ         PPMUQQ         PUTUQQ
+ SEKUQQ         WEFUQQ        
+
+entx6l         Offset: 1E00H  Code and data size: 27F
+ BEGHQQ         BEGMQQ         BEGXQQ         CESXQQ
+ CLNEQQ         CRCXQQ         CRDXQQ         CSXEQQ
+ CURHQQ         DGRMQQ         DOSEQQ         DOSXQQ
+ ENDHQQ         ENDMQQ         ENDXQQ         HDRFQQ
+ HDRVQQ         MAXMQQ         PNUXQQ         RECEQQ
+ REFEQQ         REPEQQ         RESEQQ         STKBQQ
+ STKHQQ         UPCX87        
+
+utlx           Offset: 2400H  Code and data size: 131
+ UM46OK         UTLXQQ        
+
+cmpd7          Offset: 2800H  Code and data size: EB
+ CDDDQQ         CDEDQQ         CSDDQQ         CSEDQQ
+
+cmpr7          Offset: 2A00H  Code and data size: BD
+ CDDRQQ         CDERQQ         CSDRQQ         CSERQQ
+
+debe           Offset: 2C00H  Code and data size: C6
+ DEBEQQ         ENTEQQ         EXTEQQ         LNTEQQ
+ TRAEQQ        
+
+dedr7          Offset: 3000H  Code and data size: 86C
+ DDEC87         DDECQQ         DENC87         DPCRQQ
+ EEDCQQ         EIGRQQ         INARQQ         LDLG2
+ NANRQQ         ONERQQ         PWRRQQ         PWTRQQ
+ SCAC87         STPRQQ         TENRQQ         TOORQQ
+ XTPRQQ         YTPRQQ         Z4TRQQ         Z5TRQQ
+
+intr7          Offset: 4000H  Code and data size: 18D
+ ABSTQQ         ADPTQQ         BADTQQ         BASTQQ
+ BCDTQQ         BCSTQQ         BDDTQQ         BDSTQQ
+ BIDTQQ         BISTQQ         BLDTQQ         BLSTQQ
+ BMDTQQ         BMSTQQ         BODTQQ         BOSTQQ
+ BRDTQQ         BRSTQQ         BSDTQQ         BSSTQQ
+ BTDTQQ         BTSTQQ         CHSTQQ         DRPTQQ
+ DUPTQQ         DVPTQQ         FIDRQQ         FIERQQ
+ FIWRQQ         FLGX87         INIX87         MPBRQQ
+ MPDRQQ         MPHRQQ         MPIRQQ         MPPRQQ
+ MPSRQQ         MUPTQQ         RADTQQ         RASTQQ
+ RCDTQQ         RCSTQQ         RDDTQQ         RDSTQQ
+ RIDTQQ         RISTQQ         RLDTQQ         RLSTQQ
+ RLTTQQ         RMDTQQ         RMSTQQ         RNBX87
+ RODTQQ         ROSTQQ         RRDTQQ         RRSTQQ
+ RSDTQQ         RSSTQQ         RSTTQQ         RTDTQQ
+ RTSTQQ         SADTQQ         SASTQQ         SBPTQQ
+ SCDTQQ         SCSTQQ         SDDTQQ         SDSTQQ
+ SIDTQQ         SISTQQ         SLDTQQ         SLSTQQ
+ SLTTQQ         SMDTQQ         SMSTQQ         SODTQQ
+ SOSTQQ         SRDTQQ         SRPTQQ         SRSTQQ
+ SSDTQQ         SSSTQQ         SSTTQQ         STDTQQ
+ STSTQQ         TRTRQQ         TUGRQQ        
+
+erre           Offset: 4800H  Code and data size: 296
+ EMSEQQ         ERREQQ        
+
+erree          Offset: 4E00H  Code and data size: 359
+ ASNEQQ         CNVEQQ         DNREQQ         DZIEQQ
+ DZNEQQ         DZREQQ         DZWEQQ         EXPEQQ
+ GHIEQQ         GHSEQQ         GHVEQQ         INREQQ
+ LNEEQQ         NOREQQ         OVIEQQ         OVNEQQ
+ OVREQQ         OVWEQQ         PREEQQ         RNPEQQ
+ SINEQQ         SOVEQQ         SRTEQQ         TANEQQ
+ UEREQQ         UNREQQ         ZPIEQQ         ZPNEQQ
+ ZPREQQ        
+
+fmrc           Offset: 5600H  Code and data size: 2F6
+ FMRC           FMRCQQ        
+
+fong           Offset: 5C00H  Code and data size: 2D4
+ FONG           ISIWQQ         NSNWQQ        
+
+heah           Offset: 6200H  Code and data size: 1A5
+ ALLHQQ         GETHQQ         HEAHQQ        
+
+lonc           Offset: 6600H  Code and data size: 3BF
+ DENCQQ         ENNCQQ         LONCQQ         MINCQQ
+
+long6          Offset: 6C00H  Code and data size: 1C9
+ LADDOK         LDNGQQ         LMNGQQ         LMULOK
+ LRNGQQ         NAOGQQ         NDZGQQ        
+
+lscw7          Offset: 7000H  Code and data size: 34
+ LCWRQQ         LSWRQQ         SCWRQQ         SSWRQQ
+
+misg6          Offset: 7200H  Code and data size: 35C
+ ASMGQQ         ASNGQQ         AVAGQQ         BRTEQQ
+ CESGQQ         CINSQQ         CLSGQQ         DNRE87
+ DZRE87         ERTEQQ         FILLC          FILLSC
+ INRE87         LOCKED         MOVEL          MOVER
+ MOVESL         MOVESR         MTBUQQ         OVRE87
+ PREE87         SADDOK         SAOGQQ         SDZGQQ
+ SMULOK         SOVGQQ         UADDOK         UAOGQQ
+ UDZGQQ         UERE87         UMULOK         UNLOCK
+ UNRE87         VASGQQ        
+
+miso           Offset: 7A00H  Code and data size: 38
+ BEGOQQ         ENDOQQ         MISOQQ        
+
+misr7          Offset: 7C00H  Code and data size: 44
+ AIDRQQ         AISRQQ        
+
+misy           Offset: 7E00H  Code and data size: CA
+ ENDYQQ         FILKQQ         MISYQQ        
+
+mp2r7          Offset: 8200H  Code and data size: B0
+ FRXDQQ         MP2DQQ         MP2SQQ        
+
+msfr7          Offset: 8400H  Code and data size: 50
+ I2MSQQ         M2ISQQ        
+
+oemr7          Offset: 8600H  Code and data size: 127
+ CTCR87         EXCX87         OEMS87         OEMX87
+ TSIR87         TSRR87        
+
+rndc7          Offset: 8A00H  Code and data size: 65
+ RNDCQQ         RNDRQQ        
+
+rtim6          Offset: 8C00H  Code and data size: D6
+ $V2_ERROR      $V2_EXIT       $V2_EXIT2      $V2_OK
+ CLOSE          CREAT          ERRNO          EXIT
+ I24IQQ         IOCTL          LSEEK          OPEN
+ READ           S24IQQ         SHRUQQ         STBIQQ
+ U24IQQ         UNLINK         WRITE         
+
+stdr           Offset: 9000H  Code and data size: 1BD
+ ANDRQQ         MDDRQQ         MNDRQQ         MXDRQQ
+ RFDR          
+
+stsr           Offset: 9600H  Code and data size: 1BC
+ ANSRQQ         MDSRQQ         MNSRQQ         MXSRQQ
+ RFSR          
+
+tsdr           Offset: 9C00H  Code and data size: 7AE
+ A2DRQQ         A2SRQQ         ACDRQQ         ACSRQQ
+ ASDRQQ         ASSRQQ         ATDRQQ         ATSRQQ
+ CHDRQQ         CHSRQQ         CNDRQQ         CNSRQQ
+ EXDRQQ         EXSRQQ         LDDRQQ         LDSRQQ
+ LNDRQQ         LNSRQQ         PIDRQQ         PISRQQ
+ PRDRQQ         PRSRQQ         SHDRQQ         SHSRQQ
+ SNDRQQ         SNSRQQ         SRDRQQ         SRSRQQ
+ THDRQQ         THSRQQ         TNDRQQ         TNSRQQ
+
+tidgl          Offset: B000H  Code and data size: 1A1
+ DATE           DIG2           MIN8           TICS
+ TIDGQQ         TIME          
+
+foruxm         Offset: B400H  Code and data size: 38E
+ DIFUQQ         EOFUQQ         FORUXM         FPSUQQ
+ IOCUQQ         NEFUQQ         TFDUQQ        
+
+auxv           Offset: BA00H  Code and data size: 553
+ AUXVQQ         BAKVQQ         ENFVQQ         EOFVQQ
+ REWVQQ         SEKVQQ         STPVQQ        
+
+dpsv           Offset: C400H  Code and data size: C8
+ DPSVQQ         POSVQQ        
+
+erhv           Offset: C800H  Code and data size: 13E
+ ERHVQQ         ICLRER         IGETER        
+
+ermv           Offset: CC00H  Code and data size: 54
+ EFEVQQ         EREVQQ         EXTVQQ        
+
+fmtv           Offset: CE00H  Code and data size: A58
+ FMTVQQ         GFTVQQ         GOFVQQ         GOIVQQ
+ PSTVQQ         RACVQQ         RTCVQQ         WACVQQ
+ WRFVQQ         WTCVQQ        
+
+fore           Offset: E000H  Code and data size: 9B
+ AGOEQQ         FOREQQ        
+
+forw6          Offset: E200H  Code and data size: DF
+ CMPWQQ         MNNGQQ         MXNGQQ        
+
+iinv           Offset: E400H  Code and data size: 216
+ IINVQQ         RAIVQQ         RANVQQ         RTIVQQ
+ RTNVQQ        
+
+iliv           Offset: EA00H  Code and data size: 17D
+ IAIVQQ         IANVQQ         ILIVQQ         ITIVQQ
+ ITNVQQ        
+
+ilov           Offset: EE00H  Code and data size: 18C
+ ILOVQQ         OAIVQQ         OANVQQ         OTIVQQ
+ OTNVQQ        
+
+intrns         Offset: F200H  Code and data size: 706
+ ABS4           AINT4          AMOD4          ANINT4
+ DABS8          DDIM8          DIM4           DINT8
+ DMOD8          DNINT8         DPROD8         DSIGN8
+ IABS2          IABS4          IDIM2          IDIM4
+ IDNIN2         IDNIN4         ISIGN2         ISIGN4
+ MOD2           MOD4           NINT2          NINT4
+ SIGN4         
+
+iopv           Offset: 10000H  Code and data size: 1BD
+ IOPVQQ         WAIVQQ         WANVQQ         WTIVQQ
+ WTNVQQ        
+
+linv           Offset: 10400H  Code and data size: 1D3
+ LINVQQ         RALVQQ         RAMVQQ         RTLVQQ
+ RTMVQQ        
+
+liov           Offset: 10800H  Code and data size: 597
+ GLDVQQ         GLFVQQ         GLIVQQ         IACVQQ
+ ITCVQQ         LDCVQQ         LIOVQQ         OACVQQ
+ OIFVQQ         OTCVQQ         PLDVQQ        
+
+lliv           Offset: 11200H  Code and data size: 181
+ IALVQQ         IAMVQQ         ITLVQQ         ITMVQQ
+ LLIVQQ        
+
+llov           Offset: 11600H  Code and data size: 12B
+ LLOVQQ         OALVQQ         OAMVQQ         OTLVQQ
+ OTMVQQ        
+
+lopv           Offset: 11A00H  Code and data size: 14B
+ LOPVQQ         WALVQQ         WAMVQQ         WTLVQQ
+ WTMVQQ        
+
+manv           Offset: 11E00H  Code and data size: 12B4
+ BUFVQQ         BZFVQQ         BZLVQQ         CLSVQQ
+ COLVQQ         CRNVQQ         EFLVQQ         ENRVQQ
+ ERFVQQ         ERLVQQ         ERRVQQ         ERUVQQ
+ FDUVQQ         FILVQQ         FLBVQQ         FLRVQQ
+ FMDVQQ         GETVQQ         GOUVQQ         GTMVQQ
+ GTUVQQ         IIOVQQ         INIVQQ         IOCVQQ
+ KBBVQQ         KBPVQQ         KBRVQQ         LSOVQQ
+ NFMVQQ         NXRVQQ         OPNVQQ         PBLVQQ
+ PCTVQQ         PTUVQQ         PUTVQQ         RDGVQQ
+ TRMVQQ         WRUVQQ        
+
+rinv           Offset: 13A00H  Code and data size: 32F
+ RADVQQ         RARVQQ         RINVQQ         RTDVQQ
+ RTRVQQ        
+
+rliv           Offset: 14000H  Code and data size: 266
+ IADVQQ         IARVQQ         ITDVQQ         ITRVQQ
+ RLIVQQ        
+
+rlov           Offset: 14600H  Code and data size: 25F
+ OADVQQ         OARVQQ         OTDVQQ         OTRVQQ
+ RLOVQQ        
+
+ropv           Offset: 14C00H  Code and data size: 32B
+ ROPVQQ         WADVQQ         WARVQQ         WTDVQQ
+ WTRVQQ        
+
+comr7          Offset: 15200H  Code and data size: 1D7
+ CHPRQQ         ENDX87         I3EX87         INTR87
+ RESX87        
+

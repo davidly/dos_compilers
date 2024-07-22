@@ -1,0 +1,368 @@
+
+
+
+1.0  INTRODUCTION
+
+     This describes changes to MS-FORTRAN Version 3.13  that
+were  made  too late to be described in either the reference
+manual or the  User's  Guide  and  its  addendum.   It  also
+outlines differences between versions 3.13 and 3.10.
+
+
+
+2.0  DIFFERENCE FROM VERSION 3.13
+
+2.1  Enhancements
+
+     The following changes are made to the way the  compiler
+and runtime behave:
+
+a.  The default setting of the  8087  control  word  enables
+NAN, divide-by-zero and infinity exceptions.  These will now
+give a runtime error.  Use LCWRQQ if you preferred the  3.10
+behavior.
+
+b.  Most incorrect format strings in FORMAT, READ and  WRITE
+statements now give warning messages.
+
+c.  The compiler front end is smaller and, on  systems  with
+limited memory, should compile larger programs.
+
+d.  NULR7.OBJ is no longer required,  since  floating  point
+code  is  only  included with your program if it is actually
+needed.
+
+e.  The compiler sets an exit status to MSDOS 2.0.
+
+
+
+2.2  Corrections
+
+     The  following  errors  in  version  3.10   have   been
+corrected:
+
+Incorrect code was being generated for comparisons of  reals
+in named common.
+
+External and actual functions of the same type gave an ERROR
+33
+
+An error on the last line of a formatted  input  file  would
+'create'  an extra (empty) line.  Errors were also caused if
+a file did not end in a <Control Z>.
+
+List directed format  choices  for  real  numbers  were  not
+triggered by the ranges documented.
+
+INTEGER*4 conversions to  real  were  sometimes  incorrectly
+rounded.
+                                                      Page 2
+
+
+G  format  choices  were  not  triggered   by   the   ranges
+documented.
+
+READ or WRITE of an adjustable array caused a  compile  time
+error 151.
+
+Reading a real with list directed input would not  accept  a
+null item.
+
+Statement function actual and formal  parameter  sizes  were
+sometimes incorrectly matched.
+
+PAS2 looped indefinitely for c=amin0(-5,min0(0,1))
+
+The last record output to the printer  was  not  printed  on
+certain types of printer.
+
+INTEGER*4 exponentiation was truncated to 16-bits under some
+circumstances.
+
+PAS2 sometimes gave incorrect integer overflow message.
+
+FOR1 was not deleting intermediate files if  it  detected  a
+compile error.
+
+Incorrect   code   might   be   generated    for    multiple
+multi-dimensioned array references.
+
+If the result of an expression was assigned to an INTEGER*2,
+divides of INTEGER*4 values were done with 16-bit division.
+
+DEXP(X) sometimes returned zero.
+
+amin0(i,i) caused a PAS2 loop.
+
+An erroneous compile time error 71 sometimes occurred.
+
+
+
+3.0  NULR7.OBJ
+
+     This module is not supplied with this version since the
+Real  Math  Package  is only included in your program if you
+actually use floating point operations.
+
+
+
+4.0  COMPILE TIME FORMAT CHECKING.
+
+     A special warning message  will  be  displayed  by  the
+compiler  if a format specification contains certain errors.
+This has the form:
+
+***** Warning -- Invalid Format, Error n, Line m
+                                                      Page 3
+
+
+Where n is one of the following runtime error codes:
+1200
+1204..1213
+1215..1224
+1226..1228
+1232
+and m is the line number of the offending statement.
+
+
+
+5.0  EXIT STATUS
+
+     The compiler supplies an exit status to MSDOS 2.0  that
+can  be  accessed  via  the "IF ERRORLEVEL n" batch command.
+The vaules returned by the compiler are:
+         n Value     Meaning
+         0           No warning or errors issued
+         1           Warnings messges were issued
+         2           Fatal errors were encountered
+
+
+
+6.0  ALTERNATIVE LINKER
+
+     Two versions of the MS-LINK utility are  provided  with
+this version of MS Fortran.  The first, named LINK.V1 is the
+most current linker for MS-DOS versions 1.25 and below.   It
+will  run  under  MS-DOS  2.0 but cannot accept pathnames or
+subdirectories.  The other is named  LINK.V2  and  will  run
+only   on   MS-DOS   2.0.    The  limits  on  program  size,
+relocations, externals  per  module  etc.,  are  bigger  for
+LINK.V2  than  for  either  LINK.V1  or  the  linker usually
+supplied with MS-DOS 2.0.  The interface to both linkers  is
+identical  and  is as described in the linker documentation.
+You should rename the one you want to use LINK.EXE.
+
+
+
+7.0  EXTENDED NON-DECIMAL NUMBERS
+
+     Although the maximum 32-bit integer value is defined as
+2**31-1,  the  compiler and runtime will read greater values
+which are nominally in the range upto 2**32  without  giving
+an  error if (and only if) the radix is other than 10.  They
+will  be  interpreted  as  the  negative  numbers  with  the
+corresponding   internal   representation.    For   example,
+16#FFFFFFFF will result  in  all  the  bits  in  the  32-bit
+integer  result being set, and will have an arithmetic value
+of -1.
+                                                      Page 4
+
+
+8.0  $MESSAGE METACOMMAND
+
+     The $MESSAGE metacommand can be used to  send  messages
+to the standard output device when running the Fortran front
+end, for example:
+$MESSAGE: 'This is displayed when you run FOR1'
+
+The message string must be 40 characters or fewer.
+
+
+
+9.0  FLOATING POINT OPERATIONS
+
+     Most users of MS-Fortran will find the default behavior
+of  the  floating  point  operations  will provide extremely
+accurate,  consistent  and  efficient  processing  of  their
+algorithms,  whether they have an 8087 installed or not.  If
+this is the case for you, you need not be concerned with the
+issues  described  either  below  or  in the addendum to the
+User's Guide.
+
+     However, those who wish to take advantage of  the  full
+power and flexiblity of the proposed IEEE Real Math Standard
+should read both the addendum and the following  description
+carefully.
+
+
+
+9.1  Math Package Size
+
+     The REAL arithmetic support routines  contribute  about
+6.5k  bytes to your program and not 4.5k as specified in the
+addendum.
+
+
+
+9.2  $FLOATCALLS And The 8087
+
+     Contrary to the description  in  the  addendum  to  the
+Fortran User's Guide, programs compiled with the $FLOATCALLS
+option, linked with  the  emulator  library  and  run  on  a
+machine  with  an  8087,  will use the 8087 to do the actual
+arithmetic.  This means that using this option  will  result
+in  a  much  smaller  performance  penalty, when you have an
+8087, than suggested in the addendum.
+
+
+
+9.3  Environment Control And Exception Handling For 8087 Math
+
+     There  are  five  exceptions  required  by   the   IEEE
+standard.   The "Control Word" defines what response is made
+to each exception  (see  below  for  a  description  of  the
+Control  Word and how to access it).  The exceptions and the
+default and alternative responses are as follows:
+                                                      Page 5
+
+
+1. Invalid Operation - any operation involving a NAN (Not A
+                       a number), SQRT (-1), 0*infinity etc.
+   Default Action    - Enabled: gives runtime error 2136.
+   Alternate Action  - Disabled: returns a NAN
+
+2. Divide by Zero    - r/0.0
+   Default Action    - Enabled: gives runtime error 2100
+   Alternate Action  - Disabled: returns a properly signed
+                       INF (infinity)
+
+3. Overflow          - Operation results in a number greater
+                       than maximum representable number.
+   Default Action    - Enabled: gives runtime error 2101.
+   Alternate Action  - Disabled: returns INF.
+
+4. Underflow         - Operation results in a number smaller
+                       than minimum representable number.
+   Default Action    - Disabled: returns zero.
+   Alternate Action  - Enabled: gives runtime error 2135.
+
+5. Precision Loss    - When a result is subject to rounding
+                       error, means result is not exact.
+   Default Action    - Disabled: Returns properly rounded
+                       result.
+   Alternate Action  - Enabled: gives runtime error 2139
+
+
+     Note that if you have masked the  exceptions,  you  may
+get  not-a-number  values.   If  you write these values with
+formatted i/o, you  will  either  get  asterisks,  or,  more
+usually,   the  letters  INF  -  for  infinity,  IND  -  for
+indefinite, and NAN - for not-a-number will appear,  usually
+in the fractional part of the field.
+
+     Contrary to the description in the MS-Fortran reference
+(Section  6.2.1) the $DEBUG metacommand does not control the
+handling of the exceptions (you should continue to use it to
+control  Integer aritmetic errors, however).  Instead, there
+are two  memory  locations  that  control  both  processors.
+These  are  called  the  CONTROL and STATUS words.  (You can
+access or change the control and status words by  using  one
+of  the  procedures  described  below).   When  one  of  the
+exceptional conditions occurs, the appropriate  bit  in  the
+status  word  is set.  This flag will remain set to indicate
+that the exception occurred until cleared by the  user.   If
+the bit in the control word relating to a given exception is
+set then that exception is masked and the operation proceeds
+with  a supplied default.  If the bit is unset any exception
+of that type generates an error message, halts the operation
+and your program will stop.  In either case the exception is
+ORed into the STATUS word.
+
+     The CONTROL word is also used  to  set  modes  for  the
+internal  arithmetic  required  by the IEEE standard.  These
+are:
+                                                      Page 6
+
+
+    Rounding Control -  round to nearest (or even), Up,
+        Down, or Chop
+
+    Precision Control - Determines at which bit of the
+        manstissa rounding should take place. (24, 53,
+        or 64). Note all results are done to 64 bits
+        regardless of the precision control. It only
+        affects the rounding in the internal form.
+        On storage any result is again rounded to the
+        storage precision.
+
+    Infinity Control - Affine mode is the familar + and
+        - INF style of arithmetic. Projective mode is a
+        mode where + and - INF are considered to be the
+        same number. The principal effect is to change the
+        nature of comparisons (Projective INF does not
+        compare with anything but itself).
+        
+
+
+
+Format for STATUS BYTE and CONTROL WORD
+
+           15                     8  7  6  5  4  3  2  1  0
+STATUS    |     hi byte unused     |  |  |PE|UE|OE|ZE|  |IE|
+                                           |  |  |  |     |
+    Precision Exception -------------------+  |  |  |     |
+    Underflow Exception ----------------------+  |  |     |
+    Overflow Exception --------------------------+  |     |
+    Zero Divide Exception --------------------------+     |
+    Invalid Exception ------------------------------------+
+
+        (All other bits unused, may be either 1 or 0)
+
+            15 14 15 12 11-10  9-8   7  6  5  4  3  2  1  0
+CONTROL    |  |  |  |IC| RC  | PC  |  |  |PM|UM|OM|ZM|  |IM|
+                      |   |     |          |  |  |  |     |
+    Infinity Control -+   |     |          |  |  |  |     |
+    Round Control --------+     |          |  |  |  |     |
+    Precision Control ----------+          |  |  |  |     |
+                                           |  |  |  |     |
+    Precision Mask ------------------------+  |  |  |     |
+    Underflow Mask ---------------------------+  |  |     |
+    Overflow Mask -------------------------------+  |     |
+    Zero Divide Mask -------------------------------+     |
+    Invalid Mask -----------------------------------------+
+
+        (All other bits unused, may be either 1 or 0)
+
+        Infinity Control
+            0 = Projective
+            1 = Affine
+        Round Control
+            00 = Round nearest or even
+            01 = Round down (toward -INF)
+                                                      Page 7
+
+
+            10 = Round up   (toward +INF)
+            11 = Chop (Truncate toward 0)
+        Precision Control
+            00 = 24 bits of mantissa
+            01 = (reserved)
+            10 = 53 bits of mantissa
+            11 = 64 bits of mantissa
+
+
+     You can read or set the value of the control  word  and
+read the status word using the following subroutines:
+C Load Control Word
+      SUBROUTINE LCWRQQ (CW)
+      INTEGER*2 CW
+C Sets the control word to the value in CW
+
+C Store Control Word
+      INTEGER*2 FUNCTION SCWRQQ
+C Returns the value of the control word
+
+C Store Status Word
+      INTEGER*2 FUNCTION SSWRQQ
+C Returns the value of the status word
+
