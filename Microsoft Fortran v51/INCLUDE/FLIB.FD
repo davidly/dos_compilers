@@ -1,0 +1,298 @@
+C****************************** Module Header ******************************
+C*
+C* Copyright (c) 1990  Microsoft Corporation
+C*
+C* Module Name: FLIB.FD
+C*
+C* This module provides parameter and structure type declarations
+C* needed to communicate with subprograms found in the various FORTRAN
+C* libraries.  Each of the functional areas covered by this include file
+C* are small enough that separate include files for each are not warranted.
+C*
+C* The functional areas covered are the following.
+C*
+C* Math error support.
+C*
+C* Signal handling.
+C*
+C* Intdos/Intdosx.
+C*
+C***************************************************************************
+C -----------------------------------------------------------------
+C Data Tyoe Codes.
+C -----------------------------------------------------------------
+C Only of interest for math errors currently.
+      INTEGER TY$REAL4
+      INTEGER TY$REAL8
+      INTEGER TY$CMPLX8
+      INTEGER TY$CMPLX16
+
+      PARAMETER (TY$REAL4   = 1)
+      PARAMETER (TY$REAL8   = 2)
+      PARAMETER (TY$CMPLX8  = 3)
+      PARAMETER (TY$CMPLX16 = 4)
+
+C -----------------------------------------------------------------
+C Math Error Support
+C -----------------------------------------------------------------
+C Codes for function failure.
+      INTEGER MTH$E_DOMAIN              ! Argument domain error
+      INTEGER MTH$E_SINGULARITY         ! Argument Singularity
+      INTEGER MTH$E_OVERFLOW            ! Overflow range error
+      INTEGER MTH$E_UNDERFLOW           ! Underflow range error
+      INTEGER MTH$E_TLOSS               ! Total loss of precision
+      INTEGER MTH$E_PLOSS               ! Partial loss of precision
+
+      PARAMETER (MTH$E_DOMAIN      = 1)
+      PARAMETER (MTH$E_SINGULARITY = 2)
+      PARAMETER (MTH$E_OVERFLOW    = 3)
+      PARAMETER (MTH$E_UNDERFLOW   = 4)
+      PARAMETER (MTH$E_TLOSS       = 5)
+      PARAMETER (MTH$E_PLOSS       = 6)
+
+C Math error information structure.
+      STRUCTURE /MTH$E_INFO/
+        INTEGER*2 ERRCODE        ! INPUT : One of the MTH$ values above
+        INTEGER*2 FTYPE          ! INPUT : One of the TY$ values above
+        UNION
+        MAP
+            REAL*4 R4ARG1        ! INPUT : FIrst argument
+            REAL*4 R4ARG2        ! INPUT : Second argument (if any)
+            REAL*4 R4RES         ! OUTPUT : Desired result
+        END MAP
+        MAP
+            REAL*8 R8ARG1        ! INPUT : FIrst argument
+            REAL*8 R8ARG2        ! INPUT : Second argument (if any)
+            REAL*8 R8RES         ! OUTPUT : Desired result
+        END MAP
+        MAP
+            COMPLEX*8 C8ARG1     ! INPUT : FIrst argument
+            COMPLEX*8 C8ARG2     ! INPUT : Second argument (if any)
+            COMPLEX*8 C8RES      ! OUTPUT : Desired result
+        END MAP
+        MAP
+            COMPLEX*16 C16ARG1   ! INPUT : FIrst argument
+            COMPLEX*16 C16ARG2   ! INPUT : Second argument (if any)
+            COMPLEX*16 C16RES    ! OUTPUT : Desired result
+        END MAP
+        END UNION
+      END STRUCTURE
+
+C -----------------------------------------------------------------
+C Signal support
+C -----------------------------------------------------------------
+      INTEGER SIG$ERR                    ! SIGNALQQ return value
+      INTEGER SIG$NSIG
+      INTEGER SIG$INT
+      INTEGER SIG$ILL
+      INTEGER SIG$FPE
+      INTEGER SIG$SEGV
+      INTEGER SIG$TERM
+      INTEGER SIG$USR1
+      INTEGER SIG$USR2
+      INTEGER SIG$USR3
+      INTEGER SIG$BREAK
+      INTEGER SIG$ABORT
+
+      PARAMETER (SIG$ERR   = -1)
+      PARAMETER (SIG$NSIG  = 23)
+      PARAMETER (SIG$INT   =  2)
+      PARAMETER (SIG$ILL   =  4)
+      PARAMETER (SIG$FPE   =  8)
+      PARAMETER (SIG$SEGV  = 11)
+      PARAMETER (SIG$TERM  = 15)
+      PARAMETER (SIG$USR1  = 16)
+      PARAMETER (SIG$USR2  = 17)
+      PARAMETER (SIG$USR3  = 20)
+      PARAMETER (SIG$BREAK = 21)
+      PARAMETER (SIG$ABORT = 22)
+
+      INTEGER FPE$INVALID
+      INTEGER FPE$DENORMAL
+      INTEGER FPE$ZERODIVIDE
+      INTEGER FPE$OVERFLOW
+      INTEGER FPE$UNDERFLOW
+      INTEGER FPE$INEXACT
+      INTEGER FPE$UNEMULATED
+      INTEGER FPE$SQRTNEG
+      INTEGER FPE$STACKOVERFLOW
+      INTEGER FPE$STACKUNDERFLOW
+      INTEGER FPE$EXPLICITGEN                  ! RAISEQQ( SIGFPE )
+
+      PARAMETER (FPE$INVALID        = #81)
+      PARAMETER (FPE$DENORMAL       = #82)
+      PARAMETER (FPE$ZERODIVIDE     = #83)
+      PARAMETER (FPE$OVERFLOW       = #84)
+      PARAMETER (FPE$UNDERFLOW      = #85)
+      PARAMETER (FPE$INEXACT        = #86)
+      PARAMETER (FPE$UNEMULATED     = #87)
+      PARAMETER (FPE$SQRTNEG        = #88)
+      PARAMETER (FPE$STACKOVERFLOW  = #8a)
+      PARAMETER (FPE$STACKUNDERFLOW = #8b)
+      PARAMETER (FPE$EXPLICITGEN    = #8c)
+
+      INTEGER   SIGNALQQ[EXTERN]
+      INTEGER*2 RAISEQQ[EXTERN]
+
+C -----------------------------------------------------------------
+C Intdos/Intdosx support.
+C -----------------------------------------------------------------
+      STRUCTURE /REGS$WORD/
+        INTEGER*2 AX
+        INTEGER*2 BX
+        INTEGER*2 CX
+        INTEGER*2 DX
+        INTEGER*2 SI
+        INTEGER*2 DI
+        INTEGER*2 CFLAG
+      END STRUCTURE
+
+      STRUCTURE /REGS$BYTE/
+        INTEGER*1 AL
+        INTEGER*1 AH
+        INTEGER*1 BL
+        INTEGER*1 BH
+        INTEGER*1 CL
+        INTEGER*1 CH
+        INTEGER*1 DL
+        INTEGER*1 DH
+      END STRUCTURE
+
+      STRUCTURE /REGS$INFO/
+        UNION
+        MAP
+            RECORD /REGS$WORD/ WREGS
+        END MAP
+        MAP
+            RECORD /REGS$BYTE/ BREGS
+        END MAP
+        END UNION
+      END STRUCTURE
+
+      STRUCTURE /SREGS$INFO/
+        INTEGER*2 ES
+        INTEGER*2 CS
+        INTEGER*2 SS
+        INTEGER*2 DS
+      END STRUCTURE
+
+C -----------------------------------------------------------------
+C FORTRAN QuickWin App Support
+C -----------------------------------------------------------------
+      INTEGER*2 ABOUTBOXQQ[EXTERN]
+
+C Clicking on menus.
+      INTEGER*2 QWIN$STATUS
+      INTEGER*2 QWIN$TILE
+      INTEGER*2 QWIN$CASCADE
+      INTEGER*2 QWIN$ARRANGE
+
+      PARAMETER (QWIN$STATUS  = 1)
+      PARAMETER (QWIN$TILE    = 2)
+      PARAMETER (QWIN$CASCADE = 3)
+      PARAMETER (QWIN$ARRANGE = 4)
+
+      INTEGER*2 CLICKQQ[EXTERN]
+
+C Get/Set unit focus.
+      INTEGER*2 FOCUSQQ[EXTERN]
+      INTEGER*2 INQFOCUSQQ[EXTERN]
+
+C Size/Move a window
+      STRUCTURE /QWINFO/
+          INTEGER*2 TYPE          ! request type
+          INTEGER*2 X             ! x coordinate for upper left
+          INTEGER*2 Y             ! y coordinate for upper left
+          INTEGER*2 H             ! window height
+          INTEGER*2 W             ! window width
+      END STRUCTURE
+
+      INTEGER*2 QWIN$MIN
+      INTEGER*2 QWIN$MAX
+      INTEGER*2 QWIN$RESTORE
+      INTEGER*2 QWIN$SET
+
+      PARAMETER (QWIN$MIN     = 1)
+      PARAMETER (QWIN$MAX     = 2)
+      PARAMETER (QWIN$RESTORE = 3)
+      PARAMETER (QWIN$SET     = 4)
+
+      INTEGER*2 SETWSIZEQQ[EXTERN]
+
+      INTEGER*2 QWIN$FRAMEMAX
+      INTEGER*2 QWIN$FRAMECURR
+      INTEGER*2 QWIN$CHILDMAX
+      INTEGER*2 QWIN$CHILDCURR
+
+      PARAMETER (QWIN$FRAMEMAX  = 1)
+      PARAMETER (QWIN$FRAMECURR = 2)
+      PARAMETER (QWIN$CHILDMAX  = 3)
+      PARAMETER (QWIN$CHILDCURR = 4)
+
+      INTEGER*2 GETWSIZEQQ[EXTERN]
+
+C Message Boxes
+      INTEGER*2 MB$ABORTRETRYIGNORE
+      INTEGER*2 MB$DEFBUTTON1
+      INTEGER*2 MB$DEFBUTTON2
+      INTEGER*2 MB$DEFBUTTON3
+      INTEGER*2 MB$ICONASTERISK
+      INTEGER*2 MB$ICONEXCLAMATION
+      INTEGER*2 MB$ICONHAND
+      INTEGER*2 MB$ICONINFORMATION
+      INTEGER*2 MB$ICONQUESTION
+      INTEGER*2 MB$ICONSTOP
+      INTEGER*2 MB$OK
+      INTEGER*2 MB$OKCANCEL
+      INTEGER*2 MB$RETRYCANCEL
+      INTEGER*2 MB$SYSTEMMODAL
+      INTEGER*2 MB$TASKMODAL
+      INTEGER*2 MB$YESNO
+      INTEGER*2 MB$YESNOCANCEL
+
+      PARAMETER (MB$ABORTRETRYIGNORE = #0002)
+      PARAMETER (MB$DEFBUTTON1       = #0000)
+      PARAMETER (MB$DEFBUTTON2       = #0100)
+      PARAMETER (MB$DEFBUTTON3       = #0200)
+      PARAMETER (MB$ICONASTERISK     = #0040)
+      PARAMETER (MB$ICONEXCLAMATION  = #0030)
+      PARAMETER (MB$ICONHAND         = #0010)
+      PARAMETER (MB$ICONINFORMATION  = #0040)
+      PARAMETER (MB$ICONQUESTION     = #0020)
+      PARAMETER (MB$ICONSTOP         = #0010)
+      PARAMETER (MB$OK               = #0000)
+      PARAMETER (MB$OKCANCEL         = #0001)
+      PARAMETER (MB$RETRYCANCEL      = #0005)
+      PARAMETER (MB$SYSTEMMODAL      = #1000)
+      PARAMETER (MB$TASKMODAL        = #2000)
+      PARAMETER (MB$YESNO            = #0004)
+      PARAMETER (MB$YESNOCANCEL      = #0003)
+
+      INTEGER*2 MB$IDOK
+      INTEGER*2 MB$IDCANCEL
+      INTEGER*2 MB$IDABORT
+      INTEGER*2 MB$IDRETRY
+      INTEGER*2 MB$IDIGNORE
+      INTEGER*2 MB$IDYES
+      INTEGER*2 MB$IDNO
+
+      PARAMETER (MB$IDOK     = 1)
+      PARAMETER (MB$IDCANCEL = 2)
+      PARAMETER (MB$IDABORT  = 3)
+      PARAMETER (MB$IDRETRY  = 4)
+      PARAMETER (MB$IDIGNORE = 5)
+      PARAMETER (MB$IDYES    = 6)
+      PARAMETER (MB$IDNO     = 7)
+
+      INTEGER*2 MESSAGEBOXQQ[EXTERN]
+
+C -----------------------------------------------------------------
+C Time and Date Support
+C -----------------------------------------------------------------
+      LOGICAL SETTIM[EXTERN]
+      LOGICAL SETDAT[EXTERN]
+
+C -----------------------------------------------------------------
+C Command Line Arguments
+C -----------------------------------------------------------------
+      INTEGER*4 NARGS[EXTERN]

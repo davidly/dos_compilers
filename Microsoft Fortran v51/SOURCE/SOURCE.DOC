@@ -1,0 +1,167 @@
+			       SOURCE.DOC File
+      Microsoft(R) FORTRAN Professional Development System version 5.10
+
+===========================< Source List >=================================
+
+The \SOURCE directory contains the subdirectories PATCH, STARTUP, and
+SAMPLES, and the files as described below. (NOTE: The files copied depend
+on the options selected during SETUP.)
+
+\SOURCE\STARTUP
+
+  This directory contains OS non-specific startup files.  They are
+  used in conjunction with the OS specific files found in
+  \SOURCE\STARTUP\DOS, \OS2, and \WIN.
+
+  The file STARTUP.DOC describes how to build new startup code for
+  your FORTRAN run-time libraries. MASM is required to assemble
+  the startup code.
+
+  The file FILEHAND.DOC describes how to change the default limit on
+  open files for a FORTRAN program.
+
+\SOURCE\STARTUP\DOS
+
+  This directory contains the files required for building new
+  startup code for a DOS mode FORTRAN run-time library.
+
+\SOURCE\STARTUP\OS2
+
+  This directory contains the files required for building new
+  startup code for a OS\2 mode FORTRAN run-time library.
+
+\SOURCE\STARTUP\WIN
+
+  This directory contains two .OBJ files that will allow a QuickWin
+  application or a FORTRAN Windows DLL to open 64 files (as opposed to
+  the default limit of 20 files).  See the FILEHAND.DOC file for more
+  information.
+
+\SOURCE\PATCH
+
+  This directory contains information and files required to patch
+  IBM PC-DOS 3.20.  There is a bug in IBM PC-DOS 3.20 which may cause
+  improper operation of a program if a floating-point exception is
+  generated.  The file PATCH320.DOC describes the procedure for
+  patching IBM PC-DOS 3.20.
+
+\SOURCE\SAMPLES
+
+  This directory contains some general demonstration programs. The
+  comments at the beginning of each program give further information,
+  including any required compiler options.
+
+    Files	  Description
+    -----	  -----------
+
+    DWHET.FOR	  Single- and double-precision versions of the Whetstone
+    SWHET.FOR	  benchmark program measure floating-point calculation
+		  speed.
+
+    SIEVE.FOR	  The Sieve of Eratosthenes benchmark program measures
+		  integer processing speed.
+
+    EXEC.FI       The include file EXEC.FI contains interface statements
+    DEMOEXEC.FOR  for the SYSTEM and SPAWNLP functions that allow a
+                  program to execute DOS commands or other programs.
+                  The program DEMOEXEC.FOR illustrates use of the include
+                  file.
+
+    SORTDEMO.FOR  This program visually illustrates six different sorting
+		  algorithms. The source code demonstrates how to make
+                  OS/2 calls and how to use the OS/2 include files.
+
+    ANNUITY1.FOR  This program calculates a simple annuity table.  It is
+                  used as an example program for the PWB tutorial and
+                  contains intentional errors.
+
+    MTRX.FOR      This program calculates the product of two matrices.  It
+                  is used as an example of compiling a QuickWin application.
+
+    MTRX_W.FOR    This program calculates the product of two matrices.  It
+                  is similar to MTRX.FOR, but makes use of QuickWin
+                  enhancements.
+
+    MTRX_WD.FOR   These files create a version of MTRX_W that uses a
+    MTRX_WD.DEF   Windows dynamic-link library (DLL).
+    MATLIB.FOR
+    MATLIB.DEF
+
+    MULMIX.C      These files demonstrate how to create mixed-language
+    MULMIX.H      Windows applications with C and FORTRAN.  There are
+    MULMIX.RC     two versions of the MULMIX program. One version is
+    MULMIX.DEF    a statically linked mixed-language application, and
+    MULMIX.MAK    is built with MULMIX.MAK.   The other contains a
+    MULF.FOR      mixed-language DLL and is built with MULMIX_D.MAK.
+    MULC.C
+    MULLIB.DEF
+    MULMIX_D.DEF
+    MULMIX_D.MAK
+
+    RGMAIN.FOR    These files are a modular version of the REALG.FOR
+    RGGRAPH.FOR   graphics example program.  They are used in the PWB
+    RGGRID.FOR    tutorial to demonstrate how to manage a multimodule
+    RGINIT.FOR    program.
+    RG.MAK
+
+    FMHELLO.FOR   This program demonstrates multithread OS/2 programming.
+
+    FMTDLL.DEF    These files are used to demonstrate the creation of
+    FMTDLL.FOR    multithread dynamic-link libraries under OS/2.  Build
+    FMTMAIN.DEF   the DLL using MKFDLL.CMD.
+    FMTMAIN.FOR
+    MKFDLL.CMD
+
+    FDLLOBJS.CMD  This batch file creates a dynamic-link library and a
+    FDLLOBJS.DEF  corresponding imports library containing the FORTRAN
+    DIFFHLP.DEF   run-time.  A pre-built version of FRTLIB.DLL is
+                  included on the FORTRAN 5.1 distribution disks, and
+                  is copied by the SETUP program.
+
+    EMOEM.ASM     This file contains OEM customization routines for PC
+                  clones that are not IBM compatible and that contain an
+                  8087/80287/80387 coprocessor.
+
+  This directory also contains the source code for the graphics programs
+  from chapters 11, 12, and 13 of the Microsoft FORTRAN Advanced Topics
+  manual. Note that these examples require the graphics include files 
+  FGRAPH.FI and FGRAPH.FD. These files are copied to an INCLUDE directory 
+  by the SETUP program. In real mode (DOS), the programs must be linked with
+  the graphics library GRAPHICS.LIB. In protected mode (OS/2), graphics is
+  not supported, but you can compile text-only programs by linking
+  with the text library GRTEXTP.LIB. The appropriate libraries are
+  copied to your disk by the SETUP program. For example, use the
+  following command line for DOS:
+
+    FL COLTEXT.FOR GRAPHICS.LIB
+
+  Or use the following command line for OS/2:
+
+    FL COLTEXT.FOR GRTEXTP.LIB
+
+  The programs are listed below:
+
+			DOS only		DOS or OS/2
+			--------		-----------
+
+     Chapter 11         CGA.FOR                 COLTEXT.FOR
+                        COLOR.FOR
+                        EGA.FOR
+                        GRAPHIC.FOR
+                        HORIZON.FOR
+                        REALG.FOR
+                        SINE.FOR
+
+     Chapter 12         SAMPLER.FOR
+
+     Chapter 13         ANIMATE.FOR             CURSOR.FOR
+                        ARC.FOR                 MODES.FOR
+                        CGAPAL.FOR              SCRTXWIN.FOR
+                        FIGURE.FOR              SETROWS.FOR
+                        FILL.FOR                TEXT.FOR
+                        FONTS.FOR               WRAP.FOR
+                        MAGNIFY.FOR
+                        PAGE.FOR
+                        PALETTE.FOR
+                        STAR.FOR
+                        WINDOW.FOR

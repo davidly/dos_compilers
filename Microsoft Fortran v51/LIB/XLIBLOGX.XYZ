@@ -1,0 +1,64 @@
+***SETUP LIB LOG FILE***
+
+This file contains the output of the LIB utility
+
+
+Microsoft (R) Library Manager  Version 3.18
+Copyright (C) Microsoft Corp 1983-1991.  All rights reserved.
+
+Library name: C:\FORTRAN\LIB\MLIBFER.LIB
+Library does not exist.  Create? (y/n) Y
+Operations: +C:\FORTRAN\LIB\LIBH.LIB  &
+Operations: +C:\FORTRAN\LIB\MLIBFOR.LIB  &
+Operations: +C:\FORTRAN\LIB\MLIBFP.LIB  &
+Operations: +C:\FORTRAN\LIB\EM.LIB  &
+Operations: +C:\FORTRAN\LIB\MGRAPHFP.LIB  &
+Operations: +C:\FORTRAN\LIB\MLIBFOR1.LIB;
+LIB : warning U4150: qcwindow : module redefinition ignored
+LIB : warning U4150: grfpinit : module redefinition ignored
+LIB : warning U4150: grwindow : module redefinition ignored
+
+Microsoft (R) Library Manager  Version 3.18
+Copyright (C) Microsoft Corp 1983-1991.  All rights reserved.
+
+Library name: C:\FORTRAN\LIB\MLIBF7R.LIB
+Library does not exist.  Create? (y/n) Y
+Operations: +C:\FORTRAN\LIB\LIBH.LIB  &
+Operations: +C:\FORTRAN\LIB\MLIBFOR.LIB  &
+Operations: +C:\FORTRAN\LIB\MLIBFP.LIB  &
+Operations: +C:\FORTRAN\LIB\87.LIB  &
+Operations: +C:\FORTRAN\LIB\MGRAPHFP.LIB  &
+Operations: +C:\FORTRAN\LIB\MLIBFOR1.LIB;
+LIB : warning U4150: qcwindow : module redefinition ignored
+LIB : warning U4150: grfpinit : module redefinition ignored
+LIB : warning U4150: grwindow : module redefinition ignored
+
+Microsoft (R) Library Manager  Version 3.18
+Copyright (C) Microsoft Corp 1983-1991.  All rights reserved.
+
+Library name: C:\FORTRAN\LIB\LLIBFER.LIB
+Library does not exist.  Create? (y/n) Y
+Operations: +C:\FORTRAN\LIB\LIBH.LIB  &
+Operations: +C:\FORTRAN\LIB\LLIBFOR.LIB  &
+Operations: +C:\FORTRAN\LIB\LLIBFP.LIB  &
+Operations: +C:\FORTRAN\LIB\EM.LIB  &
+Operations: +C:\FORTRAN\LIB\MGRAPHFP.LIB  &
+Operations: +C:\FORTRAN\LIB\LLIBFOR1.LIB;
+LIB : warning U4150: qcwindow : module redefinition ignored
+LIB : warning U4150: grfpinit : module redefinition ignored
+LIB : warning U4150: grwindow : module redefinition ignored
+
+Microsoft (R) Library Manager  Version 3.18
+Copyright (C) Microsoft Corp 1983-1991.  All rights reserved.
+
+Library name: C:\FORTRAN\LIB\LLIBF7R.LIB
+Library does not exist.  Create? (y/n) Y
+Operations: +C:\FORTRAN\LIB\LIBH.LIB  &
+Operations: +C:\FORTRAN\LIB\LLIBFOR.LIB  &
+Operations: +C:\FORTRAN\LIB\LLIBFP.LIB  &
+Operations: +C:\FORTRAN\LIB\87.LIB  &
+Operations: +C:\FORTRAN\LIB\MGRAPHFP.LIB  &
+Operations: +C:\FORTRAN\LIB\LLIBFOR1.LIB;
+LIB : warning U4150: qcwindow : module redefinition ignored
+LIB : warning U4150: grfpinit : module redefinition ignored
+LIB : warning U4150: grwindow : module redefinition ignored

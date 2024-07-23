@@ -1,0 +1,5 @@
+LIBRARY FMTDLL
+DESCRIPTION 'Sample Dynalink Library written in Microsoft FORTRAN'
+PROTMODE
+EXPORTS dynalibtest
+DATA MULTIPLE

@@ -1,0 +1,32 @@
+; Module-definition file for FORTRAN mixed-language example.
+
+NAME         MULMIX        ; application's module name
+
+DESCRIPTION 'FORTRAN 5.1 Mixed-Language Example'
+
+EXETYPE      WINDOWS	   ; required for all Windows applications
+
+STUB        'WINSTUB.EXE' ; Generates error message if application
+                           ;   is run without Windows
+
+;CODE can be moved in memory and discarded/reloaded
+CODE  PRELOAD MOVEABLE DISCARDABLE
+
+;DATA should be SINGLE if program can be invoked only once
+DATA  PRELOAD MOVEABLE SINGLE
+
+
+HEAPSIZE     1024
+STACKSIZE    5120	   ; recommended minimum for Windows applications
+
+
+; All functions that will be called by any Windows routine
+; must be exported.
+
+EXPORTS
+    MainWndProc     @1   ; name of window processing function
+    AboutBoxFunc    @2   ; name of "About" processing function
+    MultiplyBoxFunc @3   ; name of "Multiply" processing function
+IMPORTS
+    MULLIB.MUL
+

@@ -1,0 +1,40 @@
+FORTRAN Run-time Library Startup Sources
+---------------------------------
+The directory \STARTUP and its subdirectories contain the files
+necessary for building the startup portion of the FORTRAN run-time library.
+The \STARTUP directory contains the startup source files, the include files, 
+the batch file, and the make file used to build the startup object files.  
+The subdirectories of \STARTUP contain operating-system (OS) specific sources.
+
+The startup object files can be built by invoking STARTUP.BAT from within
+the \STARTUP directory.  This batch file assumes the following:
+
+	(1) MMAKE.EXE, LINK.EXE, the FORTRAN compiler, and the assembler must
+	be in the execution path.  Microsoft(R) Macro Assembler Version 5.0 
+	or later is required to build the startup sources.
+	(2) OS2.LIB must be in the directory specified by the LIB
+	environment variable.
+
+Startup will create two memory-model specific subdirectories (M and L)
+and place the appropriate object files there. Under each memory model 
+subdirectory, startup creates two additional subdirectories, OS2 and DOS, 
+where OS-specific objects reside.
+
+The message "<cEnd - nogen>" is generated when some of the assembly language 
+source files are assembled.  This message is expected and is benign.
+
+The startup batch file requires as arguments a list of capital letters
+describing the memory models you wish to build.  For example,
+"startup M L" will build the medium- and large-model startup objects.
+STARTUP.BAT will then link the objects with a sample FORTRAN program called 
+NULBODY.FOR to produce NULBODY.EXE. Invoking STARTUP.BAT with no arguments 
+will give usage information.
+
+If you are assembling the source files with MASM 6.0, then replace 
+CMACROS.INC with CMACROS.NEW and add "-DMS_STARTUP" to the ASMFLAGS
+line in MAKEFILE.
+
+Note:  Startup sources written in assembly language have been edited with
+tabstops set to 8.  
+
+				--- End ---

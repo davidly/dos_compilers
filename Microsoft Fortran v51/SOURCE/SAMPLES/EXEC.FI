@@ -1,0 +1,55 @@
+$LIST
+C       EXEC.FI - Interface file for C system and spawnlp routines
+
+C       These functions are discussed in Chapter 3 of the Advanced Topics
+C       manual. The program DEMOEXEC.FOR illustrates how to use the include
+C       file and the functions.
+
+
+C       Function:       SYSTEM
+C
+C       Purpose:        Starts a child copy of the DOS system shell
+C                       program--COMMAND.COM
+C
+C       Argument:       string - A string (in C format) consisting
+C                       of a DOS command, program, or batch file name
+C                       followed optionally by arguments
+C
+C       Return:         INTEGER*2 - 0 for success, or -1 for fail
+C
+C       Example:        dummy2 = SYSTEM( 'dir *.for'C )
+
+        INTERFACE TO FUNCTION SYSTEM[C] (STRING)
+        INTEGER*2 SYSTEM
+        CHARACTER*1 STRING[REFERENCE]
+        END
+
+
+C       Function:       SPAWNLP
+C
+C       Purpose:        Starts a child copy of a specified program
+C
+C       Arguments:      mode - Must be 0
+C
+C                       path - Address of a string (in C format) containing
+C                       path name of program to be executed (may be partial
+C                       if the program is in PATH or current directory)
+C
+C                       arg0 - Must be same as path
+C
+C                       arg1,...,argn - Addresses of command-line argument
+C                       strings (in C format) to be passed to the program.
+C                       Last argument must be INT4(0)
+C
+C       Return:         INTEGER*2 - return code of process or -1 for fail
+C
+C       Example:        dummy2 = SPAWNLP( 0,
+C                      +                  LOC( 'format'C ),
+C                      +                  LOC( 'format''C ),
+C                      +                  LOC( 'a:'C ),
+C                      +                  INT4( 0 ) )
+C
+C
+        INTERFACE TO FUNCTION SPAWNLP [C,VARYING] (MODE)
+        INTEGER*2 MODE,SPAWNLP
+        END

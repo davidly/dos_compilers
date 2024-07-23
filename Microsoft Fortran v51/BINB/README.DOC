@@ -1,0 +1,449 @@
+                            README.DOC File
+              Release notes for the Microsoft(R) FORTRAN
+             Professional Development System, Version 5.1
+
+This document contains release notes for version 5.1 of the Microsoft
+FORTRAN Professional Development System for MS-DOS(R) and the Microsoft
+Operating System/2 (MS(R) OS/2).  The information in this document is
+more up-to-date than that in the manuals and the Microsoft Advisor
+(online help).
+
+Microsoft improves its languages documentation at the time of reprinting,
+so some of the information in this file may already be in your manuals.
+
+
+
+=================================< Contents >==================================
+
+
+This file has 5 parts:
+
+      Part    Contents
+      ----    --------
+      1       The SETUP Program
+      2       FORTRAN Programming with Microsoft Windows
+      3       Additions to the Microsoft FORTRAN Reference
+      4       Additions to the Microsoft FORTRAN Environment and Tools
+      5       Miscellaneous
+
+
+
+=============================< The SETUP Program >=============================
+
+
+Disk Space for Additional Libraries
+-----------------------------------
+
+Each library for a different combination of memory model and floating-
+point arithmetic requires a minimum of 220K of disk space. If you intend
+to create more than one library when running SETUP, be sure to take into
+account the additional disk space required.
+
+
+DECOMP.EXE
+----------
+
+The files on the FORTRAN 5.1 disks are compressed. SETUP uses a utility
+called DECOMP.EXE to decompress the files before copying them to your hard
+disk. Normally you should use SETUP to copy files, and they will be
+decompressed automatically.
+
+Occasionally, however, you may want to copy a file from the SETUP disks
+directly to your hard disk without using the SETUP program. In that case,
+you will have to use the DECOMP.EXE utility to decompress the file. The
+syntax for DECOMP.EXE is:
+
+     DECOMP filename.ab$ filename.abc
+
+where filename.abc is the decompressed filename.
+
+All compressed files end with $. If the filename extension is three
+characters long, the final character will be replaced with a $. If the
+extension is two characters, the two characters will be retained and a
+$ will be placed in the third position. If the extension has one
+character, then that character will be retained and followed by a $. If
+there is no extension, then the filename will be given a suffix of a
+single $.
+
+For example:
+
+     f1.ex$      ->  f1.exe
+     source.do$  -> source.doc
+     flib.fd$    -> flib.fd
+     mulmix.c$   -> mulmix.c
+     makefile.$  -> makefile
+
+
+
+================< FORTRAN Programming with Microsoft Windows >================
+
+
+Requirement for Windows Dynamic-Link Libraries
+----------------------------------------------
+
+All FORTRAN 5.1 dynamic-link libraries (DLLs) must explicitly export the
+symbol WEP. To do this, the statement
+
+     EXPORTS
+         WEP
+
+should be added to the DLL's module definition file. The WEP routine is
+included in the FORTRAN 5.1 startup code. If a DLL already has a user-
+defined WEP routine (for example, in a mixed-language DLL with existing C
+code), the WEP routine should be renamed _WEP. The FORTRAN 5.1 startup
+code will call _WEP, if present, during DLL termination. For additional
+information concerning the WEP function, see the Windows 3.0 SDK
+documentation.
+
+
+Close All Files Before Exiting a Windows DLL
+--------------------------------------------
+
+When a Windows DLL written in FORTRAN terminates, any information
+left in a file output buffer will be lost. This is a result of how DLLs
+are terminated in Windows. To insure that all data is written to a 
+file, explicitly CLOSE any open files in a DLL before the DLL is terminated.
+One way of doing this is by adding a function to the DLL code that closes all
+files, and calling this function just before the application terminates.
+
+
+MessageBox Support
+-------------------
+
+FORTRAN supports two modes of MessageBox for QuickWin applications,
+TASKMODAL and SYSTEMMODAL.  TASKMODAL requires that you respond to the
+message box before the application will perform any further calculations;
+however, all other applications currently running will not be affected.
+SYSTEMMODAL requires you to respond before any application may run.
+
+
+Maximizing Windows
+------------------
+
+To maximize the frame window of a QuickWin application, place the 
+following statement in the WIN.INI file:
+
+     [<appname>]
+     QWINMaximized=1
+
+where <appname> is the base name of your executable file. For example, if
+the executable file is called PROGRAM.EXE, the value for <appname> would
+be PROGRAM.
+
+
+Windows DLLs and Subprograms with String Arguments
+--------------------------------------------------
+
+Don't pass char*(*) arguments to a subprogram residing in a Windows DLL.
+This is because the runtime in the calling DLL or EXE cannot communicate
+the length of the string with the runtime in the called DLL.
+
+
+
+==============< Additions to the Microsoft FORTRAN Reference >=================
+
+/Gt option
+----------
+
+The /Gt, or data threshold, compiler option can remedy a number of link-
+time and run-time errors in FORTRAN 5.1.  The /Gt option sets a threshold
+value that determines where data items are stored in memory. Data items
+that are greater in size than the threshold value, and that would normally
+be stored in the default data segment, or DGROUP, are moved to a far
+segment of data.  This frees up more room in DGROUP for variables less
+than the threshold value and for other uses, such as the program STACK
+and NEAR HEAP.
+
+Using the /Gt switch can often help eliminate the LINK errors:
+
+     L1070: 'segment name':Segment exceeds 64K
+
+where segment can be _BSS or _DATA
+
+     L2041: Stack Plus Data exceeds 64K
+
+and the run-time error:
+
+     F6700: Heap Space Limit Exceeded
+
+In each of these cases, too much data is being stored in DGROUP, and using
+the /Gt switch may free up the required space.  See Section 7.6 of the
+FORTRAN 5.1 Reference for more information.
+
+
+/Oc Option
+----------
+
+When you use the /Oc (default common subexpression optimization), the
+compiler examines only short sections of code for common subexpressions.
+You can disable default common subexpression optimization with the /Od
+option.
+
+
+Special Device Names
+--------------------
+
+The list of special device names in the FORTRAN Reference Manual is
+incomplete.  The complete list of special device names is:
+
+     Device Name              Comments
+     ===========              ========
+     CON                      stdout, stdin
+     USER                     stdout, stdin
+     COM1                     COM1 port
+     AUX                      COM1 alias
+     LINE                     COM1 alias
+     LPT1                     stdprn
+     PRN                      stdprn
+     LPT2
+     LPT3
+     LPT4
+     ERR                      stderr
+     NUL                      null device
+
+Note that COM2, COM3, and COM4 are not special device names in FORTRAN 
+5.1.
+
+To access these devices, use an OPEN statement of the form:
+
+      OPEN (10, FILE='lpt1')
+
+For connections to LPT2 or COM2, you are also required to specify
+STATUS='old'.  These two devices are not treated as standard devices
+like LPT1 and COM1.  Output to these devices is of the same form as to a
+file, i.e. the output is buffered and carriage control characters in 
+column 1 are ignored.
+
+
+/ND Option
+----------
+
+When using the /ND option in a module, you must also set the loadds
+attribute on all subprograms called from outside the module.
+
+
+Restrictions on String Assignment
+---------------------------------
+
+The right and left sides of a string assignment may not reference the
+same memory location.  For example, the following may fail because the
+generated code overlays the input as it produces the output:
+
+     character *10 string/'0123456789'
+     string = '#' // string
+     write (*,*) 'string = ' string
+     end
+
+
+IBM VS Extensions in Microsoft FORTRAN
+-----------------------------------------
+
+Microsoft FORTRAN supports only the following IBM VS FORTRAN
+extensions:
+
+- 31-character names
+- Allowing integer arrays to contain FORMAT specifications
+- DO statements without specified labels
+- DO WHILE statement
+- END DO statement
+- Equivalence of character and non character items
+- Mixing of character and non-character items in COMMON
+- NAMELIST
+- Specification of common block items in DATA outside block data
+    subprograms
+- Initialization on the declaration line
+- IMPLICIT NONE
+- INCLUDE
+- Length specification within declarations
+- Noninteger array subscripts
+- Z edit descriptor
+- ! comments
+- $ and _ in identifiers
+
+
+$NOTRUNCATE Metacommand
+-----------------------
+
+$NOTRUNCATE is now the default. As a result, it is possible to create
+variable names, common block names, and function or subroutine names that
+are longer than the 26-character space allotted in a .LST file. If these
+identifiers do not differ in the first 26 characters, the .LST file shows
+them with the same name.
+
+
+New NINT Functions
+------------------
+
+Three NINT intrinsic functions have been added: NINT1, NINT2, and NINT4.
+These return integer values of one, two, and four bytes respectively.
+
+
+The /4I2 Switch and the INT and NINT Functions
+----------------------------------------------
+
+The length of the value returned by the INT and NINT intrinsic functions
+is determined by the integer storage switch: two bytes if /4I2 is used,
+four bytes if /4I4 (the default) is used.
+
+If you want these functions to return a value with a length different
+from the length set by the integer storage switch, use INT1, INT2, or
+INT4 instead of INT, and use NINT1, NINT2, or NINT4 instead of NINT.
+
+
+80387 Coprocessor Instructions
+------------------------------
+
+The run-time libraries recognize the presence of an 80387 coprocessor. If
+you are not using the alternate math package, the library uses the 80387
+SIN and COS instructions, rather than deriving sines and cosines from the
+FPTAN instruction.
+
+
+Array Conformity in Functions and Subroutines
+---------------------------------------------
+
+A formal array argument in a subroutine or function does not have to have
+the same number of dimensions or total size as the actual array argument
+passed to it. This permits the procedure to contain a formal array that
+is as large as you think you will ever need; the calling program can then
+pass any array of the same size or smaller.
+
+Note, however, that if the formal and actual dimensions do not match in
+quantity and size, the formal array elements do not point to the same
+memory locations as the actual array elements with the same subscripts.
+In this case, your program has to calculate the correct subscripts.
+
+
+"Out of Memory" Error Message
+-----------------------------
+
+This compiler error does not have an error number. It occurs when the FL
+program does not have sufficient memory, as in the following cases:
+
+1. You used wildcard characters to specify the files to be compiled (for
+example, FL *.FOR) and there were too many files. The exact number of
+files that can be handled depends on the amount of system memory.
+
+2. The computer did not have enough free memory. This may occur when
+other processes are running under Microsoft Windows or OS/2.
+
+
+Additional Compiler Error Messages
+----------------------------------
+
+F2399: <name> : COMMON (or EQUIVALENCE) : automatic variable illegal.
+
+A variable previously declared as AUTOMATIC cannot appear in a COMMON
+block or an EQUIVALENCE statement.
+
+
+F4187: Debugging information exceeds 64K - extra ignored.
+
+There was more debugging information than could fit in the allotted 64K
+space. The additional information (which is usually symbols) was
+discarded.
+
+
+Revised Compiler Error Message
+------------------------------
+
+The <attribute> in error message F2384 can be "common block" or
+"equivalenced," in addition to ALLOCATABLE, EXTERN, FAR, or HUGE.
+
+
+Linker Path Specification
+-------------------------
+
+The /link option does not allow you to specify the linker's path. FL
+assumes the linker is in the same directory as the compiler.
+
+
+FL Switch Default Values
+------------------------
+
+If no switches appear in the FL command line, the source code is compiled
+with the following defaults:
+
+1. The Large memory model is used
+2. The 8086/8088 instruction set is used
+3. 8087/287/387 in-line instructions are used for floating-point
+   calculations
+4. Variable, subroutine, or function names are not truncated
+5. All integer and single-precision floating-point numbers are four bytes
+6. All Microsoft extensions to FORTRAN are enabled
+7. FORTRAN 66-style DO statements are disabled
+8. Full optimization is performed
+9. Debugging (extended run-time error handling) is disabled
+
+Any metacommands in a source code file override these defaults.
+
+
+Compiling Extremely Large Programs
+----------------------------------
+
+This release contains the file F1L.EXE, which is an alternate form of the
+Compiler Pass 1 disk if you need it.
+
+This compiler pass is used to compile programs that receive error message
+"F1901: program too large for memory." The F1L.EXE pass is invoked by
+ adding the /B1 option to the FL command line, as follows:
+
+     FL  /B1  F1L.EXE  <sourcefile>.FOR
+
+where <path> is the path (including drive and directory) where F1L.EXE
+resides, and <sourcefile> is the name of the FORTRAN source file you are
+compiling. Alternatively, you can rename F1L.EXE to F1.EXE to make the
+high-capacity version the default.
+
+
+Compiler Errors and Warnings Generated by $DEBUG and /4Yb
+---------------------------------------------------------
+
+In addition to the expanded run-time error handling and testing
+that $DEBUG and /4Yb enable, there are a number of compiler errors and
+warnings that appear if $DEBUG or /4Yb are used. They are:
+
+Error F2367: INTEGER : range error
+Error F2533: lower substring bound exceeds upper bound
+Error F2534: upper substring bound exceeds string length
+Error F2535: lower substring bound not positive
+Error F2536: subscript out of range
+Warning F4501: subscript out of range (array argument)
+
+
+
+======< Additions to the Microsoft FORTRAN Environment and Tools >======
+
+
+Displaying FORTRAN Arrays in CodeView
+-------------------------------------
+
+CodeView allows you to expand arrays and examine the individual elements
+of an array.  This feature, however, only works on one-dimensional arrays.
+Arrays of two dimensions or more cannot be expanded in CodeView.
+
+Another limitation of CodeView is that it cannot keep track of elements
+of HUGE arrays beyond the first 64K, or first segment, of the array.  An
+attempt to display an array element beyond the first segment will fail to
+give the proper value.
+
+
+TXTONLY.OBJ
+-----------
+
+TXTONLY.OBJ is useful for programs that may use _clearscreen, _outtext,
+_settextcolor, _settextwindow, and so on, but do not use graphics. If you
+have a program that never has to work in or switch into graphics modes and
+never changes the palette, linking TXTONLY.OBJ into your DOS .EXE file (in
+the .OBJ field) will save about 12K of .EXE size.
+
+
+
+================================< Miscellaneous >=============================
+
+APPEND.EXE
+----------
+
+Do not use the APPEND.EXE utility (shipped with DOS 4.01 and later
+versions) with FORTRAN applications.  FORTRAN 5.1 does not set the
+APPEND path and the results are unpredictable.

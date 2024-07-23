@@ -1,0 +1,24 @@
+; MTRX_WD.DEF
+; Module-definition file for FORTRAN QuickWin
+; program using DLL
+
+NAME	     MTRX_WD	     ; application's module name
+
+DESCRIPTION  'FORTRAN 5.1 QuickWin Program with DLL'
+
+APPLOADER    '__MSLANGLOAD'  ; described in FL.DEF
+
+EXETYPE      WINDOWS 3.0     ; required for all Windows applications
+
+STUB	     'WINSTUB.EXE'   ; Generates error message if application
+			     ;	 is run without Windows
+
+;CODE can be moved in memory and discarded/reloaded
+CODE  PRELOAD MOVEABLE DISCARDABLE
+
+DATA  PRELOAD MOVEABLE
+
+HEAPSIZE     1024
+STACKSIZE    5120      ; recommended minimum for Windows applications
+
+IMPORTS      MATLIB.MultMatrices

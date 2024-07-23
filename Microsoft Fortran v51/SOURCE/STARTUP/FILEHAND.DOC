@@ -1,0 +1,50 @@
+Increasing File Handles for the FORTRAN 5.10 Run-Time Libraries
+---------------------------------------------------------------
+
+There are two methods available for increasing the number of file handles
+available to a program.  One method is to modify and assemble the files
+CRT0DAT.ASM and UNIT.ASM as described in the header of the file UNIT.ASM.
+The Microsoft Macro Assembler (MASM) is required to assemble these two files. 
+Use the following commands to assemble the files with MASM 5.0 or 5.1:
+
+MASM /Mx UNIT.ASM
+
+MASM /Mx /Dmem_L CRT0DAT.ASM
+or,
+MASM /Mx /Dmem_M CRT0DAT.ASM
+
+where L and M are for Large and Medium model run-time libraries. If you
+are using MASM 6.00, rename the file CMACROS.NEW to replace the file
+CMACROS.INC.  Use the following commands to assemble the files:
+
+MASM /Mx UNIT.ASM
+
+MASM /Mx /Dmem_L /DMS_STARTUP CRT0DAT.ASM
+or,
+MASM /Mx /Dmem_M /DMS_STARTUP CRT0DAT.ASM
+
+
+The other method is to use the pre-compiled modules provided in this
+directory tree. The files CRT0DAT.ASM and UNIT.ASM have been compiled
+with 64 handles as opposed to the normal 20 handles.
+The modules provided are:
+
+UNIT.OBJ                - used with all models/operating systems
+
+OS2\CRT0DATL.OBJ        - large model, OS/2 EXE
+OS2\CRT0DATM.OBJ        - medium model, OS/2 EXE
+DOS\CRT0DATL.OBJ        - large model, DOS EXE
+DOS\CRT0DATM.OBJ        - medium model, DOS EXE
+WINDOWS\CRT0DATL.OBJ    - large model, Windows EXE
+WINDOWS\CRT0DATD.OBJ    - large model, Windows DLL
+
+To use these object files, place them on the .OBJ line of the linker
+and specify the /NOE switch when linking.  You may also use the LIB
+utility to replace the existing modules in your run-time libraries
+with the objects above.  For example:
+
+  LIB LLIBFOR7.LIB -+ UNIT.OBJ - CRT0DAT.OBJ + CRT0DATL.OBJ;
+
+would replace the appropriate modules in LLIBFOR7.LIB.
+
+				--- End ---

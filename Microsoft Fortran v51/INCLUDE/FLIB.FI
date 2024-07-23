@@ -1,0 +1,252 @@
+C****************************** Module Header ******************************
+C*
+C* Copyright (c) 1990  Microsoft Corporation
+C*
+C* Module Name: FLIB.FI
+C*
+C* This module provides interface descriptions for subprograms found
+C* in the various FORTRAN libraries.  Each of the functional areas
+C* covered by these interfaces are small enough that separate include
+C* files for each are not warranted.
+C*
+C* The functional areas covered are the following.
+C*
+C* Math error support.
+C*
+C* Signal handling.
+C*
+C* Intdos/Intdosx.
+C*
+C* Windows Applications Suuport.
+C*
+C* Date and Time
+C*
+C* Command Line Arguments
+C*
+C* Random Numbers
+C*
+C***************************************************************************
+C -----------------------------------------------------------------
+C Math Error Support
+C -----------------------------------------------------------------
+      INTERFACE TO SUBROUTINE MATHERRQQ[alias:'FMATHERRQQ']
+     +                                 (NAME, NLEN, INFO, RETCODE)
+      INTEGER*2 NLEN
+      CHARACTER NAME(NLEN)       ! INPUT : Name of function causing error.
+      STRUCTURE /MTH$E_INFO/
+        INTEGER*2 ERRCODE        ! INPUT : One of the MTH$ values in flib.fd
+        INTEGER*2 FTYPE          ! INPUT : One of the TY$ values in flib.fd
+        UNION
+        MAP
+            REAL*4 R4ARG1        ! INPUT : FIrst argument
+            REAL*4 R4ARG2        ! INPUT : Second argument (if any)
+            REAL*4 R4RES         ! OUTPUT : Desired result
+        END MAP
+        MAP
+            REAL*8 R8ARG1        ! INPUT : FIrst argument
+            REAL*8 R8ARG2        ! INPUT : Second argument (if any)
+            REAL*8 R8RES         ! OUTPUT : Desired result
+        END MAP
+        MAP
+            COMPLEX*8 C8ARG1     ! INPUT : FIrst argument
+            COMPLEX*8 C8ARG2     ! INPUT : Second argument (if any)
+            COMPLEX*8 C8RES      ! OUTPUT : Desired result
+        END MAP
+        MAP
+            COMPLEX*16 C16ARG1   ! INPUT : FIrst argument
+            COMPLEX*16 C16ARG2   ! INPUT : Second argument (if any)
+            COMPLEX*16 C16RES    ! OUTPUT : Desired result
+        END MAP
+        END UNION
+      END STRUCTURE
+      RECORD /MTH$E_INFO/ INFO
+      INTEGER*2 RETCODE          ! OUTPUT : 0 for failure, non 0 for success
+      END
+
+C -----------------------------------------------------------------
+C Signal support
+C -----------------------------------------------------------------
+      INTERFACE TO INTEGER FUNCTION SIGNALQQ[c,loadds,alias:'_signal']
+     +                                      (SIGNAL, HANDLER)
+      INTEGER*2 SIGNAL[value]
+      EXTERNAL HANDLER
+      END
+
+      INTERFACE TO INTEGER*2 FUNCTION RAISEQQ(SIGNAL)
+      INTEGER*2 SIGNAL[value]
+      END
+
+C -----------------------------------------------------------------
+C Intdos/Intdosx support.
+C -----------------------------------------------------------------
+      INTERFACE TO SUBROUTINE INTDOSQQ[c,alias:'_intdos']
+     +                                (REGS1, REGS2)
+      STRUCTURE /REGS$WORD/
+        INTEGER*2 AX
+        INTEGER*2 BX
+        INTEGER*2 CX
+        INTEGER*2 DX
+        INTEGER*2 SI
+        INTEGER*2 DI
+        INTEGER*2 CFLAG
+      END STRUCTURE
+      STRUCTURE /REGS$BYTE/
+        INTEGER*1 AL
+        INTEGER*1 AH
+        INTEGER*1 BL
+        INTEGER*1 BH
+        INTEGER*1 CL
+        INTEGER*1 CH
+        INTEGER*1 DL
+        INTEGER*1 DH
+      END STRUCTURE
+      STRUCTURE /REGS$INFO/
+        UNION
+        MAP
+            RECORD /REGS$WORD/ WREGS
+        END MAP
+        MAP
+            RECORD /REGS$BYTE/ BREGS
+        END MAP
+        END UNION
+      END STRUCTURE
+      RECORD /REGS$INFO/ REGS1[reference]
+      RECORD /REGS$INFO/ REGS2[reference]
+      END
+
+      INTERFACE TO SUBROUTINE INTDOSXQQ[c,alias:'_intdosx']
+     +                                 (REGS1, REGS2, SREGS)
+      STRUCTURE /REGS$WORD/
+        INTEGER*2 AX
+        INTEGER*2 BX
+        INTEGER*2 CX
+        INTEGER*2 DX
+        INTEGER*2 SI
+        INTEGER*2 DI
+        INTEGER*2 CFLAG
+      END STRUCTURE
+      STRUCTURE /REGS$BYTE/
+        INTEGER*1 AL
+        INTEGER*1 AH
+        INTEGER*1 BL
+        INTEGER*1 BH
+        INTEGER*1 CL
+        INTEGER*1 CH
+        INTEGER*1 DL
+        INTEGER*1 DH
+      END STRUCTURE
+      STRUCTURE /REGS$INFO/
+        UNION
+        MAP
+            RECORD /REGS$WORD/ WREGS
+        END MAP
+        MAP
+            RECORD /REGS$BYTE/ BREGS
+        END MAP
+        END UNION
+      END STRUCTURE
+      STRUCTURE /SREGS$INFO/
+        INTEGER*2 ES
+        INTEGER*2 CS
+        INTEGER*2 SS
+        INTEGER*2 DS
+      END STRUCTURE
+      RECORD /REGS$INFO/ REGS1
+      RECORD /REGS$INFO/ REGS2
+      RECORD /SREGS$INFO/ SREGS
+      END
+
+C -----------------------------------------------------------------
+C FORTRAN Windows App Support
+C -----------------------------------------------------------------
+      INTERFACE TO INTEGER*2 FUNCTION ABOUTBOXQQ(STR)
+      CHARACTER*(*) STR
+      END
+
+      INTERFACE TO INTEGER*2 FUNCTION CLICKQQ(ITEM)
+	  INTEGER*2 ITEM
+	  END
+
+      INTERFACE TO INTEGER*2 FUNCTION FOCUSQQ(IUNIT)
+	  INTEGER*2 IUNIT
+	  END
+
+      INTERFACE TO INTEGER*2 FUNCTION INQFOCUSQQ(IUNIT)
+	  INTEGER*2 IUNIT
+	  END
+
+      INTERFACE TO INTEGER*2 FUNCTION SETWSIZEQQ(IUNIT,WINFO)
+      STRUCTURE /QWINFO/
+          INTEGER*2 TYPE          ! request type
+          INTEGER*2 X             ! x coordinate for upper left
+          INTEGER*2 Y             ! y coordinate for upper left
+          INTEGER*2 H             ! window height
+          INTEGER*2 W             ! window width
+      END STRUCTURE
+	  INTEGER*2 IUNIT
+	  RECORD /QWINFO/ WINFO
+	  END
+
+      INTERFACE TO INTEGER*2 FUNCTION GETWSIZEQQ(IUNIT,IREQ,WINFO)
+      STRUCTURE /QWINFO/
+          INTEGER*2 TYPE          ! request type
+          INTEGER*2 X             ! x coordinate for upper left
+          INTEGER*2 Y             ! y coordinate for upper left
+          INTEGER*2 H             ! window height
+          INTEGER*2 W             ! window width
+      END STRUCTURE
+	  INTEGER*2 IUNIT
+	  INTEGER*2 IREQ
+	  RECORD /QWINFO/ WINFO
+	  END
+
+      INTERFACE TO INTEGER*2 FUNCTION MESSAGEBOXQQ(MSG,CAPTION,MTYPE)
+	  CHARACTER*(*) MSG
+	  CHARACTER*(*) CAPTION
+	  INTEGER*2 MTYPE
+	  END
+
+      INTERFACE TO SUBROUTINE YIELDQQ()
+      END
+
+C -----------------------------------------------------------------
+C Time and Date Support
+C -----------------------------------------------------------------
+      INTERFACE TO SUBROUTINE GETTIM(IHR, IMIN, ISEC, I100TH)
+      INTEGER*2 IHR, IMIN, ISEC, I100TH
+      END
+
+      INTERFACE TO LOGICAL FUNCTION SETTIM(IHR, IMIN, ISEC, I100TH)
+      INTEGER*2 IHR, IMIN, ISEC, I100TH
+      END
+
+      INTERFACE TO SUBROUTINE GETDAT(IYR, IMON, IDAY)
+      INTEGER*2 IYR, IMON, IDAY
+      END
+
+      INTERFACE TO LOGICAL FUNCTION SETDAT(IYR, IMON, IDAY)
+      INTEGER*2 IYR, IMON, IDAY
+      END
+
+C -----------------------------------------------------------------
+C Command Line Arguments
+C -----------------------------------------------------------------
+      INTERFACE TO INTEGER*4 FUNCTION NARGS()
+      END
+
+      INTERFACE TO SUBROUTINE GETARG(N, BUFFER, STATUS)
+      INTEGER*2 N
+      CHARACTER*(*) BUFFER
+      INTEGER*2 STATUS
+      END
+
+C -----------------------------------------------------------------
+C Random Numbers
+C -----------------------------------------------------------------
+      INTERFACE TO SUBROUTINE RANDOM(ARG)
+      REAL*4 ARG
+      END
+
+      INTERFACE TO SUBROUTINE SEED(ARG)
+      INTEGER*2 ARG
+      END

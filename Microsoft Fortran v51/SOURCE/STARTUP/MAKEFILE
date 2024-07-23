@@ -1,0 +1,195 @@
+#############################################################
+#	
+#	Copyright (c) 1986-1991, Microsoft Corporation.  All rights reserved.
+#
+#	makefile for building fortran runtime startup objects
+#	and linking null fortran program
+#
+#	This makefile is invoked by STARTUP.<BAT,CMD>.
+#	See STARTUP.<BAT,CMD> for usage information.
+#
+#############################################################
+
+MODEL=L
+
+SRC=..
+INC=..
+
+CFLAGS=-A$(MODEL) -I$(INC) -Os -Gs -c
+FL=fl $(CFLAGS)
+
+ASMFLAGS= -Mx -Dmem_$(MODEL) -I$(INC)
+ASM=masm $(ASMFLAGS)
+
+CMACROS=$(INC)\version.inc $(INC)\cmacros.inc
+
+
+# target list
+
+all:	dos os2
+
+# DOS objects
+
+dos:	\
+	dos\crt0.obj \
+	dos\crt0dat.obj \
+	dos\crt0msg.obj \
+	fmsghdr.obj \
+	dos\nmsghdr.obj \
+	chksum.obj \
+	dos\stdargv.obj \
+	dos\stdalloc.obj \
+	dos\stdenvp.obj \
+	dos\nchkstk.obj \
+	dos\fchkstk.obj \
+	dos\nrchkstk.obj \
+	dos\frchkstk.obj \
+	crt0fp.obj \
+	dos\execmsg.obj \
+	dos\nulbody.obj \
+	dosstart
+
+#	dos\_file.obj \
+#	..\setargv.obj \
+#	dos\_setargv.obj \
+#	wild.obj \
+#	crt0fp.obj \
+#	dos\execmsg.obj \
+#	dos\nulbody.obj \
+#	dosstart
+
+# OS/2 objects
+
+os2:	\
+	os2\crt0.obj \
+	os2\crt0dat.obj \
+	os2\crt0msg.obj \
+	fmsghdr.obj \
+	os2\nmsghdr.obj \
+	chksum.obj \
+	os2\stdargv.obj \
+	os2\stdalloc.obj \
+	os2\stdenvp.obj \
+	os2\nchkstk.obj \
+	os2\fchkstk.obj \
+	os2\nrchkstk.obj \
+	os2\frchkstk.obj \
+	crt0fp.obj \
+	os2\nulbody.obj \
+	os2start
+
+#	os2\_file.obj \
+#	..\setargv.obj \
+#	os2\_setargv.obj \
+#	wild.obj \
+#	crt0fp.obj \
+#	os2\nulbody.obj \
+#	os2start
+
+
+#	startup modules
+
+dos\crt0.obj: $(SRC)\dos\crt0.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\heap.inc $(INC)\rterr.inc
+		$(ASM) $(SRC)\dos\crt0.asm,dos\crt0.obj;
+
+os2\crt0.obj: $(SRC)\os2\crt0.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\heap.inc $(INC)\rterr.inc
+		$(ASM) $(SRC)\os2\crt0.asm,os2\crt0.obj;
+
+dos\crt0dat.obj: $(SRC)\dos\crt0dat.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\dos\crt0dat.asm,dos\crt0dat.obj;
+
+os2\crt0dat.obj: $(SRC)\os2\crt0dat.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\os2\crt0dat.asm,os2\crt0dat.obj;
+
+dos\crt0msg.obj: $(SRC)\dos\crt0msg.asm $(CMACROS) $(INC)\rterr.inc
+		$(ASM) $(SRC)\dos\crt0msg.asm,dos\crt0msg.obj;
+
+os2\crt0msg.obj: $(SRC)\os2\crt0msg.asm $(CMACROS) $(INC)\rterr.inc
+		$(ASM) $(SRC)\os2\crt0msg.asm,os2\crt0msg.obj;
+
+fmsghdr.obj:	$(SRC)\fmsghdr.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\fmsghdr.asm;
+
+dos\nmsghdr.obj: $(SRC)\dos\nmsghdr.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\dos\nmsghdr.asm,dos\nmsghdr.obj;
+
+os2\nmsghdr.obj: $(SRC)\os2\nmsghdr.asm $(CMACROS) $(INC)\msdos.inc
+		$(ASM) $(SRC)\os2\nmsghdr.asm,os2\nmsghdr.obj;
+
+chksum.obj:	$(SRC)\chksum.asm $(CMACROS) $(INC)\rterr.inc
+		$(ASM) $(SRC)\chksum.asm;
+
+dos\stdargv.obj: $(SRC)\dos\stdargv.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\rterr.inc
+		$(ASM) $(SRC)\dos\stdargv.asm,dos\stdargv.obj;
+
+os2\stdargv.obj: $(SRC)\os2\stdargv.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\rterr.inc
+		$(ASM) $(SRC)\os2\stdargv.asm,os2\stdargv.obj;
+
+dos\stdalloc.obj: $(SRC)\dos\stdalloc.asm $(CMACROS) \
+		$(INC)\heap.inc $(INC)\msdos.inc
+		$(ASM) $(SRC)\dos\stdalloc.asm,dos\stdalloc.obj;
+
+os2\stdalloc.obj: $(SRC)\os2\stdalloc.asm $(CMACROS) \
+		$(INC)\heap.inc $(INC)\msdos.inc
+		$(ASM) $(SRC)\os2\stdalloc.asm,os2\stdalloc.obj;
+
+dos\stdenvp.obj: $(SRC)\dos\stdenvp.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\rterr.inc
+		$(ASM) $(SRC)\dos\stdenvp.asm,dos\stdenvp.obj;
+
+os2\stdenvp.obj: $(SRC)\os2\stdenvp.asm $(CMACROS) $(INC)\msdos.inc \
+		$(INC)\rterr.inc
+		$(ASM) $(SRC)\os2\stdenvp.asm,os2\stdenvp.obj;
+
+dos\nchkstk.obj: $(SRC)\chkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DMI_NEAR $(SRC)\chkstk.asm,dos\nchkstk.obj;
+
+dos\fchkstk.obj: $(SRC)\chkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DMI_FAR $(SRC)\chkstk.asm,dos\fchkstk.obj;
+
+os2\nchkstk.obj: $(SRC)\chkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DOS2 -DMI_NEAR $(SRC)\chkstk.asm,os2\nchkstk.obj;
+
+os2\fchkstk.obj: $(SRC)\chkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DOS2 -DMI_FAR $(SRC)\chkstk.asm,os2\fchkstk.obj;
+
+dos\nrchkstk.obj: $(SRC)\rchkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DMI_NEAR $(SRC)\rchkstk.asm,dos\nrchkstk.obj;
+
+dos\frchkstk.obj: $(SRC)\rchkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DMI_FAR $(SRC)\rchkstk.asm,dos\frchkstk.obj;
+
+os2\nrchkstk.obj: $(SRC)\rchkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DOS2 -DMI_NEAR $(SRC)\rchkstk.asm,os2\nrchkstk.obj;
+
+os2\frchkstk.obj: $(SRC)\rchkstk.asm $(CMACROS) $(INC)\msdos.inc
+	$(ASM) -DOS2 -DMI_FAR $(SRC)\rchkstk.asm,os2\frchkstk.obj;
+
+#	error message modules
+
+crt0fp.obj:	$(SRC)\crt0fp.asm $(CMACROS) $(INC)\rterr.inc
+		$(ASM) $(SRC)\crt0fp.asm;
+
+dos\execmsg.obj: $(SRC)\dos\execmsg.asm $(CMACROS) $(INC)\rterr.inc
+		$(ASM) $(SRC)\dos\execmsg.asm,dos\execmsg.obj;
+
+
+#	small program
+
+dos\nulbody.obj: $(SRC)\nulbody.for
+		$(FL) -Fodos\nulbody.obj $(SRC)\nulbody.for
+
+os2\nulbody.obj: $(SRC)\nulbody.for
+		$(FL) -Foos2\nulbody.obj $(SRC)\nulbody.for
+
+#	this step is always done because the target does not exist
+
+dosstart:
+		link @$(SRC)\dos\nulbody.lnk
+
+os2start:
+		link @$(SRC)\os2\nulbody.lnk

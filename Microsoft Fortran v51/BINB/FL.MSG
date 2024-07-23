@@ -1,0 +1,95 @@
+FORTRAN COMPILER OPTIONS
+-METACOMMAND-
+/4cc<string> conditional compilation
+/4I{2|4} default integer size
+/4{y|n}6 FORTRAN 66
+/4{Y|N}a make variables AUTOMATIC 
+/4{Y|N}b debug
+/4{Y|N}d declare
+/4{Y|N}f free-form format
+/4{Y|N}i conform to IBM extensions
+/4{Y|N}s strict syntax
+/4{Y|N}t truncate variable names
+/4{Y|N}v conform to VAX extensions
+/4{y|N}V enable IBM VS compatibility
+-SOURCE LISTINGS-
+/Sl<number> listing page width
+/St<title> listing title
+/Sp<number> listing page size
+/Ss<sub-title> Listing sub-title
+-MEMORY MODEL-
+/AM medium model
+/AL large model
+/AH huge model
+-OPTIMIZATION-
+/O enable optimization (same as /Ot)
+/Od disable optimizations
+/Ol enable loop optimizations
+/Op enable precision optimizations
+/Os optimize for space
+/Ot optimize for speed
+/Ox max. optimization (/Olt /Gs)
+-CODE GENERATION-
+/G0 8086 instructions
+/G1  186 instructions
+/G2  286 instructions
+/Gb backward compatibility
+/Ge enable stack checking
+/Gi incremental linking
+/Gs disable stack checking
+/Gt[<number>] data size threshold
+/Gw Windows calls
+-OUTPUT FILES-
+/Fa[<assembly listing file>]
+/Fb[<bound executable file>]
+/Fc[<mixed object/source listing file>]
+/Fe<executable file>
+/Fl[<object listing file>]
+/Fm[<map file>]
+/Fo<object file>
+/Fr add basic Source Browser info
+/FR add expanded Source Browser info
+/Fs[<source listing file>]
+-LANGUAGE-
+/Zc ignore case of PASCAL routines
+/Zd line number information
+/Zi symbolic debugging information
+/Zl remove default library info
+/Zp[n] pack struct on n-byte boundary
+/Zs syntax check only
+-FLOATING POINT-
+/FPa calls with altmath
+/FPc calls with emulator
+/FPc87 calls with 8087 library
+/FPi inline with emulator
+/FPi87 inline with 8087
+-MISCELLANEOUS-
+/Aw Windows DLL
+/c compile only, no link
+/D<name>[=text] define macro
+/H<number> external name length
+/help display online help
+/I<name> add "include file" path
+/MD support DLL
+/MT support multi-threads
+/MW support Windows
+/ND<name> set data segment's name
+/NM<name> set text segment's name
+/nologo suppress logo display
+/NT<name> set text segment's name
+/Tf<file> compile file without .for
+/V<string> set version string
+/W<number> warning level
+/Wx make all warnings fatal
+/X ignore "include file" paths
+/? display this information
+-MASM SUPPORT-
+/MA<switch> set MASM switch
+/Ta<file> assemble file without .asm
+/Fx[cross reference file]
+-LINKING-
+/F<hex_number> stack size (hex. bytes)
+/Lc link compatibility mode executable
+/Lr link compatibility mode executable
+/Lp link protect mode executable
+/link <linker options and libraries>

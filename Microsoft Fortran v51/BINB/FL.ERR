@@ -1,0 +1,30 @@
+				/* error messages */
+
+2001	"too many symbols predefined with /D"
+2002	"memory-model conflict"
+2003	"missing source filename"
+2008	"limit of %s exceeded at '%s'"
+2011	"only one floating-point option allowed"
+2012	"too many linker arguments"
+2016	"%s and %s are incompatible"
+2018	"cannot create linker response file"
+2019	"cannot overwrite source or object file '%s'"
+2021	"invalid numeric argument '%s'"
+2022	"cannot open '%s'"
+2027	"cannot execute '%s'"
+2031	"too many command-line arguments"
+2000	"UNKNOWN COMMAND-LINE ERROR\n\t\tContact Microsoft Product Support Services"
+
+				/* warning messages */
+
+4001	"listing overrides assembly output"
+4002	"ignoring unknown option '%s'"
+4003	"processor-option conflict"
+4005	"cannot find '%s';\nPlease enter new filename (full path) or CTRL+C to quit: "
+4008	"nonstandard model; assuming large model"
+4009	"threshold only for far or huge data; ignored"
+4013	"combined listing overrides object listing"
+4014	"invalid value '%d' for '%s'; assuming '%d'"
+4018	".DEF files supported for segmented executable files only"
+4019	"string too long; truncated to %d characters"
+4000	"UNKNOWN COMMAND-LINE WARNING\n\t\tContact Microsoft Product Support Services"
