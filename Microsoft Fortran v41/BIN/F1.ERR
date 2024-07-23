@@ -1,0 +1,428 @@
+G
+W
+4
+0
+0
+maximum memory-allocation size exceeded
+program too large for memory
+%s : array bound used function call
+%s : array bound used intrinsic call
+%s : array bound used array reference
+%s : array bound used illegal variable
+%s : array bound used illegal variable
+%s : already dimensioned
+%s : array bounds missing
+%s : more than 7 array bounds
+%s : attributes illegal on array bounds
+%s : * : not last array bound
+%s : bound size too small
+%s : adjustable-size array not in subprogram
+%s : NEAR array bigger than segment
+%s : %s attribute repeated
+%s : %s illegal with attributes specified in same list
+%s : %s attribute mismatch with earlier NEAR/FAR/HUGE
+%s : %s illegal with attributes specified in earlier list
+%s : NEAR/FAR/HUGE attribute mismatches default
+%s : %s illegal on COMMON statements
+%s : %s illegal on formal arguments
+%s : %s illegal on ENTRY statements
+%s : %s illegal on subprogram statements
+%s : %s illegal on variable declarations
+%s : %s illegal on type declarations
+%s : language attributes illegal on formal arguments
+%s : %s only legal on formal arguments
+%s : illegal bound type
+%s : bound not integer
+%s : substring on noncharacter item
+%s : upper substring bound exceeds string length
+%s : lower substring bound exceeds upper bound
+%s : lower substring bound not positive
+concatenation with CHARACTER*(*)
+cannot pass CHARACTER*(*) by value
+label %ld : redefined in program unit
+no ASSIGN statements for assigned %s
+IF or ELSEIF missing
+expression type not LOGICAL
+statement stack underflow
+statement-nesting limit exceeded
+label %ld : used across blocks
+no assigned GOTO or FMT= for ASSIGN statement
+ASSIGN target not an INTEGER variable
+%s : ASSIGN : variable not INTEGER
+%s : ASSIGN : too many INTEGER*1 variables
+DO-loop expression not INTEGER or REAL
+zero illegal as increment
+DO-loop variable : not a variable
+%s : illegal use of active DO-loop variable
+DO-loop variable not INTEGER or REAL
+ENDIF missing
+DO-loop label %ld : not seen
+IF, ELSEIF, or ELSE missing
+too many assigned GOTO statements
+only variables allowed in assigned GOTO statements
+assigned GOTO variable not INTEGER
+computed GOTO variable not INTEGER
+expression type not INTEGER or REAL
+illegal statement after logical IF
+label %ld : previously used as FORMAT label
+label %ld : previously used as executable label
+block label %ld : must not be referenced
+label %ld : must not be referenced
+DO-loop label %ld : out of order
+assigned and unconditional GOTO illegal here
+block and arithmetic IF illegal here
+statement illegal as DO-loop termination
+%s : maximum of 5 digits
+%s : illegal expression
+%s : EQUIVALENCE : enclosing class too big
+%s : COMMON : attributes on items illegal
+%s : EQUIVALENCE : formal argument illegal
+%s : EQUIVALENCE : not array
+%s : EQUIVALENCE : array subscripts missing
+%s : EQUIVALENCE : nonconstant offset illegal
+%s : EQUIVALENCE : nonconstant upper substring expression ignored
+%s : nonconstant lower substring expression illegal
+%s : COMMON : length specification illegal
+%s : %s : %s name illegal
+%s : %s : preinitialization illegal
+%s : %s : formal argument illegal
+%s : %s : not an array or variable
+%s : COMMON : character and noncharacter items mixed
+%s : COMMON : too big
+%s : COMMON : array size nonconstant or zero
+%s, %s : EQUIVALENCE : character and noncharacter items mixed
+%s, %s : EQUIVALENCE : both in blank common block
+%s, %s : EQUIVALENCE : both in common block %s
+%s, %s : EQUIVALENCE : in different common blocks
+%s : EQUIVALENCE : extends blank common block forward
+%s : EQUIVALENCE : extends common block %s forward
+%s, %s : EQUIVALENCE : conflicting offsets
+%s : EQUIVALENCE : two different common blocks
+%s : item in common block crosses segment
+%s : COMMON : size changed
+%s : NEAR common block has HUGE item
+blank common can not be HUGE
+%s : COMMON : too big to be NEAR
+%s : COMMON : function or subroutine name
+%s : already in COMMON
+%s : EQUIVALENCE : needs at least two items
+DATA : iteration count not positive
+%s : DATA : illegal address expression
+%s : cannot initialize formal argument
+%s : cannot initialize item in blank common block
+%s : can only initialize common block in BLOCK DATA subprogram
+%s : DATA : not array or variable
+%s : repeat count not positive integer
+%s : DATA : nonconstant item in initializer list
+%s : DATA : too few constants to initialize item
+%s : nonstatic address illegal in initialization
+%s : bound or increment not constant
+%s : bound or increment not INTEGER
+%s : DATA : zero increment
+%s : DATA : active implied-DO variable
+%s : DATA : implied-DO variable not INTEGER
+%s : DATA : not array-element name
+DATA : too few constants to initialize names
+DATA : more constants than names
+%s : already declared %s
+%s : illegal use of %s
+%s : already typed
+%s : types illegal on BLOCK DATA/COMMON/PROGRAM/SUBROUTINE
+%s : cannot initialize in type statements
+DOUBLE PRECISION : length specifier illegal
+%s : IMPLICIT : only single letter allowed
+%c, %c : IMPLICIT : lower limit exceeds upper limit
+%c : already IMPLICIT
+%s : INTRINSIC : unknown name
+%s : PARAMETER : nonconstant expression
+too many symbols
+%s : declared with wrong type
+%s : intrinsic function illegal as actual argument
+LEN : illegal expression
+%s : multiple arguments
+%s : cannot convert FAR address to NEAR
+%s : cannot convert to %s
+%s : incorrect use of intrinsic function
+%c : illegal separator
+%s : cannot open include file
+octal value too big for byte
+closing quote missing
+CHARACTER constant too long
+zero-length CHARACTER constant
+empty escape sequence
+integer string too long
+alternate bases illegal
+illegal base value
+INTEGER constant must follow #
+illegal REAL constant
+%s : include file nested too deeply
+INTEGER value overflow
+FORMAT string too long
+missing ] following attribute string
+%s : attribute repeated
+colon expected following ALIAS
+opening quote missing
+unrecognized attribute
+%s : name too long; truncated
+%s : already specified in $%sLARGE
+$DEBUG:'<debug-list>' illegal with $FREEFORM
+%c : nonalphabetic character in $DEBUG ignored
+$DEBUG:'<debug-list>' : string expected
+$DECMATH not supported
+$INCLUDE:'<filename>' : string expected
+$%sSIZE : integer constant out of range
+$%sSIZE:<integer constant> : integer constant expected
+$%sLARGE already set
+$%sLARGE illegal in executable statements
+$MESSAGE:'<message>' : string expected
+$STORAGE:<number> : 2 or 4 expected
+$SUBTITLE:'<subtitle>' : string expected
+$TITLE:'<title>' : string expected
+unrecognized metacommand
+metacommand already set
+metacommand must come before all FORTRAN statements
+characters following metacommand ignored
+Hollerith constant exceeds 1313 characters
+zero-length Hollerith constant
+Hollerith constant : text length disagrees with given length
+Hollerith not allowed
+%s : non-FORTRAN character
+%s : error closing file
+illegal label field
+zero-value label field
+free-form label too long
+label on continuation line
+first statement line must have ' ' or '0' in column 6
+too many continuation lines
+label on blank line
+illegal %s flag, would overwrite %s with %s
+too many %s flags, %s
+%s : unknown option (%c)
+%s : illegal number in switch
+illegal command-line option
+out of disk space for compiler internal file
+write error on compiler internal file
+%s : cannot open file
+%s : name too long
+cannot open internal files
+-4Y and -4N : both options used for argument
+-4Y and -4N : both options used; -4Y assumed
+syntax error
+END missing
+%s : unrecognized option
+-4I2 or -4I4 expected
+illegal -A option
+-W%d : illegal warning level ignored
+program too large for memory
+RETURN : integer or character expression required
+%s : alternate RETURN missing
+%s : DIMENSION : not array
+statement illegal with INTERFACE
+statement illegal in INTERFACE
+statement illegal in BLOCK DATA
+%s : formal argument not local variable
+%s : formal argument not a variable
+%s : repeated in formal-argument list
+%s : statement function already declared
+%s : statement function : too few actual arguments
+%s : statement function : too many actual arguments
+%s : formal argument %s : never used
+%s : formal argument %s : subprogram passed by VALUE
+%s : formal argument %s : symbol-class mismatch
+%s : language attribute mismatch
+%s : type redefined
+%s : length redefined
+%s : NEAR/FAR attribute mismatch
+%s : VARYING attribute mismatch
+%s : previously called near
+%s : previously called far
+%s : defined with different number of arguments
+%s : formal argument %s : Hollerith passed to CHARACTER formal argument
+%s : formal argument %s : VALUE/REFERENCE mismatch
+%s : formal argument %s : NEAR/FAR/HUGE mismatch
+%s : formal argument %s : previously passed by value, now by reference
+%s : formal argument %s : previously passed by reference, now by value
+%s : formal argument %s : previously passed with NEAR, now with FAR or HUGE
+%s : formal argument %s : previously passed with FAR or HUGE, now with NEAR
+%s : formal argument %s : CHARACTER *(*) cannot pass by value
+%s : formal argument redefined
+%s : illegal as formal argument
+%s : formal argument previously initialized
+%s : EQUIVALENCE : formal argument illegal
+ENTRY : formal argument %s : attribute %s : mismatch
+alternate RETURN only legal within SUBROUTINE
+ENTRY seen before FUNCTION or SUBROUTINE
+ENTRY not in function or subroutine
+too many PROGRAM statements
+%s : formal argument used as ENTRY
+%s : PROGRAM : name redefined
+%s : used or declared before ENTRY
+%s : subprogram used or declared before INTERFACE
+%s : already defined
+%s : already used or declared with different symbol class
+%s : ENTRY : CHARACTER lengths differ
+%s : ENTRY : CHARACTER and non-CHARACTER types mixed in ENTRY statements
+too many ENTRY statements
+%s : INTERFACE : not formal argument
+%s : assumed-size array : cannot pass by value
+%s : adjustable-size array : cannot pass by value
+statement out of order or END missing
+statement out of order
+no state transition for root of tree
+%s : truncated to 6 characters
+%s : not previously declared
+label %ld : undefined
+%s : FUNCTION : return variable not set
+%s : assumed-size array : not reference argument
+%s : adjustable-size array : not reference argument
+%s : CHARACTER*(*) type illegal
+%s : VARYING illegal on symbol class
+%s : $ illegal in C name
+%s : illegal length
+value %ld : INTEGER : range error
+integer constant expression expected
+length specification illegal
+length %ld : illegal type length
+only C attribute legal on INTEGER type
+attributes illegal on non-INTEGER types
+DOUBLE PRECISION : length specifier illegal
+illegal use of Hollerith constant
+illegal type conversion
+cannot convert between CHARACTER and non-CHARACTER constants
+cannot convert type to %s
+unknown primitive type
+missing symbol reference
+unknown constant type
+%s : subscript %ld out of range
+%s : subscript %ld out of range
+%s : subscript %d : not integer
+%s : too few array subscripts
+%s : too many array subscripts
+%s : array subscripts missing
+%s : adjustable-size array : used before definition
+%s : symbolic constant : subscript illegal
+%s : symbolic constant : substring illegal
+%s : variable : argument list illegal
+%s : function : argument list missing
+%s : not a variable
+%s : function : substring operator illegal
+left side of assignment illegal
+%s : assignment using active DO variable illegal
+incompatible types in assignment
+%s : formal argument %s : Hollerith illegal with CHARACTER
+%s : formal argument %s : type mismatch
+%s : formal argument %s : type mismatch
+%s : formal argument %s : length mismatch
+%s : formal argument %s : length mismatch
+%s : alternate RETURN statement missing
+%s : formal argument * : actual not alternate-return label
+%s : formal argument %s : not alternate-return label
+%s : formal argument %s : actual not subprogram
+%s : formal argument %s : subprogram mismatch
+%s : formal argument %s : not subprogram
+%s : NEAR formal argument %s : actual has FAR or HUGE address
+%s : formal argument %s : length mismatch
+%s : formal argument %s : type mismatch
+%s : not function or subroutine
+%s : illegal use of function or subroutine
+%s : type redefined
+%s : length redefined
+%s : too few actual arguments
+%s : too many actual arguments
+%s : directly recursive
+%s : Hollerith constant passed by value
+%s : assumed-size array %s : cannot pass by value
+%s : adjustable-size array %s : cannot pass by value
+%s : value argument bigger than segment
+%s : formal argument %s : CHARACTER expressions cannot be passed by VALUE
+nonconstant CHARACTER length : cannot pass by value
+incompatible types for formal and actual arguments
+%s : FAR formal argument %s : passed HUGE array
+%s : cannot use CHARACTER *(*) function
+consecutive arithmetic operators illegal
+negative exponent with zero base
+division by zero
+nonlogical operand
+non-numeric operand
+exponentiation of COMPLEX and DOUBLE PRECISION together illegal
+non-numeric operand
+operands of relation not numeric or character
+one numeric, one character operand
+only comparisons by .EQ. and .NE. allowed for complex items
+concatenation of expressions illegal
+noncharacter operand
+consecutive relational operators illegal
+illegal implied-DO list in expression
+illegal Xxprep node type
+%s : COMPLEX : type conversion error
+%s : REAL : type conversion error
+%s : operation error with COMPLEX operands
+%s : operation error with REAL operands
+%s : symbol class illegal here
+DO : too many expressions
+label %ld : not between 1 and 99999
+I/O implied-DO list : list empty
+I/O implied-DO list : too many expressions
+I/O implied-DO list : illegal assignment
+I/O implied-DO list : too few expressions
+I/O implied-DO list : assigment missing
+assignments in COMPLEX constant illegal
+illegal assignment in parenthesized expression
+numeric constant expected
+%s : not symbolic constant
+component of COMPLEX number not INTEGER or REAL
+parser stack overflow, statement too complex
+syntax error
+%s : not %s
+%s : noncharacter array nonstandard
+%s : array subscript missing
+%s : not a variable or array element
+label %ld : not between 1 and 99999
+UNIT = * illegal for this statement
+illegal unit specifier
+illegal format specifier
+HUGE format illegal
+FAR format illegal in medium model
+%s : illegal statement label
+%s : appears twice
+I/O option %ld : <keyword>= missing
+%s : option illegal for this statement
+%s : option nonstandard
+INQUIRE : either UNIT= or FILE= needed
+UNIT= missing
+END= : illegal when REC= present
+REC= : illegal when FMT= *
+illegal I/O formatting for internal unit
+REC= illegal for internal unit
+FORMAT : label missing
+ASSIGN : too many format labels
+no ASSIGN statements for FMT=<integer variable>
+initial left parenthesis expected in format
+repeat count on nonrepeatable descriptor
+integer expected to precede H, X, or P edit descriptor
+positive integer expected in format
+missing N or Z after B in format
+maximum nesting level for formats exceeded
+%c or $ : nonstandard edit descriptor in format
+Z : nonstandard edit descriptor in format
+M field exceeds W field in I edit descriptor
+'.' : expected in format
+unexpected end of format encountered
+'%c' : unexpected character in format
+unexpected character in format
+integer expected in format
+separator expected in format
+RECL= : out of range
+UNIT= : not between -32767 and 32767
+%s : unrecognized value in option
+RECL= required to open direct-access file
+illegal input list item
+%s : * illegal with this option
+%s : assumed-size array illegal here
+%s : HUGE internal units illegal
+%s : record length too large for internal unit
+FAR or HUGE I/O item illegal in medium model
+%s : cannot modify active DO variable
+LOCKING : nonstandard
+%s : lowercase in string nonstandard
+
