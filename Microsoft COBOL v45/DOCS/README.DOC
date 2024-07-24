@@ -1,0 +1,484 @@
+
+			     README.DOC File
+
+		 Release Notes for the Microsoft(R) COBOL
+		     Professional Development System
+			       Version 4.5
+
+		 (C) Copyright Microsoft Corporation, 1991
+
+  This document contains essential information for version 4.5 of the
+  Microsoft COBOL Professional Development System for MS-DOS(R) and the
+  Microsoft Operating System/2 (MS(R) OS/2(R)). The information in this
+  document is more up to date than that in the manuals.
+
+  Microsoft improves its languages documentation at the time of reprinting,
+  so some of the information in this file may already be included in your
+  manuals.
+
+
+  NEW FEATURES
+
+   o  Support for Windows 3.0
+
+      The following types of programs are supported under Windows 3.0 :
+
+      - Existing DOS applications can be linked with a new runtime library
+	(COBAPIDW) to produce an application that runs under Windows.
+
+      - Programs that call the Windows API can now be written in 
+	COBOL.  Note that if you do not have the Windows Software 
+	Development Kit (SDK) and plan to create true COBOL Windows
+	applications by calling the Windows API directly, you may be
+	interested in using the Dialog Editor from the SDK.  The Dialog
+	Editor is available through PSS by calling 637-7096.
+
+      - Dynamic-link libraries that can be called from programs written
+	in other programming languages can be written in COBOL.
+
+   o  Intrinsic Functions
+
+      The 1989 Addendum to the ANSI 85 COBOL Standard introduced a set of
+      intrinsic functions.  These functions are fully supported in
+      Microsoft COBOL 4.5. Functions are provided for Trigonometric,
+      Financial, Statistical and String handling.
+
+   o  Floating Point
+
+      COMP-1 (32 bit Real) and COMP-2 (64 bit Real) data types have been
+      added to this release of COBOL.  The syntax support is the same as
+      defined for IBM OSVS COBOL and IBM VS COBOL II, and an Intel Floating
+      Point Co-Processor will be used if available.
+
+   o  Table Sort
+
+      The SORT verb can now apply to a Data Division table, which will be
+      sorted in place.
+
+   o  EXIT PERFORM
+
+      Control of program flow is enhanced with a new EXIT PERFORM statement.
+
+   o  'IF 78-level DEFINED' syntax for conditional compilation
+
+   o  Support for X/Open XPG3 COBOL definition
+
+   o  Compilation up to 10% faster
+
+   o  General performance improvements in generated code
+
+   o  Save and Restore Environment enables you to save the break-points and
+      monitors from one Animator session and reload them next time.
+
+   o  Breakpoint when data value changes.
+
+   o  Monitoring a subscripted item will follow a changing subscript.
+
+   o  Data compression
+
+      You can supply your own data compression routines, which can be
+      tuned to the data that will be in the file.
+
+   o  OS/2 Database Manager (SQL) enhancements
+
+      Support for: qualified host variables; more than 100 host variables in
+      one SQL statement; EXEC SQL WHENEVER SQLWARNING.
+
+   o  Screens index program
+
+      The Screens program will generate an index program which can be used
+      for simple data entry applications.
+
+
+  NEW DIRECTIVES
+
+  These are the new compiler directives introduced in this product:
+
+      ALIAS          Subscripts
+      BROWSE         Create .SBR file
+      CHECKDIV       Allow divide by zero
+      DEFAULTCALLS   CALL convention
+      DETECTLOCK     Detect record locks
+      DLL            DLL or EXE
+      FLAGAS         Show flags as errors etc.
+      HIDEMESSAGE    Set message to hide
+      INFORETURN     Info msg return value
+      INTLEVEL       Portability level
+      LOCKTYPE       Read locked records
+      MF(7)          Micro Focus COBOL syntax
+      SQLDB2         Mainframe compatibility
+      SQLFORMAT      Define date format
+      SQLPROT        Protect database
+      WRITETHROUGH   Unbuffered writes
+      XOPEN          X/Open
+
+
+  THE COBOL SOFTWARE
+
+  Compatibility with Previous Releases
+  ====================================
+  This product is generally compatible with previous releases, However,
+  there are some differences. These are described in the ASCII text file,
+  CBL-CMPT.DOC, supplied with this product. Before you use this product with
+  programs created with earlier versions, we recommend that you read
+  CBL-CMPT.DOC.
+
+
+  Restrictions in the COBOL Software
+  ==================================
+   o  Cooperative Animation only allows 4 breakpoints to be set.
+
+   o  In general, the components in this product support the High
+      Performance File System complex filenames. However, the directory
+      facility in some components will not work correctly when complex names
+      are present. Also, names are restricted to a maximum of 65 characters.
+
+   o  NODYNAM currently impacts both CALL literal and CALL identifier. To
+      get mainframe-type link-edit, use NOLITLINK with DYNAM and LITLINK
+      with NODYNAM when compiling to OBJ.
+
+   o  The ANIMATOR Do command will not work with:
+
+       -  the CHAIN verb when parameters are supplied
+       -  CALL procedure-pointer
+       -  CALL ....  BY VALUE
+       -  CANCEL of nested program
+       -  EXIT PERFORM/PARAGRAPH/SECTION
+       -  intrinsic functions.
+
+   o  The program-id of a called subprogram must be the same as the name
+      used for the .OBJ file created by the compiler. Otherwise, a new copy
+      will be loaded whenever the program is called.
+
+   o  Under OS/2 you cannot redirect input to the compiler or Animator.
+
+   o  On OS/2, any DLL that is to be loaded by the shared run-time that is
+      not specified with a path must exist on a path given in the COBDIR
+      environment variable, as well as on the OS/2 LIBPATH.
+
+   o  EXTERNAL data items are limited to a maximum of 64K bytes each.
+
+   o  The DISPLAY UPON PRINTER syntax does not work on OS/2.
+
+   o  Any computation which has an intermediate result greater than 18
+      digits may give an incorrect final result. This will affect arithmetic
+      expressions such as those used in COMPUTE statements.
+
+   o  Floating-point data is currently not supported in QuickWin applications.
+
+   o  When interfacing with Microsoft C programs, the following C graphics
+      library routines should not be called as this will corrupt the COBOL
+      environment:
+
+       -  _outtext
+       -  _outmem
+       -  _floodfill
+       -  any routine that uses floodfill where you specify the
+	  _GFILLINTERIOR option (namely _ellipse and _pie)
+
+   o  You should not use cross-session animation on a network server since
+      this can prevent cross-session animation operating on other machines
+      on the network.
+
+   o  You cannot have more than ten files in the USING or GIVING phrase of a
+      MERGE statement.
+
+   o  In VS COBOL II Releases 1 and 2, and OS/VS COBOL, the "PERFORM stack"
+      is preserved between calls to a program. Thus, on re-entry to the
+      program, the PERFORM state will be as it was when the program was last
+      exited. This means that the code to return to the PERFORM statement
+      which exists at the end of any piece of code that had been performed
+      but had not exited when the program itself was exited will remain
+      active, and may cause unexpected program flow when the program is
+      re-entered.
+
+      This COBOL behaves the same way as VS COBOL II Release 3 and
+      initializes the PERFORM stack each time a program is called
+      irrespective of the existence of the VSC2(1), VSC2(2) or OSVS
+      directives.
+
+   o  When interfacing with a C program, floating point items may only be
+      passed as BY REFERENCE parameters, not as BY VALUE or BY CONTENT
+      parameters.
+
+
+
+  Restrictions in Related Software
+  ================================
+
+  Novell(R) network
+  -----------------
+   o  When sharing files across a Novell network, it is essential that all
+      the workstations using the network are configured so that they do not
+      use local buffering (CACHE DATA BUFFERING). Failure to do this may
+      result in loss of data.
+
+      Novell version 2.0A, and prior to 2.15 are all configured with local
+      buffering on by default. To disable this buffering, in version 2.0A
+      you require a patch from Novell. In other versions, insert the line:
+
+	  CACHE BUFFERS = 0
+
+      into the file SHELL.CFG on each workstation.
+
+   o  Use of the NETBIOS option on a Novell network can cause loss of data
+      on files shared across the network. (NETBIOS is activated by entering
+      the NETBIOS command after connecting to the network. To avoid loss of
+      data, do not use this command.)
+
+   o  When creating multi-user programs to run on a Novell network, it is
+      necessary to ensure that all disk mapping assignments are beyond E:.
+      i.e. do not use assignments A: thru E:.
+
+
+
+  DOCUMENTATION
+
+  On-disk Documentation
+  =====================
+  The disks supplied with this product contain additional documentation.
+
+  The following on-disk documents should be regarded as additional chapters,
+  or additions to chapters, in your Operating Guide:
+
+      MFCOMPAT.DOC  - Compatibility with Micro Focus COBOL
+      OPTIMIZE.DOC  - Creating Optimized Programs
+      TIMEOUT.DOC   - Timeout Support in ACCEPT
+
+
+  Omissions and Errors
+  ====================
+  This section contains information that is either incorrect or missing from
+  your Microsoft COBOL manuals. This information is organized according
+  to the manual in which it appears. You may want to mark the changes in
+  your manuals.
+
+
+  Language Reference
+  ------------------
+  Page 5-24. There is an optional phrase within the WITH DUPLICATES phrase
+  of the ALTERNATE RECORD KEY clause of the SELECT statement for an indexed
+  file. Its syntax is:
+
+      SUPPRESS  [WHEN]  { ZEROS         }
+			{ SPACES        }
+			{ [ALL] literal }
+
+  SUPPRESS, ZEROS, SPACES, and ALL are all keywords.
+
+
+  Page 5-32. Insert a new General Rule (13a) between rules 13 and 14:
+
+  "If a file is defined as EXTERNAL and the operating system file name is
+  assigned by means of a file name (for example, by use of either the
+  DYNAMIC directive or keyword, using data-name-1 in the SELECT/ASSIGN
+  statement, or using format 2 of the VALUE OF phrase of an FD), then the
+  following rules should be followed:
+
+    1) An identifier with the same name should be used to contain the
+       physical file name in all programs which reference the file.
+
+    2) Each definition of the identifier which contains the physical file
+       name should also contain the EXTERNAL attribute.
+
+  Any violation of these rules will not be detected at compile time.
+  However, if any program in the run-unit violates these rules, the results
+  at run time are unpredictable. That is, they may or may not execute as
+  expected."
+
+
+  Page 5-83. After General Rule 27, add:
+
+  "28. The I-O phrase permits the opening of a file for both input and
+  output operations (except for file with ORGANIZATION LINE SEQUENTIAL). If
+  the file does not exist it will be created and used as an empty file for
+  input unless NOT OPTIONAL was specified in the SELECT statement. An
+  attempt to WRITE it will cause an error."
+
+ 
+  Page 5-120. Add a new General Rule 13a:
+
+  "The phrases ADVANCING PAGE and END-OF-PAGE must not both be specified in
+  a single WRITE statement."
+
+
+  Page 10-11, replace the entire second boxed extension with the following:
+
+  "If a file is defined as EXTERNAL and the operating system file name is
+  assigned by means of a file name (for example,  by use of either the
+  DYNAMIC directive or keyword, using data-name-1 in the SELECT/ASSIGN
+  statement, or using format 2 of the VALUE OF phrase of an FD), then the
+  following rules should be followed:
+
+    1) An identifier with the same name should be used to contain the
+       physical file name in all programs which reference the file.
+
+    2) Each definition of the identifier which contains the physical file
+       name should also contain the EXTERNAL attribute.
+
+  Any violation of these rules will not be detected at compile time.
+  However, if any program in the run-unit violates these rules, the results
+  at run time are unpredictable. That is, they may or may not execute as
+  expected."
+
+
+  Page 15-34, General Rule 4 of the FOREGROUND-COLOR clause. In the first
+  sentence, change "contains a BACKGROUND-COLOR clause" to "contains a
+  FOREGROUND-COLOR clause".
+
+
+  Page 16-43, before the description of the ORD-MAX function insert a
+  description of the ORD-MIN function. Its description is exactly the same
+  as that of ORD-MAX, but replacing "ORD-MAX" by "ORD-MIN", "maximum" by
+  "minimum" and "greatest" by "least" everywhere that they occur.
+
+
+  Operating Guide
+  ---------------
+
+  General
+
+      A number of the executable files are supplied with .PIF files for use
+      with Microsoft Windows 3.0 or later. Using these .PIF files, the
+      components of this system can be run as Windows applications, and can
+      be added to a group for direct execution from Program Manager. From
+      the DOS command line, these applications can be invoked using the
+      command
+
+       WIN prog.PIF
+
+      where prog is the name of the relevant component.
+
+  Chapter 9 (Packaging and Shipping Applications):
+
+      There is a module RMSTAT.OBJ, which must be linked into your
+      application if you want to get RM file statuses.
+
+  Chapter 19 (SQL):
+
+      There is no support for using COMP-1 items with SQL.
+
+  Chapter 34 (Converting C Header Files with H2CPY)
+
+      There is a utility called SPLIT78. It splits the constants file
+      produced by H2CPY into several files.
+
+      It uses the first set of characters before the first hyphen to name
+      the files. For example, if OS2.78 contains:
+
+	   78 ABB-COLOR                         VALUE H"01".
+	   78 ABB-BACK-COLOR                    VALUE H"02".
+	   78 ABB-MIX-MODE                      VALUE H"04".
+	   78 ABB-BACK-MIX-MODE                 VALUE H"08".
+	   78 ABB-SET                           VALUE H"10".
+	   78 ABB-SYMBOL                        VALUE H"20".
+	   78 ABB-REF-POINT                     VALUE H"40".
+
+	   78 AF-CHAR                           VALUE H"01".
+	   78 AF-VIRTUALKEY                     VALUE H"02".
+	   78 AF-SCANCODE                       VALUE H"04".
+	   78 AF-SHIFT                          VALUE H"08".
+	   78 AF-CONTROL                        VALUE H"10".
+	   78 AF-ALT                            VALUE H"20".
+	   78 AF-LONEKEY                        VALUE H"40".
+	   78 AF-SYSCOMMAND                     VALUE H"0100".
+	   78 AF-HELP                           VALUE H"0200".
+
+	   78 HWND-DESKTOP                      VALUE 1.
+	   78 HWND-OBJECT                       VALUE 2.
+	   78 HWND-TOP                          VALUE 3.
+	   78 HWND-BOTTOM                       VALUE 4.
+	   78 HWND-THREADCAPTURE                VALUE 5.
+	   78 HWND-PARENT                       VALUE 0.
+
+      then typing the command, "SPLIT78 OS2.78" will create 3 files:
+
+		   ABB.78
+		   AF.78
+	    and    HWND.78
+
+      The contents of OS2.78 will be unaffected. If any of the output files
+      already exist they will be extended, so make sure your working
+      directory contains no ".78" files other than the source file before
+      you enter the command SPLIT78.
+
+  Appendix B (Compiler Directives):
+
+      The default for the directive CHECKDIV is NOCHECKDIV, not CHECKDIV as
+      stated in the manuals.
+
+      There is an additional directive FLAGCD. Its syntax is [NO] FLAGCD.
+      When it is set, selecting flagging for the dialect SAA, ANS85, OSVS or
+      VSC2 release 2 or 3 will not only flag syntax outside that dialect,
+      but will also flag any directive settings that cause behavior
+      incompatible with that dialect. The default is NOFLAGCD.
+
+      There are two additional directives, HOST-NUMCOMPARE and ZWB which
+      direct the results of comparing a numeric display field with SPACE,
+      " " and "0". The directives are provided to ensure compatibility with
+      mainframe COBOL operation. If NOHOST-NUMCOMPARE or ZWB are specified,
+      the results of comparing are as now. If HOST-NUMCOMPARE and NOZWB are
+      specified together, the results are the exact opposite. Hence, if
+      PIC-9 contains spaces, the results of the comparison with SPACES, " "
+      and "0" are:
+				  PIC-9 = SPACE  PIC-9 = " "  PIC-9 = "0"
+      NOZWB and HOST-NUMCOMPARE       TRUE           TRUE         FALSE
+      ZWB or NOHOST-NUMCOMPARE        FALSE          FALSE        TRUE
+
+      These results are the same independent of the setting of the F
+      run-time switch.
+
+      There is an additional generator directive SIGNCOMPARE. Its syntax is
+      [NO] SIGNCOMPARE. When it is set in an EBCDIC program, it changes the
+      way some numeric comparisons are performed so that, for example, an
+      unsigned data item containing 1234 is equal to a signed data item
+      containing +1234. This does, however, cause these comparisons to be much
+      less efficient. The default is NOSIGNCOMPARE. If you are using an
+      add-on product, note that the behavior in intermediate code is the
+      same as you get in generated code with SIGNCOMPARE; thus with the
+      default setting of this directive, the behavior in intermediate code
+      and generated code is different.
+
+      There is an error in the example given for STICKY-LINKAGE. The name
+      of the data item referenced in the Procedure Division code should be
+      HOURLY-RATE, not RATE.
+
+      There is an additional directive ZEROLENGTHFALSE. Its syntax is
+      [NO] ZEROLENGTHFALSE. When it is set, all class tests of zero length
+      group items return false. Otherwise they all return true. The default
+      is NOZEROLENGTHFALSE. For conformance to ANSI and SAA you must set
+      ZEROLENGTHFALSE.
+
+  Appendices C and D (COBOL System Library Routines)
+
+      The following passage is relevant to both these appendices:
+
+      The COBOL system library routines generally supply features that
+      cannot be accessed using COBOL syntax, such as operating system
+      functions. Under OS/2, many of the features can be accessed directly
+      by calling the OS/2 API functions. However, this ties the program to
+      OS/2, with DOS capability available only for those API calls which are
+      part of the Family API, and only then when the program is bound.
+
+      Parameters to the call-by-name routines can be defined anywhere
+      provided they do not cross a segment boundary. (See the CHIP "16" and
+      FLAG-CHIP compiler directives.) Parameters to the call-by-number
+      routines must not be defined in the Linkage Section or Local-Storage
+      Section of your program, and must be in the first 64K of the Data
+      Division.
+
+
+  Error Messages
+  --------------
+
+  Page 2-2. The reference to the E switch is only appropriate if you have
+  the Toolset or Workbench add-on products. Consequently, the effect of the
+  E switch is not documented in the Operating Guide as stated.
+
+
+  Pocket Guide
+  ------------
+
+  Reserved Words List
+
+      The words SECONDS is shown as a reserved word. This is incorrect.

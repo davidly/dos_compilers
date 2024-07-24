@@ -1,0 +1,177 @@
+
+                       TIMEOUT SUPPORT IN ACCEPT
+                       =========================
+
+  Definition
+  ==========
+
+  General Format
+
+
+  For both Format 1 and Format 2 of the ACCEPT statement as documented in
+  the Screen Handling chapter of the Language Reference, the following
+  additional phrase is provided.
+
+  +------------------------------------------------------------------------+
+  |                                                                        |
+  |           { TIME-OUT  }        { integer-7    }                        |
+  |           { --------  }        {              }                        |
+  |           {           } AFTER  {              }                        |
+  |           {           }        {              }                        |
+  |           { TIMEOUT   }        { identifier-8 }                        |
+  |           { -------   }        {              }                        |
+  |                                                                        |
+  +------------------------------------------------------------------------+
+
+  Syntax Rules
+
+  1.  Identifier-8 must be an integer.  It may be signed.  If unsigned it is
+      treated as positive.
+
+  2.  Integer-7 must be an integer which may optionally be signed.  If
+      unsigned it is treated as positive.
+
+
+  General Rules
+
+  1.  If identifier-8 or integer-7 has a negative value, this represents a
+      request that no time-out "exception" should occur no matter how long
+      there is between/before key-strokes.
+
+  2.  If identifier-8 or integer-7 is zero, this indicates that a time-out
+      should not occur if characters are waiting. However, if no characters
+      are waiting (when the ACCEPT is processed), then issue a time-out
+      immediately.
+
+  3.  The ON EXCEPTION clause, if present, will be executed when a Time-Out
+      occurs and a time-out clause is specified.  The NOT ON EXCEPTION
+      clause, if present, will be executed when a Time-Out clause is specified
+      but no time-out (or other exception) occurs.
+
+  4.  If a Time-Out exception occurs, then the contents of any ACCEPT
+      resultant-field will be defined as follows:
+
+      a.  Any field which has been partially modified will contain any
+          information which has already been received.
+      b.  Fields which have "FULL" or "REQUIRED" attributes or any other
+          attribute which would normally impact partial field input, will NOT
+          be required to meet those attributes when a partial field entry has
+          occurred when a TIMEOUT exception occurs.
+      c.  The rules listed above apply whether or not the timeout clock is
+          reset upon each keystroke.
+
+  5.  If at run-time a positive timeout interval greater than 2,147,483,647
+      hundredths of a second is detected the timeout value will be reset to
+      2,147,483,647 hundredths of a seconds (which is approximately eight
+      months).
+
+  6.  The Time-Out value specifies the number of seconds (or tenths of a
+      second) after the ACCEPT statement begins processes until a time-out
+      exception occurs.  A new ADISCF configuration option controls
+      whether or not the TIMEOUT clock is "reset" each time a new keyboard
+      action is detected.  An application which wants some ACCEPT statements
+      to be handled with a RESET and some without, may make specific CALLs
+      to the ADIS run-time interface before or after the ACCEPT statements
+      that need changes from the default.  For example when ADIS was
+      configured not to do resets, if a program had:
+
+        ACCEPT INPUT-FIELD RIME-OUT AFTER +10
+
+      Then a time-out would occur after 10 seconds had elapsed from the
+      beginning of the ACCEPT, even if some characters were entered after 5
+      seconds into the ACCEPT processing.
+
+      If, on the other hand, ADIS were configured to do resets, if a program
+      had the same code given above, then each time a new character were
+      entered, the timeout "clock" would be reset to zero.
+
+   8. If a Time-Out exception occurs and no On Exception phrase is specified,
+      then the CRT Status keys (if specified) are updated, the application
+      continues to the logically next phrase, and the contents of the ACCEPT
+      receiving field are as defined above.  (The above is true whether or not
+      a NOT ON EXCEPTION phrase is specified.)
+
+   9. All references to (NOT) ON EXCEPTION phrases within this proposal also
+      apply to (NOT) ON ESCAPE phrases.
+
+
+
+  Running
+  =======
+
+  Configuring the TIMEOUT options using ADISCF
+  --------------------------------------------
+  Two new Accept/Display options are available in ADISCF to allow
+  configuration of TIMEOUT. They are as follows:
+
+  Option 31 - Selection of the units used when calculating TIMEOUT on
+              an accept.
+
+              1 - Units used are seconds
+
+              2 - Units used are tenths of a second
+
+
+  Option 32 - Control of the timer used to calculate accept TIMEOUT.
+
+              1 - The timer is never reset. Timeout will occur
+                  at the specified length of time after the accept is
+                  initiated
+
+              2 - Timeout is reset to its original value each time a
+                  character is entered.
+
+
+  Changing the TIMEOUT options at run-time
+  ----------------------------------------
+  Two new X"AF" calls are provided to allow the TIMEOUT options shown
+  above to be altered at run-time. The calls have the following format
+
+     CALL X"AF" USING Set-Bit-Pairs Parameter-Block
+
+  where the parameters are defined as follows:
+
+     01 Set-Bit-Pairs              PIC 9(2) COMP-X VALUE 1.
+     01 Parameter-Block.
+       03 Bit-Pair-Setting         PIC 9(2) COMP-X.
+       03 FILLER                   PIC X VALUE "6".
+       03 Bit-Pair-Number          PIC 9(2) COMP-X.
+       01 FILLER                   PIC 9(2) COMP-X VALUE 1.
+
+  The values to be set for the fields Bit-Pair-Setting and Bit-Pais-Number
+  are given in each of the descriptions below.
+
+  With each call, if an error occurs, Set-Bit-Pairs will return the value
+  255.
+
+
+  Select Timeout units.
+  ---------------------
+  Allows selection of the units to be used when calculating TIMEOUT.
+
+    Bit-Pair-Number must be set to 14.
+
+    Bit-Par-Setting should be one of the following values:
+
+      0  -   Units are seconds
+
+      1  -   Units are tenths of a second
+
+
+  Control Timeout Reset
+  ---------------------
+  Allows control of the timer used to calculate TIMEOUT on an accept.
+
+    Bit-Pair-Number must be set to 15.
+
+    Bit-Par-Setting should be one of the following values:
+
+      0  -   Timer is never reset. Timeout occurs after the specified
+             time from the start of the accept.
+
+      1  -   The timer is reset each time a character is entered.
+
+
+  ==========================================================================
+  Copyright (C) 1991 Microsoft Corporation
+  Copyright (C) 1991 Micro Focus Ltd

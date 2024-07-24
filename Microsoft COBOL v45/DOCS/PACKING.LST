@@ -1,0 +1,844 @@
+
+       Microsoft COBOL Professional Development System, Version 4.5
+
+                        Product Contents Checklist
+
+               (C) Copyright Microsoft Corporation, 1991
+
+
+   Contents
+   --------
+           Introduction
+           Documentation
+           Diskettes
+           Description of Components
+           Description of Files
+
+
+   Introduction
+   ------------
+   This document describes the contents of the Microsoft COBOL package,
+   including documentation, diskettes and diskette contents.
+
+
+   Documentation
+   -------------
+   The following documentation pieces are provided with the COBOL software
+   package.
+
+       Installing and Using the Professional Development System
+       Advanced Topics and Utilities Reference
+       Operating Guide
+       Language Reference Manual (volumes 1 and 2)
+       Error Messages Manual
+       Compatibility Guide
+           Conversion Series 1 Operating Guide
+           Conversion Series 2 Operating Guide
+           Conversion Series 3 Operating Guide
+           Conversion Series 5 Operating Guide
+           Dialect Summary
+       Pocket Guide
+
+   The following additional documents appear as ASCII text files on the
+   diskettes.
+
+       PACKING.LST    - List of documents and files included in this package
+       README.DOC     - Essential information for this release
+       CBL-CMPT.DOC   - Lists differences between Microsoft COBOL 4.5 and
+                        earlier releases.
+
+   These can be viewed from within SETUP, the installation program, or using
+   the operating system command, TYPE, or any ASCII text file editor or
+   listing utility.
+
+
+
+   Diskettes
+   ---------
+   Your COBOL software package includes a set of either 5.25" diskettes or
+   3.5" diskettes, low or high density. The contents of each disk are listed
+   below. Note that files with an "@" character at the start of the
+   extension are compressed and require PKUNZIP to load them. In general,
+   the name of the compressed file is the same as the uncompressed file
+   except that the first character of the extension is replaced by "@".
+   For some files, this results in two compressed files with the same name.
+   In this case, the extension of the compressed file is changed and the name
+   is listed in brackets after the name of the uncompressed file.
+
+
+    Low density 5.25 inch disk layout
+
+      Disk 1 / SETUP
+        BRIEF.@NI       CBL-CMPT.DOC    COBOL.INI       MFCOMPAT.DOC
+        OPTIMIZE.DOC    PACKING.LST     PKUNZIP.EXE     README.DOC
+        SETUP.EXE       TIMEOUT.DOC
+
+
+      Disk 2
+        CCI.@BJ         COBLIB.DLE      COBLIB.DLL      HNFDC.@LL
+        HNFDC.@XE       HYHELP.@BR      HYHELP.@NF      HYHELP.@XE
+        MSHELP.@LL      MSHIF.@LL       MSHIF.@XE
+
+
+      Disk 3
+        ANIMATE.@XE     COBFP87.@LE     COBFP87.@LL     COBFP87D.@IB
+        COBFP87O.@IB    COBIFN.@LL      COBOL.@XE       GENERATE.@BR
+        SCREENS.@BR     SCREENS.@XE     _SORT.@LL       _SQLPRE.@LL
+
+
+      Disk 4
+        ADISCF.@BR      ADISCF.@XE      ADISCTRL.@      CCIAPPC.@LL
+        CCIIPX.@XE      CCINAMP.@LL     CCINAMP2.DLL    CCINETB.@LL
+        CCINETB.@XE     CNVCOMP6.@BJ    CONVERT3.@XE    CONVERT5.@XE
+        HELPADCF.@BR    KEYBCF.@XE      REBUILD.@XE     REFORM5.@XE
+        TABX.@XE
+
+
+      Disk 5
+        ADIS.@BJ        ADIS.DEF        ADISDYNA.@BJ    ADISINIT.@BJ
+        ADISKEY.@BJ     C6DOSIF.@BJ     C6DOSLB.@BJ     C6OS2IF.@BJ
+        C6OS2LB.@BJ     CBLBIND.@IB     CBLBIND.NOT     CBLDC001.@BJ
+        COBAPI.@IB      COBINTFN.@BJ    COBLIB.@IB      EXTERNL.@BJ
+        EXTERNL.DEF     EXTFH.@BJ       EXTFH.DEF       LCOBOL.@IB
+        LINITC31.@BJ    LINITC31.@SM    LINITC32.@BJ    LINITC32.@SM
+        LINITIO.@       LINITIO.@BJ     MCS.@BJ         MCSETUP.@XE
+        MFC6INTF.@BJ    MINITC.@BJ      MINITC.@SM      MINITF.@BJ
+	MINITF.@SM	MINITP.@BJ	MINITP.@SM	SPLIT78.@XE
+
+
+      Disk 6
+	COBOL.@LP	RMSTAT.@BJ	RTSBIN.@SM	RTSCALL.@BJ
+	SQLINIT.@BJ	_CLASS.@BJ	_CODESET.@BJ
+
+
+      Disk 7
+        ANIMATOR.@BR    ANIMRTNS.@LL    ANIMRTNS.@XE    ANIMUSER.@XE
+        COBCLI.@BR      HELP.@BR        HELPNAME.@BR    NAME.@BR
+        UTILERR.@LP     UTILS.@LP
+
+
+      Disk 8
+        CHECK.@BR       UTILS.@BR
+
+
+      Disk 9
+        ADMOUSE.@BL     APPC.@EM        ASM.@EM         CALC.@BL
+        CALENDAR.@BL    CASE.@BL        DDE.@EM         DECLARE.@BL
+        DIOPHANT.@BL    EXPAND.@BL      EXTFILE.@BL     FUNKEY.@BL
+        LOGOPER.@BL     MUDEMO.@EM      NESTED.@BL      PMCALC.@EM
+        PMHELLO.@BL     POPUP.@BL       PRINTESC.@BL    REPORT.@BL
+        SMPLACCP.@BL    SORTDEMO.@EM    SQLDEMO.@EM     SSCNTRL.@BL
+        STATUS.@BL      TICBUG.@BL      TICTAC.@EM      TSTDEBUG.@BL
+        WINDOWS.@EM
+
+
+      Disk 10
+        BIND.@XE        EXEHDR.@XE      EXP.@XE         HELPMAKE.@XE
+        ILINK.@XE       ILINKSTB.@VL    LIB.@XE         LINK.@XE
+        PWBRMAKE.@XE
+
+
+      Disk 11
+        API.@IB         LRFMERGE.@XE    NMAKE.@P        NMAKE.@R
+        NMK.@OM         RC.@XE          RCPP.@RR        RCPP.@XE
+        RM.@XE          SBR-LOAD.@NT    TOOLS.@RE       UNDEL.@XE
+
+
+      Disk 12
+        CBLSSEG.@LL     CBLWINB.@BJ     CBLWINC.@BJ     CBLWING.@BJ
+        CBLWINL.@BJ     COBAPIDW.@IB    COBAPIW.@IB     DWSKEL.DEF
+        FIXSHIFT.@OM    HIMEM.@YS       LDLLCEW.@IB     LIBENTRY.@BJ
+        LIBW.@IB        LLIBCEW.@IB     RAMDRIVE.@YS    SDKPAINT.@XE
+        SDKPAINT.DAT    SMARTDRV.@YS    WINSTUB.@XE
+
+
+      Disk 13
+        MOUSE.@OM       PWB.@OM         PWBCOBOL.@R     PWBED.@XE
+        PWBHELP.@R      PWBROWSE.@R     PWBUTILS.@R     QH.@R
+
+
+      Disk 14  Disk 14
+        OS2.@IB         PWB.@XE         PWBCOBOL.@P     PWBHELP.@P
+        PWBROWSE.@P     PWBUTILS.@P     QH.@P
+
+
+      Disk 15
+        CANOS2.@LL      COBOS2.@LL      CVP.@XE         CVPACK.@XE
+        IMPLIB.@XE      PMCVAID.@XE     PWBC.@P         PWBC.@R
+
+
+      Disk 16
+        CV.@LP          LINK.@LP
+
+
+      Disk 17
+        PWB.@LP
+
+
+      Disk 18
+        COBOL1.HLP      H2CPY.@XE       PWB2.HLP        QH.@LP
+
+
+
+    Low density 3.5 inch disk layout
+
+      Disk 1 / SETUP
+        BRIEF.@NI       CBL-CMPT.DOC    CCI.@BJ         COBLIB.DLE
+        COBLIB.DLL      COBOL.INI       HNFDC.@LL       HNFDC.@XE
+        HYHELP.@BR      HYHELP.@NF      HYHELP.@XE      MFCOMPAT.DOC
+        MSHELP.@LL      MSHIF.@LL       MSHIF.@XE       OPTIMIZE.DOC
+        PACKING.LST     PKUNZIP.EXE     README.DOC      SETUP.EXE
+        TIMEOUT.DOC
+
+
+      Disk 2
+        ADISCF.@BR      ADISCF.@XE      ADISCTRL.@      ANIMATE.@XE
+        CCIAPPC.@LL     CCIIPX.@XE      CCINAMP.@LL     CCINAMP2.DLL
+        CCINETB.@LL     CCINETB.@XE     CNVCOMP6.@BJ    COBFP87.@LE
+        COBFP87.@LL     COBFP87D.@IB    COBFP87O.@IB    COBIFN.@LL
+        COBOL.@XE       CONVERT3.@XE    CONVERT5.@XE    GENERATE.@BR
+        HELPADCF.@BR    KEYBCF.@XE      REBUILD.@XE     REFORM5.@XE
+        SCREENS.@BR     SCREENS.@XE     TABX.@XE        _SORT.@LL
+        _SQLPRE.@LL
+
+
+      Disk 3
+        ADIS.@BJ        ADIS.DEF        ADISDYNA.@BJ    ADISINIT.@BJ
+        ADISKEY.@BJ     C6DOSIF.@BJ     C6DOSLB.@BJ     C6OS2IF.@BJ
+        C6OS2LB.@BJ     CBLBIND.@IB     CBLBIND.NOT     CBLDC001.@BJ
+        COBAPI.@IB      COBINTFN.@BJ    COBLIB.@IB      COBOL.@LP
+        EXTERNL.@BJ     EXTERNL.DEF     EXTFH.@BJ       EXTFH.DEF
+        LCOBOL.@IB      LINITC31.@BJ    LINITC31.@SM    LINITC32.@BJ
+        LINITC32.@SM    LINITIO.@       LINITIO.@BJ     MCS.@BJ
+        MCSETUP.@XE     MFC6INTF.@BJ    MINITC.@BJ      MINITC.@SM
+        MINITF.@BJ      MINITF.@SM      MINITP.@BJ      MINITP.@SM
+        RMSTAT.@BJ      RTSBIN.@SM      RTSCALL.@BJ     SPLIT78.@XE
+        SQLINIT.@BJ     _CLASS.@BJ      _CODESET.@BJ
+
+
+      Disk 4
+        ANIMATOR.@BR    ANIMRTNS.@LL    ANIMRTNS.@XE    ANIMUSER.@XE
+        CHECK.@BR       COBCLI.@BR      HELP.@BR        HELPNAME.@BR
+        NAME.@BR        UTILERR.@LP     UTILS.@BR       UTILS.@LP
+
+
+      Disk 5
+        ADMOUSE.@BL     APPC.@EM        ASM.@EM         BIND.@XE
+        CALC.@BL        CALENDAR.@BL    CASE.@BL        DDE.@EM
+        DECLARE.@BL     DIOPHANT.@BL    EXEHDR.@XE      EXP.@XE
+        EXPAND.@BL      EXTFILE.@BL     FUNKEY.@BL      HELPMAKE.@XE
+        ILINK.@XE       ILINKSTB.@VL    LIB.@XE         LINK.@XE
+        LOGOPER.@BL     MUDEMO.@EM      NESTED.@BL      PMCALC.@EM
+        PMHELLO.@BL     POPUP.@BL       PRINTESC.@BL    PWBRMAKE.@XE
+        REPORT.@BL      SMPLACCP.@BL    SORTDEMO.@EM    SQLDEMO.@EM
+        SSCNTRL.@BL     STATUS.@BL      TICBUG.@BL      TICTAC.@EM
+        TSTDEBUG.@BL    WINDOWS.@EM
+
+
+      Disk 6
+        API.@IB         CBLSSEG.@LL     CBLWINB.@BJ     CBLWINC.@BJ
+        CBLWING.@BJ     CBLWINL.@BJ     COBAPIDW.@IB    COBAPIW.@IB
+        DWSKEL.DEF      FIXSHIFT.@OM    HIMEM.@YS       LDLLCEW.@IB
+        LIBENTRY.@BJ    LIBW.@IB        LLIBCEW.@IB     LRFMERGE.@XE
+        NMAKE.@P        NMAKE.@R        NMK.@OM         RAMDRIVE.@YS
+        RC.@XE          RCPP.@RR        RCPP.@XE        RM.@XE
+        SBR-LOAD.@NT    SDKPAINT.@XE    SDKPAINT.DAT    SMARTDRV.@YS
+        TOOLS.@RE       UNDEL.@XE       WINSTUB.@XE
+
+
+      Disk 7
+        MOUSE.@OM       OS2.@IB         PWB.@OM         PWB.@XE
+        PWBCOBOL.@P     PWBCOBOL.@R     PWBED.@XE       PWBHELP.@P
+        PWBHELP.@R      PWBROWSE.@P     PWBROWSE.@R     PWBUTILS.@P
+        PWBUTILS.@R     QH.@P           QH.@R
+
+
+      Disk 8
+        CANOS2.@LL      COBOS2.@LL      CV.@LP          CVP.@XE
+        CVPACK.@XE      IMPLIB.@XE      LINK.@LP        PMCVAID.@XE
+        PWBC.@P         PWBC.@R
+
+
+      Disk 9
+        COBOL1.HLP      H2CPY.@XE       PWB.@LP         PWB2.HLP
+        QH.@LP
+
+
+
+    High density 5.25 inch disk layout
+
+      Disk 1 / SETUP
+        ANIMATE.@XE     BRIEF.@NI       CBL-CMPT.DOC    CCI.@BJ
+        COBFP87.@LE     COBFP87.@LL     COBFP87D.@IB    COBFP87O.@IB
+        COBIFN.@LL      COBLIB.DLE      COBLIB.DLL      COBOL.@XE
+        COBOL.INI       GENERATE.@BR    HNFDC.@LL       HNFDC.@XE
+        HYHELP.@BR      HYHELP.@NF      HYHELP.@XE      MFCOMPAT.DOC
+        MSHELP.@LL      MSHIF.@LL       MSHIF.@XE       OPTIMIZE.DOC
+        PACKING.LST     PKUNZIP.EXE     README.DOC      SCREENS.@BR
+        SCREENS.@XE     SETUP.EXE       TIMEOUT.DOC     _SORT.@LL
+        _SQLPRE.@LL
+
+
+      Disk 2
+        ADIS.@BJ        ADIS.DEF        ADISCF.@BR      ADISCF.@XE
+        ADISCTRL.@      ADISDYNA.@BJ    ADISINIT.@BJ    ADISKEY.@BJ
+        C6DOSIF.@BJ     C6DOSLB.@BJ     C6OS2IF.@BJ     C6OS2LB.@BJ
+        CBLBIND.@IB     CBLBIND.NOT     CBLDC001.@BJ    CCIAPPC.@LL
+        CCIIPX.@XE      CCINAMP.@LL     CCINAMP2.DLL    CCINETB.@LL
+        CCINETB.@XE     CNVCOMP6.@BJ    COBAPI.@IB      COBINTFN.@BJ
+        COBLIB.@IB      COBOL.@LP       CONVERT3.@XE    CONVERT5.@XE
+        EXTERNL.@BJ     EXTERNL.DEF     EXTFH.@BJ       EXTFH.DEF
+        HELPADCF.@BR    KEYBCF.@XE      LCOBOL.@IB      LINITC31.@BJ
+        LINITC31.@SM    LINITC32.@BJ    LINITC32.@SM    LINITIO.@
+        LINITIO.@BJ     MCS.@BJ         MCSETUP.@XE     MFC6INTF.@BJ
+        MINITC.@BJ      MINITC.@SM      MINITF.@BJ      MINITF.@SM
+        MINITP.@BJ      MINITP.@SM      REBUILD.@XE     REFORM5.@XE
+        RMSTAT.@BJ      RTSBIN.@SM      RTSCALL.@BJ     SPLIT78.@XE
+        SQLINIT.@BJ     TABX.@XE        _CLASS.@BJ      _CODESET.@BJ
+
+
+      Disk 3
+        ADMOUSE.@BL     ANIMATOR.@BR    ANIMRTNS.@LL    ANIMRTNS.@XE
+        ANIMUSER.@XE    APPC.@EM        ASM.@EM         CALC.@BL
+        CALENDAR.@BL    CASE.@BL        CHECK.@BR       COBCLI.@BR
+        DDE.@EM         DECLARE.@BL     DIOPHANT.@BL    EXPAND.@BL
+        EXTFILE.@BL     FUNKEY.@BL      HELP.@BR        HELPNAME.@BR
+        LOGOPER.@BL     MUDEMO.@EM      NAME.@BR        NESTED.@BL
+        PMCALC.@EM      PMHELLO.@BL     POPUP.@BL       PRINTESC.@BL
+        REPORT.@BL      SMPLACCP.@BL    SORTDEMO.@EM    SQLDEMO.@EM
+        SSCNTRL.@BL     STATUS.@BL      TICBUG.@BL      TICTAC.@EM
+        TSTDEBUG.@BL    UTILERR.@LP     UTILS.@BR       UTILS.@LP
+        WINDOWS.@EM
+
+
+      Disk 4
+        API.@IB         BIND.@XE        CBLSSEG.@LL     CBLWINB.@BJ
+        CBLWINC.@BJ     CBLWING.@BJ     CBLWINL.@BJ     COBAPIDW.@IB
+        COBAPIW.@IB     DWSKEL.DEF      EXEHDR.@XE      EXP.@XE
+        FIXSHIFT.@OM    HELPMAKE.@XE    HIMEM.@YS       ILINK.@XE
+        ILINKSTB.@VL    LDLLCEW.@IB     LIB.@XE         LIBENTRY.@BJ
+        LIBW.@IB        LINK.@XE        LLIBCEW.@IB     LRFMERGE.@XE
+        NMAKE.@P        NMAKE.@R        NMK.@OM         PWBRMAKE.@XE
+        RAMDRIVE.@YS    RC.@XE          RCPP.@RR        RCPP.@XE
+        RM.@XE          SBR-LOAD.@NT    SDKPAINT.@XE    SDKPAINT.DAT
+        SMARTDRV.@YS    TOOLS.@RE       UNDEL.@XE       WINSTUB.@XE
+
+
+      Disk 5
+        CANOS2.@LL      COBOS2.@LL      CVP.@XE         CVPACK.@XE
+        IMPLIB.@XE      MOUSE.@OM       OS2.@IB         PMCVAID.@XE
+        PWB.@OM         PWB.@XE         PWBC.@P         PWBC.@R
+        PWBCOBOL.@P     PWBCOBOL.@R     PWBED.@XE       PWBHELP.@P
+        PWBHELP.@R      PWBROWSE.@P     PWBROWSE.@R     PWBUTILS.@P
+        PWBUTILS.@R     QH.@P           QH.@R
+
+
+      Disk 6
+        COBOL1.HLP      CV.@LP          H2CPY.@XE       LINK.@LP
+        PWB.@LP         PWB2.HLP        QH.@LP
+
+
+
+    High density 3.5 inch disk layout
+
+      Disk 1 / SETUP
+        ADISCF.@BR      ADISCF.@XE      ADISCTRL.@      ANIMATE.@XE
+        BRIEF.@NI       CBL-CMPT.DOC    CCI.@BJ         CCIAPPC.@LL
+        CCIIPX.@XE      CCINAMP.@LL     CCINAMP2.DLL    CCINETB.@LL
+        CCINETB.@XE     CNVCOMP6.@BJ    COBFP87.@LE     COBFP87.@LL
+        COBFP87D.@IB    COBFP87O.@IB    COBIFN.@LL      COBLIB.DLE
+        COBLIB.DLL      COBOL.@XE       COBOL.INI       CONVERT3.@XE
+        CONVERT5.@XE    GENERATE.@BR    HELPADCF.@BR    HNFDC.@LL
+        HNFDC.@XE       HYHELP.@BR      HYHELP.@NF      HYHELP.@XE
+        KEYBCF.@XE      MFCOMPAT.DOC    MSHELP.@LL      MSHIF.@LL
+        MSHIF.@XE       OPTIMIZE.DOC    PACKING.LST     PKUNZIP.EXE
+        README.DOC      REBUILD.@XE     REFORM5.@XE     SCREENS.@BR
+        SCREENS.@XE     SETUP.EXE       TABX.@XE        TIMEOUT.DOC
+        _SORT.@LL       _SQLPRE.@LL
+
+
+      Disk 2
+        ADIS.@BJ        ADIS.DEF        ADISDYNA.@BJ    ADISINIT.@BJ
+        ADISKEY.@BJ     ANIMATOR.@BR    ANIMRTNS.@LL    ANIMRTNS.@XE
+        ANIMUSER.@XE    C6DOSIF.@BJ     C6DOSLB.@BJ     C6OS2IF.@BJ
+        C6OS2LB.@BJ     CBLBIND.@IB     CBLBIND.NOT     CBLDC001.@BJ
+        CHECK.@BR       COBAPI.@IB      COBCLI.@BR      COBINTFN.@BJ
+        COBLIB.@IB      COBOL.@LP       EXTERNL.@BJ     EXTERNL.DEF
+        EXTFH.@BJ       EXTFH.DEF       HELP.@BR        HELPNAME.@BR
+        LCOBOL.@IB      LINITC31.@BJ    LINITC31.@SM    LINITC32.@BJ
+        LINITC32.@SM    LINITIO.@       LINITIO.@BJ     MCS.@BJ
+        MCSETUP.@XE     MFC6INTF.@BJ    MINITC.@BJ      MINITC.@SM
+        MINITF.@BJ      MINITF.@SM      MINITP.@BJ      MINITP.@SM
+        NAME.@BR        RMSTAT.@BJ      RTSBIN.@SM      RTSCALL.@BJ
+        SPLIT78.@XE     SQLINIT.@BJ     UTILERR.@LP     UTILS.@BR
+        UTILS.@LP       _CLASS.@BJ      _CODESET.@BJ
+
+
+      Disk 3
+        ADMOUSE.@BL     API.@IB         APPC.@EM        ASM.@EM
+        BIND.@XE        CALC.@BL        CALENDAR.@BL    CASE.@BL
+        CBLSSEG.@LL     CBLWINB.@BJ     CBLWINC.@BJ     CBLWING.@BJ
+        CBLWINL.@BJ     COBAPIDW.@IB    COBAPIW.@IB     DDE.@EM
+        DECLARE.@BL     DIOPHANT.@BL    DWSKEL.DEF      EXEHDR.@XE
+        EXP.@XE         EXPAND.@BL      EXTFILE.@BL     FIXSHIFT.@OM
+        FUNKEY.@BL      HELPMAKE.@XE    HIMEM.@YS       ILINK.@XE
+        ILINKSTB.@VL    LDLLCEW.@IB     LIB.@XE         LIBENTRY.@BJ
+        LIBW.@IB        LINK.@XE        LLIBCEW.@IB     LOGOPER.@BL
+        LRFMERGE.@XE    MUDEMO.@EM      NESTED.@BL      NMAKE.@P
+        NMAKE.@R        NMK.@OM         PMCALC.@EM      PMHELLO.@BL
+        POPUP.@BL       PRINTESC.@BL    PWBRMAKE.@XE    RAMDRIVE.@YS
+        RC.@XE          RCPP.@RR        RCPP.@XE        REPORT.@BL
+        RM.@XE          SBR-LOAD.@NT    SDKPAINT.@XE    SDKPAINT.DAT
+        SMARTDRV.@YS    SMPLACCP.@BL    SORTDEMO.@EM    SQLDEMO.@EM
+        SSCNTRL.@BL     STATUS.@BL      TICBUG.@BL      TICTAC.@EM
+        TOOLS.@RE       TSTDEBUG.@BL    UNDEL.@XE       WINDOWS.@EM
+        WINSTUB.@XE
+
+
+      Disk 4
+        CANOS2.@LL      COBOS2.@LL      CV.@LP          CVP.@XE
+        CVPACK.@XE      IMPLIB.@XE      LINK.@LP        MOUSE.@OM
+        OS2.@IB         PMCVAID.@XE     PWB.@OM         PWB.@XE
+        PWBC.@P         PWBC.@R         PWBCOBOL.@P     PWBCOBOL.@R
+        PWBED.@XE       PWBHELP.@P      PWBHELP.@R      PWBROWSE.@P
+        PWBROWSE.@R     PWBUTILS.@P     PWBUTILS.@R     QH.@P
+        QH.@R
+
+
+      Disk 5
+        COBOL1.HLP      H2CPY.@XE       PWB.@LP         PWB2.HLP
+        QH.@LP
+
+
+
+   Description of Components
+   -------------------------
+   The Microsoft COBOL 4.5 package contains the following software
+   components:
+
+   COBOL Optimizing Compiler - compiles COBOL source code into OBJ files.
+
+   ANIMATOR testing tool     - interactive full screen testing, learning and
+                               debugging tool. Includes Cooperative
+                               Animation facility to animate programs in
+                               different sessions/machines.
+
+   Linking Support           - Linker, libraries and system programs to
+                               create standalone EXE files for DOS and OS/2
+                               from the OBJs created by the compiler.
+
+   COBOL Communications      - Preparation and run-time support for MCS
+     Module Support
+
+   Mixed Language Facility   - Extra tools, and documentation to aid in
+                               linking COBOL programs with programs of other
+                               languages.
+
+   Screen Painter            - SCREENS Screen Painter
+
+   Screen/keyboard           - Tools to allow configuration of the extended
+   Configuration tools         ACCEPT/DISPLAY system program, ADIS.
+
+   SETUP installation        - Utility to allow efficient installation of
+   utility                     this product
+
+   Indexed file maintenance tool
+                             - REBUILD file management utility
+
+   Demonstration programs    - Programs that demonstrate some of the
+                               facilities in this package, and batch streams
+                               to compile, link and run, or animate them.
+
+   MF Compatibility Tools    - File conversion utility to aid in converting
+                               Micro Focus COBOL systems to compile and
+                               run with this system.
+
+   MS Compatibility Tools    - Compatibility documentation and file
+                               conversion utility to aid in converting
+                               Microsoft COBOL v2.2 systems to compile and
+                               run with this system.
+
+   RM Compatibility Tools    - Compatibility documentation and file
+                               conversion utility to aid in converting
+                               RM/COBOL applications to compile and run
+                               with this system.
+
+   DG Compatibility Tools    - Compatibility documentation and file
+                               conversion utility to aid in converting DG
+                               ICOBOL applications to compile and run with
+                               this system.
+
+   Utilities                 - LINK, LIB, NMAKE, etc
+
+   Programmer's WorkBench    - Integrated development environment.
+
+   CodeView                  - CodeView Version 3.5 for OS/2 allowing
+                               native code debugging of COBOL programs
+                               and mixed COBOL/C debugging.
+
+   Windows 3.0 Support       - Libraries and tools needed to develop
+                               Microsoft Windows 3.0 applications.
+
+
+   Description of Files
+   --------------------
+   The files included on the release disks are briefly described below.
+   Unless otherwise stated, files marked DOS are only required for running
+   the software on DOS, and those marked OS/2 are only required for running
+   the software on OS/2.
+
+   Executable files on the disks are one of the following types:
+
+   (DOS)             Runs in real mode under DOS 3.3 or above
+   (OS/2)            Runs in protected mode of OS/2 1.1 or above
+                     Runs in either real or protected mode
+
+
+   COBOL Optimizing Compiler:
+
+       COBOL.EXE      Compiler (Bound)
+       COBCLI.LBR     Complier/ANIMATOR Command Line Interpreter
+       CHECK.LBR      Compiler/ANIMATOR modules
+       UTILS.LBR      Compiler/ANIMATOR run-time support
+       _SORT.DLL      Compiler/ANIMATOR support                     OS/2
+       _SQLPRE.DLL    Compiler/ANIMATOR SQL support                 OS/2
+       GENERATE.LBR   Compiler - code generation
+       COBLIB.DLE     Shared run-time                               DOS
+       COBLIB.DLL     Shared run-time                               OS/2
+
+   ANIMATOR debugging utility:
+
+       ANIMATE.EXE    Animator (Bound)
+       COBCLI.LBR     Complier/ANIMATOR Command Line Interpreter
+       CHECK.LBR      Compiler/ANIMATOR modules
+       ANIMATOR.LBR   ANIMATOR - additional programs
+       UTILS.LBR      Compiler/ANIMATOR run-time support
+       HELP.LBR       ANIMATOR HELP screens (delete if help is not needed)
+       _SORT.DLL      Compiler/ANIMATOR support                     OS/2
+       _SQLPRE.DLL    Compiler/ANIMATOR SQL support                 OS/2
+       COBLIB.DLE     Shared run-time for DOS                       DOS
+       COBLIB.DLL     Shared run-time for OS/2                      OS/2
+       ANIMUSER.EXE   Cooperative animation
+       ANIMANIM.DLE   Cooperative animation
+       ANIMANIM.DLL   Cooperative animation
+       CCINETB.DLE    Cooperative animation (other machine)         DOS
+       CCINETB.DLL    Cooperative animation (other machine)         OS/2
+       CCINAMP.DLL    Cooperative animation (same machine)          OS/2
+       CCINAMP2.DLL   Cooperative animation (same machine)          OS/2
+
+
+   Linking:
+
+       LCOBOL.LIB     COBOL link support routines - static linked
+       COBLIB.LIB     COBOL link support routines - shared run-time
+       COBAPI.LIB     COBOL link support routines                   DOS
+       CBLBIND.LIB    Required for BINDing
+       CBLBIND.NOT    Required for BINDing
+
+       ADIS.OBJ       ADIS-ACCEPT/DISPLAY support
+       ADISINIT.OBJ   ADIS-ACCEPT/DISPLAY support
+       ADISKEY.OBJ    ADIS-ACCEPT/DISPLAY support
+       ADISDYNA.OBJ   ADIS-ACCEPT/DISPLAY support
+       ADIS.DEF       LINK definition file to create ADIS.DLL       OS/2
+       _CLASS.OBJ     Support for user defined CLASS
+       _CODESET.OBJ   Support for CODE-SET syntax
+       EXTERNL.OBJ    External data handler
+       EXTERNL.DEF    LINK definition file to create EXTERNL.DLL    OS/2
+       EXTFH.OBJ      Indexed and External file handler
+       EXTFH.DEF      LINK definition file to create EXTFH.DLL      OS/2
+       SQLINIT.OBJ    Database Manager (SQL) initialization support OS/2
+
+
+   Presentation Manager and Windows support
+
+       H2CPY.EXE      Converter for C Header files to COBOL
+       SPLIT78.EXE    Splits large files containing level 78s into
+                      smaller files.
+
+
+   COBOL Communications Module Support:
+
+       MCSETUP.EXE    Communication setup                           DOS
+       MCS.OBJ        Communications module                         DOS
+       COBLIB.DLE     Shared run-time                               DOS
+
+   Mixed Language Facility:
+
+       MFC6INTF.OBJ   Microsoft C 6.0 - COBOL interface
+       C6DOSIF.OBJ    Microsoft C 6.0 - C initialization for DOS
+       C6DOSLB.OBJ    Microsoft C 6.0 - C initialization for DOS
+       C6OS2IF.OBJ    Microsoft C 6.0 - C initialization for OS2
+       C6OS2LB.OBJ    Microsoft C 6.0 - C initialization for OS2
+
+       MINITC.ASM     Microsoft C 5.0 and 4.0
+       MINITC.OBJ
+       MINITF.ASM     Microsoft FORTRAN
+       MINITF.OBJ
+       MINITP.ASM     Microsoft Pascal
+       MINITP.OBJ
+
+       LINITC31.ASM   Lattice(R) C v3.1
+       LINITC31.OBJ
+       LINITC32.ASM   Lattice C v3.2
+       LINITC32.OBJ
+       LINITIO.C      I/O module required for linking to Lattice C
+       LINITIO.OBJ
+
+   Indexed file Rebuild utility:
+
+       REBUILD.EXE    File Management Utility - recovery and conversion
+
+   Screen/keyboard Configuration tools:
+
+       ADISCTRL       (ADISCTRL.@) ADIS configuration file
+       ADISCF.EXE     ADIS configuration utility
+       ADISCF.LBR     ADISCF/KEYBCF run-time support
+       HELPADCF.LBR   ADIS configuration utility - help screens
+       KEYBCF.EXE     Keyboard configuration utility
+       COBLIB.DLE     Shared run-time for DOS
+       COBLIB.DLL     Shared run-time for OS/2
+
+   Screen Painter:
+
+       SCREENS.EXE    Screen Painter
+       SCREENS.LBR    Screen Painter support
+       NAME.LBR       Screen Painter support
+       HELPNAME.LBR   Screen Painter support
+       COBLIB.DLE     Shared run-time for DOS
+       COBLIB.DLL     Shared run-time for OS/2
+
+   Windows 3.0 Support
+
+       CBLSSEG.DLL    Support DLL used by all COBOL Windows programs
+       CBLWINB.OBJ    Startup module for batch programs running under Windows
+       CBLWINC.OBJ    Startup module for QuickWin applications
+      CBLWING.OBJ     Startup module for COBOL GUI applications
+       CBLWINL.OBJ    Startup module for Dynamic Link Libraries
+       COBAPIDW.LIB   Link library for QuickWin applications
+       COBAPIW.LIB    Link library for GUI applications and DLLs
+       DWSKEL.DEF     .DEF file for QuickWin applications
+       LIBW.LIB       Link library for Windows applications
+       LLIBCEW.LIB    Link library for Windows applications
+       LDLLCEW.LIB    Link library for Windows DLLs
+       LIBENTRY.OBJ   Needed for Windows DLLs
+       WINSTUB.EXE    Needed for Windows applications
+       RC.EXE         Windows Resource Compiler
+       RCPP.EXE
+       RCPP.ERR
+       SDKPAINT.EXE   Windows Icon, Cursor and Bitmap painter
+       SDKPAINT.DAT
+
+   SETUP installation utility and on-disk documentation
+
+       PKUNZIP.EXE    Unzipping processor  (Bound)
+       SETUP.EXE      Installation utility (Bound)
+       COBOL.INI      Script for installation
+       PACKING.LST    List of documents and files included in this package
+       README.DOC     Essential information about this version
+       CBL-CMPT.DOC   Compatibility with earlier releases
+
+   Demonstration programs:
+
+       ADMOUSE.CBL     Demonstrates the use of mouse and ADIS
+       APPC.@EM        Demonstrates the use of APPC. Contains files:
+           APPC.DOC    On-disc documentation for using APPC
+           ACSSVC.CPY
+           APPC.CPY
+           ADAPTER.EXE Program to find adapter address for APPC use
+           APPCBATL.CFG
+           APPCBATR.CFG
+           APPCBATT.CFG
+           APPCDEMO.DOC    Read this for details of the demo
+           BATTAPPC.CBL
+           BATTLE.CBL
+           BATTLE.CMD
+           BATTLE.SS
+           BATTLE.WKS
+           BATTLEL.CBL
+           BATTLER.CBL
+       ASM.DEM	       Demonstrates the use of Assembler sub programs
+           ADD.CBL
+           ADDEM.ASM
+           ADDEM.DEF
+           ADDEM.OBJ
+       CASE.CBL        Converts the case of COBOL source programs
+       DECLARE.CBL     DECLARATIVES
+       DIOPHANT.CBL    Recursion
+       EXPAND.CBL      Clever expanding ACCEPT
+       EXTFILE.CBL     EXTERNAL FILES
+       FUNCTION.CBL    Function keys
+       LOGOPER.CBL     Demonstrates the logical call-by-name routines
+       MUDEMO.DEM      Multi-user file handling
+           MUDEMO.CBL
+           STOCKIN.CBL
+           STOCKIOA.CBL
+           STOCKIOM.CBL
+       STOCKOUT.CBL    Multi-user file handling
+       NESTED.CBL      Nested programs
+       PMCALC.@EM      Presentation Manager demonstration. Contains files:
+           PMCALC.CBL
+           PMCALC.DEF
+           PMCALC.DLG
+           PMCALC.EXE
+           PMCALC.ICO
+           PMCALC.PTR
+           PMCALC.RES
+           PMCALC.RC
+       PMHELLO.CBL     Presentation Manager (low-level) demo
+       POPUP.CBL       Screen handling demo
+       PRINTESC.CBL    Printer escape codes
+       REPORT.CBL      Report Writer
+       SMPLACCP.CBL    ACCEPT
+       SORTDEMO.@EM    Demonstration program using OS/2 API calls
+           SORTDEMO.CBL
+           SRTDEM.BAT  Demonstration program batch stream            DOS
+           SRTDEM.CMD  Demonstration program batch stream            OS/2
+       SQLDEMO.DEM     SQL demonstration
+           SQLCA.CPY       SQL demonstration - support file
+           SQLDEMO.CBL     SQL demonstration
+           SQLPREP.CBL     SQL demonstration - support program
+       SSCNTRL.CBL     Screen Section dynamic attributes using CONTROL
+       STATUS.CBL      File status handling
+       TICBUG.CBL      Other products support material
+       TICTAC.@EM      Demonstration program
+           TICTAC.CBL
+           TTDEMO.BAT  Demonstration batch stream                    DOS
+           TTDEMO.CMD  Demonstration batch stream                    OS/2
+       TSTDEBUG.CBL    ANSI Debug
+       WINDOWS.@EM     Windows demonstration files. Contains files:
+           WINCALC.CBL     Simple calculator program
+           WINCALC.DEF
+           WINCALC.DLG
+           WINCALC.ICO
+           WINCALC.PTR
+           WINCALC.RES
+           WINCALC.RC
+           WINHELLO.CBL    'Hello world' program
+           WINHELLO.DEF
+           SYSMETS.CBL     Displays system metrics
+           SYSMETS.CPY
+           WINDOWS.78      Windows header files converted into COBOL
+           WINDOWS.CPY
+
+   MF Compatibility Tools:
+
+       MFCOMPAT.DOC   Document of compatibility with versions of Micro Focus
+                        COBOL prior to Micro Focus COBOL/2
+       RTSCALL.OBJ    Emulation of .BIN file handling
+       RTSBIN.ASM     Emulation of .BIN file handling
+       REBUILD.EXE    File Management Utility - file conversion
+
+   MS Compatibility Tools:
+
+       REBUILD.EXE    File Management Utility - MS file conversion
+
+   RM Compatibility Tools:
+
+       CNVCOMP6.OBJ   Subroutine used with RM data file conversion programs
+       CONVERT3.EXE   Generates programs to convert RM/COBOL data files
+       TABX.EXE       Utility to expand tabs in a source file
+       COBLIB.DLE     Shared run-time for DOS
+       COBLIB.DLL     Shared run-time for OS/2
+
+   DG Compatibility Tools:
+
+       CONVERT5.EXE   Generates programs to convert Data General data files
+       REFORM5.EXE    Reformatter for DG Interactive COBOL source programs
+       COBLIB.DLE     Shared run-time for DOS
+       COBLIB.DLL     Shared run-time for OS/2
+
+   Utilities:
+
+       LINK.EXE       Segmented executable Linker                    Bound
+       LIB.EXE        Library Manager                                Bound
+       ILINK.EXE      Incremental Linker                             Bound
+       ILINKSTB.OVL   Overlay for Incremental Linker
+       IMPLIB.EXE     Create Import Libraries                        Bound
+       BIND.EXE       Creates family mode applications               Bound
+       LRFMERGE.EXE   Used by PWB to merge two linker response files Bound
+       CVPACK.EXE     Packs CodeView debugging information           Bound
+       EXEHDR.EXE     Display/modify executable file headers        Bound
+       EXP.EXE        Remove files from DELETED directory            Bound
+       PWBRMAKE.EXE                                                  Bound
+       HELPMAKE.EXE   Creates help files                             Bound
+       QH.EXE         QuickHelp                                      Bound
+       RM.EXE         Move a file to DELETED directory               Bound
+       UNDEL.EXE      Undelete file                                  Bound
+       NMAKE.EXE      (NMAKE.@P)                                     OS/2
+       NMAKE.EXE      (NMAKE.@R)                                     DOS
+       NMK.COM                                                       DOS
+       MOUSE.COM                                                     DOS
+       HIMEM.SYS                                                     DOS
+       MOUSE.COM                                                     DOS
+       RAMDRIVE.SYS                                                  DOS
+       SMARTDRV.SYS                                                  DOS
+
+   Programmer's WorkBench:
+
+       PWB.EXE        Programmer's Workbench                         OS/2
+       PWBCOBOL.PXT   (PWBCOBOL.@P) PWB COBOL Options Extension      OS/2
+       PWBC.PXT       (PWBC.@P)     PWB C Options Extension          OS/2
+                      This is only installed by SETUP if you have
+                      the version of PWB supplied with Microsoft
+                      C Version 6.0 already installed.
+       PWBHELP.PXT    (PWBHELP.@P)  PWB Advisor                      OS/2
+       PWBROWSE.PXT   (PWBROWSE.@P) PWB Browser                      OS/2
+       PWBUTILS.PXT   (PWBUTILS.@P) PWB Utilities Options Extension) OS/2
+
+       PWB.COM        Programmer's Workbench                         DOS
+           PWBED.EXE
+       PWBCOBOL.MXT   (PWBCOBOL.@R) PWB COBOL Options Extension      DOS
+       PWBC.MXT       (PWBC.@R)     PWB C Options Extension          DOS
+                      This is only installed by SETUP if you have
+                      the version of PWB supplied with Microsoft
+                      C Version 6.0 already installed.
+       PWBHELP.MXT    (PWBHELP.@R)  PWB Advisor                      DOS
+       PWBROWSE.MXT   (PWBROWSE.@R) PWB Browser                      DOS
+       PWBUTILS.MXT   (PWBUTILS.@R) PWB Utilities Options Extension  DOS
+
+       SBR-LOAD.GNT   Compiler support for browser
+
+   CodeView:
+
+       CVP.EXE        CodeView                                       OS/2
+       PMCVAID.EXE    Support for debugging Presentation Manager     OS/2
+                      programs
+       COBOS2.DLL     COBOL Expression Evaluator                     OS/2
+       CANOS2.DLL     C Expression Evaluator                         OS/2
+
+   Help Files:
+
+       UTILERR.HLP    Help for utilities error messages
+       UTILS.HLP      Help for utilities
+       LINK.HLP       Help for Linker
+       QH.HLP         Help for the QH program
+       CV.HLP         Help for CodeView
+       PWB.HLP        Help for Programmer's WorkBench
+       COBOL.HLP      Help on the COBOL language
+
+   System Libraries:
+
+       OS2.LIB
+       API.LIB
+
+   System Dynamic-Link Libraries:
+
+       MSHELP.DLL
+
+   Initialisation Files:
+
+       BRIEF.INI
+       TOOLS.PRE
+
+
+ ===========================================================================
+ Microsoft and CodeView are registered trademarks and Windows is a trademark of Microsoft Corporation.
+ OS/2 and Operating System/2 are registered trademarks and Presentation Manager is a trademark licensed to Microsoft Corporation.
+ Micro Focus is a registered trademark of Micro Focus Limited.
+ Micro Focus COBOL/2 is a trademark of Micro Focus Limited.
+ IBM is a registered trademark of the International Business Machines
+ Corporation.
+ Lattice is a registered trademark of Lattice Incorporated.
+ Ryan-McFarland and RM/COBOL are registered trademarks of Ryan-McFarland
+ Corporation.
+ ===========================================================================

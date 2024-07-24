@@ -1,0 +1,254 @@
+
+
+            COBOL Advanced Program to Program (APPC) Demonstration
+            ======================================================
+
+
+   Contents
+   --------
+
+       Introduction
+       Hardware/software requirements
+       Amending the configuration profiles
+       Changing CONFIG.SYS
+       Compiling and running the demonstration
+       User instructions
+
+
+   Introduction
+   ------------
+
+       This document describes how to run a demonstration which uses
+       Advanced Program to Program Communication to communicate between two
+       programs on a network.
+
+       The demonstration is the game Battleships.  Each program controls
+       the two player's views of the battle scene, showing positions of his
+       own ships and coordinates where previous attacks have been made.
+       The game involves a simple two way communication of sending
+       coordinates, receiving opponent's damage reports, receiving
+       opponent's attack coordinates and sending own damage reports.
+       Instructions for playing the game are provided later.
+
+       If you have no previous knowledge of APPC, we recommend that you read
+       the IBM OS/2 Extended Edition Version 1.1 APPC Programming Reference
+       manual to gain a basic understanding of the concepts and terminology.
+       For detailed information about configuring Communications Manager,
+       refer to the IBM Operating System/2 Extended Edition Version 1.1
+       System Administrator's Guide for Communications.  Also read the
+       section on using APPC in the document INTERFAC.DOC.
+
+
+   Hardware/Software requirements
+   ------------------------------
+
+   Hardware:
+
+      o Two IBM PS/2s or machines capable of running IBM OS/2 1.1 Extended
+        Edition
+
+      o Memory enough to run IBM OS/2 1.1 EE with Communications Manager,
+        this will be around 6 megabytes.
+
+      o Both machines to be connected to an IBM Token Ring Network or PC LAN
+        Network
+
+   System Software:
+
+       o IBM OS/2 1.1 Extended Edition
+
+       o Communications Manager (CM)
+
+       o CM configuration profile to run APPC
+
+       o Network Driver software relevent to type of network being used
+
+   Application Software:
+
+       o The following programs/configurations have been provided:
+
+           BATTLEL.CBL  - main program for local machine
+           BATTRER.CBL  - main program for remote machine
+           BATTLE.WKS   - working storage copy file
+           BATTLE.SS    - screen section copy file
+           BATTLE.CBL   - procedure copy file
+           BATTLE.CMD   - batch file to create run files
+           BATTAPPC.CBL - communications interface
+           APPCBATL.CFG - CM configuration profile for local machine
+           APPCBATR.CFG - CM configuration profile for remote machine
+           ADAPTER.EXE  - Utility program to get adapter address
+           APPC.CPY     - APPC COBOL definitions (appc basic/mapped verbs)
+           ACSSVC.CPY   - ACSSVC COBOL definitions (common service verbs)
+
+       o APPC.CPY and ACSSVC.CPY are general purpose copy files, and can be
+         used by any COBOL APPC application.  The files contain definitions
+         for each verb's control block, operation codes, error codes and
+         constants.
+
+
+   Amending the configuration profiles
+   -----------------------------------
+
+   Before you can start running the demonstration programs you must amend
+   one and possibly both the configuration files. The configurations
+   provided assume that you will be using an IBM Token Ring Network running
+   on a PS/2 machine. If you have a different type of machine or you are
+   using a different DLC type (eg. IBM PC Network ) it is likely that you
+   will have to amend the configurations.
+
+   The other change, which you should make to APPCBATL.CFG, is to fill in
+   the adapter number field in the Partner Logical Unit Profiles of the SNA
+   Feature Profiles menu.  This tells Communications Manager which machine
+   on the network to talk converse with.
+
+   The profile which you should change is called DEMOPLU.  To change this
+   field:
+
+     o start Communications Manager with the configuration file as a
+       parameter: 'CM APPCBATL'
+     o press F10 and select 'A' to get to the advanced pull down menu
+     o select 'C' for configuration
+     o enter configuration name APPCBATL (if not already shown) and press
+       enter key
+     o select the SNA Feature Profiles menu
+     o select the PLU profile menu
+     o enter 'H' to change profile
+     o enter profile name 'DEMOPLU1' and press enter key
+     o press enter key to accept first screen
+     o move cursor to adapter number field and enter the adapter address of
+       the network adapter card in the machine that will use the other
+       configuration ie. APPCBATR.CFG.
+     o keep pressing the enter key until you reach the SNA Feature
+       Configuration menu, then press the escape key to get back to
+       Communication Configuration menu
+     o press F10 and then 'V' and the enter key to verify the changes you
+       have made
+     o the verification should complete successfully
+     o exit Communications Manager
+
+   The adapter number is the hard coded address of the network adapter card
+   (each card is given a unique address by the manufacturer). You can find out
+   this address by running ADAPTER.EXE (OS/2 1.1), or by looking in ACSLAN.LOG
+   in the CMLIB directory (OS/2 1.2) on the machine which will use the
+   configuration file 'APPCBATR.CFG'.
+
+
+   Changing CONFIG.SYS
+   -------------------
+
+   The device drivers which control the network hardware require the CM
+   configuration profiles to be specified as parameters.
+
+   If you are using a IBM Token Ring Network amend the following lines in
+   CONFIG.SYS.
+       o on the local machine:
+
+           DEVICE=C:\CMLIB\TRNETDD.SYS CFG=C:\CMLIB\APPCBATL.CFG
+           DEVICE=C:\CMLIB\NETBDD.SYS CFG=C:\CMLIB\APPCBATL.CFG
+
+       o on the remote machine:
+
+           DEVICE=C:\CMLIB\TRNETDD.SYS CFG=C:\CMLIB\APPCBATR.CFG
+           DEVICE=C:\CMLIB\NETBDD.SYS CFG=C:\CMLIB\APPCBATR.CFG
+
+   If you are using a IBM PC LAN Network amend the following lines in
+   CONFIG.SYS.
+       o on the local machine:
+
+           DEVICE=C:\CMLIB\PCNETDD.SYS CFG=C:\CMLIB\APPCBATL.CFG
+           DEVICE=C:\CMLIB\NETBDD.SYS CFG=C:\CMLIB\APPCBATL.CFG
+
+       o on the remote machine:
+
+           DEVICE=C:\CMLIB\PCNETDD.SYS CFG=C:\CMLIB\APPCBATR.CFG
+           DEVICE=C:\CMLIB\NETBDD.SYS CFG=C:\CMLIB\APPCBATR.CFG
+
+       After changing CONFIG.SYS reboot both machines so that the device
+       drivers are reactivated with the correct configurations.
+
+
+   Starting Communications Manager
+   -------------------------------
+
+       Before you start running the demo program you must make sure that you
+       have started Communications Manager (CM) on each machine with the
+       respective configuration file active.  To make the configuration
+       active supply its name as a parameter when you start CM.
+
+       eg. STARTCM APPCBATL
+
+       If you receive any error messages when you start CM you should fix
+       these problems before attempting to run the programs.  If you do have
+       problems record the error message number and refer to the IBM OS/2 EE
+       Manual on Programming Services and Problem Determination for
+       Communications for help.
+
+
+   Compiling and running the demonstration
+   ---------------------------------------
+
+   The demonstration programs can be compiled for use with Animator or as
+   object files which can then be linked to produce standalone executable
+   programs.
+
+   A batch file has been provided : BATTLE.CMD which will create the
+   files to run the demonstration.  The batch file will produce files for
+   animation or for direct execution.
+
+   To run the demonstration, start BATTLEL on the machine that has
+   configuration profile APPCBATL.CFG active.
+
+   If there are no problems with the connection, a message on the remote
+   machine should appear instructing the operator to begin a transaction
+   program called BATTLE.
+
+   This message is your prompt to start BATTLER on the remote machine.
+
+   If a conversation is established, the two programs should start to
+   communicate with each other and the BATTLESHIPS game should start.
+
+   If any errors occur, the program will stop and the error codes, together
+   with the verb operation code will be displayed.  Refer to the APPC
+   Reference Manual for information on error codes. Additional information
+   is provided by the error log, which can be accessed from the Problem
+   Determination menu of the Advanced features pull down menu. This provides
+   information in the form of error codes which reference cause/diagnosis
+   text in the Problem Determination for Communications manual - it will
+   also report what area of communications the problem occured in.
+
+   Unless you change the programs, the most likely cause of any problems
+   that may occur will be due to problems in the configuration file.  The
+   configurations provided are model profiles.  This means that you may have
+   to amend some fields in the profile which suit the particular setup you
+   have.  For example the LAN Adapter Type profile has been configured as an
+   IBM Token-Ring Network Adapter /A card which is generally used by IBM
+   PS/2 machines.  If you are using a different machine you will likely have
+   to change the profile to configure a different type of card.  Also it is
+   possible to have two adapter cards installed in a machine. The primary
+   adapter card is known as Adapter 0 and the secondary as Adapter 1.  The
+   configurations assume only one card is installed which define Adapter 0.
+   If you have two cards, you may have to alter the profile to reflect this.
+
+
+   User Instructions
+   -----------------
+
+   Before the game starts, both players should agree on how many ships that
+   are going to take part and how many of each type of ship.  There are four
+   types of ships: Aircraft Carrier, Battleship, Frigate and Gun-Boat,
+   denoted by the letters: A,B,F and G respectively. There is no limit to
+   the numbers of ships, nor of each type.  The only requirement is that
+   different ships of the same type are not placed in adjacent locations to
+   one another.
+
+   The game starts for player 1. Player 1 selects a grid coordinate where he
+   thinks an opponent ship is located. Coordinates are specified in column
+   row order (eg. F2).  After a while, player 1 will receive a damage report
+   of the earlier attempt this will be either a hit, a miss or a sinking.
+   If a part of an opponent's ship has been hit, the grid location is
+   colored red, a miss it is colored cyan and a sink, the whole ship is
+   marked in black.  After this player 2 has his turn. The player who sinks
+   all of his opponent's ships first wins the game.
+
+   The game can be stopped by entering a grid location of Q.  This will
+   send a message to the opponent to quit.

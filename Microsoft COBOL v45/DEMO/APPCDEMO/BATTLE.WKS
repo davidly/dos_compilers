@@ -1,0 +1,139 @@
+      *******************************************************************
+      *                                                                 *
+      *                                                                 *
+      *                  (C) Micro Focus Ltd. 1990                      *
+      *                                                                 *
+      *                         BATTLEL.WKS                             *
+      *                                                                 *
+      *      COBOL Advanced Program to Program (APPC) Demonstration     *
+      *                                                                 *
+      *      working-storage copy file                                  *
+      *                                                                 *
+      *******************************************************************
+
+      *-----------------------------------------------------------------
+      *    Grid-Table - contains locations of ships
+      *-----------------------------------------------------------------
+       01 Grid-Table redefines Battle-Grid.
+          03 filler                        Occurs 9.
+              05 Grid-Array                Pic X Occurs 13.
+
+      *-----------------------------------------------------------------
+      *    Grid-Att-Table - contains opponent damage locations as
+      *                     different attributes eg hit=red, miss=cyan
+      *-----------------------------------------------------------------
+       01 Grid-Att-Table.
+          03 filler                        Occurs 9.
+              05 Grid-Att-Array            Pic 9(2) Occurs 13.
+
+      *-----------------------------------------------------------------
+      *    Grid-Coordinates - coordinates in form eg. 'G9'
+      *-----------------------------------------------------------------
+       01 Grid-Coordinates.
+          03 Grid-1                        Pic X.
+          03 Grid-1-Asc redefines Grid-1   Pic 9(2) Comp-X.
+          03 Grid-2                        Pic X.
+
+      *-----------------------------------------------------------------
+      *    Grid-Asc - ascii value of Grid-Chr used for decoding
+      *               coordinate
+      *-----------------------------------------------------------------
+       01 Grid-Chr                         Pic X.
+       01 Grid-Asc redefines Grid-Chr      Pic 9(2) Comp-X.
+
+      *-----------------------------------------------------------------
+      *    Grid-Row,Grid-Col - decoded x and y offsets into Grid-Table
+      *-----------------------------------------------------------------
+       01 Grid-Pos.
+          03 Grid-Row                      Pic 9(2) Comp-X.
+          03 Grid-Col                      Pic 9(2) Comp-X.
+
+      *-----------------------------------------------------------------
+      *    Temp-Row,Temp-Col - temporary data used by various routines
+      *-----------------------------------------------------------------
+       01 Temp-Row                         Pic 9(2) Comp-X.
+       01 Temp-Col                         Pic 9(2) Comp-X.
+
+      *-----------------------------------------------------------------
+      *    Max-Row,Max-Col - upper limits of grid
+      *-----------------------------------------------------------------
+       01 Max-Row                          Pic 9(2) Comp-X Value 9.
+       01 Max-Col                          Pic 9(2) Comp-X Value 13.
+
+      *-----------------------------------------------------------------
+      *    Sunk-Ship-Locations - grid positions of a sunk ship to be
+      *                          provided to opponent
+      *-----------------------------------------------------------------
+       01 Sunk-Ship-Locations.
+          03 Sunk-Ship                     Occurs 4.
+             05 Sunk-Ship-Row              Pic 9(2) Comp-X.
+             05 Sunk-Ship-Col              Pic 9(2) Comp-X.
+      *-----------------------------------------------------------------
+      *    Ship-Sector - sub-division of a ship across several locations
+      *-----------------------------------------------------------------
+       01  Ship-Sector                     Pic 9(2) Comp-X.
+
+      *-----------------------------------------------------------------
+      *    Key-Char - contains a keyboard response character
+      *-----------------------------------------------------------------
+       01  Key-Char                        Pic X.
+
+      *-----------------------------------------------------------------
+      *    Damage-Msg - contains damage report to be sent/received
+      *                 to/from opponent eg 'HIT','MISS''SINK' etc.
+      *-----------------------------------------------------------------
+       01  Damage-Msg                       Pic X(4).
+
+      *-----------------------------------------------------------------
+      *    Sink-Coords - temporary store for holding sunk ship locations
+      *-----------------------------------------------------------------
+       01  Sink-Coords                      Pic X(8).
+
+      *-----------------------------------------------------------------
+      *    Target-Object - contains character found at grid location
+      *-----------------------------------------------------------------
+       01  Target-Object                    Pic X.
+
+      *-----------------------------------------------------------------
+      *    operation codes used to interface to communication module
+      *-----------------------------------------------------------------
+       78 Connect-Code                     Value 1.
+       78 Disconnect-Code                  Value 2.
+       78 Send-Coords-Code                 Value 3.
+       78 Receive-Coords-Code              Value 4.
+       78 Send-Report-Code                 Value 5.
+       78 Receive-Report-Code              Value 6.
+
+      *-----------------------------------------------------------------
+      *    Screen-Msgs - Different messages that may appear on screen
+      *-----------------------------------------------------------------
+       01  Screen-Msgs.
+           03 Screen-Msg-1                 Pic X(25).
+           03 Screen-Msg-2                 Pic X(20).
+           03 Screen-Msg-3                 Pic X(30).
+           03 Screen-Msg-4                 Pic X(20).
+
+
+      *-----------------------------------------------------------------
+      *    Flags - defines various conditions
+      *-----------------------------------------------------------------
+       01 Flags.
+          03 filler                        Pic 9(2) Comp Value 0.
+             88 Win-Game                   Value 1.
+             88 Lose-Game                  Value 2.
+             88 Game-Over                  Value 1,2.
+          03 filler                        Pic 9(2) Comp.
+             88 Ship-Not-Sunk              Value 0.
+             88 Ship-Sunk                  Value 1.
+          03 filler                        Pic 9(2) Comp Value 0.
+             88 End-Of-Ship                Value 1.
+             88 Not-End-Of-Ship            Value 0.
+
+
+      *-----------------------------------------------------------------
+      *    Battle-Buffer
+      *    Battle-Op-Code
+      *        - are call parameters to communications module
+      *-----------------------------------------------------------------
+       01  Battle-Buffer                   Pic x(12).
+       01  Battle-Op-Code                  Pic 9(2) Comp-X.

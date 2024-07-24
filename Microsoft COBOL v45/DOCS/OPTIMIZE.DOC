@@ -1,0 +1,330 @@
+
+                       CREATING OPTIMIZED PROGRAMS
+                       ===========================
+
+  This document should be regarded as a supplement to the chapter Writing
+  Programs in your Operating Guide. It gives some guidelines which, if
+  followed, allow your COBOL system to optimize fully the native code
+  produced for your programs - resulting in smaller and faster applications.
+
+
+  TABLE OF CONTENTS
+
+      INTRODUCTION
+      DATA DIVISION CONSIDERATIONS
+          Data Types
+          Linkage Items
+          Large Data Divisions
+      PROCEDURE DIVISION CONSIDERATIONS
+          Arithmetic Statements
+          Alphanumeric Data Manipulation
+          Tables
+          Conditional Statements
+          Loops and Subroutines
+          CALL statements
+          Large Procedure Divisions
+      COMPILER DIRECTIVES
+      EXAMINING THE NATIVE CODE
+
+
+  INTRODUCTION
+
+  The guidelines are set out in a "Do this" / "Don't do that" style. Do
+  remember that these are only guidelines; programs that do not conform to
+  these guidelines will still run correctly, just less efficiently.
+
+  For further information on many of the topics discussed in this document,
+  see chapter Compiling and chapter Writing Programs in your Operating
+  Guide.
+
+
+  DATA DIVISION CONSIDERATIONS
+
+  Data Types
+  ----------
+   o  Use unsigned COMP-5 or COMP-X numeric data items; preferably COMP-5.
+
+   o  Use 2-byte COMP-5 items rather than single byte fields for arithmetic.
+
+   o  Do not use numeric items that occupy more than 4 bytes of storage.
+
+   o  Do not redefine COMP-5 items to access individual bytes; if access to
+      individual bytes is required use COMP-X.
+
+   o  Use edited items only when necessary and use only simple ones such as
+      ZZ9. If possible use them in a subroutine so the total number of
+      edited moves in your program is kept as small as possible.
+
+   o  Do not use items defined as EXTERNAL.
+
+   o  Align items on even byte boundaries and ensure the stride of a table
+      is an even number, if possible a power of 2 (pad the table as
+      necessary). The stride of a table is the size of one element; for
+      example, the stride of the following table is 2 bytes:
+
+      01 a occurs 10.
+          05 b pic x
+          05 c pic x.
+
+
+  Linkage Items
+  -------------
+   o  Don't make many references to items defined in the Linkage Section
+      (examples: linkage parameters; x"D0" allocated memory). It is more
+      efficient to move the data to Working-Storage, manipulate it there,
+      then move it back again.
+
+   o  If a parameter is optional you can detect its presence  using the
+      following syntax:
+
+      IF ADDRESS OF linkage-item NOT = NULL
+
+
+  Large Data Divisions
+  --------------------
+   o  Ensure the size of your Data Division is less than 64 kilobytes (64K),
+      keeping the total size as small as possible. In the Procedure Division
+      the RTS can swap segments, but it cannot page the Data Division.
+
+   o  Redefine memory that is only used during certain phases of a program's
+      execution so that it can be shared by several routines.
+
+   o  If more than 64K of data is required use a heap, or use the x"D0"
+      COBOL System Library Routine to allocate the space dynamically. But
+      remember x"D0" items have the disadvantage of being Linkage items.
+
+   o  Do not use the NOSMALLDD directive unless you have no choice. If
+      necessary (normally for parameters passed to your program by external
+      programs), use the SEGCROSS directive so that the performance of most
+      data accesses is not affected.
+
+
+  PROCEDURE DIVISION CONSIDERATIONS
+
+  Arithmetic Statements
+  ---------------------
+   o  Use simple forms (for example, ADD a TO b) of the arithmetic verbs and
+      do not use the COMPUTE verb.
+
+   o  Do not use the GIVING form of these verbs. If necessary create
+      temporary variables and code several simple statements to achieve the
+      same result. For example, write:
+
+          MOVE a TO c
+          ADD  b TO c
+
+      rather than:
+
+          ADD a TO b giving c
+
+   o  Do not mix items of different sizes in an arithmetic statement (for
+      example, try to use all 2-byte items or all 4-byte items).
+
+   o  Do not use the REMAINDER, ROUNDED, ON SIZE ERROR or CORRESPONDING
+      phrases.
+
+
+  Alphanumeric Data Manipulation
+  ------------------------------
+   o  Reference modified fields are optimized if coded in one of the
+      following forms:
+
+      item (literal:)
+      item (literal:literal)
+      item (literal:variable)
+      item (variable:variable)
+      item (variable + literal:literal)
+      item (variable - literal:literal)
+      item (variable + literal:variable)
+      item (variable - literal:variable)
+
+      Other forms of reference modification are inefficient.
+
+   o  If the offset or length of the reference modification is a data item,
+      use a 2-byte COMP-5 item. Define it in Working-Storage.
+
+   o  In a MOVE statement, have the source item the same size as or larger
+      than the target. This prevents space-padding code being generated.
+
+   o  Do not use the INITIALIZE verb.
+
+   o  Do not use the CORRESPONDING option of the MOVE verb.
+
+   o  Do not use the STRING or UNSTRING verbs - they create a lot of code.
+      For manipulating filenames use the COBOL System Library Routines
+      CBL_SPLIT_FILENAME and CBL_JOIN_FILENAME. For other purposes, create
+      your own loops; they will almost always be more efficient.
+
+
+  Tables
+  ------
+   o  The optimal definition for a subscript is a 2-byte COMP-5 item.
+
+   o  Subscripts for items that have the same stride and are used in
+      consecutive statements are optimized so that they are only evaluated
+      once. For example:
+
+          01 A PIC XX OCCURS 10.
+          01 B PIC XX OCCURS 10.
+          01 C PIC XX OCCURS 10.
+          01 D PIC XX OCCURS 10.
+              . . .
+              MOVE A(I) TO B(I)
+              IF C(I) = D(I)
+                  DISPLAY "PASS"
+              END-IF
+
+      would result in the subscript I being evaluated only once, although it
+      is used four times in two statements.
+
+   o  When compiling your program for use in production, use the NOBOUND
+      directive so that subscript range checking code is not included. Use
+      BOUND only when debugging.
+
+
+  Conditional Statements
+  ----------------------
+   o  Do not use large EVALUATE statements. They are compiled into a series
+      of IF ... ELSE IF ... statements where the value of the expression is
+      derived separately for each WHEN clause.
+
+   o  Order an EVALUATE statement so that the most commonly satisfied
+      condition is tried first. Do not use complex expressions or Linkage
+      items as conditions in an EVALUATE statement; instead, calculate the
+      value yourself in a Working-Storage item and use that item.
+
+   o  Comparing for equality or inequality is more efficient than testing
+      for "greater than" or "less than", especially with COMP-X or
+      alphanumeric items.
+
+   o  In both alphanumeric and numeric comparisons, have the source and
+      target items the same size.
+
+   o  Use a GO TO ... DEPENDING statement if the range of possible values is
+      fairly close. Although this construct has the disadvanage of not being
+      particularly suited to structured programming, it is efficient.
+
+
+   Loops and Subroutines
+   ---------------------
+   o  When incrementing or decrementing a counter, terminate it with a
+      literal value rather than a value held in a data item. For example, to
+      execute a loop n times, set the counter to n and then decrement the
+      counter until it becomes zero, rather than incrementing the counter
+      from 0 to n.
+
+   o  The range of an out-of-line PERFORM statement should not contain the
+      end of another perform range. (One way to ensure this is to perform
+      sections only, not paragraphs; however, with carefully structured
+      programming this should not arise). You can then compile your program
+      with the generator directive NOTRICKLE, which lets the compiler
+      produce more efficient code. This coding style generally gives you a
+      more easily maintained program too.
+
+   o  Do not use PERFORM a THRU b as this too can lead to trickling code.
+
+   o  Use PERFORM para N TIMES but not the equivalent in-line perform.
+
+   o  Put commonly used pieces of code in sections or paragraphs and PERFORM
+      them. This is saves space for any statement used more than once that
+      produces more than 4 bytes of generated code (in a NOTRICKLE program).
+      It is often beneficial even on single statements, for example edited
+      moves, subprogram calls or file I/O.
+
+
+  CALL statements
+  ---------------
+   o  Try to limit the number of CALL statements a program makes, if
+      necessary by avoiding splitting it into too many subprograms.
+
+   o  CALL statements that do not alter the RETURN-CODE special register or
+      whose effect on RETURN-CODE are of no interest should use a calling
+      convention of 4 (the checker directive DEFAULTCALLS can be used to set
+      this globally).
+
+   o  Calls to the COBOL System Library Routines that carry out logical
+      operations (CBL_AND, etc) are optimized by the generator to actual
+      machine logical operations, providing the parameters are 8 bytes long
+      or less. These too should use a calling convention of 4.
+
+   o  Use the generator directive NOPARAMCOUNTCHECK if your program is
+      always called with the correct number of parameters, or if it does not
+      reference unsupplied parameters. Most programs will fall into this
+      category.
+
+
+  Large Procedure Divisions
+  -------------------------
+   o  On DOS or OS/2, code segments are limited in size to 64K. Do not let
+      the generator decide where to break your program into segments.
+      Instead segment the program manually, that is, by using the segment
+      number on a section header, so you can choose where to split it. Avoid
+      inter-segment PERFORM and GO TO statements.
+
+   o  If appropriate the memory needed can be reduced by manually segmenting
+      a procedure division smaller than 64K. As the RTS can segment-swap
+      procedural code this is rarely necessary.
+
+
+  DIRECTIVES
+
+  A number of checker and generator directives can be used to enable the
+  native code for a program to be better optimized. Some of these directives
+  must be used with care; ensure that the behavior that you get with these
+  directives is acceptable.
+
+  Use the following directives when checking and generating your programs:
+
+       NOALTER
+       ALIGN(2)
+       NONESTCALL
+       OPTSIZE
+
+   Use with care:
+
+       NOTRICKLE
+       DEFAULTCALLS(4)
+       NOPARAMCOUNTCHECK
+
+   Use when compiling for production:
+
+       NOANIM
+       NOBOUND
+
+   Other suggestions (to help prevent inefficient coding):
+
+       REMOVE "UNSTRING"
+       REMOVE "STRING"
+       REMOVE "GIVING"
+       REMOVE "ROUNDED"
+       REMOVE "COMPUTE"
+       REMOVE "ERROR"
+       REMOVE "ALTER"
+       REMOVE "INITIALIZE"
+       REMOVE "CORRESPONDING"
+       REMOVE "TALLYING"
+       REMOVE "THRU"
+       REMOVE "THROUGH"
+
+
+  EXAMINING THE NATIVE CODE
+
+  You can see the generated code produced for your program, by using the
+  generator directives ASMLIST() SOURCEASM to produce a .GRP file containing
+  the assembler and source listing in the same file.
+
+  If the generator considers a statement for optimization, but finds that it
+  does not conform to the necessary guidelines, the word "BADCODE" appears
+  next to the statement, on the right-hand side of the listing. But some
+  statements that have generated inefficient code will not have been
+  identified in this way; you can usually spot these by looking for a single
+  statement that has generated a lot of assembler code.
+
+  Try to eliminate or at least reduce the inefficient statements in your
+  program. But be aware of the law of diminishing returns; as you improve
+  the efficiency of your program, you will eventually reach a point where a
+  lot of extra effort will give only small further gains.
+
+  ==========================================================================
+  Copyright (C) 1991 Microsoft Corporation
+  Copyright (C) 1991 Micro Focus Ltd

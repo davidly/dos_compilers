@@ -1,0 +1,671 @@
+
+                             CBL-CMPT.DOC File
+
+          Compatibility with Previous Releases of Microsoft(R) COBOL
+
+                 (C) Copyright Microsoft Corporation, 1991
+
+
+   Contents
+   --------
+       Introduction
+       Changes in Microsoft COBOL 4.5
+       Changes in Microsoft COBOL 4.0
+       Documentation
+
+
+   Introduction
+   ------------
+   This document is for use when maintaining applications created using
+   earlier releases of this product.
+
+   It describes the differences that may cause problems, and includes
+   documentation of features no longer documented in this system, but
+   maintained for compatibility.
+
+   Note that the use of the compiler with default settings will cause the
+   use of new words to become reserved.  A list of these words is given
+   below.
+
+
+   Changes in Microsoft COBOL 4.5
+   ------------------------------
+   Compiling
+
+    o  Use of the MF directive when compiling will cause some data names
+       to be illegal as the reserved word list has been extended.  Change
+       the dataname, use the REMOVE(reservedword) directive or recompile
+       with MF(6).
+
+       New reserved words included when using MF(7) are:
+
+       ALPHABET        ALPHABETIC-LOWER        ALPHABETIC-UPPER
+       ALPHANUMERIC    ALPHANUMERIC-EDITED     ANY
+       BINARY          CLASS                   COMMON
+       COMP-1          COMP-2                  COMP-4
+       COMPUTATIONAL-1 COMPUTATIONAL-2         COMPUTATIONAL-4
+       CONTENT         CONTINUE                CONVERTING
+       CYCLE           DAY-OF-WEEK             DBCS
+       DISPLAY-1       EJECT                   END-ADD
+       END-CALL        END-COMPUTE             END-DELETE
+       END-DISPLAY     END-DIVIDE              END-EVALUATE
+       END-IF          END-MULTIPLY            END-PERFORM
+       END-READ        END-RECEIVE             END-RETURN
+       END-REWRITE     END-SEARCH              END-START
+       END-STRING      END-SUBTRACT            END-UNSTRING
+       END-WRITE       EOL                     EOS
+       EQUALS          EVALUATE                EXCEEDS
+       FALSE           FUNCTION                GLOBAL
+       ID              INITIALIZE              LOWLIGHT
+       NUMERIC-EDITED  ORDER                   OTHER
+       PACKED-DECIMAL  PADDING                 PARAGRAPH
+       PURGE           REFERENCE               REPLACE
+       SKIP1           SKIP2                   SKIP3
+       SORT-RETURN     STANDARD-2              TEST
+       TIME-OUT        TIMEOUT                 TITLE
+       TRUE            UNEQUAL                 WAIT
+       WHEN-COMPILED
+
+      Note that most of these words are already reserved under the ANS85 or
+      VSC2 directives, so will only become new if you are compiling with MF
+      but without ANS85 or VSC2.
+
+   o  RM compatibility
+
+      When compiling for RM compatibility, if the same behavior is required
+      as with Microsoft COBOL 4.0 then you should compile with the
+      DETECTLOCK directive.
+
+   o  ASSIGN TO PRINTER
+
+      Files defined with ASSIGN TO PRINTER are treated as LINE ADVANCING in
+      COBOL 4.5. In 4.0, they were treated as LINE SEQUENTIAL.
+
+   o  NEXT SENTENCE
+
+      In COBOL 4.0, you could make NEXT SENTENCE jump to the appropriate
+      end-scope delimiter by using the MF"5" directive (see below). In 4.5
+      this directive does not have this effect.
+
+   o  Nested Programs
+
+      In V4.0, nested programs could have Configuration Sections. In V4.5
+      they cannot.
+
+   o  The "DISPLAY ... UPON CRT Attributes Behavior" switch S6 is no longer
+      documented in the Operating Guide. Here is its description. With the
+      Enhanced DISPLAY (see the Screen Handling chapter of the Language
+      Reference Manual), if no attributes are specified on the DISPLAY then,
+      by default, the attributes already existing in the given area will be
+      used. If the switch +S6 is specified at run time the normal screen
+      attributes will be used instead.
+
+   o  In earlier versions of this COBOL system all system library routines
+      were call-by-number. Many of the call-by-name routines in the present
+      product replace old call-by-number routines. The list below indicates,
+      for each call-by-name routine that has replaced a call-by-number
+      routine, the number of the routine it has replaced. In some cases the
+      call-by-name routine has additional features.
+
+       Name                   Number
+       ----                   ------
+       CBL_READ_SCR_CHARS       B7 0
+       CBL_READ_SCR_ATTRS       B7 2
+       CBL_READ_SCR_CHATTRS     B8 0
+       CBL_WRITE_SCR_CHARS      B7 1
+       CBL_WRITE_SCR_ATTRS      B7 3
+       CBL_WRITE_SCR_CHATTRS    B8 1
+       CBL_WRITE_SCR_TTY        82
+       CBL_WRITE_SCR_N_CHAR     B7 4
+       CBL_WRITE_SCR_N_ATTR     B7 5
+       CBL_SWAP_SCR_CHATTRS     B8 2
+       CBL_GET_SCR_SIZE         E3
+       CBL_SET_CSR_POS          E6
+       CBL_CLEAR_SCR            E4
+       CBL_GET_KBD_STATUS       D9
+       PC_READ_DRIVE            91 5
+       PC_SET_DRIVE             91 6
+       CBL_READ_DIR             91 7
+       CBL_CHANGE_DIR           91 8
+       CBL_DELETE_FILE          91 18
+       CBL_RENAME_FILE          91 17
+       PC_TEST_PRINTER          B0 7
+       CBL_SPLIT_FILENAME       8C
+       CBL_JOIN_FILENAME        8D
+
+   o  The behavior of COPY ... REPLACING has been changed depending on the
+      setting of the ANS85 or VSC2(3) directives. Previously all non-COBOL
+      characters were disallowed in operands to COPY ... REPLACING, and
+      lowercase and colon were added to the character set. This behavior now
+      only occurs if the ANS85 or VSC2(3) directive is used. Otherwise, the
+      operands may contain non-COBOL characters.
+
+
+   Changes in Microsoft COBOL 4.0
+   ------------------------------
+   General
+
+    o  When installing on an OS/2 system, SETUP will add PATH and
+       environment variable information to CONFIG.SYS and not to OS2INIT.CMD
+       as in previous releases. This conforms with the standard for
+       installing OS/2 v1.1 and later.
+
+    o  The files, DBCS.EXE/.DLL and V-ISAM.DLL are no longer required, and
+       are not included with this release.
+
+    o  The shared run-time files, COBLIB.DLE and COBLIB.DLL are used by the
+       components of this system, and must be loaded for the system to
+       operate. COBLIB.DLE is required for DOS, COBLIB.DLL for OS/2.
+
+    o  The callable file handler interface is no longer part of this
+       product. If you wish to use the CALLFH feature, or to call the file
+       handler directly, you will require a copy of the Micro Focus COBOL/2
+       Toolset.
+
+   Compiling
+
+    o  The default directives, NOCOPYLBR, ANS85, NOOSVS and MF are now built
+       into the compiler and are not included in the COBOL.DIR created by
+       SETUP. ANS85 and OSVS can be changed by SETUP, so that NOANS85 and/or
+       OSVS are included in the COBOL.DIR created by SETUP. SETUP also
+       allows selection of SAA and the default linking libraries.
+
+    o  VSC2 is now equivalent to VSC2(3). Previously VSC2 was equivalent to
+       VSC2(2).  The directives VSC2 OLDVSC2 have been replaced by VSC2(1).
+
+    o  The directive OLDFILEIO has been replaced by the directive IDXFORMAT
+       which defines the type of indexed file required. IDXFORMAT"2" is
+       equivalent to OLDFILEIO.
+
+    o  The verb, GOBACK, and the special register, RETURN-CODE are now part
+       of the standard Micro Focus(R) COBOL language and can be used without
+       needing VSC2 or OSVS. They are enabled by an MF level of 5 or above
+       (on by default) and can, therefore, be disabled by specifying MF(4).
+
+    o  Comments following the PROGRAM-ID, which were allowed in previous
+       versions, are now not allowed by default. They can, however, be
+       enabled using the PROGID-COMMENT directive.
+
+    o  For interfacing at the assembler level, note that the object segment
+       class names created by the COBOL compiler have changed in this
+       release.
+
+    o  The default ALPHASTART value has been set to 1 to conform to the
+       ANSI'85 standard. In previous versions, this was set to 0. If you
+       have programs that use the ALPHABET clause of the SPECIAL-NAMES
+       paragraph, you may need to specify the directive ALPHASTART"0" to
+       maintain the required behavior.
+
+    o  ACCEPT .. FROM DAY-OF-WEEK
+
+       The statement
+
+	   ACCEPT data-item FROM DAY-OF-WEEK
+
+       incorrectly returned the value 0 for Sunday. It now returns a value
+       of 7, as documented.
+
+    o  COMP-5
+
+       The default behavior of USAGE COMP-5 data items has been changed. In
+       previous versions of the product, COMP-5 was treated in a similar
+       fashion to signed COMP. It is now treated in a similar fashion to
+       COMP-X, allowing it to be a true binary numeric item using machine
+       specific byte ordering. This makes it a very efficient data type.
+
+       If you use COMP-5 in existing programs, and depend on its sign
+       handling, you should compile your programs with the COMP-5"1"
+       directive.
+
+    o  NEXT SENTENCE
+
+       NEXT SENTENCE is handled differently in this version of the product.
+       In previous versions NEXT SENTENCE would cause control to move to the
+       end of the sentence (i.e. following the next period) or to the
+       statement following the next end-scope delimiter. In this version, it
+       will always go to the end of the sentence, as defined by the ANSI'85
+       standard.
+
+       If your program uses NEXT SENTENCE and relies on the change of
+       control being to the appropriate end-scope delimiter, you can use the
+       MF"5" directive (but see above for V4.5). Alternatively, change the
+       NEXT SENTENCE phrases to CONTINUE, which will have the desired
+       effect.
+
+    o  SYMBOLIC CHARACTERS clause
+
+       The default SYMBSTART value has been set to 1 to conform to the
+       ANSI'85 standard. In previous versions, this was set to 0. If you
+       have programs that use the SYMBOLIC CHARACTERS clause of the
+       SPECIAL-NAMES paragraph, you may need to specify the directive
+       SYMBSTART"0" to maintain the required behavior.
+
+    o  RECORDING MODE
+
+       The RECORDING MODE phrase has been amended so that, when it is
+       explicitly included in an FD, it overrides the RECORD clause in all
+       cases, with RECORDING MODE F always causing a fixed format file to be
+       created, and RECORDING MODE V a variable format file.
+
+       If you require the original behavior, whereby RECORDING MODE is
+       overridden by the RECORD clause, then use the MF"5" directive.
+
+       Note that the RECMODE directive will not override the RECORD clause.
+
+    o  REPORT-WRITER reserved words
+
+       The RW directive has been made obsolete by incorporating the REPORT-
+       WRITER reserved words into the main dialects that support REPORT-
+       WRITER. If you have a program that uses some REPORT-WRITER reserved
+       words as data names, and used to be compiled with the NORW directive,
+       then you need to replace the NORW directive by USE(NORW). This will
+       cause the REPORT-WRITER reserved words to be removed from the
+       reserved word list, making them available for use as data names.
+
+    o  INSPECT
+
+       The handling of the LEADING phrase in INSPECT has been amended to
+       make it conform to a recent interpretation of the ANSI'85 standard.
+       For example, if data-stream contains "//AAA BBB OOO CCC", the
+       statement
+
+	   INSPECT data-stream TALLYING count-field
+	       FOR LEADING "A" "\" " "O" "C"
+
+       returned the value 5 in count-field in previous versions, but now
+       returns the value 2. This is because the remaining characters in the
+       LEADING phrase are considered to be ineligible once a match has been
+       found on one of the characters.
+
+    o  COPY filenames
+
+       Since this version now distinguishes between filenames with no
+       extension, but with a trailing period, and those without a trailing
+       period (treating the former as a specified extension of spaces),
+       some COPY statements in existing programs may appear to stop
+       working. If you want your copy files to have extension .CPY, but
+       code them in your program with no extension, then you must be sure
+       that the name does not have a trailing period. For example, change:
+
+	   COPY "mycopy.".
+
+       to
+
+	   COPY "mycopy".
+
+       Note that
+
+	   COPY mycopy.
+
+       is treated as if it has no trailing period, and hence as in previous
+       versions.
+
+
+   Running
+
+    o  A large number of the run-time system subprogram calls, provided in
+       earlier releases as call-by-number calls, have been replaced by named
+       calls. In addition to making the calls easier to remember and use,
+       the call-by-name calls can accept parameters defined in any part of
+       the data division.
+
+       The replaced call-by-number calls are still supported in this
+       release, and documented below. However, we recommend that you
+       replace them with the equivalent call-by-name calls as appropriate.
+
+    o  Record sizes
+
+       In previous releases, the maximum and minimum record sizes specified
+       for a variable format file had to be the same in every program
+       referencing the file. This restriction has been removed, allowing
+       programs to specify record lengths different to those specified in
+       the program used to create the file. However, if an attempt is made
+       to write a record which is smaller than the smallest defined or
+       larger than the largest defined a run-time error, 9/044, will be
+       returned.
+
+   Animating
+
+    o  The method required to animate programs has changed in this release.
+       When a program is compiled for animation, using the ANIM directive,
+       intermediate code files are packaged into .OBJ files and .DLL on
+       OS/2). These .EXE/.DLL files can be animated in the usual way. The
+       pure intermediate code files (.INT) are no longer required for
+       animation.
+
+    o  Since the new animation method incorporates a link step, any non-
+       COBOL .OBJ files can be linked in prior to animation. These will
+       operate correctly when encountered, though always in zoom mode. This
+       new technique makes IANIM and augmented INT obsolete, and these
+       facilities are not supported in this release.
+
+       The same method allows OS/2 API function calls to be resolved prior
+       to animation, avoiding the need for the Install Function technology
+       of earlier releases.
+
+    o  This release has the +F switch set by default. This will cause
+       illegal data in numeric fields to be trapped during animation, and
+       when running intermediate code .OBJ files (run-time system error
+       163). This may cause existing programs to fail where they previously
+       worked. However, trapping such instances will help prevent the
+       subsequently generated code from failing. All generated programs will
+       work as at present, always assuming that numeric fields contain
+       numeric data.
+
+   Linking
+
+    o  The linking library, OS2.LIB, should be used instead of DOSCALLS.LIB
+       when linking applications for use on OS/2(tm). OS2.LIB is supplied as
+       part of the utilities. (DOSCALLS.LIB can be used provided the
+       application is not a Presentation Manager application.)
+
+    o  The /NOP option is no longer required when linking for use on OS/2.
+
+    o  The default environment for applications created using this release
+       is the shared run-time environment.  This is particularly recommended
+       for use on OS/2, where a single copy of COBLIB.DLL can be shared by
+       any COBOL application (built to use COBLIB) running in any OS/2
+       session.
+
+       To use this environment, the application is linked in the usual way,
+       using the libraries, COBLIB.LIB, and COBAPI.LIB or OS2.LIB depending
+       on DOS or OS/2. The EXE files produced will be much smaller since
+       little run-time system code is included directly. System programs,
+       such as EXTFH and ADIS, can be linked in with the application, or
+       linked as standalone sub-programs. Again, for OS/2, if linked as
+       standalone .DLL files, they can be shared by any number of COBOL
+       applications.
+
+       Notes:
+	-  These system programs MUST be linked with COBLIB for use with
+	   COBLIB applications.
+
+	-  Modules linked with COBLIB cannot be mixed with modules linked
+	   with LCOBOL. Hence, applications must be either all LCOBOL or all
+	   COBLIB. However, COBLIB applications and LCOBOL applications can
+	   be run on the same environment as long as they don't try to call
+	   each other.
+
+    o  The linking library (.LIB) files supplied with the system have been
+       split in a different way to enable reduced disk usage. They now
+       consist of LCOBOL.LIB, COBLIB.LIB, and COBAPI.LIB. The new LCOBOL
+       is equivalent to the old PCOBOL. The addition of COBAPI.LIB to
+       LCOBOL.LIB gives the old LCOBOL. (Users may like to recombine these
+       libraries using LIB if they wish to retain old working practices.)
+       For OS/2 operation, LCOBOL.LIB is used in combination with OS2.LIB
+       (which supersedes DOSCALLS.LIB).
+
+       In the shared run-time system, the default, COBLIB.LIB, is equivalent
+       to the old PRCOBOL.LIB. Again, either COBAPI.LIB or OS2.LIB is used
+       in combination with COBLIB.LIB to complete the linking for DOS or
+       OS/2 respectively. Applications linked with these libraries will be
+       very much smaller, benefiting from the shared run-time system support
+       in COBLIB.DLE and COBLIB.DLL. (Note that the application itself can
+       be bound so that it will run on both DOS and OS/2 provided both
+       shared run-time system files are present.)
+
+    o  If you select a linking environment other than the built-in default,
+       SETUP will create a default LINKLIB in your COBOL.DIR. The default,
+       and equivalent of earlier releases, is LINKLIB(LCOBOL+COBAPI). If
+       you normally use the system on OS/2, use LINKLIB(LCOBOL+OS2). With
+       this release, the default is to use the COBLIB shared run-time system,
+       requiring LINKLIB(COBLIB+COBAPI) on DOS, and LINKLIB(COBLIB+OS2) on
+       OS/2.
+
+       When the default has been set in this way, you can still link for use
+       in other environments by specifying the relevant libraries on the
+       LINK command line. However, you should use the /NOD directive when
+       doing so, otherwise link-time errors may occur.
+
+    o  The file handler for indexed files, IXSIO, has been replaced by the
+       external file handler, EXTFH. This can be linked in exactly the same
+       way as IXSIO in earlier releases, either linked in with the
+       application or linked as a standalone system program.
+
+       Programs referencing ANSI'85 EXTERNAL files and normal indexed files
+       now only use EXTFH rather than two separate file handlers.
+
+   Compatibility issues
+
+   Compiling
+
+    o  If you compile your programs on OS/2 using batch files, you will need
+       to alter the batch files to compile using the command COBOL instead
+       of PCOBOL. Alternatively, you can copy COBOL.EXE to PCOBOL.EXE in the
+       COBOL system directory.
+
+    o  Programs previously compiled without the ANS85 directive, if
+       recompiled under this default system, may not work correctly. The
+       most likely cause is that the new system has ANS85 on by default.
+       This causes all file status codes to be ANS85 not ANS74 statuses.
+       The problem can be avoided by using the NOANS85 directive when
+       compiling any program that is designed to work with ANS74 file
+       statuses.
+
+   Animating
+
+    o  The compiler dictionary structure has been amended. This means that
+       IDY files created by earlier releases will not be compatible with
+       ANIMATOR in this system. Hence, you should recompile, with this
+       release of the compiler, any program you wish to animate.
+
+   Linking
+
+    o  .OBJ files created by this release are not compatible with .OBJ files
+       created by earlier releases. Hence, if you need to rebuild an
+       application where one of the OBJs has been created using this
+       release, you must recompile all the programs with this release of the
+       compiler before linking.
+
+   Running
+
+    o  In previous versions of this software, an error is given when an
+       indexed file is opened if the record lengths of the file do not
+       exactly match those given in the FD. This has been changed so the
+       error is only given if an attempt is made to WRITE a record larger
+       than the maximum or smaller than the minimum.
+
+    o  The Report Writer module has been changed so that it is compatible
+       with IBM(R) OS/VS COBOL when the OSVS directive is used. This is the
+       ANSI'68 COBOL standard. In previous versions, the default with OSVS
+       was ANSI'74 COBOL standard report writer. You may have report writer
+       programs using OSVS features, but requiring ANSI'74 report writer
+       compatibility. This mix is no longer possible, and you will either
+       need to remove the OSVS features (try VSC2), or accept ANSI'68 COBOL
+       report writer standard.
+
+
+   Documentation
+   -------------
+   Call-by-number subprogram calls.
+
+   Many of the COBOL system library routines provided in earlier releases as
+   call-by-number have been replaced by call-by-name routines.	We recommend
+   that you replace all call-by-number routines by their equivalent call-by-
+   name routines. See your Operating Guide chapter, COBOL System Library
+   Routines, for details of which call-by-name routines replace these.
+
+   To allow you to maintain existing applications, the documentation for the
+   replaced call-by-number routines follows:
+
+
+   PUT A CHARACTER TO THE SCREEN
+
+       CALL X"82" USING character.
+
+   where:
+
+       character is a PIC X field containing the character to be put on the
+       screen in the current cursor position.
+
+   The cursor is then advanced one position to the right, or onto the next
+   line if it is in the rightmost position, or off the screen if it is in
+   the bottom right-hand corner.
+
+
+   READ A CHARACTER FROM THE KEYBOARD
+
+       CALL X"83" USING character.
+
+   where:
+
+       character is a PIC X field to contain the character returned.
+
+   Notes:  1.  A call on this subprogram also causes the function key table
+	       to be checked and the result byte updated.
+
+	   2.  If the character returned from this subprogram is a carriage-
+	       return character (hex 0D), then the character read from the
+	       keyboard has been recognized by the function key table, and
+	       the result byte of that table should be checked to determine
+	       the actual character which has been pressed.
+
+	   3.  If the character read is a 2-byte character (such as a
+	       function key) and it was not matched in the function key
+	       table, then both bytes are returned to this subprogram.	The
+	       first call returns a null byte (hex 00) and the next call
+	       returns the scan code (refer to the IBM Personal Computer
+	       Technical Reference Manual for details of scan codes).
+
+	   4.  Break can be used to interrupt a running program.  However,
+	       if the program was in the middle of a call to this subprogram
+	       at the time, nothing happens until the call on this
+	       subprogram is satisfied by reading another character from the
+	       keyboard.  Break is not returned by this routine.
+
+
+   SCREEN INPUT AND OUTPUT
+
+       CALL X"B7" USING function, parameter, buffer
+
+   where:
+
+       function is a PIC 99 COMP-X data item and contains a value:
+
+	   0   to read characters from the screen
+	   1   to write characters to the screen
+	   2   to read attributes from the screen
+	   3   to write attributes to the screen
+	   4   to clear characters from the screen
+	   5   to clear attributes from the screen
+
+
+       parameter is a group item consisting of three data items:
+
+	o  a PIC 9(4) COMP-X field  showing the length of the data to be
+	   read or written.
+
+	o  a PIC 9(4) COMP-X field giving the start position on the screen.
+	   Top left is position 1, 81 is the start of the next line, etc.
+
+	o  a PIC 9(4) COMP-X field showing the start position in the buffer.
+	   The starting  buffer position is 1.
+
+       buffer is the COBOL data area. It is a PIC X(n) field and may be as
+       large or small as you require to write your data.
+
+   An entire screen of text or attributes is 2000 bytes.  No check is made
+   that any data to be read will fit into your buffer.	Therefore, if the
+   length specified is greater than the length available in your buffer, any
+   subsequent data will be corrupted.  Buffer is not used with a function of
+   4 or 5, but this parameter must still be supplied.
+
+   Note: When writing or clearing characters, the User attribute is imposed
+	 on the character position, unless the User attribute flag is set
+	 off, in which case the current Screen attribute for that character
+	 position is used.
+
+
+   SCREEN CELL INPUT AND OUTPUT
+
+       CALL X"B8" using FUNCTION PARAMS CHARBUFF ATTRBUFF
+
+   where parameters are:
+
+       01 FUNCTION     PIC 9(2) COMP-X
+
+		=   0 to read screen to character and attribute buffers
+		=   1 to write screen from character and attribute buffers
+		=   2 to swap screen with character and attribute buffers
+
+       01 PARAMS
+	   03	   P-LENGTH	   PIC 9(4) COMP-X.
+	   03	   P-SOFFSET	   PIC 9(4) COMP-X.
+	   03	   P-BOFFSET	   PIC 9(4) COMP-X.
+
+		P-LENGTH   =	   number of screen cells to read/write/swap
+		P-SOFFSET  =	   screen offset (1 = top left)
+		P-BOFFSET  =	   buffer offset (1 = start of buffer)
+
+       01 CHARBUFF
+	   03	   CHARS PIC X OCCURS n TIMES
+
+			   =	   an array of character bytes
+
+       01 ATTRBUFF
+	   03	   ATTRS PIC X OCCURS n TIMES
+
+			   =	   an array of associated attribute bytes
+
+
+   TEST CONSOLE STATUS
+
+       CALL X"D9" USING parameter.
+
+   where:
+
+	parameter is a PIC 99 COMP-X field and shows the status of the
+		  console:
+
+	   zero        there is no character waiting to be read from the
+		       keyboard
+
+	   non-zero    there is a character waiting to be read from the
+		       keyboard
+
+   When a program is being animated in other than zoom mode, this function
+   always returns a zero (i.e., it never detects a character), because
+   ANIMATOR always looks for characters.  However, the function operates
+   correctly when zoom mode is used.
+
+
+   GET SCREEN SIZE
+
+       CALL X"E3" USING no-lines, no-cols.
+
+   where:
+
+       no-lines is a PIC 99 COMP-X field and shows the number of lines on
+       the screen.
+
+       no-cols is a PIC 99 COMP-X field and shows the number of columns on
+       the screen.
+
+
+   CLEAR SCREEN
+
+       CALL X"E4".
+
+   This routine clears the entire user screen.
+
+
+   MOVE THE CURSOR TO A DEFINED POSITION
+
+       CALL X"E6" USING result, parameter.
+
+   where:
+
+       result is a PIC 99 COMP-X field.  It is not used.
+
+       parameter is a group item consisting of two data items:
+
+	o  a PIC 99 COMP-X field specifying the row number for the cursor to
+	   be moved to; in the range 0 to 24.
+
+	o  a PIC 99 COMP-X field giving the column number for the cursor to
+	   be moved to; in the range 0 to 79.
+
+
+  ==========================================================================
+  Copyright (C) 1991 Microsoft Corporation
+  Copyright (C) 1991 Micro Focus Ltd
