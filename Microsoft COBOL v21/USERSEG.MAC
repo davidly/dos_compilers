@@ -1,0 +1,53 @@
+        .SALL
+;
+; START_CSEG is a macro for defining the Code (Program) segment type of each
+; routine.
+;
+
+START_CSEG MACRO ROUTINE
+
+_USER   SEGMENT BYTE
+        ASSUME  CS:_USER
+        PUBLIC  ROUTINE
+ROUTINE PROC    FAR
+        ENDM
+
+;
+; END_CSEG is a macro for termination the Code (Program) segment type of each
+; routine.
+;
+
+END_CSEG MACRO ROUTINE
+
+
+ROUTINE ENDP
+_USER   ENDS
+        ENDM
+
+;
+; START_DSEG and END_DSEG are macros for initalization and termination 
+; of the DATA segment type of each routine.
+;
+
+;
+; DMACCNT  is used to assure that the DGROUP command is generated only if 
+; needed, and then only once.
+;
+
+DMACCNT = 0
+
+START_DSEG MACRO
+
+IFE	DMACCNT
+DGROUP  GROUP   _DATA
+DMACCNT = 1
+ENDIF	
+_DATA	SEGMENT WORD PUBLIC 'DATA'
+        ASSUME  DS:DGROUP,ES:DGROUP,SS:DGROUP
+        ENDM
+
+END_DSEG MACRO
+_DATA    ENDS
+        ENDM
+
+;

@@ -1,0 +1,74 @@
+Microsoft COBOL  MS-DOS Release 2.1
+
+FILES.DOC
+
+January 2, 1986
+
+
+     The following files are contained on your Microsoft Cobol distribution
+     diskettes:
+
+Disk 1: Primary MS-COBOL files 
+
+     COBOL.EXE      - The Cobol Compiler
+     COBOL0.OVR     - Cobol Compiler Overlay
+     COBOL1.OVR     - Cobol Compiler Overlay
+     COBOL2.OVR     - Cobol Compiler Overlay
+     COBOL3.OVR     - Cobol Compiler Overlay
+     COBOL4.OVR     - Cobol Compiler Overlay
+     
+     RUNCOB.EXE     - Cobol Runtime Executor
+     DEBUGCOB.EXE   - Cobol Interactive Debug Facility
+      
+     ISAM.EXE       - Indexed file handler
+
+     FILES.DOC      - This Document
+     UPDATE.DOC     - Information pertinent to this release
+     REFMAN.DOC     - Additions to MS-COBOL Compiler Reference Manual
+     UGUIDE.DOC     - Additions to MS-COBOL Compiler User's Guide
+     README.DOC     - Information pertinent to using ISAM with networks
+
+Disk 2: Utilities and Demonstration Programs
+
+     INSTALL.COM    - Runtime INSTALL Utilty
+     INSTALL.DAT    - INSTALL support file
+     INSTALL.MSG    - INSTALL support file
+     INSTALL.OVL    - INSTALL support file
+     INSTALL.SPC    - INSTALL support file
+
+     LINK.EXE       - MS-DOS Linker
+     REBUILD.EXE    - Indexed File Recovery Utility
+
+     DEMO.COB       - Cobol Demonstration System
+     DEMO.CPY       - Cobol Demonstration System
+     BUILD.COB      - Cobol Demonstration System
+     UPDATE.COB     - Cobol Demonstration System
+     CLDEMO.BAT     - Batch file to compile Demonstration System
+
+     CENTER.COB     - Demonstration Program
+     CENTER.INT     - Compiler output for CENTER.COB
+     CRTEST.COB     -  Screen handlingTest program
+
+
+Disk 3:  Assembly Language Subroutine Support Files and
+         Isam Network Files
+
+     COBOL1.LIB     - Custom Runtime Library #1
+     COBOL2.LIB     - Custom Runtime Library #2
+     COBOL.OBJ      - Custom Runtime Object Module 
+
+     DEBUG.LIB      - Custom Debugger Support Library
+     DEBUG.OBJ      - Custom Debugger Object Module
+
+     MAKERUN.BAT    - Custom Runtime Batch File (Hard Disk)
+     MAKERUN2.BAT   - Custom Runtime Batch File (Floppies)
+
+     ASM.ASM        - Subroutine name table module
+     PSEG.MAC       - Assembly Language Include File for ASM.ASM
+     USERPROG.MAC   - Program name table file for ASM.ASM
+     USERSEG.MAC    - Assembly Language Segmentation Macro File
+
+     NISAM.EXE      - Indexed file handler for use with networks
+     ISAM.SRV       - The server component of networked ISAM
+     ISAM.RDR       - The redirector component of networked ISAM
+

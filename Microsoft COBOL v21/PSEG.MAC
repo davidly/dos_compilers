@@ -1,0 +1,102 @@
+IFNDEF EUREKA
+EUREKA  EQU     1
+ENDIF
+LPROG   EQU     1                       ;Large Program model.
+LDATA   EQU     0                       ;Large Data model. (not used)
+        .SALL
+;
+; START_PSEG is a macro for defining the Program segment type of each
+; routine.
+;
+
+XDEF = 0				;Allows code group def.s only once.
+XDDEF = 0				;Allows data group def.s only once.
+
+START_PSEG MACRO ROUTINE
+
+if LPROG
+_TEXT	SEGMENT BYTE PUBLIC 'CODE'
+	ASSUME	CS:_TEXT
+        PUBLIC  ROUTINE
+ROUTINE PROC    FAR
+else					;Small program definitions.
+_TEXT	SEGMENT BYTE PUBLIC 'CODE'
+	ASSUME	CS:_TEXT
+        PUBLIC  ROUTINE
+ROUTINE PROC    NEAR
+endif
+        ENDM
+
+;
+; END_PSEG is a macro for termination the Program segment type of each
+; routine.
+;
+
+END_PSEG MACRO ROUTINE
+ROUTINE ENDP
+_TEXT	ENDS
+        ENDM
+
+;
+;  Standard definiton for near segment definitions.
+;
+
+START_CODE MACRO
+_TEXT	SEGMENT
+	ENDM
+
+END_CODE MACRO
+_TEXT	ENDS
+	ENDM
+
+;
+;  Standard Data area descriptions.
+;
+
+ife XDDEF
+DGROUP	GROUP	CONST,_BSS,_DATA
+CONST	SEGMENT WORD PUBLIC 'DATA'
+CONST	ENDS
+_BSS	SEGMENT WORD PUBLIC 'DATA'
+_BSS	ENDS
+_DATA	SEGMENT WORD PUBLIC 'DATA'
+	ASSUME DS:DGROUP,ES:DGROUP,SS:DGROUP
+_DATA	ENDS
+endif
+
+START_DSEG MACRO
+_DATA	SEGMENT
+	ASSUME DS:DGROUP,ES:DGROUP,SS:DGROUP
+        ENDM
+
+END_DSEG MACRO
+_DATA	ENDS
+        ENDM
+
+;
+; Structure used to reference parameters off the stack.
+;
+
+IF LPROG
+
+DYNS    STRUC
+        DD      ?                       ;Long return address.
+ARG1    DW      ?                       ;Parameter number 1.
+ARG2    DW      ?                       ;Parameter number 2.
+ARG3    DW      ?                       ;Parameter number 3.
+ARG4    DW      ?                       ;Parameter number 4.
+ARG5    DW      ?                       ;Parameter number 5.
+DYNS    ENDS
+
+ELSE
+
+DYNS    STRUC
+        DW      ?                       ;Near return address.
+ARG1    DW      ?                       ;Parameter number 1.
+ARG2    DW      ?                       ;Parameter number 2.
+ARG3    DW      ?                       ;Parameter number 3.
+ARG4    DW      ?                       ;Parameter number 4.
+ARG5    DW      ?                       ;Parameter number 5.
+DYNS    ENDS
+
+ENDIF

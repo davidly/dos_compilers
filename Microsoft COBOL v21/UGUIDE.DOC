@@ -1,0 +1,298 @@
+Microsoft COBOL  MS-DOS Release 2.1
+
+UGUIDE.DOC
+
+Additions to the Microsoft COBOL Compiler
+   User's Guide
+
+September 3, 1985
+
+
+
+
+
+   The following information was not available when the
+   Microsoft COBOL Compiler User's Guide was printed,
+   but will appear in future versions of that document.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   CONTENTS
+
+CHAPTER 3     Compiling
+
+        3.1   Invoking the Compiler
+
+        3.1.3 Using Compiler Switches
+
+CHAPTER 7     Data Input and Output
+
+        7.3   Using MS-DOS and Nondisk FIles
+
+CHAPTER 10    Interprogram Communication
+
+        10.5  Calling MS-COBOL Extension Subroutines
+
+APPENDIX F    Error Messages
+
+        F.1   Compile Time Error Messages
+       
+        F.1.2 Program Syntax Errors
+
+        F.2   Runtime Error Messages
+
+APPENDIX G    Loading the Indexed File Handler
+
+
+CHAPTER 3    Compiling
+
+        3.1  Invoking the Compiler
+
+        3.1.3 Using Compiler Switches
+
+    An additional compile time switch has been added to
+    MS-COBOL.
+
+Switches
+
+    /G
+
+      This switch causes any program statements with a "D"
+      in column 7 to be compiled, rather than being treated
+      as comments. Specifying this switch has the same effect
+      as specifying WITH DEBUGGING MODE in the SOURCE-COMPUTER
+      paragraph in the ENVIRONMENT DIVISION.
+
+CHAPTER 7     Data Input and Output
+
+        7.3   Using MS-DOS and Nondisk FIles
+
+    To send an output file to the printer, use the SELECT
+    file-name ASSIGN TO PRINTER clause. Then, in an associated
+    FD, specify the clause LABEL RECORD IS OMITTED. DO not
+    specify the VALUE OF FILE-ID clause. 
+    
+    The FILE-STATUS data-item for a PRINTER file will not be 
+    updated; You may receive MS-DOS messages if a printer is
+    not attached or is not on-line, but the FILE-STATUS item
+    will not change from its initial value. Be sure to check 
+    your printer before writing to it.
+
+CHAPTER 10    Interprogram Communication
+
+      10.5  Calling MS-COBOL Extension Subroutines
+
+   Two additional Extension Subroutines, KBDAVAIL and
+   CURPOS, are now available. KBDAVAIL allows a COBOL
+   program to check whether keyboard data has been 
+   entered, without having to wait for such entry,
+   or having to read the data. CURPOS allows a COBOL
+   program to examine the current line and column 
+   value of the screen cursor.
+
+   Note that to call these or any other extension 
+   subroutines, the routine name must be entered
+   in UPPER-CASE in the CALL statement.
+
+
+   Name and function:
+
+   KBDAVAIL     Indicates whether data is available
+                at the keyboard, without actually
+                reading the data.
+
+   CURPOS       Returns the line and column location
+                of the screen cursor at the time of 
+                the call.
+
+   Calling conventions:
+
+   CALL "KBDAVAIL" USING status.
+   
+   CALL "CURPOS" USING line-val, column-val.
+
+   Arguments:
+
+   status       A alphanumeric two-character 
+                data-item (PIC XX). Returned 
+                status values are described below.
+
+   line-val     A numeric data-name with USAGE 
+                COMP-0. The current cursor line
+                will be returned here.
+
+   column-val   A numeric data-name with USAGE 
+                COMP-0. The current cursor column
+                will be returned here.
+
+	
+   Returned status values:
+
+   Status Code:  "00"
+              For KBDAVAIL, "00" indicates 
+              keyboard data has been entered.
+
+   Status Code:  "30"
+              For KBDAVAIL, "30" indicates 
+              keyboard data has not been entered.
+
+
+   Programming notes:
+
+   KBDAVAIL can be used to check whether data
+   has been entered at the keyboard, without 
+   having to ACCEPT the data.
+   
+   One use of this routine is to place it in 
+   a timing loop before ACCEPTing keyboard data.
+   This allows a "timeout" ACCEPT - if data is 
+   entered before the loop times out, an ACCEPT 
+   can be done to process the data; otherwise
+   some default action may take place. Normally,
+   an ACCEPT will wait until data is entered or
+   the process is terminated. The timing loop may
+   be based on a fixed number of iterations of 
+   the call, which is machine dependent, or based 
+   on a period of time derived from ACCEPT ... FROM
+   TIME. For example, the following procedure may
+   be used:
+
+	PERFORM P900-CHECK-KEYBOARD
+	   UNTIL KEYBOARD-CHECK-DONE = "YES".
+	IF KEYBOARD-STATUS = "00"
+	   ACCEPT KEYBOARD-LINE
+	ELSE
+	   MOVE DEFAULT-DATA TO KEYBOARD-LINE.
+
+   where P900-CHECK-KEYBOARD would call KBDAVAIL 
+   and do some timing checks, which can be used 
+   to set KEYBOARD-CHECK-DONE to "YES".
+
+
+   CURPOS will return the current line (x) and 
+   column (y) values of the screen cursor. This
+   may be useful for determining the last field 
+   entered during a screen ACCEPT, for example.
+
+   In general, after an ACCEPT or DISPLAY, the 
+   cursor is placed in the column immediately 
+   following the last field involved in the 
+   operation.
+
+   Following is a list of special circumstances
+   involving the cursor.  (x, y) is assumed to
+   be the previous cursor position if a position
+   is not specified. Blank-screen is a screen 
+   containing only BLANK SCREEN.
+
+Operation	Cursor placement after operation
+
+Program startup	           (1, 1)
+DISPLAY (x, y) ERASE       (x, y)
+DISPLAY (x, y) data-name   (x, (y + data-name size + 1))
+ACCEPT (x, y) data-name    (x, (y + data-name size + 1))
+DISPLAY blank-screen       (1, 1)
+DISPLAY screen-name        1 column past the end of the
+                              last screen line
+ACCEPT screen-name         1 column past the end of the
+                              field the cursor was in
+                              when the ACCEPT was
+                              terminated
+DISPLAY data-name          (x + 1, 1)
+ACCEPT data-name           (x + 1, 1)
+
+
+
+             APPENDIX F    Error Messages
+
+       F.1   Compile Time Error Messages
+
+       F.1.2 Program Syntax Errors
+
+
+      INSPECT REPLACING operands have incorrect length
+   
+      The operands used in the REPLACING form of the 
+      INSPECT statement must be the same length. If 
+      CHARACTERS is used, the replacing operand must
+      have a length of 1. If the replaced operand is
+      a figurative constant, the replacing operand 
+      must have a length of 1. 
+
+      
+      Illegal structure: Item beyond scope of 
+         OCCURS/DEPENDING.
+
+      A variable sized data item, defined as one 
+      containing the OCCURS DEPENDING ON clause, 
+      had more data defined following the variable 
+      length section of the record.  A variable 
+      sized data item may only be followed, within
+      the current 01 level data item, by data 
+      description entries which are subordinate to it.
+
+      END DECLARATIVES required.
+
+      A DECLARATIVES header was declared with no
+      matching END DECLARATIVES.
+
+        F.2   Runtime Error Messages
+
+      Subroutine must be CALLed.
+
+      A program with a USING list in its PROCEDURE
+      DIVISION header has been invoked directly,
+      rather than being CALLed from a COBOL program.
+      Since the LINKAGE SECTION variables are undefined,
+      this is not allowed.
+
+      CALL parameters mismatched.
+
+      The number of elements in the USING list in a 
+      CALLed program's PROCEDURE DIVISION header does
+      not match the number of elements in the USING
+      list of the CALL statement that CALLed the
+      subroutine.
+
+      Must run Install.
+
+      Screen DISPLAYs or ACCEPTs were attempted which 
+      used Microsoft extensions supported by the INSTALL
+      utility, but INSTALL had not been run. See this
+      manual for instructions on running INSTALL.
+
+APPENDIX G    Loading the Indexed File Handler
+
+G.3 Error Handling
+
+Opening a large number of Indexed files or using
+files with very large records may cause ISAM to
+run out of buffer memory space. If this happens,
+and a FILE-STATUS item has been defined, the
+file operation that caused the memory overflow
+will return status "96". If no FILE-STATUS item
+was defined, the runtime error message "Need
+more memory" will be displayed and the job will
+be cancelled.
+
+The /S switch may be used to increase the buffer
+space available to ISAM. Note that this switch
+must be entered exactly as described, with
+a colon (:) after the S and no spaces in the
+command line. E.g.,
+
+              ISAM/S:20000
+
+is a valid invocation of ISAM with the /S switch.

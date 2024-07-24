@@ -1,0 +1,126 @@
+Microsoft COBOL  MS-DOS Release 2.1
+
+REFMAN.DOC
+
+Additions to the Microsoft COBOL Compiler
+   Reference Manual
+
+September 3, 1985
+
+
+
+
+
+   The following information was not available when the
+   Microsoft COBOL Compiler Reference Manual was printed,
+   but will appear in future versions of that document.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   CONTENTS
+
+CHAPTER  6     DATA DIVISION
+
+         6.2   Record Description Entry
+
+         6.2.5 Numeric Items
+             
+               3. Binary Item
+
+
+CHAPTER  7     PROCEDURE DIVISION
+
+         7.2   Arithmetic Statements
+
+         7.2.1 SIZE ERROR Option
+
+         7.6   PROCEDURE DIVISION Statements
+
+         7.6.1 ACCEPT Statement
+
+         7.6.1.1 Format 1 ACCEPT Statement
+
+
+
+
+CHAPTER  6     DATA DIVISION
+
+         6.2   Record Description Entry
+
+         6.2.5 Numeric Items
+             
+               3. Binary Item
+
+      Warning: Regardless of the number of digits
+               specified in the PICTURE clause for
+               a COMP-0 or COMP-4 item, truncation
+               and the SIZE ERROR condition occur 
+               only when a value moved to such an
+               item exceeds the range (described
+               above) for a 2-byte (COMP-0) or 4-
+               byte (COMP-4) SIGNED binary integer.
+               A COMP-0 item has an implicit PICTURE
+               S9(5), and a COMP-4 item has an 
+               implicit PICTURE S9(10).
+ 
+               Binary items are always considered
+               to be signed, even if the PICTURE 
+               omits the sign character S.
+
+
+
+CHAPTER 7      PROCEDURE DIVISION
+
+
+        7.2    Arithmetic Statements
+
+        7.2.1  SIZE ERROR Option
+
+      Warning: For binary items, defined with 
+               USAGE COMP-0 or COMP-4, truncation
+               and the SIZE ERROR condition occur 
+               only when a value moved to such an 
+               item exceeds the range for a 2-byte
+               (COMP-0) or 4-byte (COMP-4) SIGNED 
+               binary integer. A COMP-0 item has 
+               an implicit PICTURE S9(5), and a 
+               COMP-4 item has an implicit PICTURE
+               S9(10), regardless of the number of
+               digits specified in the PICTURE
+               clause.
+
+
+         7.6   PROCEDURE DIVISION Statements
+
+         7.6.1 ACCEPT Statement
+
+               The Format 1 ACCEPT obtains date or time 
+	       information from the operating system. It
+	       places the amount of data specified into
+	       identifier, regardless of the size of
+	       identifier. (For example, DATE will move
+	       6 digits of information even if identifier
+	       is PIC XX). Be sure identifier is large enough
+	       to hold the output of ACCEPT.
+
+         7.6.1.1 Format 1 ACCEPT Statement
+	       
+	       LINE NUMBER
+
+	       a two-digit value. The ACCEPT ... FROM LINE 
+	       NUMBER is provided for compatibility with
+	       other COBOL's, but in Microsoft COBOL the 
+	       value of LINE NUMBER is always "00".
+

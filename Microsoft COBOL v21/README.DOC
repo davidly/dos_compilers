@@ -1,0 +1,86 @@
+README.DOC
+
+December 13, 1985
+
+This diskette contains two versions of ISAM. 
+
+One version, ISAM.EXE, is version 2.30, and should be
+used if you have a stand-alone, or non-IBM PC environment.
+If it is used in a network environment, locking affects the
+entire file instead of a single record.  It will allow ISAM
+files OPENed for INPUT to be read simultaneously by
+different processes, however.  There are also some speed im-
+provements over ISAM.EXE version 2.26.  This version of ISAM
+will support MS-NET compatible networks as well as the 
+IBM PC-NET.
+
+The second version of ISAM is designed to be used in an IBM
+PC-NET network environment and requires PC-DOS v 3.1 or
+greater.  It consists of three files: NISAM.EXE, ISAM.SRV,
+and ISAM.RDR.
+
+NISAM.EXE is the front end ISAM command processor, version 
+ 3.0.  The commands it accepts are:
+
+NISAM START SRV | RDR {/S:NNNNN}  --start network ISAM
+                                 (/S: specifies buffer size)
+NISAM STOP                        --stop ISAM & free memory
+NISAM SHARE                       --show share list, as with
+                                    server
+NISAM SHARE shortname=d:\path     --share a directory with
+                                    the specified shortname
+NISAM SHARE d:\path               --share the specified
+                                    directory
+NISAM SHARE shortname|d:\path /D  --stop sharing the short-
+                                    name or directory
+NISAM FILE                        --show the currently OPEN
+                                    ISAM files
+NISAM CLOSE name                  --close the specified open
+                                    file
+
+ISAM.SRV is the server version of ISAM which can service 
+ISAM requests.  It is activated by the NISAM START SRV 
+command.  This command should be given on a network
+server machine when requests for ISAM files located on that
+machine will be made either locally or across the network.
+
+ISAM.RDR is the redirector version of ISAM, and is activated
+by the NISAM START RDR command.  This command should be 
+given on network machines that run programs that access ISAM
+files located only on other, server machines.
+
+Thus, ISAM files must be located on a server, and the ISAM
+on that machine must be activated with the NISAM START SRV
+command.
+
+Note:  It is possible, in the same network, to have some 
+machines running ISAM.EXE and others running NISAM.EXE.
+We do not recommend it, however.  It is NOT possible to
+have the same machine running both ISAM.EXE and NISAM.EXE
+at the same time.
+
+Like the network server, network directory paths must be
+shared using the NISAM SHARE command.  The command syntax
+has been modeled after the NET SHARE command.  You MUST
+NISAM SHARE the same directories that you NET SHARE, using
+the SAME syntax used in the NET SHARE command.
+For example, on a server named ZEKE you would type:
+
+	NET SHARE PAYABLE=C:\LEDGER\PAYABLE
+	NISAM SHARE PAYABLE=C:\LEDGER\PAYABLE
+
+Then, the user on another machine who wants to use an ISAM
+file in the C:\LEDGER\PAYABLE directory on the server named
+ZEKE would type:
+
+	NET USE E: \\ZEKE\PAYABLE
+
+and then run the application which OPENs the ISAM file on 
+drive E:.
+
+The application can be passed the name of the machine\short-
+name to do an explicit OPEN using the "VALUE OF FILE-ID"
+clause.  For example:
+
+	VALUE OF FILE-ID "\\ZEKE\PAYABLE\MASTER.DAT".
+

@@ -1,0 +1,23 @@
+;  **********  Assembly language interface table include file
+
+;*********************************************************************
+;
+;   User non-COBOL subroutines must be specified in this file using
+;   the macro asmnam to generate table entries to go into asm.asm,
+;   which must then be assembled and linked. This file may not
+;   be assembled by itself.
+
+;   Enter new routines by specifying :
+;        asmnam <program entry point>,<program language>
+;   <program entry point> should be entered using the same case as used in
+;   the CALL statement in the COBOL program, so the names will match,
+;   <program language> - only asm86 is acceped (must be provided)
+
+;   Below are some example statements (commented out) specifying some
+;   user routines.
+
+;	asmnam leon,asm86
+;   	asmnam BOBZ,asm86
+;	asmnam lylek,asm86
+
+;  ********* enter routine specifications here *************************
