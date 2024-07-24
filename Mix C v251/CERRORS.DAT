@@ -1,0 +1,256 @@
+Identifier expected
+Identifier expected in a type declaration
+Variable or function declaration expected
+')' expected
+':' expected
+Illegal symbol
+Invalid preprocessor statement
+Unexpected end of file during declaration definition
+Right braces expected
+
+
+Right bracket ']' or '.)' expected
+
+';' expected
+Integer expected
+'=' expected
+Statement expected
+Closing single quote expected
+Invalid character constant
+',' expected
+Invalid octal digit
+Expression or ';' expected
+Invalid hexadecimal digit
+Expression expected
+Left parenthesis expected
+WHILE keyword expected
+Lvalue expected (invalid expression on left hand side of assignment)
+Invalid type cast in constant expression
+
+
+Left braces expected or semi-colon missing on function declaration
+
+Exponential part of floating point number expected
+
+
+Lvalue expected for & and * unary operators
+'{' not allowed, contents skipped
+Matching '}' to error 37, text between has been skipped
+
+
+
+
+
+
+
+
+
+
+
+Constant expected
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Name of typedef expected
+Structure contains a reference to itself
+Bitfield too wide
+Bitfields must be int or unsigned
+Invalid reference to bitfield
+Too many parameters in macro invocation
+#ENDIF without a matching #IF
+Unexpected eof with unclosed #IF statment
+Preprocessor command expected
+Missing parameter in macro invocation
+Error opening #include file
+
+End of file within a comment (missing */)
+Open comment within a comment
+Unknown option
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Identifier already defined
+
+
+Undeclared identifier
+
+
+
+
+
+
+
+
+
+Null array size allowed for first dimension only
+
+
+
+
+Static function definition must precede use
+Static function must be declared static before first use
+Pointer to a function expected
+';' not allowed before '{' in function definition
+
+
+
+
+
+
+Type conflict of operands in an expression
+Structure assignment with structures of different sizes
+| or & do not apply to float or double operands
+
+Pointer arithmetic requires int
+Illegal type of operands
+
+
+Incompatible pointers
+Type of variable is not array
+
+Type of variable is not structure or union
+Type of variable is not pointer
+
+Constant expression contains illegal operator
+
+
+
+
+
+
+
+
+No such field in this structure
+
+Function parameter list expected
+
+
+
+Redefinition of a global variable
+Missing identifier in type definition
+Function definition within a function illegal
+
+Function definition has more than one variable in declaration list
+
+Parameter declaration expected
+Label already defined
+
+This symbol is not a label
+Label not defined
+
+Too many items in initializer
+Initializer contains list to initialize single item
+Type not compatible in initializer
+Initializer not allowed for this class
+Initialization of bitfields not allowed on statics & globals
+Can not be initialized by a string constant
+& operator does not apply
+Pointer required for & in initializers
+Expression not allowed for float, double
+
+
+
+
+Switch selector must be int, unsigned or char
+
+
+
+Array subscript must be int
+Invalid type in  operands of an op= or = operator
+Operand to & must be a variable
+
+
+
+
+
+
+
+
+
+Feature not implemented
+
+
+String constant cannot span lines
+Integer constant too large
+Auto variables exceed 32k in a single function
+
+
+
+
+
+Unable to create trace file for debugging
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Too many errors
+
+
+
+
+
