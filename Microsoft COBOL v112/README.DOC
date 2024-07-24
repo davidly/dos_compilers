@@ -1,0 +1,502 @@
+Microsoft MS-COBOL Compiler
+Release	1.12 Update Notice
+March 8, 1984
+
+
+	  The MS-COBOL compiler	for the	8086/8088  micropro-
+     cessor  under  MS-DOS  release  1.12  contains  several
+     enhancements and corrections to previous releases.
+
+     *********************************************************
+     **							    **
+     **			Important Notice		    **
+     **							    **
+     *********************************************************
+
+
+     *1*  All ISAM files (ORGANIZATION IS INDEXED),  created
+	  or  modified	by  versions  of Cobol prior to	1.10
+	  <<MUST>>  be	run  through  version  1.21  of	 the
+	  REBUILD  program  prior  to  being used by version
+	  1.12 of Cobol.  We strongly suggest REBUILDing and
+	  subsequently using only version 1.12 for ISAM	file
+	  handling.  See the corrections listed	below.
+
+     *2*  When converting to version 1.12 from previous	ver-
+	  sions,  ALL PROGRAMS MUST BE RECOMPILED.  Programs
+	  compiled with	previous versions, and	linked	with
+	  the version 1.12 libraries may not work properly.
+
+
+Enhancements
+
+     **	  The REBUILD utility now accepts valid	 MS-DOS	 2.0
+	  path	names for its files, and allows	the creation
+	  of a key file	from an	indexed	 data  file  without
+	  duplicating  the  data  file.	 REBUILD also allows
+	  its paramaters to be	entered	 using	the  command
+	  line	bypassing its normal interactive method. See
+	  the added information	on REBUILD below.
+
+	  NOTE:	REBUILD	must be	used on	ISAM  files  created
+	  by  previous	versions  of  Cobol  due to possible
+	  errors in the	key file structure.
+
+     **	  DOS 2.0 pathnames can	now  be	 used  within  Cobol
+	  programs.  When the VALUE OF FILE-ID is a literal,
+	  the length is	still limited to 16 characters.	When
+	  VALUE	 OF  FILE-ID is	an identifier, the length of
+	  the specified	filename, including path, may be  up
+	  to  64  characters.  Note that pathnames cannot be
+	  used with compiler itself for	source,	 object	 and
+	  list filenames.
+
+     **	  A limitation which existed on	the size of an	item
+	  subordinate to an item sontaining an OCCURS clause
+	  (2048	byte maximum size) has been removed.
+
+     **	  The INSTALL terminal interface now supports  color
+	  for  the IBM and Compaq Personal Computers and the
+	  Texas	 Instruments  Professional  Computer.	 The
+	  reserved  words  FOREGROUND-COLOR  and BACKGROUND-
+	  COLOR	may be used to add color to  SCREEN  SECTION
+	  displays.   They  have  no  effect  when  used  on
+	  machines for	which  color  is  not  supported  by
+	  INSTALL.   See  the  color  addendum at the end of
+	  this file.
+
+     **	  The DEC Rainbow computer has	been  added  to	 the
+	  list of installable machines.	 See the DEC Rainbow
+	  addendum at the end of this file.
+
+     **	  Compiler switches /T and /C  now  allow  drives  A
+	  through  Z  to be specified.	Previous limit was A
+	  through D.
+
+Corrections
+
+     **	  When a numeric or alphanumeric editted  field	 was
+	  entered in a screen, and if had an attribute,	such
+	  as  highlight	 or  underline	set,  when  it	 was
+	  redisplayed  in  it's	 editted form, the attribute
+	  would	be lost.
+
+     **	  A bug	was introduced in 1.10 such that if a number
+	  fo  records were deleted from	an ISAM	file, occas-
+	  sionally a subsequent	START would fail.
+
+     **	  When	a  Subprogram  containing  an	overlay	  is
+	  invoked, after which another subprogram containing
+	  an overlay is	invoked, the return will attempt  to
+	  reload  an overlay in	the calling program, regard-
+	  less of whether or not there was one.
+
+     **	  When SORT was	invoked,  if  memory  needed  to  be
+	  reallocated, the program could crash.
+
+     **	  Corrected  the  detection  of	 bad  PICTUREs	 for
+	  numeric items.
+
+     **	  The handling of quoted literals, continued  quoted
+	  literals  and	continued quoted literals which	were
+	  continued at an embedded quote character has	been
+	  corrected.
+
+     **	  A problem in the ISAM	handler	resulted when a	cer-
+	  tain	set  of	conditions were	met when inserting a
+	  record.  The key for the record would	be  inserted
+	  into the index improperly.  In most cases this was
+	  transparent, but in some cases could result in the
+	  record   being  available  only  under  sequential
+	  access, and not being	found in random	mode.
+
+	  Version 1.10 of Cobol	corrects this problem,	how-
+	  ever	ISAM  files  created or	modified by previous
+	  versions of Cobol  must  be  run  through  REBUILD
+	  prior	 to  their  use.  These	 files	may  have an
+	  erroneous index structure  that  may	render	some
+	  records unfindable in	random mode. Insure that the
+	  version of REBUILD used is 1.21  or  greater,	 and
+	  the  version	of  Cobol used thereafter is version
+	  1.10 or greater.
+
+     **	  A bug	has been corrected in the ISAM file  handler
+	  that	would  not  mark  a  deleted record as being
+	  deleted in the data file if it was the only record
+	  in the file. REBUILD would then restore the record
+	  that had been	deleted.
+
+     **	  The compiler now  requires  that  ACCESS  MODE  be
+	  SEQUENTIAL  when  the	file organization is sequen-
+	  tial.
+
+     **	  The compiler now requires that numeric items be no
+	  longer than 18 digits.
+
+     **	  The compiler will now	trap attempts to  write	 the
+	  object  or  the list file onto the source file, as
+	  well as onto each other.
+
+     **	  The message "No errors or warnings" is now sent to
+	  the list file.
+
+     **	  The compiler now traps attempts  to  use  a  VALUE
+	  clause  when	the  when  an  OCCURS clause is	also
+	  used.
+
+     **	  A bug	has been corrected where at any	time follow-
+	  ing  a  CALL	to  another program, if	an I/O error
+	  occurred (such as opening a non-existent file	 for
+	  I-O),	 the program would occassionaly	get lost and
+	  produce unexpected results.
+
+     **	  A bug	has been corrected  where  a  PERFORM  in  a
+	  CALLed  subroutine  would  occasionally be errone-
+	  ously	trapped	with a "PERFORM	OVERLAP".
+
+     **	  A bug	has been corrected where if, in	a  statement
+	  generating a Numeric Edit, the source	field has to
+	  be converted,	such as	from COMP-3, and an overflow
+	  occurs  in the edit, then all	further	leading	zero
+	  suppression in numeric editing is disabled until a
+	  similar  operation  occurs  that does	not generate
+	  such an overflow.
+
+     **	  A bug	has been corrected which would not  allow  a
+	  value	 to be displayed PIC ??? FROM <literal>	in a
+	  screen section.
+
+     **	  A bug	has been corrected in  the  UNSTRING  state-
+	  ment.	 If  a POINTER is used,	and is initially out
+	  of range, it is now handled properly.
+
+     **	  A bug	has been corrected in which literals in	 the
+	  VALUE	 OF  FILE-ID clause of exactly 17 characters
+	  were truncated to 16 characters  without  warning.
+	  Now  any  literals  longer than 16 characters	will
+	  produce an error message.
+
+     **	  A bug	has been corrected which would not  allow  a
+	  group	item to	be given a VALUE of ZERO.
+
+     **	  A bug	has been corrected  that  affected  relative
+	  files	 with  certain record lengths and cause	them
+	  to return disk full status when a record was writ-
+	  ten at a 64k boundary	in the file.
+
+     **	  A bug	 has  been  corrected  that  prevented	sub-
+	  scripted  variables  from being passed to a called
+	  program  correctly.  This  bug  also	occasionally
+	  affected  program  branches  by  sending  them  to
+	  erroneous targets, and then  flagging	 a  Run-Time
+	  error.
+
+     **	  Filenames CON	 and  PRN  now	work  properly	with
+	  line-sequential  files  under	 MS-DOS	 and PC-DOS.
+	  Previously,  the  data  could	  occassionally	  be
+	  displayed or printed in improper order.
+
+     **	  A compiler crash when	a quoted literal was improp-
+	  erly continued in area A has been corrected.
+
+     **	  A program with a large number	 of  CALLs  (usually
+	  over	120),  now  no	longer	generates an invalid
+	  object module. The exact number of calls  required
+	  to generate the invalid code was a function of the
+	  additional  features,	 such	as   numeric   edit,
+	  alphanumeric	edit,  ISAM, etc. that were required
+	  by the program.
+
+     **	  A bug	has  been  corrected  whereby  the  compiler
+	  would	  crash	  if  a	 very  large  variable	were
+	  declared. For	example: A OCCURS 1023 PIC X(120).
+
+     **	  A bug	has been corrected in which very large	pro-
+	  grams,  or  programs	with a large number of jump,
+	  branch  and	perform	  targets,   would   compile
+	  incorrectly.
+
+     **	  Line numbers in error	messages pertaining to	pro-
+	  cedure header	lines are now printed correctly.
+
+     **	  COMP-0 variables now	properly  handle  the  value
+	  -32768.
+
+     **	  CTRL-BREAK  is  now  checked	at  every  procedure
+	  header under MS-DOS.
+
+     **	  A bug	in the ACCEPT handler which lost screen	out-
+	  put  if an item was ACCEPTed whose length exceeded
+	  the amount of	room left on  the  screen  has	been
+	  corrected.
+
+     **	  Certain  improper  REDEFINES	constructs  are	 now
+	  flaged as errors by the compiler.
+
+     **	  The INSTALL terminal interface  utility  has	been
+	  corrected  so	 that the "Define your own terminal"
+	  option  now  allows  COBOL  function	keys  to  be
+	  defined.
+
+     **	  A bug	has been  fixed	 which	disallowed  multiple
+	  screen   attributes	(HIGHLIGHT,   REVERSE-VIDEO,
+	  UNDERLINE, BLINK) in a single	screen item.
+
+     **	  A bug	has been  corrected  where  if	a  file	 was
+	  defined,  used  in  a	SAME RECORD AREA clause, but
+	  never	otherwise referenced, improper	object	code
+	  would	be generated.
+
+
+Enhancements to	REBUILD	Version	1.21
+
+     REBUILD, the Indexed File Recovery	 Utility,  has	been
+enhanced  in version 1.21 to allow a new Indexed key file to
+be created without producing a new Indexed  data  file.	 The
+resulting  key and data	file may be used in exactly the	same
+way as any other Indexed file. REBUILD has also	 been  given
+the  ability to	accept its input from a	command	line, making
+its use	in batch files simpler.
+
+     Any previously existing Indexed key files	to  be	used
+with programs running under MS-COBOL versions 1.10 and later
+must be	rebuilt	with REBUILD, version 1.21 or later. Version
+1.21  of  REBUILD  allows the key file to be recreated while
+still using the	original data file. Indexed files  processed
+with  version  1.21 of REBUILD may be used with	all MS-COBOL
+programs from version 1.0 and later.
+
+     See Appendix E - REBUILD: INDEXED FILE RECOVERY UTILITY
+in the Microsoft COBOL Compiler	User's Guide for more detail
+on REBUILD. Note that this appendix does not currently	con-
+tain information on these enhancements.
+
+
+INTERACTIVE MODE
+
+     To	create only a new key file in interactive mode	type
+REBUILD	 followed  by  <RETURN>	in response to the operating
+system prompt.	REBUILD	will issue four	prompts	for informa-
+tion  on  the file to be rebuilt.  The data required are key
+length,	position of key	in data	record ,source file name and
+target	file  name. The	key length, key	position, and source
+file name prompts should be answered as	in previous versions
+of REBUILD.  (See Appendix E of	the Microsoft COBOL Compiler
+User's Guide for examples).
+
+     The target	file name prompt appears as:
+
+       Input the file name of the target data file
+	 (should not have the extension	of .KEY)
+	 or <RETURN> to	return to the Key Length prompt.
+
+	 If the	target file name is the	same as
+	   the source file name, a key file with
+	   the source file name	and extension ".KEY"
+	   will	be produced without producing a
+	   new data file. ----->
+
+
+     If	the file name entered is the same as the source	file
+name,  a  key  file  with the name <source file>.KEY will be
+created, but the source	data file will be used unchanged.
+
+     Example 1.	Interactive mode - creating key	file only
+
+	   Input Key Length:	     52
+	   Input Key Position:	     13
+	   Input Source	File-name:   IXFILE.DAT
+	   Input Target	File-name:   IXFILE.DAT
+
+	  File IXFILE.KEY will be created,  overwriting	 any
+     existing IXFILE.KEY, and may be used with IXFILE.DAT in
+     any MS-COBOL programs.
+
+     Example 2.	Interactive mode -  creating  key  and	data
+     files
+
+	   Input Key Length:	     52
+	   Input Key Position:	     13
+	   Input Source	File-name:   IXFILE.DAT
+	   Input Target	File-name:   NEWIX.DAT
+
+	  Files	NEWIX.DAT and NEWIX.KEY	will be	created, and
+     may  be  used  in any MS-COBOL programs. IXFILE.KEY, if
+     present, is unchanged.
+
+
+COMMAND	LINE MODE
+
+     REBUILD may also be invoked with data contained in	 the
+command	line.  You may enter REBUILD <command line> followed
+by <RETURN>, where <command line> is of	the form:
+
+     <source file name>,<target	file name>,<key	description>
+
+
+with no	spaces allowed in the command line.   <key  descrip-
+tion> is of the	form:
+
+     <key position>:<key length>
+
+
+     Any command line argument entered	after  <source	file
+name>  may be defaulted	by placing a semicolon (;) after the
+last argument desired.	If <target file	name> is  defaulted,
+but  <key  description>	 is desired, type two commas between
+<source	file name> and <key  description>.  (See  example  3
+below).	The defaults used are:
+
+<target	file>  Default is <source file name>, causing a	 key
+	       file  with the source file name and extension
+	       ".KEY" to be created; no	new data  file	will
+	       be created.
+
+<key description>Default is 1:1
+
+     REBUILD will prompt for any information not provided on
+the command line.
+
+     Example 3.	Command	Line mode - creating key file only
+
+	  (Same	results	as Example 1 above)
+
+	   REBUILD IXFILE.DAT,,13:52
+
+
+	  File IXFILE.KEY will be created,  overwriting	 any
+     existing IXFILE.KEY, and may be used with IXFILE.DAT in
+     any MS-COBOL programs.
+
+     Example 4.	Command	Line mode - creating  key  and	data
+     files
+
+	  (Same	results	as Example 2 above)
+
+	  REBUILD IXFILE.DAT,NEWIX.DAT,13:52
+
+
+	  Files	NEWIX.DAT and NEWIX.KEY	will be	created, and
+     may  be  used  in any MS-COBOL programs. IXFILE.KEY, if
+     present, is unchanged.
+
+
+
+Color in the MS-COBOL SCREEN SECTION
+
+     For release 1.10 of MS-COBOL, the	IBM  PC	 and  Compaq
+Personal  Computers  and  the Texas Instruments	Professional
+Computer are the only machines with color support.
+
+     The    clauses:	<FOREGROUND-COLOR    integer>	 and
+<BACKGROUND-COLOR  integer>  may be included in	the descrip-
+tion of	an elementary screen item. (See	the Microsoft  COBOL
+Reference  Manual,  section 5.3.4, for a description of	ele-
+mentary	screen items).
+
+     The value of "integer" can	range from 0 through 15, and
+is  used to select the desired color. The actual colors	used
+vary by	machine. If black and white monitors  are  used,  or
+color  is  not supported by INSTALL, use of FOREGROUND-COLOR
+and BACKGROUND-COLOR will either have  no  effect  or  cause
+screen displays	to use different shades	of gray.
+
+     If	FOREGROUND-COLOR or BACKGROUND-COLOR is	used in	 the
+same  elementary screen	item as	the BLANK SCREEN clause, the
+colors chosen become the default colors	 for  all  following
+screen	items  that  do	not explicitly define colors. If the
+BLANK SCREEN clause is not present in an  elementary  screen
+item,  colors chosen are in effect only	for the	current	ele-
+mentary	screen item, and later items will  use	the  default
+colors,	 which are normally white on black. If REVERSE-VIDEO
+is used	in an elementary screen	 item,	the  values  of	 the
+foreground and background colors are switched.
+
+     Values   of   "integer"   in    FOREGROUND-COLOR	 and
+BACKGROUND-COLOR clauses:
+
+
+** IBM and Compaq Personal Computers **
+
+FOREGROUND-COLOR		   BACKGROUND-COLOR
+Integer	  Color			   Integer   Color
+
+   0	  black			      0	     black
+   1	  blue			      1	     blue
+   2	  green			      2	     green
+   3	  cyan			      3	     cyan
+   4	  red			      4	     red
+   5	  magenta		      5	     magenta
+   6	  brown			      6	     brown
+   7	  white			      7	     white
+
+   8	  gray			      8	     blinking black
+   9	  light	blue		      9	     blinking blue
+  10	  light	green		     10	     blinking green
+  11	  light	cyan		     11	     blinking cyan
+  12	  light	red		     12	     blinking red
+  13	  light	magenta		     13	     blinking magenta
+  14	  yellow		     14	     blinking brown
+  15	  high intensity white	     15	     blinking white
+
+
+** Texas Instruments Professional Computer **
+
+FOREGROUND-COLOR		 BACKGROUND-COLOR
+Integer	  Color			 Integer   Color
+
+   0	  black			 not supported (no effect if
+   1	  blue			 BACKGROUND-COLOR clause is used)
+   2	  green
+   3	  cyan
+   4	  red
+   5	  magenta
+   6	  brown
+   7	  white
+
+   (colors 8 - 15 are the same as 0 - 7)
+
+
+DEC Rainbow 100	Addendum
+INSTALL	Information
+
+EDITING	KEYS
+
+Delete Line		CTRL-U,CTRL-X
+Delete Character	DEL key
+Forward	Space		CTRL-F or right	arrow key
+Back Space		CTRL-H or left arrow key
+Plus Sign		+
+Minus Sign		-
+
+TERMINATOR KEYS
+
+Escape			ESC (F11)
+Back Tab		CTRL-B or up arrow key
+Tab			CTRL-I or TAB or down arrow key
+Carriage Return		CTRL-M or Return
+Line Feed		CTRL-J or Line Feed (F13)
+
+FUNCTION KEYS
+
+Function 1		CTRL-E 1 or PF1
+Function 2		CTRL-E 2 or PF2
+Function 3		CTRL-E 3 or PF3
+Function 4		CTRL-E 4 or PF4
+Function 5		CTRL-E 5
+Function 6		CTRL-E 6
+Function 7		CTRL-E 7
+Function 8		CTRL-E 8
+Function 9		CTRL-E 9
+Function 10		CTRL-E 0
+
+Notes
+
+     The Rainbow function keys (F1 through F20)	are not	used
+     by	 MS-COBOL.  Keys  PF1  through	PF4,  on the numeric
+     keypad, may be used as function keys 1 through 4.
+
+     A blinking	cursor will remain on  in  the	upper  right
+     hand corner of the	screen while any MS-COBOL program is
+     running.
+                                                                                            
