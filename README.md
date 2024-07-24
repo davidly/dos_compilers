@@ -38,8 +38,10 @@ To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag
     
 The Borland Pascal (v1 through v3) products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for QuickBASIC v2 and v3. For QuickBASIC v2 you must use some emulator other than NTVDM to build; that version directly accesses keyboard hardware in a way that's not emulated in NTVDM. DOSBOX works great.
 
+The ttt benchmark does not run with Microsoft COBOL v1 or v2 because they don't support recursive PERFORM statements.
+
 If you're running Linux or MacOS and see perplexing compilation errors, it could be your source files don't have cr/lf line separators. Use unix2dos to add them; some of these compilers require them. Some compilers require a ^Z / 0x1a at the end of files; CB86 is an example. Again, if you see build errors this may be the problem.
 
 Here are runtimes for the benchmarks in milliseconds for a 4.77Mhz 8086 (not 8088) as emulated by [NTVDM](https://github.com/davidly/ntvdm)
 
-![runtimes](https://github.com/user-attachments/assets/3f831a4c-2e30-467d-9585-19a2501fd714)
+![runtimes](https://github.com/user-attachments/assets/a9086ca3-e1ce-40ca-ad00-dc7242c949b4)
