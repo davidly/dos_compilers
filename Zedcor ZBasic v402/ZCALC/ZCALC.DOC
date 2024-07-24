@@ -1,0 +1,133 @@
+
+ZCALC Notes
+
+ZCalc is a spreadsheet program that uses a command structure similar to
+Lotus 1-2-3.  The following notes describe the various commands.  If the
+program doesn't do something that you'd like it to, feel free to modify it.
+In addition, if you see something in the source code that you'd like to use
+in your own programs, feel free to do so.
+
+KEYBOARD
+
+The following keys perform the following functions:
+
+{HOME} : Move the cell pointer position to A1
+{PGUP} : Move the cell pointer one page up
+{PGDN} : Move the cell pointer one page down
+{F6}   : Go to a specific cell location
+{F9}   : Recalculate the contents of the spreadsheet
+
+
+ENTERING NUMBERS, FORMULA AND LABELS
+
+To enter a formula, press the '=' sign and then type the formula.  A
+formula can consist of numbers, cell references, and cell names.
+In addition, the four basic mathematical operators and parentheses are
+allowed.  The program parses from left to right, with expressions inside
+parentheses evaluated first.
+
+Two functions are currently implemented.  They are covered later in the
+notes.
+
+To enter a number, just type the number.
+
+To enter a label, enter the label, or if the label begins with a number,
+enter a double quote first.
+
+
+CELL REFERENCES
+
+Cell references consist of letters for columns and numbers for rows.
+Cells past column Z are represented by double letters: AA, AB and so on.
+Cell blocks are represented by the upper left and lower right
+coordinates separated by a comma.  For example:  A1,B2   B5,E10  etc.
+
+
+COMMANDS
+
+The command menu is brought up with the '/' key.
+
+A command can be executed by moving the bar to the command and pressing
+enter, or just hitting the first key of the command (upper case only).
+Sub-menus work in a similar fashion.
+
+
+FILE COMMAND
+
+The file command allows the user to load, save or delete a file.
+
+
+ERASE COMMAND
+
+The erase command erase the spreadsheet.
+
+
+COPY COMMAND
+
+The copy command allows a range of cells to be copied from one part
+of the spreadsheet to another.
+
+
+WIDTH COMMAND
+
+The width command allows the width a column to be adjusted.
+
+
+RANGE COMMAND
+
+The range command allows ranges of cells to be erased or formatted
+to look a different way.
+
+The command will first ask for the range, and then whether or not the
+range is to be deleted or re-formatted.
+
+
+INSERT COMMAND
+
+Insert allows the insertion of rows or columns in the spreadsheet.  Cell
+references are adjusted.
+
+
+DELETE COMMAND
+
+Delete allows the deletion of rows or columns in the spreadsheet.  Cell
+references are adjusted.
+
+
+PRINT COMMAND
+
+Print allows the spreadsheet to be printed.
+
+
+NAME COMMAND
+
+THe name command allows cells to be named, instead of referred to
+by just their address.  For example cell F1 could be named TAX, allowing
+a formula like 'TAX*A1' instead of 'F1*A1'.
+
+
+MSDOS COMMAND
+
+This command returns temporarily to the operating system.  Type EXIT
+from the DOS prompt to return to the spreadsheet.
+
+
+QUIT COMMAND
+
+The quit command allows the user to exit the program.
+
+MACROS
+
+Macros are supported.  To create a macro, do this:
+
+1.  Move to a cell and type a double quote followed by the keystrokes
+    you would normally type for the command.
+
+2.  Give this cell a name consisting of a backslash followed by a letter.
+
+3.  To invoke the macro, type Ctrl and the letter.
+
+To use arrow and other special keys in a macro, type the key name
+inside brackets.  For example:  {UP}  {RECALC}  {JUMP}  {PGDN}.
+
+

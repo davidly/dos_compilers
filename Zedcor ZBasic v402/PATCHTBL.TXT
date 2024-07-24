@@ -1,0 +1,26 @@
+Patch Locations for ZBasic v4.02
+
+				Initial
+Name		Address		Value	Description
+
+LISTFLG	        &H5345           &H00     Set to 2Ah to highlight tokens during
+                                        list
+INSRTFLG        &H6F40           &H82     Set to 02h to default screen editor
+                                        to insert mode
+
+COLOR1          &H6860          &H79     Line editor function key text
+COLOR2		&H6865		&H07	Line editor function key number
+COLOR3		&H6E6F		&H01	Full Screen Editor (FSE) border
+COLOR4		&H6E85		&H0F	FSE current line
+COLOR5		&H6EA7		&H03	FSE non-current line
+COLOR6		&H6ECD		&H1C	FSE warning messages
+COLOR7		&H6EEF		&H1F	FSE load/save filename prompt
+COLOR8		&H6EF0		&H17	FSE load/save filename response
+COLOR9		&H88DB		&H1B	FSE function key text
+COLOR10		&H88E4		&H1A	FSE ALT-function key text
+COLOR11		&H88EE		&H16	FSE function key number
+COLOR12		&H8A49		&H1E	FSE "File:" message
+COLOR13		&H8A69		&H12	FSE memory remaining message
+COLOR14		&H89F6		&H00	FSE exit border color
+
+

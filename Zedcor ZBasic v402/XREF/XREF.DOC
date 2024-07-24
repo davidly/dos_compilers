@@ -1,0 +1,76 @@
+Well, you've been screaming for a cross-reference utility for your ZBasic
+programs, so here it is!  XREF was originally written by Jeff Moore on the
+Apple //e in ZBasic, and then ported to the IBM and modified slightly (to
+take advantage of the IBM's special features) by Greg Branche.  This .DOC
+file contains a little bit of information on how to use the darn thing!
+
+The first thing you need to do is save the program that you want cross-
+referenced in ASCII format, using the SAVE* command from within ZBasic.  XREF
+will only work with ASCII format source files. Once you've got the ASCII file
+on disk, execute XREF (either from within ZBasic, or as a .COM file after
+you've created one).  The first thing you'll see is a prompt asking you for
+the file name of the source file to cross- reference.  This file MUST be in
+the currently logged directory (if you want the program to support pathnames,
+modify XREF!).  After entering the filename, the program will ask you which
+items you'd like a cross- reference listing on.
+
+
+Line label definitions
+     This option will list every label defined in the program, and the line
+number associated with that label.
+
+String constants
+     This option will list every string constant used in the program, as well
+as every line label reference.  For example, the line
+
+     00010 GOSUB "INIT"
+
+will be parsed by XREF and an entry will appear in the string constants
+listing.
+
+Numeric constants
+     This option will list every numeric constant used in the program. Again,
+this includes line # references in GOSUB, GOTO, etc. statements.
+
+Variables
+     This option will list the variables used in the program, and the line #
+of each reference to the variable.
+
+Keywords
+     This option will produce a listing of ZBasic keywords and the program
+line that each keyword is used in.
+
+Display parsing actions
+     Turning this option ON will have XREF display each line as it is read
+in, and then each item within the line as the program parses the line.  If
+this option is turned off, XREF will display a dot for each line processed
+(so that you know that it's at least doing SOMEthing!).  At any time during
+the parsing phase of operation, you can press the space bar to pause the
+output.  Once paused, the space bar will single step through each line.  Any
+other key will allow the program to continue.  CTRL-C will abort the
+process.
+
+Require spaces between keywords
+     This option is the same as the one on the ZBasic configure page, and
+should be set the same as ZBasic when the program was saved.
+
+Printer on for X-Ref listing
+     This option simply routes output of the final XREF report to the
+printer.  If this option is turned off, the report is produced on the screen,
+one screenful at a time.  The program will pause at the end of each screenful
+of information and wait for you to press a key to continue.
+
+The default answer for each of these options is "N".  If you just press
+<RETURN> at each of the questions, the default will be accepted.  At least
+ONE of the first five questions must be answered as "Y".  The program will
+not continue until at least one of the report options has been selected (if
+you didn't want a cross reference listing, you wouldn't have run the program
+in the FIRST place).
+
+
+This XREF utility is supplied in source code format so that you can modify it
+to your own liking.  If you make any modifications that you feel are
+worthwhile, drop us a line!  We'll put your fix in the newsletter (and our
+copy of XREF) for all to enjoy.
+
+

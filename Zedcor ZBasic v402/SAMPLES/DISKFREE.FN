@@ -1,0 +1,21 @@
+'Long Function to determine amount of free space on a drive
+'Parameter to function is the drive specifier.
+'0 = default drive, 1 = A:, 2 = B:, etc.
+'Returns # of bytes free as a double-precision #
+'Returns -1 if drive specifier is invalid
+:
+LONG FN GetSpace#(DRIVE)
+MACHLG &B4, &36           : ' MOV AH,36H
+MACHLG &8A, &16, DRIVE    : ' MOV DL,[DRIVE]
+MACHLG &CD, &21           : ' INT 21H
+MACHLG &3D, &FFFF         : ' CMP AX,FFFFH
+MACHLG &75, &06           : ' JNE +6
+MACHLG &BB, &01, &00      : ' MOV BX,1
+MACHLG &B9, &01, &00      : ' MOV CX,1
+MACHLG &A3, AX            : ' MOV [AX],AX
+MACHLG &89, &1E, BX       : ' MOV [BX],BX
+MACHLG &89, &0E, CX       : ' MOV [CX],CX
+Free# = AX * BX * CX * 1.0
+END FN = Free#
+:
+

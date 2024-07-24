@@ -1,0 +1,26 @@
+' These two functions can be used to scroll a window either up or down.
+' X1,Y1 are the coordinates of the upper left corner of the window.
+' X2,Y2 are the coordinates of the lower right corner of the window.
+' ATTRIB is the color attribute for the new blank line
+' Experiment with them a little to get a feel for them.
+:
+LONG FN Scrollup(X1,Y1,X2,Y2,ATTRIB)
+MACHLG &B8,1,6
+MACHLG &8A,&3E,ATTRIB
+MACHLG &8A,&2E,Y1
+MACHLG &8A,&0E,X1
+MACHLG &8A,&36,Y2
+MACHLG &8A,&16,X2
+MACHLG &CD,&10
+END FN
+:
+LONG FN Scrolldown(X1,Y1,X2,Y2,ATTRIB)
+MACHLG &B8,1,7
+MACHLG &8A,&3E,ATTRIB
+MACHLG &8A,&2E,Y1
+MACHLG &8A,&0E,X1
+MACHLG &8A,&36,Y2
+MACHLG &8A,&16,X2
+MACHLG &CD,&10
+END FN
+

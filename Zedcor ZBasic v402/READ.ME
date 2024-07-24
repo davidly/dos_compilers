@@ -1,0 +1,308 @@
+ZBasic Version 4.02 - December 7, 1987
+
+This file contains items of interest that didn't make it into the manual.
+Anything not specified in the manual, or changed since the manual has been
+printed, can be found in this file.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+The HERC.COM (and it's batch file loader, ZHERC.BAT) are only required if you
+wish to intermix text and graphics on the Hercules graphics screen.  If you
+are only producing graphics, these files are not required.  Just remember
+that the HERC.COM driver is a software emulation of text on the graphics
+screen.  It works by actually drawing the characters on the screen from a
+predefined software font.  Therefore, there is a great speed difference
+between text in MODE 2 and MODE 20.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+There are a couple of additional sample programs included on the disk which
+are not mentioned in the program.  One of them deserves mention here.  The
+ZCALC.BAS file contains the ZBasic source code to produce a spreadsheet with
+a very familiar command structure.  Try it out!  If you don't like it, modify
+it until you do!
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+The method used to store null (blank) lines in the tokenized source program
+has been changed, since the full screen editor would go totally FUNGUS
+(Fouled-Up, No Good, and generally UnSatisfactory) with the old way.  Version
+4.00 stored null lines as a single null byte within the tokenized program.
+Version 4.02 and later stores null lines in the same format as the other
+tokenized lines.  The full screen editor is much happier now.  This does
+cause a problem with the programs that you've saved using version 4.0,
+though.  If the program was saved in tokenized format (using the SAVE
+command), and it contained null lines, then that program will have to be
+converted to the new tokenized format.  There are two methods for doing
+this.  First method:  Use version 4.00 to save the program in ASCII format
+(using SAVE*), and then reload it into version 4.02.  Second method:  Use the
+supplied conversion program which will translate any null lines into the new
+format.  The name of this program is "nullfix.bas", and can be found on this
+distribution diskette.  Run this program as you would any other ZBasic
+program.  Any old tokenized programs that do not contain null lines will not
+cause any problems, and can be loaded normally.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+Many people requested a way to change the colors of the screen in the line
+and screen editors.  There is an additional file on the diskette titled
+"PATCHTBL.TXT" which lists the addresses within ZBasic which can be changed
+to customize the screen colors.  Simply use the Patch option on the ZBasic
+startup screen to change the various attribute bytes.  If you wish to save
+the changes that you've made, select Save from the same menu.
+
+In addition, the program "CONFIG.BAS" will allow you interactively alter the
+colors used in the line and screen editor.  Simply load the program into
+ZBasic, and then RUN it.  It will first ask you to specify the pathname of
+the ZBASIC.COM file that you wish to alter.  Next, you will be presented with
+the main menu.  Use the keypad arrow keys to move the cursor to the menu item
+that you want, then press either the RETURN key or the space bar. This same
+method is used to change the various colors within the submenus.  When done,
+select the SAVE option to save the changes in your ZBasic file on disk, or
+select ABANDON to discard the changes.
+
+This program is supplied in source code format so that you can modify it to
+your own liking.  Feel free to use the programming techniques in your own
+programs.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+To maintain compatibility with our other machine versions, the LIST command
+has reverted back to a normal screen display (no more highlighted tokens).
+LIST* still will highlight the tokens for you though.  F1 in the line editor
+has been pre-defined as LIST* so that you can use it if you prefer the
+highlighted tokens.  If that`s still not good enough, you can patch the 
+location LISTFLG to 2ah to default to token highlighting.  See the file
+"PATCHTBL.TXT" for the current address of LISTFLG.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+A couple of additions have been added to the KEY command in the line editor.
+Typing KEY without any parameters will toggle the current display state of
+the function key prompt at the bottom of the screen. (turning it off if it
+was on, and visa-versa).
+
+The second new addition has the following syntax:
+
+     KEY x {,|=} ["]command["]
+
+This will allow you to customize the actions of the function keys in the line
+editor.  For example, if you seldom use the CONFIG command, but frequently
+use the RENUM command, you can use the following statement to change the
+definition of the F7 key:
+
+    KEY 7 = RENUM
+
+The  symbol represents a carriage return at the end of the command.  It is
+entered into the command string by pressing the ESC key.  The editor will
+translate it appropriately.  The "command" can be optionally surrounded by
+quotes, and must be a valid line editor command.  It can be no longer than 15
+characters.  You can not use a string variable (as with some other BASIC's),
+since this is not a program statement.  This is ONLY a line editor command.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+If you happen to get to the LOAD prompt by mistake (for example, if you press
+F1 in the screen editor instead of Alt-F1), you can press CTRL-C to exit the
+prompt and then try again.  Same goes for the SAVE prompt.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+Many people have asked for a way to change the color of the text produced on
+the EGA graphics screens.  The COLOR statement can't be used, since it
+affects the graphics colors while in graphics modes, and the MODE statement
+resets the default character attribute to 7 whenever you change into a
+graphics mode.  The solution is to sidestep the system by POKEing into the
+ZBasic data area.  The character color attribute is stored at 033Bh in the
+data segment.  To change the attribute so that any characters will be printed
+in blue (attribute = 1), use the following statement:
+
+     POKE &33B, 1
+
+Any attribute value from 0 to 255 can be used, and follows the attribute
+rules as outlined on page A-37, table 2, of the ZBasic reference manual.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+As stated in the manual, the CALL statement (pg. A-31), and the DEF USR
+statement (pg. A-47) allow a segment specifier in addition to the address. 
+This way, the machine language routine can be anywhere in memory.  The
+segment specifier is optional, and I just wanted to clarify what happens with
+and without the segment value.
+
+If you use the statement
+
+        CALL LINE 100
+    or
+        DEF USR 0 = LINE 100
+
+the compiler will generate the necessary code to perform a NEAR call (which
+means that it must be within the current code segment).  Therefore, your
+subroutine must end with a NEAR RET (MACHLG &C3).  If, on the other hand, one
+of the following statements is used
+
+        CALL LINE 100, MEMC
+    or
+        DEF USR 0 = LINE 100, MEMC
+
+then the compiler will generate a FAR call, and the subroutine MUST terminate
+with a FAR RET (MACHLG &CB).  These two examples would effectively accomplish
+the same thing, except that the second examples would take a little longer to
+execute.
+
+One way to keep this all straight is this:  if you are CALLing a MACHLG line
+that is located somewhere within your ZBasic program, don't specify the
+segment.  The compiler will automatically assume that it is in the code
+segment.  If, on the other hand, you DIMension a dummy array, and then BLOAD
+a machine language subroutine into that area of memory, then use the segment
+specifier whenever you access that subroutine (and make sure that it
+terminates with a FAR RET).
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+The EOF function behaves differently, depending on how you are accessing the
+file.  If you are using INPUT# or LINE INPUT#, then the EOF function will
+return true (-1) if an end-of-file mark (1Ah) is encountered in the file.  If
+you are using the READ# statement to retrive data from the file, then the
+function will not return true until the physical end-of-file is reached (i.e.
+when MS-DOS returns an EOF error).  Keep in mind that MS-DOS does not know
+what your program's record length is.  Therefore, it's physical end-of-file
+error will occur when it has reached the end of the last allocated sector of
+your file (which will probably be past the actual end of your file).
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+If you prefer to have the full screen editor default to insert mode (as
+opposed to overwrite mode, as shipped), simply patch the INSRTFLG location
+from 82H to 02H.  Instructions for using the patch command can be found on
+page B-15 of your ZBasic manual.  The current address of INSRTFLG can be
+found in the PATCHTBL.TXT file included on your master disk.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+We have discovered that ZBasic will run just fine within a Microsoft (R)
+Windows window, as long as you follow a few simple rules.  First, make sure
+that your ZBasic is configured to be NOT IBM text compatible.  This way,
+Windows can intercept any text output and convert it to the necessary
+graphical representation of the characters.  Also, make sure that you don't
+try to do any graphics while Windows is active.  It won't hurt anything, but
+it won't accomplish anything either (the graphics are invisible).
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+The TIMER function now returns the number of seconds since midnight down to
+the nearest hundredth of a second.  This matches BASICA's function.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+There have been numerous reports of little inconsistencies in the fourth
+edition manual, so get your pen ready and follow along while I make
+corrections.
+
+Pg 77-
+     Line 9 of the "QUICK SORT" subroutine has a typographical error.  The
+variable 'R1' in the second statement should be 'RI'.
+
+Pg 108, 111, 112, 117, 118-
+     The variable NAME$ contains an MS-DOS version reserved word.  Change the
+variable to NM$.
+
+Pg 168-
+     The list of reserved words on the page pertain to the standard version
+of the language.  Due to the many enhancements made to the MS-DOS version,
+the following are also reserved words for this version only.  Page number
+following the reserved word shows which page the word is referenced on.
+
+'      - 316	ARR    - A58	AS       - 278	BCD      - A58	BEEP      - 178
+BLOAD  - A29	BSAVE  - A30	CARDTYPE - A33	CASE     - 183	CHDIR     - A34
+CINT   - A35	COM   - A40,A66	COMBUFF  - A38	COMMAND$ - A41	COMMON    - 192
+COORDINATE - 195		CSRLIN   - 197	EOF      - 220	FCB       -
+FILES  - A50	FRE    - A52	GET      - 232	IS       -	KEY       -
+MKDIR  - A60	NAME   - 278	OFF      - A40	PAINT    - A72	PALETTE   - A73
+PATH$  - A74	PRESET - 306	PSET     - 306	PUT      - 306	RANDOMIZE - 309
+RESET  - 319	RMDIR  - A79	SCREEN   - A80,A81		SEG       - A58
+SELECT - 328	SHELL  - A82	STR      - A58	SYSTEM   - 339	TFORMAT   - A83
+TIMER  - A85	VARSEG - A91 	VIEW     - A92	WAIT     - A93	WINDOW    - 195
+
+Pg 172-
+     The example run erroneously shows comma's between the printed numbers.
+Those commas would not be printed by the example program.
+
+Pg 201-
+     DATE$ function:  In the remarks section, mention is made that the MSDOS
+version can set the date from within a program.  The example given is
+incorrect (the slashes aren`t allowed in the string).  See page A-42 for the
+correct syntax.
+
+Pg 232-
+     The formula for calculating the memory requirements for the GET
+statement has an extra ")" character at the end.
+
+Pg 255, 256-
+     The LINE INPUT statement is actually two words.  The manual incorrectly
+shows the command as one word, and the system will not parse the words as
+keywords if SPACES BETWEEN KEYWORDS is selected in the configuration.
+
+Pg 263-
+     The second word in the second line of DEFINITION should be "useful".
+
+Pg 327-
+     The description for SAVE+ says to be sure that your program doesn't use
+label references.  This is exactly opposite from what it should say.  Since
+this command does not save the line numbers with the text of the program, the
+program SHOULD use label references so that it will still run correctly when
+reloaded.
+
+Pg A-20-
+     The entry and exit parameters for address &118 are incorrect.  On entry,
+ES:SI should point to the destination string.  On exit, ES:SI will point to
+the standard ZBasic string.
+
+Pg A-38-
+     The printed syntax shows that the command is made up of two words.  This
+is incorrect.  It should read:
+
+        COMBUFF (port)
+
+Pg A-61-
+     In the description for MODE 20, the address and size of the Hercules
+graphics buffer is incorrect.  Page 0 starts at &HB000 and is 32K bytes long.
+Page 1 starts at &HB800 and is also 32K bytes long.  Also, reference is made
+to a HERC.BIN file on the diskette.  This should read HERC.COM.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+The MOUSE(1) and MOUSE(2) functions normally return values using the
+standard ZBasic coordinates of 1024 x 768.  If your program uses a
+COORDINATE statement to alter the screen coordinate system, the mouse
+functions will return values to match your new coordinate system.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+For the mouse to operate properly on the Hercules Graphics Screen, your
+program must perform it's MODE 20 statement prior to initializing the mouse
+with the MOUSE(0) function.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+We have included a ZBasic cross-reference program on this master disk.  It
+can be found in the XREF subdirectory.  Documentation is included in the same
+subdirectory.
+
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+We want to make this the best BASIC available on MS-DOS computers.  We can't
+do that without your feedback, though.  If you have any comments,
+suggestions, complaints, etc, please write us a letter and let us know your
+thoughts.  Try to be as specific as possible when suggesting something, or
+complaining about something.  We can't implement a suggestion, or fix a
+complaint, unless we know exactly what you're talking about.
+
+And lastly, thank you for purchasing ZBasic.  We sincerely hope that we can
+have a long and fruitful relationship!
+
+Zedcor, Inc.
+4500 E. Speedway, Suite 22
+Tucson, AZ  85712
+
+
