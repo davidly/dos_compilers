@@ -59,39 +59,35 @@ true   equ 1
 false  equ 0
 digits equ 200
 
-dataseg segment para public 'data'
-    assume ds: dataseg
+e_dataseg segment para public 'data'
+    assume ds: e_dataseg
 
     crlfmsg       db      13,10,0
     donemsg       db      'done',13,10,0
     
     align 16
     array         db      digits dup( ? )
-dataseg ends
+e_dataseg ends
 
 .code
 
 start:
-        mov      ax, dataseg
+        mov      ax, e_dataseg
         mov      ds, ax
 
-        ; why is the loop backwards? no idea.
         ; while n > 0 do begin
         ;     a[ n ] := 1;
         ;     n := n - 1;
         ; end;
 
-        ; register bh is n. di is a[]. bl is a constant 1
-
-        mov      bl, 1
-        mov      bh, digits - 1
-        mov      di, offset array + digits - 1
-
-  ainit:
-        mov      byte ptr [ di ], bl
-        dec      di
-        dec      bh
-        jnz      ainit
+        mov      al, 1
+        mov      ah, 1
+        push     ds
+        pop      es
+        mov      di, offset array
+        mov      cx, ( digits / 2 )
+        cld
+        rep stosw
 
         ; a[ 1 ] := 2;
         ; a[ 0 ] := 0;
@@ -99,6 +95,7 @@ start:
         mov      di, offset array
         mov      byte ptr[ di + 1 ], 2
         mov      byte ptr[ di ], 0
+        mov      cl, 10
 
         ; register bx is n. register si is high. register di is x at the start of each inner loop
 
@@ -110,16 +107,15 @@ start:
         xor      di, di           ; x := 0;
 
   innerloop:
-        xor      dx, dx
         mov      ax, di
-        div      bx               ; computes both x MOD n and x DIV n. dx has remainder, ax has result
-        mov      di, ax           ; save the result of the division in di. ah is guaranteed to be 0.
+        div      bl               ; computes both x MOD n and x DIV n. ah has remainder, al has quotient
 
-        mov      byte ptr[ offset array + bx ], dl  ; a[ n ] := x MOD n;
+        mov      byte ptr[ offset array + bx ], ah  ; a[ n ] := x MOD n;
+        xor      ah, ah
+        mov      di, ax           ; save the quotient in di.
 
-        mov      al, byte ptr [ offset array + bx - 1 ] ; load a[ n - 1 ] into al
-        mov      cx, 10
-        mul      cx
+        mov      al, byte ptr [ offset array + bx - 1 ] ; load a[ n - 1 ]
+        mul      cl
         add      di, ax           ; x := 10 * a[ n - 1 ] + x DIV n;
 
         dec      bx               ; n := n - 1;
