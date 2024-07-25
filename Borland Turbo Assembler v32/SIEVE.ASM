@@ -49,40 +49,38 @@ false      equ 0
 loops      equ 10
 arraysize  equ 8190
 
-tttdataseg segment para public 'sievedata'
-    assume ds: tttdataseg
+sieve_dataseg segment para public 'sievedata'
+    assume ds: sieve_dataseg
 
     crlfmsg       db      13,10,0
     primesmsg     db      ' primes.',13,10,0
-    count         dw      0
     ITER          dw      0
     PKFLAGS       dd      0
     
     align 16
     flags         db      arraysize + 1 dup( ? )
     afterflags    db      0
-tttdataseg ends
+sieve_dataseg ends
 
 .code
 
 start:
-        mov      ax, tttdataseg
+        mov      ax, sieve_dataseg
         mov      ds, ax
 
   iteragain:                        ; for ( iter = 1; iter <= 10; iter++ )
-        mov      word ptr [ count ], 0   ; count = 0
+        xor      dx, dx             ; count of primes found
 
         ; set all array entries to true:  for (i = 0; i <= SIZE; i++) flags[i] = TRUE;
 
         mov      ah, true
         mov      al, true
         mov      di, offset flags
-        mov      cx, ( arraysize + 2 ) / 2 ; 4095
+        mov      cx, ( arraysize + 2 ) / 2 ; 4096
         push     ds
         pop      es
         cld
         rep stosw
-        stosb
 
         ; iterate through array entries and count primes
 
@@ -105,25 +103,25 @@ start:
         jge      inccount           ; redundant check to the one in the loop below but it saves a jump instruction in the loop
 
   kloop:                        
-        mov      byte ptr [ si ], cl ; flags[ k ] = false. use cl for 0 because it's faster than an immediate
+        mov      [ si ], cl         ; flags[ k ] = false. use cl for 0 because it's faster than an immediate
         add      si, ax             ; k += prime
         cmp      si, di             ; is si >= offset afterFlags? (i.e. k <= size)
         jl       kloop
 
   inccount:
-        inc      word ptr [ COUNT ] ; count++
+        inc      dx                 ; count++
 
   flagisoff:                        ; check if outer loop is done
         inc      bx
         cmp      bx, arraysize + 1
         jnz      nextprime
 
-  checknextiter:                  ; are we done iterating loops times?
+  checknextiter:                    ; are we done iterating loops times?
         inc      word ptr [ ITER ]
         cmp      word ptr [ ITER ], loops
         jnz      iteragain
 
-        mov      ax, word ptr [COUNT]
+        mov      ax, dx
         call     printint
 
         call     printcrlf
