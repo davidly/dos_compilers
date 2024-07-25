@@ -36,7 +36,7 @@ To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag
   * ntvdm -c -p e
   * ntvdm -c -p ttt
     
-The Borland Pascal (v1 through v3) products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for ZBasic and QuickBASIC v2 and v3. For QuickBASIC v2 you must use some emulator other than NTVDM to build; that version directly accesses keyboard hardware in a way that's not emulated in NTVDM. DOSBOX works great.
+The Borland Pascal (v1 through v3) products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for ZBasic and QuickBASIC v2 and v3. For QuickBASIC v2 you must use some emulator other than NTVDM to build; that version directly accesses keyboard hardware in a way that's not emulated in NTVDM. DOSBOX and [MSDOS](http://takeda-toshiya.my.coocan.jp/) work great.
 
 The ttt benchmark does not run with Microsoft COBOL v1 or v2 because they don't support recursive PERFORM statements.
 
