@@ -40,6 +40,8 @@ The Borland Pascal (v1 through v3) products don't support command-line builds, s
 
 The ttt benchmark does not run with Microsoft COBOL v1 or v2 because they don't support recursive PERFORM statements.
 
+The BA compiler is in the [tic-tac-toe and its applicability to nuclear war](https://github.com/davidly/ttt) repo. It generates code for 6502, 8080, 8086, x86, x64, arm32, arm64, and 64-bit RISC-V.
+
 If you're running Linux or MacOS and see perplexing compilation errors, it could be your source files don't have cr/lf line separators. Use unix2dos to add them; some of these compilers require them. Some compilers require a ^Z / 0x1a at the end of files; CB86 is an example. Again, if you see build errors this may be the problem.
 
 Here are runtimes for the benchmarks in milliseconds for a 4.77Mhz 8086 (not 8088) as emulated by [NTVDM](https://github.com/davidly/ntvdm)
