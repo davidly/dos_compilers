@@ -1,0 +1,147 @@
+/*
+** Small-C Compiler Symbol Definitions
+*/
+
+/*
+** compile options
+*/
+
+/* #define NOCCARGC	
+*/
+
+#define SEPARATE	/* compile separately */
+#define OPTIMIZE	/* compile output optimizer */
+#define DYNAMIC 	/* allocate memory dynamically */
+#define COL		/* terminate labels with a colon */
+/* #define UPPER	/* force symbols to upper case */
+#define LINK		/* will use with linking loader */
+
+/*
+** machine dependent parameters
+*/
+#define BPW     2	/* bytes per word */
+#define LBPW    1	/* log2(BPW) */
+#define SBPC    1	/* stack bytes per character */
+#define ERRCODE 7	/* op sys return code */
+ 
+/*
+** symbol table format
+*/
+#define IDENT    0
+#define TYPE     1
+#define CLASS    2
+#define OFFSET   3
+#define NAME     5
+#define OFFSIZE (NAME-OFFSET)
+#define SYMAVG  10
+#define SYMMAX  14
+
+/*
+** symbol table parameters
+*/
+#define NUMLOCS   25
+#define STARTLOC  symtab
+#define ENDLOC   (symtab+(NUMLOCS*SYMAVG))
+#define NUMGLBS   200
+#define STARTGLB  ENDLOC
+#define ENDGLB   (ENDLOC+((NUMGLBS-1)*SYMMAX))
+#define SYMTBSZ   3050  /* NUMLOCS*SYMAVG + NUMGLBS*SYMMAX */
+ 
+/*
+** System wide name size (for symbols)
+*/
+#define NAMESIZE 9
+#define NAMEMAX  8
+ 
+/*
+** possible entries for "IDENT"
+*/
+#define LABEL    0
+#define VARIABLE 1
+#define ARRAY    2
+#define POINTER  3
+#define FUNCTION 4
+ 
+/*
+** possible entries for "TYPE"
+**    low order 2 bits make type unique within length
+**    high order bits give length of object
+*/
+/*      LABEL   0 */
+#define CCHAR   (1<<2)
+#define CINT    (BPW<<2)
+ 
+/*
+** possible entries for "CLASS"
+*/
+/*      LABEL     0 */
+#define STATIC    1
+#define AUTOMATIC 2
+#define EXTERNAL  3
+#define AUTOEXT   4
+
+/*
+** "switch" table
+*/
+#define SWSIZ   (2*BPW)
+#define SWTABSZ (60*SWSIZ)
+ 
+/*
+** "while" statement queue
+*/
+#define WQTABSZ  30
+#define WQSIZ     3
+#define WQMAX   (wq+WQTABSZ-WQSIZ)
+ 
+/*
+** entry offsets in while queue
+*/
+#define WQSP    0
+#define WQLOOP  1
+#define WQEXIT  2
+ 
+/*
+** literal pool
+*/
+#define LITABSZ 800
+#define LITMAX  (LITABSZ-1)
+ 
+/*
+** input line
+*/
+#define LINEMAX  127
+#define LINESIZE 128
+
+/*
+** output staging buffer size
+*/
+#define STAGESIZE   1200
+#define STAGELIMIT  (STAGESIZE-1)
+ 
+/*
+** macro (define) pool
+*/
+#define MACNBR   130
+#define MACNSIZE (MACNBR*(NAMESIZE+2))
+#define MACNEND  (macn+MACNSIZE)
+#define MACQSIZE (MACNBR*7)
+#define MACMAX   (MACQSIZE-1)
+ 
+/*
+** statement types
+*/
+#define STIF      1
+#define STWHILE   2
+#define STRETURN  3
+#define STBREAK   4
+#define STCONT    5
+#define STASM     6
+#define STEXPR    7
+#define STDO      8	/* compile "do" logic */
+#define STFOR     9	/* compile "for" logic */
+#define STSWITCH 10	/* compile "switch/case/default" logic */
+#define STCASE   11
+#define STDEF    12
+#define STGOTO   13	/* compile "goto" logic */
+#define STLABEL  14
+

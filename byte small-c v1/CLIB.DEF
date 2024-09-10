@@ -1,0 +1,56 @@
+/* CLIB.DEF -- Definitions for Small-C library functions
+** Modified for MS-DOS 2 and up.
+**
+** Credits:
+**    Based on the CP/M version by L.E. Payne and J.E.Hendrix
+**
+** Notes:
+** What was Ubdos() is now Umsdos().
+**
+** Note that the Function calls are all shifted up by 8 bits
+** since they go into the AH register and we need them
+** that way to begin with.
+*/
+
+/* MAXIMUM files open simultaneously */
+#define MAXFILES 10
+
+/* EOF character */
+#define FILEOF  26
+
+/*  MS-DOS function calls */
+
+#define MAKFIL  15360  /* Create file */
+#define OPNFIL 15616  /* Open file */
+#define CLOFIL 15872  /* Close file */
+#define RDFIL  16128  /* Read file */
+#define WRFIL  16384  /* Write file */
+#define POSFIL 16896  /* Position file */
+#define DELFIL 16640  /* Delete file */
+#define PRTOUT 1280   /* Printer output */
+
+#define RDONLY  0     /* Read only file */
+#define WRONLY  1     /* Write only file */
+#define RACCESS 0     /* READ ACCESS */
+#define WACCESS 1     /* WRITE ACCESS */
+#define RWACCESS 2    /* READ AND WRITE ACCESS */
+
+/* Device codes */
+#define CONSOL  1	/* System console */
+#define PRINTR  2	/* System printer -- list device */
+#define AUXDEV  3	/* Aux. device -- usually serial */
+
+/* File status bits */
+#define	RDBIT	1	/* Open for read */
+#define WRTBIT	2	/* Open for write */
+#define EOFBIT	4	/* Eof condition */
+#define ERRBIT	8	/* Error condition */
+
+/* ASCII characters */
+#define	ABORT	3
+#define	RUB	8
+#define	PAUSE	19
+#define	WIPE	24
+#define	DEL	127
+
+

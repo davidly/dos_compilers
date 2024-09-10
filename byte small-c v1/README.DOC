@@ -1,0 +1,216 @@
+
+BYTE SMALL-C Version 1.0
+
+Welcome:
+
+You should find on this disk (or, in this archive) all the files you need
+to get started with BYTE Small-C.  Of course, I'm presuming that you have
+a copy of MASM and LINK around, since BYTE Small-C emits assembly-language
+source.  (I don't know whether or not the output is CHASM-compatible, and
+I'm CERTAIN it's not Optasm-compatible.  However, a little work with the
+conditional branches in the CC4*.C files should fix that.)
+
+You should keep a few things in mind:
+1) This is NOT an optimizing compiler.  It THINKS it is...I left the peephole
+optimizing routine -- peephole() -- alive, but it doesn't do anything.  The
+staging buffer is passed through unmodified, and here's where you I-live-to-
+optimize gangbusters can go hog wild.  I'd like to see the results.
+
+2) This version is 8088-compatible.  An 80386 version will follow shortly.
+
+3) We'll do our best to let you know of any bug fixes via Bix and in the
+magazine, but this is NOT a supported product.  We've put it in the public
+domain so that you can take it in whatever direction you choose.
+
+4) If you create any worthwhile programs in BYTE Small-C, we ask that you
+give conspicuous credit to "those who have gone before."  Ron Cain, J.E.
+Hendrix, L.E. Payne, and me -- R. E. Grehan.  (If you ever use the
+Mac version, don't forget Steve Williams.)
+
+GETTING GOING
+
+If you're just anxious to compile stuff, I've included a working executable
+of the compiler -- CC86.EXE.  Let's say you want to compile a file called
+"hello.c".  The commands you enter are:
+   CC86 HELLO.C
+   MASM HELLO.MAC;;
+   LINK HELLO   (and when the linker asks for .LIB files, give it
+                 CLIB.LIB)
+
+HELLO.EXE will be created, and you're off and running.  Make sure
+PROLOG.H and EPILOG.H are available when you do the MASM.  These
+files contain segment info that HELLO.MAC needs.  (I'll be many of
+you see the CP/M origins of this stuff now.... ".MAC" instead of
+".ASM".  Well, if that bothers you, modify the compiler.)
+
+TIDBITS
+
+* ASSEMBLY LANGUAGE:  You can drop into inline assembly language at any time
+with the #asm...#endasm construct.  Usually, I do this within entire
+functions, like:
+
+  func(x,y)
+  int x,y;
+  {
+   #asm
+     .....assembly language code....
+   #endasm
+  }
+If you do this, keep one rule in mind: ALWAYS ALWAYS MAKE CERTAIN THE CX
+REGISTER IS CLEARED (ZERO) WHEN YOU LEAVE YOUR ROUTINE.  This is critical
+for the logical operations to work properly.  Otherwise, you can use whatever
+register you want (be careful with the SP, of course.)
+
+* CALLING CONVENTIONS: All arguments are transferred on the stack in 16-bit
+form.  Arguments are pushed in left-to-right order, and the "topmost" entry
+on the stack is the return address.  You should leave the return value in
+the BX register.  An example might make this clearer:
+
+ fadd2(a,b)    /* Add a and b, return result */
+ int a,b;
+ {
+ #asm
+    MOV BP,SP		/* Get stack pointer in BP */
+    MOV AX,2[BP]	/* Get b value */
+    MOV BX,4[BP]        /* Get a value */
+    ADD BX,AX           /* Add, result in BX */
+ #endasm
+ }
+
+Also, unless you define NOCCARGC, a called function will receive an
+argument count in the AL register. (This is how printf() knows how many
+arguments it receives.)
+
+* THE LIBRARY.  It would be impossible for me to go through a detailed
+description of all the library routines and what they do.  You should be
+able to get a good idea by reading the code itself.  Most adhere to the
+routines outlined in J.E. Hendrix's article "A New Library for Small-C".
+(You can find this reprinted in DR. DOOB'S TOOLBOOK OF C -- see the
+references at the end of this file.)
+
+The big differences occur in the fileio routines, (cseek, fread, fwrite,
+ctell, etc.)
+
+Following is a list of the library routines.  You can use your word
+processor to cut-and-paste this list into a batch file if you want to
+recreate the library CLIB.LIB.  I've also included a file for rebuilding
+the library -- LIBMAKE.TXT.  You can hand LIBMAKE.TXT to Microsoft's
+library manager (LIB).  Note that there are a couple of machine-language
+files (CALL.MAC, CEND.MAC -- used in by the system library) that you'll
+have to pass through MASM first.
+
+A determined programmer could probably make some substantial improvements
+in the execution of library routines by simply recoding most of them
+in assembly language.  I'd like to see the results if you do this.
+
+Library routine files:
+
+ ABS.C
+ ATOI.C
+ ATOIB.C
+ AVAIL.C
+ CALLOC.C
+ CLEARERR.C
+ CSEEK.C
+ CSYSLIB.C
+ CTELL.C
+ DTOI.C
+ EXIT.C
+ FCLOSE.C
+ FEOF.C
+ FERROR.C
+ FGETC.C
+ FGETS.C
+ FOPEN.C
+ FPRINTF.C
+ FPUTC.C
+ FPUTS.C
+ FREAD.C
+ FREE.C
+ FREOPEN.C
+ FSCANF.C
+ FWRITE.C
+ GETARG.C
+ GETCHAR.C
+ ISALNUM.C
+ ISALPHA.C
+ ISASCII.C
+ ISATTY.C
+ ISCNTRL.C
+ ISCONS.C
+ ISDIGIT.C
+ ISGRAPH.C
+ ISLOWER.C
+ ISPRINT.C
+ ISPUNCT.C
+ ISSPACE.C
+ ISUPPER.C
+ ISXDIGIT.C
+ ITOA.C
+ ITOAB.C
+ ITOD.C
+ ITOO.C
+ ITOU.C
+ ITOX.C
+ LEFT.C
+ LEXCMP.C
+ MALLOC.C
+ OTOI.C
+ PAD.C
+ POLL.C
+ PUTCHAR.C
+ PUTS.C
+ RENAME.C
+ REVERSE.C
+ REWIND.C
+ SIGN.C
+ STRCAT.C
+ STRCHR.C
+ STRCMP.C
+ STRCPY.C
+ STRLEN.C
+ STRNCAT.C
+ STRNCMP.C
+ STRNCPY.C
+ STRRCHR.C
+ TOASCII.C
+ TOLOWER.C
+ TOUPPER.C
+ UNGETC.C
+ UNLINK.C
+ UTOI.C
+ XTOI.C
+
+
+Of course, the Small-C compiler itself is in files:
+
+CC*.C
+
+
+FINALLY:
+
+You'll probably get a better picture of Small-C if you locate the BYTE
+benchmark programs and examine the code there (not that those programs
+are any lustrous programming examples).  Particularly if you're interested
+in doing floating-point stuff, you should look for SCFMXX.C, the floating-
+point support files.  There are also support routines for most of the
+video adapters in the VIDEO benchmark routines.
+
+Good luck.  Let me know what you think of all this.
+
+--Rick Grehan
+BYTE Magazine
+Bix: rick_g
+Compuserve: 76224,13
+
+REFERENCES
+
+Hendrix, J.E.  The Small-C Handbook.  Reston, VA: Reston Publishing
+Company, 1984.
+
+Dr. Dobb's Toolbook of C. New York, NY: Prentice-Hall, 1986.
+
+Williams, Steve. Programming the Macintosh in Assembly Language.
+Berkeley, CA: Sybex, 1986.
+
+
