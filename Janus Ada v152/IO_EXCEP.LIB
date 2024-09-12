@@ -1,0 +1,16 @@
+Package IO_Exceptions Is
+    --
+    -- IO_Exceptions for the I/O system
+    --
+
+    Status_Error : Exception;
+    Mode_Error	 : Exception;
+    Name_Error	 : Exception;
+    Use_Error	 : Exception;
+    Device_Error : Exception;
+    End_Error	 : Exception;
+    Data_Error	 : Exception;
+    Layout_Error : Exception;
+
+End IO_Exceptions;
+

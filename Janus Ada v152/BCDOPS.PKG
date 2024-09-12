@@ -1,0 +1,947 @@
+With Util, StrLib, Text_IO;
+    Pragma Debug(off); Pragma Enumtab(off);
+    Pragma RangeCheck(off); Pragma Arithcheck(off);
+@   Pragma Debug(on); Pragma Enumtab(on);
+@   Pragma RangeCheck(on); Pragma Arithcheck(on);
+    -- Debugging is on only if condcomp is on
+Package Body BCDOps Is
+
+-- Package for Binary Coded Decimals
+-- Last Modified  9/21/84
+
+-----------------------------------------------------------------------------
+-----			Property of R.R. Software, Inc.			-----
+-----									-----
+-----    Do Not Remove from Premises without consent of R.R. Software	-----
+-----									-----
+-----	The Property contained herein is proprietary in nature.		-----
+-----	Duplication, Disclosure, Retransmission or any other use,	-----
+-----	Not allowed by the licensing agreement, is unauthorized and	-----
+-----	may result in legal action.					-----
+-----									-----
+-----			Copyright 1984 By				-----
+-----			R.R. Software, Inc.				-----
+-----			P.O. Box 1512					-----
+-----			Madison WI 53701				-----
+-----------------------------------------------------------------------------
+
+-- DECLARATIONS FROM SPECIFICATION (except subprograms):
+-- Type BCD Is Private;
+-- BCD_Fore: Constant := 20;
+-- BCD_Aft: Constant := 10;
+-- Subtype Fore_Field Is Integer Range 0..BCD_Fore;
+-- Subtype Aft_Field Is Integer Range 0..BCD_Aft;
+-- Default_Fore: Fore_Field; -- := BCD_Fore;
+-- Default_Aft: Fore_Field;  -- := BCD_Aft;
+-- Private
+--     Fore_Size: Constant := (BCD_Fore + 1) / 2;
+--     Aft_Size: Constant := (BCD_Aft + 1) / 2;
+--     Total_Size: Constant := Fore_Size + Aft_Size;
+--     Subtype Digit_Index Is Integer Range 1..Total_Size;
+--     Subtype Digit Is Byte Range Byte(0)..Byte(99); -- base 100 digit
+--     Type Digit_Array Is Array (Digit_Index) Of Digit;
+--     Type Three_Way Is (NEGATIVE, ZERO, POSITIVE);
+--     Type BCD Is Record
+--	   Sign: Three_Way;
+--	   Magnitude: Digit_Array;
+--     End Record;
+-- END OF DECLARATIONS FROM SPECIFICATION
+
+Type Comparison Is (LESS, EQUAL, GREATER);
+Zero_BCD: BCD;
+One_BCD: BCD;
+Tiny_BCD: BCD; -- smallest possible Positive BCD
+Type Error_Kind Is (OVERFLOW, DIVISION_BY_ZERO, BAD_DATA, INTERNAL,
+		    NEGATIVE_EXPONENT, BAD_STRING);
+
+Function Compare (Left, Right: Digit_Array) Return Comparison Is
+Begin
+    For i In Digit_Index Loop
+	If Left (i) < Right (i) Then
+	    Return LESS;
+	Elsif Left (i) > Right (i) Then
+	    Return GREATER;
+	End If;
+    End Loop;
+    Return EQUAL;
+End Compare;
+
+Function Compare (Left, Right: BCD) Return Comparison Is
+Begin
+    If Left.Sign < Right.Sign Then
+	Return LESS;
+    Elsif Left.Sign > Right.Sign Then
+	Return GREATER;
+    Else -- signs equal
+	Case Left.Sign Is
+	    When NEGATIVE =>
+		Case Compare (Left.Magnitude, Right.Magnitude) Is
+		    When LESS => Return GREATER;
+		    When EQUAL => Return EQUAL;
+		    When GREATER => Return LESS;
+		End Case;
+	    When ZERO =>
+		Return EQUAL;
+	    When POSITIVE =>
+		Return Compare (Left.Magnitude, Right.Magnitude);
+	End Case;
+    End If;
+End Compare;
+	
+Function LT (Left, Right: BCD) Return Boolean Is -- <
+Begin
+    Return Compare (Left, Right) = LESS;
+End LT;
+
+Function GT (Left, Right: BCD) Return Boolean Is -- >
+Begin
+    Return Compare (Left, Right) = GREATER;
+End GT;
+
+Function LE (Left, Right: BCD) Return Boolean Is -- <=
+Begin
+    Return Compare (Left, Right) /= GREATER;
+End LE;
+
+Function GE (Left, Right: BCD) Return Boolean Is -- >=
+Begin
+    Return Compare (Left, Right) /= LESS;
+End GE;
+
+Function PLUS (Right: BCD) Return BCD Is -- unary +
+Begin
+    Return Right;
+End PLUS;
+
+Function MINUS (Right: BCD) Return BCD Is -- unary -
+    Result: BCD;
+Begin
+    Case Right.Sign Is
+	When NEGATIVE => Result.Sign := POSITIVE;
+	When ZERO => Result.Sign := ZERO;
+	When POSITIVE => Result.Sign := NEGATIVE;
+    End Case;
+    Result.Magnitude := Right.Magnitude;
+    Return Result;
+End MINUS;
+
+Function ABSOLUTE (Right: BCD) Return BCD Is -- abs
+    Result: BCD;
+Begin
+    If Right.Sign = ZERO Then
+	Return Right;
+    Else
+	Result.Sign := POSITIVE;
+	Result.Magnitude := Right.Magnitude;
+    End If;
+    Return Result;
+End ABSOLUTE;
+
+Function PLUS (Left, Right: Digit_Array) Return Digit_Array Is
+    Result: Digit_Array;
+    Digit_Sum: Integer;
+    Carry: Integer Range 0..1 := 0;
+Begin
+    For i In Reverse Digit_Index Loop
+	Digit_Sum := Carry + Integer(Left(i)) + Integer(Right(i));
+	    -- max of 199
+	If Digit_Sum >= 100 Then
+	    Carry := 1;
+	    Result(i) := Digit(Digit_Sum - 100);
+	Else
+	    Carry := 0;
+	    Result(i) := Digit(Digit_Sum);
+	End If;
+    End Loop;
+    If Carry > 0 Then
+	Raise Numeric_Error; -- Overflow
+    End If;
+    Return Result;
+End PLUS;
+
+Function SUB (Left, Right: Digit_Array) Return Digit_Array Is
+-- subtract right from left.  Assume magnitude of left is greater that
+-- that of right.
+    Result: Digit_Array;
+    Digit_Sum: Integer;
+    Carry: Integer Range -1..0 := 0;
+Begin
+    For i In Reverse Digit_Index Loop
+	Digit_Sum := Carry + Integer(Left(i)) - Integer(Right(i));
+	    -- max of 99, min -100
+	If Digit_Sum < 0 Then
+	    Carry := -1;
+	    Result(i) := Digit(Digit_Sum + 100);
+	Else
+	    Carry := 0;
+	    Result(i) := Digit(Digit_Sum);
+	End If;
+    End Loop;
+@   If Carry < 0 Then
+@	-- should never happen, by assumption that magnitude of left
+@	-- greater than that of right
+@	Raise Numeric_Error;
+@   End If;
+    Return Result;
+End SUB;
+
+Function PLUS (Left, Right: BCD) Return BCD Is -- binary +
+    Result: BCD;
+Begin
+    If Left.Sign = ZERO Then
+	Return Right;
+    End If;
+    If Right.Sign = ZERO Then
+	Return Left;
+    End If;
+    If Left.Sign = Right.Sign Then
+	-- same signs
+	Result.Sign := Left.Sign;
+	Result.Magnitude := PLUS (Left.Magnitude, Right.Magnitude);
+    Else
+	-- different signs
+	Case Compare (Left.Magnitude, Right.Magnitude) Is
+	    When LESS =>
+		Result.Sign := Right.Sign;
+		Result.Magnitude := SUB (Right.Magnitude, Left.Magnitude);
+	    When EQUAL =>
+		Return Zero_BCD;
+	    When GREATER =>
+		Result.Sign := Left.Sign;
+		Result.Magnitude := SUB (Left.Magnitude, Right.Magnitude);
+	End Case;
+    End If;
+    Return Result;
+End PLUS;
+
+Function MINUS (Left, Right: BCD) Return BCD Is -- binary -
+Begin
+    Return PLUS (Left, MINUS(Right));
+End MINUS;
+    
+Procedure Check_Zero (To_Check: In Out BCD) Is
+-- maintain consistency -- if all digits zero, then sign is set correctly
+Begin
+    If To_Check.Magnitude = Zero_BCD.Magnitude Then
+	To_Check.Sign := ZERO;
+    End If;
+End Check_Zero;
+
+Function TIMES (Left, Right: BCD) Return BCD Is -- *
+    Result: BCD;
+	    
+    Low_Index: Digit_Index := Total_Size;
+    High_Index: Digit_Index := 1;
+        -- lowest & highest index of nonzero digits of right
+	-- initted to impossible values to allow checking for garbaged
+	-- input data
+    Subtype Double_Digit_Index Is Integer Range 0..Total_Size + Aft_Size;    
+    Type Double_Digit_Array Is Array (Double_Digit_Index) Of Integer;
+    Zero_Magnitude, Full_Magnitude, Addend_Magnitude: Double_Digit_Array;
+
+    Subtype Int_Digit Is Integer Range 0..99;
+    
+    Left_Digit, Carry: Int_Digit;
+    Digit_Sum, This_Product: Integer;
+    Offset: Integer;
+    
+Begin
+    -- quick check for multiplies by zero
+    If Left.Sign = ZERO Or Right.Sign = ZERO Then
+	Return Zero_BCD;
+    End If;
+    
+    -- set sign of result
+    If Left.Sign = Right.Sign Then
+	Result.Sign := POSITIVE;
+    Else
+	Result.Sign := NEGATIVE;
+    End If;
+    
+    -- init a few variables
+    For This_Index In Double_Digit_Index Loop
+	Zero_Magnitude(This_Index) := 0;
+    End Loop;
+    Full_Magnitude := Zero_Magnitude;
+    
+    -- find highest & lowest non zero indices of Right
+    For Right_Index In Digit_Index Loop
+	If Right.Magnitude(Right_Index) /= Byte(0) Then
+	    Low_Index := Right_Index;
+	    Exit;
+	End If;
+    End Loop;
+    For Right_Index In Reverse Digit_Index Loop
+	If Right.Magnitude(Right_Index) /= Byte(0) Then
+	    High_Index := Right_Index;
+	    Exit;
+	End If;
+    End Loop;
+    If Low_Index > High_Index Then
+	-- zero magnitude but not zero sign, bad data
+	Raise Numeric_Error;
+    End If;
+    
+    For Left_Index In Digit_Index Loop
+	Left_Digit := Integer(Left.Magnitude(Left_Index));
+	
+	If Left_Digit /= 0 Then
+	    
+	    -- get new addend for this digit
+	    Addend_Magnitude := Zero_Magnitude;
+	    Offset := Left_Index - Fore_Size;
+	    Carry := 0;
+	    For i In Reverse Low_Index-1..High_Index Loop
+		If i = 0 Then
+		    This_Product := Carry;
+		Else
+		    This_Product :=
+			Integer(Right.Magnitude(i)) * Left_Digit + Carry;
+		End If;
+		If i + Offset <= 0 Then
+		    If This_Product /= 0 Then
+			Raise Numeric_Error; -- Overflow
+		    End If;
+		Else
+		    Carry := This_Product / 100;
+		    Addend_Magnitude (i + Offset) :=
+			This_Product - Carry * 100; -- faster than "mod"
+		End If;
+	    End Loop;
+		
+	    -- add new addend into total
+	    Carry := 0;
+	    For i In Reverse 1 .. High_Index + Offset Loop
+		Digit_Sum := Carry + Addend_Magnitude(i) + Full_Magnitude(i);
+		If Digit_Sum >= 100 Then
+		    Carry := 1;
+		    Full_Magnitude(i) := Digit_Sum - 100;
+		Else
+		    Carry := 0;
+		    Full_Magnitude(i) := Digit_Sum;
+		End If;
+	    End Loop;
+	    If Carry > 0 Then
+		Raise Numeric_Error; -- Overflow
+	    End If;
+	End If;
+    End Loop;
+    For i In Digit_Index Loop
+	Result.Magnitude (i) := Digit(Full_Magnitude(i));
+    End Loop;
+    If Full_Magnitude (Digit_Index'Last + 1) >= 50 Then
+	Result.Magnitude := PLUS (Result.Magnitude, Tiny_BCD.Magnitude);
+    End If;
+	
+    Check_Zero (Result);
+    Return (Result);
+End TIMES;
+
+Function DIVIDED_BY (Left, Right: BCD) Return BCD Is -- /
+    -- this is an original derivation based on a fair use of Algorithm D,
+    -- pages 257-258, of Donald Ervin Knuth's
+    -- *The Art of Computer Programming*,
+    -- Volume 2 "Seminumerical Algorithms", Second Edition,
+    -- Addison-Wesley 1981.
+    Subtype Double_Digit_Index Is
+	Integer Range -1..Total_Size+Total_Size+Aft_Size+2;    
+    Type Double_Digit_Array Is
+	Array (Double_Digit_Index) Of Integer Range 0..99;
+    U, V, Q: Double_Digit_Array;
+    N, M, D, Guess: Integer;
+    L_Leading_Zeroes, L_Trailing_Zeroes,
+    R_Leading_Zeroes, R_Trailing_Zeroes: Integer := 0;
+    This_Product, Carry: Integer;
+    Result: BCD;
+    Need_To_Round_Up: Boolean := true; -- tie breaker initialization --
+	    -- when exactly even, do round up
+Begin
+    -- check for division of or by zero
+    If Right.Sign = ZERO Then
+	Raise Numeric_Error; -- Division by zero
+    End If;
+    If Left.Sign = ZERO Then
+	Return Zero_BCD;
+    End If;
+    
+    -- set sign of result
+    If Left.Sign = Right.Sign Then
+	Result.Sign := POSITIVE;
+    Else
+	Result.Sign := NEGATIVE;
+    End If;
+    
+    -- zero out U, V, Q
+    For i In Double_Digit_Index Loop
+	U(i) := 0;
+    End Loop;
+    V := U;
+    Q := U;
+    
+    -- copy digits of Left to U
+    While Left.Magnitude(L_Leading_Zeroes + 1) = Byte(0) Loop
+	L_Leading_Zeroes := L_Leading_Zeroes + 1;
+	If L_Leading_Zeroes = Total_Size Then
+	    -- invalid data, all zeroes in magnitude but sign not ZERO
+	    Raise Numeric_Error;
+	End If;
+    End Loop;
+    While Left.Magnitude(Total_Size - L_Trailing_Zeroes) = Byte(0) Loop
+	L_Trailing_Zeroes := L_Trailing_Zeroes + 1;
+    End Loop;
+    For i In L_Leading_Zeroes + 1 .. Total_Size - L_Trailing_Zeroes Loop
+	U(i - L_Leading_Zeroes) := Integer(Left.Magnitude(i));
+    End Loop;
+    
+    -- copy digits (except leading & trailing zeroes) of Right to V
+    While Right.Magnitude(Total_Size - R_Trailing_Zeroes) = Byte(0) Loop
+	R_Trailing_Zeroes := R_Trailing_Zeroes + 1;
+	If R_Trailing_Zeroes = Total_Size Then
+	    -- invalid data, all zeroes in magnitude but sign not ZERO
+	    Raise Numeric_Error;
+	End If;
+    End Loop;
+    If R_Trailing_Zeroes > L_Trailing_Zeroes + Aft_Size Then
+	-- we must keep some of the trailing zeroes, since the
+	-- corresponding digits on the left are non-zero
+	R_Trailing_Zeroes := L_Trailing_Zeroes + Aft_Size;
+    End If;
+    While Right.Magnitude(R_Leading_Zeroes + 1) = Byte(0) Loop
+	R_Leading_Zeroes := R_Leading_Zeroes + 1;
+    End Loop;
+    For i In R_Leading_Zeroes + 1..Total_Size - R_Trailing_Zeroes Loop
+	V(i - R_Leading_Zeroes) := Integer(Right.Magnitude(i));
+    End Loop;
+    
+    -- calculate M and N
+    N := Total_Size - R_Leading_Zeroes - R_Trailing_Zeroes;
+    M := Aft_Size + R_Leading_Zeroes - L_Leading_Zeroes;
+    If M < -1 Then
+	-- result would be way too small
+	-- if M = -1, then result is too small also, but might round up
+	-- to Tiny_BCD
+	Return (Zero_BCD);
+    End If;
+    
+    -- normalize
+    D := 100 / ( V(1) + 1 );
+    If D > 1 Then
+	Carry := 0;
+	For i In Reverse 0..M+N Loop
+	    This_Product := U(i) * D + Carry;
+	    Carry := This_Product / 100;
+	    U(i) := This_Product - Carry * 100; -- faster than mod
+	End Loop;
+	-- Carry is reset to 0 by above
+	For i In Reverse 1..N Loop
+	    This_Product := V(i) * D + Carry;
+	    Carry := This_Product / 100;
+	    V(i) := This_Product - Carry * 100; -- faster than mod
+	End Loop;
+    End If;
+    
+    For j In 0..M Loop
+	-- each time through the loop gets a single digit of the quotient
+    
+	-- guess right answer (always either right or 1 too high)
+	If U(j) = V(1) Then
+	    Guess := 99; -- DEPENDS ON BASE 100
+	Else
+	    Guess := ( 100 * U(j) + U(j+1) ) / V(1);
+	End If;
+	While (Guess * V(2) + 99 - U(j+2)) / 100 >
+	       100*U(j) + U(j+1) - Guess*V(1) Loop
+	    Guess := Guess - 1;
+	End Loop;
+	
+	-- multiply and subtract
+	Carry := 0;
+	For i In Reverse j .. N+j Loop
+	    This_Product := U(i) + Carry - V(i-j) * Guess;
+	    U(i) := This_Product mod 100;
+	    Carry := (This_Product - U(i)) / 100;
+		-- must be careful here, since This_Product could be negative
+	End Loop;
+	
+	If Carry >= 0 Then
+	    -- guess was right
+	    Q(j) := Guess;
+	Else
+	    -- guess was one too high; add back
+	    Q(j) := Guess - 1;
+	    Carry := 0;
+	    For i In Reverse j .. j+N Loop
+		This_Product := U(i) + V(i-j) + Carry;
+		If This_Product >= 100 Then
+		    U(i) := This_Product - 100;
+		    Carry := 1;
+		Else
+		    U(i) := This_Product;
+		    Carry := 0;
+		End If;
+	    End Loop;
+	End If;
+    End Loop;
+    
+    -- convert answer into BCD format
+    For i In 0..M - Total_Size Loop
+	If Q(i) /= 0 Then
+	    Raise Numeric_Error; -- Overflow
+	End If;
+    End Loop;
+    Result.Magnitude := Zero_BCD.Magnitude;
+    For i In M + 1 - Total_Size .. M Loop
+	If i >= 0 Then
+	    Result.Magnitude(i + Total_Size - M) := Byte(Q(i));
+	End If;
+    End Loop;
+	    
+    -- check whether we need to round up
+    -- first, add remainder to itself
+    U(M) := 0;
+    Carry := 0;
+    For i In Reverse M..M+N Loop
+	This_Product := 2 * U(i) + Carry;
+	If This_Product >= 100 Then
+	    U(i) := This_Product - 100;
+	    Carry := 1;
+	Else
+	    U(i) := This_Product;
+	    Carry := 0;
+	End If;
+    End Loop;
+    -- now compare doubled remainder to divisor
+    For i In 0..N Loop
+	If V(i) /= U(i+M) Then
+	    Need_To_Round_Up := V(i) < U(i+M);
+	    Exit;
+	End If;
+    End Loop;
+    If Need_To_Round_Up Then
+	Result.Magnitude := PLUS (Result.Magnitude, Tiny_BCD.Magnitude);
+    End If;
+	
+    -- check whether answer is zero & return it
+    Check_Zero (Result);
+    Return Result;
+End DIVIDED_BY;
+
+Function TO_POWER (Left: BCD; Right: Integer) Return BCD Is -- **
+Begin
+    If Right < 0 Then
+	Raise Constraint_Error; -- Illegal raise to negative power
+    Elsif Right = 0 Then
+	Return One_BCD;
+    Elsif Right = 1 Then
+	Return Left;
+    Elsif Left.Sign = ZERO Then
+	Return Zero_BCD;
+    Else
+	Declare
+	    Temp_BCD: BCD := TO_POWER (Left, Right / 2);
+	Begin
+	    Temp_BCD := TIMES (Temp_BCD, Temp_BCD);
+	    If Right mod 2 = 1 Then
+		Return TIMES(Temp_BCD, Left);
+	    Else
+		Return Temp_BCD;
+	    End If;
+	End;
+    End If;
+End TO_POWER;
+
+Function Int_To_BCD (Right: Integer) Return BCD Is
+    Result: BCD;
+    Neg_Abs_Right: Integer;
+	-- the negative of the absolute value of right. We use negatives
+	-- to avoid problems with Integer'First.
+	-- For example, note that the value of this variable cannot be
+	-- set by an expression like "- (abs Right)", because this would
+	-- screw up for Integer'First.
+    Next_Value: Integer;
+    This_Index: Integer := Fore_Size;
+Begin
+    If Right = 0 Then
+	Return Zero_BCD;
+    End If;
+    If Right > 0 Then
+	Result.Sign := POSITIVE;
+	Neg_Abs_Right := - Right;
+    Else
+	Result.Sign := NEGATIVE;
+	Neg_Abs_Right := Right;
+    End If;
+    Result.Magnitude := Zero_BCD.Magnitude;
+    While Neg_Abs_Right < 0 Loop
+	If This_Index = 0 Then
+	    Raise Numeric_Error; -- Overflow
+	End If;
+	Next_Value := Neg_Abs_Right / 100;
+	Result.Magnitude(This_Index) :=
+	    Digit (100 * Next_Value - Neg_Abs_Right); -- faster than rem
+	Neg_Abs_Right := Next_Value;
+	This_Index := This_Index - 1;
+    End Loop;
+    Return(Result);
+End Int_To_BCD;
+    
+Function BCD_To_Int (Right: BCD) Return Integer Is
+ -- round to nearest integer
+    Result: Integer := 0;
+    This_Digit: Integer;
+Begin
+    If Right.Sign = ZERO Then
+	Return 0;
+    End If;
+    For i In 1..Fore_Size Loop
+	This_Digit := Integer(Right.Magnitude(i));
+	Pragma Arithcheck(On);
+	Begin
+	    Result := Result * 100 - This_Digit; -- Build negative so that
+						 -- Integer'First works ok
+	Exception
+	    When Numeric_Error => Raise Numeric_Error;
+	    -- Reraise numeric error so that we dont get "integer overflow"
+	    -- message.  Numeric error here implies overflow.
+	End;
+	Pragma Arithcheck(off);
+@	Pragma Arithcheck(on);
+    End Loop;
+    If Right.Magnitude(Fore_Size + 1) >= Byte(50) Then
+	If Result = Integer'First Then
+	    Raise Numeric_Error; -- Overflow
+	Else
+	    Result := Result - 1; -- Build negative -- see above
+	End If;
+    End If;
+    If Right.Sign = POSITIVE Then
+	If (Result = Integer'First) and (Integer'First /= -Integer'Last) Then
+	    Raise Numeric_Error; -- Overflow
+	Else
+	    Result := - Result;
+	End If;
+    End If;
+    Return Result;
+End BCD_To_Int;
+	
+Function Str_To_BCD (Right: String) Return BCD Is
+    Result: BCD;
+    Str_Len: Integer := StrLib.Length(Right);
+    Non_Zero_Digit_Found, E_found, Dot_found, Bad: Boolean := false;
+    This_Char: Character;
+    Last_Char: Character := ASCII.NUL;
+    Exponent_Is_Negative: Boolean := false;
+    Mantissa_Pos: Integer := 1;
+    Implicit_Exponent: Integer := 0;
+    Explicit_Exponent: Integer := 0;
+    Exponent: Integer;
+    This_Digit: Integer;
+    Index: Digit_Index;
+Begin
+    Result.Sign := POSITIVE; -- until shown otherwise
+    
+    -- check to make sure that string is well formed
+    For i In 1..Str_Len Loop
+	This_Char := Right(i);
+	Case This_Char Is
+	    When 'E' | 'e' =>
+		If E_found Or Last_Char Not In '0'..'9' Then
+		    Bad := True;
+		Else
+		    E_found := true;
+		End If;
+	    When '+' | '-' =>
+		If Last_Char = 'e' Or Last_Char = 'E' Then
+		    Exponent_Is_Negative := This_Char = '-';
+		Elsif Last_Char = ASCII.NUL Then
+		    If This_Char = '-' Then
+			Result.Sign := NEGATIVE;
+		    End If;
+		Else
+		    Bad := True;
+		End If;
+	    When '_' =>
+		If Last_Char Not In '0'..'9' Then
+		    Bad := true;
+		End If;
+	    When '0'..'9' =>
+		If E_found Then
+		    -- in exponent
+		    This_Digit :=
+			Character'Pos(This_Char) - Character'Pos('0');
+		    Pragma Arithcheck(On);
+		    Begin
+			Explicit_Exponent :=
+			    Explicit_Exponent * 10 + This_Digit;
+		    Exception
+			When Numeric_Error => Raise Numeric_Error;
+			-- Indicates overflow.  We reraise numeric error
+			-- to prevent the "integer overflow" message from
+			-- occurring.
+		    End;
+		    Pragma Arithcheck(off);
+@		    Pragma Arithcheck(on);
+		Else
+		    -- not in exponent
+		    If Non_Zero_Digit_Found Then
+			Implicit_Exponent := Implicit_Exponent + 1;
+		    End If;
+		    If Dot_Found Then
+			Implicit_Exponent := Implicit_Exponent - 1;
+		    End If;
+		    If This_Char /= '0' Then
+			Non_Zero_Digit_Found := true;
+		    End If;
+		End If;
+	    When '.' =>
+		If Dot_Found Or E_Found Or Last_Char Not In '0'..'9' Then
+		    Bad := True;
+		Else
+		    Dot_Found := True;
+		End If;
+	    When Others =>
+		Bad := True;
+	End Case;
+	Last_Char := This_Char;
+    End Loop;
+    If Bad Or Last_Char Not In '0'..'9' Then
+	Raise Numeric_Error; -- BAD STRING
+    End If;
+    
+    -- if mantissa is zero, return zero
+    If Not Non_Zero_Digit_Found Then
+	Return Zero_BCD;
+    End If;
+    
+    -- move Mantissa_Pos to position of first non-zero digit
+    While Right(Mantissa_Pos) Not In '1'..'9' Loop
+	Mantissa_Pos := Mantissa_Pos + 1;
+    End Loop;
+	
+    -- get total exponent
+    If Exponent_Is_Negative Then
+	Explicit_Exponent := - Explicit_Exponent;
+    End If;
+    If ((Explicit_Exponent > 0) = (Implicit_Exponent > 0)) And Then
+       Integer'Last - ( abs Explicit_Exponent ) < abs Implicit_Exponent Then
+	-- exponents have same sign and would overflow if added
+	Raise Numeric_Error; -- Overflow
+    End If;
+    Exponent := Implicit_Exponent + Explicit_Exponent;
+    If Exponent >= 2 * Fore_Size Then
+	Raise Numeric_Error; -- Overflow
+    Elsif Exponent < - 1 - 2 * Aft_Size Or Else
+          (Exponent = - 1 - 2 * Aft_Size And Then
+	   Right(Mantissa_Pos) < '5') Then
+	-- underflow
+	Return Zero_BCD;
+    End If;
+    
+    -- fix result magnitude
+    Result.Magnitude := Zero_BCD.Magnitude;
+    For i In 2 * Fore_Size - Exponent .. 2 * Total_Size Loop
+	
+	Index := (i + 1) / 2; -- since we pack 2 decimal digits to the byte
+	If Boolean'Val(2*Index - i) Then
+	    -- high order decimal digit
+	    Result.Magnitude(Index) := Digit (10 *
+		(Character'Pos(Right(Mantissa_Pos)) - Character'Pos('0')));
+	Else
+	    -- low order decimal digit
+	    Result.Magnitude(Index) :=
+		Digit (Integer(Result.Magnitude(Index)) +
+		    Character'Pos(Right(Mantissa_Pos)) - Character'Pos('0'));
+	End If;
+	
+	-- move Mantissa_Pos to position of next digit
+	Mantissa_Pos := Mantissa_Pos + 1;
+	Exit When Mantissa_Pos > Str_Len Or Else Right(Mantissa_Pos) = 'E'
+	   Or Else Right(Mantissa_Pos) = 'e';
+	If Right(Mantissa_Pos) = '.' Or Right(Mantissa_Pos) = '_' Then
+	    Mantissa_Pos := Mantissa_Pos + 1;
+	End If;
+    End Loop;
+    If Mantissa_Pos <= Str_Len And Then Right(Mantissa_Pos) In '5'..'9' Then
+	-- need to round up last digit
+	Result.Magnitude := PLUS (Result.Magnitude, Tiny_BCD.Magnitude);
+    End If;
+	
+    Return Result;
+End Str_To_BCD;
+    
+Procedure Put (To:   Out String;
+	       Item: In BCD;
+	       Fore: In Fore_Field;
+	       Aft:  In Aft_Field) Is
+    Result: String;
+    Index: Digit_Index := 1;
+    String_Index: Natural;
+    String_Index_Is_Odd: Boolean;
+Begin
+    
+    -- set sign
+    If Item.Sign = NEGATIVE Then
+	Result := " "; -- Opsym problem
+	Result(1) := '-';
+    Else
+	Result := "";
+    End If;
+    
+    -- skip leading zeroes
+    While Index <= Fore_Size And Then Item.Magnitude(Index) = Byte(0) Loop
+	Index := Index + 1;
+    End Loop;
+    
+    If Index > Fore_Size Then
+	-- zero before decimal point
+	Result := Result & "0";
+    Else
+	-- add digits before decimal point
+	-- handle first character specially to avoid leading zero
+	If Item.Magnitude(Index) < Byte(10) Then
+	    Result := Result & StrLib.Char_To_Str(Character'Val
+		      (Character'Pos('0') + Integer(Item.Magnitude(Index))));
+	    Index := Index + 1;
+	End If;
+	While Index <= Fore_Size Loop
+	    Result := Result &
+	      StrLib.Char_To_Str(Character'Val
+	       (Character'Pos('0') + Integer(Item.Magnitude(Index)) / 10)) &
+	      StrLib.Char_To_Str(Character'Val
+	       (Character'Pos('0') + Integer(Item.Magnitude(Index)) mod 10));
+	    Index := Index + 1;
+	End Loop;
+    End If;
+	
+    -- fill in leading spaces and add decimal point
+    For i In StrLib.Length(Result)..Fore - 1 Loop
+	Result := " " & Result;
+    End Loop;
+    Result := Result & ".";
+    
+    -- add trailing digits
+    String_Index := 1; -- keep track of # of digits after decimal point
+    Loop -- exits in middle -- always add at least one digit
+	Result := Result &
+	    StrLib.Char_To_Str(Character'Val
+	       (Character'Pos('0') + Integer(Item.Magnitude(Index)) / 10));
+	Exit When String_Index >= Aft;
+	String_Index := String_Index + 1;
+	Result := Result &
+	    StrLib.Char_To_Str(Character'Val
+	       (Character'Pos('0') + Integer(Item.Magnitude(Index)) mod 10));
+	Exit When String_Index >= Aft;
+	String_Index := String_Index + 1;
+	Index := Index + 1;
+    End Loop;
+    
+    -- check for rounding
+    String_Index_Is_Odd := String_Index mod 2 = 1;
+    If String_Index < 2 * Aft_Size And Then
+      ((String_Index_Is_Odd And Then
+		 Integer(Item.Magnitude(Index)) mod 10 >= 5) Or Else
+       ((not String_Index_Is_Odd) And Then
+		 Item.Magnitude (Index + 1) >= Byte(50))) Then
+	-- need to round up
+	String_Index := StrLib.Length(Result);
+	Loop
+	    If String_Index = 0 Then
+		-- all string was all nines & decimal point
+		Result := "1" & Result;
+		Exit;
+	    Else
+		Case Result(String_Index) Is
+		    When '0'..'8' =>
+			Result(String_Index) :=
+			    Character'Succ(Result(String_Index));
+			Exit;
+		    When '9' =>
+			Result(String_Index) := '0';
+		    When '.' => Null;
+		    When ' ' =>
+			Result(String_Index) := '1';
+			Exit;
+		    When Others => -- should never occur
+			Declare
+			    Internal_BCD_Error: Exception;
+			Begin
+			    Raise Internal_BCD_Error;
+			End;
+		End Case;
+		String_Index := String_Index - 1;
+	    End If;
+	End Loop;
+    End If;
+	    
+    To := Result;
+End Put;
+
+Procedure Put (To:   Out String;
+	       Item: In BCD;
+	       Fore: In Fore_Field) Is
+Begin
+    Put (To, Item, Fore, Default_Aft);
+End Put;
+
+Procedure Put (To:   Out String;
+	       Item: In BCD) Is
+Begin
+    Put (To, Item, Default_Fore, Default_Aft);
+End Put;
+
+Procedure Put (Fyle: In Text_IO.File_Type;
+	       Item: In BCD;
+	       Fore: In Fore_Field;
+	       Aft:  In Aft_Field) Is
+    To: String;
+Begin
+    Put (To, Item, Fore, Aft);
+    Text_IO.Put (Fyle, To);
+End Put;
+
+Procedure Put (Fyle: In Text_IO.File_Type;
+	       Item: In BCD;
+	       Fore: In Fore_Field) Is
+Begin
+    Put (Fyle, Item, Fore, Default_Aft);
+End Put;
+
+Procedure Put (Fyle: In Text_IO.File_Type;
+	       Item: In BCD) Is
+Begin
+    Put (Fyle, Item, Default_Fore, Default_Aft);
+End Put;
+
+Procedure Put (Item: In BCD;
+	       Fore: In Fore_Field;
+	       Aft:  In Aft_Field) Is
+    To: String;
+Begin
+    Put (To, Item, Fore, Aft);
+    Text_IO.Put (To);
+End Put;
+
+Procedure Put (Item: In BCD;
+	       Fore: In Fore_Field) Is
+Begin
+    Put (Item, Fore, Default_Aft);
+End Put;
+
+Procedure Put (Item: In BCD) Is
+Begin
+    Put (Item, Default_Fore, Default_Aft);
+End Put;
+
+Begin -- Initialization Of BCDOps
+    Zero_BCD.Sign := ZERO;
+    For i In Digit_Index Loop
+	Zero_BCD.Magnitude(i) := Byte(0);
+    End Loop;
+    One_BCD := Int_To_BCD (1);
+    Tiny_BCD.Sign := POSITIVE;
+    Tiny_BCD.Magnitude := Zero_BCD.Magnitude;
+    Tiny_BCD.Magnitude(Total_Size) := Byte(1);
+    Default_Fore := BCD_Fore;
+    Default_Aft := BCD_Aft;
+End BCDOps;
+

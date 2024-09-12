@@ -1,0 +1,31 @@
+With Text_IO; Use Text_IO;
+Package RText_IO Is
+
+-- RR Software additional Text_IO routine for JANUS/Ada Version 1.5.1
+
+    -- Copyright 1982,1983,1984  RR Software, Inc.,
+    -- P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+Procedure Put_Hex(val : In Integer);
+    -- Write the integer in hexidecimal (no special format)
+Procedure Put_Hex(File : In File_Type; val : In Integer);
+    -- Write the integer in hexidecimal (no special format)
+Procedure Putw(str : In LString; width : In Integer);
+    -- Write the string to the default file, with blank padding to fill width
+Procedure Putw(File : In File_Type; Str : In LString; width : In Integer);
+    -- Write the string to fyle, with blank padding to fill width.
+Function Get_Line Return LString;
+    -- The old Get_Line Function
+Function Get_Line (File : In File_Type) Return LString;
+    -- Ditto.
+Function Keypress Return Boolean;
+    -- Returns true if a key has been pressed since last read
+Function Keypress (File : In File_Type) Return Boolean;
+    -- Returns true if a key has been pressed since last read
+Procedure Purge (name : In String);
+    -- Deletes file name without an error if it does not exist
+
+End RText_IO;
+

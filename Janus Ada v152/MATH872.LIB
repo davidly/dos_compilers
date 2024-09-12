@@ -1,0 +1,29 @@
+Package Math872 Is
+    -- Mathematic functions library
+    -- These routines do no checking, have weird use restrictions, and
+    -- should not be used from user programs.  Use Mathlib instead.
+
+    -- Copyright 1983  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    Function Two_Exp (Val : In Long_Float) Return Long_Float;
+	-- Returns 2 ** Val
+
+    Function Exp (Val : In Long_Float) Return Long_Float;
+	-- Returns E ** Val
+
+    Function Power (X,Y : In Long_Float) Return Long_Float;
+	-- Returns X ** Y
+
+    Function Sin (Angle : In Long_Float) Return Long_Float;
+	-- Returns the Sine of the angle
+
+    Function Cos (Angle : In Long_Float) Return Long_Float;
+	-- Returns the Cosine of the angle
+
+    Function Tan (Angle : In Long_Float) Return Long_Float;
+	-- Returns the Tangent of the Angle
+
+End Math872;
+

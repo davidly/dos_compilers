@@ -1,0 +1,52 @@
+Package Longops Is
+
+    -- Copyright 1983  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    -- Long Integer Operations
+    -- Last Modified 3/27/83
+    -- The names of these routines will be changed when operator overloading
+    -- is implemented.
+
+    Type Long_Integer Is Private;
+
+    -- Normal Assignment and Equality operators are used
+
+    Function Labs (Item : In Long_Integer) Return Long_Integer;
+	-- Operator "ABS" - Take the absolute value of operand
+    Function Lneg (Item : In Long_Integer) Return Long_Integer;
+	-- Operator "-" - Negate the Operand
+    Function Lint (Item : In Integer) Return Long_Integer;
+	-- Type Conversion Integer => Long_Integer
+    Function L_to_int (Item : In Long_Integer) Return Integer;
+	-- Type Conversion Long_Integer => Integer
+
+    Function Ladd (Item,Item2 : In Long_Integer) Return Long_Integer;
+	-- Operator "+" - Long Integer addition
+    Function Lsub (Item,Item2 : In Long_Integer) Return Long_Integer;
+	-- Operator "-" - Long Integer subtraction
+    Function Lmul (Item,Item2 : In Long_Integer) Return Long_Integer;
+	-- Operator "*" - Long Integer multiply
+    Function Ldiv (Item,Item2 : In Long_Integer) Return Long_Integer;
+	-- Operator "/" - Long Integer division
+    Function Lrem (Item,Item2 : In Long_Integer) Return Long_Integer;
+	-- Operator "REM" - Long Integer remainder
+    Function Lmod (Item,Item2 : In Long_Integer) Return Long_Integer;
+	-- Operator "MOD" - Long Integer modulus
+
+    Function Lgt (Item,Item2 : In Long_Integer) Return Boolean;
+	-- Operator ">" - Long Integer greater than
+    Function Lge (Item,Item2 : In Long_Integer) Return Boolean;
+	-- Operator ">=" - Long Integer greater than or equals
+    Function Llt (Item,Item2 : In Long_Integer) Return Boolean;
+	-- Operator "<" - Long Integer less than
+    Function Lle (Item,Item2 : In Long_Integer) Return Boolean;
+	-- Operator "<=" - Long Integer less than or equals
+
+Private
+    Type Long_Integer Is Record
+		a,b : Integer;
+	End Record;
+End Longops;
+

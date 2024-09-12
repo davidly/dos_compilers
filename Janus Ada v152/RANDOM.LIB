@@ -1,0 +1,21 @@
+Package random Is
+
+    --
+    -- Simple random number generator
+    --
+
+    Procedure Set_Seed;
+	-- Initialize the random number generator to its default seeds
+
+    Procedure Set_Seed(x,y,z : Integer);
+	-- Sets the seeds to any three arbitrary integers
+
+    Function Rand Return Long_float;
+	-- Returns a random number in the range 0..1
+
+    Function Srand Return Float;
+	-- Returns a random number in the range 0..1
+
+End random;
+
+

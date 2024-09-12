@@ -1,0 +1,36 @@
+Pragma RangeCheck(off); Pragma Debug(off); Pragma Arithcheck(off);
+@Pragma Rangecheck(on); Pragma Debug(on); Pragma Arithcheck(on);
+
+WITH Text_IO;
+Use Text_IO;
+
+Procedure Sieve Is
+--      From Byte Sept. 81 Benchmark evaluation
+    SIZE : Constant := 8190;
+
+    Flags : Array(0..SIZE) Of Boolean;
+    Count,k,Prime : Integer;
+
+Begin
+        Put("10 Iterations"); New_line;
+Ten :   For Iter In 1..10 Loop
+            -- The Loop labels are optional
+            Count := 0;
+Clear :     For i In 0..SIZE Loop
+                Flags(i) := TRUE;
+            End Loop Clear;
+Primes:     For i In 0 .. SIZE Loop
+                If Flags(i) Then
+                    Prime := i + i + 3;
+                    k := i + Prime;
+                    While k <= SIZE Loop
+                        Flags(k) := FALSE;
+                        k := k + Prime;
+                    End Loop;
+                    Count := Count + 1;
+@                   Put("Prime "); Put(Prime); New_line;
+                End If;
+            End Loop Primes;
+        End Loop Ten;
+        Put(Count); Put(" Primes"); New_line;
+End Sieve;

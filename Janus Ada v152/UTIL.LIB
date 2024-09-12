@@ -1,0 +1,25 @@
+Package Util Is
+    -- Spec for the package util
+    -- Last modifed  5/13/85
+    -- Contains the utility routines.
+
+    -- Copyright 1982,1983,1984,1985 RR Software, Inc., P.O. Box 1512,
+    --  Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+
+    Procedure Err_Exit;
+    Procedure Halt;
+    Function Hi (val : Integer) Return Byte;
+    Function Lo (val : Integer) Return Byte;
+    Function Memavail Return Integer;
+    Function Maxavail Return Integer;
+    Function Command_Line Return String;
+	-- Returns the command line
+
+    Procedure Halt(Code : In Integer);
+	-- Halts, returning the return code Code
+
+End Util;
+

@@ -1,0 +1,81 @@
+With Jlib86; Use Jlib86;
+Package Bas2_IO Is
+    --
+    -- MS-DOS 2.xx Assembly Language I/O System
+    -- Used exclusively by Basic_IO (MS-DOS 2.xx version)
+    --
+    -- This library is not intended to be used directly.  Use SEQ_IO, TEXT_IO,
+    -- and RANDIO instead!!!  RR SOFTWARE, INC. DOES NOT SUPPORT THE DIRECT
+    -- USE OF THIS LIBRARY.
+    --
+    -- These routines are written in Assembly Language to make them
+    -- easier to maintain (than many lines of in-line ASM code).
+    -- Last Modified  1/31/85
+    -- Written 11/26/84
+    --
+
+    IO_Code : Integer;
+
+    Procedure Open_File(Handle : Out Integer; Name : In String;
+	Mode : In Integer);
+	-- Open the disk file (or MS-DOS device) with the name name, give
+	-- it mode mode.  Set IO_Code to the return code (or 0 if OK).
+
+    Procedure Create_File(Handle : Out Integer; Name : In String;
+	Mode : In Integer);
+	-- Open the disk file (or MS-DOS device) with the name name, give
+	-- it mode mode.  Set IO_Code to the return code (or 0 if OK).
+
+    Procedure Delete_File (Name : In String);
+	-- Delete the (disk)file named Name.
+
+    Function Is_Dev (Fyle : In File_Ptr) Return Boolean;
+	-- Is this (disk)file a device?  (A disk file is one with a handle!)
+
+    Function Is_End (Fyle : In File_Ptr) Return Boolean;
+	-- Is the (disk)file at it's end?
+
+    Function File_Ready (Fyle : In File_Ptr) Return Boolean;
+	-- Is the file ready?
+
+
+    Procedure LSeek (Fyle : In File_Ptr; blk : In Natural);
+	-- Seek to the location specified by block.
+
+    Procedure Read_At (Fyle : In File_Ptr; addr : In Integer);
+	-- Read from file into memory at addr.  (Blk_Size bytes)
+
+    Procedure Write_At (Fyle : In File_Ptr; addr : In Integer);
+	-- Write from file into memory at addr.  (Blk_Size bytes)
+
+    Function File_Size (Fyle : In File_Ptr) Return Integer;
+	-- Return the file size in Blk_Size blocks.
+
+
+    Procedure Bad_Device_Err;
+	-- Raise the Use_Error exception with the Bad Device code
+	-- This will print the string (file_name) found in Jlib86.Temp_String
+	-- if the Exception is unhandled.
+
+    Procedure Not_Found_Err;
+	-- Raise the Name_Error exception with the Not Found code
+	-- This will print the string (file_name) found in Jlib86.Temp_String
+	-- if the Exception is unhandled.
+
+    Procedure Bad_Filename;
+	-- Raise the Name_Error exception with the Bad Filename code
+	-- This will print the string (file_name) found in Jlib86.Temp_String
+	-- if the Exception is unhandled.
+
+    Procedure Mode_Err (Fyle : In File_Ptr);
+	-- Raise the Mode_Error exception with the file name.
+
+
+    Function Environ_Char (Index : In Integer) Return Character;
+	-- Returns the next character in the environment
+
+    Function Skip_Environ_String (Index : In Integer) Return Integer;
+	-- Skip an ASCIZ string in the environment
+
+End Bas2_IO;
+

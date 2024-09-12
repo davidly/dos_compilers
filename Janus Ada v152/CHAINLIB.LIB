@@ -1,0 +1,24 @@
+Package Chainlib Is
+    -- The program chaining and calling library
+    -- Last modified 8/ 2/82
+
+    -- Copyright 1982  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    Procedure Chain(Str : In String);
+	-- Chains a program, destroying the data segment
+	-- Note: The Jlib86 library must be the same for both the chaining
+	-- and chained programs for this routine to work
+    Procedure Prog_Call(Str : In String);
+	-- Calls a program
+    Procedure Prog_Return;
+	-- Returns from a called program
+
+End Chainlib;
+- these libraries.  All Other rights reserved.
+
+    Procedure Chain(Str : In String);
+	-- Chains a program, destroying the data segment
+	-- Note: The Jlib86 library must be the same for both the chaining
+	-- and chained programs for this routine to w

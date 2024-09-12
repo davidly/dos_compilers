@@ -1,0 +1,79 @@
+Package Profiler Is
+    --
+    -- JANUS/Ada Profiler.
+    -- User entry points.
+    --
+    -- Copyright (c) 1984  RR Software, Inc.  All rights reserved.
+    --
+    -- Designed  1/25/84
+    -- Last Modified 1/26/84
+    --
+
+    Type Chart_Types Is (Calls, Total_Time, Ave_Total_Time, Min_Total_Time,
+	Max_Total_Time, Exec_Time, Ave_Exec_Time, Min_Exec_Time,
+	Max_Exec_Time);
+
+    Type Chart_Width Is (Narrow,Wide);
+
+    Procedure Trace_On;
+	--
+	-- This routine turns on the printing of the name of each subprogram
+	-- as it is entered and exited.
+	--
+
+    Procedure Trace_Off;
+	--
+	-- This routine turns off the printing of the name of each subprogram
+	-- as it is entered and exited.  Trace is Off by default.
+	--
+
+    Procedure Clear;
+	--
+	-- Clears the profiling information.  Useful if only a part of the
+	-- program is to be profiled.
+	--
+
+    Procedure Ignore (name : In String);
+	--
+	-- The subprogram name is ignored.  No tracing will be done on it,
+	-- and it will be treated as if it does not exist.  It will not
+	-- show up in charts or print_outs, either.  The name will
+	-- be matched exactly, so it should be capitalized, and it should
+	-- be the full expanded name of the subprogram (I.e. "IO.OPEN").
+	-- Ignores are cleared by Clear.
+	--
+
+    Procedure Enter_Part(name : In String);
+	--
+	-- Name is marked in the profile as if it is a subprogram.
+	-- A matching Exit_Part with the same name must be executed
+	-- somewhere in the same subprogram as the Enter_Part call.
+	-- Remember that all subprograms are profiled automatically -
+	-- this routine is only intended to be used to profile parts of
+	-- a subprogram.  Use this routine carefully, as a missing exit_part
+	-- will screw up the profiler.
+	--
+
+    Procedure Exit_part(name : In String);
+	--
+	-- Mark the exit of a part of a subprogram.  See comments above.
+	--
+	
+    Procedure Print_Profile;
+	--
+	-- Outputs the current profile.  May be called as often as desired.
+	--
+
+    Procedure Chart (which : Chart_types; width : Chart_Width);
+	--
+	-- Outputs a chart of the current profile for the item which.
+	-- May be called as often as desired.
+	-- If width = Narrow, an 80 col. chart is produced.  Otherwise,
+	-- a 132 column chart is produced.
+	-- The output of both chart and print_profile both are written to
+	-- Current_Output.  The output can be redirected to a file with
+	-- Set_output.
+	--
+
+End Profiler;
+

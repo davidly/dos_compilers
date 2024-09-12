@@ -1,0 +1,105 @@
+Package Float87 Is
+
+    -- Floating Point Operations Package
+    -- Written August 1983
+    -- Last Modified  8/30/84
+
+    -- This module works on the same principle as the 8087.  Not all 8087
+    -- operations are supported, however, only those that are needed are
+    -- supported.  Supported types are Short Float (4 Bytes), Long Float
+    -- (8 Bytes), Short Integer (2 Bytes), Long Integer (4 Bytes), and
+    -- Temporary Float (Size depends on implementation - Max. is 10 Bytes).
+
+    -- Initialization is performed by the package body.
+
+    -- This specification cannot be modified without modifying the compiler's
+    -- code generator.
+
+    -- Copyright 1982,1983,1984  RR Software, Inc.,
+    --  P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    Pragma Syslib(2);	-- Tell the compiler that this is the floating
+			-- point library.
+
+    Procedure Ferror_chk;
+	-- Check for floating point errors.
+    Procedure FLD_Short_Float(addr : Integer);
+	-- Load a Short Float into the floating point unit.  Addr is the
+	-- address of the value.
+    Procedure FST_Short_Float(addr : Integer);
+	-- Store a Short Float from the floating point unit, POPing the stack
+    Procedure FLD_Long_Float(addr : Integer);
+	-- Load a Long Float into the floating point unit
+    Procedure FLD_Long_Float_Cnst(addr : Integer);
+	-- Load a Long Float Constant into the floating point unit
+    Procedure FST_Long_Float(addr : Integer);
+	-- Store a Long Float from the floating point unit, POPing the stack
+    Procedure FLD_Short_Integer(value : In Integer);
+	-- Load a Short Integer into the floating point unit
+    Procedure FST_Short_Integer(value : Out Integer);
+	-- Store a Short Integer from the floating point unit, POPing the
+	-- stack.  A error occurs if the number is not an integer.
+    Procedure FLD_Long_Integer(addr : Integer);
+	-- Load a Long Integer into the floating point unit
+    Procedure FST_Long_Integer(addr : Integer);
+	-- Store a Long Integer from the floating point unit, POPing the
+	-- stack.  A error occurs if the number is not an integer.
+    Procedure FLD_Temp_Float(addr : Integer);
+	-- Load a Temp Float into the floating point unit.  (Note: This is
+	-- not the same format as the 8087!).
+    Procedure FST_Temp_Float(addr : Integer);
+	-- Store a Temp Float fron the floating point unit, POPing the stack
+
+    Function Fcmp_LT Return Boolean;
+	-- Return TOS <  NOS; Toss both operands
+    Function Fcmp_LE Return Boolean;
+	-- Return TOS <= NOS; Toss both operands
+    Function Fcmp_EQ Return Boolean;
+	-- Return TOS =  NOS; Toss both operands
+    Function Fcmp_NE Return Boolean;
+	-- Return TOS /= NOS; Toss both operands
+    Function Fcmp_GE Return Boolean;
+	-- Return TOS >= NOS; Toss both operands
+    Function Fcmp_GT Return Boolean;
+	-- Return TOS >  NOS; Toss both operands
+
+    Procedure FXCHG;
+	-- Exchange TOS with NOS.
+    Procedure FADD;
+	-- NOS := TOS + NOS; Toss TOS
+    Procedure FSUB;
+	-- NOS := TOS - NOS; Toss TOS
+    Procedure FMUL;
+	-- NOS := TOS * NOS; Toss TOS
+    Procedure FDIV;
+	-- NOS := TOS / NOS; Toss TOS
+    Procedure FABS;
+	-- TOS := ABS TOS
+    Procedure FNEG;
+	-- TOS := - TOS
+    Procedure FRNDINT;
+	-- TOS := Integer(TOS) [Integer Round]
+    Procedure FEXP(cnt : Integer);
+	-- TOS := TOS ** cnt
+    Procedure Finit;
+	-- Clear the unit (generally used after an exception)
+
+    Function Float_OK Return Boolean;
+	-- Returns true if the floating point library can be executed.
+	-- Mainly intended for use with Hardware libraries - will return
+	-- False if the Hardware is missing or does not work.
+	-- [Replaces Have_8087!]
+
+    -- Errors:
+	-- Stack Overflow.
+	-- Bad Operand.
+	-- Overflow.
+	-- Underflow (result is rounded to zero).
+
+    -- To call these externally, would use something like:
+    --		Floatops.FLD_Short_Float(Value'Address);
+
+End Float87;
+

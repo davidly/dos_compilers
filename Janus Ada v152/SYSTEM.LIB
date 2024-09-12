@@ -1,0 +1,32 @@
+Package System Is
+
+    -- System package for JANUS/Ada
+
+    Type address Is New Integer;
+    Type Name Is (MS_DOS1, MS_DOS2, CPM_86);
+
+    System_Name : Constant Name := MS_DOS2;
+
+    Storage_Unit : Constant := 8;
+    Memory_Size  : Constant := 32767;
+	-- Note: The memory size of a program is determined dynamically,
+	-- and has nothing to do with this constant!!
+
+    -- System Dependent Named Numbers:
+    Min_Int : Constant := -32768;
+    Max_Int : Constant :=  32767;
+	-- Long_Integers are not yet considered Integers by the compiler.
+    Max_Digits : Constant := 15;
+    Max_Mantissa : Constant := 16; -- Fixed Point...
+    Fine_Delta : Constant := 1.0; -- No Fixed Point Yet!
+    Tick : Constant := 0.01; -- Some machines have less accuracy, the IBM PC,
+			     -- for example.  (IBM PC Tick = 0.06)
+
+    -- Other System Dependent Declarations
+    Subtype Priority Is Integer Range 0..0; -- No Priorities yet!
+
+End System;
+
+not yet considered Integers by the compiler.
+    Max_Digits : Constant := 15;
+    Max_Mantissa : Constant := 16; -- Fixed Poin

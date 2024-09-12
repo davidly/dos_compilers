@@ -1,0 +1,132 @@
+With JLib86,
+     Sect; -- The Package in which the type sector is declared.
+With IO_Exceptions;
+Package Randio Is
+
+    -- Copyright 1983,1984 RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    --
+    -- JANUS/Ada Random I/O Package.
+    -- Modeled on Ada Direct_IO.
+    --
+    -- How to use this Package
+    --
+    --  This Package is designed as an Ada Generic Package.  However, since
+    --  Generics are not yet available in JANUS/Ada, the method for using
+    --  this package is a bit awkward.  The Type Sector must imported from
+    --  some other Package, by changing the With Clause, and the Subtype
+    --  declaration.  Note that the name 'Sector' is used in only one place,
+    --  and thus can easily be changed to any other type.  Then both the
+    --  Specification and Body of RandIO must be recompiled.
+    --
+    --  The following classes of types must not be used as the type Sector
+    --  (cannot be output or input):
+    --     Limited Private Types
+    --     Access Types
+    --     Composite Types containing either of the above.
+    --  Any other type may be output or input.
+    --
+    --  Records are numbered from 1, as per the 1983 Ada Standard.
+
+    Subtype Element_Type Is Sect.Sector; --Replace Sect.Sector with your type
+
+    Type File_Type Is Limited Private;
+
+    Type File_Mode Is (IN_File,INOUT_File,OUT_File);
+    Type Count Is New Natural;
+    Subtype Positive_Count Is Count Range 1 .. Count'Last;
+
+    Procedure Open (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String);
+	-- Opens a file for I/O.
+    Procedure Open (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String; Form : In String);
+	-- Opens a file for I/O. (Form Unused)
+
+    Procedure Create (File : In Out File_Type);
+	-- Creates a new file with a system generated name for I/O.
+    Procedure Create (File : In Out File_Type; Mode : In File_Mode);
+	-- Creates a new file with a system generated name for I/O.
+    Procedure Create (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String);
+	-- Creates a new file for I/O.
+    Procedure Create (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String; Form : In String);
+	-- Creates a new file for I/O. (Form Unused)
+
+    Procedure Close (File : In Out File_Type);
+	-- Closes a file.
+
+    Procedure Delete (File : In Out File_Type);
+	-- Deletes a file.
+
+    Procedure Reset (File : In Out File_Type);
+	-- Resets a file with the current mode.
+    Procedure Reset (File : In Out File_Type; Mode : In File_Mode);
+	-- Resets a file to mode mode.
+
+    Function Mode (File : In File_Type) Return File_Mode;
+	-- Returns the current mode of File.
+
+    Function Name (File : In File_Type) Return String;
+	-- Returns the name of File.
+
+    Function Form (File : In File_Type) Return String;
+	-- Returns the (unused) form of File.
+
+    Function Is_Open (File : In File_Type) Return Boolean;
+	-- Return True if the file is Open.
+
+    Procedure Read (File : In File_Type; Item : Out Element_Type; From : In
+	positive_count);
+	-- Read the record at record number positive count.  End_Error is
+	-- raised if reading past File_Size.  Data_Error is raised if
+	-- it does not exist.
+
+    Procedure Read (File : In File_Type; Item : Out Element_Type);
+	-- Read the record following the last one read or written.
+
+    Procedure Write (File : In File_Type; Item : In Element_Type; To : In
+	positive_count);
+	-- Write the record at record number positive count.
+	-- Use_Error is raised if an error occurs.
+	-- (The disk is probably full).
+
+    Procedure Write (File : In File_Type; Item : In Element_Type);
+	-- Write the record following the last one read or written.
+	-- Use_Error is raised as above.
+
+    Procedure Set_Index (File : In File_Type; To : In Positive_Count);
+	-- Set the next record to be read or written, if a number is not
+	-- specified.
+
+    Function Index (File : In File_Type) Return Positive_Count;
+	-- Returns the number of the next record to be read or written.
+
+    Function Size (File : In File_Type) Return Count;
+	-- Returns the current size of the file, in records.
+
+    Function End_of_File (File : In File_Type) Return Boolean;
+	-- Returns True if the current index points beyond the end of the
+	-- file.
+
+    Status_Error : Exception Renames IO_Exceptions.Status_Error;
+    Mode_Error   : Exception Renames IO_Exceptions.Mode_Error;
+    Name_Error   : Exception Renames IO_Exceptions.Name_Error;
+    Use_Error    : Exception Renames IO_Exceptions.Use_Error;
+    Device_Error : Exception Renames IO_Exceptions.Device_Error;
+    End_Error    : Exception Renames IO_Exceptions.End_Error;
+    Data_Error   : Exception Renames IO_Exceptions.Data_Error;
+
+Private
+    Type File_Block;
+    Type File_Type Is Access File_Block;
+    Type File_Block Is Record
+	Fyle : Jlib86.File_Ptr;
+	Index : Positive_Count;
+	Size : Count;
+    End Record;
+End RandIO;
+

@@ -1,0 +1,104 @@
+With Text_IO,Timelib;
+Package Body Matmul Is
+    -- Jerry Pournelle's Floating Point Benchmark
+    -- October 1982 Byte, pages 254 - 270
+    -- Translated from Pascal into Janus/Ada, 3/13/83
+
+    start_time,end_time : Timelib.Time;
+
+    MAXSIZE : Constant := 45;
+    M : Constant := 20;
+    N : Constant := 20;
+
+    Subtype Real Is Float; -- Also can use Long_Float for comparision
+    Subtype Dim1 Is Integer Range 1..M;
+    Subtype Dim2 Is Integer Range 1..N;
+
+    -- The following mess since Janus/Ada does not yet have multi-dim.
+    -- arrays.
+    Type Col1 Is Array (Dim2) Of Real;
+    Type Col2 Is Array (Dim1) Of Real;
+    Type Mat1 Is Array (Dim1) Of Col1;
+    Type Mat2 Is Array (Dim2) Of Col2;
+    Type Mat3 Is Array (Dim1) Of Col2;
+
+    -- Effect is:
+    -- Type Mat1 Is Array (Dim1,Dim2) Of Real;
+    -- Type Mat2 Is Array (Dim2,Dim1) Of Real;
+    -- Type Mat3 Is Array (Dim1,Dim1) Of Real;
+
+    A : Mat1;
+    B : Mat2;
+    C : Mat3;
+
+    Summ : Real;
+
+
+    Procedure Fill_A Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim2 Loop
+                A(i)(j) := Real(i + j);
+            End Loop;
+        End Loop;
+    End Fill_A;
+
+    Procedure Fill_B Is
+    Begin
+        For i In Dim2 Loop
+            For j In Dim1 Loop
+                B(i)(j) := Real((i + j) / j);
+            End Loop;
+        End Loop;
+    End Fill_B;
+
+    Procedure Fill_C Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                C(i)(j) := 0.0;
+            End Loop;
+        End Loop;
+    End Fill_C;
+
+    Procedure Matrix_Multiply Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim2 Loop
+                For k In Dim1 Loop
+                    C(i)(k) := C(i)(k) + A(i)(j) * B(j)(k);
+                End Loop;
+            End Loop;
+        End Loop;
+    End Matrix_Multiply;
+
+    Procedure Summit Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                Summ := Summ + C(i)(j);
+            End Loop;
+        End Loop;
+    End Summit;
+
+Begin
+    Summ := 0.0;
+    Text_IO.Put("J.E. Pournelle's Matrix Multiply Benchmark"); Text_IO.New_line;
+    Text_IO.Put("This Program times itself"); Text_IO.New_Line;
+    Start_time := Timelib.Get_Time;
+    Fill_A;
+@   Text_IO.Put(" A filled. "); Text_IO.New_line;
+    Fill_B;
+@   Text_IO.Put(" B filled. "); Text_IO.New_line;
+    Fill_C;
+@   Text_IO.Put(" C filled. "); Text_IO.New_line;
+    Matrix_Multiply;
+@   Text_IO.Put("Multiplied."); Text_IO.New_line;
+    Summit;
+@   Text_IO.Put("Summ is : "); Text_IO.Put(Summ); Text_IO.New_Line;
+    end_time := Timelib.Get_Time;
+    Text_IO.Put("Checksum is : "); Text_IO.Put(Summ); Text_IO.New_line;
+    Text_IO.Put("Elapsed time was "); Timelib.Put_Time(Text_IO.Current_Output,
+        Timelib.Elapsed_Time(start_time,end_time)); Text_IO.New_line;
+End Matmul;
+

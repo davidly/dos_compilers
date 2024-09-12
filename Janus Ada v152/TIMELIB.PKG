@@ -1,0 +1,117 @@
+With Util;	-- Hi and Lo are used in here
+With Text_IO;	-- For the Put routine.
+Pragma Debug(Off); Pragma Rangecheck(Off); Pragma Arithcheck(Off);
+Package Body Timelib Is
+
+-- Time Library - Get the current time and date from MS-DOS --
+-- Last modified 6/22/82
+
+
+    -- Copyright 1982  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+Use Util;
+
+time1,time2 : Integer;	-- Local temporary variables
+
+Function get_time Return Time Is
+    -- Get and return the current time
+    temp : time;
+Begin
+    Asm 16#B4#,44; -- Get time from OS
+    Asm 16#CD#,33; -- Call OS
+    -- Time is now in CX and DX
+    Asm 16#89#,2#00_001_110#,time1'address; -- Mov [time1],CX
+    Asm 16#89#,2#00_010_110#,time2'address; -- Mov [time2],DX
+    -- Now Hours in hi(time), minutes in lo(time1),
+    -- seconds in hi(time2), 1/100 seconds in lo(time2).
+    temp.hours   := Integer(hi(time1));
+    temp.minutes := Integer(lo(time1));
+    temp.seconds := Integer(hi(time2));
+    temp.fract   := Integer(lo(time2));
+    Return Temp;
+End get_time;
+
+Function get_date Return Date Is
+    -- Get and return the current date
+    temp : date;
+Begin
+    Asm 16#B4#,42; -- Get date from OS
+    Asm 16#CD#,33; -- Call OS
+    -- Date is now in CX and DX
+    Asm 16#89#,2#00_001_110#,time1'address; -- Mov [time1],CX
+    Asm 16#89#,2#00_010_110#,time2'address; -- Mov [time2],DX
+    -- Now Year in time1, month in hi(time2), day in lo(time2).
+    temp.year  := time1;
+    temp.month := Integer(hi(time2));
+    temp.day   := Integer(lo(time2));
+    Return Temp;
+End get_date;
+
+Procedure put_date(fyle : In Text_IO.File_Type; day : date) Is
+    -- Put the date to the file
+Begin
+    Case day.month Is
+	When 1 => Text_IO.Put(fyle,"January ");
+	When 2 => Text_IO.Put(fyle,"February ");
+	When 3 => Text_IO.Put(fyle,"March ");
+	When 4 => Text_IO.Put(fyle,"April ");
+	When 5 => Text_IO.Put(fyle,"May ");
+	When 6 => Text_IO.Put(fyle,"June ");
+	When 7 => Text_IO.Put(fyle,"July ");
+	When 8 => Text_IO.Put(fyle,"August ");
+	When 9 => Text_IO.Put(fyle,"September ");
+	When 10 => Text_IO.Put(fyle,"October ");
+	When 11 => Text_IO.Put(fyle,"November ");
+	When 12 => Text_IO.Put(fyle,"December ");
+	When Others => Text_IO.Put(fyle,"** Bad Date ** ");
+    End Case;
+    Text_IO.Put(fyle,day.day,0); Text_IO.Put(fyle,", ");
+    Text_IO.Put(fyle,day.year,0);
+End put_date;
+
+Procedure put_time(fyle : In Text_IO.File_Type; clk : time) Is
+    -- Put the time to the file
+Begin
+    Text_IO.Put(fyle,clk.hours,0); Text_IO.Put(fyle,":");
+    If clk.minutes In 0..9 Then Text_IO.Put(fyle,'0'); End If;
+    Text_IO.Put(fyle,clk.minutes,0); Text_IO.Put(fyle,":");
+    If clk.seconds In 0..9 Then Text_IO.Put(fyle,'0'); End If;
+    Text_IO.Put(fyle,clk.seconds,0); Text_IO.Put(fyle,".");
+    If clk.fract In 0..9 Then Text_IO.Put(fyle,'0'); End If;
+    Text_IO.Put(fyle,clk.fract,0);
+End Put_time;
+
+Function elapsed_time(start,finish : Time) Return Time Is
+    -- Figure the elapsed time between start and finish
+    temp : time;
+Begin
+    temp.hours := finish.hours - start.hours;
+    temp.minutes := finish.minutes - start.minutes;
+    temp.seconds := finish.seconds - start.seconds;
+    temp.fract := finish.fract - start.fract;
+    If temp.hours >= 0 Then -- adjust so all fields are positive
+        If temp.fract < 0 Then
+	    temp.fract := temp.fract + 100;
+	    temp.seconds := temp.seconds - 1;
+	End If;
+	If temp.seconds < 0 Then
+	    temp.seconds := temp.seconds + 60;
+	    temp.minutes := temp.minutes - 1;
+	End If;
+	If temp.minutes < 0 Then
+	    temp.minutes := temp.minutes + 60;
+	    temp.hours := temp.hours - 1;
+	End If;
+	If temp.hours < 0 Then
+    	    Text_IO.Put("*Error* Negative time elapsed"); Text_IO.New_Line;
+	End If;
+    Else
+	Text_IO.Put("*Error* Negative time elapsed"); Text_IO.New_Line;
+    End If;
+    Return temp;
+End elapsed_time;
+
+End Timelib;
+        

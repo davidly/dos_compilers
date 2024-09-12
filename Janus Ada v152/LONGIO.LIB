@@ -1,0 +1,25 @@
+With Longops,Text_IO;
+Package Longio Is
+
+    -- Copyright 1983  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    -- Long Integer I/O
+    -- Last Modified 3/27/83
+    -- Note that Long Integer Input is flakey...I recommend writting a
+    -- String to Long_Integer routine for applications where Long_Integer
+    -- Input is critical.
+
+    Use Longops,Text_IO;
+
+    Procedure Get(Item : Out Long_Integer);
+    Procedure Get(Fyle : In File_Type; Item : Out Long_Integer);
+
+    Procedure Put(Item : In Long_Integer);
+    Procedure Put(Fyle : In File_Type; Item : In Long_Integer);
+    Procedure Put(Item : In Long_Integer; Width : In Integer);
+    Procedure Put(Fyle : In File_Type; Item : In Long_Integer; Width :
+	In Integer);
+
+End Longio;

@@ -1,0 +1,87 @@
+With Jlib86; Use Jlib86;
+Package Basic_IO Is
+
+-- The Underlying I/O package (KAPSE) for JANUS/Ada
+-- Last Modified -  4/22/85
+-- Added Is_Device - 12/12/84
+-- Deeleted IOResult - 1/14/85
+-- Added Is_Buffered - 4/22/85
+
+    -- Copyright 1982,1983,1984,1985  RR Software, Inc.,
+    -- P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+-- This library is not intended to be used directly.  Use SEQ_IO, TEXT_IO, and
+-- RANDIO instead!!!  RR SOFTWARE, INC. DOES NOT SUPPORT THE DIRECT USE OF THIS
+-- LIBRARY.
+
+-- This library is responsible for raising all exceptions, except:
+--     STATUS_ERROR (which must be checked above also)
+--     END_ERROR for Random Files (as a sparse file could the wrong exception)
+--     DATA_ERROR (this module knows nothing about data!)
+--     USE_ERROR for Random File Opens (no devices)
+--     LAYOUT_ERROR (of course).
+-- In particular, all MODE_ERRORs, NAME_ERRORs, and END_ERROR and USE_ERRORs
+-- other than mentioned above MUST be trapped in here.  STATUS_ERROR may or
+-- may not checked in here, except the Read and Write routines (where it
+-- should not be checked for efficiency).
+-- Note:  Random Files should not be sparse if at all possible, as Ada expects
+-- them not to be sparse.  Raise DATA_ERROR for reading unwritten areas, as
+-- the Data cannot have the correct form (it hasn't been written yet!).
+
+Type File_Mode Is (No_Access,Read_Only,Write_Only,Read_Write);
+
+Procedure Open(Fyle : In Out File_Ptr; Name : In String; Mode : In File_Mode);
+    -- Open the file name and give it the mode mode
+Procedure Create(Fyle : In Out File_Ptr; Name : In String; Mode : In File_Mode);
+    -- Create the file name and give it the mode mode
+Procedure Delete(Fyle : In Out File_Ptr);
+    -- Delete the file name
+Procedure Close(Fyle : In Out File_Ptr);
+    -- Close the file fyle
+Function Name(Fyle : In File_Ptr) Return String;
+    -- Return the name of the Open file
+Function Mode(Fyle : In File_Ptr) Return File_Mode;
+    -- Return the file mode of the Open file
+Function Is_open(Fyle : In File_Ptr) Return Boolean;
+    -- Is the file fyle open?
+Procedure Purge (name : In String);
+    -- Deletes file name without an error if it does not exist
+
+Procedure Read_Mem (fyle : In File_Ptr; addr,amount : In Integer);
+    -- Read amount bytes into memory starting at addr from fyle
+Procedure Write_Mem (fyle : In File_Ptr; addr,amount : In Integer);
+    -- Write amount bytes from memory starting at addr to fyle
+
+-- These routines are all used together...
+Procedure Set_Block_Size (fyle : In File_Ptr; size : In Integer);
+    -- Set the random access block size to size.  (Ought to call this only
+    -- once - right after the Open or Create).
+Procedure Read_Mem_At (fyle : In File_ptr; addr : In Integer; blk : In Natural);
+    -- Read Memory at block number
+Procedure Write_Mem_At (fyle : In File_Ptr; addr : In Integer; blk : In Natural);
+    -- Write Memory at block number
+Function File_Size (fyle : In File_ptr) Return Integer;
+    -- Return the file size in blocks.
+
+Function Is_Device (fyle : In File_Ptr) Return Boolean;
+    -- Is this a Device??
+
+Function Is_End (fyle : In File_Ptr) Return Boolean;
+    -- End of file yet??
+
+Function File_Ready (fyle : In File_Ptr) Return Boolean;
+    -- Is the file ready for input?  (Most useful for console Input)
+
+Function Name_Gen Return String;
+    -- Return a (unique) file name for Create.
+
+Procedure Bad_Device (fyle : In File_Ptr);
+    -- Generate a Bad_Device Use_Error.
+
+Is_Buffered : Constant Boolean := False; -- Does the underlying I/O system
+					 -- use buffering??
+
+End Basic_IO;
+

@@ -1,0 +1,35 @@
+Package Strlib Is
+    -- String Handling Package Specification
+    -- Last Modified 6/ 3/82
+
+
+    -- Copyright 1982  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+
+    Subtype Mstring Is String(255); -- Maximum string length
+    Subtype StrIndex Is Integer Range 0..255; -- Maximum string indices
+
+Function Length (str : In Mstring) Return Integer;
+    -- Return the length of the string
+Function Remove (str : In Mstring; pos,size : In StrIndex) Return Mstring;
+    -- Remove size characters from str at pos
+Function Insert (source,dest : In MString; pos : In StrIndex) Return MString;
+    -- Insert source into dest at pos
+Function Extract (str : In Mstring; pos,size : In StrIndex) Return Mstring;
+    -- Extract size characters from str at pos
+Function Position (pattern,str : Mstring) Return Integer;
+    -- Return the position of the first occurance of pattern in str,
+    -- or 0 if there is none
+Function char_to_str (char : character) Return String;
+    -- Convert a character into a string of length 1
+Function str_to_int (str : Mstring) Return Integer;
+    -- Convert a string into an integer
+Function int_to_str (int : Integer) Return Mstring;
+    -- Convert an integer into a string
+
+End Strlib;
+os
+Function Position (pattern,str : Mstring) Return Integer;
+    -- Return the position of the first occurance of pattern in 

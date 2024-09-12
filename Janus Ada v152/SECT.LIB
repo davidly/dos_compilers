@@ -1,0 +1,17 @@
+Package Sect Is
+    -- Used to define an example Type for use with the standard JANUS/Ada
+    -- Package Randio.
+
+    Type Sector Is Array (0..127) Of Byte;
+
+End Sect;
+ept_Others;
+
+End Except;
+
+	Except_Chain := Curptr - 2;
+
+	-- May need to do other things later...
+    End Except_Limb_End;
+
+    Procedure Except

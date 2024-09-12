@@ -1,0 +1,52 @@
+Package Bit Is
+    -- Bit operations library
+    -- Last modified 3/27/83
+
+
+    -- Copyright 1982,1983  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+
+    Subtype bit_num Is Integer Range 0..15;
+
+    Procedure Setbit(Val : In Out Integer; Bit : In Bit_num);
+	-- Set bit number bit
+    Procedure Clrbit(Val : In Out Integer; Bit : In Bit_num);
+	-- Clear bit number bit
+    Function Tstbit(Val : In Integer; Bit : In Bit_num) Return Boolean;
+	-- Return the value of bit number bit (1 = True)
+
+    Function Land(Val1,Val2 : In Integer) Return Integer;
+	-- Logical And
+    Function Lor(Val1,Val2 : In Integer) Return Integer;
+	-- Logical Or
+    Function Lxor(Val1,Val2 : In Integer) Return Integer;
+	-- Logical Xor
+    Function Lnot(Val : In Integer) Return Integer;
+	-- Logical Not
+
+    Function Peek (Addr : In Integer) Return Byte;
+	-- Returns the byte at address in the data segment
+    Procedure Poke (Addr : In Integer; Val : In Byte);
+	-- Changes the byte at address in the data segment to Val
+
+    Function Peek (Segmnt,Offset : In Integer) Return Byte;
+	-- Returns the byte at address Segmnt:Offset
+    Procedure Poke (Segmnt,Offset : In Integer; Val : In Byte);
+	-- Changes the byte at address Segmnt:Offset to Val
+
+    Function Code_Seg Return Integer;
+	-- Returns the Code Segment Value (If multiple code segments are
+	-- used, this returns the Code Segment value of THIS unit).
+    Function Data_Seg Return Integer;
+	-- Returns the Data Segment Value (If multiple Data segments are
+	-- used, this returns the Data Segment value of THIS unit).
+
+    Procedure InPort (Portnum : In Integer; Value : Out Byte);
+	-- Reads a byte from the port portnum, returns it in Value
+    Procedure Outport (Portnum : In Integer; Value : In Byte);
+	-- Writes a byte (Value) to the port portnum
+
+End Bit;
+

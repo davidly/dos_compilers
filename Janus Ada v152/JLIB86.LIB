@@ -1,0 +1,148 @@
+Package Jlib86 Is
+	-- These are the External declarations for JLib86
+
+	-- Copyright 1982,1983,1984,1985  RR Software, Inc.,
+	-- P.O. Box 1512, Madison WI 53701     Permission is hereby
+	-- given to distribute Object Code produced from these libraries.
+	-- All Other rights reserved.
+
+	-- The specifications below cannot be changed or deleted.
+	-- The user may add entries to the end of the table
+
+	-- The Procedures below cannot be (usefully) called from a JANUS/Ada
+	-- program (they can be used in a Assembly language program) unless
+	-- they are marked by an asterisk  (*)
+
+	-- MS-DOS 2.xx version.  The program will abort if MS-DOS 2.xx is
+	-- not present.
+
+	-- The Entry Point Table -	Idnum
+
+	Procedure EHalt;		-- 1*
+	Procedure PrgRet;		-- 2
+	Procedure PChain;		-- 3
+	Procedure NotUsed4;		-- 4
+	Procedure Exp2;			-- 5
+	Procedure Mod2;			-- 6
+	Procedure NotUsed7;		-- 7
+	Procedure NotUsed8;		-- 8
+	Procedure NotUsed9;		-- 9
+	Procedure NotUsed10;		--10
+	Procedure NotUsed11;		--11
+	Procedure NotUsed12;		--12
+	Procedure NotUsed13;		--13
+	Procedure NotUsed14;		--14
+	Procedure NotUsed15;		--15
+	Procedure NotUsed16;		--16
+	Procedure NotUsed17;		--17
+	Procedure NotUsed18;		--18
+	Procedure NotUsed19;		--19
+	Procedure NotUsed20;		--20
+	Procedure NotUsed21;		--21
+	Procedure NotUsed22;		--22
+	Procedure ECWrite;		--23 - Code Seg write
+	Procedure CSAssign;		--24 - Code Seg String Assignment
+	Procedure Copy_Str;		--25
+	Procedure Raise_Exc;		--26
+	Procedure Enter_Exc;		--27
+	Procedure Leave_Exc;		--28
+	Procedure Enter_Walkback;	--29
+	Procedure Exit_Walkback;	--30
+	Procedure Sour_Err;		--31*
+	Procedure Range1;		--32
+	Procedure Range2;		--33
+	Procedure SRange1;		--34
+	Procedure SRange2;		--35
+	Procedure EErr_Exit;		--36*
+	Procedure Null_Ptr;		--37
+	Procedure Str_Bound;		--38
+	Procedure CaseErr;		--39
+	Procedure ReRaise_Exc;		--40*
+	Procedure EPut_Str;		--41
+	Procedure Put_CStr;		--42
+	Procedure NotUsed43;		--43
+	Procedure NotUsed44;		--44
+	Procedure EPutInt;	 	--45
+	Procedure NotUsed46;		--46
+	Procedure NotUsed47;		--47
+	Procedure NotUsed48;		--48
+	Procedure NotUsed49;		--49
+	Procedure NotUsed50;		--50
+	Procedure NotUsed51;		--51
+	Procedure NotUsed52;		--52
+	Procedure EClose;		--53
+	Procedure NotUsed54;		--54
+	Procedure SLt;			--55
+	Procedure SLe;			--56
+	Procedure SEq;			--57
+	Procedure SNeq;			--58
+	Procedure SGe;			--59
+	Procedure SGt;			--60
+	Procedure Sassign;		--61
+	Procedure Concat;		--62
+	Procedure EVWrite;		--63
+	Procedure ERead;		--64
+	Procedure EWrite;		--65
+	Procedure ENew_Line;		--66
+	Procedure Raise_Exc_Minor;	--67
+	Procedure Func_Release;		--68
+	Procedure Func_Ret;		--69
+	Procedure EFile_Name;		--70
+	Procedure New_Ptr;		--71
+	Procedure EMemAvail;		--72
+	Procedure EMaxAvail;		--73
+	Procedure EDispose;		--74
+	Procedure StkOver;		--75
+	Procedure Bool_Tab;		-- This is not a Procedure at all,
+					-- rather, it is the enumeration
+					-- table for Boolean
+
+	-- File Type definitions
+
+	Subtype File_Name_Type Is String(65);
+	-- File names must be 64 bytes or less in MS-DOS 2.xx
+
+	Type File_mask;
+	Type File_ptr Is Access File_Mask;
+	Type File_mask Is Record
+	    ftype:Byte;		-- 0-Disk_File; 1-Con; 2-Aux; 4-Lst; 5-Kbd
+				-- Offset 0
+	    fmode:Byte;		-- Offset 1 (Really of type file_mode, see
+				--		Basic_IO.LIB)
+	    handle:Integer;	-- Offset 2 - File Handle (if ftype = 0)
+	    fname:file_name_type;-- Offset 4
+	    eof_flag : Boolean;	-- Offset 70 - Set if EOF reached.
+	    link : File_ptr;	-- Offset 71
+				-- Chain link so JANUS/Ada can keep track of
+				-- all open files.
+	    blk_size:Integer;	-- Offset 73 - File Block Size, if any.
+	End Record;
+
+	-- JLib86 Data Area
+	DispStart : Integer; -- Display 'Registers' (0 and 1 unused)
+	Display1  : Integer;
+	Display2  : Integer;
+	Display3  : Integer;
+	Display4  : Integer;
+	Display5  : Integer;
+	Display6  : Integer;
+	Display7  : Integer;
+	Display8  : Integer;
+	Display9  : Integer;
+	Display10 : Integer;
+	LineNo : Integer;	-- Current Line Number being executed
+	Input_File : File_Ptr;	-- Standard Input (Cannot be used directly)
+	Output_File : File_Ptr;	-- Standard Output (ditto)
+	File_Chain : File_Ptr;	-- Chain of files (so they can be closed if
+				-- the user forgets)
+	RetList : Integer;	-- Chain of garbage blocks.
+	RetEnd  : Integer;	-- End of chain of garbage blocks.
+	Const_Start : Integer;	-- Start of constant segment. (Segment address)
+	Temp_File : File_Ptr;
+	Temp_String : String;	-- For error messages.
+	Base_Page : Integer;	-- Base Page segment address.
+	Mem_Model : Integer;	-- Memory model of this program.
+	-- Other user defined routines may be added here
+	
+End Jlib86;
+

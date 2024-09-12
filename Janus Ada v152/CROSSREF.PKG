@@ -1,0 +1,308 @@
+With Text_IO,Util; Use Text_IO;
+Package Body Crossref Is
+    -- Cross reference program
+    -- Last Modified  9/20/84
+    -- Provided to demonstrate Access types, and to provide a useful tool
+    -- Only the first MAXLINES occurances of a name will be recorded to
+    -- save space.
+    -- If the memory is nearly full, the crossref will be aborted, and
+    -- what already has been done will be printed.
+
+    -- The crossref'ed words are stored in a Binary Sorted Tree, and then
+    -- are printted in order by printtree.  The line numbers are stored in
+    -- a linked list attached to each tree node.  This algorithm is from
+    -- Wirth, Algorithms + Data Structures = Programs
+
+    MAXLINES : Constant := 25;
+
+    Type Ident Is New String(20);
+    Type LNum;			-- These types are used to form a linked list
+    Type Line Is Access Lnum;	-- of line numbers
+    Type LNum Is Record
+	lno : Integer;
+	nxt : Line;
+    End Record;
+
+    Type word;			-- These types are used to form a sorted
+    Type wptr Is Access word;	-- binary tree of words
+    Type word Is Record
+	key : Ident;
+	cnt : Integer;	-- Number of uses
+	lnos: Line;	-- Line number chain
+	left,right : wptr; -- Tree pointers
+	ignore : Boolean; -- Placeholder for reserved words.
+    End Record;
+
+    Root : Wptr := Null;
+
+    cur_line : Integer := 1;
+    inp : File_Type;
+    tname : String; tlen : Integer;
+    yes : Character;
+
+Procedure printtree(w:wptr) Is
+    -- This routine recursively prints the cross reference tree
+    -- This means that is calls itself to print the left and right
+    -- subtrees of the node passed in.  If the node passed in is Null,
+    -- nothing is done (this guarentees termination).
+    t : Line; no : Integer := 0;
+Begin
+    If w /= Null Then
+	printtree(w.left);
+	If w.ignore Then Null;
+	Else
+	    Put(w.key); Put('-'); Put(w.cnt); Put(" Usages"); New_Line;
+	    Put("       Lines - ");
+	    -- Print the line numbers
+	    -- This is done by 'walking' the linked list of line numbers
+	    t := w.lnos;	-- Start of line number list
+	    While t /= Null Loop
+		Put(t.lno,4);
+		no := no + 1;
+		If no Mod 15 = 0 Then
+		    New_Line;
+		End If;
+		t := t.nxt;	-- Walk to next line number
+	    End Loop;
+	    New_Line;
+	End If;
+	printtree(w.right);
+    End If;
+    -- Do nothing for a null pointer
+End printtree;
+
+Procedure insert(newkey : String; w : In Out wptr) Is
+    -- This routine recursively inserts a new word.  The tree is recursively
+    -- searched for the word.  If it is found, the line number is added to
+    -- the line number list.  Otherwise, a new node is created and added
+    -- to the tree.
+    t : line;
+Begin
+    If w = Null Then -- Not in tree, insert it
+	w := New word;
+	w.key := newkey; w.cnt := 1;
+	w.left := Null; w.right := Null;
+	w.lnos := New LNum;
+	w.lnos.lno := Cur_Line;
+	w.lnos.nxt := Null;
+	w.ignore := FALSE;
+    Elsif newkey < w.key Then
+	insert(newkey,w.left);
+    Elsif newkey > w.key Then
+	insert(newkey,w.right);
+    Else -- Found it
+	If w.ignore Then
+	    Return;
+	End If;
+	w.cnt := w.cnt + 1;
+	If w.cnt < MAXLINES And Then w.lnos.lno /= Cur_Line Then
+	    t := New LNum;
+	    t.lno := Cur_Line;
+	    t.nxt := w.lnos;
+	    w.lnos := t;
+	End If;
+    End If;
+    If Util.Memavail In 0..200 Then -- Dump the tree before the memory runs out
+	Printtree(root);
+	Put("Crossref Program Halted at Line Number "); Put(Cur_Line);
+	Put(" of the source file for insufficient memory"); New_Line;
+	Util.Halt;
+    End If;
+End Insert;
+
+Procedure Stuff_Reserved_Words Is
+    -- Stuff the reversed words into the tree, with Ignore on...
+    tstr : String;
+
+    Procedure Set_Ignore(w : In Out WPtr) Is
+	-- Set the ignore flag on the entire tree.
+    Begin
+	If w /= Null Then
+	    Set_Ignore(w.left);
+	    w.ignore := TRUE;
+	    Set_Ignore(w.right);
+	End If;
+    End Set_Ignore;
+
+Begin
+    -- These are scattered out to provide a somewhat balanced tree...
+    Insert("LOOP",Root);
+    Insert("ELSE",Root);
+    Insert("RAISE",Root);
+    Insert("IF",Root);
+    Insert("OUT",Root);
+    Insert("USE",Root);
+    Insert("CASE",Root);
+    Insert("ARRAY",Root);
+    Insert("DIGITS",Root);
+    Insert("END",Root);
+    Insert("IS",Root);
+    Insert("NULL",Root);
+    Insert("PACKAGE",Root);
+    Insert("RECORD",Root);
+    Insert("THEN",Root);
+    Insert("WHEN",Root);
+    Insert("ALL",Root);
+    Insert("ABORT",Root);
+    Insert("ACCEPT",Root);
+    Insert("AT",Root);
+    Tstr := "AB ";
+    Tstr(3) := 'S'; -- "ABS" is an OPsym, currently unavailable
+    Insert(Tstr,Root);
+    Insert("ACCESS",Root);
+    Tstr := "AN ";
+    Tstr(3) := 'D'; -- Opsym
+    Insert(Tstr,Root);
+    Insert("BEGIN",Root);
+    Insert("BODY",Root);
+    Insert("CONSTANT",Root);
+    Insert("DECLARE",Root);
+    Insert("DELAY",Root);
+    Insert("DELTA",Root);
+    Insert("DO",Root);
+    Insert("FOR",Root);
+    Insert("EXCEPTION",Root);
+    Insert("GENERIC",Root);
+    Insert("ELSIF",Root);
+    Insert("ENTRY",Root);
+    Insert("EXIT",Root);
+    Insert("FUNCTION",Root);
+    Insert("GOTO",Root);
+    Insert("IN",Root);
+    Insert("LIMITED",Root);
+    Tstr := "MO "; -- Opsym
+    Tstr(3) := 'D';
+    Insert(Tstr,Root);
+    Insert("NEW",Root);
+    Tstr := "NE "; -- Opsym
+    Tstr(3) := 'W';
+    Insert(Tstr,Root);
+    Insert("OF",Root);
+    Tstr := "O "; -- Opsym
+    Tstr(2) := 'R';
+    Insert(Tstr,Root);
+    Insert("OTHERS",Root);
+    Insert("PRIVATE",Root);
+    Insert("PRAGMA",Root);
+    Insert("PROCEDURE",Root);
+    Insert("RANGE",Root);
+    Tstr := "RE "; -- Opsym
+    Tstr(3) := 'M';
+    Insert(Tstr,Root);
+    Insert("SELECT",Root);
+    Insert("RETURN",Root);
+    Insert("RENAMES",Root);
+    Insert("REVERSE",Root);
+    Insert("SEPARATE",Root);
+    Insert("SUBTYPE",Root);
+    Insert("TASK",Root);
+    Insert("TERMINATE",Root);
+    Insert("TYPE",Root);
+    Insert("WHILE",Root);
+    Insert("WITH",Root);
+    Tstr := "XO "; -- Opsym
+    Tstr(3) := 'R';
+    Insert(Tstr,Root);
+
+    Set_Ignore(root);
+End Stuff_Reserved_Words;
+
+Procedure scan_input Is
+    -- Break up the input into JANUS tokens, and store them in the tree
+	str : string;
+	ch : character;
+	len : Integer;
+    Begin
+	While Not End_of_File(inp) Loop
+	    len := 1;
+	    str(0) := Character'Val(20); -- Set the string to the maximum
+					 -- possible length
+	    While Not End_Of_File(inp) Loop
+		If End_of_Line(inp) Then
+    		    Cur_Line := Cur_Line + 1; -- Next Line;
+		    Skip_Line(inp); -- Skip the EOLN
+		Else
+		    Get(inp,ch);
+		    -- Only cross reference ID's
+		    If (ch In 'A'..'Z') or (ch In 'a'..'z') Then
+		      <<Id>> -- Jump from character constant, below
+		        While (ch In 'A'..'Z') or else (ch In 'a'..'z') or else
+			    (ch In '0'..'9') or else (ch = '_') Loop
+			    If len < 21 Then -- String not full
+			        If ch In 'a'..'z' Then
+				    str(len) := Character'Val(Character'Pos(ch) +
+				        Character'Pos('A') - Character'Pos('a'));
+			        Else
+				    str(len) := ch;
+			        End If; -- Capitalize characters
+			        len := len + 1;
+			    End If; -- Throw away character if string is full
+			    Exit When End_of_Line(inp); -- Done at EOLN
+			    get(inp,ch);
+			End Loop;
+			Exit; -- Leave Scanner
+		    Elsif (ch = '-') Then -- Skip comments
+			get(inp,ch);
+			If ch /= '-' Then
+			    GoTo NotComment; -- Not a comment
+			End If;
+			Loop
+			    get(inp,ch);
+			    Exit When End_of_Line(inp);
+			End Loop;
+			-- No exit (we'll get another token)
+		    <<NotComment>> Null; -- Do nothing special
+		    Elsif (ch = '"') Then -- Skip strings
+			While Not End_Of_File(inp) Loop
+			    get(inp,ch);
+			    Exit When ch = '"';
+			End Loop;
+			-- No exit - get another token
+		    Elsif (ch = ''') Then
+		        -- (Must skip the middle character of a char constant)
+		        get(inp,ch);
+		        str(1) := ch;
+		        len := 2;
+		        get(inp,ch);
+		        If ch = ''' Then
+			    len := 1; -- Char constant, skip all
+			Elsif str(1) In 'A'..'Z' Then
+			    Goto Id; -- It's an Id, Not a character const.
+			Elsif str(1) In 'a'..'z' Then
+			    str(1) := Character'Val(Character'Pos(Str(1)) - 32);
+			    GoTo Id; -- Also an ID
+			Else -- Not an Id
+			    len := 1; -- Reset character
+			End If;
+		    -- Else Null; -- Skip the character
+		    End If;
+		End If;
+	    End Loop;
+	    str(0) := Character'Val(len - 1); -- Set the string length
+	    insert(str,root);  -- And put it into the tree
+	End Loop;
+    End scan_input;
+
+Begin
+    Put("Cross Reference Generator - Version 1.3"); New_Line;
+    Put("File to Crossref? ");
+    Get_Line(tname,tlen);
+    Open(inp,In_File,tname);
+    Loop
+	Put("Include Reserved Words? ");
+	Get(Yes); Skip_Line;
+	If Yes = 'Y' Or Yes = 'y' Then
+	    Exit;
+	Elsif Yes = 'N' Or Yes = 'n' Then
+	    Stuff_Reserved_Words;
+	    Exit;
+	Else
+	    Put("Y/N !!"); New_Line;
+	End If;
+    End Loop;
+    Scan_Input;
+    printtree(root);
+    New_Line; Put(Util.Memavail); Put(" Bytes Free Memory"); New_Line;
+    Put("Cross Reference Program Completed"); New_Line;
+End Crossref;
+

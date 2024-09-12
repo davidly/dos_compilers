@@ -1,0 +1,8 @@
+WITH Text_IO;
+Use Text_IO;
+Procedure EXAMPLE Is
+  BEGIN
+    NEW_LINE;
+    PUT("sank you");
+  END EXAMPLE;
+

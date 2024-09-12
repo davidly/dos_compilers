@@ -1,0 +1,318 @@
+Last minute notes and changes to version 1.5.2 of the JANUS/Ada D-Pak (and S-Pak).
+MS-DOS 2.0 and later version.  [also MS-DOS 1.xx version]
+
+If you feel a change is important (or even potentially important), mark it
+in your manual.  At least, mark your manual to read this information at the
+appropriate point.
+
+
+Bugs.
+
+   Extensive testing of this version of the compiler has uncovered several
+bugs.  It isn't likely that you will run into any of these bugs in your
+own programs, but in case you do have problems, we'll list them here.
+If you don't understand what a bug report means, don't worry about it now.
+Most of them are aimed at the so-called "Ada Laywer".
+   The last three bugs are caused by MS-DOS.  It is possible that your version
+of DOS does not exhibit these problems.  MS-DOS 2.0 does have them,
+and as it is the least common denominator, we are reporting them to you.
+[These bugs do not appear in the DOS 1.xx version].
+
+   1) There is a bug list in the manual; all of these bugs are still exist in
+the compiler.  Make sure you read it.
+   2) Declarations of very large data items (those which are too big to fit
+into 64K) are not caught.  This is especially a problem with Arrays of Records.
+   3) EXITing from a subprogram declared in a block inside of a loop crashes
+the program.
+   4) Goto's out of blocks with Exception handlers; and Goto's directly into
+exception handlers will cause strange results.  They should be avoided.
+If you get a "Error in Source Language" when none exists, you probably did
+such a Goto.  (It is used to trap internal errors in the Exception Handling
+mechanism).  In other situations, the program could crash, or run out of room.
+
+  As an example of bugs 3 and 4:
+
+     Loop
+	Declare
+	    Procedure Crash Is
+	    Begin
+		Exit;	-- This EXIT will crash the program.  It ought to be
+			-- marked illegal, but the compiler does not catch it.
+	    End Crash;
+	Begin
+	    Goto Out_a_here;	-- This GOTO will cause funny results.  It is
+				-- legal in full Ada.
+	    Goto In_there;	-- This GOTO will also cause funny results.
+				-- This GOTO is illegal in Ada, but the
+				-- compiler does not catch it.
+	Exception
+	    When Constraint_Error =>
+		<<In_There>> Raise;
+	End;
+     <<Out_a_Here>> Null;
+     End Loop;
+
+   5) There is no way to get a listing of a specification.
+
+   6) Deferred constants which are actually floating point constants do not work.
+
+   7) Pointers at pointers sometimes are dereferenced incorrectly, giving
+compiler errors.
+
+   8) Integer'First/1 will raise Numeric_Error (or cause divide by zero).
+This is caused by the 8086 Divide instruction.
+
+   9) A module in which no floating point constants are used (but has floating
+point operations) will not automatically WITH the floating point module, leading
+to source errors in your code.  A fix is to add a declaration like
+"Not_Used : Float := 0.0;" to your code.
+
+  10) Deriving an Access Type does not work.
+
+  11) Due to the way internal garbage collection works, it is possible to write
+a subprogram which never releases its temporary storage.  If such a subprogram
+is called enough, the program will run out of memory.  A statement like
+Junk := (Str = ""); will force a call to the garbage collector if this happens.
+
+  12) In certain very rare cases, the 'First and 'Last attributes of array
+OBJECTS (not types) will generate bad code.
+
+  13) The parameter TO in various Text_IO.Put routines should be an Out
+parameter, not an In parameter as the manual states.  (The software is OK).
+
+  14) Case statements whose case expression is Byte or a "Universal_Integer"
+give the message "Static Range not found".  Type convert the expression to
+Integer (which the compiler will do anyway!), and the problem will go away.
+
+  15) SYNTAX sometimes runs out of heap space when the /D option is used.
+
+  16) Keypress is flakey (due to the design of MS-DOS).  It will give strange
+results if:
+     A) The previous line was not flushed with Skip_Line.  Keypress will return
+False even if there are still characters in the buffer.
+     B) When used on disk files, if the file size or end_of_file routines are
+used, it will return False.  (Appearently, there is a conflict between IOCtrl
+and LSeek.  It operates differently than stated in the DOS manual.)
+(This is not a problem with DOS 1.xx).
+
+  17) DOS closes Standard_Input (for the life of the running program) if a 
+<Ctrl>-Z is the first character on a line.  Unfortunately, the use of the
+"Z" form does not eliminate this.  This is a DOS "feature"; there is no way
+around it.
+
+  18) Due to the way DOS works, any characters not read from Standard_Input are
+still there when the next program starts.  There is no way to flush the
+input buffer in DOS 2.xx.  (We don't know whether Standard_Input is a
+re-directed file or not).  Extra reads would cause the system to wait for
+more input.  As Keypress does not work very well (at least on Standard_Input),
+there really is no way to flush the buffer.  (Again, this is not a problem
+with DOSs 1.xx).
+
+
+Major Changes from version 1.5.0:
+
+   1) Elimination of the built-in I/O.  You MUST use Text_IO for I/O, or
+write your own library.
+   2) Exceptions are now implemented.  The I/O libraries raise exceptions
+everywhere!  The full documentation explains the conditions which raise
+exceptions in most library routines.  If an exception is unhandled, in most
+cases a walkback like that generated by the previous version is generated.
+   3) Renames of Exceptions and Objects are implemented.
+   4) An allocator may have an initiallizer.
+   5) Case statements are now checked for completeness.
+   6) Functions raise Program_Error if no return statement is executed.
+   7) Empty parens are no longer required or allowed on parameterless function
+calls.
+   8) Many bugs in version 1.5.0 (& 1.5.1) were fixed.
+   9) String and real constants are now stored in their own segment, thus freeing
+more room in the code segment.
+  10) Variant Records also now have standard Ada syntax, although not all of
+the checking required by Ada is done.  Variant tag completeness checking is done.
+  11) Multiple code segments are fully supported; extra data segments are
+supported via BigArray.
+  12) JANUS4 no longer exists; it has been replaced by the use of more memory
+for better performance.
+  13) Several JASM86 bugs have been fixed.  Semicolons are now only comment
+symbols when the /A option is used, so that subprogram specifications can be
+copied without modifiaction.
+
+Most 1.5.0 programs need to be converted to handle I/O exceptions, rather than
+testing IOResult.  If the old programs used the discontinued IO package, they'll
+have to be rewritten to use Seq_IO or Basic_IO.
+
+Assembly lanaguage programs may need to be rewritten to support memory model 1,
+if multiple code segment support is desired.
+
+
+
+Other notes about version 1.5.2:
+(Manual ommissions, errors, etc.)
+
+IO:
+
+   The Package Text2_IO is available for thos who are not using any floating
+point in their programs.  This Package is identical to Text_IO, except that
+it has no Floating Point I/O.  Using it can save 4-8K of space.
+
+   The automatic file close which is applied to all open files when a program
+terminates is NOT equivelent to calling Text_IO.Close; it does not write out
+line and page terminators.
+
+Separate Compilation:
+
+   The file naming given on page 10-2 of the manual is incorrect.  The .SYM
+name and the .JRL name are the same, and match the compilation unit name, not
+the source name.  You must link the compilation unit name.  Thus, in the example
+given, the names would be: SEARCH_L.SYM and SEARCH_L.JRL, even if the source
+was named JOE.X and JOE.Y.  If Search_library was a program, it would be linked
+by JLINK SEARCH_L (of course, Packages are not programs).
+
+BigArray:
+
+    The Package BigArray allows you to use large arrays outside of the normal
+Data Segment.  Up to 128K of extra data can be used.
+
+    To use the library unit, replace the size and type with your own values,
+and recompile and reassemble it.  (Spec and Body).
+
+    To use more than one copy of the routine at a time, you'll have to
+rename it.
+
+    If the message "Not enough RAM" is printed, one of two things
+could have happened.  You could have run out of memory, or you tried to
+allocate more than 128K to the BigArray.  It is possible that the array
+seems like it should fit, but it does not.  This is caused by a little
+overhead.
+
+    You can calculate the amount of memory that the resulting program will
+use by the following formula:
+
+    (Size_of_.COM_or_.EXE_File) + 64K + (Size_of_Array_Item * Length_of_Array)
+
+The result must be smaller than the amount of memory that CHKDSK reports
+free, or the resulting program will not run. 
+
+Memory Models:
+
+   This compiler is distributed with two linker disks, one labeled "model 0",
+and one labeled "model 1".  This are to be used to produce programs of the
+appropriate model.  All compilation units in a given program must be compiled
+with the same model; the linker enforces this rule.  The Profiler is included
+on each linker disk, as it is also linked to the program.  The /O option is
+used on the compiler and linker to select the memory model.  Model 0 is assumed
+if the option is not used.
+
+   The models are:
+	Model 0 - 64K Code; 64K Data; 64K Constants.
+	Model 1 - "Uunlimited" Code; 64K Data; 64K Constants.
+	(Use BigArray to expand your data area).
+
+   Model 1 programs are about 15% bigger and slower than the equivalent Model
+0 programs.  All Model 1 programs are .EXE files; Model 0 programs can be
+either .COM or .EXE.
+
+   Using memory models in the assembler is tricky.  The important things to
+know:
+   Use the Pragma Memory_Model to select a memory model.  I usually declare
+a constant (EQU) "Memory_Model", and conditionally assemble both models.
+   All external calls or jumps must be Near in Model 0; and Far (Call Far xxx)
+in Model 1.  This includes references to local entry points.
+   Returns should match the Calls; i.e. Near Returns (just RET) for Model 0;
+and Far Returns (RET FAR) for model 1.
+   When accessing parameters, remember that there are two more bytes on the
+stack for the return address when using model 1 than in model 0.
+   The SEGMENT directive allows references to the segment addresses of any
+compilation unit under model 1.
+
+
+JANUS1:
+
+   Symbol Table Overflow occuring in JANUS1 means that you've got too many
+labels, block labels, and/or loop labels.  You should minimize use of these
+because of their bizarre visibility rules.
+
+
+JLINK:
+
+   As MS-DOS does not support .COM files larger than 64K, you must use the
+/E option when linking a program which has more than 64K of code plus constants
+under model 0.  (Model 1 automatically produces an .EXE file).
+The linker checks for this condition so that non-working files cannot be
+produced.
+
+JASM86:
+
+   The /A option makes semicolon into a comment delimitor.  Otherwise,
+semicolons can be used just like in Ada.
+
+    The Floating Point things still aren't implemented.
+
+    Nested Packages don't work.
+
+Program Execution:
+
+   The Exception Program_Error is raised if the end of a function is reached
+without executing a return statement.
+
+
+Additional Compiler Checks:
+
+   The compiler now checks that a function contains at least one Return
+statement (as per the Ada Reference Manual).
+
+   The compiler checks for Case Label completeness, as specified by the Ada
+standard.  If a value is found to be missing, it and the range of values
+expected is printed with the error message.  The simple solution to remove
+this error is to put an Others clause into the offending Case statements.
+
+   Exception Renaming is also implemented.  This is mainly so it can be used in
+the I/O subprograms.
+
+
+Why an Exception is Raised:
+
+   Several aspects of the I/O exceptions NAME_ERROR, USE_ERROR, and
+DEVICE_ERROR are implementation dependent.  Here are the
+situations in which these exceptions are raised:
+
+NAME_ERROR is raised when a file name:
+	- is the null string and cannot be (Open);
+	- is not legal for the operating system; or
+	- should name an existing file, but does not (Open).
+    
+USE_ERROR is raised when an attempt is made:
+	- to write to a full disk (Write, Put, Close);
+	- to create a file in a full directory (Create);
+	- to have more files open than the OS allows (Open, Create);
+	- to open a device with an illegal mode;
+	- to create, reset, or delete a device;
+	- to create a file where a protected file (i.e., a
+	  directory or read-only file) already exists;
+	- to delete a protected file;
+	- to use an illegal form (Open, Create); or
+	- to open a device for random I/O.
+    
+DEVICE_ERROR is raised when certain conditions which never should
+  happen actually do.  For example, it occurs when:
+	- a file is not found in a close or a delete;
+	- a seek error occurs on a random Read or Write; or
+	- a seek error occurs on a sequential End_Of_File check; or
+	- an error occurs reopening a file during a Reset; or
+	- the OS does not like the command issued to it.
+
+
+
+
+That's all that I can think of.
+Good luck!
+
+
+
+		Randall L. Brukardt
+		Director, Technical Operations.
+		RR Software, Inc.
+		P.O. Box 1512
+		Madison WI  53701
+
+
+

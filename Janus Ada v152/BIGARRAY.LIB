@@ -1,0 +1,35 @@
+Package BigArray Is
+
+    --
+    -- Package to allow BigArrays outside of the main Data segment.
+    -- The user of this package should change the element_type and
+    -- num_of_elements to match his or her needs.
+    --
+    -- Limits:	The total array size can be no larger than 128K.
+    --		The element size must be less than 4000 Bytes.
+    --		Only one copy of this package may be used under MS-DOS 1.xx;
+    --		Multiple copies are OK under MS-DOS 2.xx and later.
+    --		The lower bound of the array is always 0.
+    --
+    -- Written 3/85
+    -- Last Modified  3/18/85
+    --
+    -- Copyright 1985, RR Software, Inc.; P.O. Box 1512; Madison WI  53704
+    --
+
+    NUM_OF_ELEMENTS : Constant := 15000;
+			-- Number of elements in big array.
+    Subtype Element_Type Is Long_Float;
+			-- Replace Long_Float with the type you want to use.
+
+    Subtype Index_Subtype Is Integer Range 0..NUM_OF_ELEMENTS;
+
+
+    Procedure Get_from_Array(index : index_subtype; rec : Out Element_Type);
+	-- Get Array(index)
+
+    Procedure Put_to_Array(index : index_subtype; rec : In Element_Type);
+	-- Set Array(index)
+
+End BigArray;
+

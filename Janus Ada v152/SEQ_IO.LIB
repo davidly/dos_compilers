@@ -1,0 +1,67 @@
+With IO_Exceptions;
+Package Seq_IO Is
+
+-- The Sequential I/O package for JANUS V. 1.5.1
+-- Last Modified 11/29/84
+-- Designed 11/20/84
+
+-- Ought to be Generic.  Temporarily, Read and Write are built-in to the
+-- compiler to allow that.
+
+-- Type File_Type Is Limited Private;
+Subtype File_Type Is File; -- Temp. so we can use built-in Read & Write
+
+Type File_Mode Is (In_File, Out_File);
+
+Procedure Open(File : In Out File_Type; Mode : In File_Mode; Name : In String);
+    -- Open the file name and give it the mode mode
+Procedure Open(File : In Out File_Type; Mode : In File_Mode; Name : In String;
+    Form : In String);
+    -- Open the file name and give it the mode mode (form is unused)
+
+Procedure Create(File : In Out File_Type);
+    -- Create the file with a system defined name, and give it mode Out_File
+Procedure Create(File : In Out File_Type; Mode : In File_Mode);
+    -- Create the file with a system defined name, and give it mode mode
+Procedure Create(File : In Out File_Type; Mode : In File_Mode; Name : In String);
+    -- Create the file name, and give it mode mode
+Procedure Create(File : In Out File_Type; Mode : In File_Mode; Name : In String;
+    Form : In String);
+    -- Create the file name, and give it mode mode
+
+Procedure Delete(File : In Out File_Type);
+    -- Delete the file file
+Procedure Close(File : In Out File_Type);
+    -- Close the file file
+Procedure Reset(File : In Out File_Type);
+    -- Reset the file, using the current mode
+Procedure Reset(File : In Out File_Type; Mode : In File_Mode);
+    -- Reset the file, with mode mode
+
+Function Name(File : In File_Type) Return String;
+    -- Return the name of the Open file
+Function Mode(File : In File_Type) Return File_Mode;
+    -- Return the file mode of the Open file
+Function Form(File : In File_Type) Return String;
+    -- Return the (unused) form of the file file
+Function Is_open(File : In File_Type) Return Boolean;
+    -- Is the file file open?
+Function End_of_file(file : In File_Type) Return Boolean;
+    -- Can any more items be read from the file?
+
+-- These are currently built-in...
+-- Procedure Read(file : In File_Type; Item : Out Element_Type);
+--    -- Read an element
+-- Procedure Write(file : In File_Type; Item : In Element_Type);
+--    -- Write an element
+
+    Status_Error : Exception Renames IO_Exceptions.Status_Error;
+    Mode_Error   : Exception Renames IO_Exceptions.Mode_Error;
+    Name_Error   : Exception Renames IO_Exceptions.Name_Error;
+    Use_Error    : Exception Renames IO_Exceptions.Use_Error;
+    Device_Error : Exception Renames IO_Exceptions.Device_Error;
+    End_Error    : Exception Renames IO_Exceptions.End_Error;
+    Data_Error   : Exception Renames IO_Exceptions.Data_Error;
+
+End Seq_IO;
+

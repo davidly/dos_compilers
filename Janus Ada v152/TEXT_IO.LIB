@@ -1,0 +1,219 @@
+With JLib86;
+With IO_Exceptions;
+Package Text_IO Is
+
+-- The Text I/O package for JANUS/Ada Version 1.5.1
+-- Last Modified 11/20/84
+
+    -- Copyright 1982,1983,1984  RR Software, Inc.,
+    --  P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+Type File_Type Is Limited Private;
+
+Type File_Mode Is (IN_File,Out_File);
+
+Type Count Is Range 0 .. Integer'Last;
+Subtype Positive_Count Is Count Range 1 .. Count'Last;
+Unbounded : Constant Count := 0;
+
+Subtype LString Is String(255);
+Subtype Field Is Natural;
+
+-- These routines are a subset of the standard Ada Text_IO.  All implemented
+-- routines follow the Ada standard as closely as possible.
+-- Generic IO is not implemented, so I/O is only supported for the built-in
+-- types Character, String, Boolean, Integer, Float, Long_Float, and their
+-- subtypes.  No instantiations are necessary to use this library!
+
+Procedure Open(File : In Out File_Type; Mode : In File_Mode; Name : In String); 
+    -- Open the file name and give it the mode mode
+Procedure Open(File : In Out File_Type; Mode : In File_Mode; Name : In String;
+    Form : In String);
+    -- Open the file name and give it the mode mode
+
+Procedure Create(File : In Out File_Type);
+    -- Create the file with a system defined name and give it the mode Out_File
+Procedure Create(File : In Out File_Type; Mode : In File_Mode);
+    -- Create the file with a system defined name and give it the mode mode
+Procedure Create(File : In Out File_Type; Mode : In File_Mode; Name : In String);
+    -- Create the file name and give it the mode mode
+Procedure Create(File : In Out File_Type; Mode : In File_Mode; Name : In String;
+    Form : In String);
+    -- Create the file name and give it the mode mode
+
+Procedure Delete(File : In Out File_Type);
+    -- Delete the Open file
+Procedure Close(File : In Out File_Type);
+    -- Close the file File
+Procedure Reset(File : In Out File_Type);
+    -- Reset the file File
+Procedure Reset(File : In Out File_Type; Mode : In File_Mode);
+    -- Reset the file File with mode Mode
+Function Name(File : In File_Type) Return String;
+    -- Return the name of the Open file
+Function Mode(File : In File_Type) Return File_Mode;
+    -- Return the file mode of the Open file
+Function Form(File : In File_Type) Return String;
+    -- Return the form of the Open file
+Function Is_open(File : In File_Type) Return Boolean;
+    -- Is the file File open?
+
+    -- Io Redirection
+
+    Function Standard_Input Return File_Type;
+	-- Returns the initial default system input file
+    Function Standard_Output Return File_Type;
+	-- Returns the initial default system output file
+    Function Current_Input Return File_Type;
+	-- Returns the current default input file
+    Function Current_Output Return File_Type;
+	-- Returns the current default output file
+    Procedure Set_Input(File : In File_Type);
+	-- Set the current default input file to File
+    Procedure Set_Output(File : In File_Type);
+	-- Set the current default output file to File
+
+    -- Layout control
+
+    Procedure New_Line;
+    Procedure New_Line(File : In File_Type);
+
+    Procedure New_Line(Spacing : In Positive_Count);
+    Procedure New_Line(File : In File_Type; Spacing : In Positive_Count);
+
+    Procedure Skip_Line;
+    Procedure Skip_Line(File : In File_Type);
+
+    Procedure Skip_Line(Spacing : In Positive_Count);
+    Procedure Skip_Line(File : In File_Type; Spacing : In Positive_Count);
+
+    Procedure New_Page;
+    Procedure New_Page(File : In File_Type);
+
+    Procedure Skip_Page;
+    Procedure Skip_Page(File : In File_Type);
+
+    Function End_of_file(File : In File_Type) Return Boolean;
+	-- End of File Reached?
+    Function End_of_file Return Boolean;
+	-- End of File Reached in Current_Input?
+    Function End_of_Line(File : In File_Type) Return Boolean;
+	-- End of Line Reached?
+    Function End_of_Line Return Boolean;
+	-- End of Line Reached in Current Input?
+    Function End_of_Page(File : In File_Type) Return Boolean;
+	-- End of Page Reached?
+    Function End_of_Page Return Boolean;
+	-- End of Page Reached in Current Input?
+
+    -- Character I/O
+    Procedure Get(Item : Out Character);
+    Procedure Get(File : In File_Type; Item : Out Character);
+    Procedure Put(Item : In Character);
+    Procedure Put(File : In File_Type; Item : In Character);
+
+    -- String I/O
+
+    Procedure Put(Item : In String);
+    Procedure Put(File : In File_Type; Item : In String);
+
+    Procedure Get_Line(Item : Out LString; Last : Out Natural);
+	-- Get a line from Current_Input
+    Procedure Get_Line(File : In File_Type; Item : Out LString; Last : Out Natural);
+	-- Get a line from the file File
+    Procedure Put_Line(File : In File_Type; Item : In LString);
+	-- Put a line to the file with a New_line
+    Procedure Put_Line(Item : In LString);
+	-- Put a line to current_output with a new_line
+
+    -- Integer I/O
+
+    Procedure Get(Item : Out Integer);
+    Procedure Get(File : In File_Type; Item : Out Integer);
+
+    Procedure Put(Item : In Integer);
+    Procedure Put(Item : In Integer; Width : In Field);
+    Procedure Put(File : In File_Type; Item : In Integer);
+    Procedure Put(File : In File_Type; Item : In Integer; Width : In Field);
+
+    Procedure Put(To : Out String; Item : In Integer);
+
+    -- Float I/O
+
+    Procedure Get(File : In File_Type; Item : Out Float);
+    Procedure Get(Item : Out Float);
+	-- Gets a value from the file
+
+    Procedure Put(File : In File_Type; Item : In Float);
+    Procedure Put(Item : In Float);
+    Procedure Put(File : In File_Type; Item : In Float; Fore : In Field);
+    Procedure Put(Item : In Float; Fore : In Field);
+    Procedure Put(File : In File_Type; Item : In Float; Fore,Aft : In Field);
+    Procedure Put(Item : In Float; Fore,Aft : In Field);
+    Procedure Put(Item : In Float; Fore,Aft,Exp : In Field);
+    Procedure Put(File : In File_Type; Item : In Float;
+				Fore,Aft,Exp : In Field);
+	-- Puts formatted item to file
+
+    Procedure Put(To : Out String; Item : In Float);
+    Procedure Put(To : Out String; Item : In Float; aft,exp : Field);
+	-- Formats item into a string
+
+    -- Long_Float I/O
+
+    Procedure Get(File : In File_Type; Item : Out Long_Float);
+    Procedure Get(Item : Out Long_Float);
+	-- Gets a value from the file
+
+    Procedure Put(File : In File_Type; Item : In Long_Float);
+    Procedure Put(Item : In Long_Float);
+    Procedure Put(File : In File_Type; Item : In Long_Float; Fore : In Field);
+    Procedure Put(Item : In Long_Float; Fore : In Field);
+    Procedure Put(File:In File_Type; Item : In Long_Float;
+		Fore,Aft : In Field);
+    Procedure Put(Item : In Long_Float; Fore,Aft : In Field);
+    Procedure Put(Item : In Long_Float; Fore,Aft,Exp : In Field);
+    Procedure Put(File : In File_Type; Item : In Long_Float;
+				Fore,Aft,Exp : In Field);
+	-- Puts formatted item into file
+
+    Procedure Put(To : Out String; Item : In Long_Float);
+    Procedure Put(To : Out String; Item : In Long_Float; aft,exp : Field);
+	-- Formats item into a string
+
+    -- Boolean I/O
+
+    Procedure Put(Item : In Boolean);
+    Procedure Put(Item : In Boolean; Width : In Field);
+    Procedure Put(File : In File_Type; Item : In Boolean);
+    Procedure Put(File : In File_Type; Item : In Boolean; Width : In Field);
+
+    -- Exceptions
+
+    Status_Error : Exception Renames IO_Exceptions.Status_Error;
+    Mode_Error   : Exception Renames IO_Exceptions.Mode_Error;
+    Name_Error   : Exception Renames IO_Exceptions.Name_Error;
+    Use_Error    : Exception Renames IO_Exceptions.Use_Error;
+    Device_Error : Exception Renames IO_Exceptions.Device_Error;
+    End_Error    : Exception Renames IO_Exceptions.End_Error;
+    Data_Error   : Exception Renames IO_Exceptions.Data_Error;
+    Layout_Error : Exception Renames IO_Exceptions.Layout_Error;
+
+Private
+    Type File_Block;
+    Type File_Type Is Access File_Block;
+    Type File_Block Is Record
+	File : Jlib86.File_Ptr;
+	Backup : Character;
+	Backup_Used : Boolean;
+	Line_End : Boolean;
+	Page_End : Boolean;
+	Line_End2: Boolean;
+	Last_was_Line_End : Boolean;
+	Look_Behind : Character;
+	Ctrl_Z_is_end : Boolean;
+    End Record;
+End Text_IO;
+

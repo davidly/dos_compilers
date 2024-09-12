@@ -1,0 +1,91 @@
+With Text_IO;
+Package BCDOps Is
+
+-- Package for Binary Coded Decimals
+-- Last Modified  8/29/84
+
+-----------------------------------------------------------------------------
+-----			Property of R.R. Software, Inc.			-----
+-----									-----
+-----    Do Not Remove from Premises without consent of R.R. Software	-----
+-----									-----
+-----	The Property contained herein is proprietary in nature.		-----
+-----	Duplication, Disclosure, Retransmission or any other use,	-----
+-----	Not allowed by the licensing agreement, is unauthorized and	-----
+-----	may result in legal action.					-----
+-----									-----
+-----			Copyright 1984 By				-----
+-----			R.R. Software, Inc.				-----
+-----			P.O. Box 1512					-----
+-----			Madison WI 53701				-----
+-----------------------------------------------------------------------------
+    
+Type BCD Is Private;
+BCD_Fore: Constant := 20;
+BCD_Aft: Constant := 10;
+Subtype Fore_Field Is Integer Range 0..BCD_Fore;
+Subtype Aft_Field Is Integer Range 0..BCD_Aft;
+Default_Fore: Fore_Field; -- := BCD_Fore;
+Default_Aft: Fore_Field;  -- := BCD_Aft;
+
+Function LT (Left, Right: BCD) Return Boolean; -- <
+Function GT (Left, Right: BCD) Return Boolean; -- >
+Function LE (Left, Right: BCD) Return Boolean; -- <=
+Function GE (Left, Right: BCD) Return Boolean; -- >=
+
+Function PLUS (Right: BCD) Return BCD; -- unary +
+Function MINUS (Right: BCD) Return BCD; -- unary -
+Function ABSOLUTE (Right: BCD) Return BCD; -- abs
+
+Function PLUS (Left, Right: BCD) Return BCD; -- binary +
+Function MINUS (Left, Right: BCD) Return BCD; -- binary -
+Function TIMES (Left, Right: BCD) Return BCD; -- *
+Function DIVIDED_BY (Left, Right: BCD) Return BCD; -- /
+
+Function TO_POWER (Left: BCD; Right: Integer) Return BCD; -- **
+
+Function Int_To_BCD (Right: Integer) Return BCD;
+Function BCD_To_Int (Right: BCD) Return Integer; -- round to nearest integer
+Function Str_To_BCD (Right: String) Return BCD;
+
+Procedure Put (To:   Out String;
+	       Item: In BCD;
+	       Fore: In Fore_Field;
+	       Aft:  In Aft_Field);
+Procedure Put (To:   Out String;
+	       Item: In BCD;
+	       Fore: In Fore_Field);
+Procedure Put (To:   Out String;
+	       Item: In BCD);
+Procedure Put (Fyle: In Text_IO.File_Type;
+	       Item: In BCD;
+	       Fore: In Fore_Field;
+	       Aft:  In Aft_Field);
+Procedure Put (Fyle: In Text_IO.File_Type;
+	       Item: In BCD;
+	       Fore: In Fore_Field);
+Procedure Put (Fyle: In Text_IO.File_Type;
+	       Item: In BCD);
+Procedure Put (Item: In BCD;
+	       Fore: In Fore_Field;
+	       Aft:  In Aft_Field);
+Procedure Put (Item: In BCD;
+	       Fore: In Fore_Field);
+Procedure Put (Item: In BCD);
+
+Private
+
+    Fore_Size: Constant := (BCD_Fore + 1) / 2;
+    Aft_Size: Constant := (BCD_Aft + 1) / 2;
+    Total_Size: Constant := Fore_Size + Aft_Size;
+    Subtype Digit_Index Is Integer Range 1..Total_Size;
+    Subtype Digit Is Byte Range Byte(0)..Byte(99); -- base 100 digit
+    Type Digit_Array Is Array (Digit_Index) Of Digit;
+    Type Three_Way Is (NEGATIVE, ZERO, POSITIVE);
+    Type BCD Is Record
+	Sign: Three_Way;
+	Magnitude: Digit_Array;
+    End Record;
+	
+End BCDOps;
+

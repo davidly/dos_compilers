@@ -1,0 +1,233 @@
+With Timelib,Text_IO;
+Use  Timelib,Text_IO;
+Procedure TQsort Is
+
+-- Timed Quicksort Benchmark Program
+-- Uses non-recursive Quicksort program written by I.R.P. for CS 467
+-- Note that this program is only useful in that it shows some of the
+-- general syntax of ADA as compared to say Pascal
+-- A similar program is in Wirth's A + DS = P
+-- **** Notes for Pascal programmers are noted by --**.  Example:
+--** A Main program is a Procedure in JANUS/Ada
+-- The conditionally compiled lines were for debugging the compiled code
+-- and may be useful if you wish to understand how the program works
+
+    ZERO : Constant := 0;
+    NUMRECS : Constant := 200; -- max number of sortable records
+    Type item Is Record
+	    data1,data2 : Character;
+	    key1 : Integer;
+	End Record;
+    Type drecord Is Array (ZERO..NUMRECS) of item;
+    newrec,datrec : drecord;
+    total : Integer;-- total number of records
+    --** Declarations are like in Pascal
+
+    start,finish,elpased : Time;
+    day : date;
+
+    temp_file : file;
+
+    -----------------------------------------------
+
+    Procedure getrecs (filrec : In Out drecord; sum : In Out integer) Is
+	-- Initializes the array of records --
+	--** these are Like Pascal Var parameters
+
+	aline : Integer;
+    Begin
+	For i In 1..100 Loop
+	    Pragma Arithcheck(off);
+	    aline := (i * 3377) Mod 97;
+		--  Use Overflow and Mod to generate pseudo random sequence
+	    Pragma Arithcheck(on);
+	    filrec(i).key1 := aline;
+	    filrec(i).data1 := 'A';
+	    filrec(i).data2 := 'Z';
+	    Put(i); Put(":  "); Put(aline); New_line;
+	End Loop;
+	sum := 100;
+	--** Procedure need not have return statements if you wish to
+	--** fall out the bottom like this one
+    End getrecs;
+
+    -----------------------------------------------
+
+    Procedure fileout (outfil : In drecord; send : In Integer) Is
+	-- writes out sorted records to the screen
+
+	tot : Integer;
+    Begin
+	tot := ZERO;
+	While tot /= send Loop
+	    tot := tot + 1;
+	    Put(tot); Put(": "); Put(outfil(tot).key1); New_line;
+	End Loop;
+	Put("TOTAL "); Put(send); New_line;
+    End fileout;-- fileout
+
+    -----------------------------------------------
+    Procedure quicksort (list : In Out drecord; numb : In integer) Is 
+
+	MAXSUB : Constant := 21; -- smallest subfile allowed in qsort
+	STACKDEP : Constant := 20; -- stack size 
+	Type indicies Is Record    -- records of partions for stack
+		beg,edn : Integer;
+	    End Record;
+	stk,i,j,left,righ : Integer;
+	t1rec,t2rec : item; -- temp records
+	Subtype stackptr Is integer Range 1..stackdep;
+	Type temparr Is Array (stackptr) of indicies;
+	stack : temparr;
+	--** The order of declaration need only be in the order neccessary
+	--** so that types, and constants can be used by other declarations
+
+	Function median (listnam : In drecord; lef,rit : In Integer)
+	    Return Integer Is
+	--** Note that as compared to Pascal that the parameter passing mode
+	--** is indicated after the colon
+	--** Also unlike Pascal, parameters of mode IN need not be specified
+	--** as such as they are the default of the three kind
+
+	    med : Integer;
+	Begin
+	    --** unlike Pascal, the function name can't be used as a temporary
+	    -- ** variable, as a return is an immediate jump to the End
+	    med := (lef + rit) / 2;
+@	    Put("med="); Put(med); Put(" lef="); Put(lef); Put(" rit=");
+@	    Put(rit); New_line; Put("    "); Put(listnam(med).key1);
+@	    Put("    "); Put(listnam(lef).key1); Put("    ");
+@	    Put(listnam(rit).key1);Put(" should return median value");New_line;
+	    If (listnam(rit).key1 > listnam(med).key1) Then 
+		If listnam(med).key1 > listnam(lef).key1 Then Return(med);
+		Elsif (listnam(rit).key1 > listnam(lef).key1) Then Return(lef);
+		Else Return(rit);
+		End If;
+	    Elsif listnam(med).key1 < listnam(lef).key1 Then Return(med);
+	    Elsif listnam(rit).key1 < listnam(lef).key1 Then Return(lef);
+	    Else Return(rit); --** functions require Return statements
+	    End If;
+	End median;
+	
+	Procedure stinsertsort (newrec : In Out drecord; m,n : Integer) Is
+	    -- 'm' has starting position,'n' has ending position
+	    -- straight insertion for number of records < 21 is 
+	    -- more efficent
+ 
+	    lft : Integer;  -- left sorting stop
+	    savrec,xrec : item; -- temporary records
+	Begin
+	    savrec := newrec(m - 1); -- save the record before the sorting area
+	    For rgt In (m + 1)..n Loop -- Right sorting stop
+		xrec := newrec(rgt);
+		newrec(m - 1) := xrec;
+		lft := rgt - 1;
+		While xrec.key1 < newrec(lft).key1 Loop -- switch records
+		    newrec(lft + 1) := newrec(lft);
+		    lft := lft - 1;
+		End Loop;
+		newrec(lft + 1) := xrec;
+	    End Loop;
+	    newrec(m - 1) := savrec; -- restore that saved record
+	End stinsertsort;
+
+    Begin
+	If numb < MAXSUB Then
+	    stinsertsort(list,1,numb);
+	Else -- file is larger than minimum subfile size
+	    stk := 1;
+	    stack(1).beg := 1;
+	    stack(1).edn := numb;
+	    Loop -- take top request from stack
+ 		left := stack(stk).beg;
+		righ := stack(stk).edn;
+@		Put("Stk="); Put(stk); Put(" left="); Put(left);
+@		Put(" right="); Put(righ); New_line;
+		stk := stk - 1;-- sort subfiles less than maxsub
+				-- by straight insertion sort
+		If (righ - left) < maxsub Then
+		    stinsertsort(list,left,righ);
+		Else
+		    Loop -- split intervals
+			i := left;
+			j := righ;
+@			Put("i=left="); Put(i); Put(" j=righ="); Put(j);
+@			Put(" low and high marks of current sort"); New_line;
+			t1rec := list(median(list,left,righ));
+@			Put("t1rec.key1="); Put(t1rec.key1);
+@			Put(" should match median value"); New_line;
+			Loop
+			    While list(i).key1 < t1rec.key1 Loop
+				i := i + 1;
+			    End Loop;
+			    While t1rec.key1 < list(j).key1 Loop
+				j := j - 1;
+			    End Loop;
+			    If i <= j Then 
+				t2rec.key1 := list(i).key1;
+				list(i).key1 := list(j).key1;
+				list(j).key1 := t2rec.key1;
+				i := i + 1;
+				j := j - 1;
+			    End If;
+			    Exit When i > j;
+			End Loop; -- Repeat Loop
+@			Put("Done Partition - i="); Put(i); Put(" j=");
+@			Put(j); New_line;
+			If (j - left) < (righ - i) Then 
+			    If i < righ Then -- stack right partion req.
+@				Put("Stack Right");
+				stk := stk + 1;
+				stack(stk).beg := i;
+				stack(stk).edn := righ;
+			    End If;
+			    righ := j;-- continue sorting left partion
+			Else
+			    If left < j Then -- stack left partion req.
+@				Put("stack left");
+				stk := stk + 1;
+				stack(stk).beg := left;
+				stack(stk).edn := j;
+			    End If;
+			    left := i; -- continue sorting right partion
+			End If;
+			Exit When left >= righ;
+		    End Loop; --** A Repeat Loop in Pascal
+		End If;
+		Exit When stk = ZERO;
+	    End Loop; -- Repeat Loop
+	End If;
+    End quicksort;
+
+    -----------------------------------------------
+
+Begin
+@   Delete("TQSORT.OUT");
+@   Create(Temp_File,"TQSORT.OUT",Write_Only);
+@   Set_Output(Temp_File);
+    day := get_date;
+    getrecs(datrec,total);
+    Put("**** Sort Start ****"); New_line;
+@   Put(Standard_Output,"**** Sort Start ****");
+@   New_line(Standard_Output);
+    start := get_time;
+    For i In 1..30 Loop
+	newrec := datrec;
+	quicksort(newrec,total);
+@	Put(Standard_Output,i); Put(Standard_Output,"th Sort Done");
+@	New_line(Standard_Output);
+    End Loop;
+    finish := get_time;
+    Put("**** 30 Sorts Done ****"); New_line;
+@   Put(Standard_Output,"**** 30 Sorts Done ****");
+@   New_line(Standard_Output);
+    fileout(newrec,total);
+    Put("Date = "); Put_date(Current_Output,day); New_Line;
+    Put("Starting Time = "); Put_time(Current_Output,start); New_line;
+    Put("Finish Time = "); Put_time(Current_Output,finish); New_Line;
+    Put("Elapsed Time = "); Put_time(Current_Output,
+	elapsed_time(start,finish)); New_Line;
+    Put("Qsort Finish"); New_line;
+@   Close(Temp_File);
+End TQsort;
+

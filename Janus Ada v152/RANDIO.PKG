@@ -1,0 +1,371 @@
+With Jlib86,Basic_IO,Util; Use Basic_IO;
+With IO_Exceptions;  Use IO_Exceptions;
+@ With Text_IO; Use Text_IO;
+    Pragma Debug(Off); Pragma Arithcheck(Off); Pragma Rangecheck(Off);
+@   Pragma Debug(On);  Pragma Arithcheck(On);  Pragma Rangecheck(On);
+Package Body Randio Is
+
+    -- Copyright 1983,1984,1985 RR Software, Inc.,
+    -- P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+    -- This Package uses Basic_IO, and is completely system-independent.
+    -- Only Basic_IO should need to be changed to move this to another
+    -- operating system.
+
+    --
+    -- JANUS/Ada Random I/O Package.
+    -- Modeled on Ada Direct_IO.
+    --
+    -- How to use this Package
+    --
+    --  This Package is designed as an Ada Generic Package.  However, since
+    --  Generics are not yet available in JANUS/Ada, the method for using
+    --  this package is a bit awkward.  The Type Sector must imported from
+    --  some other Package, by changing the With Clause, and the Subtype
+    --  declaration.  Note that the name 'Sector' is used in only one place,
+    --  and thus can easily be changed to any other type.  Then both the
+    --  Specification and Body of RandIO must be recompiled.
+    --
+    --  The following classes of types must not be used as the type Sector
+    --  (cannot be output or input):
+    --     Limited Private Types
+    --     Access Types
+    --     Composite Types containing either of the above.
+    --  Any other type may be output or input.
+	
+    --  Records are numbered from 1, as per the 1983 Ada Standard.
+
+    -- Subtype Element_Type Is Private;
+
+    -- Type File_Type Is Limited Private;
+
+    -- Type File_Mode Is (IN_File,INOUT_File,OUT_File);
+    -- Type Count Is New Natural;
+    -- Subtype Positive_Count Is Count Range 1 .. Count'Last;
+
+    -- Type File_Block;
+    -- Type File_Type Is Access File_Block;
+    -- Type File_Block Is Record
+    --	Fyle : JLib86.File_ptr;
+    --	Index : Positive_Count;
+    --  Size : Count;
+    -- End Record;
+
+    Temp : File_Type;
+
+    qqaddr : Integer;	-- Temporaries used below
+    handle : Integer;
+    block  : Integer;
+    bsize  : Integer := Element_Type'Size/8;
+    result : Integer;
+    fmask : Jlib86.file_ptr;
+
+    Function Convert_Mode (Mode : In File_Mode) Return Basic_Io.File_Mode Is
+    Begin
+	If Mode = IN_File Then
+	    Return Basic_IO.Read_Only;
+	Elsif Mode = INOUT_File Then
+	    Return Basic_IO.Read_Write;
+	Else
+	    Return Basic_IO.Write_Only;
+	End If;
+    End Convert_Mode;
+
+
+    Procedure Open (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String) Is
+	-- Opens a file for I/O.
+    Begin
+	-- Check for Status Error here when the pointers are initted to Null
+	-- by the J/A system.
+	FMask := Null;
+	Basic_Io.Open(FMask,name,Convert_Mode(Mode));
+	-- Exceptions will not come back here...
+	If Basic_IO.Is_Device(FMask) Then
+@	    Put("** Can't use a device Randomly"); New_Line;
+	    Basic_IO.Bad_Device(FMask); -- Raises Use_Error
+	Else
+	    Temp := New File_Block;
+	    Temp.Fyle := FMask;
+	    Basic_IO.Set_Block_Size(Temp.Fyle,BSize);
+	    Temp.Index := 1;
+	    Temp.Size := Count(Basic_IO.File_Size(Temp.Fyle));
+	    File := Temp;
+	End If;
+    End Open;
+
+    Procedure Open (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String; Form : In String) Is
+	-- Opens a file for I/O. (Form is not used)
+    Begin
+	If Form /= "" Then
+	    Raise Use_error;
+	End If;
+	Open(File,Mode,Name);
+    End Open;
+
+
+    Procedure Create (File : In Out File_Type) Is
+	-- Creates a new file for I/O with a temporary name.
+    Begin
+	Create(File,INOUT_File,"");
+    End Create;
+
+    Procedure Create (File : In Out File_Type; Mode : In File_Mode) Is
+	-- Creates a new file for I/O with a temporary name.
+    Begin
+	Create(File,Mode,"");
+    End Create;
+
+    Procedure Create (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String) Is
+	-- Creates a new file for I/O.
+    Begin
+	-- Check for Status Error here when the pointers are initted to Null
+	-- by the J/A system.
+	FMask := Null;
+	If Name = "" Then
+	    Basic_Io.Create(FMask,Basic_IO.Name_Gen,Convert_Mode(Mode));
+	Else
+	    Basic_Io.Create(FMask,name,Convert_Mode(Mode));
+	End If;
+	Temp := New File_Block; -- Done here so exceptions don't leave space on heap.
+	Temp.Fyle := FMask;
+	Basic_IO.Set_Block_Size(Temp.Fyle,BSize);
+	Temp.Index := 1;
+	Temp.Size := Count(Basic_IO.File_Size(Temp.Fyle));
+	File := Temp;
+    End Create;
+
+    Procedure Create (File : In Out File_Type; Mode : In File_Mode;
+	Name : In String; Form : In String) Is
+	-- Creates a new file for I/O. (Form Unused).
+    Begin
+	If Form /= "" Then
+	    Raise Use_error;
+	End If;
+	Create(File,Mode,Name);
+    End Create;
+
+
+    Procedure Close (File : In Out File_Type) Is
+	-- Closes a file.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	FMask := File.Fyle;
+	FMask.Fmode := Byte(1);
+		-- Set mode to read_only, to avoid a buffer flush.
+	Dispose(File); -- Insure that the file is closed, regardless of what
+			-- Basic_IO raises.
+	Basic_IO.Close(FMask);
+    End Close;
+
+
+    Procedure Delete (File : In Out File_Type) Is
+	-- Deletes a file.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	FMask := File.fyle;
+	Dispose(File); -- Insure that the file is closed, regardless of what
+			-- Basic_IO raises.
+	Basic_IO.Delete(FMask);
+    End Delete;
+
+
+    Procedure Reset (File : In Out File_Type) Is
+	-- Resets a file to the original mode
+    Begin
+	Reset(File,Mode(File));
+    End Reset;
+
+    Procedure Reset (File : In Out File_Type; Mode : In File_Mode) Is
+	-- Resets a file.
+	str : String;
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	Else
+	    str := Name(File);
+	    File.Fyle.Fmode := Byte(1);
+		-- Set mode to read_only, to avoid a buffer flush.
+	    Basic_IO.Close(File.Fyle);
+	    Basic_IO.Open(File.Fyle,Str,Convert_Mode(Mode));
+	    Basic_IO.Set_Block_Size(File.Fyle,BSize);
+	    Temp.Index := 1;
+	    Temp.Size := Count(Basic_IO.File_Size(Temp.Fyle));
+	    File := Temp;
+	End If;
+    End Reset;
+
+
+    Function Mode (File : In File_Type) Return File_Mode Is
+	-- Returns the current mode of File.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	Case Basic_IO.Mode(File.Fyle) Is
+	    When No_Access => Raise STATUS_ERROR;
+	    When Read_Only => Return In_File;
+	    When Write_Only=> Return Out_File;
+	    When Read_Write=> Return InOut_File;
+	End Case;
+    End Mode;
+
+
+    Function Name (File : In File_Type) Return String Is
+	-- Returns the name of File.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	Return Basic_IO.Name(File.Fyle);
+    End Name;
+
+
+    Function Form (File : In File_Type) Return String Is
+	-- Returns the form of File.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	Return "";
+    End Form;
+
+
+    Function Is_Open (File : In File_Type) Return Boolean Is
+	-- Return True if the file is Open.
+    Begin
+	If File = Null Then
+	    Return False;
+	Else
+	    Return Basic_IO.Is_Open(File.Fyle);
+	End If;
+    End Is_Open;
+
+
+    Procedure Read (File : In File_Type; Item : Out Element_Type; From : In
+	positive_count) Is
+	-- Read the record at record number positive count.
+    Begin
+	If Mode (File) = Out_File Then -- Call to "Mode" checks STATUS_ERROR
+@	    Put ("** Bad Mode");
+	    Raise MODE_ERROR;
+	End If;
+@	Put("Read Block - "); Put(From); New_Line;
+	File.Index := From;
+	If File.Index > File.Size Then
+	    Raise End_Error;
+	End If;
+	Basic_IO.Read_Mem_At(File.Fyle,Item'Address,Integer(File.Index));
+	File.Index := File.Index + 1;
+    End Read;
+
+    Procedure Read (File : In File_Type; Item : Out Element_Type) Is
+	-- Read the record following the last one read or written.
+    Begin
+	If Mode (File) = Out_File Then -- Call to "Mode" checks STATUS_ERROR
+@	    Put ("** Bad Mode");
+	    Raise MODE_ERROR;
+	End If;
+@	Put("Read Block - "); Put(File.index); New_Line;
+	If File.Index > File.Size Then
+	    Raise End_Error;
+	End If;
+	Basic_IO.Read_Mem_At(File.Fyle,Item'Address,Integer(File.Index));
+	File.Index := File.Index + 1;
+    End Read;
+
+
+    Procedure Write (File : In File_Type; Item : In Element_Type; To : In
+	positive_count) Is
+	-- Write the record at record number positive count.
+    Begin
+	If Mode (File) = In_File Then -- Call to "Mode" checks STATUS_ERROR
+@	    Put ("** Bad Mode");
+	    Raise MODE_ERROR;
+	End If;
+@	Put("Write Block - "); Put(To); New_Line;
+	File.Index := To;
+	If File.Index > File.Size Then
+	    File.Size := File.Index;
+	End If;
+	Basic_IO.Write_Mem_At(File.Fyle,Item'Address,Integer(File.Index));
+	File.Index := File.Index + 1;
+    End Write;
+
+    Procedure Write (File : In File_Type; Item : In Element_Type) Is
+	-- Write the record following the last one read or written.
+    Begin
+	If Mode (File) = In_File Then -- Call to "Mode" checks STATUS_ERROR
+@	    Put ("** Bad Mode");
+	    Raise MODE_ERROR;
+	End If;
+@	Put("Write Block - "); Put(File.Index); New_Line;
+	If File.Index > File.Size Then
+	    File.Size := File.Index;
+	End If;
+	Basic_IO.Write_Mem_At(File.Fyle,Item'Address,Integer(File.Index));
+	File.Index := File.Index + 1;
+    End Write;
+
+
+    Procedure Set_Index (File : In File_Type; To : In Positive_Count) Is
+	-- Set the next record to be read or written, if a number is not
+	-- specified.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	File.Index := To;
+    End Set_Index;
+
+
+    Function Index (File : In File_Type) Return Positive_Count Is
+	-- Returns the number of the next record to be read or written.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	Return File.Index;
+    End Index;
+
+
+    Function Size (File : In File_Type) Return Count Is
+	-- Returns the current size of the file, in records.
+    Begin
+	If File = Null Then
+@	    Put("** File Not Open");
+	    Raise STATUS_ERROR;
+	End If;
+	File.Size := Count(Basic_IO.File_Size(File.Fyle));
+	Return File.Size;
+    End Size;
+
+
+    Function End_of_File (File : In File_Type) Return Boolean Is
+	-- Returns True if the current index points past the end of file.
+    Begin
+	If Mode(File) = Out_File Then -- Call to Mode checks STATUS_ERROR
+@	    Put("** Bad Mode");
+	    Raise MODE_ERROR;
+	End If;
+	Return File.index > File.Size;
+    End End_of_File;
+	
+End RandIO;
+

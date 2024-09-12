@@ -1,0 +1,57 @@
+Package Calendar Is
+
+    -- Ada "Standard" Calendar Package for JANUS/Ada
+    -- This will of course be converted to standard Ada in the future.
+    -- Written by Randall Brukardt  6/23/84
+
+    Subtype Duration Is Long_Float; -- Temp. Declarations until get Fixed
+    Subtype Time Is Duration;       -- Point and Operator Overloading Done.
+		-- Duration ought to be in standard; and Time ought to
+		-- be a Private type with operators.
+    Duration_Small : Constant Duration := 0.01;
+		-- Accuracy of the MS-DOS clock (replaces Duration'Small)
+
+    Subtype Year_Number     Is Integer  Range 1901 .. 2099;
+    Subtype Month_Number    Is Integer  Range    1 ..   12;
+    Subtype Day_Number      Is Integer  Range    1 ..   31;
+    Subtype Day_Duration    Is Duration; -- Range  0.0 .. 86400.0;
+
+    Function Clock Return Time;
+	-- Current Time-of-Day
+
+    Function Year    (Date    : Time) Return Year_Number;
+    Function Month   (Date    : Time) Return Month_Number;
+    Function Day     (Date    : Time) Return Day_Number;
+    Function Seconds (Date    : Time) Return Day_Duration;
+
+    Procedure Split  (Date    : In Time;
+		      Year    : Out Year_Number;
+		      Month   : Out Month_Number;
+		      Day     : Out Day_Number;
+		      Seconds : Out Day_Duration);
+	-- Split a Time into its parts.
+
+    Function Time_of (Year    : Year_Number;
+		      Month   : Month_Number;
+		      Day     : Day_Number;
+		      Seconds : Day_Duration -- := 0.0
+						) Return Time;
+	-- Create a Time from the parts.
+
+    -- Implement these when Operator overloading is implemented
+    -- They are already implemented via the Subtypes declared above.
+    -- Function "+" (Left : Time;     Right : Duration) Return Time;
+    -- Function "+" (Left : Duration; Right : Time)     Return Time;
+    -- Function "-" (Left : Time;     Right : Duration) Return Time;
+    -- Function "-" (Left : Time;     Right : Time)     Return Duration;
+
+    -- Function "<" (Left, Right : Time) Return Boolean;
+    -- Function "<="(Left, Right : Time) Return Boolean;
+    -- Function ">" (Left, Right : Time) Return Boolean;
+    -- Function ">="(Left, Right : Time) Return Boolean;
+
+    Time_Error : Exception; -- Can be raised by Time_of, "+", and "-"
+
+-- Private -- None yet
+End Calendar;
+

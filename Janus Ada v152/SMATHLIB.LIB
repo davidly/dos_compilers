@@ -1,0 +1,73 @@
+Package SMathlib Is
+    -- Single Precision Mathematic functions library
+    -- Last modified  2/ 1/84
+
+    -- Copyright 1983,84  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+
+    PI : Constant := 3.14159_26535_89793_23846;
+    E : Constant := 2.71828_18284_59045_23536;
+    LOG10_E : Constant := 0.43429_44819_03251_82765; -- Log10(e)
+
+    Function Sqrt (Val : In Float) Return Float;
+	-- Returns the sqrt of val
+
+    Function Round (Val : In Float) Return Float;
+	-- Rounds val to an integer value, and returns it as a float
+
+    Function Trunc (Val : In Float) Return Float;
+	-- Truncate val to its integer part, and returns it as a float
+
+    Function Exp (Val : In Float) Return Float;
+	-- Returns e ** Val
+	-- To get 10 ** val, divide by LOG10_E.
+
+    Function Log (Val : In Float) Return Float;
+	-- Returns the natural logarithm of Val.  Val must be > 0.
+	-- To get Log10, multiply by LOG10_E.
+
+    Function Power (Val,Exp : In Float) Return Float;
+	-- Returns Val ** Exp
+
+    -- All angles are in radians!
+    Function Sin (Angle : In Float) Return Float;
+	-- Returns the Sine of the angle
+
+    Function Cos (Angle : In Float) Return Float;
+	-- Returns the Cosine of the angle
+
+    Function Tan (Angle : In Float) Return Float;
+	-- Returns the Tangent of the Angle
+
+    Function ArcTan (Val : In Float) Return Float;
+	-- Returns the ArcTangent of the Value
+
+    Function ArcCos (Val : In Float) Return Float;
+	-- Returns the ArcCosine of the Value
+
+    Function ArcSin (Val : In Float) Return Float;
+	-- Returns the ArcSine of the Value
+
+    Function ArcTan2(X,Y : In Float) Return Float;
+	-- Returns the ArcTangent of X / Y
+
+    Function Deg_to_Rad (Angle : In Float) Return Float;
+	-- Converts the Angle in Degrees to the same angle in Radians
+
+    Function Rad_to_Deg (Angle : In Float) Return Float;
+	-- Converts the Angle in Radians to the same angle in Degrees
+
+End SMathlib;
+ In Float) Return Float;
+	-- Returns the ArcSine of the Value
+
+    Function ArcTan2(X,Y : In Float) Return Float;
+	-- Returns the ArcTangent of X / Y
+
+    Function Deg_to_Rad (Angle : In Float) Return Float;
+	-- Converts the Angle in Degrees to the same angle in Radians
+
+    Function Rad_to_Deg (Angle : In Float) Return Float;
+	-- Converts the Angle in Radians to the sam

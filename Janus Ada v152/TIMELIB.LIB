@@ -1,0 +1,35 @@
+With Text_IO;
+Package Timelib Is
+   -- Time Library - Contains procedures for getting the time and date
+   -- from MS-DOS
+
+
+    -- Copyright 1982  RR Software, Inc., P.O. Box 1512, Madison WI 53701
+    -- Permission is hereby given to distribute Object Code produced from
+    -- these libraries.  All Other rights reserved.
+
+
+Type time Is Record
+     hours  : Integer;
+     Minutes: Integer;
+     seconds: Integer;
+     fract  : Integer;
+End Record;
+
+Type date Is Record
+    year  : Integer;
+    month : Integer;
+    day   : Integer;
+End Record;
+
+Function get_time Return Time;	-- Get and return the current time
+Function get_date Return Date;	-- Get and return the current date
+Procedure put_date(fyle : In Text_IO.file_type; day : date);
+				-- Put the date to the file
+Procedure put_time(fyle : In Text_IO.file_type; clk : time);
+				-- Put the time to the file
+Function elapsed_time(start,finish : Time) Return Time;
+		-- Figure the elapsed time between start and finish
+
+End Timelib;
+
