@@ -1,0 +1,11 @@
+Create
+ProtectedMode
+GlobalComp,NOCHECK:M
+GlobalComp,NOMODINIT
+Directories,'SRCD',DOWN,'OBJD',ENTER
+NewProgram,'DLLMain',ENTER
+NewUnit,'Body',ENTER
+NewExeDef,'MyDll',ENTER
+SetLinkDLL
+LinkDLL,PressAnyKey
+ExitEnv

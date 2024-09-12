@@ -1,0 +1,294 @@
+
+
+    This document is designed to cover the design concept of the
+    Stony Brook development environment SBE. You say, I already know
+    how to use an IDE. SBE is not an IDE, it is actually designed to be
+    a project management system. IDE, Project management system, what
+    do these words mean. Here is how we define these terms.
+
+    IDE
+
+    This is a program that smoothly integrates the tools that a
+    software developer uses to write software. These tools include and
+    editor, compiler, linker and debugger. Other tools may also be
+    available. These tools are integrated into a single whole, rather
+    than being discrete applications. These environments are usually
+    based upon the editor, and allow the setting of options for the
+    various tools and executing these tools.
+
+
+    Project Management System
+
+    This product understands all of the files that compose an 
+    application and what the inter-relational dependencies these files 
+    may have. The project manager tracks all attributes of all files 
+    under its supervision in real time as they are edited, compiled, 
+    linked and debugged to help ensure the "correctness" of the final 
+    linked program. The project manager also integrates the various 
+    tools used in development as an IDE does.
+
+    Enough about terminology. Basically SBE provides the same basic
+    core functionally as other IDE environments, it goes about this
+    duty in a different manner, and goes beyond this level as well.
+
+    Design goals of SBE.
+
+    The most basic design goal of SBE is to provide an IDE like system
+    that has features to manage large applications, 30 or more modules.
+    Another basic design goal is to reduce the number of keystrokes
+    required to perform a typical task, which means less work for the
+    user.
+
+    SBE is not a freeform, do it on the fly system like the typical
+    IDE, it has an application structure you define before any code is
+    written or added.  Thus for small projects SBE can be seen as
+    cumbersome compared to an IDE which requires no structure at all.  A
+    good example of an application used to design the SBE feature set
+    are our compilers.  Each compiler consists of more than 50 modules,
+    two files per module, distributed across three directory groups,
+    with two directories per group.
+
+    M2     - Modula-2 parser
+      DEF  - definition files. same as INTERFACE section of a UNIT
+      MOD  - implementation files. same as IMPLEMENTATION portion.
+    PP     - Pascal parser
+      DEF
+      MOD
+    CG     - common "back end" to both compilers
+      DEF
+      MOD
+    CORE   - files common to all Stony Brook programs.
+             ie Files,Keyboard,mouse.
+      DEF
+      MOD
+
+    The typical File Open directory list box is a completely inadequate
+    user interface to deal with the above situation. Thus SBE was
+    designed to eliminate the need to deal with the disk other than
+    initial setup of the directory structure. File selection now
+    becomes nothing more than selecting a file by name, the environment
+    fills in the directory information.
+
+    SBE basics
+
+    The tools SBE provides for project development are an editor,
+    Pascal+ compiler, foreign language compilers such as an
+    assembler and C compiler, linker, debugger and profiler. Pascal+
+    supplies all these tools but the assembler and C compiler. Also SBE
+    allows you to install any editor, linker or debugger you want. SBE
+    is designed to be a project manager that you can plug in the tools
+    of your choice.  Thus it has the ability to integrate varied tools
+    not necessarily available from Stony Brook, into the project
+    management system without loss of capability.
+
+    Since SBE is a project manager, and tracks module information, it
+    must have some place to store all of this information it gathers on
+    the modules that compose your project.  This is the SBL file. SBE
+    always runs with an associated SBL file.
+
+    With SBE you add application components to the project SBL library.
+    SBE finds these components via the usual directory search paths
+    you are already familiar with. The component types SBE can track
+    and deal with are UNITs, Program files, Include files, $L Object
+    import files (OBJ) and their associated sources, linkable object
+    libraries(LIB), other project SBL files, and two types of foreign
+    languages, Assembly code and C source code. The most important of
+    these are the native Pascal source code modules, and SBE has a very
+    good understanding of Pascal.
+
+    An example of adding a module to a project.
+
+    One menu choice is New program. When you type in the name of the
+    program, the path is not necessary, SBE will find it and add the
+    program to its list of things to track. It will notice that it
+    knows nothing about this modules dependencies and will scan the
+    source file to find out what this file depends on. Any items in the
+    USES statement will be automatically added to the project, also any
+    include files and any object import files. SBE will continue adding
+    and scanning files until nothing else is added, and SBE has scanned
+    all files.  By simply executing New program, SBE will load your
+    entire application into the project, which could be 1 to a 1023
+    files.  There are other ways provided to add modules to your
+    projects.
+
+    At this level SBE has already removed one level of management from
+    your duties. Directory management. You need not concern yourself
+    with what directory each module is in, SBE knows and tracks this
+    for you, simply select the module you want by name, SBE knows
+    where to find this module.
+
+    What does SBE know about your application modules.
+
+    1. The exact disk location. If the location changes it will detect
+       it.
+
+    2. The file date and time. If this changes it will detect it.  This
+       is useful if you edited or changed files outside of the SBE
+       environment.
+
+    3. When you edit a file. It detects if you have really changed the
+       file or "just looking".
+
+    4. It knows all modules that each module depends upon. If you tried
+       to remove a module that somebody else in the library still needs
+       the environment will warn you of this.
+
+    For Pascal files only.
+    5. For Pascal units the dependencies of the INTERFACE and
+       IMPLEMENTATION portions of the UNIT are tracked separately.
+    6. It knows the exact time of the last compilation of each module.
+    7. It knows the exact compiler options used to compile each
+       module.
+    8. It knows if these options differ from the current options
+       settings. If the options are different, the file should be
+       compiled.
+    9. It allows you to set compiler options on a per module basis
+       overriding the global compiler options that are set for all
+       files.
+    10.It knows all files that contain IFDEF, IFOPT, etc...,
+       statements and what conditional compilation version tags are set
+       in each file. This allows SBE to know exactly which files need
+       to be compiled or re-scanned when you change a version tag or
+       option.
+
+    For program files.
+    11. It knows if the program has been linked, and if debug
+	information was linked or not.
+
+    At this level SBE has removed another task in project management
+    from your duties, ensuring program correctness at any point in
+    time.  Make systems you are used to simply go by file date times of
+    the compiler output to the source. Options are not taken into
+    account.  SBE fully integrates all options into the make process.
+    If the current set option state is different than the current built
+    state then the application will require some or all files to be
+    updated to the current state.
+
+
+    The SBL file is really at the core of the project management
+    system. SBL files are the method used to allow the use of
+    precompiled utility libraries of code. The basic concept is to
+    compress the amount of information the programmer must deal with.
+    The SBL file contains this information. The process is quite
+    simple.
+
+    1. You create an SBL project file for your utility library.
+    2. Set the appropriate directory search options for all of the
+       file types.
+    3. Add all necessary modules to the library.
+    4. Set the appropriate compiler options for all modules.
+    5. Compile all of the modules.
+    6. Exit the environment.
+
+    Now for anyone to use any of the modules that are contained in the
+    utility library, all they have to do is refer to the utility SBL
+    file from their application SBL file.  All information about all
+    modules is now known, even if the modules are distributed all over
+    the hard disk, the one SBL file gives access to all contained
+    modules.
+
+    SBE displays all of your project modules on its main screen.
+    Numerous methods are given for customization of this display and
+    allowing you to display a varying degree of information about your
+    project from very little information to too much. Selecting a
+    module is as simple as using the mouse or cursor keys. An even
+    faster method is to type the name of the module, the environment
+    does an incremental ASCII search at each keystroke. Three
+    keystrokes should get you to most any module.
+
+    A sample of the commands for the selected module are
+
+    Alt/C	- compile it
+    Alt/L	- link it
+    Alt/D	- debug it
+    Alt/R	- run it
+    ENTER	- edit it
+
+    This gives a basic idea what SBE tries to accomplish. The manuals
+    can go in further detail on the features and how to use them. What
+    I want to cover in a bit more detail now is some of the capabilities
+    SBE offers that you have not seen before.
+
+    Local compiler options.
+
+    Other IDE systems allow you to set compiler options, SBE does to.
+    SBE also allows you to set options for a specific module. To
+    accomplish this in other systems your placed the options in the
+    source files via embedded compiler directives. You should not have
+    to edit source code to set compiler options. What if the same piece
+    of source code is used by more than one project and each wants
+    different options. The work around for this is to use conditional
+    compilation, which means you are writing more source code to set
+    compiler options.
+
+    Compiler options and conditional compilation.
+
+    SBE uses compiler options and conditional compilation version tags
+    as part of its make system. This helps preserve the integrity of
+    your application by ensuring that all files were compiled with the
+    proper options and version tags.
+
+
+    Control of compiler output.
+
+    SBE places a compiler output into the single directory supplied by
+    your directory options. Most systems place the compiler output in
+    the same location as the source file. It is not uncommon for
+    multiple applications to use the same source file for some action.
+    This would cause each application to clobber to others compiler
+    output, or worse, use the other output, since the other
+    application may have used different options or version tags. By
+    controlling the compiler output location, many projects can use the
+    same source code and not clobber each others compiler output. They
+    share the source code but have their own unique binary linkable
+    code.
+
+    I use this feature on our Modula-2 and Pascal SBE environments.
+    They are about 97% the same. The main differences are constants and
+    such. "Module name" vs. "UNIT name". The source directories are the
+    same, the SBL files M2E.SBL and SBE.SBL are in the same
+    directory, and there is a version tag difference. The compiler
+    output directories are different, MOBJ and POBJ respectively.
+
+
+    Seamless integration of foreign, non-Pascal, languages.
+
+    It is very common for a project to include assembly code in some
+    form. With Pascal+, this can take many forms. The Pascal compiler
+    can handle assembly, to a certain extent, via syntax compatible
+    with Turbo Pascal. Also, $L object importation is very common. The
+    OBJ files that are imported do have some limitations, and Pascal+
+    can link in assembly OBJ files in their full glorious wonder by
+    declaring the file as a ForeignAsm file. C language source files
+    are also supported. Yes, C!. You can edit your assembly and C
+    source code and SBE will compile it using the command line you
+    specified to compile the file when necessary. SBE does not
+    understand how to determine assembly and C dependency structures,
+    therefore any include files these may use will not be automatically
+    added to the project.
+
+    SBE has the capability to fully integrate Pascal, assembly and C
+    source code into the development of an application. You write the
+    source code, SBE will do the make, compile and linking for you for
+    these three languages.
+
+    Debugging.
+
+    Since SBE knows everything about your application when you give the
+    command to debug a program module, the environment can
+    automatically compile any files with debug info if they were not
+    already compiled with debug info.
+
+    If your application is compiled and linked, but some or all modules
+    were not compiled with debug info, the system can make sure that
+    everything is compiled with debug info before executing the
+    debugger. This relieves you of making sure the proper debug options
+    are set to debug your application. SBE will do it automatically for
+    you.
+
+
+    Plug and Play
+
+    SBE has the ability to integrate other development tools.
+    You can install any editor, linker and debugger you may want to
+    use.

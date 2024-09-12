@@ -1,0 +1,482 @@
+******************************************************************************
+*									     *
+*	These changes are supplied courtesy of:				     *
+*									     *
+*       Robert J. Atkins						     *
+*       838 Flowers Crossing						     *
+*	Lawrenceville, GA  30244-5955                                        *
+*	Phone: (404) 972-4257						     *
+*									     *
+* NOTE: Self-employed as an independent software developer, I		     *
+*	presently am not a practicing consultant.  I do not		     *
+*	provide any technical support for either Stony Brook		     *
+*	Software or Borland International.				     *
+*									     *
+*	This list of changes is provided as is with no guarantees	     *
+*	of any kind and with no intent on my part to supply technical	     *
+*	assistance to anyone trying to implement them.			     *
+*									     *
+*	I would like to gratefully acknowledge technical assistance	     *
+*	provided to me by Stony Brook software in learning the various	     *
+*	nuances of the Pascal+ development system's implementation.	     *
+*	However, Stony Brook was in no way involved in the project I	     *
+*	undertook of making Turbo Vision work correctly with Pascal+.	     *
+*	Nor was Borland International involved in the project.		     *
+*									     *
+******************************************************************************
+
+
+
+This is a list of changes required to Borland International's Turbo Pascal 6.0
+version of the Turbo Vision application framework and Turbo Vision Demos
+source code in order to successfully compile and link them with Stony Brook
+Pascal+. All of the Turbo Vision demo programs supplied with Turbo Pascal 6.0,
+with the exception of the TVBGI.PAS demo program, were thoroughly tested after
+these changes were made.  In all cases the Pascal+ versions worked identically
+to the Turbo Pascal compiled and linked versions.
+
+If you installed Turbo Pascal 6.0 using the default installation disk drive
+paths, the demos will be in \TP\TVDEMOS.  The Turbo Pascal Runtime Library
+Source Code diskette has an install program that puts the Turbo Vision source
+in \TP\RTL\VISION.  The dates of the files on the RTL Souce diskette used for
+this project are all 1/14/91 6:00AM.
+
+The demos were compiled and linked from within the Pascal+ environment.  The
+defaults in that environment were used with a one exception.  I changed the
+Options/Compiler options/Global 'Aliasing occurs' setting to 'Yes' so all
+modules would be compiled with that assumption.  With close inspection of all
+source code modules this could be selected on an individual module basis.
+
+Along with the description of each actual change is some explanatory informa-
+tion concerning the need for the change.  In some cases changes made are not
+compatible with the Turbo Pascal compiler.  These are duly noted in the ex-
+planations.  Periods (...) are used to avoid duplication of the original
+source code, except in the case of keywords such as 'asm'.
+
+
+
+Turbo Vision Units modified as follows:
+
+(****************************************************************************)
+OBJECTS.PAS -
+
+NOTE: All of the following changes in the OBJECTS unit are needed to accomo-
+date the Pascal+ implementation of how nested procedures access the parent
+proc's local variables.  WARNING: These changes are not compatible with the
+Turbo Pascal compiler because it uses a different implementation.
+
+(1)
+(A) At the very beginning of the body of function TCollection.FirstThat make
+the following changes-
+	   FROM: 	     function TCollection.FirstThat.............
+			     asm
+				     LES  ..,Self
+
+	   TO:	 	     function TCollection.FirstThat.............
+		 (New  Line) var
+		 (New  Line)   CallerBP: Word;
+			     asm
+		 (New  Line)	     MOV  AX,[BP]
+		 (New  Line)	     MOV  CallerBP,AX
+				     LES  ..,Self
+
+(B) Later in function TCollection.FirstThat make the following change-
+	   FROM:		    PUSH	WORD ... ES:[DI]
+		(Delete this line)  PUSH	WORD ... [BP]
+				    CALL	Te..
+				    POP		C.
+
+	   TO:			    PUSH	WORD ... ES:[DI]
+				    CALL	Te..
+				    POP		C.
+
+(2)
+(A) At the very beginning of the body of procedure TCollection.ForEach make
+the following changes-
+	   FROM: 	     procedure TCollection.ForEach.............
+			     asm
+				     LES  ..,Self
+
+	   TO:	 	     procedure TCollection.ForEach.............
+		 (New  Line) var
+		 (New  Line)   CallerBP: Word;
+			     asm
+		 (New  Line)	     MOV  AX,[BP]
+		 (New  Line)	     MOV  CallerBP,AX
+				     LES  ..,Self
+
+(B) Later in procedure TCollection.ForEach make the following change-
+	   FROM:		    PUSH	WORD ... ES:[DI]
+		(Delete this line)  PUSH	WORD ... [BP]
+				    CALL	Act...
+				    POP		C.
+
+	   TO:			    PUSH	WORD ... ES:[DI]
+				    CALL	Act...
+				    POP		C.
+
+(3)
+(A) At the very beginning of the body of function TCollection.LastThat make
+the following changes-
+	   FROM: 	     function TCollection.LastThat.............
+			     asm
+				     LES  ..,Self
+
+	   TO:	 	     function TCollection.LastThat.............
+		 (New  Line) var
+		 (New  Line)   CallerBP: Word;
+			     asm
+		 (New  Line)	     MOV  AX,[BP]
+		 (New  Line)	     MOV  CallerBP,AX
+				     LES  ..,Self
+
+(B) Later in function TCollection.LastThat make the following change-
+	   FROM:		    PUSH	WORD ... ES:[DI]
+		(Delete this line)  PUSH	WORD ... [BP]
+				    CALL	Te..
+				    POP		C.
+
+	   TO:			    PUSH	WORD ... ES:[DI]
+				    CALL	Te..
+				    POP		C.
+
+
+(****************************************************************************)
+DRIVERS.PAS -
+
+(1)
+The following consts are in the first section of initialized variables in the
+interface section.  Add the single const MouseReversePad as shown-
+	   FROM:	 MouseReverse: Boolean = .....;
+			 DoubleDelay: Word = .;
+
+	   TO:		 MouseReverse: Boolean = .....;
+	(Add this line)	 MouseReversePad: Byte = 0;
+			 DoubleDelay: Word = .;
+The technical reason for this change is because Pascal+ does not WORD align
+typed constants when the {$A+} alignment option is enabled.  It only WORD
+aligns uninitialized vars.  Turbo Pascal WORD aligns both typed constants and
+uninitialized vars so it would automatically pad the MouseReverse const in any
+program using this const.  Some of the demo programs contain code that causes
+the MouseReverse const to be accessed as both a WORD-sized variable and a
+Boolean.  This change is compatible with the Turbo Pascal compiler.
+
+Operationally, this const must be added to get the demo programs TVDEMO and
+TVRDEMO to work properly when setting the mouse click delay using the OPTIONS/
+MOUSE dialog box.  Without it any change made to the click delay using the
+dialog box's horizontal scrollbar assigned to this option will be lost when
+you exit the dialog box. This is true whether you use the 'CANCEL' or the 'OK'
+button.  Actually, when working properly the 'OK' button has no bearing on
+changes to the position of the click delay indicator on the scroll bar. Any
+changes made to the scrollbar will be kept even if the 'CANCEL' button is
+'pressed'.  The 'OK' button only affects keeping a change to the MouseReverse
+state.
+
+(2)
+The following var is in the Event manager variables in the implementation
+section-
+	   DELETE EventQLast: record ...
+This var will not be used due to the next change in the DRIVERS unit.
+
+(3)
+The following code is line 21 of actual instructions in the body of
+procedure GetMouseState following the 'asm' keyword-
+	   FROM: ...	SI, OFFSET EventQLast
+	   TO:   ...	SI, OFFSET EventQueue[EventQSize * (TYPE TEvent)]
+Originally, the code using this line depended upon the way Turbo Pascal cre-
+ates variables in the .EXE file.  Pascal+ uses a different algorithm for
+deciding where to place vars in the linked program.  The replacement line
+eliminates this implementation dependency.  This change is compatible with
+the Turbo Pascal compiler.
+
+(4)
+The following code is line 28 of actual instructions in the body of
+procedure MouseInt following the 'asm' keyword-
+	   FROM: ...	DI, OFFSET EventQLast
+	   TO:   ...	DI, OFFSET EventQueue[EventQSize * (TYPE TEvent)]
+This change is for the same reason as the preceding one. Here a different
+register is being compared to the offset value, but that is of no consequence.
+
+(5)
+The following code is line 7 of actual instructions in the body of
+procedure InitEvents following the 'asm' keyword-
+	   FROM: MOV	.., OFFSET DS:EventQueue
+	   TO:   MOV	.., OFFSET EventQueue
+Currently, Pascal+ will not compile this line properly with the DS: included.
+The compiler already knows what segment EventQueue is located in anyway.
+
+(6)
+The following code is line 24 of actual instructions in the body of
+procedure InitEvents following the 'asm' keyword-
+	   FROM: MOV	.., OFFSET CS:MouseInt
+	   TO:   MOV	.., OFFSET MouseInt
+Currently, Pascal+ will not compile this line properly with the CS: included.
+The compiler already knows what segment MouseInt is located in anyway.
+
+(7)
+Between Lines 10 and 11 following the 'asm' keyword in proc SwapStatusLine
+insert a CLD instruction as follows-
+	   FROM: (Line 10) 		LDS	.., Buffer
+		 (Line 11)  @@1:	MOV	AX, ...
+
+	   TO:   (Line 10) 		LDS	.., Buffer
+	     (New Line 11)		CLD
+	     (Old Line 11)  @@1:	MOV	AX, ...
+The direction flag (DF) must be initialized properly before the MOVSW instruc-
+tion that occurs after AX is loaded.  The instruction that loads AX is inside
+a loop, so the CLD instruction is placed immediately before this loop.
+
+
+(****************************************************************************)
+VIEWS.PAS -
+
+NOTE: The following changes in items (1) thru (4) for the VIEWS unit are
+necessary in order to get Pascal+ to actually create the local variables
+by initializing them to zero.  These vars are not used in the TView methods
+where they are declared locally.  Instead they are referenced later by
+procedure WriteView when it is called.  Pascal+ does not create local vars
+if they are not referenced within the code block that declares them.  This is
+true in assembler procs as well as normal Pascal procs.
+
+(1)
+At the beginning of the body of procedure TView.WriteBuf immediately following
+the 'asm' keyword make the following changes-
+	   FROM:	     asm
+					CMP	.,0
+					JLE	..2
+
+	   TO:		     asm
+			(New line)	XOR	AX,AX
+			(New line)	MOV	Target.WORD[2],AX
+			(New line)	MOV	Target.WORD[0],AX
+			(New line)	MOV	Buffer.WORD[2],AX
+			(New line)	MOV	Buffer.WORD[0],AX
+			(New line)	MOV	&Offset,AX
+					CMP	.,0
+					JLE	..2
+
+(2)
+At the beginning of the body of procedure TView.WriteChar immediately follow-
+ing the 'asm' keyword make the following changes-
+	   FROM:	     asm
+					MOV	..,Color
+					CALL	Map....
+
+	   TO:		     asm
+			(New line)	XOR	AX,AX
+			(New line)	MOV	Target.WORD[2],AX
+			(New line)	MOV	Target.WORD[0],AX
+			(New line)	MOV	Buffer.WORD[2],AX
+			(New line)	MOV	Buffer.WORD[0],AX
+			(New line)	MOV	&Offset,AX
+					MOV	..,Color
+					CALL	Map....
+
+(3)
+At the beginning of the body of procedure TView.WriteLine immediately follow-
+ing the 'asm' keyword make the following changes-
+	   FROM:	     asm
+					CMP	.,0
+					JLE	..2
+
+	   TO:		     asm
+			(New line)	XOR	AX,AX
+			(New line)	MOV	Target.WORD[2],AX
+			(New line)	MOV	Target.WORD[0],AX
+			(New line)	MOV	Buffer.WORD[2],AX
+			(New line)	MOV	Buffer.WORD[0],AX
+			(New line)	MOV	&Offset,AX
+					CMP	.,0
+					JLE	..2
+
+(4)
+At the beginning of the body of procedure TView.WriteStr immediately follow-
+ing the 'asm' keyword make the following changes-
+	   FROM:	     asm
+					MOV	..,Color
+					CALL	Map....
+
+	   TO:		     asm
+			(New line)	XOR	AX,AX
+			(New line)	MOV	Target.WORD[2],AX
+			(New line)	MOV	Target.WORD[0],AX
+			(New line)	MOV	Buffer.WORD[2],AX
+			(New line)	MOV	Buffer.WORD[0],AX
+			(New line)	MOV	&Offset,AX
+					MOV	..,Color
+					CALL	Map....
+
+
+NOTE: The following changes in items (5) and (6) in the VIEWS unit are needed
+to accomodate the Pascal+ implementation of how nested procedures access the
+parent proc's local variables.  WARNING: These changes are not compatible with
+the Turbo Pascal compiler because it uses a different implementation.
+
+The added variable, CallerBP, must be the first in the local variables decla-
+ration section.  It cannot be placed after the Alast var.
+
+(5)
+(A) At the beginning of the body of procedure TGroup.FirstThat make the
+following changes-
+	   FROM:	     var
+				ALast: Poin...;
+			     asm
+				LES     ..,Self
+
+	   TO:		     var
+		(New line)	CallerBP: Word;
+				ALast: Poin...;
+			     asm
+		(New line)	MOV	AX,[BP]
+		(New line)	MOV	CallerBP,AX
+				LES     ..,Self
+
+(B) Later in procedure TGroup.FirstThat make the following change-
+	   FROM:		    PUS.    ES
+				    PUS.    DI
+		(Delete this line)  PUSH    WORD ... [BP]
+				    CAL.    P
+
+	   TO:			    PUS.    ES
+				    PUS.    DI
+				    CAL.    P
+
+(6)
+(A) At the beginning of the body of procedure TGroup.ForEach make the
+following changes-
+	   FROM:	     var
+				ALast: Poin...;
+			     asm
+				LES     ..,Self
+
+	   TO:		     var
+		(New line)	CallerBP: Word;
+				ALast: Poin...;
+			     asm
+		(New line)	MOV	AX,[BP]
+		(New line)	MOV	CallerBP,AX
+				LES     ..,Self
+
+(B) Later in procedure TGroup.ForEach make the following two sets of changes-
+    (1st)  FROM:		    PUS.    ES
+				    PUS.    DI
+		(Delete this line)  PUSH    WORD ... [BP]
+				    CAL.    P
+
+	   TO:			    PUS.    ES
+				    PUS.    DI
+				    CAL.    P
+
+    (2nd)  FROM:		    PO.	    ES
+				    JMP	    ..1
+		@@3:		    PUSH    WORD ... [BP]
+				    CAL.    P
+
+	   TO:			    PO.     ES
+				    JMP     ..1
+		@@3:		    CAL.    P
+Note that the label @@3: must be preserved but the PUSH WORD PTR [BP] instruc-
+tion must be eliminated.  Then the CALL P instruction becomes the one immedi-
+ately after the label.
+
+
+(****************************************************************************)
+STDDLG.PAS -
+
+(1)
+Between Lines 3 and 4 following the 'asm' keyword in nested function
+NoWildChars inside of procedure TFileDialog.GetFileName insert a CLD
+instruction as follows-
+	   FROM: (Line 3) 	XOR	AX,..
+		 (Line 4)	LOD..
+
+	   TO:   (Line 3) 	XOR	AX,..
+	     (New Line 4)	CLD
+	     (Old Line 4)	LOD..
+The direction flag (DF) must be initialized properly before the LODSB instruc-
+tion.
+
+
+(****************************************************************************)
+EDITORS.PAS -
+
+(1)
+Between Lines 6 and 7 following the 'asm' keyword in function IScan insert
+a CLD instruction as follows-
+	   FROM: (Line 6) 	XOR	AH,..
+		 (Line 7)	LOD..
+
+	   TO:   (Line 6) 	XOR	AH,..
+	     (New Line 7)	CLD
+	     (Old Line 7)	LOD..
+The direction flag (DF) must be initialized properly before the LODSB instruc-
+tion.
+
+
+
+Turbo Vision Demo Units and Programs modified as follows:
+
+(****************************************************************************)
+GENPARTS.PAS -
+
+(1)
+In the interface section there is a typed constant named Descriptions which is
+an initialized array[1..DataCount] of String.  Each of the strings in the
+initializer is enclosed in an unnecessary set of parentheses.  They are appar-
+ently included to make it easier for a programmer to read the initializer.
+Pascal+ currently does not parse these nested parentheses correctly, reporting
+an error unless they are removed.  The change is to remove them.  An example
+of one of the strings follows-
+	FROM:	Descriptions: array[1..DataC....] of Str... =
+		    (('Govern.... stan.... issue'#13#10 +
+		      'and certi.... by FA. for'#13#10 +
+		      'internat..... use.'),
+		     (<NEXT STRING IS HERE>),
+		     (<ETC.>),
+		     (<ETC.>),
+		     (<ETC.>)
+		    );
+
+	TO:	Descriptions: array[1..DataC....] of Str... =
+		    ('Govern.... stan.... issue'#13#10 +
+		     'and certi.... by FA. for'#13#10 +
+		     'internat..... use.',
+		     <NEXT STRING IS HERE>,
+		     <ETC.>,
+		     <ETC.>,
+		     <ETC.>
+		    );
+
+
+(****************************************************************************)
+TVRDEMO.PAS -
+
+(1) This demo program uses the Turbo Pascal Overlay Unit so a number of the
+other units used can be overlaid.  Pascal+ uses a different scheme for pro-
+gram overlays, requiring that the Overlay unit be removed from the list in
+TVRDEMO's 'uses' clause.  Also, remove the individual {$O <unitname>} direc-
+tives following the 'uses' clause.
+
+(2) Since Borland's Overlay Unit is not used in the Pascal+ overlay system
+the calls made inside the program's begin .. end section to procedures in
+that unit must be removed.  Lines 7 thru 13 in that section must be deleted
+as follows-
+			begin
+		(Line 1)  if Lo(....) ..............
+			  else
+			  begin
+			    EXENa.. ................
+			    if EXENa.. .............
+			  end;
+	(Delete  Line 7)  OvrInit(EXENa..);
+	(Delete  Line 8)  OvrSetBuf(58 * 10..);
+	(Delete  Line 9)  if OvrResult <> ovrOk th..
+	(Delete  Line 10) begin
+	(Delete  Line 11)   Print...('No overlays fou.. in .EXE file. ....);
+	(Delete  Line 12)   Halt(.);
+	(Delete  Line 13) end;
+			  Demo.In..;
+			  Demo.Ru.;
+		(Line 16) Demo.Do..;
+			end.
+

@@ -1,0 +1,14 @@
+The Graph.PAS file in this directory is an interface to the Borland
+C, C++ compilers GRAPHICS.LIB BGI implementation.
+
+If you look at the file you will notice that most calls are directly to
+the C code. Some however, are indirect through Pascal procedures. This
+is primarily because C uses NULL terminated strings and Pascal uses length
+byte strings. Thus a conversion is necessary.
+
+Please familiarize yourself with the methods for linking with C language
+code. Refer to the Pascal+ manuals and the example code.
+
+NOTE: The Graph.PAS module should be compiled to an .OBJ file and not a
+      .LIB file. This is because of a conflict with the Graph module in
+      the RTL.

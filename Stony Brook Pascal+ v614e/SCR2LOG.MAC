@@ -1,0 +1,107 @@
+;a "macro" must be contained on a single line
+;if you don't like that, well then, you have the source code!
+;Tabs and spaces are treated as white space
+;repeat blocks are as follows (count:commands)
+;when a repeat block is expanded, it should be less than about 200 characters
+
+;this will get you to the main window from any location, except the editor!
+Root=ESC,ESC
+
+;some basic field selectors
+Yes	= "Y"
+No	= "N"
+Default	= "D"
+Small	= "S"
+Medium	= "M"
+Large	= "L"
+Space	= "S"
+Time	= "T"
+Object	= "O"
+Library	= "L"
+Create	= "Y"
+PressAnyKey = ESC
+
+;commands to get to menus
+NewMenu		= Root,AltNKey
+CompileMenu	= Root,AltCKey
+LinkMenu	= Root,AltLKey
+ModuleMenu	= Root,AltMKey
+ToolsMenu	= Root,AltTKey
+ProfilerMenu	= ToolsMenu,AltPKey
+OptionsMenu	= Root,AltOKey
+SystemMenu	= Root,AltSKey
+ExitEnv		= AltEKey
+
+;commands to get to specific options
+GlobalComp	= OptionsMenu,"CG"
+LocalComp	= OptionsMenu,"CM"
+GlobalOpt	= OptionsMenu,"OG"
+LocalOpt	= OptionsMenu,"OM"
+EnvOpt		= OptionsMenu,"E"
+LinkerOpt	= OptionsMenu,"L"
+LibrarianOpt	= OptionsMenu,"N"
+Directories	= OptionsMenu,"D"
+VersionTags	= OptionsMenu,"V"
+
+;some common options
+;select global or local then choose you your option
+;GlobalComp2,INLINE:Y
+
+ProtectedMode	= EnvOpt,AltPKey,"Y",ENTER
+RealMode!?	= EnvOpt,AltPKey,"N",ENTER
+SLVM		= LinkerOpt,AltSKey,"Y",ENTER
+NOSLVM		= LinkerOpt,AltSKey,"N",ENTER
+OutFile.LIB	= PgDn,AltOKey,"L",ENTER
+OutFile.OBJ	= PgDn,AltOKey,"O",ENTER
+Global.OBJ	= GlobalComp,OutFile.OBJ
+Global.LIB	= GlobalComp,OutFile.LIB
+Local.OBJ	= LocalComp,OutFile.OBJ
+Local.LIB	= LocalComp,OutFile.LIB
+CODE:S		= PgDn,AltCKey,"S",ENTER
+CODE:L		= PgDn,AltCKey,"L",ENTER
+NOWARN		= AltWKey,"N",ENTER
+WARNINGS	= AltWKey,"Y",ENTER
+INLINE:Y	= PgDn,AltGKey,"Y",ENTER
+INLINE:N	= PgDn,AltGKey,"N",ENTER
+286code		= PgDn,Alt2Key,"Y",ENTER
+NOMODINIT	= PgDn,AltIKey,"N",ENTER
+CHECK:M		= AltMKey,"Y",ENTER
+NOCHECK:M	= AltMKey,"N",ENTER
+LineNumbers	= AltLKey,"Y",ENTER
+DebugInfo	= AltDKey,"Y",ENTER
+$N+		= AltCKey,"Y",ENTER
+$N-		= AltCKey,"N",ENTER
+$E+		= AltEKey,"Y",ENTER
+$E-		= AltEKey,"N",ENTER
+$V+		= AltVKey,"Y",ENTER
+$V-		= AltVKey,"N",ENTER
+$I+		= AltIKey,"Y",ENTER
+$I-		= AltIKey,"N",ENTER
+NOOPT:X		= AltXKey,"N",ENTER
+OPT:X		= AltXKey,"Y",ENTER
+BestOptOpt	= "S",(16:Down,"Y"),DOWN,"N",ENTER
+AllOptOpt	= "S",(17:Down,"Y"),ENTER
+NoOptimize	= "S",(17:Down:"N"),ENTER
+StackSize	= ModuleMenu,"S"
+
+NewAll		= NewMenu,"A"
+NewProgram	= NewMenu,"P"
+NewUnit		= NewMenu,"U"
+NewModule	= NewMenu,"M"
+NewLibrary	= NewMenu,"L"
+NewExeDef	= NewMenu,"E"
+Select		= Root
+LinkSelected	= LinkMenu,"S"
+LinkAll		= LinkMenu,"A"
+SetLinkDLL	= LinkerOpt,AltYKey,"Y",ENTER
+LinkDLL		= LinkMenu
+CompileSelected	= CompileMenu,"S"
+CompileAll	= CompileMenu,"A"
+MakeObjLibrary	= ToolsMenu,"O"
+DeleteAfter	= OptionsMenu,"N",AltDKey,"A",ENTER
+SwapEnv		= EnvOpt,AltWKey,"Y",ENTER
+NoSwapEnv	= EnvOpt,AltWKey,"N",ENTER
+CompilerStatus	= EnvOpt,AltIKey,"Y",ENTER
+NoCompilerStatus= EnvOpt,AltIKey,"N",ENTER
+40Lines		= EnvOpt,AltDKey,"3",ENTER
+SlowMo		= SystemMenu,"S"

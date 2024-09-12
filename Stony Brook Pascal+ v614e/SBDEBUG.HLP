@@ -1,0 +1,911 @@
+%1 Debug
+%2 HelpMenu
+The debugger shows you the source code of your program
+in a window.  It also can create windows to watch registers
+or expressions.
+
+Use the arrow keys, PgUp, PgDn, Home, and End keys to move
+around in your program in the source window.  Use Shift/F1
+to search for a string in the source program, and F2 to
+search forward, F1 to search backward.
+
+To evaluate an expression, type the expression, then press
+Enter.
+
+%% File  View  Run  Breakpoints  Data  Step  Calls  Exit
+%% Expressions      ExitHelp
+
+%2 Expressions
+Expressions in the debugger are a subset of Modula-2 and
+Pascal expressions.  You can use variables from your program,
+if the program was compiled with debug enabled.
+
+To evaluate an expression:
+
+  Just type the expression on the keyboard.  A prompt
+  window appears after you type the first character.
+  The debugger creates a data window to show the value of
+  the expression.  See the Window topic listed below for
+  Help on the commands you can use when the data window
+  is up.
+
+  The expression can be followed by a colon and a type.
+%% Syntax  DataWindow  Types  PrevScreen  ExitHelp
+
+%2 DataWindow
+%3 DataWindow
+The Data window shows the value of a program variable or
+of an expression.  If a structured variable is shown, you
+can move up and down through the components as follows:
+
+  Move to the next component		Down arrow
+  Move to the previous component	Up arrow
+  Move up a page			PgUp
+  Move down a page			PgDn
+
+To expand a structured or pointer type component:
+
+  Expand component in a new window	Enter
+  Expand component in the same window	Right arrow
+
+To change the value of the variable or selected component,
+just type an expression for the new value.
+
+%% PrevScreen  ExitHelp
+
+%3 Types
+An expression can be followed by a data type of the
+following forms:
+
+	: typename
+        : ARRAY OF typename
+        : POINTER TO typename
+
+where typename is any valid type defined in your program.
+These predefined types are also allowed:
+
+SHORTINT   INTEGER   LONGINT    SHORTCARD   CARDINAL
+REAL       SINGLE    LONGREAL   DOUBLE      TEMPREAL
+COMP       CHAR      BYTE       LONGCARD    ADDRESS
+ASCIIZ     WORD	     REAL       STRING      BITSET
+
+%% PrevScreen  ExitHelp
+
+%3 Syntax
+
+Expressions consist of variables, constants and operators.
+The variables are variables from your program.
+
+You can use the operators +, -, *, /, DIV, and MOD in
+expressions.  The operands must be the same type.  The
+debugger uses the type of the operand on the right side
+when evaluating expressions.  All expressions are
+evaluated as 32bit integers or 10 byte reals, with the
+shorter forms of these types automatically converted.
+
+The precedence of operators is the same in Modula-2 and
+Pascal+.  Use parentheses in expressions to override the
+order of precedence.
+
+%% Variables   Constants  AbsoluteAddresses  PublicSymbols
+%% PrevScreen  ExitHelp
+
+%4 Variables
+
+You can use local variables from the currently executing
+procedure and global variables of all modules in debugger
+expressions.  Globals from modules other than the currently
+executing module must be qualified by the module name.
+
+Use the following forms to specify variables:
+
+  VariableName			simple variable
+  ModuleName.VariableName	qualified variable
+  Variable[Subscript,..]	subscripted variable
+  Variable[i..j]        	array slice
+  Variable.FieldName		field of record
+  Variable^			pointer dereference
+
+%% PrevScreen  ExitHelp
+
+%4 Constants
+
+Use the types of constants listed below.  The syntax is the
+same as the corresponding Modula-2 and Pascal+ constants.
+
+Type:				Example:
+
+     Integer constants		        123
+     Real constants		        7.5E-10
+     String constants		        "hello"
+
+%% PrevScreen  ExitHelp
+
+%4 AbsoluteAddresses
+Use the following syntax to examine data at an absolute
+address:
+
+  [segment:offset]	absolute address
+
+where segment and offset are hex numbers or registers or
+a simple expression of the two.  If no segment is
+supplied, DS is assumed, unless BP or SP are used in the
+offset expression.  In that case SS is assumed.
+
+  [12A2]		DS assumed
+  [@BP+0FFFE]		SS assumed
+  [@ES:@BX+@DI-23]	segment is given
+
+The debugger displays an array of words at the location
+specified in a data window.
+
+%% PrevScreen  ExitHelp
+
+%2 Go
+%2 GoMenu
+Use the GO command to continue execution of your program.
+
+Execution continues until the end of your program, or until
+your program is about to execute an instruction where you
+have set a breakpoint.
+
+%% PrevScreen  ExitHelp
+
+%2 Step
+%2 StepMenu
+%2 InMenu
+%2 OutMenu
+Use the Step command to step through your program by one
+line or one instruction at a time.
+
+You can step by lines if the source window is showing source
+code, or by instructions if the source window is showing
+assembly code or both source and assembly code.
+
+Use the In command to step into a procedure that is called.
+
+Use the Out command to step out of the current procedure,
+stopping at the first line after the call.
+
+%% PrevScreen  ExitHelp
+
+%2 FileMenu
+%2 File
+%3 Save status
+%3 Restore status
+
+  Save status      Saves your local and global breakpoints
+                   and watch expressions for later use
+  Restore status   Restores previously saved status
+                   information
+
+  Save defaults    Saves the current options as system wide
+                   defaults.
+
+  DOS command      Executes a DOS command
+
+  Exit		   Exits the debugger
+
+%%  SaveDefaults Dos  Exit  PrevScreen  ExitHelp
+
+%3 Save defaults
+%3 SaveDefaults
+
+Options in the Params menu are saved to disk in the
+SBDEBUG directory and are read each time the debugger
+is loaded.
+
+Screen mode, Registers window, Case sensitivity,
+mouse swapping, Ctrl break are saved.
+
+Thus you could always have the registers window
+automatically active every time the debugger is loaded,
+etc.
+
+%%  ParamsMenu  PrevScreen  ExitHelp
+
+%2 ViewMenu
+%2 View
+Use the View menu to change what is shown on the screen.
+The options are:
+
+  Output      Displays the output screen of your program
+              (Press any key to return to the debugger.)
+
+  Source      Displays source code
+  Assembly    Displays assembly code
+  Both        Displays both source and assembly code
+
+  Location    Displays code at a different location
+  Module      Displays source code from a different module
+  Current     Redisplays the current program location
+
+  Trace back  Displays the procedure call chain in a popup
+
+%%  Locations  PrevScreen  ExitHelp
+
+%3 Output
+Use the Output option to view the output screen of the
+program that you are debugging.
+
+When you select Output, the program's output is shown
+on the full screen.  Press any key, or click a mouse
+button to return to the debugger screen.
+
+%% PrevScreen  ExitHelp
+
+%3 Source
+
+Use the Source option to view your program in source
+mode.  This is the default mode when you start SBDEBUG.
+
+You can view the source code only for modules that have
+been compiled with the Include Line Numbers (/LINE)
+compiler option, and linked with the Include debug info
+(/DEBUG) linker option.
+
+%% PrevScreen  ExitHelp
+
+%3 Assembly
+
+Use the Assembly option to view the assembly code for
+your program.  If source code is not available, SBDEBUG
+automatically switches to this mode.
+
+You cannot view assembly code for an overlay that is
+not currently loaded into memory.
+
+%% PrevScreen  ExitHelp
+
+%3 Both
+
+Use the Both option to view both the source and the
+generated assembly code of your program.
+
+You cannot view assembly code for an overlay that is
+not currently loaded into memory.
+
+%% PrevScreen  ExitHelp
+
+%3 Location
+
+Use the Location option to enter an expression describing
+the program location you want to display.
+
+%% Locations  PrevScreen  ExitHelp
+
+%3 Module
+
+Use the List option to bring up a list box showing all
+modules in your program that have source code available.
+
+%% PrevScreen  ExitHelp
+
+%3 Current
+
+Use the Current option to redisplay the current program
+location. This is useful for a quick return to the current
+location after having examined other locations.
+
+%% PrevScreen  ExitHelp
+
+%2 Run
+%2 RunMenu
+%3 Single step
+%3 Step in
+%3 Step out
+%3 GO
+%3 To cursor
+%3 Restart
+Use the Run menu to control program execution.
+
+  Single step   Steps one source line or instruction,
+                stepping over called procedures
+  Step in       Steps one source line or instruction,
+                stepping into called procedures
+  Step out      Executes until current procedure ends
+  GO            Executes until program terminates or
+                reaches a breakpoint
+  To location   Enters an expression that describes the
+                location to execute to
+  To cursor     Executes up to the program location
+                the cursor points to
+  Restart       Reloads and restarts your program
+
+%% PrevScreen  ExitHelp
+
+%2 Breakpoints
+%2 BreakpointsMenu
+You set breakpoints at locations in your program where you
+want the program to stop and to give control back to the
+debugger.
+
+Use breakpoints to get to a specific point in the execution
+of your program.  Once you have stopped at a breakpoint,
+you can use other commands to examine or modify variables.
+
+Breakpoints can have conditions applied to them as well.
+
+%% Conditions   BreakpointEditWindow   QuickBreakpointMenu
+%% PrevScreen   ExitHelp
+
+%2 GlobalsWindow
+%3 Global
+The Global Breakpoint window allows you to set or clear any
+of the four global breakpoints.  Use the Up and Down arrow
+keys to go to the breakpoint you want to change, then:
+
+   Type a variable expression to set a new breakpoint.  If
+   there was already an expression in this slot, the old
+   breakpoint is deleted.
+
+   Press Del to delete a breakpoint.
+
+%% PrevScreen  ExitHelp
+
+%3 Conditions
+
+Breakpoint conditions come in two flavors:
+
+	Expression TRUE and/or Pass count.
+
+Expression TRUE breakpoints will not break until the
+expression evaluates to TRUE. An empty expression is
+always TRUE.  Sample expressions are:
+
+  i = 23
+  (ch >= 'a') AND (ch <= 'z')
+
+Pass counts breakpoints allow you to specify how many
+times the breakpoint is reached and identified as TRUE
+before SBDEBUG stops your program.
+
+%% PrevScreen  ExitHelp
+
+%2 CodeMenu
+%3 QuickBreakpointMenu
+The Quickie breakpoint options are:
+
+Set breakpoint        Sets a breakpoint at the current cursor
+                      location
+
+Set w/expression      Sets a breakpoint and conditional
+                      expression for the breakpoint
+
+Set w/pass count      Sets a breakpoint and pass count
+                      for the breakpoint
+
+Clear breakpoint      Clears the breakpoint at the cursor
+                      location
+
+Diable breakpoint     You can leave a breakpoint in the list
+		      but have its function disabled with by
+		      using this function.
+
+Enable breakpoint     You can enable a that is disabled by
+		      using this function.
+
+Go to location        Executes until the cursor location is
+                      reached
+%% PrevScreen  ExitHelp
+
+%3 Set breakpoint
+
+  This option sets a breakpoint at the current cursor
+  location.  The conditional expression will be empty, and
+  the pass count will be one.
+
+%% PrevScreen  ExitHelp
+
+%3 Set w/expression
+
+  This options sets a breakpoint at the current cursor
+  location.  The pass count will be one. You are prompted
+  for an expression. This expression must evaluate to a
+  BOOLEAN type. Some sample expressions are:
+
+	i = 23
+
+  	(ch >= 'a') AND (ch <= 'z')
+
+%% PrevScreen  ExitHelp
+
+%3 Set w/pass count
+
+  This option sets a breakpoint at the current cursor
+  location.  The conditional expression will be empty, and
+  you will be prompted for a pass count to apply to the
+  breakpoint.  Any number from 1 to 9999 is allowed.
+
+%% PrevScreen  ExitHelp
+
+%3 Clear breakpoint
+
+  This option deletes the breakpoint at the cursor location.
+
+%% PrevScreen  ExitHelp
+
+%3 Disable breakpoint
+
+  This option disables the breakpoint at the cursor location.
+  The breakpoint remains in the breakpoint list and can be
+  enabled at a later time.
+
+%% PrevScreen  ExitHelp
+
+%3 Enable breakpoint
+
+  This option enables the breakpoint at the cursor location.
+
+%% PrevScreen  ExitHelp
+
+%3 To location
+%3 Go to location
+
+  This option executes to the cursor location.  Execution
+  may stop before you reach the line if there are any other
+  breakpoints set and they are hit before this one.  When
+  you reenter the debugger, this breakpoint is deleted
+  from the system, even if you entered because of another
+  breakpoint.
+
+%% PrevScreen  ExitHelp
+
+%2 BpWindow
+%3 Local
+%3 BreakpointEditWindow
+
+You can set or clear up to fifteen breakpoints in the Break-
+point window.  Use the Up and Down arrow keys to go to the
+breakpoint you want to change, then:
+
+   Type a breakpoint expression to set a new breakpoint.  If
+   there currently is an expression in this slot, the old
+   breakpoint is deleted.  Press:
+
+        F3 	To prompt for a conditional expression for
+		the selected breakpoint
+	F4 	To prompt for a pass count for the selected
+		breakpoint
+	Del 	To delete a breakpoint
+	Ctrl/D  To toggle the Enabled/Disabled state.
+	Alt/L   To display a list of previously entered
+		breakpoint expressions
+
+%% BreakpointExpressions  PrevScreen  ExitHelp
+
+%3 BreakpointExpressions
+%4 BreakpointExpressions
+%3 Locations
+%4 Locations
+Use the following types of expressions to specify the
+location of a breakpoint or a location to view:
+
+  LineNumber			Line in the displayed module
+  ModuleName LineNumber		Line in any other module
+  ModuleName.ProcedureName	At entry to a procedure
+  ProcedureName			Procedure in displayed module
+  [segment:offset]		Absolute hex address (CS is  				CS is assumed if not given
+				assumed if not given at a
+				public symbol address)
+
+%%  PublicSymbols  PrevScreen  ExitHelp
+
+%4 PublicSymbols
+%5 PublicSymbols
+
+To specify a public symbol use the following syntax.
+
+ %PublicSymbolName
+It will be displayed as type WORD. You may coerse the symbol
+to an approiate type
+
+ %PublicSymbolName:MyRecord
+
+The public symbol naming convension of Stony Brook
+compilers is
+
+ ModuleName_SymbolName for Modula-2
+ UnitName_SymbolName for Pascal+
+
+%% PrevScreen  ExitHelp
+
+%2 Data
+%2 DataMenu
+%3 Delete watch
+%3 Popup watch
+%3 Tiled watch
+%3 Inspect/modify
+%3 Registers
+Watch 		Brings up the Watch Expressions window.
+expressions
+Delete watch	Deletes all expressions in the Watch
+		Expressions window.
+Popup watch     Selects the operating mode for the Watch
+or Tile         window.  This menu item changes dynamically.
+		If Popup watch is displayed, select it to
+		put the window in popup.  If Tiled watch is
+		displayed, select it for tiled mode.
+Inspect/modify  Prompts for an expression to display in Data
+		window
+Registers       Displays the registers in a window. Two
+		lines are displayed: the top line is the
+		previous register, the bottom line is the
+		current register.
+
+%% WatchWindow  PrevScreen   ExitHelp
+
+%2 WatchWindow
+%3 WatchWindow
+%4 WatchWindow
+%5 WatchWindow
+%3 Watch expressions
+
+The Watch expressions window allows you to enter up to
+twelve expressions that are automatically displayed in the
+Watched expressions window whenever you enter the debugger.
+
+  Use the Up and Down arrow keys to select a slot, then type
+  the expression you want to watch.  If there is currently
+  an expression displayed in the slot you choose, it is
+  deleted from the Watch Expression window.
+
+  Del    To delete the selected expression from the Watch
+         Expressions window.
+  Alt/L  To display a list of previously entered data
+	 expressions.
+
+%% PrevScreen  ExitHelp
+
+%2 Dos
+%2 DosMenu
+%3 Dos
+%3 DOS command
+Use the DOS command to perform a DOS or OS/2 command from
+inside the debugger.  SBDEBUG prompts you for the command
+line.
+
+To execute a series of DOS commands, answer the prompt with:
+
+	COMMAND
+
+This executes the DOS command interpreter.  You can then
+perform as many DOS commands as you want.  Type EXIT at the
+DOS prompt to return to the debugger.
+
+%% PrevScreen  ExitHelp
+
+%2 ExitMenu
+%2 Exit
+%3 Exit
+
+Use the Exit command to terminate the program you are
+debugging and return to the environment or to the DOS
+command prompt.
+
+%% PrevScreen  ExitHelp
+
+%2 Calls
+%2 CallsMenu
+%3 Trace back
+Use the Calls command to get a list of the active procedure
+calls.
+
+The debugger creates a window with one line displayed for
+each active procedure.  The first line in the window is the
+current location in the program.  The next line is the
+location of the call to the first line, and so on.
+
+%% PrevScreen  ExitHelp
+
+%2 ParamsMenu
+%3 ParamsMenu
+%4 ParamsMenu
+This menu offers the following choices:
+When the option is checked û, the action is TRUE or taken.
+
+Search path		- where the debugger finds source
+                          files
+Case sensitive		- how debugger treats names in
+                          expressions
+Swap mouse		- save/restore user mouse state
+Smart swap		- swap screen intelligently
+Screen resolution	- set screen display mode
+Window colors		- change the window colors
+Ctrl break		- Ctrl break will stop the user
+                          program
+Auto save/load status	- the debugger will save and
+                          restore the debug status
+			  automatically.
+
+
+%% SearchPath  CaseSens   SwapMouse  SmartSwap  ScreenRes
+%% Colors      CtrlBreak  AutoStatus
+%% PrevScreen  ExitHelp
+
+%3 Search path
+%3 SearchPath
+
+The debug information contains information on where the
+source files where found at the time of compilation. If
+the current directory is different at debug time the
+source will not be found. Use this option to set a search
+path that the debugger can use to find source files.
+
+Example
+
+  SOURCE;..\GENERIC\SOURCE
+
+%% PrevScreen  ExitHelp
+
+%3 Case sensitive
+%3 CaseSens
+
+The debugger can auto detect what language it is debugging,
+by what the main program is. All languages are treated as
+case sensitive except Pascal. All Pascal main programs
+will be detected properly.
+
+You can change how the debugger treats symbolic names by
+setting the case sensitivity here.
+
+A û means that names are treated case sensitive.
+
+%% PrevScreen  ExitHelp
+
+%3 Swap mouse
+%3 SwapMouse
+
+If you wish to use the mouse in the debugger and the program
+you are debugging will use the mouse, this option should be
+TRUE, û.
+
+%% PrevScreen  ExitHelp
+
+%3 Smart swap
+%3 SmartSwap
+
+When the debugger is operating in a screen swapping mode.
+It can to screens to the user screen on every step or
+it can attempt to determine if it needs to swap or not
+for each step command.
+
+In nearly all cases the debugger will correctly determine
+when a swap is necessary. You can turn off smart swapping
+if necessary.
+
+%% PrevScreen  ExitHelp
+
+%2 ScreenResMenu
+%3 Screen resolution
+%3 ScreenRes
+%3 25 line
+%3 35/40 line
+%3 43/50 line
+%3 Dual monitor
+%3 Page flip
+
+The debugger can operate in many screen resolutions and
+modes. The options available are
+
+25 line	     - screen swap
+35/40 line   - screen swap
+43/50 line   - screen swap
+Dual monitor - Monochrome monitor for debugger screen
+               User program on color screen.
+Page flip    - 25 line, debugger operates in Page 1.
+               User program in Page 0.
+
+%% PrevScreen  ExitHelp
+
+%3 Window colors
+%3 Colors
+
+The brings up a dialog box that allows you to change the
+colors that the debuggers uses.
+
+%% ColorsWindow  PrevScreen  ExitHelp
+
+%2 ColorsWindow
+%3 ColorsWindow
+%4 ColorsWindow
+
+Use the Window colors option to set display colors.  You
+can select:
+
+    Window background and foreground
+
+    Border background and foreground
+
+    Selected text background and foreground
+
+In addition, you can select colors for each of six diff-
+erent windows.
+
+Use the mouse or the Arrow keys to select colors.  Use the
+mouse or the PgUp and PgDn keys to select the window type.
+
+%% PrevScreen  ExitHelp
+
+%3 Ctrl break
+%3 CtrlBreak
+
+When TRUE, û, the debugger will stop execution of the user
+program at the current instruction. Since this may be a
+random location source code may not be available, and
+machine code will be displayed.
+
+This option is usefull to stop a runaway program or a
+program that is in an infinite loop.
+
+%% PrevScreen  ExitHelp
+
+%3 Auto save/load status
+%3 AutoStatus
+
+When TRUE, û, the debugger will automatically save, on exit,
+and restore, on load, the current state of you program.
+
+This includes Watch variables, Breakpoints and other
+display options set such as registers window.
+
+For this option to operate automatically you must set this
+option to TRUE, plus any other options, and then choose
+Save defaults from the File menu. This saves the options
+as system wide defaults that are read each time the
+debugger is loaded. Thus you could always have the
+registers window automatically active every time the
+debugger is loaded, etc.
+
+%% PrevScreen  ExitHelp
+
+%1 Profiler
+After using WATCH in the profiler, ANALYZE breaks down your
+program's execution by modules, and displays the results in
+a histogram.  Each line represents a module of your program,
+with percentage of time spent executing  shown at each line.
+Use these menus and commands in the histogram window:
+
+   View    To choose the units of display in the histogram
+   Sort    To choose the order of display of the units
+   Print   To print the histogram
+   Exit    To exit
+
+To look at the source code associated with each line in the
+histogram, select a line, using the histogram editing keys
+to move around the histogram, then press Enter.
+
+%% Keys  Print  Exit  PrevScreen  ExitHelp
+
+%2 Keys
+
+When the histogram is displayed, the highlighted line is the
+the selected line.  To move around the histogram, use these
+keys:
+
+	Down arrow		Down one line
+	Up arrow		Up one line
+	PgDn			Down one screen
+	PgUp			Up one screen
+	Ctrl/PgDn		To bottom of histogram
+	Ctrl/PgUp		To top of histogram
+
+Then, to see the source code associated with the selected
+line, press ENTER.  Press Esc to return to the histogram.
+
+%% PrevScreen  ExitHelp
+
+%2 ViewMenu
+
+Select View, then use the options on the View menu to
+determine the units ANALYZE uses to display the histogram
+for your program.  You can choose:
+
+	Module (the default)
+	Procedure
+	Line
+	Summary
+
+%% PrevScreen  ExitHelp
+
+%3 Modules
+
+Choose the Modules option on the View menu to organize
+your program by module in the Profiler histogram display.
+
+Each line in the histogram represents one module of your
+program.  The percentage of execution time spent in each
+module is listed at the beginning of each line.
+
+To look at the source code associated with a module,
+select the line for that module and press Enter.
+
+%% PrevScreen  ExitHelp
+
+%3 Procedures
+
+Choose the Procedures option on the View menu to organize
+your program by procedure in the Profiler histogram
+display.
+
+Each line in the histogram represents one procedure in
+your program.  The percentage of execution time spent in
+each procedure is listed at the beginning of each line.
+
+To look at the source code associated with a procedure,
+select the line for that module and press Enter.
+
+%% PrevScreen  ExitHelp
+
+%3 Lines
+
+Choose the Lines option on the View menu to organize
+your program by line in the Profiler histogram display.
+
+Each line in the histogram represents one line of your
+program.  The percentage of execution time spent in each
+line is listed at the beginning of each line.
+
+To look at the source code associated with a line,
+select the line for that module and press Enter.
+
+%% PrevScreen  ExitHelp
+
+%3 Summary
+
+The Summary option lists information about the Profiler
+process for your program.  Summary provides:
+
+	The number of samples collected for each unit
+	of the histogram
+
+	The percentage of samples that were actually
+	executed in your program (and not in DOS or
+	elsewhere)
+
+	The percentage of samples in the histogram
+	currently displayed
+
+%% PrevScreen  ExitHelp
+
+%2 SortMenu
+
+Use the options on the Sort menu to display the units in
+the histogram in ranking order.
+
+	The Address option sorts the units by address
+	(the default), then displays them in the same
+	order in which they occur in the program.
+
+	The Count option counts the number of samples
+	for each unit of the histogram, then ranks and
+	displays them in decreasing order.
+
+%% PrevScreen  ExitHelp
+
+%3 Address
+
+The Address option sorts the units by address (the
+default), then displays them in the same order in
+which they occur in the program.
+
+%% PrevScreen  ExitHelp
+
+%3 Count
+
+The Count option counts the number of samples for each
+unit of the histogram, the ranks and displays them in
+decreasing order.
+
+%% PrevScreen  ExitHelp
+
+%2 Print
+
+To print the entire histogram currently displayed, press
+Alt/P or click the mouse on Print.
+
+%% PrevScreen  ExitHelp
+
+%2 Exit
+
+Choose Exit to exit from the Profiler.

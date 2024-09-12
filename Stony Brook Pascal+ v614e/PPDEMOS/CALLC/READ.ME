@@ -1,0 +1,42 @@
+This program is the example program CALLC from the manual that
+demonstrates calling procedures in the Microsoft C runtime library.
+There is also a more complete explanation of this example in the
+READ.ME file on the master diskette.
+
+One change have been made from what is written in the manual.  The
+definition module of COUT has the embedded qualifier (*/NOMODINIT*),
+which tells its clients not to call an initialization procedure.  This
+allows us to omit the implementation module for COUT.  This is not really
+necessary in this example, but it is necessary if you are referring to
+variables in the C program or library.
+
+To run this example, you must have Microsoft C installed.  You will
+need the large model C runtime library.  This library is called LLIBC.LIB
+if you have not created merged libraries, it is LLIBCx.LIB where
+x is a single letter or digit if you installed Microsoft C with merged
+libraries.
+
+You might be able to run using another C implementation by including its
+equivalent large model runtime library, but we have not tried any others.
+
+To run the CALLC sample:
+
+	1.  Copy the SOURCE directory to your hard disk.
+	
+	2.  Create a library CALLC by using:
+	
+		SBE CALLC
+		
+	3.  Choose the Unit option on the New menu and type CALLC in
+	    response to the prompt to add the main module.
+	    
+	4.  Choose the Obj library option on the new menu and type the
+	    full path name of your large model C object library.  This
+	    module will also be marked with an asterisk, since there
+	    is no source file for the environment to look up.
+	    
+	5.  Select the implementation module CALLC, then press Alt/R
+	    to compile, link and run it.
+	    
+	6.  The program creates a file named TEXT.TXT and writes to
+	    it using the C file handling calls.

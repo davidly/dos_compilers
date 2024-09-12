@@ -1,0 +1,86 @@
+Thanks to someone's decision that "No one will ever need more than 640k"
+there are several different types of memory on our PC's.  The
+environment, linker, debugger and compiler all use various types of
+memory.
+There are basically 3 types of memory that all of our various programs
+use.  The amount available of each of these can be found by the dos
+"MEM" command.
+
+C:\>MEM
+
+    655360 bytes total conventional memory
+    655360 bytes available to MS-DOS
+    615376 largest executable program size     <------------------¿
+								  |
+   1048576 bytes total EMS memory                                 |
+   1048576 bytes free EMS memory    <--------------------------¿  |
+							       |  |
+   7340032 bytes total contiguous extended memory              |  |
+         0 bytes available contiguous extended memory          |  |
+   1048576 bytes available XMS memory                 <-----¿  |  |
+           MS-DOS resident in High Memory Area              |  |  |
+							    |  |  |
+							    |  |  |
+  Ú---------------------------------------------------------Ù  |  |
+  À> XMS - This is the memory we need to compile or link in    |  |
+           protected mode.  If the compiler or linker gives    |  |
+	   you the error message "Not enough memory ..." or    |  |
+	   "out of memory" then try increasing this by loading |  |
+	   fewer device drivers or decreasing the amount of    |  |
+	   EMS you have allocated or decreasing the size of    |  |
+	   any disk caches you might have. This type of memory |  |
+	   requires that a device driver such as HIMEM.SYS be  |  |
+  	   installed.                                          |  |
+  Ú------------------------------------------------------------Ù  |
+  À> EMS - This is the memory used by the environment and the     |
+  	   debugger. If you get the error message "Not enough     |
+	   heap for symbol table" or "Not enough heap for module  |
+	   table"  then try freeing up some more EMS.  You first  |
+	   must make sure that there is an EMS driver installed   |
+	   in your CONFIG.SYS file such as EMM386.EXE. Try        |
+	   slowly increasing the number on that line to about     |
+	   64k.                                                   |
+  Ú---------------------------------------------------------------Ù
+  À> Conventional DOS Memory - This is the memory used by all of our
+	   programs.  If the environment or the compiler will
+	   not load or when you try to compile from the
+	   environment you get the error message could not load
+	   compiler then you don't have enough conventional 
+	   memory available.  You can free more conventional 
+	   memory by loading high device drivers with the DEVICEHIGH= 
+	   instead of the DEVICE= command in your CONFIG.SYS, or 
+	   just eliminating the device all together.  If you are 
+	   operating form the environment you will want to set the 
+	   swap environment switch to yes so that the compiler will 
+	   have as much memory as possible.  You can also try loading 
+	   dos high by using the DOS,HIGH command in your CONFIG.SYS 
+	   file.
+
+
+     DPMI - When running under 386Max 6.x or Windows 3.x Enhanced mode
+          or when running under OS/2 2.x, our extender uses DPMI
+	  memory. The DOS mem command does not display this memory.
+	  
+	  Under 386Max and Windows 3.x all memory can be DPMI memory.
+	  Under OS/2 2.x, use your DOS settings to allocate the amount
+	  of memory desired for protected mode compiling and linking.
+
+    ----------------------------------------------------------------------
+
+     If you get a "Could not run compiler" error inside the environment,
+     this means that there was not enough DOS memory to load the compiler.
+     While the compiler can "execute" in protected mode, it must start
+     out as a DOS program and must load into DOS memory.
+     
+     The environment is a DOS program and uses DOS memory. It can use a
+     limited amount of EMS memory to store its information on the
+     modules that compose a project. This is usually 64k unless you have
+     set up your EMS manager to provide more mappable memory.
+     
+     The environment must have enough memory to load the compiler into
+     DOS memory after all modules have been added to the environment. The
+     compiler requires roughly 330k to load.
+     
+     We suggest you have a minimum of 540k free at the DOS prompt before
+     running the environment, and have 64k of EMS memory available. More
+     DOS memory is better.

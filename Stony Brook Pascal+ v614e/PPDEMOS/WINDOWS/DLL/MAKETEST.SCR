@@ -1,0 +1,9 @@
+Create
+ProtectedMode
+Directories,'SRCW',DOWN,'OBJW',ENTER
+NewLibrary,'MyDll',ENTER
+NewProgram,'wtest',ENTER
+NewExeDef,'wtest',ENTER
+Select,'wtest'
+LinkSelected,PressAnyKey
+ExitEnv

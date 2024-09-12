@@ -1,0 +1,582 @@
+
+    This file is a collection of tips on how to best utilize Pascal+
+    and to write smaller faster code. The tips are grouped into two
+    sections. The first is tips for writing source code. The second is
+    tips about using Pascal+, including tips on how you "use" an optimizer.
+
+    ----------------------------------------------------------------------
+
+    Code Tips
+
+    These items apply equally, for the most part, to both Pascal+ and
+    Turbo Pascal.  Special emphasis is placed with regard to Pascal+
+    code generation.
+
+    ----------------------------------------------------------------------
+
+    Beware of the following Turbo Pascal bug.
+
+    TYPE
+	MyObjPtr = ^MyObj;
+	MyObj =
+	    OBJECT
+		x : WORD;
+		CONSTRUCTOR Init;
+		DESTRUCTOR Done;
+	    END;
+
+    DESTRUCTOR MyObj.Done;
+    BEGIN
+	DISPOSE(@Self);
+    END;
+
+    The Dispose statement will NOT deallocate any memory. This is
+    becaise the @ operator returns a type of POINTER. TP will accept a
+    POINTER type to DISPOSE or FREEMEM and since a POINTER points to
+    nothing a size of zero bytes is passed to deallocate.
+
+    Pascal+ will not accept a value of type POINTER as acceptable input
+    to DISPOSE or FREEMEM and will give a syntax error.
+
+    An alternative way of coding this is.
+
+    VAR
+	p : MyObjPtr;
+    BEGIN
+	p := @Self;
+        DISPOSE(p);
+    END;
+
+    ----------------------------------------------------------------------
+
+    Try to use consistent types in your expression computations.
+    Pascal allows any numeric data types to be mixed in an expression.
+    It is important to remember that these data types are all
+    INCOMPATIBLE on a binary basis and must go through an conversion
+    before they can be used. This conversion happens EVERY time
+    you use the variable. These conversions make your program bigger
+    and slower.  Pascal+ does try to reconvert expressions after they
+    are fully parsed into a consistent data type, but Pascal+ is
+    limited by the needs of compatibility with Turbo Pascal.
+
+    ----------------------------------------------------------------------
+
+    Try not to use byte sized variables, other than enumerations, to
+    index an array. Try to use INTEGER or WORD only.
+
+    While enumerations are almost always one byte, they do carry significant
+    code clarity advantages to offset the larger slower code generated
+    when a byte variable indexes an array.
+
+    ----------------------------------------------------------------------
+
+    When declaring set types, be aware of the size of the set in bytes.
+    This formula can be found on page 236 of the compiler reference
+    manual. Avoid creating a 3 byte set, in other words round the set
+    size up to 4 bytes with some dead space. The compiler generates
+    much better code for 4 byte set vs. 3 byte sets. The performance
+    difference is more than 10 times.
+
+    ----------------------------------------------------------------------
+
+    Attempt to have your sets start with a lower bound of zero. These
+    generate more efficient code. Enumerations always start at zero.
+    If you are using a subset of char, set 'A'..'Z', try to use a whole
+    set of char, to keep the lower bound at zero for performance
+    critical items.
+
+    ----------------------------------------------------------------------
+
+    Never use the EXTENDED type unless there is some very special
+    reason to use it. You code will be smaller and faster if you use
+    either the DOUBLE or SINGLE data types. The DOUBLE data type
+    contains 15 digits of precision and an exponent range of greater
+    than 300.  Real world devices basically only are capable of up
+    to about 6 digits of precision per range scale, so why calculate
+    15.  Digits of precision are not arbitrary more is better
+    quantities, they have a real physical significance. The question is
+    how much is really needed.
+
+    An interesting and amusing example is a navigation program that
+    uses the meter as its base unit of measurement. With this, you
+    can measure distances to the size of an atom, an angstrom, and
+    still have 5 significant digits of precision for round off error
+    with no error in distance, and 6 digits with a 1 atom error.
+
+    The DOUBLE is the IEEE specification for storing floating point
+    numbers in 64bits of data. This is the world wide standard.
+
+    The Intel co-processor does not support the full instruction set
+    for the 80bit EXTENDED data type. Basically only LOAD and POP, and
+    then the load of a DOUBLE is twice as fast as the load of a
+    EXTENDED.  The 80 bit type is used internally by the x87 and x87
+    emulators so that your 64bit numbers will not be effected by the
+    usual round off errors present in the IEEE specification.
+
+    ----------------------------------------------------------------------
+
+    Try to minimize your usage of uplevel variables. These variables
+    take one EXTRA memory reference to access verses direct variables.
+    If the references are just copy references, pass the value as a
+    parameter.
+
+    If the value is a structured type, don't worry about it. Primarily
+    concern yourself with BYTE, INTEGER, WORD, LONGINT, REAL, SINGLE
+    DOUBLE variable types.
+
+    PROCEDURE outer;
+    VAR
+       uplevel : word;
+
+       PROCEDURE inner;
+       VAR
+	  direct : word;
+       BEGIN
+	  direct := uplevel;
+
+    This an example of a uplevel reference.
+
+    Multiple nesting levels should be avoided. These variable
+    references are very expensive with Turbo Pascal code generation.
+    The number of memory references to access a variable per nest level
+    is linear with the number of nest levels.
+
+    With Pascal+ the relationship is not readily apparent. Pascal+ does
+    most of its uplevel work at the begin statement of each procedure.
+    Thus Pascal+ can access the uplevel variable with one EXTRA
+    reference per variable access no matter how deep the nesting level.
+
+    The code generation between TP and P+ is a push at 1 level of
+    nesting. At more levels of nesting it is a push at one variable
+    access and the savings with P+ become very dramatic the more
+    accesses there are.
+
+    ----------------------------------------------------------------------
+
+    The Pascal+ compiler can give "warnings" as to when a structured
+    value parameter is copied onto the stack. While this is not
+    incorrect at all within the Turbo Pascal language, it is very
+    expensive operation, both code size and speed, that many times can
+    be avoided. If you need an local quantity an assignment statement
+    to a local variable will most likely be more efficient than the
+    parameter copy.
+
+    Pascal+ will not copy a value parameter to the stack unless one of
+    the following situations occurs.
+
+    1. It is directly modified. ie on the left hand side of an
+       assignment statement.
+    2. The variable has been addressed. This can happen if you directly
+       take the address of the variable or indirectly take the address
+       of the variable by passing the variable as parameter to a
+       procedure accepting the variable as a VAR parameter.
+
+    I will cover a couple examples of how to avoid parameter copies
+    with the STRING type, but the ideas apply equally to any structured
+    type such as ARRAYs and RECORDs.
+
+    1. Don't use the value parameter as a "temp" variable after the
+       useful life of the value passed has finished.
+    2. Standardize on a consistent structure for declaring structured
+       parameters as value parameters or VAR parameters.
+
+    Parameter copies can easily be avoided with a little thought and
+    work. None of the Stony Brook programs have a single parameter copy
+    with the exception of a couple of string manipulation procedures
+    which have forced parameter copies with the /ALIAS directive.
+
+    ----------------------------------------------------------------------
+
+    Try to minimize your usage of the variable Mem[] functions.
+    Constant Mem[] functions are treated differently than variable
+    Mem[] functions. A constant Mem[] function has compile time
+    constants for both the segment and offset. Variable Mem[] functions
+    are not optimizable( volatile ), and they can generate extra code.
+
+    MemB[$40:$87]	{ a constant Mem function }
+
+    MemW[$40:biosData]	{ a variable Mem function }
+
+    A better alternative would be
+
+    VAR
+       ptrb : ^byte;
+    BEGIN
+       ptrb := Ptr($40, biosData);
+
+    Now use ptrb where ever you would have used the Mem[] function.
+    The pointer variable is optimizable. Also, the pointer dereference
+    generates smaller code than the Mem[] function, because the pointer
+    is already constructed. Each time a Mem[] function is used the
+    address must be constructed before it can be used.
+
+    The Ptr() function with variable expressions is also not
+    optimizable. This primarily effects common subexpression
+    elimination.
+
+    The variable Mem[] and variable Ptr() functions are treated by
+    Pascal+ as volitale quantities.
+
+    ----------------------------------------------------------------------
+
+    Many third party libraries have the compiler directives $O+,F+ and
+    $F+ placed in their code to enable overlay capability. If you are
+    not going to overlay a program that is using this code you may want
+    to get rid of those switches as they will definitely increase code
+    size. You probably should contact the vendor to verify the
+    proper locations to modify to disable overlay capability. This
+    affects Pascal to an extreme, and slightly in Turbo Pascal. An
+    example. The TechnoJock demo program TOTDEMO uses most if not all
+    of the libraries capabilities.  The library has a directive to turn
+    enable overlay capability.
+
+    With no overlay capability the EXE file is 161k.
+    With overlay capability but NOT OVERLAYED the EXE file is 173k.
+
+    ----------------------------------------------------------------------
+
+    The best way to write smaller faster code is to learn assembly code
+    and look at the machine code the compiler is generating for your
+    source code. You will quickly learn what kicks butt.
+
+    Pascal+ can generate source formatted machine code listings at
+    compile time.
+
+    ----------------------------------------------------------------------
+
+    Pascal+ Tips
+
+    ----------------------------------------------------------------------
+
+    Try to break down the following types of expressions into multiple 
+    simple expressions.
+
+    variable := function + function + function + function ...
+
+    to
+
+    variable := function;
+    variable := variable + function;
+    .
+    .
+    .
+
+    Because of the Turbo Pascal calling convention requires that all 
+    registers can be assumed altered it is better to break down 
+    expressions with many functions in them into smaller additive 
+    expressions. This will give better register allocation, plus 
+    decrease compilation times, many times dramatically.
+
+    Since each function may clobber all registers the register 
+    allocator cannot get any registers to compute the expression. It 
+    goes through multiple failures per + node. It get all the way to 
+    the last function and then fails it way from each node down to the 
+    last.
+
+    As a "see for yourself" test, try the following.
+
+    PROGRAM wow{!!!};
+
+    VAR
+       li : LONGINT;
+
+    (* this func definitely clobbers all registers *)
+
+    FUNCTION func : LONGINT; EXTERNAL;
+
+    PROCEDURE it;
+    BEGIN
+	(* keep adding 1 func and watch compilation times *)
+	(* increase almost exponentially per addition *)
+	li := func + func + func;
+    END;
+
+    BEGIN
+	it;
+    END.
+
+    ----------------------------------------------------------------------
+
+    Be very careful with $L object(OBJ) imports. Many users and libraries
+    name the OBJ the same as the UNIT. This could never cause a problem
+    with Turbo Pascal since it generates a TPU file. However, Pascal can
+    generate an OBJ file from the UNIT source. This will clobber the $L OBJ
+    file if the OBJ file is in the same directory as the UNIT source.
+
+    It is our recommendation that $L OBJ files AND their ASM sources be
+    placed in a different directory than the associated UNIT source. This
+    will also eliminate confusion with the SBE environment which will
+    assume that the ASM source is associated with a ForeignAsm module.
+    Linking assembly source through the ForeignAsm type, as opposed to the
+    $L import method, does not contain any of the limitations of the object
+    importer.
+
+    ----------------------------------------------------------------------
+
+    Try to use the Object(.OBJ) output format for the compiler. The
+    default is the Library(.LIB). The OBJ format is MUCH, MUCH faster
+    to link than the LIB format. The OBJ format cannot perform smart
+    linking, thus a good algorithm and the one we use, is that all
+    application specific modules are compiled to OBJ and utility
+    modules are compiled to LIB.
+
+    ----------------------------------------------------------------------
+
+    Try not to split your units into small pieces for overlaying
+    because it may increase compilation times dramatically. This is due
+    to structural differences in the way Pascal+ makes and builds
+    programs and the way TP does it. Since the TP compiler is the make
+    system, compiler, and linker all in one they can minimize the
+    reading of UNIT interface information. With Pascal+ these items are
+    all separate for maximum flexibility, but must be read for each
+    compile of each UNIT.
+
+    Also, optimization and code generation will suffer, sometimes
+    dramatically. The reason for this is that the compiler has no
+    register usage information from procedures that are imported from
+    other UNITs. Generating good code has everything to do with good
+    usage of the processor register set. Cross module register
+    parameter passing can help here, but a heavily cross dependent
+    application that arises because of many small modules can eliminate
+    the gain. For imported procedures Pascal+ reverts to the Turbo
+    Pascal compatible calling convention, which means we know
+    absolutely nothing about the procedures use of registers, this is a
+    worse case, and wherever one of these procedures is called, there
+    exists a black hole to register usage. Therefore applications with
+    larger percentages of total procedure calls consisting of exported
+    procedures will suffer the consequences.
+
+    This is a really tough issue because it does have dramatic gains in
+    code generation if TP register compatibility were relaxed and the
+    compiler can follow its own rules, as it does when it knows a
+    procedure is implemented in Pascal. However, procedures declared in
+    the interface portion and implemented in assembly will break any
+    such relaxing of total TP register compatibility. We are looking at
+    possible ways around this code killer for future releases.
+
+    ----------------------------------------------------------------------
+
+    Try to use the Pascal+ environment instead of the command line
+    utilities. The SBE environment is much more efficient than PPB or
+    SBMAKE. Also, since SBE is more than just an IDE, it provides you with
+    a host of project management capabilities to help you in your
+    development.
+
+    ----------------------------------------------------------------------
+
+    Both SBE and SBDEBUG use EMS memory to reduce their memory image.
+    However, they do not use EMS in a virtual memory manner. EMS is
+    bank switched virtual memory, only a small portion can be mapped as
+    real memory at any point in time. The guaranteed to be 64k. SBE and
+    SBDEBUG use EMS is a real fashion. They map as much memory as they
+    can between B000-FFFF and leave it there as real memory. Therefore
+    while you can always get 64k EMS memory, you can get more EMS
+    memory used by these programs by adjusting the setup of the EMS
+    memory manager to allow more mappable EMS memory than 64k.
+    Examples.
+
+    QEMM: FL=?. FL=8 will give 128k (8 16k pages) mappable EMS memory.
+
+    386Max: INCLUDE=?. INCLUDE=64 will give 64k additional EMS on top
+    of the 64k standard mappable EMS memory, a total of 128k.
+
+    EMM386: This utility does not have this capability if DOS is told
+    to make UMB memory available. DOS=UMB.  Unfortunately most people
+    have drivers and TSRs that need to be pushed into UMB memory.
+
+    OS/2 2.0 DOS session: Turn off UMB memory for the DOS session, use
+    the EMS_HIGH_MAP_REGION setting. This defaults to 32 which means
+    make 32k more mappable memory on top of the 64k standard. You
+    basically don't need UMB memory in a OS/2 DOS session since all of
+    the drivers and TSRs that you usually use in DOS are built into OS/2
+    and do not need to be added to the DOS session. aka Mice, Disk
+    caches, network drivers, CD-ROM.
+
+    ----------------------------------------------------------------------
+
+    Register preservation.
+
+    Pascal+ assumes the Turbo Pascal calling conventions by default.
+    This means that AX,BX,CX,DX,DI,SI are assumed altered across all
+    procedure calls. This does not allow for generating the best code.
+
+    When a procedure is implemented in Pascal, we then know what
+    registers are really altered and use this information. Cross module
+    Register parameter passing carries this across UNIT boundaries.
+    However, what about EXTERNAL procedures, INLINE procedures and
+    ASSEMBLER procedures. These still clobber all registers. You can
+    control this situation with one or both of the following steps.
+
+    1. Preserve some registers in your assembly procedures. This will
+       not effect your code when compiled by Turbo Pascal. Tests have
+       shown that Pascal+ does best when CX, SI and DI registers are
+       preserved. Remember to place an ALTERS(AX,BX,DX,ES) procedure
+       attribute on the procedure declaration so the compiler will know
+       that the procedure in question alters something other than the
+       default.
+
+    2. If the code alters only a couple of registers, then inform the
+       Pascal+ compiler of this fact by using the explicit alters
+       procedure attribute on the procedure declaration.
+
+    NOTE: On ASSEMBLER procedures will automatically generate any
+    register saves for registers not in the ALTERS statement. This is
+    because ASSEMBLER procedures are in charge of generating procedure
+    entry and exit code. The BASM does not track register usage and
+    assumes all registers are altered by any ASM statement. This means
+    the register saves may include registers that were not actually
+    altered, since they were assumed altered. Future version of BASM
+    will track registers, to the extent that it can be done.
+
+    example of the alters attribute
+
+    {$IFDEF StonyBrook}
+    FUNCTION MakeLong(low, high : WORD) : LONGINT [ALTERS(AX,BX,DX,ES)];
+                                                                EXTERNAL;
+    {$ELSE}
+    FUNCTION MakeLong(low, high : WORD) : LONGINT; EXTERNAL;
+    {$ENDIF}
+
+    ----------------------------------------------------------------------
+
+    embedded ASM and/or INLINE statements
+
+    Try to avoid using these statements in their inline forms, as they
+    place a "black hole" at that point of the procedure where the
+    statement exists. Optimization information is lost down these holes
+    when the compiler is doing its thing.
+
+    Try using the procedure versions of these statements, because you
+    can using the alters statement to help the compiler out.
+
+    The Pascal+ compiler can not help you if it is hampered with these
+    constructs.
+
+    ----------------------------------------------------------------------
+
+    Maximum compile speeds.
+
+    Here at Stony Brook we do all development with the optimizer on at
+    all times, even during early development. However, you have
+    probably been spoiled by Turbo Pascal compile speeds. While Pascal+
+    has absolutely no worries about compilation speed when stacked up
+    against other global optimizing compilers, Turbo Pascal is by far
+    the worlds fastest PC compiler by a huge margin.  To get maximum
+    compile speeds out of Pascal+ make sure the following options are
+    set as follows.
+
+    All optimizations off, //NOOPT. You may leave Peephole optimization
+    on as it does not take much time by itself with no peephole
+    accessory options active. Peephole optimization has a large effect
+    on shrinking generated code size.
+
+    Expand single calls should be off as well. //INLINE:N for you
+    command line types.
+
+    Warnings should be off as well. The source scan after compilation
+    has successfully completed will take some time.
+
+    ----------------------------------------------------------------------
+
+    auto Expand single calls. //INLINE:Y or
+    manual procedure expansion via procedure attribute [INLINE].
+
+    Pascal+ defaults to auto inline expansion OFF. However, this
+    feature is almost always a winner in both size and execution speed.
+
+    Procedure inlining can cause your application to use more stack
+    space if the inlined procedure and the calling procedure are
+    performing STRING expressions.
+
+    Also, compiler register allocation can go down the toilet and cause
+    the code to be slower. This is the exception, and profiling and/or
+    timing will discover whether this is the case or not.
+
+    General guidelines
+
+    Turn expand single calls on except in these cases.
+
+    1. Heavy STRING expression code. ie String functions and
+       string expression usage.
+
+    2. Computation intensive code. Test with both ON an OFF to see
+       which is better.
+
+    ----------------------------------------------------------------------
+
+    Using the Pascal+ optimizer.
+
+    No real adjustments are necessary to use the optimizer on your
+    code. The only user adjustments really necessary are all ON, all
+    OFF and Space vs. Time. The Pascal+ optimizer does not just do
+    optimization because it can, it does it only when it makes sense
+    for the code given.  Nothing is perfect, but the decisions the
+    Pascal+ compiler makes are very proper for most all situations.
+    This relieves you of making anything but all ON and OFF decisions.
+
+    Use the following guides to best set your optimization options.
+
+    ----------------------------------------------------------------------
+
+    Space vs. Time optimization.
+
+    Basically 99% of the time you will want to use the Space
+    optimization strategy. Only use time optimization when profiling
+    and/or timing determines that a performance can be had, and then
+    only do time optimization on a per unit, or even a per procedure basis.
+
+    Remember that time optimization does things that are faster, but
+    also bigger. Whether or not the optimization makes a performance
+    difference depends on your application and your algorithms. Thus
+    since it will make larger code, check to see if the speed increase,
+    if any, is worth the increase in size.
+
+    Optimization can only generate the best possible code for your
+    source, it cannot make your code fast.
+
+    ----------------------------------------------------------------------
+
+    Smallest possible generated code.
+
+    Basically start with all optimizations on with Space optimization
+    strategy and adjust using the following guidelines.
+
+    Turn off the following optimizations.
+
+    Loop Induction variables
+    Loop invariant motion
+    Loop Rewriting
+
+    Command line //OPT//NOOPT:VIW
+
+    These optimizations always increase code a little and are meant to
+    provide speed enhancements. This will save around .1%, not much, but
+    it is something.
+
+    ----------------------------------------------------------------------
+
+    For most code, conditional common subexpression elimination will not
+    make much of a difference. In fact it may increase code size by
+    about .1-.3 per cent, or have a decrease of the same percentage.
+    In general, leave this optimization off unless you get a benefit,
+    because it does affect compiler memory requirements and compilation
+    speed.
+
+    ----------------------------------------------------------------------
+
+    Cross module register parameter passing should not be used until
+    you are doing final builds of an application. DO NOT use it during
+    early development. It causes virtually everything to be compiled
+    every time a make is initiated. This optimization is a winner 99%
+    of the time. It can cause a size increase in size when two UNITs
+    massively cross reference each other.
+
+    The gains of this optimization are twofold.
+    1. Register parameter passing is allowed across UNIT boundaries.
+    2. Most importantly, TRUE procedure register usage is learned across
+       UNIT boundaries. Pascal+ undertakes this considerable overhead
+       in an attempt to make up for the inefficient Turbo Pascal procedure
+       calling convention regarding register preservation.
+
+    ----------------------------------------------------------------------
+

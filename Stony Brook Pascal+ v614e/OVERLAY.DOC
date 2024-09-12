@@ -1,0 +1,406 @@
+
+
+
+	This document covers the use of the new virtual overlay manager
+	available in this release. The existing overlay manager as
+	documented in the manuals, and read.me file, is still available
+	and its usage has not changed.
+
+	This overlay manager is a subset of a product soon to be
+	offered by U-CAN Software Software Inc.. Certain features are
+	not available in this version because of limitations of the
+	Turbo Pascal runtime system and our need to be compatible with
+	this system.  We will be providing an alternate heap manager
+	that will allow you to use the overlay system provided by U-CAN
+	Software and all of its advanced features. One such feature is
+	dynamic memory use.  The overlays occupy all available memory
+	to start and then as your program asks for memory out of the
+	heap, the overlay area shrinks to accommodate this, and as the
+	heap shrinks, memory is released back to DOS, the overlay area
+	expands as this memory again becomes available.
+
+	This overlay manager operates in much the same way as the Turbo
+	Pascal overlay manager you are used to. This means that
+	overlays consist of a single unit per overlay, and that all
+	overlays are loaded into an overlay buffer the size of which is
+	user defined. A larger buffer allows more overlays to reside in
+	memory at any specific point in time. The overlay manager can
+	use EMS memory for overlays. Also, the same code
+	generation options are used to get proper overlay code
+	generation, $F+ in all units and $O+ in units that can be
+	overlayed. There are some important new capabilities this
+	overlay manager offers over the Turbo Pascal overlay system,
+	and these are.
+
+	1. The overlay manager can use EMS memory even if there is not
+	   enough EMS memory available for all overlays.
+
+	2. The overlay manager can EXECUTE your overlays in EMS memory.
+	   This means no overlay buffer is required.  Turbo Pascal
+	   offers the ability to buffer overlays in EMS memory. This is
+	   nothing more than a ram disk, and is very wasteful of
+	   memory. A disk cache program is more efficient with memory,
+	   and tests have shown that the Turbo Pascal overlay system
+	   usually runs faster by up to 7% when a disk cache is used,
+	   and the overlay system is told not to use EMS memory, verses
+	   when the overlay system is buffering overlays in EMS memory.
+
+	   The Pascal+ virtual overlay manager will also buffer in
+	   EMS memory if you so desire.
+
+	3. The overlay manager allows individual overlays to have
+	   attributes separate from others. For example you can specify
+	   that some overlays use EMS memory and others not use EMS
+	   memory.
+
+	4. The overlay manager automatically initializes itself. There
+	   is no Overlay unit you need to place in your USES statement,
+	   and there are no procedures to call to initialize the
+	   system.  Units can have initialization code overlayed without
+	   worry because the overlay manager is initialized before any
+	   user code is executed. There are some procedure calls
+	   available but these are used for advanced usage of the
+	   system.
+
+	5. Pieces of the overlay manager are overlayed themselves. Much
+	   of the initialization code is overlayed. Also the EMS
+	   management code is overlayed per se. It is on disk as an
+	   overlay, but if needed then becomes a permanent part the the
+	   resident program portion.
+
+	6. The overlay manager takes up no space in the 64k data
+	   segment limit with it global variables. With the memory
+	   model capability of Pascal+, the overlay manager has its own
+	   data group separate from the programs data group.
+
+	7. The overlay manager can overlay any code that has a
+	   procedure stack frame on all far calls. Therefore you can
+	   overlay C code if need be.
+
+	The virtual overlay manager information is specified in the
+	linker EXE definition file just as the standard overlay system.
+	There are however additional commands necessary. An example of
+	an EXE definition file is.
+
+	VIRTUAL 20000 NOEMSRUN FA20;
+	    OVERLAY Unit1 PRELOAD;
+	    OVERLAY Unit2;
+
+	Only one Unit can be placed in each overlay. This differs
+	from the static overlay system which allows multiple
+	Units per overlay. The Unit is specified by its name.
+
+	The virtual overlay manager has options available on a
+	global(all overlays) and local(specific overlay) basis.
+
+	The global syntax is.
+
+	VIRTUAL [BufSize] [NOEMS] [NOEMSRUN] [FAmodeNumber] [PROGRAMEMS];
+
+	BufSize is the size in bytes of the overlay buffer. The default
+	is Zero (0), which means the minimum possible overlay buffer
+	size. If BufSize is non zero it is rounded up to the next
+	16k boundary if necessary. For example 24000 would be rounded
+	up to 32768.
+
+	NOEMS specifies that the overlay manager will not use EMS to
+	buffer and/or execute overlays in EMS memory. The default is to
+	use EMS memory. This is a difference with the Turbo pascal
+	overlay manager.
+
+	NOEMSRUN specifies that the overlay manager will not execute
+	overlays in EMS memory. NOTE: NOEMS implies NOEMSRUN.  The
+	default is to execute overlays in EMS memory. If your
+	application uses EMS memory you will not be able to execute
+	overlays in EMS without some modification to your EMS usage.
+	See the advanced use section in this file if your program uses
+	EMS and you want to execute overlays in EMS memory.
+
+	FileMode is the DOS file open attribute used to open the EXE
+	file to read the overlays. The default is $20 hex which is
+	compatible with operation over a network by multiple users. The
+	number must be specified in hex. example
+
+	FA20
+
+	This sets the file open mode to $20 hex.
+
+	PROGRAMEMS this is an advanced feature that tells the
+	overlay manager init code to delay EMS usage until the
+	users gives the program an EMS handle, starting page and number
+	of pages the overlay manager can use.
+
+	-----------------------------------------------------------------
+
+	The syntax for specifying overlays and their local options is.
+
+	OVERLAY ModuleName [NOEMS] [NOEMSRUN] [PRELOAD];
+
+	Every overlay must be preceded by the OVERLAY keyword.
+	Immediately following the OVERLAY keyword is the name of the
+	module to be overlayed. Only one module name is allowed.
+
+	NOEMS and NOEMSRUN have the same meaning and defaults as their
+	global counterparts. All overlays get the global options by
+	default and are then modified using the local options you
+	specify here.
+
+	PRELOAD specifies that the overlay will be loaded from disk
+	into memory at initialization time, during system startup. The
+	overlay manager loads all PRELOAD overlays possible until it
+	runs out of memory. The PRELOAD overlays are loaded smallest to
+	largest in that order.
+
+	----------------------------------------------------------------
+
+	ADVANCED USAGE OF THE OVERLAY MANAGER.
+	
+	Example programs discussing advanced use of the overlay manager
+	are in the PPDEMOS\VIRTOVL directory.
+
+	Executing overlays in EMS memory AND having your application
+	use EMS memory as well.
+
+	The bottom line here is that your application is going to have
+	to save and restore the EMS page map around any accesses you
+	make to EMS memory. Also any overlays that access EMS memory
+	cannot be in an overlay that will be executing in EMS memory.
+	An example of not allowing EMS memory execution to be used for
+	a specific overlay is
+
+	VIRTUAL;
+	    OVERLAY Will;
+	    OVERLAY WillNot NOEMSRUN;
+
+	This allows EMS usage globally and will not allow Foo to run in
+	EMS memory, but Foo can be buffered in EMS memory.
+	
+	See the example files MYEMS.PAS and MYEMSUSE.PAS for a detailed
+	discussion on this subject.
+
+	-----------------------------------------------------------------
+
+	ADJUSTING LINK TIME PARAMETERS AT RUN TIME
+
+	You can change the global options NOEMS and NOEMSRUN and
+	BUFSIZE at runtime. At this time you can also limit the
+	number of EMS pages the overlay manager is allowed to use. To
+	do this you will declare procedures that the overlay manager
+	initialization will call during its initialization. Simply
+	declaring these procedures is all that is necessary.
+
+	NOTE: Since the overlay manager is initialized before any user
+	code is initialized, you should be careful about what Units of
+	your code uses here since they have not been initialized if
+	they need initialization. All Pascal+ RTL functions can be
+	called. You can check the heap to see how much memory is
+	available, but remember that just as in the Turbo pascal
+	overlay system the heap must be empty otherwise the overlay
+	manager will clobber your data because it takes its memory from
+	the bottom of the heap.
+
+	See the example source code MYCMDOPT.PAS, in the VIRTOVL
+	directory within the PPDEMOS directory, for an example of
+	getting and setting these options at runtime.
+
+	-----------------------------------------------------------------
+
+	PROGRAMEMS
+
+	To use this feature you need to call a procedure in the overlay
+	manager. The declaration is.
+
+        FUNCTION AnyName(emmhandle, startpage, numpages: WORD) : WORD; FAR;
+	                    EXTERNAL 'OVLPROGEMSINIT';
+
+	emmhandle is the EMS handle the overlay manager will use.
+
+	startpage is the logical page number the overlay manager can
+	use.
+
+	numpages is the number of logical pages after startpage the
+	overlay manager can use.
+
+	The word returned is the number of logical pages the overlay
+	manager is not going to use from the pages it was allowed to
+	use. Your program is free to use these pages of memory if
+	needed.
+	
+	See the example file MYEMSUSE.PAS.
+
+	-----------------------------------------------------------------
+	
+	This overlay manager has many runtime error codes that do not
+	have equivelents to the Turbo Pascal overlay system. These
+	overlay errors are.
+	
+	280: BP register contained a bad value for stack walking.
+	     Overlay system cannot operate properly.
+	281: Wrong File. File opened is not our overlay file.
+	282: Overlay manager failed to allocate memory in conversional
+	     memory arena.
+	283: Heap size is too small for convensional memory arena needed
+	     by the overlay manager.
+	284: Overlay manager failed memory allocate/reallocate in
+	     convensional memory arena.
+	285: EMS memory manager error
+	286: Overlay manager failed to allocate memory in EMS arena.
+	287: Call was made to TEMPORARY overlay after overlay manager
+	     initialization.
+
+	-----------------------------------------------------------------
+
+	EXTREMELY ADVANCED USAGE
+	READ: You can break things big time by playing with this!
+
+	The overlay manager can have its disk read calls intercepted.
+	Typical usage of this can be to split the overlays into
+	multiple files, multiple disks, compress the overlays and
+	decompress upon loading, etc..., and any combo of the above.
+
+	This requires knowledge of how overlays are placed in the EXE
+	file, which is discussed later.
+
+	The overlay manager requests overlays by asking for a physical
+	offset from the start of the EXE file, and asks for X number of
+	bytes. It is up to you to translate these addresses into
+	whatever you may have done with the overlay data.
+
+	See the example MYDISK.PAS, in the VIRTOVL directory of the
+	PPDEMOS directory, for the proper procedure declarations to
+	patch your disk read function into the overlay manager. The
+	assembly file MYDISKRD.ASM, is an example of a disk read
+	function. It is the procedure the overlay manager uses by
+	default, and as such accesses the overlay manager data segment
+	for the file handle.
+
+	---------------------------------------------------------------
+
+	The overlay structures used are as follows.
+
+	SBLINK places overlays at the end of the program memory
+	image in the EXE file. This is not necessarily the end of the
+	EXE file because CodeView debug information is always placed at
+	the end of an EXE file. The end of the memory image can be
+	computed with the information in the EXE header.
+
+	At this location will be the overlay header block. This block
+	is PARAgraph aligned and is structured as follows.
+
+	NOTE: If you wish to alter the overlay data and install your
+	own disk read function, the OvHeaderV block must remain in the
+	location set by the linker, all overlays themseleves can be
+	altered and or moved.
+
+
+        OvHeaderV =
+	    RECORD
+	        ovlSig		: ARRAY [0..1] OF CHAR; (* SB *)
+	        ovlSize		: LONGINT;
+	        ovlCount	: WORD;
+	        firstThunkSeg	: WORD;
+	        ovlGlobalOpts	: GlobOverlayAttribSet; (* WORD *)
+	        reserved1	: WORD;
+	        reserved2	: WORD;
+	END;
+
+	ovlSig will be the letters SB. This is a safety check.
+	ovlSize is the size of all overlay data in the EXE file.
+	ovlCount is the number of overlays in the EXE file.
+	firstThunkSeg is the segment address of the first thunk
+	segment. More on thunk segments later.
+	ovlGlobalOpts are the options set globally in the EDF file.
+
+	The thunk segments are where the real action is happening. The
+	data structure is as follows.
+
+        ThunkHeaderRec =
+	    RECORD
+	        attr		: LocOverlayAttribSet;	(* 0 *)
+		farCall		: BYTE;			(* 1 *)
+	        ovlMgrEntry	: ADDRESS;		(* 2 *)
+	        status		: BYTE;			(* 6 *)
+	        nearCall	: BYTE;			(* 7 *)
+	        thunkCount	: WORD;			(* 8 *)
+	        retIP		: WORD;			(* 10 *)
+	        filePos		: LONGINT;		(* 12 *)
+	        codeSize	: WORD;			(* 16 *)
+	        fixupSize	: WORD;			(* 18 *)
+	        nextThunkSeg	: WORD;			(* 20 *)
+	        ovlRunSeg	: WORD;			(* 22 *)
+	        emsPageOffs	: WORD;			(* 24 *)
+	        emsPageRecSeg	: WORD;			(* 26 *)
+	        reserved1	: WORD;			(* 28 *)
+	        reserved2	: WORD;			(* 30 *)
+	    END;(* 32 *)
+
+	Each overlay has its own thunk segment. These thunk segments
+	are placed in the memory image immediately after the program PSP
+	segment, thus they always reside in memory. All thunk header
+	records are PARAgraph aligned.
+
+	attr are the attributes set locally for this overlay in the EDF
+	file.
+
+	farCall is simply the BYTE $9A
+
+	ovlMgrEntry is the address of the overlay manager.
+
+	status is used internally while the program is executing.
+
+	nearCall is simply $E8
+
+	thunkCount is the number thunks for this overlay. NOTE: This
+	field is overwritten with other data after the overlay manager
+	is initialized. Each thunk is 5 bytes of data, as follows.
+
+	thunkRec =
+	    RECORD
+		nearCallFarJump : BYTE; (* $E8 or $EA *)
+		nearOffsFarSeg  : WORD;
+		actualOvlOffset : WORD;
+	    END;
+
+	    actualOvlOffset is the actual offset of the procedure in
+	    the overlay.
+
+	    nearCallFarJump and the following WORD will be in one of
+	    two states.
+
+	    nearCall will be a near call to the farCall field in the
+	    thunkHeader for this overlay. This is the state when the
+	    overlay is not loaded in memory and ready to execute.
+
+	    FarJump will be a far jump to the overlayed procedure when
+	    the overlay is loaded in memory and ready to execute.
+
+	retIP is used during execution.
+
+	filePos is the file position from the start of the EXE file to
+	the overlay data. The overlay data is PARAgraph aligned and
+	contains the executable code first followed by the fixup
+	data for the overlay. Unlike EXE fixups, these fixups contain
+	only an offset since the overlay cannot exceed 64k.
+
+	NOTE: This filePos is the filePos passed as a parameter to the
+	disk read function.
+
+	codeSize is the size in bytes of the executable code.
+
+	fixupSize is the size in bytes of the fixups. The number of
+	fixups is (fixupSize DIV 2).
+
+	nextThunkSeg is the segment address of the next thunk segment.
+	If there are no more thunk segments the value will be zero.
+	NOTE: This field is overwritten after the overlay manager is
+	initialized.
+
+	ovlRunSeg is the segment the overlay is running in. If the
+	value is zero the overlay is currently not in memory. This is
+	true even if overlay are executing in EMS memory.
+
+	emsPageOffs is used if the overlay is loaded in EMS.
+
+	emsPageRecSeg is a value indexing an internal data structure
+	used when the overlay is loaded in EMS.
+

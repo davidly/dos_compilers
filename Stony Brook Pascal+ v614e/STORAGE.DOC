@@ -1,0 +1,55 @@
+
+
+	This file provides a short description of an optional heap
+	manager you can use with Pascal code. The UNIT name is Storage
+	and can be found in the UTIL directory. Complete source code is
+	provided, and as such, the source code is considered the bulk
+	of the documentation. This heap manager supports all procedure
+	calls, and then some, that the Turbo heap manager supports. It
+	does not support Mark or Release, although these can be
+	simulated. It also does not support the System variables
+	pertaining to the heap system.
+
+	This heap manager is the heap manager that all StonyBrook
+	products use, except that is was translated to Pascal from
+	Modula-2 for your use. This heap manager provides much more
+	capability than the Turbo Pascal type heap manager, plus it is
+	over 4 times faster on random allocation and deallocation. A
+	heap testing program is provided, hrand.pas, and is in the same
+	directory as the Storage unit. You can run this program using
+	both Storage and the built-in heap to verify about 4.5 times
+	execution speed difference.
+
+	Storage is written in an operating system independent fashion,
+	and can work for Windows, DOS extender or OS/2, however this
+	conditional code was removed during the conversion from
+	Modula-2. The procedures OSALLOC, OSDEALLOC, OSAVAIL are the
+	functions that are dependent on the system installed. The heap
+	manager is compatible with protected mode if the OS functions
+	are implemented from the extender being used. The TP compatible
+	system cannot function in protected mode.
+
+	This heap system can use UMB or EMS mapped blocks easily since
+	it uses discontinuous memory blocks. All that need be done is
+	to place these blocks into the heap freelist.
+
+	The heap system starts out with no memory allocated, and
+	grows as you request memory. The heap system also has the
+	capability to return memory to the OS, thus the heap is
+	something like a balloon. Therefore to use this system you will
+	have to set the $M heap parameters to zero, so that this heap
+	manager can get memory from DOS.
+
+	The heap system also provides the capability to control
+	multiple independent heap systems.
+
+	The heap system also allows users linking C code to redirect C
+	memory allocation into this heap system where the
+	TP compatible system does not. The UNIT PHEAP in the CHEAP
+	directory within PPDEMOS helps accomplish this.
+
+	The interface portion of the unit source contains documentation
+	on the various functions available.
+
+   Bebe bebe bebe that all folks...
+   Stormin Norman Black

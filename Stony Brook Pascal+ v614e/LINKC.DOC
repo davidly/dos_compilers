@@ -1,0 +1,233 @@
+
+This file collects and expands on all information available about
+linking C code and Pascal+ code together. We basically test linking
+Microsoft C and Borland C.  If you have the choice of which C compiler
+to link with then choose the Microsoft C compiler. This is because the
+Microsoft runtime system pushes itself on you less than the Borland
+system. Don't be scared off by that statement, there are a few things
+you have to do differently. And they are
+
+LINKING WITH BORLAND C
+
+Fixing Borland C incompatibilities regarding LIB files:
+
+   You may have problems when linking with any of the Borland C products
+   if you are using SBLINK or any linker compatible with the Microsoft
+   standard.  This is because the Borland library index is not 100%
+   compatible with the Microsoft LIB specification.
+
+   You can fix this by creating a new library using SBLIB, and using the
+   Borland library as input.  For example:
+
+   	SBLIB SBCL.LIB CL.LIB
+
+   The SBCL.LIB now contains everything that the CL.LIB has, but will work
+   with SBLINK and the other Microsoft compatible linkers.
+
+
+Linking in the COx.OBJ file:
+
+   When linking with any of the Borland C products, remember that you must
+   link in the C0x.OBJ file as the first object the linker reads.
+   For example, when linking a C large memory model:
+
+   Add the following items to the linker EXE definition file. If you
+   currently do not have one, you may create it.
+
+   LinkObjFirst C0L.OBJ;
+   LinkLib SBCL.LIB;
+
+Borland C and heap size:
+
+   When linking Borland C products, you must set the Pascal+ heap to 0 size.
+   For example:
+
+   	{$M stacksize, 0,0}
+
+   This is because the Borland C heap functions by resizing the program
+   memory block, which is not compatible with Pascal+.
+
+   For memory allocation in your Pascal program, refer to the CHEAP unit
+   in the PPDEMOS directory.  This unit does all memory allocation through
+   the C heap manager.
+
+
+MEMORY MODELS.
+
+We recommend that you link the C Large memory model. This memory model
+makes the fewest assumptions, and is compatible with the Pascal+
+default memory model, as well as all others.
+
+If your C Large memory model assumes that SS = DS. Then you should set
+the appropriate Pascal+ option to agree with this.
+
+From the command line //STACK:DS
+From the environment  Separate stack  No
+
+
+When developing with a single language system, everything works
+smoothly because everyone is living by the same assumptions. This is
+probably not going to be the case when you try to link two different
+languages. You are now the one who has to make sure both sides are
+living by the same assumptions. Pascal+ was designed with the
+flexibility to adjust to whatever is needed, other compilers probably
+do not have this capability. Therefore a good rule to go by is, that is
+if some adjustment is needed, then make that adjustment with the
+Pascal+ end of the application.
+
+The //CMAIN directive.
+
+This directive basically converts a Pascal main program module into a C
+compatible main program module. Pascal main programs have a DOS entry
+point at the BEGIN statement of a program source file, this is not the
+case with C compilers. The entry point is in the RTL, and the RTL calls
+a procedure of the public symbol name _main. The CMAIN directive causes
+Pascal+ to declare the main program source code as a procedure of the
+name _main.
+
+The reason for doing this is that most all C runtime systems are VERY
+picky about their segment order and other startup stuff. Pascal+ makes
+no such assumptions, and can run under any C compilers runtime system.
+In a CMAIN pascal program the C runtime library is actually setting up
+the system, and shuts down the system. This is important, because any
+HALT statements you place in your Pascal code will not allow the C
+system to perform any shutdown it may require, because the only way we
+get to the C code is to return from our _main procedure to the C
+startup code.  Remember your Pascal main program was called as a
+procedure, not the entry point of the program, and should return to the
+C startup code to properly shutdown.
+
+MANAGING SYSTEM RESOURCES.
+
+The two system resources most important to most all programs are memory
+management and floating point emulation interrupts.
+
+FPP EMULATION.
+
+FPP emulation is done via interrupts, and only one interrupt handler
+can be active at any point in time. Understanding this, if both the
+Pascal and C code want to use emulation, then only one emulator can be
+loaded and active. Again, the easiest thing to do is run under the C
+emulator. Pascal+ code generation uses a very minimal subset of the x87
+instruction set to be able to run under other emulators. All FPP
+emulators we know of support this subset. To cause the Pascal+ emulator
+to not get linked in use the following declarations in you main
+program source file.
+
+PROCEDURE LinkEm; PUBLIC 'EM_INIT';
+BEGIN
+END;
+
+PROCEDURE LinkBp; PUBLIC 'BP_INIT';
+BEGIN
+END;
+
+The first procedure will cause the emulator to not get linked in, it
+is used when the main program was compiled with $E+.
+The second procedure will cause the back patcher to not get linked in,
+it is used when the main program was compiled with $E-.
+
+It does not hurt to have both declarations in the source code.
+
+MEMORY MANAGEMENT.
+
+This one is more interesting.
+All language runtime systems allocate chunks of memory from DOS and
+then give your programs little pieces when you make a call to the
+language allocate function. With two memory managers in the system
+there can be some waste of memory, because memory available in the
+Pascal heap cannot be accessed by the C code and visa versa. Thus an
+out of memory situation can occur in one while enough memory is
+available in the other heap system.
+
+We suggest that your application standardize on one heap manager, the
+easiest being the C heap.  The Pascal heap does have function calls not
+available in the C heap manager. Two calls you should NEVER use in a
+mixed language program are Mark and Release. Believe me, don't even
+think it.  Also, MemAvail and MaxAvail do not have a direct
+relationship to C functions.  We have provided a unit to aid you in
+automatically redirecting your memory allocation from Pascal -> C.
+
+CHEAP.PAS redirects all Pascal allocation into the C heap manager.
+	  If supports NEW, DISPOSE, GETMEM and FREMEM.
+	  Other functions are not supported. If memory is not available
+	  NEW and GETMEM will return a NIL pointer.
+
+	  You will want to set the Pascal heap size to zero.
+	  {$M stacksize, 0, 0}
+
+Compile this file to the OBJ format and link it into your application.
+It is more efficient to place the CHEAP in your uses statement in the
+units that perform any memory management calls.
+
+ReDirection from C -> Pascal is not possible because of the way that
+the Pascal heap system deallocates memory. The C system knows how many
+bytes of memory a pointer is attached to and deallocates exactly this
+amount. The Pascal system allows you to deallocate a memory chunk to
+any size smaller or bigger. Also, the C Free() function does not pass a
+size parameter necessary to properly deallocate with the Pascal heap
+manager.
+
+See. Storage.DOC. This is a heap system that can have C memory
+allocation redirected to Pascal. It is also 4 times faster than the 
+Turbo compatible heap system.
+
+LINKING PASCAL CODE INTO C PROGRAMS.
+
+This is doing things the other way around. If you are doing this all of
+the above applies, except CMAIN of course, and if you want the Pascal
+memory manager to be active then you will need the following
+declarations.
+
+CONST
+    HeapMin : WORD PUBLIC 'SYSTEMP_HEAPMIN' = something;
+    HeapMax : WORD PUBLIC 'SYSTEMP_HEAPMAX' = something;
+
+
+These variables are normally declared automatically by the compiler in
+a Pascal main program. When linking units into C code, you will need to
+declare these yourself. These specify the minimum and maximum size of
+the Pascal heap. They are specified in 16byte paragraphs, just like the
+BX parameter of the DOS 48h call.
+
+USING THE NEW ForeignC MODULE TYPE IN SBE
+
+SBE can now automatically compile your C source code for you. The
+ForeignC module type consists of two modules. UNT is the interface
+portion and C is the implementation portion. SBE will use one of two
+command lines to compile the C source code. The default is the command
+line specified in the Foreign command lines selection in the Options
+menu. If the module overrides the default type by using the Module menu
+then that command line will be used. The command line used for the C
+compiler should only compile the C source file. No makes or linking is
+necessary, SBE takes care of this. Example.
+
+BCC -c -ml -o%O %S
+
+This is a suitable command line for the Borland C compiler, and assumes
+that BCC is in the DOS path.
+
+-c   means compile this file only
+-ml  sets large memory model
+-o%O set the output filename and directory.
+
+%O is replaced with the path and filename of the .OBJ file.
+%S is replaced with the path and filename of the source file.
+
+Another option is also available if necessary and this is %P. This
+option will be replaced with the path to the output directory. ie. The
+directory where the .OBJ file is to be put.
+
+An example command line for Microsoft C.
+
+CL /c /AL /batch /Fo%O %S
+
+NOTE: If you are linking MSC 7.0. You will have to use the Microsoft
+linker and CodeView debugger. This is because Microsoft is using 32bit
+segments for debug information, even though the application is a 16bit
+application. Our linker does not deal with 32bit segments. The debug
+segments are always declared by the C 7.0 compiler, as far as we can
+tell. The CodeView debugger must be used because Microsoft has changed
+the CodeView debug specification for this release. The next release of
+our product will be compatible with the CodeView 4.0 specification.
+

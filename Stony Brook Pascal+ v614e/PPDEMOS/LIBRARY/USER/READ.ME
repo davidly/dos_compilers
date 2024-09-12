@@ -1,0 +1,28 @@
+This directory contains an example of using an object library that
+is written for use with C programs.  You can follow this example
+to create interfaces to any C libraries you might have.  With suitable
+adjustment of the calling interfaces, interfaces to libraries for other
+languages can also be created.
+
+See the READ.ME file on the Master Software Diskette for a complete
+discussion of this example.
+
+To build the program using the Spiffy library:
+
+	1.  Copy the files in SOURCE, and the file SPIFFYC.LIB
+	    to your hard disk.
+	
+	2.  Create the library USESPIFF by using:
+	
+		SBE USESPIFF
+		
+	3.  Select the Program option on the New menu and add the
+	    program USESPIFFY.
+	    
+	4.  Select the Obj library option on the New menu and add
+	    the library SPIFFYC.LIB.  The module will be followed
+	    by an asterisk becuase there is no source file for it.
+	    
+	5.  Select the program USESPIFFY and press AltR to run it.
+	    The program simply reads a line from the terminal then
+	    echoes it.

@@ -1,0 +1,2854 @@
+%1 MainScreen
+%2 HelpMenu
+The main screen of the Stony Brook environment lists all
+the modules in the current module library.
+
+The highlighted module is the selected module.  To edit
+the selected module, press Enter, or point to the selected
+module and press the left mouse button.
+
+Commands and menus are listed on the top border of the
+window.  To execute commands or pull down a menu, hold Alt
+and type the first letter of the command or menu, or use
+the mouse to point to the command and press the left button.
+
+Important: Read the Help topics listed below for information
+on how to use this system.  Use the Arrow keys or mouse to
+select a topic, then press Enter or the left mouse button.
+
+%% Selecting  Menus  Commands  ControlPanels  ExitHelp
+
+%2 Selecting
+
+To select a module on the main screen:
+
+Using	Use the Arrow keys to position to the new module
+keys    OR
+        Type the name of the new module.  The module
+	is selected as you type.  When the module you
+	want is selected, type a space.
+
+Using	Point to the new module and click the left
+mouse	button
+
+%% PrevScreen  ExitHelp
+
+%2 Menus
+The menus are:  New Compile Link Module Tools Options System
+See the additional Help topics for information on each.
+
+To access the menus:
+
+Using	To pull down a menu, hold Alt and type the first
+keys	letter of the menu name.  For menu Help, hold Alt
+	and type H.
+
+Using	To pull down a menu, point to the menu name and
+mouse	click the left button.  For menu Help, click the
+	right button.
+
+Select the MenuOptions topic below for instructions on
+selecting menu options.
+
+%% NewMenu     CompileMenu LinkMenu     ModuleMenu  ToolsMenu
+%% OptionsMenu SystemMenu  MenuOptions  PrevScreen  ExitHelp
+
+%3 MenuOptions
+Using	To select a menu option, arrow to the option and
+keys	press Enter, OR, to select and immediately execute
+	an option, type the first letter of the option.
+	For Help, arrow to option, hold Alt, and type H.
+
+Using	To select an option, point to the option and click
+mouse	the left button, OR, to select and immediately
+	execute an option, hold the left button while moving
+	to the option, then release the button.  For Help,
+	point to the option and click the right button.
+
+Ellipses following an option name (for example: Version
+tags...) indicate that the option leads to another menu,
+prompt box, or control panel, with additional choices or
+entires to be made.
+
+%% PrevScreen  ExitHelp
+
+%2 Commands
+The commands are:  Run  Debug  Help  Exit
+
+To execute a command:
+
+Using	Hold Alt and type the first letter of the
+keys	command.
+
+	For Help on commands, arrow to the command and
+	type Alt/H.
+
+Using	Point to the command name and click the left
+mouse	button.
+
+	For Help on a command, point to it and click
+	the right button.
+
+%% Run  Debug  Exit  PrevScreen  ExitHelp
+
+%2 RunMenu
+%3 Run
+Use the Run command to run your program.  Select a program
+module before invoking Run.
+
+Any compilations necessary before running the program are
+performed automatically.
+
+To stop the program while it is executing, press Ctrl/Break.
+
+%% PrevScreen  ExitHelp
+
+%2 DebugMenu
+%3 Debug
+
+Use the Debug command to run a program under the control of
+SBDEBUG (the Stony Brook debugger).  Select a program module
+before invoking Debug.  Any compilations necessary before
+running the program are performed automatically.
+
+When you use the Debug command, the environment automatic-
+ally enables the Include debug information option and the
+Include line numbers option.  Choose the topics listed below
+for more information on those options.
+
+%% DebugInfo  LineNumbers  PrevScreen  ExitHelp
+
+%2 ControlPanels
+A control panel lists a set of options on the left side of
+the window, and choices for the option on the right side.
+To change the setting of an option:
+
+Using	Press the Down arrow key until the option
+keys	you want to change is highlighted, then
+	press the Left or Right arrow keys until
+	the value you want is highlighted.
+
+Using	Point to the new value you want to set
+mouse	and click the left mouse button.
+
+When you are finished, press Enter to accept the changes
+or Esc to abandon them.  With a mouse, select Okay or
+Cancel to accept or abandon the changes.
+
+%% PrevScreen  ExitHelp
+
+%2 ExitMenu
+%3 Exit
+
+Use the Exit command to exit from the environment.
+
+If the Prompt before saving environment option is set to
+Yes, the editor prompts you before saving any editor buffers
+that you have modified.
+
+%% PrevScreen  ExitHelp
+
+%2 NewMenu
+%3 NewMenu
+Use the New menu option to add new modules or libraries
+to the current module library.  When you add a Pascal+ unit
+or program, the environment automatically adds all modules
+that the new unit imports.  Briefly, the options are:
+
+Unit		  Adds a Pascal+ unit to a library
+Program		  Adds a Pascal+ program to a library
+Foreign Asm	  Adds a foreign assembly module
+Foreign C	  Adds a foreign C module
+EXE Def		  Adds a new EXE definition module
+Project library	  Refers to another module library SBL
+All		  Adds all modules in the source directories
+		  to a library
+Obj library	  Adds a new object library to a module
+		  library
+Scan dependencies Manual rescan of file dependencies.
+
+See the additional help topics for more information.
+%% Unit   Program   Foreign      EXE          Library
+%% All    Obj       Scan         PrevScreen   ExitHelp
+
+%3 Unit
+%4 Unit
+%3 Module
+%4 Module
+
+Use the Unit option to add a new Pascal+ unit to the
+current library.  When you select this option, the
+environment adds an entry for a Pascal+ unit.
+
+The environment prompts you for the name of the module.
+The module name is up to 8 characters and corresponds
+to the file name without extension.
+
+%% PrevScreen  ExitHelp
+
+%3 Program
+%4 Program
+Use the Program option to add a new Pascal+ main program
+to the current library.
+
+A program is a Pascal+ main program module.  A program is
+the only kind of module that you can link or run.
+
+The environment prompts you for the name of the program.
+The module name is up to 8 characters and corresponds
+to the file name without extension.
+
+%% PrevScreen  ExitHelp
+
+%3 Foreign Asm
+%4 Foreign Asm
+%3 Foreign C
+%4 Foreign C
+
+Use the Foreign module option to add a module that was
+implemented in assembler or C.  A Pascal+ unit is also
+added to the library when you add Foreign modules.
+
+The environment prompts you for the name of the module.
+The module name is up to 8 characters and corresponds
+to the file name without extension.
+
+%% PrevScreen  ExitHelp
+
+%3 EXE def
+%3 EXE
+%4 EXE
+
+Use the EXE definition option to add a new EXE definition
+module.  EXE def modules are command files used by the
+linker.  They contain further instructions for building a
+program or dynamic link library.
+
+The environment prompts you for the module name.
+The module name is up to 8 characters and corresponds
+to the file name without extension. The file extension is
+.EDF and the file is searched in the SOURCE directory path.
+
+The EXE def is used when linking a module with the same
+name.
+
+%% PrevScreen  ExitHelp
+
+%3 Project library(SBL)
+%4 Project library(SBL)
+
+Use the Project library option to refer to another module
+library from the current library.  You can refer to up to
+14 additional libraries.
+
+Modules in the current library can import modules in another
+library when you add that library using this option.
+
+The environment prompts you for the name of the new library.
+The name is the filename of the module library to add.  If
+you do not specify a file extension, .SBL is assumed.
+
+%% PrevScreen  ExitHelp
+
+%3 All
+%4 All
+
+The All option adds all modules and programs that can be
+found in the source directories of the current library.
+
+The environment looks in the SOURCE directories and adds an
+entry for each file it finds with the .PAS file extension.
+The default directory is the subdirectory named SOURCE
+under the directory that currently contains the library.
+
+You can use the Directories option on the Options menu to
+specify different directories to search for source modules.
+Use this option for the initial setup of a module library.
+
+%% PrevScreen  ExitHelp
+
+%3 Object library(LIB)
+%3 Obj
+%4 Obj
+
+Use the Object library option to add a new object library to
+the current module library.  Any object libraries you add
+using this option are included when you link any program in
+the current module library.  (Normally, you use this feature
+with an object library obtained from a program written in
+another language.)
+
+The environment prompts you for the name of the new object
+library.  The library name is a file specification, and can
+contain a drive, path, filename, and extension.  If you do
+not specify an extension, .LIB is assumed.
+
+%% PrevScreen  ExitHelp
+
+%3 Scan dependencies
+%4 Scan dependencies
+
+Use this command to forace a scan of file dependencies.
+This command should never be necessary, as the environment
+always scans files automatically as needed.
+
+%% PrevScreen  ExitHelp
+
+%2 CompileMenu
+%3 CompileMenu
+Use the Compile menu to compile one or more modules in the
+current module library.
+
+    Selected	    	Compiles the selected module and any
+		    	other modules required to compile it
+    All		    	Compiles all modules requiring
+		    	compilation at the time
+    Unconditional   	Compiles all modules, whether they
+		    	need it or not
+    Compiled outside	Indicates that a module has been
+    			compiled from outside the environ-
+			ment
+
+Usually you do not need to use this menu, since the Run,
+Debug, and Link commands automatically compile all modules
+that need compilation when you use those commands.
+
+%% Selected     All      Unconditional     CompOutside
+%% PrevScreen   ExitHelp
+
+%3 Selected
+%4 Selected
+
+Use the Selected option on the Compile menu to compile the
+selected module.  Any modules that the selected module
+depends on and that need to be recompiled are automatically
+compiled before the selected module.
+
+%% PrevScreen  ExitHelp
+
+%3 All
+%4 All
+
+Use the All option on the Compile menu to compile all
+modules that need compilation.  Use this option after
+editing source files to recompile all modules that have
+been affected by the edits.
+
+%% PrevScreen  ExitHelp
+
+%3 Unconditional
+%4 Unconditional
+
+Select the Unconditional option on the Compile menu to
+compile all modules in a library, whether they need it or
+not.  The main use for this option is if you have modified
+some source files from outside of the environment, and you
+want the environment to update its information about the
+modules.
+
+%% PrevScreen  ExitHelp
+
+%3 Compiled outside
+%3 CompOutside
+%4 CompOutside
+
+Use the Compiled outside option to tell the environment
+that a module has been successfully compiled from outside
+the environment, using the command line.  This can be useful
+when you have large programs and want to conserve memory.
+
+When you use this command, the environment assumes that the
+selected module has been sucessfully compiled and updates
+its data base to indicate that the module does not need
+compilation.
+
+Before using this command, make certain that you have
+compiled the selected module and have placed the object file
+in the proper directory.
+
+%% PrevScreen  ExitHelp
+
+%2 LinkMenu
+%3 LinkMenu
+
+Use the Link menu to create an executable program.
+This enables you to run the program outside the environment.
+
+Any compilations necessary before running the program are
+performed automatically.
+
+(You do not have to use Link if you previously have used the
+Run command with the program, because Run automatically
+links a program before running it.)
+
+Linker options can be set from the Options menu.
+
+%% PrevScreen  ExitHelp
+
+%3 Selected
+%4 Selected
+
+This command will link the selected module in the
+environment main window.
+
+The allowed module types are PGM, ASM and C.
+
+Any compilations necessary are performed
+automatically.
+
+
+%% StackSize PrevScreen  ExitHelp
+
+%3 All programs
+%4 All programs
+
+This command will link all PGM module types in the
+environment main window.
+
+Any compilations necessary are performed
+automatically.
+
+
+%% StackSize PrevScreen  ExitHelp
+
+%2 ModuleMenu
+%3 ModuleMenu
+Use the options on the Module menu for module management.
+The options and their functions are:
+
+    Remove	      Removes the module from the library
+
+    Altered	      Informs the environment that the
+                      selected module has been altered from
+                      outside.
+
+    Type	      Changes the type of a module
+
+    Command	      Specifies a DOS command line to compile
+                      or assemble a foreign module
+
+    StackSize         Sets the size of the program stack.
+
+    Info              Show additional module information.
+
+    Compiled options  Show options module was last compiled
+		      with.
+
+%% Remove      Altered   Command  Type        StackSize
+%% PrevScreen  ExitHelp  Info     CompOptions
+
+%3 Remove
+%4 Remove
+
+The Remove option removes a module or library from the
+library, and, optionally, deletes the source files.
+
+If the module you are removing is imported by any other
+module, the environment prompts you before removing the
+module, and before deleting the source files.
+
+If you are removing a library, the environment automati-
+cally marks all modules that were imported from it as not
+found.
+
+If the module you are removing is a Pascal+ or foreign
+module, the environment deletes the object files, and
+prompts for removal of the source files.
+
+%% PrevScreen  ExitHelp
+
+%3 Altered
+%4 Altered
+
+The Altered option informs the environment that the source
+file of a module has been altered from outside the environ-
+ment.  You must use this command if you	change or replace a
+source module from outside the environment.
+
+When you edit a module from within the environment, changes
+are automatically registered.
+
+%% PrevScreen  ExitHelp
+
+%3 Command
+%4 Command
+For each foreign module, you can specify a DOS command line
+to compile or assemble the module. The default is no
+command line and to use the gloabl environment foreign
+command line. The environment will compile the foreign
+module whenever necessary.
+
+Use the Command option on the Module menu to specify the
+command line that builds a foreign module.  The environment
+prompts you for the command line. If you cannot do this with
+a simple command, you can use the command line to run a
+batch file.
+
+%% Foreigns  PrevScreen  ExitHelp
+
+%3 Type
+%4 Type
+Use the Pascal and Foreign options on the Types option list
+to change Pascal+ types to foreign types and vice-versa.
+
+Select the unit you want to change, then choose the option
+that designates the type to which you want to change the
+unit.
+
+%% PrevScreen  ExitHelp
+
+%3 Stack size
+%4 Stack size
+%3 StackSize
+%4 StackSize
+%5 StackSize
+
+Setting a non-zero stack size will cause that to be the size
+of the program stack when linked. A size of zero will
+default to the stack size specified by the compiler.
+
+%% PrevScreen  ExitHelp
+
+%3 Info
+%4 Info
+
+
+The Info selection will display additional information about
+the selected module. Such as when the last edit and last
+compile occured and in what directory the environment found
+the file in.
+
+%% PrevScreen  ExitHelp
+
+%3 Compiled options
+%4 Compiled options
+%3 CompOptions
+%4 CompOptions
+
+The Compiled options selection will display the options that
+were used to compile the module when it was last compiled.
+The options will be displayed in the normal compiler options
+control panel.
+
+%% PrevScreen  ExitHelp
+
+%2 ModuleTypesMenu
+%3 ModuleTypesMenu
+
+The Type menu allows you to change the type of a module to
+another type. For example, changing fro a native language
+source module to a Foreign Asm module.
+
+
+%% PrevScreen  ExitHelp
+
+%3 Modula-2
+%4 Modula-2
+%3 Pascal
+%4 Pascal
+
+This option changes the module type to a native language
+module type from any other type.
+
+The module type is converted to a IMP module type.
+
+With Pascal displaying in Short mode, the UNT module
+type is displayed.
+
+%% PrevScreen  ExitHelp
+
+%3 Foreign Asm
+%4 Foreign Asm
+
+This option changes the module type to a Foreign Asm
+module type from another type. Only IMP and C module
+types are allowed to be changed.
+
+With Pascal displaying in Short mode, the UNT module
+type is allowed.
+
+%% PrevScreen  ExitHelp
+
+%3 Foreign C
+%4 Foreign C
+
+This option changes the module type to a Foreign C
+module type from another type. Only IMP and ASM module
+types are allowed to be changed.
+
+With Pascal displaying in Short mode, the UNT module
+type is allowed.
+
+%% PrevScreen  ExitHelp
+
+%2 ToolsMenu
+%3 ToolsMenu
+The Tools menu contains the following tools you can use
+from the environment:
+
+	Import list	Shows the modules imported by the
+			selected module
+
+	Client list	Shows the modules that import the
+			selected module
+
+	Profiler	Runs the Stony Brook Execution
+			Profiler on the selected program
+
+	Object 		Creates an object library from
+	librarian       modules in this module library
+
+	Altered		Check what files have changed.
+
+%% Import      Client  Profiler  Object
+%% PrevScreen  ExitHelp
+
+%3 Import list
+%3 Import
+%4 Import
+You must select a Pascal+ unit before using this option.
+
+The Import list option lists the modules imported by
+the selected unit.
+
+%% PrevScreen  ExitHelp
+
+%3 Client list
+%3 Client
+%4 Client
+You must select a Pascal+ unit before using this option.
+
+The Client list option lists the modules that import
+the selected module.
+
+
+%% PrevScreen  ExitHelp
+
+%3 Altered
+%4 Altered
+This option will allow you to query about what modules
+have changed after a specific date and time. The date/time
+defaults to 4:00am of the current day.
+
+[/Dday|/Dmonth/day|/Dmonth/day/year] /Thour[:minutes][a|p]
+
+If the date is not supplied, the current date is assumed.
+Examples
+
+/T12p - will show all files changed after 12:00pm of the
+current day.
+
+/D12/T0 - will show all files changed on and after the
+12th day of the current month.
+
+%% PrevScreen  ExitHelp
+
+%3 Profiler
+%4 Profiler
+Use the Profiler option to access the Stony Brook Execution
+Profiler.  The profiler is a tool designed to help improve
+the speed of your programs.
+
+The profiler samples your program by module, by procedure,
+or by line, and tells you how much execution time is taken
+by each part.  Because it is integrated into the environ-
+ment, it operates completely automatically.  You can also
+run the profiler from the command line.
+
+The profiler is a valuable tool when tuning a program for
+performance.
+
+%% PrevScreen  ExitHelp
+
+%3 Object Librarian
+%3 Object
+%4 Object
+
+The Stony Brook Object Librarian creates Microsoft
+compatible object libraries from all of the modules in
+a library.  Object libraries can be used by the linker
+to include library modules that a program refers to
+automatically.  This is faster (and less tedious) than
+naming each module to be included in a link.
+
+Select this command to create an object library from all
+the modules in the current library.
+
+Libraries that refer to this library will automatically
+use the object library when linking instead of including
+all of the individual objects.
+
+%% PrevScreen  ExitHelp
+
+%2 ProfilerMenu
+
+Use the Profiler menu to run the Stony Brook execution
+profiler.
+
+The Profiler options and their functions are:
+
+	Watch		To take samples during the execution
+			of a program
+
+	Analyze  	To view the results of a sampling
+			run (displayed as histograms) and
+			browse the code that the histograms
+			relate to
+
+	Options		To set the profiler's sampling rate
+
+%% Watch   Analyze   Options   PrevScreen   ExitHelp
+
+%3 Watch
+
+Use the Watch option from the Profiler menu to sample
+the execution of a program.
+
+Before using the profiler, be sure to enable the Include
+debug information and Include line number compiler options.
+(If the Recompile for debug option is enabled, the environ-
+ment automatically compiles the program with the required
+debug information included.)
+
+Once the program is compiled, the Watch program runs it.
+Watch samples the execution of your program (at a rate you
+set using the Options profiler option), and produces a
+file with the extension .IPS, which contains the sampling
+information.
+
+%% PrevScreen  ExitHelp
+
+%3 Analyze
+
+The Analyze profiler option implements the ANALYZE opera-
+tion, in which ANALYZE.EXE reads the samples taken during
+the WATCH operation along with the debug information from
+your program's .EXE file, then produces histograms dis-
+playing the information.
+
+You can view the histogram on the screen, instantly access
+the code associated with any line in the histogram, and
+print the histogram.
+
+%% PrevScreen  ExitHelp
+
+%3 Options
+%1 Profiler Options
+%2 Sample rate
+Choose Options on the Profiler menu to set a sampling
+rate for the profiler.  The Profiler options control panel
+lists the sampling rate options.
+
+The sampling rates are expressed as multiples of the clock
+rate, with:
+
+	X1	18 samples per second
+	X10	180 samples per second
+	X100	1800 samples per second
+
+Four bytes are written for each sample, so be careful not
+to set the rate at X100 for programs that run for more than
+one minute.  At that rate, with 7200 bytes/second written,
+your disk would fill up rapidly.
+
+%% PrevScreen  ExitHelp
+
+%2 OptionsMenu
+%3 OptionsMenu
+
+Use the Options Menu to view and alter various options
+that control the operation of the environment, compiler,
+and linker.
+
+Each module library maintains the settings of options
+across invocations.   You can also change the default
+options that are given when you create a new library by
+using the Save defaults option, or you can reset all the
+options to defaults by using the Read defaults option.
+
+For help on individual options, select the appropriate
+topic listed below.
+
+%%Compiler Optimizer Environment ModuleList WindowCol Directory
+%%Version  Editors   Foreigns    Linker     Debugger  Librarian
+%%Read     Save      PrevScreen  ExitHelp
+
+%3 Compiler
+%4 Compiler
+%3 Compiler options
+Select Compiler options to set options for the compiler.
+The environment responds with the following options:
+
+    Global	Sets options for all modules in the library
+    Module	Sets options for the selected module only
+    Reset 	Resets all options to default for all modules
+
+After you set one of these options, the compiler options
+control panel displays.  You can select from among all com-
+piler options, and get Help on any option by selecting
+the option and pressing Alt/H.
+
+%% PrevScreen  ExitHelp
+
+%3 Optimizer
+%4 Optimizer
+%3 Optimizer options
+
+Select Optimizer options to set optimization options.  The
+environment responds with the following options:
+
+    Global	Sets options for all modules in the library
+    Module	Sets options for the selected module only
+    Reset 	Resets all options to default for all modules
+
+After you set one of these options, the Optimizer options
+control panel displays.  You can select from among all opti-
+mizations, and get help on any option by selecting it and
+pressing Alt/H.
+
+%% PrevScreen  ExitHelp
+
+%2 Option scopeMenu
+%3 Global
+%3 Module
+%3 Reset defaults
+When you select Compiler options or Optimizer options
+on the Options menu, the environment displays a submenu
+with the following choices:
+
+Global    Allows you to set options that apply to all
+	  modules in the current library (default).
+
+Module    Allows you to set options for the selected module
+	  only.  (When you select Default for any module
+          optionthe compiler uses the global setting.)
+
+Reset	  Resets all the module options for all modules to
+default	  the default.  This means that the global options
+	  will be used for all modules.
+
+%% PrevScreen  ExitHelp
+
+%3 Environment
+%4 Environment
+%3 Environment options
+
+Use the options on the Environment options control panel to
+set various elements in the Stony Brook Environment.
+
+When you select Environment options from the Options menu,
+you'll see a control panel that lists eight environment
+options.
+
+The Help topics listed below described each environment
+option.
+
+%% Recompile    PromptSave  Altered   Editors
+%% PromptFor    Quiet       Display   ProtMode  Swapping
+%% Statusline   PrevScreen  ExitHelp
+
+%1 Environment Options
+%2 Environment Options
+
+Use the options on the Environment options control panel to
+set various elements in the Stony Brook Environment.
+
+When you select Environment options from the Options menu,
+you'll see a control panel that lists eight environment
+options.
+
+%% Recompile    PromptSave  Altered   Editors
+%% PromptFor    Quiet       Display   ProtMode  Swapping
+%% Statusline   PrevScreen  ExitHelp
+
+%2 Recompile for debug
+%2 Recompile
+%4 Recompile
+%5 Recompile
+
+The Recompile for debug environment option controls whether
+or not the environment automatically recompiles modules when
+you debug.
+
+If this option is On, all modules that were not compiled
+with debug options are compiled automatically.
+
+If this option is Off, modules are not automatically
+recompiled.  This method is preferable for large programs.
+You can use the Module compiler options to turn on debug
+options only for those modules you are interested in.
+
+%% PrevScreen  ExitHelp
+
+%2 Prompt before saving
+%2 PromptSave
+%4 PromptSave
+%5 PromptSave
+
+Use the Prompt before saving environment option to control
+whether or not the editor prompts you before saving source
+files.
+
+If this option is Off, you should not alter source files
+that you do not want saved to the disk.  When this option is
+Off, without prompting you, the editor saves all altered
+files when necessary to recover the memory the files occupy.
+
+%% PrevScreen  ExitHelp
+
+%2 Show altered lines
+%2 Altered
+%4 Altered
+%5 Altered
+
+If this option is ON (Yes), then lines which have been
+altered will have the intensity display of the line
+toggled. This allows you to quickly determine changed
+source.
+
+%% PrevScreen  ExitHelp
+
+%2 External editor for edit
+%2 External editor for errors
+%2 Editors
+%4 Editors
+%5 Edtiors
+
+When set to Yes, the external editor specified via your
+command line will be used. When No, the built-in editor
+will be used.
+
+The environment can execute an external editor for normal
+edit situations or to correct compilation errors. They
+can be set independently of each other.
+
+%% ExtEdit ExtError PrevScreen  ExitHelp
+
+%2 Prompt after foreign
+%2 PromptFor
+%4 PromptFor
+%5 PromptFor
+
+If you set the Prompt after foreign environment option to
+Yes, the environment prompts you to continue before erasing
+the screen after compiling or assembling a foreign module.
+This allows you to view the output of the compiler or
+assembler.
+
+When you set this option to No, the environment continues
+immediately after building a foreign module.
+
+%% PrevScreen  ExitHelp
+
+%2 Quiet
+%2 Quiet
+%4 Quiet
+%5 Quiet
+
+Set the Quiet environment option to Yes to suppress the use
+of the bell to signal errors.
+
+Set this option to No if you want the bell to signal errors.
+
+%% PrevScreen  ExitHelp
+
+%2 Display mode
+%2 Display
+%4 Display
+%5 Display
+
+Use the Display mode environment option to select the number
+of lines on the screen for EGA and VGA displays.  The
+settings are:
+
+	25	25 lines on EGA and VGA screens
+
+	35/40   35 lines on EGA screens
+		40 lines on VGA screens
+
+	43/50   43 lines on EGA screens
+		50 lines on VGA screens
+
+This option is for EGA and VGA only.
+
+%% PrevScreen  ExitHelp
+
+%2 Compile in protected mode
+%2 ProtMode
+%4 ProtMode
+%5 ProtMode
+
+Set the Compile in protected mode option to Yes if you are
+running on an 80386 or 80486 computer and you have extended
+memory on your system.
+
+When this option is set to Yes, the compiler and linker
+run in protected mode, giving them access to all of your
+extended memory and thereby increasing their capacity.
+
+%% PrevScreen  ExitHelp
+
+%2 Swap environment
+%2 Swapping
+%4 Swapping
+%5 Swapping
+
+When set to Yes, the environment will swap itself to
+EMS memory or Disk on the following commands.
+
+Dos Commands, External compilers/linkers/editors,
+running and debugging programs.
+
+%% PrevScreen  ExitHelp
+
+%2 Compiler status info
+%2 Statusline
+%4 Statusline
+%5 Statusline
+
+When set to Yes, the compiler will display some status
+information in the status line of the environment display.
+This will give you some idea of the progress of the
+compile currently in progress.
+
+%% PrevScreen  ExitHelp
+
+%1 Module List Options
+%3 Module list options
+%3 ModuleList
+%4 ModuleList
+Use the Module list options control panel to set options
+related to the module display on the main screen.
+
+    Order	Controls the order in which the modules
+    		are displayed on the main screen
+
+    Modules     Determines whether or not library modules
+		are listed
+
+    Format	Determines whether the long or short format
+		of the module list is used
+
+%% Order  Modules   Format   PrevScreen   ExitHelp
+
+%2 Order
+%4 Order
+%5 Order
+Use the Order option to determine the order in which modules
+are displayed in the main window.
+
+   Alphabetic	Displays the modules in alphabetic order.
+
+   Dependency	Displays the modules in the order of
+		their dependency.  The names of all modules
+		that a module depends upon precede it.
+
+%% PrevScreen  ExitHelp
+
+%2 Modules
+%4 Modules
+%5 Modules
+
+Use the Modules option to determine which modules are
+listed in the main window.
+
+    Local 	Displays only the modules in the current
+		library
+
+    All 	Displays all modules referred to by the
+		current library, including modules from
+		other module libraries
+
+%% PrevScreen  ExitHelp
+
+%2 Format
+%4 Format
+%5 Format
+
+Use the Format option to specify whether to display the list
+of modules in long or short format.
+
+    Short	Displays only the module type and name
+
+    Long	Displays all information about the module
+
+
+%% PrevScreen  ExitHelp
+
+%3 WindowCol
+%4 WindowCol
+%2 ColorsWindow
+%3 Window colors
+
+Use the Window colors option to set display colors.  You
+can select:
+
+    Window background and foreground
+
+    Border background and foreground
+
+    Selected text background and foreground
+
+In addition, you can select colors for each of six diff-
+erent windows.
+
+Use the mouse or the Arrow keys to select colors.  Use the
+mouse or the PgUp and PgDn keys to select the window type.
+
+%% PrevScreen  ExitHelp
+
+%3 Version
+%4 Version
+%3 Version tags
+
+Version tags are identifiers used in conditional compila-
+tion directives.  Select the Version tags option to set
+the version tags for a library.  Enter the version tags
+you want to define at the prompt, separated by commas.
+
+For example, to set the two version tags WINDOWS and DEBUG,
+type at the prompt:
+		WINDOWS,DEBUG
+
+In a source program, you can test the version tag with a
+conditional compilation statement:
+
+	{$IFDEF DEBUG} < n
+		WriteLn('x = ; x:o);
+	{$ENDIF}
+
+%% PrevScreen  ExitHelp
+
+%1 Directories
+%3 Directories
+%3 Directory
+%4 Directory
+
+Use the Directories option to set the directories to be
+searched for source files and the directories in which
+object files are stored.  Your entry in the Directories
+popup window determine the directories to be searched:
+
+SOURCE		Produces a list of of directories for
+		Pascal+ and Foreign language source files
+OBJECT		Produces a single directory in which object
+		files are placed
+INCLUDE		Produces a list of directories for include
+		files
+IMPOBJ 	        Produces a list of directories for imported
+		{$L} object modules and their sources.
+
+%% PrevScreen  ExitHelp
+
+%3 Text editor/normal edit
+%3 ExtEdit
+%4 ExtEdit
+%5 ExtEdit
+%6 ExtEdit
+
+Use this option to designate an editor of your choice for
+use instead of the Stony Brook Editor for normal source
+editing.
+
+The environment prompts you for a DOS command line to use
+when executing your editor. The program should be in your
+path if you do not supply a path here.
+The special symbol %F is replaced with the file to be edited.
+Example
+
+ME %F
+
+Use this in combination with the Environment options
+control panel.
+
+%% PrevScreen  ExitHelp
+
+%3 Text editor/errors edit
+%3 ExtError
+%4 ExtError
+%5 ExtError
+%6 ExtError
+Use this option to designate an editor of your choice for
+use instead of the Stony Brook Editor for correcting
+compilation errors.
+
+The environment prompts you for a DOS command line to use
+when executing your editor. The program should be in your
+path if you do not supply a path here.
+The special symbol %F is replaced with the file to be edited.
+The special symbol %E is replaced with the file containing
+a lising of all errors.
+Example
+
+ME %F %E
+
+Use this in combination with the Environment options
+control panel.
+
+%% PrevScreen  ExitHelp
+
+%1 Foreigns
+%4 Foreigns
+%3 Foreign command lines
+Use the Foreigns command lines option to set a default
+command line to assemble or compile foreign modules.  It
+can contain the special symbols %S, %O and %P, which are
+replaced by the full file name of the source program and
+object file, respectively. %P is replaced by the path
+of the object file.
+
+For example, to use the Turbo Assembler to assemble
+foreign ASM units, make sure the TASM.EXE file is in a
+directory mentioned on your PATH, and use the following
+assembler command line:  TASM %S,%O;
+
+A foreign module uses its own command line if it was set by
+the Command line option instead of by this option.
+
+%% PrevScreen  ExitHelp
+
+%2 Linker(other) command line
+%3 Linker(other) command line
+
+Use the Linker(other) command line to set the DOS command
+line to use for executing another linker to link your
+programs, you need not supply a path for the linker if the
+linker is in your PATH. It can contain the special symbols
+ %S and %R, which are replaced by the linker switches and
+response file respectively.
+
+The linker switches work with any Microsoft compatible
+linker. The default command line is
+
+LINK %S/SEG:512/NOE @%R
+
+Use this in combination with the linker options control
+panel.
+
+%% PrevScreen  ExitHelp
+
+%1 Linker Options
+%2 Linker options
+%3 Linker options
+%3 Linker
+%4 Linker
+Set these Linker options to Yes to:
+
+Include debug info	Include debug information in the
+    			executable file
+Produce map file	Produce a link map file
+Include line numbers	Include line numbers in the map
+Dynamic link library  	Link a dynamic link library (for
+			use with Microsoft Windows only)
+Pack code segments	Combine multiple code segments
+			into one, when possible
+Use other linker	Use linker other than SBLINK
+Smart link V/Methods	Allow smart linking of virtual
+                        methods.
+
+%% DebugInfo  ProduceMap  IncludeLine  DynLink  PackCode
+%% OtherLink  SLVM        PrevScreen   ExitHelp
+
+%2 Include debug info
+%3 DebugInfo
+%4 Include debug info
+%2 DebugInfo
+%4 DebugInfo
+%5 DebugInfo
+
+Use this option if you want to create an executable file
+with debug information -- for example, if you intend to use
+the debugger outside the environment.
+
+When you set the Include debug info option to Yes, the
+linker includes debug information from all modules that were
+compiled with debug information enabled.  Yes is the default.
+
+Use the No setting to turn off this option.
+
+%% PrevScreen  ExitHelp
+
+%2 Produce map file
+%4 Produce map file
+%2 ProduceMap
+%4 ProduceMap
+%5 ProduceMap
+
+When you set the Produce map file option to Yes, the linker
+produces a storage map when you link a program.  Set the
+option to No to skip this step.  No is the default.
+
+The storage map lists the addresses and lengths of the code
+and data segments for each module that is linked into your
+program.
+
+The map file the linker produces has the same format as
+those produced by the Microsoft linker.  This is because
+there are many third-party tools, such as debuggers and
+execution profilers, that get information about your
+program from the map file.  Because we generate the same
+kind of map, you can use such tools even if you do not use
+the Microsoft linker.
+
+%% PrevScreen  ExitHelp
+
+%2 Include lines in map
+%4 Include lines in map
+%2 IncludeLine
+%4 IncludeLine
+%5 IncludeLine
+
+When you set the Include lines in map option to Yes and the
+linker produces a map file, it includes the addresses of
+source lines in the map file.  No is the default setting;
+it turns off this option.
+
+Note that the linker includes the line numbers only for
+those modules that have been compiled with the Include
+line numbers compiler option.
+
+%% PrevScreen  ExitHelp
+
+%2 Dynamic link library
+%4 Dynamic link library
+%2 DynLink
+%4 DynLink
+%5 DynLink
+
+This option applies only to Microsoft Windows.
+
+Set the Dynamic link library option to Yes when you are
+linking a dynamic link library.  See the Developing for
+Microsoft Windows chapter in the Pascal+ Compiler Reference
+for more information about linking dynamic link libraries.
+
+No is the default; it turns this option off.
+
+%% PrevScreen  ExitHelp
+
+%2 Pack code segments
+%4 Pack code segments
+%2 PackCode
+%4 PackCode
+%5 PackCode
+
+Set the Pack code segments linker option to Yes to combine
+multiple code segments into one, when possible.
+
+%% PrevScreen  ExitHelp
+
+%2 Use other linker
+%4 Use other linker
+%2 OtherLink
+%4 OtherLink
+%5 OtherLink
+
+Set the Use other linker option to Yes to specify that
+the environment always uses the linker given in the other
+linker command line instead of the Stony Brook Linker.
+
+No is the default, and designates SBLINK for linking.
+
+%% PrevScreen  ExitHelp
+
+%2 Smart link V/Methods
+%4 Smart link V/Methods
+%2 SLVM
+%4 SLVM
+%5 SLVM
+
+Setting this to yes will allow the linker to smart link
+virtual methods of objects. The default is No.
+
+%% PrevScreen  ExitHelp
+
+%2 Debugger(other) command line
+%3 Debugger(other) command line
+
+Use the Debugger(other) command line to use a debugger
+other than SBDEBUG. The command line is a DOS command
+line, thus you need not supply a path if your debugger
+is in the PATH. The special symbol %F is allowed and is
+replaced with the program to be debugged.
+Example
+
+TD %F
+
+%% PrevScreen  ExitHelp
+
+%1 Debugger Options
+%2 Debugger options
+%3 Debugger options
+%3 Debugger
+%4 Debugger
+The debugger options and their functions are:
+
+Use EMS memory		Reduces use of conventional memory
+Swap mouse state	Determines whether mouse state is
+			saved and restored
+Case sensitive		Determines whether case is ignored
+Load config file	Determines whether SBDEBUG loads
+			progname.SBD file
+Screen mode		Determines the screen configuration
+Heap size		Sets the size of the heap SBDEBUG
+			uses
+
+You can set the debugger options either in the environment
+or at the command line.  See the Help topics listed below
+for more information.
+
+%% EMSmemory   SwapMouse  Case  Config  ScreenMode  HeapSize
+%% PrevScreen  ExitHelp
+
+%2 Use EMS memory
+%2 EMSmemory
+%3 EMSmemroy
+%4 EMSmemory
+%5 EMSmemory
+Using EMS, or expanded memory, reduces the amount of con-
+ventional memory used by SBDEBUG, leaving more for your
+program.  SBDEBUG uses EMS only if there is 32K or more of
+EMS memory available.  Heap size is ignored if EMS is
+turned on.
+
+SBDEBUG preserves the EMS mapping state and should be compa-
+tible with any program that uses EMS without using this
+option.  However, you may occasionally need to turn off EMS
+support if, for instance, your program requires all of the
+EMS memory available on your system.
+
+%% PrevScreen  ExitHelp
+
+%2 Swap mouse state
+%2 SwapMouse
+%3 SwapMouse
+%4 SwapMouse
+%5 SwapMouse
+
+The Swap mouse state option controls whether or not SBDEBUG
+saves and restores the mouse state each time SBDEBUG gains
+control.
+
+Enable this option only if you are debugging a program that
+uses the mouse, and you want to use the mouse in SBDEBUG as
+well.  Setting this option to ON insures that use of the
+mouse in the debugger does not interfere with use of the
+mouse in the program you are debugging.
+
+The disadvantage to using this option is that some mouse
+drivers take an inordinate amount of time to save and
+restore the mouse state, which can introduce an annoying
+delay when stepping through your program.
+
+%% PrevScreen  ExitHelp
+
+%2 Case sensitive
+%2 Case
+%3 Case
+%4 Case
+%5 Case
+The Case sensitive option determines whether or not SBDEBUG
+ignores case when comparing names.  If you are debugging
+Pascal+ code, set this option to Off.  If it is On, you must
+use uppercase characters, because the Pascal language
+converts everything to uppercase.
+
+If you are debugging C or Modula-2 programs, set this option
+to On.  Because these languages are case sensitive, lowercase
+and uppercase versions of the same characters can represent
+different elements.  To be able to distinguish between
+variables, you must maintain this case sensitivity in the
+debugger.
+
+If your main program is written in Pascal+ or Stony Brook
+Modula-2, the SBDEBUG automatically sets case-sensitivity
+appropriately.
+
+%% PrevScreen  ExitHelp
+
+%2 Load config file
+%2 Config
+%3 Config
+%4 Config
+%5 Config
+
+The Load config file option determines whether or not
+SBDEBUG loads the configuration file: progname.SBD.
+
+The configuration file contains breakpoint and watch
+expression information saved from a previous debug session.
+
+%% PrevScreen  ExitHelp
+
+%2 Screen mode
+%2 Screen Mode
+%2 ScreenMode
+%3 ScreenMode
+%4 ScreenMode
+%5 ScreenMode
+
+The SBDEBUG Screen mode options control:
+
+	The number of lines on the screen
+
+	Whether the debugger uses screen pages (flip), or
+	saves the screen memory in the heap (swap), when
+	switching between the debugger and the user program
+	screen
+
+	Whether the debugger uses the mono screen in a dual
+	monitor configuration
+
+There are five possible configurations.  The additional Help
+topics listed here descrine those configurations and the
+environment options used to select them.
+
+%% Flip   Swap   35/40   43/50   Dual  PrevScreen  ExitHelp
+
+%3 Flip
+%4 Flip
+%5 Flip
+%6 Flip
+
+The Flip setting for the Screen mode debugger option
+provides this configuration:
+
+	25 lines on the screen
+
+	Flip pages (uses two screen pages, one for
+	the debugger and one for your user program)
+
+%% PrevScreen  ExitHelp
+
+%3 Swap
+%4 Swap
+%5 Swap
+%6 Swap
+
+The Swap setting for the Screen mode debugger option
+provides this configuration:
+
+	25 lines on the screen
+
+	Swap pages (uses one screen page, swapping
+	the debugger and your user program in and
+	out as you go)
+
+%% PrevScreen  ExitHelp
+
+%3 35/40
+%4 35/40
+%5 35/40
+%6 35/40
+
+The 35/40 setting for the Screen mode debugger option
+provides 35 lines on the screen for EGA monitors, and 40
+lines on the screen for VGA monitors.
+
+Note that the 35/40 mode is available only with an EGA or
+VGA compatible video adapter.  Multiple video pages are not
+supported in these modes, so swapping is always used to
+save the screen.
+
+%% PrevScreen  ExitHelp
+
+%3 43/50
+%4 43/50
+%5 43/50
+%6 43/50
+
+The 43/50 setting for the Screen mode debugger option
+provides 43 lines on the screen for EGA monitors, and 50
+lines on the screen for VGA monitors.
+
+Note that the 43/50 mode is available only with an EGA or
+VGA compatible video adapter.  Multiple video pages are not
+supported in these modes, so swapping is always used to
+save the screen.
+
+%% PrevScreen  ExitHelp
+
+%3 Dual
+%4 Dual
+%5 Dual
+%6 Dual
+
+The Dual setting for the Screen mode debugger option is
+for monochrome screens.
+
+You can use the Dual mode only on machines that have both
+a color and a monochrome adapter and monitor.  In Dual mode
+the debugger uses the mono screen, and your program uses
+the color screen.
+
+%% PrevScreen  ExitHelp
+
+%2 Heap Size
+%2 Heap size
+%2 HeapSize
+%3 HeapSize
+%4 HeapSize
+%5 HeapSize
+
+The Heap size debugger option provides four settings:
+
+	16K  24K  32K  40K
+
+The heap size settings change the size of the heap that
+SBDEBUG uses.  The allowed range is any number between 16
+and 64.  The default heap size is 24K.
+
+These settings are ignored if there is EMS memory available
+and the EMS memory option/switch is On (which is the
+default).
+
+See the Heap usage section in the Pascal+ Utilities Refer-
+ence for information about determining the heap size for
+your program.
+
+%% PrevScreen  ExitHelp
+
+%1 Librarian Options
+%2 Librarian options
+%3 Librarian options
+
+The librarian options are:
+
+Max library size:  This sets the maximum library size in
+                   megabytes. You want to use the smallest
+		   size that your library can fit into.
+
+Delete objects:    The librarian can delete the input files
+                   when creating the LIB file. This will
+		   conserve your disk space.
+
+%% MaxLibSize DeleteObj PrevScreen  ExitHelp
+
+%2 Max library size
+%3 Max library size
+%3 MaxLibSize
+%4 MaxLibSize
+
+This option specifies the maximum library size that SBLIB can
+create in megabytes. The default is 4Mb. You want to use the
+smallest maximum size possible to minimize dead space in the
+LIB file and reduce the size of the LIB file created.
+
+%% PrevScreen  ExitHelp
+
+%2 Delete Objects
+%3 Delete Objects
+%3 DeleteObj
+%4 DeleteObj
+
+The librarian can delete the input files when creating the
+output LIB file. The default is None. The other options
+are
+
+During: The input files are deleted immediately after they
+        are read and added to the output LIB file. This
+	uses the least amount of disk space. However, if
+	an error occured, files up to that point will
+	have been lost and would need to be recompiled.
+
+After:  This deletes input files after successfully
+        creating the final output LIB file. This is the
+	safest method to perform this option.
+
+%% PrevScreen  ExitHelp
+
+%3 Read
+%4 Read
+%3 Read default options
+
+Use the Read defaults option to set all options back to
+the default options settings.
+
+The default options are set by selecting Save default
+options on the Options menu.
+
+%% PrevScreen  ExitHelp
+
+%3 Save
+%4 Save
+%3 Save default options
+
+Use the Save default option to save the current option
+settings as defaults.
+
+These settings are then used when you create a new
+module library or when you Read default options.
+
+%% PrevScreen  ExitHelp
+
+%2 SystemMenu
+%3 SystemMenu
+Use the options on the System menu to:
+
+DOS command		Perform a DOS command
+Program parameters	Specify command parameters for your
+			program
+Edit file		Edit a file that is not a module in
+			the current library
+Change project library	Close the current module library and
+			enter a new one
+Create log		Create and execute log files that
+Terminate log		perform a series of commands automa-
+Run log			tically
+Slow Mo			Slows down execution of LOG files.
+
+%% DOSCommand   ProgParam   Edit         ChangeLibrary
+%% LogFiles     SloMo       PrevScreen   ExitHelp
+
+%3 DOSCommand
+%4 DOSCommand
+%3 DOS command
+
+Use the DOS command option to perform a DOS command
+without leaving the environment.  The environment prompts
+you for the command, then executes it.  When the procedure
+is complete, press any key to return to the environment.
+
+To perform several DOS commands, type COMMAND at the prompt.
+This invokes the DOS command interpreter and allows you to
+perform multiple DOS commands.  When you are ready to return
+to the environment, type EXIT at the DOS prompt.
+
+%% PrevScreen  ExitHelp
+
+%3 Edit
+%4 Edit
+%3 Edit file
+
+Use the Edit option to edit a file that is not a module in
+the current library.
+
+	DO NOT use the Edit command to edit a
+	module in the current module library.  The
+	environment will not register the changes,
+	and automatic compilation will not be done
+	correctly.
+
+%% PrevScreen  ExitHelp
+
+%3 Program parameters
+%3 ProgParam
+%4 ProgParam
+
+Use the Program parameters option to specify command line
+parameters for your program.  These parameters are used
+whenever you run a program.
+
+When you select this option, the environment prompts you
+for the new command line parameters.  The program parameters
+are the strings that normally are specified after the
+program name when running a program under DOS.
+
+%% PrevScreen  ExitHelp
+
+%3 LogFiles
+%4 LogFiles
+%3 Create log
+%3 Terminate log
+%3 Run log
+Log files let you perform a series of commands and record
+them so you can perform them again automatically.
+
+Use the Open log option to start recording commands.  The
+environment prompts you for a filename.  Execute the
+commands as you want them recorded.  Use the Terminate log
+option to end recording.
+
+Use the Run log option to run the log file.  The environment
+prompts you for the filename, then executes the commands as
+you recorded them.
+
+To run a log file immediately upon entering the environment,
+use:
+	M2E library logfile
+
+%% PrevScreen  ExitHelp
+
+%3 Slow Mo
+%4 SloMo
+%5 SloMo
+
+This command inserts the specifed delay in between each
+keystroke read by the environment from the LOG file.
+
+The time is specified in 1/100ths of a second.
+
+This allows you to debug your script files more easily.
+
+%% PrevScreen  ExitHelp
+
+%3 ChangeLibrary
+%4 ChangeLibrary
+%3 Change project library
+
+Use the Change project library command to close the current
+project library and work on a different library.
+
+You will be prompted for the path name of the new library.
+The environment automatically sets your default drive and
+directory to that of the new library.
+
+%% PrevScreen  ExitHelp
+
+%1 Compiler Options
+%2 Check subscripts
+
+When you enable the Check subscipts compiler option, the
+compiler generates code to check all subscripts to make sure
+the subscripts are within the specified array bounds.  If a
+subscript is found to be out of bounds, the program
+generates a runtime error.
+
+Setting this option to Yes causes the compiler to generate
+larger and slower code, but since it simplifies debugging,
+you should use this option while developing a program.
+
+Set this option to No to produce the smallest and fastest
+code, after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Check assignments
+
+When you enable the Check assignments compiler option, the
+compiler checks for the assignment of values that are out
+of range.  If it finds a value that is out of range, the
+program generates a runtime error.
+
+Setting this option to Yes causes the compiler to generate
+larger and slower code, but since it simplifies debugging,
+you should use this option while developing a program.
+
+Set this option to No to produce the smallest and fastest
+code, after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Check variants
+
+When you enable the Check variants compiler option, the
+compiler generates code to check the tag field of variant
+records, whenever you refer to a field inside a variant.
+
+Setting this option to Yes causes the compiler to generate
+larger and slower code, but since it simplifies debugging,
+you should use this option while developing a program.
+
+Set this option to No to produce the smallest and fastest
+code, after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Check pointers
+
+When you enable the Check pointers compiler option, the
+compiler checks for use of pointers with nil values.
+
+Setting this option to Yes causes the compiler to generate
+larger and slower code, but since it simplifies debugging,
+you should use this option while developing a program.
+
+Set this option to No to produce the smallest and fastest
+code, after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Check for overflow
+
+When you enable the Check for overflow compiler option, the
+compiler checks for calculations that result in arithmetic
+overflow.
+
+Setting this option to Yes causes the compiler to generate
+larger and slower code, but since it simplifies debugging,
+you should use this option while developing a program.
+
+Set this option to No to produce the smallest and fastest
+code, after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Check stack
+
+Setting the Check stack compiler option to Yes causes the
+compiler to generate larger and slower code, but since it
+simplifies debugging, you should use this option while
+developing a program.
+
+Set this option to No to produce the smallest and fastest
+code, after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Initialize data
+When you enable the Initialize data compiler option, the
+compiler generates code to initialize all of the variables
+in your program.  Use this option in conjunction with the
+check pointers option to guarantee that all NIL pointers
+are found.
+
+NOTE:	Failure to use those two options may result in
+	crashing your system if there are bugs in your
+	program.
+
+Setting this option to Yes causes the compiler to generate
+larger and slower code, but since it simplifies debugging,
+you should use this option while developing a program.  Set
+this option to No to produce the smallest and fastest code,
+after debugging the program.
+
+%% PrevScreen  ExitHelp
+
+%2 Aliasing occurs
+Aliasing refers to a situation wherein a variable can be
+referred to by two distinct names.  This occurs most often
+when a procedure takes two parameters of the same type,
+and the same variable is passed for both parameters in a call
+to the procedure.  The compiler can generate better code if
+it knows that aliasing never occurs.
+
+Set this option to No only if you are certain that your
+program does not refer to the same variable by two different
+names.  Disabling this option causes the compiler to assume
+that aliasing does not occur, and produces faster code.
+However, the code could be incorrect if aliasing does
+actually occur.
+
+Set this option to Yes if you know that your program makes
+use of aliasing, or if you are not sure.
+
+%% PrevScreen  ExitHelp
+
+%2 Emulate floating point
+
+When you enable the Emulate floating point compiler option,
+the compiler generates calls to floating point emulation
+procedures instead of generating 80x87 instructions for
+floating point.  This enables your program to run on
+machines that are not equipped with a floating point
+processor.
+
+Setting this option to No causes the compiler to generate
+80x87 instructions directly.  This produces smaller and
+faster code, but the program will not run on machines that
+do not have a floating point processor.
+
+%% PrevScreen  ExitHelp
+
+%2 Numeric coprocessor
+
+Use the Numeric coprocessor option to specify whether or
+not to allow 80x87 coprocessor floating point types.
+
+	When disabled, the only floating point data
+	type is REAL.
+
+	When enabled, the types SINGLE, DOUBLE,
+	EXTENDED, and COMP are also available.
+
+%% PrevScreen  ExitHelp
+
+%2 Include debug info
+%3 DebugInfo
+%4 DebugInfo
+
+When you enable the Include debug info compiler option,
+the compiler includes information about your program for
+use by the debugger.  This option is automatically set when
+you use the Debug command on the main screen.
+
+Setting this option to No causes the compiler to omit debug
+information.  As a result, you will not be able to set
+breakpoints or examine variables from that module in the
+debugger.
+
+Large programs may not fit into memory if all modules are
+compiled with debug information.  Set this option to No for
+modules that are already debugged, to reduce the size of the
+program.
+
+%% PrevScreen  ExitHelp
+
+%2 Include line numbers
+%3 LineNumbers
+%4 LineNumbers
+
+When you enable the Include line numbers compiler option,
+the compiler includes the line numbers from your program.
+The line numbers are used by the debugger and also when a
+runtime error occurs, to tell you where the error occurred.
+
+This option is automatically set when you use the Debug
+command on the main screen.
+
+%% PrevScreen  ExitHelp
+
+%2 Extended debug info
+
+When you enable the Extended debug info compiler option,
+the compiler uses Stony Brook extensions to the CodeView
+debug information.  Set this option to Yes if you are using
+SBDEBUG or the Logitech MultiScope debugger.
+
+Set this option to No if you plan to use any other CodeView
+compatible debugger.
+
+%% PrevScreen  ExitHelp
+
+%2 Make debuggable
+
+When you enable the Make debuggable compiler option, the
+compiler suppresses optimizations that might cause confusion
+when debugging your program.
+
+When you disable this option, the compiler does not modify
+its code generation when debug information is produced. Set
+it to No if you want to debug the fully optimized code.
+
+%% PrevScreen  ExitHelp
+
+%2 Give warnings
+
+Use the Give warnings compiler option to control whether
+or not the compiler outputs warning messages.  The compiler
+issues two warnings:
+
+	When a value parameter of a structured types must
+	be copied onto the stack.  This allows you to spot
+	inefficiencies that possibly could be corrected by
+	changing the parameter to a VAR.
+
+	When a function procedure could reach the end
+	without returning a value.  If this situation
+	actually occurs, the program is in error.
+
+%% PrevScreen  ExitHelp
+
+%2 Check I/O operations
+Use the Check I/O operations option to control the behavior
+of your program when an error occurs in an input or output
+operation.
+
+When input/output checking is enabled, if an error occurs,
+your program is terminated with a runtime error.
+
+When I/O checking is disabled, the InOutRes variable is set
+with a status after each I/O operation.  Use the IOResult
+function to check the value of this variable.
+
+Turn off I/O checking if you want control over I/O errors
+in your program.  But if you do, you must check each I/O
+operation using IOResult.  Otherwise, the first I/O error
+the compiler encounters will cause all other operations
+to be ignored.
+
+%% PrevScreen  ExitHelp
+
+%2 Check var strings
+
+When the Check var strings option is enabled, you must pass
+an actual parameter of exactly the same length as the
+formal parameter for var string type parameters.
+
+When disabled, you can pass a string of any length to proce-
+dures expecting a var string.  However, you must guarantee
+that the procedure will not attempt to store a string longer
+than the string that is passed.  If the procedure stores a
+longer string, data following the string will be clobbered.
+
+%% PrevScreen  ExitHelp
+
+%2 Check modules
+When the Check modules option is enabled, the compiler puts
+a special symbol in the object file for each unit named on
+a use clause.  The format of the symbol is:
+
+	UnitName_yy_mm_dd_hh_mm_ss_ff
+
+This is derived from the data and time that the imported
+unit was compiled.  The compiler also puts out a definition
+of the same symbol when each unit is compiled.
+
+At link time, if the object module linked for a unit is not
+the same as the one expected by another unit or program,
+the linker produces the message: Undefined symbol.  Use this
+option to guarantee that you have not made a mistake in
+building a program by including the wrong version of a
+module or by referring to two modules with the same name.
+
+%% PrevScreen  ExitHelp
+
+%2 Overlay
+Overlaying is a method of reducing the memory requirements
+of a program by allowing different parts of the program to
+share the same memory space.  Only the overlay that is
+currently executing must be in memory.  The others are on
+disk and are read as they are needed.  This saves memory.
+
+All exported procedures from a module included in an over-
+lay must be called by a LONG call instruction.  Normally
+this is done by using the LARGE code model when compiling
+the module.
+
+Each Pascal+ unit that you place in an overlay must specify
+the Overlay compiler option.  This ensures that the
+generated code is compatible with overlaying.
+
+%% PrevScreen  ExitHelp
+
+%1 Additional Compiler Options
+%2 Generate sparse cases
+
+When you enable the Generate sparse cases compiler option,
+the compiler uses a lookup table for sparse cases.  This is
+smaller but slower than the jump table used for more dense
+cases.
+
+If you set this option to No, the compiler always generates
+a jump table, which is faster but larger.
+
+%% PrevScreen  ExitHelp
+
+%2 Generate listing file
+
+When you enable the Generate listing file compiler option,
+the compiler creates a printable listing when it compiles
+your program.
+
+If you set this option to No, the compiler does not produce
+a listing file.
+
+%% PrevScreen  ExitHelp
+
+%2 List machine code
+
+When you enable the List machine code compiler option, the
+compiler creates a printable listing of your source program
+and the machine code generated for it.
+
+If you set this option to No, the compiler does not create
+a machine code listing.
+
+%% PrevScreen  ExitHelp
+
+%2 Force far calls
+
+Normally, Pascal+ uses near calls for procedures that are
+not declared in a unit interface section, and are not
+declared as external.  Use the Force far calls option to
+cause the compiler to use far calls for all procedures.
+
+Note that unlike Turbo Pascal, Pascal+ does not require
+that you force far calls in units that will be overlaid.
+
+%% PrevScreen  ExitHelp
+
+%2 Generate 80286 code
+
+Use the Generate 80286 code option to tell the compiler
+to use instructions specific to the 80286 processor and all
+processors with higher numbers than the 80286, such as the
+80386.
+
+Enabling this option causes the compiler to generate
+slightly more efficient code than it does with this option
+disabled.
+
+But, it is important to note:
+
+	Programs compiled with this option will not run on
+	machines using 8088, 8086, 80188, or 80186
+	processors.
+
+%% PrevScreen  ExitHelp
+
+%2 Separate stack segment
+
+When you enable the Separate stack segment compiler option,
+the compiler uses a separate segment for the program stack.
+
+When you set this option to No, the program stack is placed
+in the default data segment.
+
+You should use a separate stack when using the medium or
+large data models, and a stack in the data segment when
+using the small data model.
+
+%% PrevScreen  ExitHelp
+
+%2 Module init code
+
+Use the Module initialization code option to inform the
+compiler whether or not a unit contains initialization code.
+
+Disable this option if the unit does not contain initiali-
+zation code.  When the unit is compiled, disabling this
+option suppresses the calls that other units would ordi-
+narily make to the unit's initialization procedure.
+
+%% PrevScreen  ExitHelp
+
+%2 Windows prologue
+
+When you set the Windows prologue compiler option to Yes,
+the compiler places a special sequence of instructions
+(which are required by Microsoft Windows) at the beginning
+and end of each procedure.  Enable this option only when
+developing applications for Microsoft Windows.
+
+When this option is disabled, the Windows prologue and
+epilogue are not generated.
+
+%% PrevScreen  ExitHelp
+
+%2 Output file type
+The Output file type option has two settings:
+
+Object 	The compiler produces a single object module for
+	each module compiled.  In this case, all procedures
+	in a module are linked into a program if any
+	procedure in the module is used.
+
+Library The compiler produces an object library for each
+	module compiled.  When you link a program compiled
+	to libraries, only the required procedures are
+	included in the program, making the executable
+	program smaller.
+
+Use the Library setting to reduce the size of your executable
+program, at the expense of longer link times.
+
+%% PrevScreen  ExitHelp
+
+%2 Expand single-calls
+
+When you enable the Expand single calls compiler option, the
+compiler automatically expands procedures that are called
+only once at the point of the call.
+
+This optimization generally should be enabled, since it
+always produces smaller, faster code.  However, you may
+need to disable this on large modules, because it can
+cause the compiler to run out of memory.
+
+%% PrevScreen  ExitHelp
+
+%2 Accept extended syntax
+
+When the Accept extended syntax option is enabled, you can
+call functions as if they were declared to be procedures.
+In this case, the function value is discarded.
+
+This option is especially useful when dealing with code
+like the Microsoft Windows API, in which each call returns
+some value, most of which you can ignore.
+
+%% PrevScreen  ExitHelp
+
+%2 C compatible program
+
+Enable the C compatible program option when you compile a
+Pascal+ program and you want it to imitate a C program.
+This option is useful for linking programs containing both
+Pascal+ and C code.
+
+The C compatible program option causes the compiler to
+define the public symbol _main for your main program, which
+is the way the C runtime library expects its main program
+to be defined.
+
+It also suppresses the definition of the main program as an
+entry point in the object module, since it would conflict
+with the entry point defined in the C runtime library.
+
+%% PrevScreen  ExitHelp
+
+%2 Full boolean eval
+Use the Full boolean evaluation option to force full
+evaluation of boolean expressions.
+
+By default, when Pascal+ evaluates a boolean expression, it
+evaluates only enough of the expression to determine its
+truth value.  When you enable Full boolean evaluation, the
+compiler generates code to evaluate all parts of a boolean
+expression, even in cases where the truth value is already
+known.
+
+The only reason to enable full boolean evaluation is if
+your code relies on all parts of the expression being evalu-
+ated.  For instance, if one of the operands involves a
+function call, and you want the call performed regardless of
+the truth value because of its side effect, enabling this
+option would get the result you need.
+
+%% PrevScreen  ExitHelp
+
+%2 Expand procedures
+
+When you enable the Expand procedures compiler option, it
+instructs the compiler to expand some procedures inline
+instead of calling them.  This can improve runtime perform-
+ance dramatically, but at the expense of code size.
+
+Set this option to 10 or 20 to expand procedures containing
+up to that number of statements.
+
+Setting this option to No suppresses inline expansion of
+procedures.
+
+%% PrevScreen  ExitHelp
+
+%2 Code memory model
+
+Use the Code memory model option to select the memory model
+used for code.  The choices are:
+
+	Small	Combined code of all modules in a program
+		is less than 64K bytes
+
+	Large	Code of each module is as much as 64K bytes
+
+%% PrevScreen  ExitHelp
+
+%2 Data memory model
+Use the Data memory model option to select the memory model
+used for data.  The choices are:
+
+	Small	Combined static data, stack, and heap
+		of all modules in a program are less than
+		64K bytes
+
+	Medium	Combined static data of all modules in a
+		program is less than 64K, but an additional
+		64K can be used for stack, and heap can be
+		as large as the memory available
+
+	Large	Same requirements as the medium model,
+		except that each module can have up to 64K
+		of static data
+
+%% PrevScreen  ExitHelp
+
+%2 Constant memory model
+
+The Constant memory model option controls the placement of
+constant data.  Constant data consists of string literals
+and floating point constants, as well as some constants
+generated implicitly by the compiler.  The settings are:
+
+Small constant model 	Places the constants in
+			DGROUP
+
+Medium constant model	Places the constants in
+			the code segment
+
+Large constant model 	Places the constants in
+			a separate segment
+
+%% PrevScreen  ExitHelp
+
+%2 Align data
+
+Use the Align data option to specify that variables are to
+be aligned on special address boundaries.  On processors
+with a 16- or 32-bit bus, this can improve runtime
+performance.
+
+When you select the 1 setting, the data is not aligned.
+
+When you select the 2 or 4 settings, the compiler aligns
+data on 2 or 4 byte boundaries.  To maximize performance:
+
+	Use 2 for machines with 16-bit busses
+	Use 4 for machines with 32-bit busses
+
+%% PrevScreen  ExitHelp
+
+%1 Optimizer Options
+%2 Optimization strategy
+
+Use the Optimization strategy option settings to set the
+general strategy for the optimizer, as follows:
+
+Time setting	The optimizer attempts to minimize execution
+	        time, producing larger code if necessary.
+
+Space setting	The optimizer attempts to minimize code
+	        size, generating slower code if necessary.
+
+%% PrevScreen  ExitHelp
+
+%2 Common subexpressions
+
+When you enable the Common subexpressions optimization
+option, the compiler looks for expressions that are used
+more than once, without any of the variables changing.
+It then computes the expression only once.
+
+When you set this option to No, the compiler does not
+perform this operation.
+
+%% PrevScreen  ExitHelp
+
+%2 Loop invariant motion
+
+When you enable the Loop invariant motion option, the
+compiler looks inside loops for expressions with values
+that do not change during the loop.  These expressions are
+moved outside the loop and computed only once.
+
+If you set this to No, the compiler does not perform Loop
+invariant motion.
+
+%% PrevScreen  ExitHelp
+
+%2 Induction variables
+
+When you enable the Induction variables optimizer option,
+the compiler looks for multiplications by a loop index.
+The multiplication is then changed to an addition of the
+multiplier in the loop, decreasing execution time.
+
+If you set this to No, the compiler does not look for
+induction variables.
+
+%% PrevScreen  ExitHelp
+
+%2 Constant/copy propagation
+
+When you enable the Constant/copy propagation optimizer
+option, the compiler looks for assignments of constants or
+simple variables to a variable.  Subsequent uses of the
+variable on the left side of the assignment are then
+replaced with the constant or variable on the right side.
+This often results in the elimination of an unnecessary
+assignment and temporary variable.
+
+If you set this to No, the compiler does not perform constant and
+copy propagation.
+
+%% PrevScreen  ExitHelp
+
+%2 Dead code elimination
+
+When you enable the Dead code elimination optimizer option,
+the compiler locates and removes code in your program that
+cannot possibly be executed.
+
+If you set this to No, the compiler does not look for dead
+code.
+
+%% PrevScreen  ExitHelp
+
+%2 Dead store elimination
+
+When you enable the Dead store elimination optimizer
+option, the compiler locates and eliminates assignments in
+which the variable assigned is not used after the assign-
+ment.
+
+If you set this to No, the compiler does not look for dead
+assignments.
+
+%% PrevScreen  ExitHelp
+
+%2 Jump chaining
+
+When you enable the Jump chaining optimizer option, the
+compiler looks for jump instructions that jump to other jump
+instructions, and replaces them with jumps to the ultimate
+destination.
+
+If you set this to No, the compiler does not look for jump
+chains.
+
+%% PrevScreen  ExitHelp
+
+%2 Live variable analysis
+
+When you enable the Live variable analysis optimizer
+option, the compiler determines exactly when the value of a
+variable might be used before it is changed.  This allows
+the compiler to perform better register allocation, for
+example, when using the same register to store two variables
+whose lifetimes do not overlap.
+
+If you set this to No, the compiler does not perform live
+variable analysis.
+
+%% PrevScreen  ExitHelp
+
+%2 Peephole optimizations
+
+When you enable the Peephole optimizations optimizer
+option, the compiler examines the generated code, looking
+for specific code sequences.  These sequences are then
+replaced with more efficient sequences that accomplish
+the same function.
+
+If you set this to No, the compiler does not perform peephole
+optimizations.
+
+%% Flow Lifetimes TailMerge Hoisting PrevScreen  ExitHelp
+
+%2 Peephole flow analysis
+%3 Flow
+
+When you enable Peephole flow, the peephole optimizer will
+follow the instruction flow of control while performing
+it normal optimizations. This allows the peepholer to carry
+the information it gathers for greater distances than if
+this option were turned off.
+
+If Peephole optimizations is Off, No, then this option will
+be off as well.
+
+%% PrevScreen  ExitHelp
+
+%2 Peephole lifetime analysis
+%3 Lifetimes
+
+When you enable Peephole life, the peephole optimizer tracks
+the register usage and lifetimes through the entire procedure.
+This allows the peephole optimizer to propagate instruction
+operands. Thus possibly allowing more instructions to be
+removed, because the propagation will create a dead
+instruction.
+
+If Peephole optimizations is Off, No, then this option will
+be off as well.
+
+%% PrevScreen  ExitHelp
+
+%2 Tail merging
+%3 TailMerge
+
+When you enable Tail merging, the peephole optimizer will
+look for identical instrucation sequences at the end of
+parallel program flows. CASE statements are a prime
+example of parallel program flows. The identical sequences
+are then merged into one sequence, allowing smaller code.
+
+If Peephole optimizations is Off, No, then this option will
+be off as well.
+
+%% PrevScreen  ExitHelp
+
+%2 Instruction hoisting
+%3 Hoisting
+
+When you enable Instruction hoisting, the peephole
+optimizer will look for identical instrucation sequences
+at the beginning of parallel program flows.
+CASE statements are a prime example of parallel program
+flows. The identical sequences are then hoisted to a
+point before the flow branches.
+
+If Peephole optimizations is Off, No, then this option will
+be off as well.
+
+%% PrevScreen  ExitHelp
+
+%2 Register parameter passing
+
+When you enable the Register parameter passing optimizer
+option, the compiler automatically passes parameters to
+procedures in registers when it can.
+
+The compiler does not use register parameter passing in
+the following cases:
+
+	When the procedure is exported
+
+	When the procedure has forward references
+
+	When the procedure is called through procedure
+	variables
+
+%% PrevScreen  ExitHelp
+
+%2 Loop rewriting
+
+When you enable the Loop rewriting optimizer option, the
+compiler attempts to rewrite indexed loops to use a multiple
+of the index, when all uses of the index are multiplied by a
+constant.
+
+This can produce tighter code for loops that involve
+subscripting operations.
+
+%% PrevScreen  ExitHelp
+
+%2 Cross module reg params
+
+When you enable the Cross module reg params optimization
+option, the compiler of register parameter passing, even
+for procedures that are called from other units.
+
+Register parameter passing is much faster than passing
+parameters on the stack, with a slight size advantage as
+well.
+
+%% PrevScreen  ExitHelp
+
+%2 Conditional common subs
+
+When you enable the Conditional common subexpressions
+optimization option, the compiler looks for common sub-
+expressions that would be a gain only if they could be
+placed in a register.
+
+Later, during register allocation, the compiler decides
+whether to compute them once and keep them in a register,
+or to compute them as needed.
+
+This optimization generally saves both time and code size.
+
+%% PrevScreen  ExitHelp
+
+%1 Editor
+The Stony Brook Editor is a full screen WYSIWYG (What You
+See Is What You Get) editor.  The editor keeps text in
+memory areas called buffers.  Each buffer is associated
+with a file.  Changes you make to a buffer are not reflected
+in the file until you save it.
+
+When you exit the environment, or when the environment needs
+the memory used by editor buffers, it will prompt you to
+save any buffer you have changed since it was last saved.
+
+To execute the commands on the top border of the window,
+hold the Alt key and type the first letter of the command,
+or point with the mouse and click the left button.
+
+In the Help messages listed below, ( ) indicate the command
+associated with the keystrokes and function.
+
+%% File  Split Window   Next      Output      DOS     Help
+%% Quit  Key   Continue Exit      Cursor      Delete  Block
+%% Shift Exit  Keys     SrchRepl  PrevScreen  ExitHelp
+
+%2 File
+%2 Buffer
+%2 OutputMenu
+%2 RenameMenu
+%2 ModuleMenu
+
+File and buffer manipulation commands:
+
+  Open a new buffer or move to an existing	Alt/F
+  buffer. 					(File)
+
+  If editing a source file in the current
+  module library with Alt/F, type only the
+  module name, not a file name.
+
+  To save a buffer to its associated file.	Alt/O
+  						(Output)
+
+  To change the name of the file associated	Alt/R
+  with the current buffer.  This file will be
+  created when you save the file.
+
+%% PrevScreen  ExitHelp
+
+%2 Help
+
+Press Alt/H (Help) for Help anywhere inside the editor.
+
+Press Alt/K (Keys) to see a list of editing keys and functions.
+
+%% PrevScreen  ExitHelp
+
+%2 Quit
+%2 Exit
+%2 ExitMenu
+%2 Continue
+
+Exiting and quitting:
+
+  Exit back to the environment		Alt/E  (Exit)
+
+  Exit and continue compiling		Alt/C  (Continue)
+
+  Abandon changes to current buffer	Alt/Q  (Quit)
+
+%% PrevScreen  ExitHelp
+
+%2 Cursor
+To move the cursor:
+
+  Left one character		Left arrow   or  Ctrl/S
+  Right one character		Right arrow  or  Ctrl/D
+  Left one word			Ctrl/A       or  Ctrl/<-
+  Right one word		Ctrl/F       or  Ctrl/->
+  Up one line			Up arrow     or  Ctrl/E
+  Down one line		        Down arrow   or  Ctrl/X
+  To top of file		Ctrl/PgUp
+  To end of file		Ctrl/PgDn
+  Up one screen			Pg Up	     or  Ctrl/R
+  Down one screen		Pg Dn	     or  Ctrl/C
+  To beginning of line	 	Home
+  To end of line		End
+  To a line (by number)		Shift/F2
+  To next compilation error	F8
+
+%% PrevScreen  ExitHelp
+
+%2 Delete
+To delete:
+
+  Character at the cursor	Del          or   Ctrl/G
+  Character left of cursor	Backspace
+  Word at the cursor		Ctrl/T
+  Line cursor is on		Ctrl/Y	     or   F6
+
+To delete large blocks of text, use the Cut command:
+
+  1  Mark the block using any of the Block marking
+     commands.
+
+  2  Press F5 or Shift/Del to cut the block of text.
+
+%% Block  PrevScreen  ExitHelp
+
+%2 Block
+Marking commands:
+
+  Start marking 		Ctrl/K B   or  F3
+  End marking			Ctrl/K K
+  Mark a word at the cursor	Ctrl/K T
+  Mark a line at the cursor	Ctrl/K L
+  Read a file into a block      Ctrl/K F
+
+  Also you may hold the Shift key down while using
+  any cursor movement key to mark text.
+
+Block commands:
+
+  Cut the marked block		Ctrl/K Y  or Shift/Del
+  Move the block of text	Ctrl/K V
+  Copy the block of text	Ctrl/K C  or Ctrl/Ins
+  Write the block to a file	Ctrl/K W
+  Paste the block last cut	F7        or Shift/Ins
+
+%% PrevScreen  ExitHelp
+
+%2 SrchRepl
+
+Searching and replacing:
+
+  Enter a search string		Ctrl/Q F   or  Shift/F1
+  Search backwards		F1
+  Search forward		F2
+  Enter replace string		Shift F4
+  Replace next occurrence	F4
+
+For global or block searches and replaces:
+
+  Enter search parameters	Alt/P
+  Search and replace		Ctrl/Q A
+  Perform previous command	Ctrl/L
+
+%% PrevScreen  ExitHelp
+
+%2 Shift
+To shift blocks of text by multiples of spaces:
+
+  Shift the cursor line left	Shift/F9
+  Shift the cursor line right 	Shift/F10
+  Shift previous line		Shift/F5
+  Shift next line 		Shift/F7
+
+When inserting or deleting a structured statement, you
+often need to shift the statements inside to a new
+indent level.  This is easily accomplished as follows:
+
+  1  Move to the first line to be shifted.
+  2  Use Shift/F9 or Shift/F10 to shift that line by the
+     required amount.
+  3  Use Shift/F7 repeatedly to shift the next line.
+
+%% ShiftSize  PrevScreen  ExitHelp
+
+%3 ShiftSize
+
+The default number of spaces for shift text is four spaces.
+You can change the number of spaces by using the following
+command.
+
+Ctrl/O W.
+
+You will be prompted to enter the size of Tab spacing and
+Shift spacing.
+
+%% PrevScreen  ExitHelp
+
+%2 DOS
+%2 Dos
+%2 DosMenu
+To perform a DOS command, type Alt/D.
+
+The editor then prompts for the DOS command to perform,
+clears the screen, and performs the command.  When the
+command has been executed, you are prompted to press a
+key to return to the file you were editing.
+
+To perform a series of DOS commands:
+
+1	Type Alt/D
+2       Type COMMAND at the prompt.
+
+This places you at the DOS prompt, and you can execute as
+many commands as you want.
+
+To get back to the editor, type EXIT at the DOS prompt.
+
+%% PrevScreen  ExitHelp
+
+%2 Key
+
+When you choose this Editor command (press Alt/K), the
+editor displays a list of all editing keystrokes and
+functions.
+
+%2 KeyMenu
+%2 Keys
+
+The Key definition control panel allows you to redefine
+the keys used for many editor functions.
+
+Use the Arrow keys or the mouse to select the function
+for which you want to redefine the key.  Next, press the
+new key you have chosen to perform the function.
+
+You can use the following keys:
+
+  Ctrl / any letter
+
+  F1 to F12 and Shift F1 to F12
+
+  Home, End, PgUp, PgDn, Ins, Del
+
+  Ctrl / Home, End, PgUp, PgDn
+
+%% PrevScreen  ExitHelp
+
+%2 Split
+%2 Window
+%2 SplitMenu
+%2 WindowMenu
+%2 Next
+
+Window manipulation commands:
+
+  Split or unsplit the screen		Alt/S (Split)
+
+  Alternate between the two windows	Alt/W (Window)
+
+  Select the next buffer		Alt/N (Next)

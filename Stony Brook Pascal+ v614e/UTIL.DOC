@@ -1,0 +1,182 @@
+
+	This file describes the new utilities included with Pascal+.
+	The source code to these utilities is included as well.
+	aka. Batteries are included!
+
+
+    1. dt.exe
+
+       This is a real simple program. It just displays the
+       current date and time. Useful for people who do not wear
+       watches like me.
+
+    2. rendir.exe
+
+       This is the command that keeps getting left out of DOS.
+       It will rename a directory.
+
+       rendir this tothat
+
+    3. whereis.exe
+
+       This program will find a file on a specified drive. The filename
+       can include the DOS wildcard characters. Do not include a path
+       in the filename!? The current drive is assumed if a drive is not
+       given. If a ? is given for the drive, then all drives >= C: will
+       be searched for the file.
+
+       whereis [d:]filename
+
+       whereis fu.bar
+       whereis c:fu.bar
+       whereis ?:fu.bar
+
+    4. altered.exe
+
+       This program will report all files modified after a specified
+       date and time. Up to four paths may be given to search. The
+       default date is the current date. The default time is 4:00am.
+       Why 4:00am, programmers work late, I do, so midnight was not a
+       good choice. The program filters out .INT, .LIB, .OBJ, .EXE,
+       .TPU, .BAK and .LST files.
+
+       altered [/Ddate] [/Ttime] paths
+       [/Dday | /Dmonth/day | /Dmonth/day/year] /Thour[:minutes][a|p]
+
+       If the date is not supplied, the default, the current date is
+       assumed.
+
+       /Dday             assumes the current month and year.
+       /Dmonth/day       assumes the current year.
+       /Dmonth/day/year. the year is assumed later than 1980 and can be
+                         supplied in 2 or 4 digit format.
+		         1/2/92 or 1/2/1992.
+
+       /Thour assumes 0 minutes and AM, and the hour is in 12 hour
+       format.
+       [a|p] a signifies AM and is assumed if not present. p signifies PM.
+
+       altered source
+       altered source\*.pas
+       altered source inc /t4pm
+
+    5. sweep.exe
+
+       This program will execute any valid COMMAND.COM command in the
+       current and all lower directories.
+
+       sweep del *.bak
+       sweep whereis fu.bar <- in case you have nothing better to do!
+
+    6. killdir.exe
+
+       This is a dangerous one. It will remove (kill) an entire
+       directory tree. You will be prompted, just to make sure you are
+       sure. The directory must be in the current directory.
+
+       killdir [/A][/Z] directory
+
+       /A will delete hidden, system and readonly files as well.
+       /Z will wipe all files with zeros before deleting them.
+
+    7. search.exe
+
+       A typical text search utility.
+       You can search up to four paths for files.
+       .INT, .LIB, .OBJ, .TPU, .EXE, .BAK and .LST  files are filtered.
+       The search is NOT case sensitive.
+       If you want to search for a string with spaces, substitute a \
+       character for any spaces to be matched.
+
+       search source fubar
+       search source inc hello\world
+
+    8. edpath.exe
+
+       This program allows you to edit the PATH statement in your 
+       environment. The existing PATH must be <= 254 characters.
+
+    9. sbdump.exe
+
+       This is the big boy of the bunch.
+       It is a formatted file dumper like the TDUMP utility supplied
+       with the Turbo Debugger. sbdump will recognize a file type by
+       the file extension.
+
+       The following files are recognized by sbdump.
+       OBJ and LIB files.
+       EXE file header and relocation information.
+       Virtual overlay manager overlay information in EXE file.
+       CodeView debug information in EXE file.
+       Pascal INT files.
+       Modula-2 SYM files.
+       Hex dumps are performed for any file type.
+
+       sbdump FileSpec [ModuleWanted]
+
+       ModuleWanted will limit a CodeView dump to that module
+
+       Switches can be anywhere on the commandline, but must be
+       separated from parameters by spaces. Switches need not be
+       separated by spaces from each other.
+
+       /P pauses per screenfull if output is to the screen.
+
+       /H forces a hex dump
+       /E forces an EXE dump
+       /L forces a Library OMF dump
+       /LS dumps various statistics of a LIB file
+       /O forces an OMF dump
+
+       /V gives a more verbose listing if available. OMF and EXE
+       currently
+
+       /T gives a list of OBJ files and their addresses in a LIB file
+
+       /CV[:[T][S][P][D]] forces a CodeView dump
+          T will give Type information only
+          S will give symbolic information only
+          P will give Public symbol information only
+          D will dive the Debug directory only
+          L will give line number information only
+
+       /A:address
+	  Where address is the starting address in the file to start
+	  the dump. Address can be in either hex or decimal.
+	  examples
+
+	  23	= decimal number
+	  $23	= hex number
+	  23h	= hex number
+	  23H	= hex number
+
+  10. markwin.exe
+
+      It marks a new executable as Windows 3.x compatible.  Any
+      resource compiler also does this, but when using the Windows
+      versions of CRT or GRAPH, the resource compiler is not needed and
+      the EXE should be marked. This program is executed by the
+      environment automatically.
+
+      markwin filespec[.EXE]
+
+  11. lock.exe
+
+      It "locks" an SBL library so that it is protected from somebody
+      opening the file and harming the options.
+
+      lock filespec[.SBL]
+
+  12. Cv2Td.exe - no source code included
+
+      This program converts CodeView V3 debug information to Turbo
+      Debugger specification 3.0 information. The program only runs in
+      protected mode. The program creates a .TDS file with the TD
+      information. The CodeView information is left intact in the EXE
+      file. The .TDS file is in the same directory as the EXE file and
+      has the same name as the EXE file.
+
+      Cv2Td filespec[.EXE]
+
+   Bebe bebe bebe that all folks...
+   Stormin Norman Black

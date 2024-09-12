@@ -1,0 +1,15 @@
+Create
+40Lines
+GlobalComp,WARNINGS
+GlobalComp,INLINE:Y
+GlobalComp,CODE:S
+GlobalComp,$I-
+GlobalOpt,BestOptOpt
+NewAll
+Select,'DumpCV'
+LocalOpt,NOOPT:X
+Select,'DumpEXE'
+LocalOpt,NOOPT:X
+CompileAll,PressAnyKey
+LinkAll,PressAnyKey
+ExitEnv

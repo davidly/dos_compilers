@@ -1,0 +1,1355 @@
+
+
+PPC
+
+1. PPC compile performance has been increased. How much of an increase 
+   depends on compiler options set, and the source code being compiled.  
+   Pascal+ is significantly faster even with the new optimizations that 
+   have been added. The range can be from 15% to 50%, with most in the 
+   middle. Optimization "off" times will show the largest increase by 
+   far, up to 3x when compiling to LIB files and full debug 
+   information.
+
+   Basic timings on a 33Mhz 486, with a 15ms hard disk and 2Mb cache
+   when compiling the Turbo Power Object Professional UNITs show.
+
+   Build time in minutes:seconds.
+
+   All optimizations on but conditional common sub-expressions,
+   auto-inlining of procedures on, .LIB output.
+
+   TPCX 6.0     00:50.  1x   125,000 lines/minute
+   Pascal+ 6.0	16:30. 20x     6,303 "
+   Pascal+ 6.1	14:00. 17x     7,428 "
+
+   Lines of code were estimated at 104,000 using the search utility
+   enclosed, unit import information is not considered. Comparison
+   of lines per minute with other compilers, such as C, is not valid,
+   as most C compilers include lines in the .h interface files as lines
+   of code each time the .h file is read.
+
+   Optimizations off, auto-inlining off, .OBJ output, full debug info
+   Pascal+ 6.1  06:30. 8x     16,000 "
+
+2. Additional optimizations have been added. These optimizations will
+   primarily effect size. The percentage reduction these add varies
+   but is approximately 5-10% actual generated code or around 3-7% for
+   EXE size.
+
+   EXE size for the Deskpop demo.
+
+   TPCX 6.0     343.5k.
+   Pascal+ 6.0	308.9k.
+   Pascal+ 6.1	293.9k.
+
+   EXE size for the MakeScrn demo.
+
+   TPCX 6.0     382.3k.
+   Pascal+ 6.0  335.4k
+   Pascal+ 6.1  320.7k.
+
+   EXE size for the TechoJock totdemo program.
+
+   TPCX 6.0     200.0k.
+   Pascal+ 6.0  169.0k.
+   Pascal+ 6.1  161.6k.
+
+   To be continued...
+
+2a. The peephole optimizer now tracks more items, and performs
+    more transformations than in previous versions. Peephole
+    optimization is the only optimization that is done at the machine
+    code level, all others done at the source level. Previously the
+    peepholer was rather "weak". It only performed basic
+    transformations and equivalences. Beginning in this release the
+    peephole optimizer will begin to take on the same level of power
+    and capability as the intermediate optimizer.
+
+2b. Tail merging. This is not a new optimization, it was previously
+    tied to the peephole optimization switch. Tail merging eliminates
+    duplicate instruction sequences at the end of parallel program
+    flows. It can now be activated via its own switch.  The switch is
+    //OPTIMIZE:M, //NOOPTIMIZE:M. Within SBE use the optimizer
+    options control panel.
+
+2c. Instruction hoisting. This is a new optimization. It performs the
+    same optimization as tail merging except it searches the front of
+    parallel program flows. The switch is //OPTIMIZE:O,
+    //NOOPTIMIZE:O. Within SBE use the optimizer options control
+    panel.
+
+2d. Peephole flow. The peephole optimizer previously operated on code 
+    between branching labels. The peephole optimizer now follows 
+    instruction flow through a procedure. This allows the peephole 
+    optimizer to carry the information it gathers greater distances 
+    than it was previously able to, thus since greater information is 
+    available per instruction the likelihood that a transformation can 
+    be done increases.  Peephole flow control can be turned off if 
+    necessary.  The switch is.  //OPTIMIZE:F, //NOOPTIMIZE:F. Within 
+    SBE use the optimizer options control panel.
+
+2e. Peephole life. This option causes the peephole optimizer to track 
+    the register lifetime of all registers, through all instructions, 
+    through all flows of control. Using this knowledge, the peephole 
+    optimizer can remove dead instructions and propagate memory 
+    operands from one instruction to another removing a register load 
+    and register test and changing it to a memory test. There are 
+    others things being done with this information, 17 to be exact, but 
+    I think you get the idea.  The command line switches for this 
+    option are //OPTIMIZE:E and //NOOPTIMIZE:E.  The option is 
+    controled in the usual manner in the environment from the Optimizer 
+    options panel.
+
+2f. If peephole optimization is turned off. This also turns off Tail
+    merging, Instruction hoisting, and of course flow control and
+    peephole lifetime.  Peephole optimizations must be on for any of
+    the above to be active.
+
+3.  The compiler debug information output has been modified. See the
+    section regarding SBDEBUG for the effects of these changes.
+
+4.  The compiler now allows empty inline procedures. Many users used
+    the PASS attribute on inline procedures, this in turn caused the
+    need for any code in the inline statement to disappear. The one
+    problem with this is that the compiler did not allow empty inline
+    statements.
+
+5.  Pascal+ has further enhanced its excellent SET code generation.
+
+    General SET operations on "large" sets have been improved.
+    A "large" SET is everything but 1, 2 and 4 byte SETs. A 3 byte SET 
+    is a large SET. Statements like
+
+    a := a + b; or a := b + a;
+    a := a * b; or a := b * a;
+    a := a / b; or a := b / a;
+
+    b can be an expression or a simple variable.
+    These now generate more efficient code.
+
+    The Turbo Pascal language is missing one important SET operation.
+    An efficient "set bit" and "exclude bit" operation. In Turbo
+    Pascal you code this operation as
+
+    a := a + [i]; or a := [i] + a;
+    a := a - [i];
+
+    What this does is create a SET from the variable i, then performs
+    a SET operation with the two SETs to assign to the result.
+
+    Pascal+ now recognizes this as "set bit" and "exclude bit"
+    operations and generates efficient inline machine code for
+    "large" SETs and 4 byte SETs. This code is also smaller than
+    before.
+
+6.  Static methods are now treated as efficiently as normal
+    procedures. Previously static method register preservation was
+    identical to virtual methods. Static methods are not procedure
+    variables as virtual methods are, and need not be treated as such.
+
+    Virtual methods assume the Turbo Pascal register alters of
+    AX,BX,CX,DX,SI,DI,ES can be altered. And this is not changed even
+    if the method is implemented in Pascal.
+
+    Static methods and normal procedures assume the Turbo Pascal
+    alters as a start, but when it is known that the procedure is
+    implemented in Pascal, the alters for a procedure is then changed
+    to the EXACT registers that are used by each procedure. No more
+    no less. This is kept track of on a per procedure basis, and when
+    cross module register parameter passing is active it is kept
+    track of across all UNIT boundaries as well.
+
+
+7. PPC has always returned a DOS exit code. For people using batch
+   files these codes are.
+
+   0	= Success
+   1	= File not found
+   2	= Out of memory
+   3	= Compilation errors
+   4	= Disk full
+   5	= Internal error
+   6	= Compiler limit
+   7	= File creation error
+   8	= Command line error
+
+   PPB now will return the error codes returned by the compiler PPC.
+
+8. The compiler now accepts the PUBLIC directive of typed constant
+   declarations in the interface portion of a unit.  example
+
+   CONST
+       HeapMin : WORD PUBLIC 'SYSTEMP_HEAPMIN' = 0;
+       HeapMax : WORD PUBLIC 'SYSTEMP_HEAPMAX' = 0;
+
+9. The compiler outputs status information when run from the command
+   line by default. The turn this information off use the /Q switch.
+
+;---------------------------------------------------------------------------
+
+NEW HISTORY PROMPT BOX
+
+This is a new prompt box you will see mentioned within this read.me.
+This section will describe the operation of the history prompt box.
+
+The history prompt box has two data entry areas.  One is a
+prompted edit line, the other is a scrollable list box.  The list box
+will display up to 5 items, but it can be scrolled to view other
+items in the history.  You can move between the two areas by using
+the cursor keys or the Tab key.  The edit line will always contain
+the last command entered. The history will contain the most recent
+commands entered. The most recent at the top and so on to the oldest.
+The history will hold as many commands as its 256 character buffer
+will hold. The prompt line is 64 characters, thus 4 history items is
+the minimum it will be able to hold.
+
+You can clear all data from the history by pressing Alt/Z.
+
+Both SBE and SBDEBUG use this prompt box.
+
+;---------------------------------------------------------------------------
+
+CONTROL PANELS ALT-key selection.
+
+The control panels now offer Alt key field selection. Previously to
+get to a field you had to cursor to the proper field. You could then
+change the fields option by using the cursor keys or by pressing the
+key corresponding to the first letter of the field. You can now go
+immediately to the field by pressing an ALT-letter key combination.
+The hot key is highlighted.
+
+For example, to change the code model option to small from large.
+
+Get the global compiler options panel on the screen. Press PgDn to
+get the second page of options. Now you can press Alt-C to go
+immediately to the Code model field, now press S for Small. The field
+highlight will now change from Large to Small. The feature makes
+creating .log files a bit simpler.
+
+;---------------------------------------------------------------------------
+
+The TAB and Shift-TAB keys can also be used to move sequentially though
+the control panel fields and dialog box fields, just as the cursor keys
+currently allow.
+
+;---------------------------------------------------------------------------
+
+The Alt-X key is now supported for exiting the environment, debugger
+and profiler. Alt-E is still supported for compatibility with current
+versions and documentation, however, future Pascal+ versions will only
+use Alt-X.
+
+;---------------------------------------------------------------------------
+
+SBE
+
+The changes to SBE are numerous, and many are behind the scenes.
+There are more changes internally than are listed here. Many quirks
+have been removed, and performance enhancements have been made.
+example.  SBL file saving is much quicker.
+
+;---------------------------------------------------------------------------
+
+Built-In EDITOR CHANGES
+
+1a. Editor capacity has been increased.
+1b. The editor now reads the entire file into memory a startup. Thus
+    you will notice a slight delay while the file loads. File loading
+    is faster now as a result.
+1c. If you run out of memory while performing a operation in the
+    editor, the editor will prompt you for a file to remove from
+    memory. This will include the paste and undo buffers, as they may
+    have text no longer needed. If the file needs saving, it will be
+    saved. If prompting is active then you will be prompted for the
+    file save.
+1d. The prompt for file saving has changed. The prompt is Yes,No for
+    saving the displayed file. If you press Escape to abort the prompt
+    you will continue editing in that file. If you answer No, the file
+    will be removed from memory and all changes lost. Yes, will save
+    the file to disk.
+
+2. The Ctrl/K and Ctrl/Q commands now have popup menus that will pop
+   up after about a second after the initial Ctrl key combination was
+   pressed.
+
+3. The editor now has a print command. It will print to the PRN
+   device.  The command is Ctrl/K, P. If no block is marked then
+   entire file will be printed. If a block is marked then the marked
+   block will be printed.
+
+4. Some "missing" commands have been added.
+   These are...
+
+   Ctrl/K, D - saves the current file.
+   Ctrl/K, Q - quits the current file. removes it from memory.
+   Ctrl/Q, B - goto the top of the marked block.
+   Ctrl/Q, K - goto end of marked block.
+   Ctrl/Q, R - goto top of file.
+   Ctrl/Q, C - goto the bottom of file.
+   Ctrl/Q, S - goto the start of line.
+   Ctrl/Q, D - goto end of line
+   Ctrl/Q, G - goto a specified line. You will be prompted.
+   Ctrl/O, V - toggles insert/overwrite mode.
+
+   Ctrl/W    - scroll up one line
+   Ctrl/Z    - scroll down one line
+
+   Shift-Ins - Paste
+   Ctrl-Ins  - Copy the marked block to paste buffer.
+   Shift-Del - Cut the marked block
+
+5. The editor now allows the Shift width, and Tab width to be
+   changed.  They default is 4 spaces for line shifts, and 8 spaces
+   for Tab characters.  The command is Ctrl/O, W. You will be
+   prompted for entry of these items.
+
+6. File position markers are now supported. Up to four markers can be
+   used.  To place a marker use the following commands, Ctrl/K, 1..4.
+   Where 1..4 is the number of the position marker to set.  To goto a
+   position marker, use Ctrl/Q, 1..4. Where again the 1..4 represents
+   the marker number to goto.
+
+7. A single level undo has been added to the editor. This can undo
+   delete line operations. Successive delete line operations with no
+   other commands in between are treated as a single undo level. The
+   command for this is Ctrl/Q, L.
+
+8. The editor now toggles the intensity bit on lines displayed that
+   have been altered since the file was last saved. Also, a command
+   has been added to allow you to position to the next altered line
+   in a file. That command is Ctrl/Q, 0. In this way you can position
+   to the top of a file and walk through all altered lines to verify
+   that all altered lines were ment to be altered before you quit or
+   save the file. Displaying altered lines can be toggled on/off with
+   the following command, Ctrl/O, H. The environment options panel also
+   allows control of this item via the option Show altered lines. The
+   editor will display the word High on the status line if toggling the
+   intensity bit mode is active.
+
+9. The Ctrl/Q, A and Ctrl/Q, F search commands no longer alter the
+   global search/replace options set with the Alt/P command. The
+   options are set for that operation only. The options default to
+   the current global settings.
+
+10. You can now search forward and backward through compile errors.
+    Previously forward was the only option allowed.  Shift F8 is the
+    previous error command.
+
+11. The editor prompt for search strings is now kept as a history.
+    The history is saved in the SBL file for future use.
+
+12. The method of selecting a new file to edit within the editor is now
+    exactly the same as selecting a file from within the environment
+    main screen. This effects the Alt/F and Alt/S commands. The
+    selection screen looks exactly the same as the environment main
+    screen, and as such, in the upper left corner of the screen the
+    word EDITOR is blinking to remind you that you are in the editor
+    module select screen.  There are three menu choices available.
+    File, ModuleList and Quit.
+
+    File - will bring up the same prompt as the System - Edit menu
+    selection. Here you can edit files that are not part of the
+    environment.
+
+    ModuleList - will bring up the module list options control panel.
+    This is the same control panel as the Options - Module list options
+    menus selection.
+
+    Quit - will leave the selection and continue editing the file you
+    were previously editing.
+
+    This selection method is consistent with the environment and allows
+    you to use the quick ASCII match method to select a module to edit.
+
+13. The System edit menu selection from the main environment and the
+    File menu selection from the editor module select screen now keep a
+    history of files edited. The history is saved in the SBL file.
+
+14. You can now mark text using the cursor movement keys while holding
+    down the Shift key just like the Turbo Pascal editor. The block
+    marked will persist until you turn blocks off or start marking
+    another block.
+
+15. The current line and cursor position in the file is saved into the
+    module records of the environment, these are saved to disk in the
+    SBL file. This allows the editor to position to the last location
+    edited in the file if the edit buffer for the file was cleared.
+    Compiling or linking a file causes the edit buffers to be cleared.
+    Previously file location was only kept wile the edit buffer was
+    active.
+
+16. The meaning of the goto Beginning of line command has changed
+    slightly. This command defaults to the Home key. When executing
+    this command the cursor will be placed at the first non white space
+    character of the current line. If the cursor is at this position
+    already then the cursor will be placed at the zero position of the
+    current line.
+
+17. The editor now marks all files with a ReadOnly attribute that it is
+    currently editing. Env when you have exited the editor the
+    environment and editor cooperate by keeping the file in memory as
+    long as possible, and while the files image is keep  in memory the
+    file will continue to have a ReadOnly attribute. When the file is
+    no longer being used by the editor the file attributes are restored
+    to their original condition. This feature keeps multiple users on a
+    network from modifying the same file accidently.
+
+ENVIRONMENT MAIN WINDOW
+
+    The Snow removal option has been removed from the environment
+    options control panel. If you have a CGA, well...
+
+01. Program files are now given the module type of PGM. Previously they
+    were displayed as PAS. This is now in agreement with the
+    documentation.
+
+02. Include files are now displayed with their extension in the
+    module type field. Previously INC was displayed there. This
+    change is because people sometimes name all include files for a
+    unit the same as the unit except for the extension. Thus, you
+    could not distinguish between one include file and another
+    previously. If an include file does not have an extension, then it
+    will be displayed with the PAS module type.
+
+03. There are more flags displayed next to module names in this
+    version.  Previously the only flag available was an '*'. This
+    meant that file was not found.
+
+    '+' This flag is now displayed for all modules that have compiler
+    and/or optimizer options set locally overriding the global
+    options. You can find out if the override is a compiler option or
+    optimizer option or both by selecting the module and then looking
+    at the status line. The word Comp will be displayed if compiler
+    options are overridden.  The word Opt will be displayed if
+    optimizer options are overridden.
+
+    '-' This flag is now displayed for any modules that are in need
+    compiling.  This is of primary use in the short display mode.
+    There are two classes of reasons a file will need compiling.
+    Unconditional and conditional.
+
+    The unconditional class includes modifying the source, and/or a
+    file that the current module depends on needs unconditional
+    compilation, also changing version tags will effect this.
+
+    The conditional class only includes compiler options. A brief
+    example.  The environment keeps track of the exact
+    compiler/optimizer options used when the file was compiled. The
+    environment compares the current options active for the module and
+    compares those to determine if the file needs compiling. This is
+    done in real time, as you change options from one setting to
+    another. An example.
+
+    The environment sees an application as a tree structure of file
+    dependencies.
+
+    Time index 1. The application is completely compiled.
+    Time index 2. You change a global compiler option.
+                  Everyone will show that they need to be compiled.
+    Time index 3. You compile a file(s) at the lower end of the tree.
+    Time index 4. You change the global compiler option back to the
+                  original state.
+    Time index 5. Most if not all of the files will now show they no
+                  longer need compiling. Unless of course the compiling
+                  of the lower elements caused a change in their
+                  interface thus requiring modules using said file to
+                  also require an unconditional compile.
+
+    The '*' and the '+' flags will have the display intensity bit
+    toggled so that they stand out better. '-' will display in the
+    normal intensity set by your color options. It is rather annoying
+    if it is toggled like the other two, we know, we tried it.
+
+    There is a special flag 'ñ'. This is displayed when the file both
+    needs compiling and it also has overridden options. It will be
+    displayed with the intensity bit toggled.
+
+04. The long format display has changed. It is basically self
+    explanatory but we will walk though an example here.  The field
+    types and meanings are.
+
+    Type Module    Lib    Com  Dif      Last Compile       Last Edit
+    ------------------------------------------------------------------------
+
+    The first field is the module type as documented with the
+    exception of the include files discussed above. In this format, the
+    interface and implementation portions of a UNIT will be displayed
+    separately. The UNT module type is used for the INTERFACE portion,
+    and IMP is used for the IMPLEMENTATION portion of each UNIT.
+
+    The second field is the module name.
+
+    The third field is the library number the module is "owned" by.
+    Library 0 is the current library. Libraries are numbered in the
+    order they are brought into the current library.
+
+    The fourth field is the uncondition compiled state of the module.
+    Yes means it needs to be compiled.
+
+    The fifth field tells whether the compiled options differ from the
+    options currently set for this module, including local options
+    overrides.
+
+    If either of the two above fields is yes, then the file will be
+    compiled at the next build sequence.
+
+    The next two fields are date time fields. Last Edit is the date
+    time of last time the file was modified. If there is no source file
+    then dashes will be displayed. Last Compile is the last time the
+    compiler compiled the file. Again dashes are displayed when no
+    object is present.
+
+    For UNT modules the Last Compile is for the .INT file, and the Last
+    Compile for the IMP portion is for the .OBJ/.LIB file. The source
+    date/time will of course be the same.
+
+04a.Compiler options set for a UNT or IMP dependencies of a UNIT are
+    copied to the other dependency automatically. example
+    If you selected the IMP of a UNIT and set a compiler option for
+    that module, it would be copied to the UNT portion of that UNIT.
+
+    Compiler options for UNT types are masked down to the options that
+    matter to an interface portion of a file. The only options that
+    matter are
+
+    Generate listing file
+    Separate Stack
+    Check Modules
+    Code model
+    Data model
+    Constant model
+
+    All other options are masked off AFTER they have been compiled to
+    the IMP portion of the file, where all options are meaningful.
+    Thus if you set debug info on a UNT file and then went back to
+    check those options it will have been cleared off, the option will
+    be set on the IMP portion of the UNIT.
+
+    When in Short display mode none of this applies. The UNT portion of
+    the file is displayed but you are editing the IMP compiler options.
+
+05. The environment main window now accepts the PgUp and PgDown
+    keys for navigating the modules list when the display mode is Long.
+    Don't forget the best way to select a module is to simply start
+    typing its name and let the ASCII search find the file for you.
+
+06. The foreign module type has now been split into two variants.  As
+    you know SBE has the ability to properly deal with assembly
+    source files as it does with Pascal files. In other words, you
+    can edit/compile/ link these files just like Pascal files.  There
+    was really no reason that this could not work with any other
+    language, such as C. However, it was a pain to do so. SBE has
+    been to the doctor and the pain is gone.
+
+    The two variants are ForeignAsm and ForeignC.  These are the two
+    languages most important to the Pascal community.  The operation
+    of the foreign modules is the same as before.  The New menu now
+    has selections for both. ForeignAsm assumes a .ASM extension.
+    ForeignC assumes a .C extension. The foreign command line option
+    in the Options menu now brings up a dialog box to set the default
+    compiler command lines for these two languages.  Of course each
+    file can have its own custom command line via the module menu as
+    currently documented.  Now if you are linking C code. You can
+    place the C source code in the environment edit/compile/link it
+    as transparently as you would your normal Pascal code! Of course
+    the same is true of ForeignAsm files as well.
+
+    The method the environment uses to test for a successful foreign
+    compile is to delete the .OBJ file and after the foreign compiler
+    has been run, it checks to see if the .OBJ file exists, if so
+    then the compile is assumed to have been successful.
+
+06. The environment now supports the editing and compiling of $L
+    object import file source. There is no special module type
+    displayed for the source, simply select the OBJ module type and
+    press enter as you would for any other editable module type. The
+    status line will display on the right if source code is available
+    for a particular OBJ module.  If you select an OBJ type that was
+    found and wish to edit it, and no source is currently available,
+    the environment will ask you if you wish to continue. This is a
+    safe guard against losing your OBJ file by creating a source file
+    the environment will want to compile.  SBE treats OBJ source
+    files exactly as it does ForeignAsm files. Thus the environment
+    will automatically compile your assembly source for you when
+    necessary.  OBJ module types are treated specially by the
+    environment in two cases.
+
+    6a.
+      Normally when a module is first added to the library, the
+      environment assumes it is not compiled and marks it as needing
+      an unconditional compile. This is not true for OBJ module
+      types.  If the .OBJ file is found, it is marked as compiled,
+      even if the source code for the OBJ is found as well.
+
+    6b.
+      The environment looks for the source code for OBJ module types
+      in the same directory as where the .OBJ file was found, with
+      the same name as the .OBJ file except with the extension of
+      .ASM.  The environment will not look for OBJ module source in
+      the source directories, this is reserved for ForeignAsm module
+      types.
+
+07. The Dos command available from the System menu now stores a
+    history of dos commands entered. This history box is like all
+    others and is saved in the SBL file.
+
+08. When the environment is started up, its checks the file date/time
+    against the date/time stored in the SBL file. Thus SBE can detect
+    if the source file has changed. Previously it could only detect
+    if the source file date/time was newer than the date/time the
+    SBL file was last saved.
+
+09. The maximum number of libraries has been increased to 16, from 8.
+    SBE makes 50 files handles available to itself and linker. The
+    linker can link programs with many LIB files much faster if it can
+    keep more libraries open. If you get an out of handles error in the
+    environment, increase your FILES statement in the config.sys.
+
+    example
+    FILES=55
+
+   This only effects the number of LIB files the linker can keep open
+   at once.
+
+
+10. A control panel has been added for the object librarian. It is in
+    Options menu of course. There are two items available. The first
+    selects the maximum library size in megabytes. The default is 4.
+    The second item selects the deletion of input files. The default
+    is None. See the librarian section for an explanation of this new
+    feature.
+
+11. As you may have noticed, SBE treats units as two separate
+    dependencies.  One for the interface and one for the
+    implementation.  The environment had the capability to recognize
+    when both can be compiled at the same.  This capability has been
+    enhanced for this version. This capability was put in at the
+    expense of the capability to compile separately if at all
+    possible.  An example will illustrate this better.  You have a
+    program with 3 units imported.  None of the files are currently
+    compiled. You select the program file and execute a compile
+    selected command. The rock bottom minimum that needs to be
+    compiled are the interfaces of the imported units and the program
+    itself. The compile Both facility used to force a Both compile
+    for the units in this instance, it no longer forces a Both
+    compile when Compile selected from the compile menu was the
+    command that initiated a build sequence.
+
+12. The scanning of files for dependencies used to be the duty of the
+    compiler. The environment now performs this task. This an
+    extremely significant feature as the next couple of items will
+    illustrate.  Oh, by the way, file scanning is now 30% faster and
+    no longer causes the editor file buffers to get disposed of.
+
+13. SBE no longer causes all files to need compiling when you change
+    the version tags that are set. SBE now checks for the changes,
+    either new tags or tags that have been removed, and only those
+    files that have one of these tags contained, AND visible, in the
+    source will be marked as needing a compile.
+
+14. As discussed earlier, the environment uses compiler options in
+    its decisions for determining if a file needs compiling. Turbo
+    Pascal has this little item called IFOPT. Previous versions of
+    SBE did not deal with this properly. The error would occur if a
+    dependency was contained within the conditional tag, but was
+    invisible initially, and a compiler option change caused it to
+    become visible via the IFOPT.  The environment would not know
+    about the new dependency. By dependency we mean and include file
+    or object import.  Now SBE is keeping track of all IFOPT items in
+    each file and which of those IFOPT items has a dependency
+    contained within them.  Thus when you change an option for a
+    file and that option has an IFOPT in the file with a dependency
+    contained, SBE will mark that file as needing a dependency scan.
+    IF the file has an IFOPT for the option in question, but no
+    dependency is contained the file will not be re-scanned.
+
+15. A new option has been added to the Tools menu. This menu option
+    is called Altered. It allows you to check to see what files have
+    been altered after a specified date time. In other words, you ask
+    the question what files did I touch today. This menu item will
+    answer it for you.  It defaults to 4am of the current day. You
+    might ask, why 4am.  Well programmers tend to work weird hours,
+    many times after midnight, so 4am was a good compromise. The
+    syntax allowed on this prompt is as follows.
+
+    [/Dday | /Dmonth/day | /Dmonth/day/year] /Thour[:minutes][a|p]
+
+    If the date is not supplied, the default, the current date is assumed.
+
+    /Dday             assumes the current month and year.
+    /Dmonth/day       assumes the current year.
+    /Dmonth/day/year. the year is assumed later than 1980 and can be
+                      supplied in 2 or 4 digit format.
+		      1/2/92 or 1/2/1992.
+
+    /Thour assumes 0 minutes and AM, and the hour is in 12 hour format.
+    [a|p] a signifies AM and is assumed if not present.
+          p signifies PM.
+
+16. The environment can now Swap itself out to EMS or Disk when
+    executing a dos command. This includes...
+
+    a. Running a user program Alt/R.
+    b. Debugging a user program Alt/D.
+    c. The dos command selection from the System menu, Alt/S, D.
+    d. Executing an external editor instead of the built-in editor.
+    e. Executing a foreign compiler command line for ForeignAsm,
+       ForeignC and OBJ module types.
+    f. Executing a foreign linker.
+
+    The environment will swap down to 1.5k. This has another benefit
+    other than the extra memory available. When running or debugging
+    a user program it is possible for a user program to clobber the
+    environment.  Thus causing the environment to possibly crash
+    after returning from the user program. This is far less likely
+    now, the target is now much smaller. Also, there is now no reason
+    the exit the environment to debug larger applications.
+
+17. The behavior if SBE when started without a library name given
+    has changed.
+
+    1. When there are multiple SBL files in the current directory and
+       SBE is started without a library name parameter it will give a
+       list box of the library names to select from.  This is the same
+       entry box as the new history box.
+
+    2. If there is only one SBL file in the directory and SBE is
+       started without a name, it will open that SBL file.
+
+    3. Previously when no SBL files are present and SBE is started
+       without a name, SBE created a SBL with the name NONAME.  The
+       environment now creates a SBL file with the name of the
+       directory instead of NONAME.
+
+18. The library header file has been increased to 4096 from 768
+    bytes.  This has been put to use storing the history buffers and
+    other things.  More importantly the header has plenty of room for
+    expansion thus causing few if any SBL version change
+    incompatibility in the future.  This helps people who wish to
+    distribute libraries in SBL form.  The module records have also
+    added freespace for this purpose.
+
+19. The program stack size option has moved from the Options menu, to
+    the module menu. This allows you to have a different stack size
+    per program. The default size is zero. Zero has a special
+    meaning.  If the stack size is specified here is zero, then the
+    program stack size should be specified via the Turbo Pascal $M
+    directive. If the value is non-zero, then that will be the program
+    stack size with no regard to what is in the $M directive.
+
+    An important change has been made to the linker also. If a stack
+    size is specified via command line, or as above, that will be the
+    stack size for the application, regardless of what the $M
+    directive has set.  Previously the linker took the biggest stack
+    size specified, command line or $M and used that one.
+
+20. The linker menu is now a real menu. If the linker options are not
+    set to link a DLL, then the link menu will appear with two items.
+    The first is Selected. This will link the selected program.  The
+    second is All. This will link all PGM module types in the
+    library.  This item gives the New All command a whole new
+    significance.
+
+21. The directories search paths can now be up to 128 characters long.
+    The entry field will scroll to allow editing fields of this size.
+
+22. The Use Microsoft linker option on the Linker options panel has
+    been changed to Use other linker. The options menu contains a new
+    selection for control of these other linkers. This option is like
+    the Foreign command lines option. You specify a command line that
+    will run the linker. This command line is executed via COMMAND.COM,
+    thus the linker can be anywhere in the path. Just as the foreign
+    command line options have the %S and %O switches, the linker
+    command line has its own switches.
+
+    %R will be replaced with the name of the linker response file.
+    %S will be replaced with the command switches like stack size
+    and debug info etc..
+
+    The various linker options generate the following switches.
+
+    Produce map file		/MAP
+    Include lines in map	/LINE
+    Include debug info		/CO
+    Pack code segments		/PACK
+
+    For the stack size if non-zero /STACK:value is output.
+
+    These switches are compatible with the following linkers tested
+    in-house.
+
+    RTLink
+    OPTLINK, OPTLINK/Windows
+
+    Tlink/Tlib are not compatible with other linkers and librarians
+    using the Microsoft .LIB format.
+
+    Other linkers may not use these Microsoft compatible switches,
+    therefore you may have to adjust the linker command line to pass
+    the appropriate switch to your linker.
+
+    The default linker command line is compatible with the Microsoft linker.
+
+    LINK %S /SEG:1024/NOE @%R
+
+    The response file is in the Microsoft linker format.
+
+    The environment will swap itself before executing the linker if
+    this option is set to yes. The execution of other linkers is the
+    same as the execution of other compilers. Thus, the environment
+    swapping and prompting after execution options effect using other
+    linkers as well.
+
+
+23. The environment can convert the CodeView debug information to Turbo
+    Debugger compatible information automatically after the program is
+    linked. By default this option is off. To turn it on set the
+    Convert To TD info option in the linker options control panel to
+    Yes.
+
+    This used in combination with the environments ability to use any
+    debugger will allow you to use the Turbo Debugger from with Pascal+
+    from within the environment using the same commands as you would to
+    use the Stony Brook debugger.
+
+24. The environment now supports the RTLink freeformat linker response
+    file format in addition to the currently supported Microsoft linker
+    compatible format. The default is the Microsoft linker format.
+    SBLINK only understands the Microsoft format. To have the
+    environment output the freeformat response file, set the Response
+    file type selection in the linker options control panel to RTL.
+    MSL is the Microsoft format style
+    RTL is the RTLink freeformat style
+
+    NOTE: The BLINKER high speed linker uses the freeformat style.
+
+    When using the freeformat style, do not place a %S switch on your
+    linker command line. These commands are placed in the
+    freeformat response file.
+
+25. The environment has always checked all files, at startup, that are
+    part of the library to see if they have changed since that library
+    was last used. If checked to see if the file date/time is
+    different, or if the file was found in a different directory, or if
+    the file does not exist any more. At startup the environment will
+    now display in a window the files that have changed, and what the
+    change was.
+
+    examples
+
+    1.
+    UNT FuBar oldDate/Time -> newDate/Time
+
+    This shows the file, its old Date and time and the new date and
+    time of the file.
+
+    2.
+    Directory Changed UNT FuBar 2 -> 1
+
+    The file was previously found in the second directory of the search
+    path, it was now found in the first directory.
+
+    3.
+    UNT FuBar no longer exists
+
+    Self explanatory.
+
+26. The interface for external editors has been enhanced. Previously
+    when an external editor was used, the environment assumed that you
+    altered the file selected for editing but could not know if you
+    edited other files.
+
+    The environment now can detect all files that you changed during an
+    edit session in an external editor, therefore there is no loss of
+    environment functionality when using an external editor.
+
+    There are two command lines you can specify for using external
+    editors.
+
+    Text editor/normal edit...
+    Text editor/errors edit...
+
+    The command line used for normal external editing.
+    The command line used for external editing of compilation errors.
+
+    The only time the errors edit command line is used is when
+    compilation errors occur when compiling a file. The environment has
+    always automatically placed you in the editor on errors, it now
+    uses this special command line to external errors editing.
+
+    Both command lines are completely independent of each other.
+    Meaning you could invoke two different editors if you like.
+    The editors are invoked via COMMAND.COM thus you need not supply a
+    complete path as previously required. The environment will be
+    swapped if swapping is active. The command line is similar to that
+    of the Foreign and linker command lines.
+
+    %F is replaced with the file specification of the file to be
+    edited.
+
+    %E is replaced with the file specification of the error file.
+    This is only allowed on the external editor for errors.
+
+    example
+
+    ME %F
+
+    This would invoke MultiEdit, with the parameter being the file to
+    be edited.
+
+26a.The activation of external editors has changed. Previously if
+    the Text editor command line was empty the internal editor was
+    used, otherwise the specified external editor was used.
+
+    This is now controlled via the environment options control panel.
+    These options are
+
+    External editor for edit
+    External editor for errors
+
+    When the respective option is set to Yes, then the appropriate
+    command line will be used to invoke your editor.
+
+    Why two external editor command lines?
+
+    Simple, there is no common method to invoke editors to read an
+    error file, thus two separate command lines. But there is a bigger
+    reason.
+
+    You may want to use the internal editor for correcting compilation
+    errors. Why?
+
+    1. The editor is small. About 20k. Thus it will load fast.
+    2. It is a memory based editor, so loading files is fast.
+    3. It can communicate directly to the environment what files have
+       been altered. Thus, the environment does not have to go through
+       DOS to figure this out. Faster again.
+    4. It already understands the error file format. You do not have to
+       program your editor to read the Microsoft error file format.
+       Most already can though.
+    5. The internal editor does not cause the compiler to be unloaded
+       from memory, unless the editor needs the memory to load the
+       file. Faster again.
+    6. The environment will not have to go through the process of
+       swapping itself if you have this active. Faster again.
+
+
+    The external editor capability is now designed for maximum
+    flexibility, performance and convenience. The system can now deal
+    with external editors without any loss of environment capability.
+
+27. The environment can now invoke an external debugger when given the
+    Alt/D command. The environment will be swapped if that option is
+    active.
+
+    This option is controlled via the debugger options control panel.
+    The option is
+
+    Use other debugger
+
+    When set to Yes, the environment will use the command line
+    specified in the
+
+    Debugger(other) command line...
+
+    menu option, which is located in the Options menu.
+
+    The command line is invoked via COMMAND.COM thus a full path
+    specification is not required. The command line is similar to all
+    other external command lines.
+
+    %F will be replaced with the file specification of the file to be
+    debugged.
+
+    example
+
+    TD %F
+
+    This will invoke the Turbo Debugger to debug the selected file when
+    the Alt/D command was given.
+
+28. The operation of the New menus selections Unit, Program,
+    ForeignAsm, ForeignC and EXE definition has changed in an important
+    manner.
+
+    a. If the module to be added does not exist you will be prompted
+    asking if you wish to create the module. If you say No, then the
+    module will not be added.
+
+    b. If you answer yes, the source file(s) will be created and will
+    be filled in with a template for the source file. Examples
+
+    PROGRAM %N;
+
+    BEGIN
+    END.
+
+    ------
+
+    UNIT %N;
+
+    INTERFACE
+
+    IMPLEMENTATION
+
+    END.
+
+    ------
+
+    PUBLIC %N
+
+    %N_TEXT SEGMENT BYTE PUBLIC 'CODE'
+    %N_TEXT ENDS
+
+    %N_BSS SEGMENT WORD PUBLIC 'BSS'
+    %N_BSS ENDS
+
+    %N_DATA SEGMENT WORD PUBLIC 'DATA'
+    %N_DATA ENDS
+
+    DGROUP GROUP %N_BSS, %N_DATA
+
+    ASSUME CS:%N_TEXT, DS:DGROUP
+
+    %N_TEXT SEGMENT
+
+    ;module init code
+    %N PROC FAR
+	ret
+    %N ENDP
+
+    %N_TEXT ENDS
+
+    END
+
+    -------
+
+    where %N is replaced with the module name.
+
+    c. The template file has the name TEMPLATE.ModuleType. Examples
+       TEMPLATE.PGM, TEMPLATE.UNT, TEMPLATE.ASM
+
+    d. The environment first searches the current, SBL, directory for a
+       template file and if not found then searches the Pascal+ system
+       directory from where the environment was run. If no template is
+       found then the module file(s) will be empty.
+
+
+29. The environment no longer automatically creates directories in the
+    directory search paths. Directories will be created, if necessary,
+    when a command that depends on the directory is executed.
+
+    a. The directory name in the OBJECT directory will be created at
+       the point you execute a compile.
+
+    b. A directory for a source file will be created when you give the
+       command to edit or create that file and the file does not exist.
+
+
+30. The environment can now place most if not all of its module table
+    into EMS memory. The environment will automatically use EMS memory
+    if present. To deactivate this feature use the /X switch after the
+    library name on the command line. examples
+
+    SBE /X
+    SBE mylib/X
+
+
+31. The environment now has an EditOnly mode. This allows you to use
+    the environment as a standalone editor. The colors and key
+    definitions defaults you have set will be used. The command to
+    activate this mode is /E after the filename you wish to edit.
+    example.
+
+    SBE myprog.lnk/e
+
+    A batch file named ed.bat has been provided to make use of this
+    mode very easy. example
+
+    ed myprog.lnk
+
+32. The Module menu has a new selection, Info. This item will display
+    in a window the same information that the Long module format
+    displays. It displays this information for the selected module.
+
+33. The Module menu has a new selection, Compiled options. This item
+    will display the compiler and optimizer options for the selected
+    module that where used when the module was LAST compiled.
+
+34. For users who take their work with them, SBE and SBDEBUG, now have
+    a new mini feature to allow for better viewing on Gray Scale
+    displays, while using the SBL files you use on your normal desktop
+    color system.
+
+    An alternate color system can be loaded. This color set can be
+    modified to optimum values for your gray scale display. This color
+    set will be loaded, without altering the existing colors, if the
+    following DOS environment variable exists.
+
+    SBGRAY=anything
+
+    The mere existence of this variable is all that is tested.
+
+    To set your alternate colors set, use the usual color options
+    control panel in SBE and SBDEBUG. At anytime while editing these
+    colors press, Alt/G. The window title will change reflecting the
+    change in color edit mode. If you accept the colors by pressing
+    ENTER or clicking on OK, then the colors will be save in a file in
+    the directory where SBE and SBDEBUG exist. The file names are
+    SBEGRAY.CLR and SBDGRAY.CLR.
+
+SBDEBUG
+
+1. The debugger now supports point and shoot selection of variables
+   to be displayed in the data window. This is currently only
+   supported with the keyboard. To use this feature simply place the
+   cursor on the variable name in the source window and press Ctrl/D
+   to place the variable in the data window. Press Ctrl/W to place
+   the variable in the watch window. This feature can display records
+   and arrays or just a specific element of the variable. Some
+   examples.
+
+   arrayvariable[j]
+         1      23
+
+   If the cursor is anywhere in area 1. The entire array will be
+   displayed.  If the cursor is on location 2 then the element
+   indexed by j will be displayed.  If the cursor is on location 3
+   then the variable j will be displayed.
+
+   recordvariable.field1^.field2
+         1         2       3
+
+   The display of records is very obvious.
+   Area 1 will display recordvariable.
+   Area 2 will display the field1 element of recordvariable.
+   Area 3 will display field3 of the field 2 element of recordvariable.
+   Pointer dereferences are always performed with the point and shoot
+   feature.
+
+2. A new item has been added to the File menu. It is called Save
+   defaults It allows you to save your current debugger settings as
+   global options defaults. A file called SBDEBUG.PAR will be
+   created in the Pascal+ system directory. SBDEBUG always reads
+   this file if it is present. The items that are saved in the
+   SBDEBUG.PAR file are...
+
+   Window colors set from the params menu.
+   Is the registers window to be displayed at startup.
+   Debugger screen mode.
+   Ems usage, Ctrl/Break handling, Mouse state swapping and case sensitivity.
+   Auto loading/saving local debugger status.
+
+3. SBDEBUG now has a new menu. It is called the Params menu.
+   Search path. This allows you to enter/edit the search paths the debugger
+       will use for finding source files at any time.
+   Case sensitive. Select case sensitivity or not. A check mark is displayed
+       beside the word Case sensitive if string comparisons will be
+       treated case sensitive.
+   Swap mouse state. If checked the mouse state will be swapped.
+   Smart screen swap. If checked the debugger will attempt to minimize
+       screen swap operations.
+   Screen resolution. Brings up a menu to allow you to select from
+       25, 35/40, 43/50, dual monitor screen modes of operation.
+       The active mode will be checked.
+   Window colors. This will bring up a window colors option control panel.
+       This panel operates exactly as the environment colors panel.
+   Ctrl break. If checked the debugger will allow Ctrl break operations
+       on the program being debugged.
+   Auto save/load status. When checked this will set the debugger to save
+       the debug status automatically when the debugger is exited.
+       To have the debugger perform this transparently, set this option to on
+       and save the system defaults by using the Save defaults option
+       in the File menu. The status information can still be loaded at
+       later times by using the File menu or using the load status
+       command line switch.
+
+4. There has been a change in compiler debug information output. This
+   section describes these changes and their effects on debugging an
+   application.
+
+   The debugger documentation stated that symbols from other units
+   could be accessed by preceding the name with the UNIT name
+   qualifier. This is no longer necessary. All symbols imported via
+   the USES statement, and are referenced in the current module
+   source file will be available without the need to qualify with the
+   UNIT name. The exception is when the symbol needs to be qualified in
+   the source code, it will have to be qualified in the debugger
+   as well.
+
+   Example
+
+   MyUnit.MyVariable <-- this syntax is no longer required
+   MyVariable	     <-- this syntax will now work.
+
+   Constants are now available within the debugger and can be used in
+   any expression. INTEGER types of constants are currently
+   supported. Constants are only supported with Extended debug
+   information.
+
+   Searching for symbols on disk is now 3x faster via a change in the
+   compiler debug output.
+
+5. The data display for an address type has been changed. Previously
+   when an address, [segment:offset], was entered it was displayed as
+   an ARRAY OF WORD. The debugger now displays this as the familiar hex
+   dump. This window can be scrolled up and down. You can also change
+   the value of the memory location displayed under the cursor. The
+   method is the same as the data window. Once you are positioned on
+   the byte you wish to modify, simply enter an expression and press
+   enter to change the value.
+
+6. IF you wish to assign an address to a pointer variable. Use the
+   address notation.
+
+   [segment:offset]
+
+   Segment and offset can be any allowable expression.
+
+   example
+
+   The variable RecPtr is currently displayed in a data window and is
+   selected. By entering the expression
+
+   [@es:@bx]
+
+   The segment:offset will be placed into the pointer variable.
+
+7. The typenames of variables, arrays and records are now displayed in
+   the data window.
+
+SBLINK
+
+1. SBLINK has changed its algorithm with regards to setting stack
+   size.  Previously it used the largest stack declared by any method
+   as the program stack size. Now, if a stack size is specified on
+   the command line that will be the stack size of the application
+   regardless of what the $M directive was set to. This change was
+   made for compatibility with the Microsoft linker.
+
+2. New commands have been added to EXE definition file. These are
+   LinkObjFirst, LinkObj, and LinkLib.
+
+   LinkObjFirst will link the specified .OBJ file as the first obj the
+   linker sees. There can be only one LinkFirst command.
+
+   LinkObjFirst. Make linking Borland C easier. The C0x.OBJ file can be
+   specified on the LinkFirst command.
+
+   Syntax.
+   LinkObjFirst ObjectName;
+
+   Example
+   LinkObjFirst C0l.OBJ;
+
+   LinkObj and LinkLib allow you to add an OBJ or LIB file to the
+   linker parameters. For items outside the application dependency
+   chain this is a very simple way to link these items in. These
+   items are added to the end of their respective parameter lists.
+
+   LinkObj. If you are supplied with an .OBJ file to link, use this
+   command to link it to your application. Previously the environment
+   did not have a way to link a single OBJ file not in the dependency
+   chain.  You can have as many LinkObj commands as you like.  Syntax
+
+   LinkObj Objname [{+ObjName}];
+
+   LinkObj myobj1;
+   LinkObj myobj1+myobj2+myobj3;
+
+   LinkLib. Use this to and a .LIB file to the linker commands. The
+   environment does have a way to link a .LIB file, this is the Obj
+   library option on the New menu. This option however added that LIB
+   file to all program linker response files in the library. This
+   option allows you to add a LIB file to a single program and no
+   others. The syntax is the same as the LinkObj command.
+
+3. Warnings are now output by the linker. These will probably only show
+   up if you are linking an external language. Pascal+ is very strict
+   and consistent in its segment declarations.
+
+   1. When segment contributions are not grouped consistently, a
+      warning will be given. Ungrouped segment contributions will be
+      grouped to the group that the other contributions have been
+      grouped to.
+
+   2. When segment contributions are not aligned consistently, a
+      warning will be given. The alignment of a segment will be given
+      the largest alignment of any contribution to that segment.
+
+4. The linker will make up to 40 handles available to itself to
+   increase link speeds when the linker is linking a program with many
+   LIB files for input to the linker. If you are compiling all of your
+   UNITs to the Library output option, it is the default, and you have
+   many UNITs, you may want to set your FILES statement in the
+   config.sys to 50
+
+   FILES=50
+
+   This only effects the number of LIB files the linker can keep open
+   at once.
+
+5. SBLINK now allows comments in the linker response file and the 
+   linker definition file. The comment format in the same as the 
+   compound comment in Pascal. Comments can be nested. Example
+
+   VIRTUAL 20000 (*NOEMSRUN*);
+       OVERLAY OVL1;
+       (*
+       OVERLAY OVL2 (*NOEMSRUN*);
+       *)
+       OVERLAY OVL3;
+
+6. SBLINK now outputs status information from the command line by default.
+   To turn this information off use the /Q switch.
+   
+SBLIB
+
+1. SBLIB can now automatically delete the input OBJ/LIB files as it
+   is creating the resultant LIB. The default is to not delete the
+   input files.  These commands are /DURING and /AFTER. The names
+   basically describe their actions.
+
+   /DURING will delete the input file after it is added to the resultant
+   LIB file. Use this command if you are short on disk space.
+
+   /AFTER will delete the input files after the resultant LIB file was
+   successfully created and closed.
+
+6. SBLIB now outputs status information from the command line by default.
+   To turn this information off use the /Q switch.
+
+PPB, MAKEPAS.
+
+   These programs can now deal with pre-compiled libraries without
+   source code being available. The algorithm is..
+
+   When a unit dependency is added to a build, these programs look
+   for a source file. If they do not find one, they look for a .INT
+   file in the /U path. If they find it in the path, they then look
+   for an OBJ/LIB file in the same directory that the .INT file was
+   found.  If that is found then that file will be linked; if not
+   then the programs assume that you will be linking a LIB file
+   manually that contains the executable code for the unit.
+
+   PPB error codes.
+
+   PPB now returns the error codes of the compiler.
+
+   0	= Success
+   1	= File not found
+   2	= Out of memory
+   3	= Compilation errors
+   4	= Disk full
+   5	= Internal error
+   6	= Compiler limit
+   7	= File creation error
+   8	= Command line error
+
+   255	= User interrupted
+
+   MAKEPAS returns the following error codes.
+
+   0	= Success
+   1	= Interrupted by user
+   2	= File scanning error

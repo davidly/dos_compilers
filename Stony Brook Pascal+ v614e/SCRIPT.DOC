@@ -1,0 +1,245 @@
+
+	This file describes the new "script" file compiler to create
+	.LOG files for the environment more easily. An "unCompiler" is
+	also included.
+
+	Source code for these programs is included.
+	aka. Batteries are included.
+
+	The environment has always had the ability to record keystrokes
+	to create .LOG files which make building libraries automated
+	and fault free. However, many times you screw up and have to
+	start over. These two utilities are meant to overcome this
+	limitation and make library building even easier than keystroke
+	recording.
+
+	1. log2scr.exe
+
+	   log2scr file[.LOG]
+
+	   will output to file.SCR in the same directory that the LOG
+	   file was found.
+
+	This program will convert a .LOG file to an editable format,
+	that can then be run through scr2log. That's all for this
+	program, lets get to the fun part, scr2log.
+
+	2. scr2log.exe
+
+	   scr2log file[.SCR]
+
+	   will output to file.LOG in the same directory as the SCR
+	   file was found.
+
+	This program is basically a text equate system. It is designed
+	so that even first time programmer can extend the "script
+	language". The core primitives the program understands are all
+	ASCII characters, Alt-letter key combinations and script 
+	parameters, everything else is assumed to be a macro text 
+	equate.
+
+	scr2log always looks for a file of its name with a .MAC
+	extension from the directory where is was run from. This file
+	can, and does, contain a bunch of predefined useful macros.
+	It does not matter what the order of the items in the .MAC
+	file are, which means a macro can refer to a macro that has not 
+	been defined yet in the file. Lets do some examples from the 
+	.MAC file to illustrate the macro format. First a few simple 
+	rules to understand the examples.
+
+	Macros are NOT case sensitive.
+	A macro MUST be contained on one line. < 255 chanacters.
+	Commands are separated by commas.
+	Spaces and tabs are treated as whitespace and are meaningless.
+	Macro nesting is limited only by available memory.
+	Macro names can have any ascii character except a ' ', '=', ';'
+	character.
+	Macro commands can be quoted strings like, "hello". This is the
+	same as pressing those keys on the keyboard.
+
+
+	Root=ESC,ESC,ESC
+
+	This macro goes by the name Root. It contains three commands.
+	ESC is a primitive command that corresponds to pressing the
+	Escape key.
+
+	NewMenu=Root,AltNkey
+
+	This macro goes by the name NewMenu. It has two commands.
+	One is Root, which is a macro, and the other is a primitive
+	corresponding to pressing Alt/N.
+
+	Lets do one more, shall we.
+
+	INLINE:Y=PgDn,AltGKey,"Y",ENTER
+
+	This shows how you can make macros look like compiler command
+	line switches.
+
+	I am not going to document the primitive commands here.  Look
+	at the TABLES.PAS file. There is a lookup table there that
+	documents all primitive commands currently accepted. If you
+	want to accept more, feel free to add them to the source.
+
+	Lets show some real use of this script system.
+	This script is the one I use to build the TechoJock library.
+	Since that library is included with Pascal+, you can use it as
+	a tutorial.
+
+	I build libraries more times in one day than you probably ever
+	will.  I use them as a test bed for code generation changes.
+	Thus a nice script system was very useful. nuff said, lets get
+	on with it.
+
+	This script creates and builds the tot.sbl file.
+
+        Create
+        ProtectedMode
+        GlobalComp,NOWARN
+        GlobalComp,INLINE:Y
+        GlobalOpt,BestOptOpt
+        DeleteAfter
+        NewAll
+        MakeObjLibrary
+        ExitEnv
+
+	This script creates and builds the totdemo.exe demo program
+        which uses the tot.sbl library.
+
+	Create
+	ProtectedMode
+	SLVM
+        GlobalComp,NOWARN
+	GlobalComp,INLINE:Y
+	GlobalOpt,BestOptOpt
+        Directories,DOWN,DOWN,END,";..\tot\source",ENTER
+	NewLibrary,"..\tot\tot",ENTER
+        NewProgram,"totdemo",ENTER
+        Select,"totdemo"
+        LinkSelected,PressAnyKey
+        ExitEnv
+
+	I am not going to explain what each line of the scripts do,
+	because it is totally self explanatory! A series of recorded
+	keystrokes is basically unreadable, but this provides a simple
+	self documenting way to ensure that all EXE files you distribute
+	are compiled with the proper options every time you build.
+
+	Here is the batch file that completes the process.
+
+        cd tot
+        del object\*.int
+        del object\*.lib
+        del object\*.obj
+        del tot.lib
+        del tot.sbl
+        sbe tot tot
+        if exist tot.lib goto totdevgood
+        echo tot lib did not build
+        goto end
+
+        :totdevgood
+        cd..
+        cd totdemo
+        del object\*.int
+        del object\*.lib
+        del object\*.obj
+        del demo.sbl
+        del *.old
+        ren *.exe *.old
+        sbe demo demo
+        dir *.old
+        dir *.exe
+
+	Here is a more complex example. This builds the Stony Brook
+	Modula-2 compiler, it is written in Modula-2, but the Pascal
+	environment is 98% the same as the Modula-2. The Pascal
+	compiler script is the same, except for the Modula2 version tag.
+
+        Create
+        ProtectedMode
+        NoSwapEnv
+        GlobalComp,LineNumbers
+        GlobalComp,NOMODINIT
+        ;GlobalComp,NOCHECK:M
+        GlobalComp,INLINE:Y
+        Global.OBJ
+        Directories,'DEF;..\cg\def;..\core\def',DOWN,DOWN,'MOD;..\cg\mod;..\core\mod',ENTER
+        VersionTags,'Ext16,Modula2',ENTER
+        NewProgram,'m2',ENTER
+        Select,'BufDiskIo',Local.LIB
+        Select,'FileFunc',Local.LIB
+        Select,'Strings',Local.LIB
+        Select,'Ems',Local.LIB
+        Select,'m2'
+	LinkSelected,PressAnyKey
+        ExitEnv
+
+	Script Parameters
+
+	Script files can have command line parameters. They are 
+	PARAM1, PARAM2, PARAM3 and PARAM4. The meaning of the 
+	parameters is selecting a module by name. If the module does 
+	not exist, the execution of the script will stop and a error 
+	message will be given. The only support currently provided to 
+	pass parameters is from the command line starting the 
+	environment. Parameters must be separated by spaces. example
+
+	sbe mylib linkit myprog
+
+	You could have a generic script, linkit, that links a selected 
+	module and takes that name via a parameter. sample text for 
+	linkit script.
+
+	Param1,LinkSelected,PressAnyKey
+
+
+	REFERENCE
+
+	Macros are NOT case sensitive.
+	A macro MUST be contained on one line. < 255 characters.
+	Commands are separated by commas.
+	Spaces and tabs are treated as whitespace and are meaningless.
+	Macro nesting is limited only by available memory.
+	Macro names can have any ascii character except a ' ', '=', ';'
+	character.
+	Macro commands can be quoted strings like, "hello". This is the
+	same as pressing those keys on the keyboard.
+
+	MACROS
+	the .MAC file must contain only macros .SCR files can have macros,
+	but the macro must be defined before it is used.
+
+	COMMENTS
+	You can place comments in a .MAC or .SCR file.  A comment line 
+	is any line that starts with a semicolon, ';'.
+
+	COMMANDS
+	commands are separated by commas. Tabs and spaces are ignored.
+	commands are NOT case sensitive.
+
+	REPEAT BLOCKS
+
+	(count:commands)
+
+	count is a one or two digit decimal number.
+
+	Epilog
+
+	The real bottom line is that the SCR2LOG.MAC file is a perfect
+	tutorial. Study it, and learn the commands defined in it, and
+	define any commands you may want available to all scripts. 
+	Specific commands, not of genreal use, can be defined in the 
+	individual .SCR file(s).
+
+	Future versions of SBE will be using .SCR files directly. The 
+	script modules will added to the module set as SCR, and the 
+	compile command will execute the script compiler and the run 
+	command will execute the Script.
+
+	Any feedback as to how to enhance the system, without adding 
+	complexity, would be greatly appreciated.
+
+	Bebe bebe bebe thats all folks.
+	Stormin Norman Black

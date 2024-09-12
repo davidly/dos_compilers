@@ -1,0 +1,15 @@
+#include "..\windows.h"
+#include "clock.h"
+
+rcinclude clock.dlg
+
+clock   ICON        clock.ico
+clock   DATA IMPURE clockdat.bin    /* Make this non-discardable */
+
+STRINGTABLE
+BEGIN
+    IDS_APPNAME,    "Clock"
+    IDS_ABOUTMENU,  "&About Clock..."
+    IDS_DATA        "data"
+    IDS_TOOMANY     "Too many clocks or timers."
+END

@@ -1,0 +1,5 @@
+EXETYPE WINDOWS
+STACKSIZE 16384
+EXPORTS
+    About
+    MainWndProc

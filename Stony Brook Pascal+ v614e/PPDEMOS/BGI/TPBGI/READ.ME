@@ -1,0 +1,40 @@
+In this directory is a method of interfacing to the Turbo Pascal BGI
+GRAPH.TPU file, as documented in the Pascal+ manuals.
+
+Go into the BGI directory and compile the BGI.PAS file. This will create
+an .EXE file with ALL of the BGI functions contained in it. This .EXE
+is used as a sort of overlay file. It is loaded at runtime and all
+calls are indirected through procedure variables in Pascal+ to the
+Turbo Pascal code in the BGI.EXE file. It is a complicated process, and
+if you understand assembly code you might get a kick out of looking at
+how this was done.
+
+In the SOURCE directory, there are a GRAPH.PAS and a GRAPHASM.ASM file.
+The graphasm file is an assembly unit that is LINKED in. It is NOT a
+{$L object import. You must have an Assmebler (MASM, TASM) because the
+environment will try to compile this file.
+
+When you import the Graph module into a program the GraphAsm unit is also
+brought into the environment. It however is brought in as a Pascal unit.
+The environment must be told that the implementation of the module is in
+assembly. You must select the <T>ype command from the <M>odule menu. Then
+select the <F>oreign command from the sub-menu. This will then show the
+UNT file AND the FGN file for the unit.
+
+NOTE: The environment may not bring in the Graph and GraphAsm units into
+      your library. This is because it has already found a Graph unit in
+      the PASLIB library. To override this you can perform the following
+      steps.
+
+      Make sure the Graph and GraphAsm files are in the directories path
+      for source files.
+
+      Select the <O>ptions menu. Then select the <M>odule list item.
+      Change the module view option to <All> from <Local>.
+
+      Now select the Graph unit on the environment screen. Select the
+      <A>ltered command from the <M>odule menu. This causes the environment
+      to forget what it knows about that unit. It will then search for it.
+      It will search you SOURCE directories first, then any imported
+      libraries such as PASLIB. After you have done this you can change
+      the module list display back to <Local> if you so desire.

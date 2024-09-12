@@ -1,0 +1,966 @@
+
+	READ.ME: CORRECTIONS, INSTRUCTIONS, SUPPLEMENTARY INFORMATION,
+                    and TIPS for Pascal+, Version 6.1
+
+
+Pascal+ 6.1 is a major update to the Pascal+ system and comes with a
+rather large collection of files documenting various items.
+
+All of the NEW program features for PPC, PPB, MAKEPAS, SBE, SBDEBUG,
+SBMAKE and SBLIB are documented in the 61.DOC file.
+
+Other DOC files included with additional more specific information.
+
+LINKC.DOC	- Collects information on Linking C in one place.
+TIPS.DOC	- A collection of source code, and Pascal+ usage tips to
+                  make your life easier/better.
+MEMORY.DOC	- Basic information about the various type of memory
+                  used by Pascal+ programs.
+SBE.DOC		- A overview of the SBE environment and its fundamental
+                  differences from other "environments".
+UTIL.DOC	- Describes a collection of useful utility programs,
+                  which are included with source code as examples.
+SCRIPT.DOC	- A Discussion of the new Script compiler for SBE.
+                  Something of a basic Macro language. Source code
+		  included!
+STORAGE.DOC	- A alternative Heap manager that is over 4 times faster
+                  than the TP compatible heap manager in the SYSTEM unit.
+OVERLAY.DOC     - Description and documentation for the new VIRTUAL 
+	          overlay manager.
+
+GENERAL
+	 0) Support BBS
+	 1) Implementation of the Graph unit on DOS
+	 2) BGI driver
+	 3) Environment default directories
+	 4) Sample programs
+	 5) Windows files
+COMPILER
+	 6) Module version checking exceptions
+	 7) Declaring volatile variables
+	 8) Changing the public symbol for procedures
+	 9) //WARNING qualifier
+        10) Effects of cross module register parameter passing
+        11) Linking other languages with floating point emulation
+        12) The //CMAIN option and program entry points
+        13) Tips on Pascal+ Set code generation
+	14) Memory models and compatibility
+	15) Smart linking of virtual methods
+	16) $F+ and its effects on code generation
+	17) ALTERS attribute on inline procedures
+	18) Procedure bodies in the interface of a unit (Macros)
+	19) Overflow checking
+	20) NIL pointer checking
+	21) Variant record checking
+	22) Compiler error messages listing
+	23) Using Turbo Vision with Pascal+
+LINKER
+        24) Protected mode
+        25) Linker options not implemented
+        26) Overlaying code an a procedure basis
+        27) The overlay UNIT
+        28) Using the stack trace feature
+        29) Maximizing linker performance
+	30) Smart linking of virtual methods
+OBJECT LIBRARIAN
+        31) Object librarian and protected mode
+DEBUGGER
+        32) Debugger features added
+        33) //CMAIN option sets breakpoint
+        34) EXE file size
+        35) Effects of the //LIBRARY qualifier when debug info is present
+	36) Effects of //LIBRARY and assembly display
+	37) Effects of //LIBRARY and procedure breakpoint setting
+WINDOWS
+        38) Implementation of the Graph unit on Windows
+        39) Implementation of the Crt unit on Windows
+        40) Implementation of the Dos and System units on Windows
+	41) Text file I/O with default handles under Windows
+        42) Windows system variables:
+        43) ExitCode for Windows programs:
+        44) Creating Windows DLL files:
+LINKING WITH BORLAND C
+        45) Special information for Borland C users
+EXAMPLES: Building and using libraries with the Stony Brook Environment
+        46) Building the Object Professional Toolkit from TurboPower
+	47) Using the Object Professional library created with the Stony
+	    Brook Environment
+
+------------------------------------------------------------------------------
+			     IMPORTANT NOTE
+
+        Before trying to run the compiler, linker, or object librarian
+	in protected mode, run the CHECKPRO program.  This verifies the
+	compatibility of Pascal+ with your system.
+
+------------------------------------------------------------------------------
+
+GENERAL
+
+0) Support BBS
+
+   Stony Brook Software now operates a technical support BBS.
+   The BBS operates 24 hours 7 days a week. The available baud rates are
+   2400 thru 14.4k. The commumication parameters are 8,N,1.
+   
+   805-379-3357
+   
+   The BBS will have the latest maintainence versions of the Pascal+
+   system available for download by *REGISTERED* users. To gain access to
+   the support area of the BBS leave a message to the SYSOP with the
+   registered user name and serial number. The SYSOP will then allow you
+   access to the support conference.
+   
+   The BBS has other conferences for discussion of other general areas
+   of interest to Pascal+ users. For example Linking Pascal code to
+   other languages.
+   
+1) Implementation of the Graph unit on DOS:
+
+   On p. 211 in the Runtime Library Reference, we report that an imple-
+   mentation of the Graph unit on DOS is not actually included with Pascal+,
+   and instruct you in building an executable file for the Graph unit using
+   the Borland Turbo Pascal compiler that Pascal+ loads at runtime.
+
+   Thanks to the TEGL Systems Corporation, a complete implementation of the
+   TEGL BGI is now included in Pascal+.  You are fully licensed	to use this
+   version of the BGI.
+
+   Be sure to install and try the TEGL's Windows Toolkit II demo disk
+   included in the Pascal+ kit!
+
+2) BGI driver:
+
+   The Graph unit supplied does not use the Borland BGI driver files.
+
+   Graph uses its own driver file format, TGI.  The files are located in
+   the DRIVERS directory in the Pascal+ system directory. OBJ versions of
+   these files are also supplied for use with the object importer ({$L}).
+
+   The procedure names and the drivers included are as follows:
+
+      -	GREVGA16.TGI, GREVGA16.OBJ are the drivers for VGA and
+	EGA systems.  To do an object import, use:
+
+   		PROCEDURE _GREVGA16_DRIVER; EXTERNAL;
+
+      -	GRCGABW.TGI, GRCGABW.OBJ are the drivers for CGA modes.
+	To do an object import, use:
+
+                PROCEDURE _GRCGABW_DRIVER; EXTERNAL;
+
+      - GRHERCBW.TGI, GRHERCBW.OBJ is the driver for Hercules
+        monochrome graphics mode.  To do an object import, use:
+
+		PROCEDURE _GRHERCBW_DRIVER; EXTERNAL;
+
+   We do not supply the .CHR font files. However, you can use any .CHR font
+   files compatible with Turbo Pascal, and use them the same way you do with
+   Turbo Pascal.
+
+3) Environment default directories:
+
+   These are errors in the Utilities Reference manual:
+
+        On p. 53, in Table 6, File Types, the entry for Imported
+	Object File under Dir should be IMPOBJ instead of OBJECT.
+
+	On p. 55, in the Using Existing Programs section, item #4
+	refers to OBJECT directory.  It should be IMPOBJ directory.
+
+4) Sample programs
+
+   Contrary to the statement on p. 19 in the Utilities Reference manual, the
+   sample programs are on the installation disk (not on a separate disk)
+   and are automatically installed in a sub-directory in the Pascal+ system
+   directory.  The directory is named PPDEMOS.
+
+   There is no diskette in the Pascal+ kit labelled "Sample Programs."
+
+5) Windows files:
+
+   All files necessary for Windows development are on the installation disk
+   and are automatically installed with the DOS files.
+
+   There is no diskette in the Pascal+ kit labelled "Windows Support."
+
+
+COMPILER
+
+6) Module version checking exceptions:
+
+   Module version checks show up at link time as undefined symbols of the
+   form:
+   		UnitName_yy_mm_dd_hh_ss_mm_ff
+
+   When the implementation of a unit is not in Pascal+ -- that is, when
+   linking C or other non-Pascal languages, you should disable module
+   versions checking for those units.
+
+   If you still get module version check errors, this indicates that some
+   object in the link was compiled with an earlier version of the interface
+   of the named unit.  In this case, you should recompile all sources by
+   using the /B qualifier on PPB or the (C)ompile (U)nconditional option
+   in the environment.
+
+7) Declaring volatile variables:
+
+   A volatile variable is a variable that can be altered by a process that is
+   external to the process that is currently executing.  An interrupt is an
+   example of one such external process.
+
+   To ensure proper code generation with volatile variables, you must declare
+   the variables as volatile.  For example:
+
+   	VAR
+           TimerBusy : BOOLEAN VOLATILE;
+
+   	CONST
+       	   KeyboardBusy : BOOLEAN VOLATILE = FALSE;
+
+8) Changing the public symbol for procedures
+
+   Refer to p. 186 in the Compiler Reference.  In the Public Symbols section,
+   the following syntax is now allowed:
+
+  	ProcedureHeader; [external|public] 'PublicName';
+
+   The keyword public has been added to resolve the conflict with object
+   imports, which also use the keyword external.  Therefore, to change the
+   public symbol of a procedure implemented in Pascal, use the keyword
+   public in place of the keyword external. If you want to declare a
+   procedure for use in Pascal but not implemented in Pascal then use the
+   external keyword.
+
+   Examples
+
+   UNIT foo;
+
+   INTERFACE
+
+   PROCEDURE One(a : WORD); PUBLIC 'Knock-Knock';
+
+   PROCEDURE Two(a : WORD); EXTERNAL 'WhosThere';
+
+   IMPLEMENTATION
+
+   VAR
+      s : STRING;
+
+   PROCEDURE Three; EXTERNAL 'Orange';
+
+   PROCEDURE One(a : WORD);
+   BEGIN
+       WriteLn('Orange Who?');
+   END;
+
+   BEGIN
+       s := 'To be finished by user';
+   END.
+
+
+
+9) //WARNING qualifier
+
+   The compiler currently outputs two warnings:
+
+      - This parameter is copied
+
+        Turbo Pascal always copies structured value parameters onto the stack.
+	Pascal+ does this only when necessary.
+
+	This warning is issued when a structured value parameter must be copied
+	to the stack because it is altered or because you have not specified
+	//NOALIAS.  This warning is given because the code is less efficient
+	than it could be.  You may have made the parameter a value parameter
+	by mistake.  Or, if you intended the parameter to be a VAR parameter,
+	this warning indicates to you that the program will not perform as you
+	expected.
+
+      - Duplicate case
+
+	When you receive this warning, it is because two branches of a case
+	statement share the same value.  This is possibly improper code,
+	because the second and subsequent case branches with duplicate values
+	will not be reached when the case expression evaluates to this value.
+
+		CASE FOO OF
+		2..8: ...;
+		0..9: ...; <- the values of 2..8 will never reach this branch
+
+10) Effects of cross module register parameter passing
+
+   With cross module register parameter passing set to YES, a simple change
+   in the implementation of a procedure can cause other units to be recom-
+   piled.  This is because Pascal+ determines the procedure calling convention
+   on a procedure by procedure basis.  Normally, this is only within a unit,
+   and cross module register parameter passing extends this across units.
+
+   The environment and PPB may not correctly recompile all dependent units
+   when you make changes in the implementation section of a unit only and
+   cross module register parameter passing is enabled.
+
+   Therefore, we recommend that you do not use cross module register parameter
+   passing until a final build of your application.
+
+   If you compile a unit to an object file instead of to a library file,
+   cross module register parameter passing increases the size of your appli-
+   cation.  You should always compile to library format when cross module
+   register parameter passing is enabled.
+
+11) Linking other languages with floating point emulation:
+
+   When linking in code from another language that uses floating point
+   emulation, you must not allow the Pascal+ emulator to be linked in,
+   because you cannot have two emulators present at the same time.  Pascal+
+   can use other floating point emulators.
+
+   You can prevent linking in of the Pascal+ emulator by putting this
+   declaration in your Pascal main program:
+
+	   PROCEDURE DontLinkEm; FAR; PUBLIC 'EM_INIT';
+	   BEGIN
+	   END;
+
+   See the LINKC.DOC file for complete information on linking C.
+
+12) The //CMAIN option and program entry points:
+
+   In C programs, the program entry point is in the C RTL, and the C RTL
+   startup code calls a procedure called _main, which the user is responsible
+   for declaring.
+
+   In Pascal+ programs, the program entry point is normally the BEGIN
+   statement of the main program module.  A program cannot have two entry
+   points, so for compatibility with C, the //CMAIN option in Pascal+
+   "converts" the main program BEGIN END pair to a procedure called _main.
+   In this way, the C RTL startup code calls your Pascal program after it has
+   initialized the system.
+
+   See the LINKC.DOC file for complete information on linking C.
+
+13) Tips on Pascal+ Set code generation:
+
+   Pascal+ code generation for 1, 2 and 4 byte sets is dramatically smaller
+   and faster than sets of all other sizes.
+
+   If you have a set that is 3 bytes, you may wish to increase the size of
+   the set to 4 bytes.  Consult the Compiler Reference, p. 236, for the
+   formula to compute the set size in bytes.  For example:
+
+	TYPE
+	    SlowAndBig   = SET OF 1..32;  (* 5 bytes *)
+     	    FastAndSmall = SET OF 0..31;  (* 4 bytes *)
+
+   For more TIPs see the TIPS.DOC file.
+
+14) Memory models and compatibility:
+
+    The default memory model of Pascal+:
+
+	//CODE:LARGE //DATA:MEDIUM //CONSTANT:MEDIUM
+
+    is compatible with Turbo Pascal.  If you are using third party libraries
+    you will probably not be able to use other memory models.  This is
+    because many libraries have $L object imports and the assembly code
+    assumes that typed constants and global variables are in the data
+    segment reachable with DS.  Inline statements and built in assembler
+    code also fall into this category.
+
+15) Smart linking of virtual methods:
+
+    This version of the Pascal+ development system supports limited smart
+    linking of virtual methods.  You need do nothing to have the compiler
+    output the approiate information for the linker.  It is always active.
+    There are some known restrictions and methods to work around these.
+    In these places the compiler cannot know exactly what will be called
+    at runtime.
+
+    a.) Accessing virtual methods via assembly.
+
+    	mov si, address of object
+    	call [si].SomeMethod
+
+	Here the compiler cannot know what the call is actually calling.
+
+    b.) Typecasting objects.
+    	obj1 = OBJECT
+		   CONSTRUCTOR init;
+		   PROCEDURE make;
+		   PROCEDURE virt; VIRTUAL;
+	       END;
+
+    	obj2 = OBJECT
+		   CONSTRUCTOR init;
+		   PROCEDURE make;
+		   PROCEDURE virt; VIRTUAL;
+	       END;
+
+
+	PROCEDURE obj1.make;
+	BEGIN
+	    obj2(self).init;	{the VMT will be set for obj2 not obj1}
+	    virt;               {this will call obj2.virt NOT obj1.virt}
+	END;
+
+	In this example, the compiler will think it is calling certain
+	methods from the object that init is a part of obj1, but the
+	typecast caused the VMT to be initialized to the obj2 object.
+	The compiler will not be calling what it thinks it is calling.
+
+    Therefore any objects with virtual methods that are accessed in the
+    above methods should have the following compiler directive placed
+    around the declaration of the object.
+
+    //SLVM allows any objects declared to have their virtual methods
+    smart linked.
+
+    //NOSLVM does not allow any virtual methods to be smart linked.
+
+    example:
+
+    {$IFDEF StonyBrook} {so that TP will not gag on this}
+	{$//NOSLVM}
+    {$ENDIF}
+
+    	obj1 = OBJECT
+		   CONSTRUCTOR init;
+		   PROCEDURE make;
+		   PROCEDURE virt; VIRTUAL;
+	       END;
+
+    	obj2 = OBJECT
+		   CONSTRUCTOR init;
+		   PROCEDURE make;
+		   PROCEDURE virt; VIRTUAL;
+	       END;
+
+    {$IFDEF StonyBrook} {so that TP will not gag on this}
+	{$//SLVM}
+    {$ENDIF}
+
+16) ALTERS attribute on inline:
+
+    Normally the compiler assumes that ALL registers other than DS, BP, SS
+    are altered by an inline procedure.
+
+    You can place the ALTERS procedure attribute to tell the compiler
+    what registers the inline procedure really alters.  This will allow
+    the compiler to use these registers for something across the call
+    to the inline procedure.  This results in better code generation.
+
+    PROCEDURE lowword(li : LONGINT) : WORD [ALTERS(AX,DX)];
+    INLINE(
+	   $58/ {pop ax}
+	   $5A  {pop dx}
+	   );
+
+17) $F+ and it effects on code generation:
+
+     The $F+ switch has an additional effect in this version of the compiler.
+     When $F+ is active, all procedure calls are made FAR, as in previous
+     versions.  It also FORCES all procedures to have a stack frame, such as
+
+     		PUSH	BP
+		MOV	BP, SP
+		.
+		.
+		.
+		POP	BP
+
+    This is so that the compiler output will be compatible with some of
+    the virtual overlay systems that exist on the market.  They must have
+    far calls AND they must have stack frames so that they can walk the
+    stack to readjust the procedure return addresses when overlaies move.
+
+    This WILL effect the size of programs. Therefore, if you do not require
+    stack frames, we suggest the following course of action:
+
+    a.) Use the memory model controls of the compiler to control procedure
+        calls.
+    b.) If you need to overide the default memory model in effect, use the
+        [NEAR|FAR] keyword on the procedure declaration, as follows:
+
+        procedure foo(...); FAR; {this call will be forced to FAR}
+
+    Most third party libraries have $F+ set in their units.  This is so that
+    the TP overlay system will function properly.  If you will not be
+    overlaying, you can get a smaller program by removing the $F+
+    ONLY where it is possible to do so.
+
+18) Procedure bodies in the interface of a unit: (Macros)
+
+    The compiler now allows procedure bodies in the interface section
+    of a unit. This is the same effect as an inline procedure, except
+    that the body is not in Hex code, but is written in Pascal!  It can
+    also result in significantly smaller code generation, compared to
+    an equivalent inline procedure, as the Pascal+ compiler always
+    detailed knowledge of variables and their locations.  Tests have shown
+    a reduction from 26 bytes to 6 bytes in some cases.  Your results
+    will vary.
+
+	UNIT foo;
+
+	INTERFACE
+
+	FUNCTION checkbit(w : WORD; b : WORD) : BOOLEAN [INLINE];
+	BEGIN
+	    checkbit := (w AND b) <> 0;
+	END;
+
+	IMPLEMENTATION
+
+	END.
+
+    The INLINE attribute must be present in the declaration.
+
+    The known restrictions on procedure bodies are
+
+	a) They cannot return a string type.
+	b) Structured parameters that must be copied are not allowed.
+
+    Our recomendation is that if you wish to use this feature, you should
+    follow these steps:
+
+	a) Only small test procedures are usually good choices.
+	b) Setup a simple example to test and verify that it works as required.
+	c) Then try it in your application.
+
+19) Overflow checking:
+
+    This checking option produces a runtime error #253.  It is documented
+    on page 39 of the Compiler Reference manual.
+
+    This option should only be used when you are sure that the code you have
+    written does not have any overflows on ANY operation.  Overflow
+    checks are done on each arithmetic operation and will generate an
+    error if the result of the operation is outside the bounds of the
+    result type of the expression.  This is not always apparent, as the
+    Pascal language allows mixed type expressions.
+
+	VAR
+	    i, j : WORD;
+	    li : LONGINT;
+	BEGIN
+	    i := 23;
+	    j := 24;
+	    li := i - j;
+	    {li := LONGINT(i - j);}
+	    {this is the EXACT same expression as above}
+	END.
+
+    This will produce an overflow, because the result of the expression
+    i - j is of type WORD, NOT LONGINT, and its result became negative,
+    which is out of the range of a WORD. The result of the expression is
+    then promoted to a LONGINT by the assignment operator to assign the
+    result to li.
+
+20) NIL pointer checking:
+
+    This checking option produces a runtime error #252. It is documented
+    on page 39 of the Compiler Reference manual.
+
+21) Variant record checking:
+
+    This checking option produces a runtime error #251. It is documented
+    on page 38 of the Compiler Reference manual.
+
+22) Compiler error messages listing:
+
+    Refer to the ERRORS.DOC file for a listing of all compiler error
+    messages, and possible causes and remedies.
+
+23) Using Turbo Vision with Pascal+:
+
+    1) You will need to purchase the Turbo Pascal runtime library source
+       code.
+    2) Consult the TVISION.DOC file for source code modifications.
+       This is because Turbo Vision was written with dependencies on the
+       code generation techniques of Turbo Pascal.
+
+LINKER
+
+24) Protected mode:
+
+   SBLINK can now be run in protected mode.  The environment does this
+   automatically when the Compile in protected mode option is set to YES.
+   From the command line, you can use the /PROTECTED switch.
+
+25) Linker options not implemented:
+
+   Though described in the manuals, the following linker options are not
+   implemented in this version of Pascal+:
+
+		Translate far calls
+
+26) Overlaying code an a procedure basis:
+
+   This feature is no longer supported by the linker.
+
+   Thus when specifying overlays in the OVERLAY statement you should only 
+   place the unit name in the statement. The * wildcard specifiers are no 
+   longer used.
+
+27) The overlay UNIT:
+
+   The OVERLAY unit is present in the Pascal+ RTL, however since both 
+   of the Pascal+ overlay systems do not use this unit the procedures and 
+   variables are just dummies that do nothing. Very little space is lost 
+   here thus you can leave any references in your code.
+
+28) Using the stack trace feature:
+
+   A stack trace feature has been added to the runtime error reporting.  When
+   a runtime error occurs, a procedure call chain from the present procedure
+   to the root is displayed.  The call chain displays the unit name and line
+   number, if line number debug information is present in the EXE.  Otherwise,
+   it displays an address.
+
+   Stack trace is available only when any of the following runtime checks are
+   activated: {$I+,R+,S+}  or {$//CHECK:NVO}
+
+   To enable stack trace when using the Stony Brook Environment or the PPB
+   program builder, you must link with debug information turned on.
+
+   To enable stack trace when manually linking, you must add the STACKTRA.OBJ
+   object in your linker response file.  STACKTRA.OBJ is located in the
+   DOSOBJ subdirectory of the PASCAL+ system.
+
+29) Maximizing linker performance:
+
+   As stated in the compiler manual, Pascal+ can output two different types
+   of object code files, OBJ and LIB:
+
+	LIB provides smart linking and procedure granularity for overlays.
+	OBJ does not provide the above, but links MANY times faster.
+
+   To maximize linking performance with the Pascal+ system, try this:
+
+   	Compile all units that do not require smart linking to
+   	the Object (OBJ) file format.  Most units specific to an
+   	application tend to fall in this category, whereas utility
+   	library units do not.  Be sure to read Section 10, Effects
+	of cross module register parameter passing, in this file.
+
+30) Smart linking of virtual methods
+
+   Smart linking of vitual methods(SLVM) is OFF by default. To turn SLVM
+   on, use the following procedures:
+
+   From the environment:
+       Set the Smart link V/Methods option to Yes in the linker options panel.
+
+   From the command line:
+       Pass the switch /SLVM to the linker either on the command line or
+       in the response file.
+
+   See Compiler section #15 for restrictions on SLVM.
+
+OBJECT LIBRARIAN
+
+31)  Object librarian and protected mode:
+
+    SBLIB now runs in protected mode.  From the environment, set the Compile
+    in protected mode option on the Compiler options menu to Yes to handle
+    this automatically.  From the command line, pass the switch /PROTECTED
+    for protected mode operation.
+
+
+DEBUGGER
+
+32) Debugger features added:
+
+    The following features were added to the debugger after the documents
+    went to press:
+
+    a. When viewing assembly code, CTRL/S toggles the display of public
+       symbol names beside near and far procedure calls and global variables,
+       if there is a public symbol associated with that location.  Default
+       public symbol display is OFF.
+
+    b. The following command line switches have been added:
+
+       1. /NM - Disables use of the mouse within the debugger.
+          The default is the mouse enabled.
+
+       2. /NB - Disables the CTRL BREAK handler in the debugger.
+          The default is CTRL BREAK enabled.
+
+33) //CMAIN option sets breakpoint:
+
+   When debugging a Pascal program that was compiled with the //CMAIN option
+   enabled, SBDEBUG sets a temporary breakpoint at the entry point of the
+   Pascal code.  Use the GO command to execute the application up to the
+   BEGIN statement of the Pascal main program.  Using any other program
+   execution command, or setting any local breakpoints, clears the temporary
+   breakpoint on the BEGIN statement.
+
+34) EXE file size:
+
+   Do not be alarmed by the size of the EXE file for your program.  For
+   example, the sizes for the TWDEMO program on the TEGL sample disk are:
+
+	178kb 	- with no debug information
+     	2Mb 	- with debug information when compiled to //Library format
+   	500kb 	- with debug information when compiled to //Object format
+
+   Note that the memory actually required for DOS to load the above programs
+   is approximately the same, and is exactly the same for the first two
+   examples.
+
+   The debugger heap requirements for the last two are dramatically
+   different, however:
+
+   	3K 	- required for the version linked with the //Object format
+	53k 	- required for the version linked with the //Library format
+
+35) Effects of the //LIBRARY qualifier when debug information is present:
+
+   Effects on linking:
+
+	The //LIBRARY option causes duplicate debug information to be output
+	for each procedure, because it is not known which procedure(s) will
+	be linked in until link time.  This increases the size of compiler
+	output files and causes the linker to process more information.
+
+   Effects on debugging:
+
+	The //LIBRARY option also increases the heap requirements of SBDEBUG,
+	and other debuggers as well.  With the //LIBRARY option, SBDEBUG may
+	not be able to debug an application because of insufficient heap
+	space for storing the extra debug information in LIB files.  This can
+	occur even though the program is small enough to fit into memory.
+
+36) Effects of //LIBRARY and assembly display:
+
+    When you are use the <V>iew <B>oth mode of source display and the UNIT
+    was compiled to a Library file(.LIB), the debugger will restrict the
+    display to the assembly code of the displayed procedure.
+
+    This is a result of the way debug information must be output to
+    still be compatible with the CodeView specification.
+
+37) Effects of //LIBRARY and procedure breakpoint setting:
+
+    If you want to set a breakpoint using an expression, as opposed to using
+    the Quickie menu, and the UNIT was compiled to a Library file, you will
+    have to preced the expression(LineNumber, ProcedureName) with the
+    CodeView debug module name.
+
+    When //LIBRARY is in effect CodeView debug module names are of the
+    format:
+
+	UnitName$ProcedureName
+
+    Examples:
+
+	MyDos$GetAttrib GetAttrib <- breakpoint on the procedure GetAttrib
+	MyDos$GetAttrib 100       <- breakpoint on line 100
+
+WINDOWS
+
+38) Implementation of the Graph unit on Windows:
+
+   The Windows Graph unit is a "nearly complete" implementation of the DOS
+   Graph unit.  There are some differences in the Graph implementation, as
+   follows:
+
+   a. SetGraphBufSize, SetVisualPage, and SetActivePage procedures are not
+      implemented.
+
+   b. Windowing applications do not have control of the "system" palette
+      registers.  Procedures for manipulating and retrieving the palette are
+      not implemented.  The procedures involved are SetAllPalette,
+      SetPalette, GetDefaultPalette, SetRGBPalette.
+
+39) Implementation of the Crt unit on Windows:
+
+   The Windows Crt unit is an implementation of the Crt unit for Microsoft
+   Windows.  The TextMode procedure is not implemented for Windows.  The
+   Crt window is resizable; however, the underlying save area is a window
+   25 lines by 80 columns.
+
+   The blink attribute does not function under the Windows Crt.
+
+40) Implementation of the Dos and System units under Windows:
+
+   All procedures and functions in the Dos and System units are implemented,
+   with the following exceptions:
+
+   a. Keep has no corresponding Windows function.
+
+   b. Mark, Release, MemAvail, and MaxAvail are not implemented by the
+      Windows heap systems.
+
+   c. DosExitCode and Exec are not implemented.
+
+   d. Intr is not implemented.   MSDOS is implemented for INT 21 type
+      interrupts.
+
+   e. GetIntVec, SetIntVec, and SwapVectors are not implemented.
+
+41) Text file I/O with default handles under Microsoft Windows:
+
+   Text file I/O with the default handles INPUT and OUTPUT is available
+   only through Crt.  You must place a 'Uses Crt' somewhere in your
+   program for Text file I/O to function properly under Microsoft Windows.
+
+   Text file IO functions with all disk based text files.
+
+
+42) Windows system variables:
+
+   The method described Chapter 7 of the Compiler Reference manual, page 
+   96, is no longer necessary to access these variables. They are now 
+   implemented in the SYSTEM unit. The definitions are
+
+   hInstance	: WORD;
+   hPrevInst	: WORD;
+   CmdLine	: POINTER;
+   CmdShow	: WORD;
+
+   This is compatible with the definitions in TPW. The exception here is 
+   the PCHAR type does not exist in TP 6.0.
+
+43) ExitCode for Windows programs:
+
+   If you wish to set an ExitCode variable from with the main program 
+   code, simple set the ExitCode variable with the appropriate value. The 
+   code in WinStart.ASM will use this value to set the proper DOS exitcode 
+   value.
+
+44) Creating Windows DLL files:
+
+   The following information supercedes the information in the Compiler 
+   reference manual with regards to creating Windows DLL files.
+
+   The new method is the same as creating a DLL in TPW, with an exception 
+   for how exported functions are declared. A complete DLL example is 
+   contained in the PPDEMOS\WINDOWS directory. A short example follows.
+
+   LIBRARY FOO;
+
+   VAR
+      SaveExit : POINTER;
+
+   PROCEDURE MyExitCode; FAR;
+   BEGIN
+       (*
+       Do something here
+       *)
+       ExitProc := SaveExit;
+   END;
+
+   BEGIN
+      SaveExit := ExitProc;
+      ExitProc := @MyExitCode;
+      ExitCode := 1;
+   END.
+
+   You do not have to declare a WEP Windows DLL termination procedure 
+   LIBENTRY.ASM does this for you can calls the ExitProc procedures.
+   You not longer need a LibInit procedure. The compiler automatically 
+   creates this for you. The code in the main body after the BEGIN 
+   statement comprises the DLL initialization code. It should return a 1 
+   if ok and a 0 if there was an error.
+
+   When MyExitCode is executing ExitCode will contain one of two Windows 
+   message values, WEP_SYSTEM_EXIT or WEP_FREE_DLL.
+
+   The hInstance variable in the SYSTEM unit contains the instance 
+   variable for the DLL.
+
+   You MUST place WEP in your EXPORT list in the linker definition file.
+   Example.
+
+   EXETYPE WINDOWS 3.1
+   CODE MOVEABLE DISCARDABLE
+   DATA MOVEABLE SINGLE
+   HEAPSIZE 1024
+   EXPORTS
+       WEP	@1 RESIDENTNAME
+       Any other procedure you are exporting from this DLL
+
+LINKING WITH BORLAND C
+
+
+45) Refer to the LINKC.DOC file for important information regarding 
+    linking Borland C with Pascal+:
+
+46) Building the Object Professional Toolkit from TurboPower Software:
+
+    When using the directory structure the Turbo Power installation
+    program sets up, Pascal+ makes these assumptions:
+
+    -  The default directory structure was used when installing OPRO
+    -  \OPRO for Pascal source and include files
+    -  \OPROOBJ	for object imports and assembly source files
+    -  \OPRODEMO for demonstration programs
+
+    Follow this procedure to create a library that can be referenced from
+    any other library:
+
+    1. Make a directory SBOPRO
+    2. Change directory to SBOPRO
+    3. Type SBE OPRO
+    4. Change the directories options to the following:
+
+	SOURCE	\OPRO
+	OBJECT  OBJECT
+	INCLUDE \OPRO
+	IMP OBJ	\OPROOBJ
+
+    5. Execute the <A>ll command from the <N>ew menu.
+
+        This will bring all of the source files associated with OPRO into
+        the environment.
+
+    6. Set all desired compiler and optimizer options.
+
+	NOTE: The OPRO package requires that you set the Compile
+	in protected mode option to YES.
+
+    7. Execute the <O>bject librarian command from the <T>ools menu.
+
+        This will compile all sources and create a single object library
+	file (.LIB), which contains all of the executable code for OPRO.
+
+    Now take a break.
+
+    When this operation completes, exit the environment. You now have a
+    library that can be referenced by any other library.
+
+47) Using the Object Professional library created with the Stony Brook
+    Environment:
+
+    As an example, here is how to build the ENTRY demo program:
+
+    1. Create a directory SBOPDEMO
+    2. Change directory to SBOPDEMO
+    3. Type SBE OPRODEMO
+    4. Change the directories options to the following:
+
+    		SOURCE    \OPRODEMO
+		OBJECT    OBJECT
+   		INCLUDE   \OPRODEMO;\OPRO
+	  	IMP OBJ   \OPROOBJ
+
+    5. Reference the OPRO.SBL by executing the <L>ibrary command from
+       the <N>ew menu.  You will be prompted for a file specification
+       (.SBL is assumed as an extension).  Respond to this prompt with:
+
+        	\OPRO\OPRO
+
+    6. Bring the ENTRY program into the environment by executing the
+       <P>rogram command from the <N>ew menu. You will be prompted for
+       the program name. Respond by entering:
+
+		ENTRY
+
+    7. Set all desired compiler and optimizer options.
+
+	NOTE: The OPRO package requires that you set the Compile
+	      in protected mode option to YES.
+
+    8. Select the ENTRY program and execute the <L>ink command.  This
+       compiles and links the ENTRY program.

@@ -1,0 +1,857 @@
+		Compiler Error Messages
+
+
+"( required"
+
+	An opening parenthesis is expected by the copiler.
+") required"
+
+	A closing parenthesis is expected by the compiler.
+
+", required"
+
+	A comma is expected by the compiler.
+
+". required"
+
+	A period is expected by the compiler.
+
+".. required"
+
+	A subrange does not appear where it should.
+
+": required"
+
+	A colon is expected by the compiler.
+
+":= required"
+
+	An assignment operator does not appear where it should.
+
+"; required"
+
+	A semicolon does not appear where it should.
+
+"= required"
+
+	An equal sign does not appear where it should.
+
+"A record type is required"
+
+        A WITH requires an object type or a record type to be specified.
+
+"Absolute clause must apply to a single variable"
+
+	Only one variable may be declared when an absolute clause is
+        specified.
+
+"Actual VAR parameter is not a variable"
+
+	You are trying to pass a constant where a variable is required.
+
+"Array is too large"
+
+	The size limit for array types is 65536 bytes.
+
+"Array is too long to use as string"
+
+	The length limit for array types used as strings
+	is 255.
+
+"ASM required"
+
+	The compiler expects ASSEMBLER procedures to begin with an ASM
+	statement.
+
+"Attempt to declare a reserved word"
+
+	You may not use the reserved words shown in the
+	list below when naming entities you create.  Reserved
+	words are identifiers that have specific meanings in
+	the Pascal+ language.
+
+	AND             GOTO            RECORD
+	ARRAY           IF              REPEAT
+	ASM             IMPLEMENTATION  SET
+	BEGIN           IN              SHL
+	CASE            INLINE          SHR
+	CONST           INTERFACE       STRING
+	CONSTRUCTOR     LABEL           THEN
+	DESTRUCTOR      MOD             TO
+	DIV             NIL             TYPE
+	DO              NOT             UNIT
+	DOWNTO          OBJECT          UNTIL
+	ELSE            OF              USES
+	END             OR              VAR
+	FILE            PACKED          WHILE
+	FOR             PROCEDURE       WITH
+	FUNCTION        PROGRAM         XOR
+
+"BEGIN required"
+
+	The compiler expects the word BEGIN at this point.
+	Either a BEGIN is required or there has been an error in the block
+	structure of the program.
+
+"Cannot assign a long to a short pointer"
+
+	You can not assign a FAR pointer to a NEAR pointer, since the
+	segment of the FAR pointer may be different than DGROUP which is
+	assumed by the near pointer.
+
+"Cannot call function as procedure"
+
+	A function return must be be assigned to a variable.  You are
+	attempting to call a function without assigning the function return
+        to a variable.
+
+	If ignoring the function return is desired, either assign to a
+	dummy variable or use the {$X+} directive.
+
+"Cannot override a virtual method with a static one"
+
+	Static methods are associated with a specific
+	procedure at compile time, and virtual methods are
+	capable of deferring this association until runtime.
+	Consequently static methods cannot override virtual
+	methods.  See the Virtual Methods section in the
+	Compiler Reference manual.
+
+"Cannot pass a long address to a short parameter"
+
+	In units compiled with the medium or large data
+	model, far addresses are used for address parameters.
+
+	The following classes of data cannot be passed to
+	short address parameters:
+
+	      - static data of large model units
+	      - heap data of medium and large model units
+	      - dynamic data of modules compiled without the
+		 //STACK:DS qualifier
+	      - literal strings and floating point constants
+		in units compiled with the medium or large
+		constant model
+
+"Cannot pass strings by value"
+
+	You cannot use the [VALUE] directive for string types.
+
+"Cannot refer to small code module "
+
+	A unit compiled with the LARGE code model can not call any procedure
+	or function in another unit compiled with the small code model.
+
+"Case selector is of the wrong type"
+
+	The case expression must compute a value of ordinal
+	type: that is, an integer, boolean, or enumeration type.
+	The selector expressions must be compile-time constants that
+	are assignable to the type of the case expression.
+
+"Case selector must be a constant expression"
+
+	You can not use a variable or expression as a case selector.
+
+"Character is out of range"
+
+	The ordinal range for a character is 0..255.  You are probably
+	assigning a constant which is negative or greater than 255 to
+	a character type.
+
+"Compilation aborted by too many errors"
+
+	The compiler aborts the present compilation when it has reached
+	25 errors.
+
+"Compile time constant required"
+
+    Expression must evaluate to a constant.
+
+"Constant expression required"
+
+    Expression must evaluate to a constant.
+
+"Constant required"
+
+    Expression must evaluate to a constant.
+
+"Constructor or destructor must be a method"
+
+    Constructor or destructor can only be methods of a specific
+    object type.
+
+"Could not open file: "
+
+    The named file was not found.
+
+"Data segment exceeds 64K bytes"
+
+	You have defined more than 64K bytes of data in this unit.
+
+"digit required"
+
+	The compiler expects a digit at this point.
+
+"DO required"
+
+	The reserved word DO does not appear where it should.
+
+"Double declaration of an enumeration id"
+
+	You have used the same identifier in more than one location in
+	the enumeration declaration.
+
+"Double declaration"
+
+	You have used the same identifier in more than one declaration.
+
+"Duplicate field name"
+
+	Each field in a record type must have a unique name.
+
+"Duplicate field"
+
+	Each field in a record type must have a unique name.
+
+"Duplicate method"
+
+	A method of this name was already declared.
+
+"ELSE clause does not match an IF statement"
+
+	There is an error in the block structure of the program or an
+	the previous statement erroneously was ended with a semicolon.
+
+"ELSE is not in an IF"
+
+	There is an error in the block structure of the program or an
+	the previous statement erroneously was ended with a semicolon.
+
+"END required"
+
+	An END is expected by the compiler or there is an error in the
+	block structure of the program.
+
+"Error in hex constant"
+
+	Hexadecimal numbers are integer constants with
+	base 16.  They must start with a dollar sign ($)
+	followed by a string of digits and the letters
+	A through F.  In a hex number, each digit can
+	have a value ranging from 0-15:
+
+		0-9 are represented by the numbers 0-9
+		10 is represented by A
+		11 by B
+		12 by C
+		13 by D
+		14 by E
+		15 by F
+
+	For example:    $F      $10A
+
+
+"expression is not assignment compatible"
+
+    Consult language reference for the rules on assignment compatibility.
+
+"Expression must be a compile time constant"
+
+    The expression must evaluate to a constant.
+
+"Expression must be an INTEGER type"
+
+	The preceeding expression must be of an INTEGER type.
+
+"Expression must be BOOLEAN"
+
+	The preceeding expression must be of type BOOLEAN.
+
+"External name cannot be null"
+
+	A non null name must be specified for an external name.
+
+"Fail must be in a constructor"
+
+	The standard procedure FAIL can only be used in constructors.
+
+"Field name required"
+
+	 The format of a typed constant is incorrect, a field name is
+         required for each field declared in the record type.
+
+"File parameters must be VAR"
+
+	 All parameters of type FILE must be VAR parameters.
+
+"Forward declared procedure cannot be INLINE"
+
+	A procedure with the INLINE directive can not be Forward declared.
+
+"Forward procedure cannot be INTERRUPT"
+
+	An INTERRUPT procedure can not be Forward declared.
+
+"Function must have result type"
+
+    The function does not have a return type declared.
+
+    eg function foo(...) : ResultType;
+
+"Hierarchy name is too long"
+
+    Call tech support.
+
+"Identifier or number required"
+
+
+"Identifier required"
+
+
+"Implementation required"
+
+	The word IMPLEMENTATION does not appear where it should.
+
+"Imported modules require that STACK = DS"
+
+	You have compiled some units with the //STACK:DS qualifier.  All
+	units must have equivalient //STACK:DS or //STACK:SS when compiled.
+
+"Incompatible expression type"
+
+	Two types are compatible if ANY of the following
+	criteria apply:
+
+	- they are equivalent
+	- one is a subrange of the other
+	- both are subranges of the same type
+	- both are integer types
+	- both are real types
+	- both are set stypes and their base types are
+	  compatible
+	- both are string types
+	- one is a string type, and the other is a char
+	  or an array of char
+	- both are arrays of char with the same number of
+	  components
+
+
+"Incorrect type of actual parameter"
+
+	The following restrictions apply to actual parameter
+	expressions:
+
+	- For value parameters, the expression must result
+	  in a type assignable to the type of the formal
+	  parameter.
+
+	- For VAR parameters, the expression must be a
+	  variable designator that has the same type as the
+	  formal parameter.
+
+	- For procedure and function parameters, the actual
+	  parameter can be either a variable of a compatible
+	  procedure or function compatible with the proce-
+	  dure or function type.
+
+"Integer expression required"
+
+	The expression must be of an INTEGER type.
+
+"Integer required for port number"
+
+	You must provide an integer type when indicating a port.
+
+"Integer type required"
+
+	Integer types have values that are the positive and
+	negative integer numbers.  Each integer type is char-
+	acterized by the range of values it can represent,
+	as follows:
+					     Range
+	Type         Storage size        from:    to:
+	-------------------------------------------------
+	Shortint        byte              -128      127
+	Byte            byte                 0      255
+	Integer         word (2 bytes)  -32768    32767
+	Word            word (2 bytes)      30    65535
+
+	Longint         longword        -2,147,483,648 to
+			(4 bytes)        2,147,483,647
+
+"Interface required"
+
+	The word INTERFACE does not appear where it should.
+
+"Invalid address reference"
+
+	The format of an assembler instruction is incorrect.
+
+"Invalid Declaration"
+
+    The specified statement is not valid in the specified scope.
+    A previous statement may not have ended properly causing the error.
+
+"Invalid digit in number"
+
+    The specfied digit is not allowed in the number forment.
+
+"Invalid directive"
+
+	You are using an unknown compiler directive or a global directive
+	after compilation of the body of the program has begun.
+
+"Invalid external reference to "
+
+	An object import {$L ...} made reference to a symbol which is not
+	visible in this unit.
+
+"Invalid Factor"
+
+	This is not a valid pascal expression.
+
+"Invalid field name"
+
+	 Field name of OBJECT or RECORD does not exist.
+
+"Invalid operand"
+
+	 The format of an assembler instruction is incorrect.
+
+"Invalid operands for instruction"
+
+	The assembler instruction indicated requires a
+	different type of operand than you provided.
+
+"Invalid real constant"
+
+	Real constants are given the type extended.  All
+	real arithmetic is performed by the compiler using
+	extended types.
+
+	Real constants have the following syntax:
+
+	digit{digit} [.{digit}][E[+|-|]digit{digit}]
+
+"Invalid real number syntax"
+
+	Real number constants have the following syntax:
+
+	digit{digit} [.{digit}][E[+|-|]digit{digit}]
+
+	A number must have either a decimal point or an
+	exponent to make it a real number.  The part of the
+	constant following the letter E is the exponent.
+	The exponent is the power of 10 by which the number
+	is multiplied.
+
+	These two examples represent the same number:
+
+		0.5             5E-1
+
+"Invalid reference to procedure or function"
+
+	Check the syntax you used to call a procedure or
+	function.
+
+	A procedure is called by using:
+
+		Proc[(parameters)]
+
+	A function call is specified by:
+
+	FunctionName [(expression,{expression])]{^Qualifier}
+
+
+"Invalid register combination"
+
+	You are using an invalid combination of index registers in an
+	assembly statement.
+
+"Invalid register name"
+
+	Registers are specified by using one of the following
+	reserved names:
+
+	AX      BX      CX      DX      SP      BP      SI
+	DI      AL      AH      BL      BH      CL      CH
+	DL      DH      ES      CS      SS      DS
+
+
+"Invalid variable typecast"
+
+	Integer types can be typecast to any other integer types, all other
+	typecasts must be cast to a type of the same size.
+
+"Label doubly defined"
+
+	You have used a label more than once.
+
+"Label is doubly defined"
+
+	You have used a label more than once.
+
+"Local object declarations are not allowed"
+
+	Object types can be declared only in the outermost scope
+	of a program or unit. Object types can not be declared within
+	a procedure or function.
+
+"Lower bound greater than upper bound"
+
+	A subrange is declared where the upper bound is less than the lower
+	bound.
+
+"Lower bound is not assignable index type"
+
+	The lower bound you specified in the FOR loop
+	indicated is not compatible with the type of the
+	index variable.
+
+"Lower bound must be >= 0"
+
+	The lower bound of a set must greater than or equal to 0.
+
+"Lower bound of range is greater then upper bound"
+
+	A subrange is declared where the upper bound is less than the lower
+	bound.
+
+"Lower bound of set must be >= 0"
+
+	Pascal sets have a lower bound of 0 and an upper bound of 255.
+
+"Lower bound of subrange is less than upper"
+
+	A subrange is declared where the upper bound is less than the lower
+	bound.
+
+"Method is not a constructor"
+
+	The method does not denote a constructor.
+
+"Method is not a destructor"
+
+	The method does not denote a destructor.
+
+"Method name required"
+
+	The identifier does not denote a method.
+
+"Method not found"
+
+	The method you called has not been declared.
+
+"Methods cannot have procedure attributes"
+
+	You cannot specify procedure attributes for a method.
+
+"Missing $ENDIF"
+
+	There is a missing $ENDIF. The block structure of your conditional
+	directives is in error.
+
+"Missing parameter"
+
+	Additional paramters are required for the procedure or function
+	being called.
+
+"Must be a pointer type"
+
+    The expression must evaluate to a pointer type.
+
+"Must be a scalar or pointer type"
+
+    The expression must evaluate to a scalar or pointer type.
+
+"Must be in numeric processor mode"
+
+	When using SINGLE, DOUBLE, EXTENDED, or COMP types,
+	you must enable numeric coprocessor mode to compile
+	in this circumstance.  Use the /$N+ qualifier on the
+	command line or the Numeric coprocessor option on the
+	Compiler options menu.
+
+"No mod init specified"
+
+	You have specified a //NOMODINT qualifier, when the
+	unit has initialization code.
+
+"No such field"
+
+	You have specified a non-existent field, where
+	indicated.
+
+"No such method"
+
+	You have specifiedd a non-existent method, where
+	indicated.
+
+"Non-function procedure called as a function"
+
+	You have tried to assign a procedure to a variable.  Either you
+	wanted the address of the procedure or incorrectly assumed the
+	procedure was a function.
+
+"Not an index register"
+
+	You have tried to use an invalid index register in an ASM statement.
+
+"Not enough elements specified for array"
+
+	You must assign a constant with exactly the number of elements
+	defined in the ARRAY OF CHAR definition.
+
+
+"Number is too large"
+
+	A constant number is out of the assignable range of the target.
+
+"Object type is too large"
+
+	The total size of the object declaration exceeds 64K.
+
+
+"OF required"
+
+	The reserved word OF does not appear where it should.
+
+"One or more actual parameters is missing"
+
+	The procedure or function being called has an
+
+"One or more {$if...} not ended"
+
+	There is a missing $ENDIF or the block structure of your conditional
+	directives is incorrect.
+
+
+"Operands of this operator are incorrect"
+
+    You cannot perform the operation with the specified types.
+    You may be missing a set of ( ).
+
+"Overflowed the version tags string"
+
+	There is a limit of 1024 characters for version tags and defines.
+
+"Overriding virtual method must be identical"
+
+	Any virtual method override must be by an identical method.  Check
+	that the number and type of parameters is identical.
+
+"Parameter required"
+
+	The compiler expects a parameter where indicated.
+
+"Parent object disagrees in data model"
+
+	The memory model used for an inherited object must be the same
+	as the memory model for this unit compilation.
+
+"Parent type must be an object"
+
+	You can not inherit a non object type.
+
+"Pointer type identifier required"
+
+	A pointer type is required.
+
+`"Pointer variable required"
+
+	A pointer type is required.
+
+"Procedure cannot have return type"
+
+	You have declared a procedure where a function declaration is
+        required.
+
+"Procedure declared forward twice"
+
+	You have duplicated a FORWARD declaration.
+
+"Procedure header differs from forward declaration"
+
+	There is a parameter or qualifier mismatch on the procedure
+        declaration and the FORWARD declaration.  They must be identical.
+
+"Procedure Name Required"
+
+    A name must follow the procedure/function declaration before
+    the parameter list.
+
+"Procedure nesting is too deep"
+
+	You can only nest procedures 9 levels deep. If you get this message
+	we would really like to see an application that requires it.
+
+"Program ended in a comment"
+
+	You missed a close comment delimiter somewhere in
+	your program.
+
+"Public is allowed only in interface"
+
+	A PUBLIC declaration can only appear in the INTERFACE section.
+
+"Record type exceeds 64K bytes"
+
+	Record types are limited to 64K bytes.
+
+"Record variable required"
+
+	A WITH expression must be a record or object type.
+
+"REPEAT must end with an UNTIL"
+
+	The block structure of your program is incorrect.
+
+"Semicolon required"
+
+        A semicolon is required before the next statement can be processed.
+
+"Sizes of typecast must match"
+
+    When typecasting types other than INTEGER types, the size in bytes
+    of the types must be the same.
+
+
+"String does not end before end of line"
+
+    String literals must end before the line ends.
+
+"String is too long"
+
+    Strings can be at most 255 characters long.
+
+"String length must be <= 255"
+
+    Strings can be at most 255 characters long.
+
+"String length must be an integer constant"
+
+    The string length must be declared by a INTEGER type.
+
+"Structured types cannot be returned"
+
+    You cannot return structured types other than STRING.
+
+"Subscript type is incorrect"
+
+    The subscript is of a incompatible type for the array.
+
+"Subscripted variable is not an array"
+
+    This variable must be an array type.
+
+"THEN required"
+
+    The IF statement is missing a THEN statement.
+
+"This builtin is not handled yet"
+
+    Call tech support.
+
+"This method was never defined"
+
+    This method was not declared in the OBJECT declaration.
+
+"This procedure cannot be inlined"
+
+    You specified that this procedure was to be inlined. But
+    the procedure cannot be inlined because of various factors.
+
+"TO required"
+
+    Compiler expected a TO at this point.
+
+"Too many actual parameters"
+
+    You are passing more parameters than were declared for the
+    specified procedure.
+
+"Too many elements specified for array"
+
+    Too many elements have been specified for an array in a typed constant.
+
+"Too many operands for concat"
+
+    Call tech support.
+
+"Too many parameters"
+
+    You are passing more parameters than were declared for the
+    specified procedure.
+
+"Too much local data declared"
+
+    You have declared >= 64k data withing the current procedure.
+
+"Type identifier required"
+"Type is not an ancestor of self"
+"Type mismatch"
+"Type must be a scalar type"
+"Type name is undefined"
+"Type name required"
+"Type name was not defined"
+"Type was never declared"
+"Undeclared identifier"
+"Undeclared label"
+"Undeclared symbol"
+"Undefined identifier"
+"undefined label"
+"Undefined type name"
+"Undefined variable name"
+	  Self explanitory.
+
+"Unit name required"
+
+    Call tech support.
+
+"Unrecognized keyword"
+
+    Call tech support.
+
+"UNTIL does not match a REPEAT"
+
+    The block structure of program is incorrect.
+
+"Upper bound is not assignable to index type"
+
+    The upper bound of a FOR loop exceeds the range of the index variable.
+
+"Upper bound must be <= 255"
+
+    Sets have an upper bound of 255.
+
+"Upper bound of set must be <= 255"
+
+    Pascal sets can have a maximum range of 0..255.
+
+
+"Value is out of range"
+
+    The constant specified is out of range of the target.
+
+"Variable name required"
+"Variable required"
+"Wrong number of arguments for builtin function"
+"Wrong type of arguments for builtin function"
+"Wrong type of parameter"
+"Wrong type of value for constant"
+"Wrong type"
+     Self explanitory.
+
+
+"[ required"
+
+    Compiler expected a [ at this point.
+
+"] required"
+
+    Compiler expected a ] at this point.
+
+"{ required"
+
+    Compiler expected a { at this point.

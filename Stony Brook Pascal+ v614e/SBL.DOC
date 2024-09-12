@@ -1,0 +1,729 @@
+
+
+     This document is supplied for the incredibly curious. It is
+     supplied without technical support. The document describes the
+     data structures that compose the SBL file. The data structure
+     definitions included here were cut directly out of the Modula-2
+     source code. Modula-2 is very simular to the Turbo Pascal dialect
+     of Pascal so you should not have any problems. Some differences.
+
+     CARDINAL = Pascal type WORD
+     BITSET   = Pascal SET 0..15
+
+     The SBL file consists of a header and then an array of module
+     dependency records. The header is fixed in size, currently at 4096
+     bytes and the module records are 256 bytes each. Modules are
+     indexed by their position within this array starting at the number
+     1. Once a module is assigned a position in the module table, it
+     will never be moved to another position. This is because the
+     dependency information uses the module index to relate one module
+     to another module. If a module is removed, a module of type NoMod
+     will be put into its place. This "hole" may be used at a later
+     date. The module table does not exist in any order, the
+     environment sorts the modules by dependency after the modules are
+     read. No dependency order information is stored in the SBL file.
+
+     The SBL file format stores information for BOTH Modula-2 and
+     Pascal.
+
+     I have inserted comments by the data structures to give some
+     explanation where necessary.
+
+
+     These are the data structures used for compiler options.
+     The order in the enumeration is exactly the same as the order in
+     the options panels.
+
+TYPE Panel1Options =
+    (
+	CheckSubscripts,
+	CheckAssignments,
+	CheckVariants,
+	CheckPointers,
+	CheckOverflow,
+	CheckStack,
+	ModuleCheck,
+	CheckIo,
+	CheckVarStrings,
+	InitializeData,
+	Lines,
+	Debug,
+	ExtendedDebug,
+	MakeDebuggable,
+	Alias,
+	Overlay,
+	EmulateFloating,
+	NumericCoprocessor,
+	Warnings,
+	p1o19,
+	p1o20,
+	p1o21,
+	p1o22,
+	p1o23,
+	p1o24,
+	p1o25,
+	p1o26,
+	p1o27,
+	p1o28,
+	p1o29,
+	p1o30,
+	p1o31
+    );
+
+CONST
+    FirstPanel1 = CheckSubscripts;
+    LastPanel1 = Warnings;
+
+TYPE Panel1Set = SET OF Panel1Options;
+
+TYPE Panel2Options =
+    (
+	CodeListing,
+	Listing,
+	Sparse,
+	ForceFarCalls,
+	Gen286,
+	SeparateStack,
+	ModInit,
+	Windows,
+	OutputLibrary,
+	ExtendedSyntax,
+	FullBoolean,
+	Cmain,
+	InlineOnce,
+
+	    (* the following are acutally stored as ordinal values *)
+	    (* in the option record *)
+	    (* these will be used in the "over" sets to signify *)
+	    (* the option as a LOCAL option override *)
+	InlineLimitBit,
+	CodeModelBit,
+	DataModelBit,
+	ConstModelBit,
+	AlignmentBit,
+	p2o18,
+	p2o19,
+	p2o20,
+	p2o21,
+	p2o22,
+	p2o23,
+	p2o24,
+	p2o25,
+	p2o26,
+	p2o27,
+	p2o28,
+	p2o29,
+	p2o30,
+	p2o31
+    );
+
+CONST
+    FirstPanel2 = CodeListing;
+    LastPanel2 = InlineOnce;
+
+TYPE Panel2Set = SET OF Panel2Options;
+
+TYPE OptOptions =
+    (
+        OptimizeSpace,
+        CommonSubs,
+	LoopInvariants,
+	InductionVariables,
+	Propagation,
+	DeadCode,
+	DeadStores,
+	JumpChaining,
+	LiveVariables,
+	PeepholeOptimizations,
+	PeepholeFlow,
+	PeepholeLife,
+	InstructionHoisting,
+	TailMerging,
+	RegisterParameterPassing,
+	LoopRewriting,
+	CrossModuleRPP,
+	CondComSub,
+	Opt18,
+	Opt19,
+	Opt20,
+	Opt21,
+	Opt22,
+	Opt23,
+	Opt24,
+	Opt25,
+	Opt26,
+	Opt27,
+	Opt28,
+	Opt29,
+	Opt30,
+	Opt31
+    );
+
+CONST
+    FirstOpt = OptimizeSpace;
+    LastOpt = CondComSub;
+
+TYPE OptOptionSet = SET OF OptOptions;
+
+TYPE MemoryModel = (Small, Medium, Large);
+
+CONST
+    FillOptions 	= 19;
+
+TYPE OptionRecord =
+    RECORD
+    panel1Opt	: Panel1Set;	(* 0 *)
+    panel2Opt	: Panel2Set;	(* 4 *)
+    codeModel	: MemoryModel;	(* 8 *)
+    dataModel	: MemoryModel;	(* 9 *)
+    constModel	: MemoryModel;	(* 10 *)
+    inlineLimit	: CARDINAL;	(* 11 *)
+    alignment	: CARDINAL;	(* 13 *)
+    optOptions	: OptOptionSet;	(* 15 *)
+    fill	: ARRAY [FillOptions..31] OF CHAR;	(* 19 *)
+    END; (* 32 *)
+
+CONST
+    AllPanel1	= Panel1Set{CheckSubscripts..Warnings};
+    AllPanel2	= Panel2Set{CodeListing..AlignmentBit};
+
+    %IF Pascal %THEN
+    DefaultPanel1Opt =
+	Panel1Set{EmulateFloating,
+	           ExtendedDebug, MakeDebuggable,
+		   CheckVarStrings, CheckIo, ModuleCheck};
+    DefaultPanel2Opt =
+	Panel2Set{Sparse, SeparateStack, ModInit, OutputLibrary};
+    %ELSE
+    DefaultPanel1Opt =
+	Panel1Set{EmulateFloating, ExtendedDebug, MakeDebuggable, ModuleCheck};
+    DefaultPanel2Opt =
+	Panel2Set{Sparse, SeparateStack, ModInit, InlineOnce};
+    %END
+
+    AllOpt	= OptOptionSet{OptimizeSpace..CondComSub};
+    DefaultOptOpt =
+        OptOptionSet{CommonSubs, LoopInvariants, InductionVariables,
+	  Propagation, DeadCode, DeadStores, JumpChaining, LiveVariables,
+	  PeepholeOptimizations, RegisterParameterPassing,
+	  LoopRewriting, OptimizeSpace,
+	  PeepholeFlow, PeepholeLife, InstructionHoisting, TailMerging};
+
+
+     These are the possible editor functions whose key assignment can
+     be reassigned.
+
+TYPE KeyFunction =
+    (
+	BeginLineFunc,
+	EndLineFunc,
+	PageUpFunc,
+	PageDownFunc,
+	TopOfFileFunc,
+	BottomOfFileFunc,
+	DeleteCharFunc,
+	DeleteLineFunc,
+	SearchStringFunc,
+	SearchForwardFunc,
+	SearchBackwardFunc,
+	ReplaceStringFunc,
+	ReplaceFunc,
+	FindLineFunc,
+	FindErrorFunc,
+	MarkFunc,
+	CutFunc,
+	PasteFunc,
+	ShiftLeftFunc,
+	ShiftRightFunc,
+	ShiftUpFunc,
+	ShiftDownFunc,
+	MovePrevCharFunc, (*!!!  and next 10 lines *)
+	MoveNextCharFunc,
+	MovePrevLineFunc,
+	MoveNextLineFunc,
+	MovePrevWordFunc,
+	MoveNextWordFunc,
+	ToggleOverwriteFunc,
+	InsertAtCursorFunc,
+	InsertAboveCursorFunc,
+	DeleteWordFunc,
+	WSUpperCaseFunc,
+	WSRepeatSearchReplaceFunc,
+	CtrlKCmdsFunc,
+	CtrlQCmdsFunc,
+	WSDeleteLineFunc,
+	WSDeletePrevCharFunc,
+	WSDeleteNextCharFunc,
+	WSPageUpFunc,
+	WSPageDownFunc,
+	CtrlOCmdsFunc,
+	Extra5,
+	Extra6,
+	Extra7,
+	Extra8,
+	Extra9,
+	NoFunction
+    );
+
+    These are the basic module types SBE currently supports.
+    Remember the SBE tracks UNIT interface and implementation
+    dependencies independenty. As such each unit will have a PascalInt
+    and PascalImp dependency in the module table.
+
+    The crazy ImportObj ($L) type has only one dependency, but can
+    contain source code. This is a hack because the OBJ file is the
+    compiler input file, not the source file as usual. Worse yet, the
+    source file uses a different compiler for compiling.
+
+    ScriptFile and LnkModule will show up in the next release.
+    ObjLibrary will probably disappear in the furture and be replaced
+    with another module type, ExportDef. Features have been added that
+    make ObjLibrary not as usefull as before, and it eliminates a
+    technical support nightmare by dropping it.
+
+    ModType =
+    (
+	NoMod,
+	ForeignAsm, ForeignC,
+        ImpModule, DefModule, ProgModule,
+	PascalImp, PascalInt, PascalProgram,
+	IncludeFile, ImportObj,
+	EdfModule, LnkModule,
+	LibModule, ScriptFile,
+	ObjLibrary
+    );
+
+CONST
+    DefaultExt : ARRAY ModType OF ARRAY [0..4] OF CHAR =
+        [".xxx",
+	 ".ASM", '.C',
+	 ".MOD", ".DEF", ".MOD",
+	 ".PAS", ".PAS", ".PAS",
+	 ".PAS",".OBJ",
+	 ".EDF", ".LNK",
+	 ".SBL", ".SCR",
+	 ".LIB"];
+
+CONST
+    ModTypeNames : ARRAY ModType OF ARRAY [0..4] OF CHAR =
+	[" xxx ",
+	 " ASM ", "  C  ",
+	 " IMP ", " DEF ", " PGM ",
+	 " IMP ", " UNT ", " PGM ",
+	 " PAS ", " OBJ ",
+	 " EDF ", " LNK ",
+	 " SBL ", " SCR ",
+	 " LIB "];
+
+TYPE
+    ModTypeSet = SET OF ModType;
+
+(* Define various classes of module types *)
+
+CONST
+    Foreigns	= ModTypeSet{ForeignAsm, ForeignC};
+
+    DefMods	= ModTypeSet{DefModule, EdfModule, PascalInt};
+    ImpMods 	= ModTypeSet{ImpModule, ProgModule, ForeignAsm, ForeignC,
+                             PascalProgram, PascalImp};
+
+    SourceDefs	= ModTypeSet{DefModule, PascalInt};
+    SourceImps	= ModTypeSet{ImpModule, PascalImp};
+    SourceProgs	= ModTypeSet{ProgModule, PascalProgram};
+    SourceMods	= SourceDefs+SourceImps+SourceProgs;
+
+    M2Mods 	= ModTypeSet{DefModule, ImpModule, ProgModule};
+    PascalMods 	= ModTypeSet{PascalProgram, PascalImp, PascalInt};
+
+    M2Imps	= ModTypeSet{ImpModule, ProgModule};
+    PascalImps	= ModTypeSet{PascalImp, PascalProgram};
+
+    Editable	= M2Mods + PascalMods + Foreigns +
+			  ModTypeSet{EdfModule, LnkModule,
+			             IncludeFile, ImportObj};
+
+    Findable	= M2Mods + PascalMods + Foreigns +
+		    ModTypeSet{EdfModule, IncludeFile, LnkModule,
+		               ImportObj, ObjLibrary};
+
+    Compilable	= M2Mods + PascalMods + Foreigns + ModTypeSet{ImportObj};
+
+    FullFileMods = ModTypeSet{ObjLibrary, IncludeFile, ImportObj, LibModule};
+
+    HasClients = ModTypeSet{PascalInt, DefModule,
+                            IncludeFile, ImportObj,
+			    EdfModule, LnkModule};
+
+
+    These are some flags SBE keeps track of.
+    Only some have any meaning when the modules are stored on disk.
+
+TYPE
+    Flags =
+	(
+	 NeedsComp,		(* Self Explanatory *)
+	 Included,		(* internal *)
+	 OptionsDiffer,		(* Self Exp *)
+	 Found,			(* Self Exp *)
+	 GotDep,		(* Dependencies are known *)
+	 Closed,		(* internal *)
+	 Looked,		(* internal *)
+	 LinkedDebug,		(* Self Exp *)
+	 Linked,		(* Self Exp *)
+	 InLib,			(* Object is in LIB file created by
+	                           object librarian
+				*)
+	 CantRemove,		(* not used currently *)
+	 NotExplicit,		(* only M2 *)
+	 ObjExists, 		(* SBLIB can delete objects when
+	                           putting them into the LIB
+				*)
+	 ImportedNeedingComp,	(* self exp *)
+	 f14,
+	 f15 );
+
+    FlagSet = SET OF Flags;
+
+    Set32 = SET OF [0..31];
+
+CONST
+    CompileFlags	= FlagSet{NeedsComp,OptionsDiffer,ImportedNeedingComp};
+    FoundFlags		= FlagSet{Looked, GotDep, Found};
+    LinkFlags		= FlagSet{Linked, LinkedDebug};
+
+    FillFentry	= 222;
+
+    This is the real gorilla, the module dependency record. To keep the
+    module record definition coherent I will describe the record here
+    with duplicate source later.
+
+    ModEntry =
+    RECORD
+    flags	: FlagSet; (* Self Exp *)
+    lib		: CARDINAL;(* library where module comes from *)
+			   (* 0 for the current library *)
+			   (* 1 usually for PASLIB *)
+			   (* 2..15 for all others *)
+    libndx	: CARDINAL;(* if above is non zero, the module index *)
+                           (* into that library module table *)
+
+    sourceDir	: CARDINAL; (* directory number in search path suppiled *)
+                            (* which path depends on the modtype field *)
+			    (* file specification are constructed via *) 
+			(* this algorithm *)
+			(* for LIB 0
+			   directory[dirNum]+name+DefaultExt[modtype]
+
+			   for LIB > 1
+			   SBL path + (the above)
+
+			 *)
+    name	: ARRAY [0..7] OF CHAR; (* Self Exp *)
+
+
+    oDate	: CARDINAL;  (* object date/time *)
+    oTime	: CARDINAL;
+    sDate	: CARDINAL;  (* source date/time *)
+    sTime	: CARDINAL;
+    stackSize	: CARDINAL;  (* stack size *)
+    other	: CARDINAL;  (* index of other module in a *)
+                             (* dependency pair *)
+
+    lastLine	: CARDINAL;  (* some editor status information *)
+			     (* to allow editor to position *)
+			     (* to last edited location *)
+			     (* after file has been saved or dumped *)
+    lastX	: CARDINAL;
+    lastY	: CARDINAL;
+    posMarkers	: ARRAY [0..3] OF INTEGER;
+    pad		: BYTE;    (* dead space *)
+    CASE modtype :  ModType OF		   (* the type of this  *)
+                                           (* dependency *)
+        DefModule, ImpModule, ProgModule,
+        PascalImp, PascalInt, PascalProgram:
+            modOpt	: OptionRecord;
+	       (* the LOCAL compiler options *)
+	    compOpt	: OptionRecord;
+	       (* the options the file was last compiled with *)
+
+	       (* since LOCAL options need more than just Yes/No *)
+	       (* we use the next three sets for the extra bit *)
+	       (* necessary to do this *)
+	       (* if a bit is in one of the "over" sets then the *)
+	       (* cooresponding bit in the ModOpt set will override *)
+	       (* whatever the GLOBAL option is set to *)
+	       (* here is the equation *)
+
+	       (* actual := (global - over) + (local * over) *)
+	       (* set arithmetic is fun, and usefull!!! *)
+
+	    panel1Over	: Panel1Set;
+	    panel2Over	: Panel2Set;
+	    optOver 	: OptOptionSet;
+
+	       (* this handles that crazy IFOPT statement *)
+	       (* the situation is as follows *)
+	       (* {$IFDEF N+}
+		     {$L x87.OBJ}
+		  {$ELSE}
+		     {$L emu.obj}
+		  {$ENDIF}
+	       *)
+	       (* if a bit is set in ifopt, by ordinal *)
+	       (* position in its enumeration, the file contains *)
+	       (* an IFOPT statement that contains a dependency *)
+	       (* if no dependency is within an IFOPT we do not *)
+	       (* care about it *)
+	       (* the big deal here is that we need to scan that *)
+	       (* file if this particular option changes *)
+	       (* since the environment must at all times know all *)
+	       (* dependents of a module *)
+	    ifOpt1	: Panel1Set;
+	    ifOpt2	: Panel2Set;
+
+	       (* this set structure indexes all dependencies *)
+	       (* that this dependency is dependent upon *)
+	       (* bit position 0 corresponds to module index *)
+	       (* number 1 *)
+	       (* the formula is, where n is the module index
+		    w := (n-1) DIV 16;
+		    b := (n-1) MOD 16;
+
+		    IF b IN x.imports[w] THEN
+	       *)
+	       (* as you can see SBE is currently limited to 1023 *)
+	       (* dependencies *)
+	    imports	: ARRAY [0..63] OF BITSET;
+        ELSE
+	    filename	: ARRAY [0..79] OF CHAR;
+		    (* for modules that are specified with full *)
+		    (* file specifications *)
+	    comline	: ARRAY [0..79] OF CHAR;
+		    (* for Foreigns,ImportObj that are not using the *)
+		    (* default command line *)
+	    hasSrc	: BOOLEAN;
+		    (* if an ImportObj file has a source file *)
+	    fullFile	: BOOLEAN;
+		    (* if a $L or $I was found via search path *)
+		    (* or source had path spec in source statement *)
+	    nameExt	: ARRAY [0..15] OF CHAR;
+	    fillf	: ARRAY [FillFentry..255] OF CHAR;
+	END;
+    END; (* 256 *)
+
+
+TYPE
+    ModEntry =
+    RECORD
+    flags	: FlagSet;		(* 0 *)
+    lib		: CARDINAL;		(* 2 *)
+    libndx	: CARDINAL;		(* 4 *)
+    sourceDir	: CARDINAL;		(* 6 *)
+    name	: ARRAY [0..7] OF CHAR;	(* 8 *)
+    oDate	: CARDINAL;		(* 16 *)
+    oTime	: CARDINAL;		(* 18 *)
+    sDate	: CARDINAL;		(* 20 *)
+    sTime	: CARDINAL;		(* 22 *)
+    stackSize	: CARDINAL;		(* 24 *)
+    other	: CARDINAL;		(* 26 *)
+    lastLine	: CARDINAL;		(* 28 *)
+    lastX	: CARDINAL;		(* 30 *)
+    lastY	: CARDINAL;		(* 32 *)
+    posMarkers	: ARRAY [0..3] OF INTEGER; (* 34 *)
+    pad		: BYTE;			(* 42 *)
+    CASE modtype : ModType OF		(* 43 *)
+	DefModule, ImpModule, ProgModule,
+	PascalImp, PascalInt, PascalProgram:
+	    modOpt	: OptionRecord;			(* 44 *)
+	    compOpt	: OptionRecord;			(* 76 *)
+	    panel1Over	: Panel1Set;			(* 108 *)
+	    panel2Over	: Panel2Set;			(* 112 *)
+	    optOver 	: OptOptionSet;			(* 116 *)
+	    ifOpt1	: Panel1Set;			(* 120 *)
+	    ifOpt2	: Panel2Set;			(* 124 *)
+	    imports	: ARRAY [0..MaxImportArray] OF BITSET;	(* 128 *)
+	ELSE
+	    filename	: ARRAY [0..79] OF CHAR;	(* 44 *)
+	    comline	: ARRAY [0..79] OF CHAR;	(* 124 *)
+	    hasSrc	: BOOLEAN;			(* 204 *)
+	    fullFile	: BOOLEAN;			(* 205 *)
+	    nameExt	: ARRAY [0..15] OF CHAR;	(* 206 *)
+	    fillf	: ARRAY [FillFentry..255] OF CHAR; (* 222 *)
+	END;
+    END; (* 256 *)
+
+TYPE
+
+    DisplayModes = (LowRes, MediumRes, HighRes);
+    M16DispModes = (Flip, Swap, M16Med, M16High, DualMon);
+
+    These constants index the array that contains the options in
+    the Params record.
+
+CONST
+
+    ViewOrder 		= 1;
+    ViewModules		= 2;
+    ViewFormat		= 3;
+    ViewCancel		= 4;
+
+    ProfilerClock	= 1;
+    ProfilerCancel	= 2;
+
+    EditSearchBackwards	= 1;
+    EditSearchScope	= 2;
+    EditReplacePrompt	= 3;
+    EditIgnoreCase	= 4;
+    EditSearchWordsOnly	= 5;
+    EditCancel		= 6;
+    EditTabWidth	= 7;
+    EditShiftWidth	= 8;
+
+    EnvRecomp		= 1;
+    EnvStopAfterForeign = 2;
+    EnvStopAfterBuild	= 3;
+    EnvPrompt		= 4;
+    EnvShowAltered	= 5;
+    EnvExtEdit		= 6;
+    EnvExtError		= 7;
+    EnvQuiet		= 8;
+    EnvDisplayMode	= 9;
+    EnvSwap		= 10;
+    EnvProtected	= 11;
+    EnvStatus		= 12;
+    EnvCancel		= 13;
+
+    LinkerDebug		= 1;
+    LinkerTdDebug	= 2;
+    LinkerMap		= 3;
+    LinkerLines		= 4;
+    LinkerLibrary	= 5;
+    LinkerPack		= 6;
+    UseOtherLinker	= 7;
+    SmartLinkVMethods	= 8;
+    LinkerResponse	= 9;
+    LinkerCancel	= 10;
+
+    (* SBDEBUG used to be named M16 *)
+    (* yes, after the rifle *)
+
+    M16Ems		= 1;
+    M16Mouse		= 2;
+    M16Case		= 3;
+    M16Config		= 4;
+    M16Screen		= 5;
+    M16Heap		= 6;
+    M16Other		= 7;
+    M16Cancel		= 8;
+
+    LibModulus		= 1;
+    LibDeleteObj	= 2;
+    LibCancel		= 3;
+
+    Modula-2 had OS/2 and OS/2 PM versions, Pascal never has.
+
+TYPE
+    TargetSystem = (
+		    M2Dos, M2Os2, M2Win, M2Pm,
+		    PascalDos, PascalOs2, PascalWin, PascalPm
+	           );
+    SystemsSet = SET OF TargetSystem;
+
+CONST
+    DosSystems		= SystemsSet{M2Dos, PascalDos};
+    WinSystems		= SystemsSet{M2Win, PascalWin};
+    Os2Systems		= SystemsSet{M2Os2, PascalOs2};
+    PmSystems		= SystemsSet{M2Pm, PascalPm};
+
+    M2Systems		= SystemsSet{M2Dos..M2Pm};
+    PascalSystems	= SystemsSet{PascalDos..PascalPm};
+
+    This is the structure that contains the global compiler options and
+    various options for all of the programs used. They are BOOLEAN
+    values but many items store ordinal values if there are more than
+    three choices for a particular field. All of the fields are bigger
+    than necessary to hold the currently used options.
+
+TYPE
+    ParamRecord =
+	RECORD
+	modOpt		: OptionRecord; (* global compiler options *)
+	environment	: ARRAY [1..32] OF BOOLEAN;	(* 32 *)
+	view		: ARRAY [1..10] OF BOOLEAN;	(* 64 *)
+	editorOpt	: ARRAY [1..16] OF BOOLEAN;	(* 74 *)
+	profiler	: ARRAY [1..6] OF BOOLEAN;	(* 90 *)
+	linker		: ARRAY [1..20] OF BOOLEAN;	(* 96 *)
+	m16Opt		: ARRAY [1..16] OF BOOLEAN;	(* 116 *)
+	libOpt		: ARRAY [1..8] OF BOOLEAN;	(* 132 *)
+	keys(*48*)	: ARRAY KeyFunction OF CHAR;	(* 140 *)
+	colors(*24*)	: ColorArray;			(* 188 *)
+	colorSpace	: ARRAY [1..20] OF CHAR;	(* 212 *)
+	space		: ARRAY [1..24] OF CHAR;	(* 232 *)
+	END; (* 256 *)
+
+CONST
+    FillHeader 	= 2944;
+    ParFileSize = (3*256)+80+256+(6*80)+32+256;
+
+    This structure holds the command histories.
+
+    HistoryRec =
+	RECORD
+	       last : ARRAY [0..63] OF CHAR;
+	    history : ARRAY [0..255] OF CHAR;
+	END;
+
+    This is the library header. It is very self explanatory.
+
+TYPE
+    LibHeader =
+	RECORD
+	id		: ARRAY [0..3] OF CHAR;    		(* 0 *)
+		(* 'SBLB' *)
+	version		: CARDINAL;		   		(* 4 *)
+	numModules	: CARDINAL;		   		(* 6 *)
+	closed		: BOOLEAN;		   		(* 8 *)
+		(* a saftey valve if something crashes *)
+		(* the environment while the SBL file is open *)
+		(* this means the disk image is dirty and has not *)
+		(* been saved with the most recent values in memory *)
+
+	locked		: BOOLEAN;		   		(* 9 *)
+		(* SBE will not open file if TRUE *)
+	system		: TargetSystem;		   		(* 10 *)
+	selected	: CARDINAL;				(* 11 *)
+		(* the index of the selected module when saved *)
+	dll		: BOOLEAN;				(* 13 *)
+		(* does this SBL compose a DLL *)
+	pad1		: ARRAY [1..18] OF CHAR;		(* 14 *)
+	CASE : BOOLEAN OF
+	    TRUE:
+		srcDir		: ARRAY [0..255] OF CHAR;	(* 32 *)
+		incDir		: ARRAY [0..255] OF CHAR;	(* 288 *)
+		impObjDir	: ARRAY [0..255] OF CHAR;	(* 544 *)
+	    |
+	    FALSE:
+		defDir		: ARRAY [0..255] OF CHAR;
+		symDir		: ARRAY [0..255] OF CHAR;
+		modDir		: ARRAY [0..255] OF CHAR;
+	END;
+	objDir		: ARRAY [0..79] OF CHAR;		(* 800 *)
+	versionTags	: ARRAY [0..255] OF CHAR;   		(* 880 *)
+	foreignAsmCom	: ARRAY [0..79] OF CHAR;   		(* 1136 *)
+	foreignCCom	: ARRAY [0..79] OF CHAR;   		(* 1216 *)
+	linkerCom	: ARRAY [0..79] OF CHAR;		(* 1296 *)
+	debuggerCom	: ARRAY [0..79] OF CHAR;		(* 1376 *)
+	progParams	: ARRAY [0..79] OF CHAR;   		(* 1456 *)
+	externalEdit	: ARRAY [0..79] OF CHAR;		(* 1536 *)
+	externalError	: ARRAY [0..79] OF CHAR;		(* 1616 *)
+	windowsRts	: ARRAY [0..31] OF CHAR;   		(* 1696 *)
+	params(*256*)	: ParamRecord;		   		(* 1728 *)
+	dosComHist	: HistoryRec;(*320*)			(* 1984 *)
+	editHist	: HistoryRec;				(* 2304 *)
+	searchHist	: HistoryRec;				(* 2624 *)
+	fill		: ARRAY [FillHeader..4095] OF CHAR;	(* 2944 *)
+	END; (* 4096 *)
+
+
+     Well that is basically it. Hope you had fun.
+     Stormin Norman Black
