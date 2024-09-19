@@ -3,6 +3,7 @@
 rem the compiler and libs\* c runtime is from https://winworldpc.com/product/intel-ic-86-compiler/45
 rem the linker and u\* objects are from https://winworldpc.com/product/intel-iapx-86-88-family-utilities/42
 rem use u not util for the directory name to keep the link86 command tail < 127 characters
+rem The C runtime's int 1c timer handler trashes both the stack and bios/dos interrupt code. good luck.
 setlocal
 
 ntvdm -r:. -e::include:=inc ic86 %1.c small optimize(3) mod86 diagnostic( 2 ) define (INTELC)
