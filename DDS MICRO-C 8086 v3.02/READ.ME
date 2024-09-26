@@ -1,0 +1,176 @@
+                          * The DDS MICRO-C Compiler *
+    
+       DDS MICRO-C is a tiny compiler for the  'C'  language.  It  has  been
+    designed to be  VERY  portable,  and  can  be  moved  between  different
+    processors and operating systems with little difficulty.
+    
+       MICRO-C should not be  compared  to  other  popular  P.C.  compilers,
+    because it is intended for an  entirely  different  purpose.  They  are,
+    expensive, and dedicated to specific computer environments.  MICRO-C  is
+    tiny (it can be made to run in less that 32K), and allows you to take it
+    anywhere you want.
+    
+       The complete MICRO-C source package  includes  all  source  code  and
+    support files you need to port the  compiler  to  any  environment.  The
+    documentation  contains  detailed  information  on  writing   new   code
+    generators for other  processors.  We  also  have  code  generators  and
+    complete development  packages  available  for  a  number  of  processor
+    families, including: 68HC08, 6809, 68HC11, 68HC16,  8051/52,  8080/8085,
+    80x86 and 8096. See the included CATALOG file for more information.
+    
+       MICRO-C is also  an  excellent  learning  tool.  Not  only  does  the
+    complete, well documented source code for  the  compiler  and  utilities
+    give you the opportunity to explore and understand those  programs,  the
+    source code for the library gives you information on all kinds of system
+    programming, such as:
+    
+                - DOS and BIOS services
+                - Video screen and windowing functions
+                - Interrupt driven serial communications
+                - Terminate and Stay Resident (TSR)
+                - Lots MORE (Over 170 functions)
+    
+       For more information on the compiler, see the file MC.DOC. This  file
+    is quite large, make sure you are in no hurry before printing  it  on  a
+    slow printer. The table of contents pages are printed last,  and  should
+    be inserted between the title page and page 1.
+    
+       MICRO-C is no longer  "User  supported  Software"  (shareware).  This
+    archive contains a "DEMO" package, consisting of the IBM PC  executables
+    and support files. If you like what you see,  and  wish  to  obtain  the
+    complete package with  source  code  for  the  compiler,  libraries  and
+    utilities, Fill out the order form in the  enclosed  CATALOG  file,  and
+    send it along with the required payment to:
+    
+                Dunfield Development Systems
+                P.O. Box 31044
+                Nepean, Ontario (Canada)
+                K2B 8S8
+                Tel: (613) 256-5820         BBS: Dial '2' at voice prompt
+                Fax: (613) 256-5821
+                              * Getting Started *
+    
+       NOTE: This archive no longer contains example  programs.  We  have  a
+    companion archive containing over 70 useful examples.  If  you  did  not
+    receive this archive, you should  contact  the  source  from  which  you
+    received this file, and arrange to obtain it.
+    
+       To install MICRO-C on a hard drive, simply  create  a  directory  and
+    unpack this archive into it. The directory  "\MC"  is  preferred,  since
+    some of the utilities assume this is the MICRO-C home  directory  unless
+    told otherwise.
+    
+       The companion "example program" archive should be dearchived into  an
+    "examples" subdirectory. The archive contains subdirectories, so be sure
+    to use any dearchiver options necessary to preserve them. (For  PKUNZIP,
+    use '-d').
+    
+       Once you have installed the system, refer  to  the  section  entitled
+    "THE COMMAND CO-ORDINATOR" in the MC.DOC file for information on how  to
+    compile programs using the 'CC' command. You should either  include  the
+    MICRO-C directory "\MC" in your PATH, or  copy  the  CC.COM  file  to  a
+    directory which is already in your PATH. Also, make sure that  the  MASM
+    and LINK commands are available on your  system.  The  MCDIR  and  MCTMP
+    environment variables should be set up  as  described  in  the  document
+    before attempting to use CC.
+                            * MICRO-C under MS-DOS *
+                            * Implementation notes *
+    
+       This 8086 MS-DOS implementation of the compiler produces code for the
+    Microsoft MASM (or compatible) assembler in either  the  TINY  or  SMALL
+    models. The LINK utility is required to create an EXE  file.  NOTE  that
+    programs produced for the TINY  model  will  execute  as  ".EXE"  files,
+    however, due to PSP being outside of the data/code segment, command line
+    parameters are only available when the program is  converted  to  ".COM"
+    format with the supplied EXE2BIN utility.
+    
+       The memory model to use is selected by  the  runtime  library,  which
+    MUST BE FIRST in the list of object files  passed  to  the  linker.  The
+    PC86RL_T.OBJ file distributed with MICRO-C is configured  for  the  TINY
+    model, and the PC86RL_S.OBJ file is configured for the SMALL model.
+    
+       The variables ARGC and ARGV (Note  capitals)  are  available  in  the
+    runtime  library  module  for  use  as  EXTERNAL  references  from  your
+    programs. This makes it easy for  a  function  other  than  'main()'  to
+    access the programs arguments.  The  variables  PSP  and  ENV  are  also
+    available to  determine  the  PROGRAM  SEGMENT  PREFIX  and  ENVIRONMENT
+    segments.
+    
+            ie:     extern int ARGC;        /* Count of arguments */
+                    extern char *ARGV[];    /* Array of ptrs to args */
+                    extern int PSP;         /* PSP segment */
+                    extern int ENV;         /* Environment segment */
+    
+       If you are using a DOS version prior to  3.0,  the  argv[0]  (program
+    name) argument will not work correctly.
+    
+       MICRO-C has been tested with these PC assemblers:
+    
+            MASM 3.0    - Works OK
+            MASM 4.0    - Works OK
+            MASM 5.1    - Works OK
+            TASM 1.0    - Works OK
+            TASM 2.01   - Works OK
+            A86 3.21    - DOES NOT WORK (not fully MASM compatible)
+    
+       NOTE: If your versions of MASM/LINK (or  compatible)  does  not  work
+    with the command lines hard coded in the CC command, you can compile by:
+    
+        1) Modify LC.BAT to use an acceptable LINK command.
+        1) Compile your program to ASM with the '-a' switch.
+        3) Assemble with your assembler
+        4) Link with library using LC.BAT
+    
+       The source code to the CC command is provided in the file  CC.C,  see
+    the comments contained within for information on altering CC to suit you
+    assembler and linker.
+                           * Files in this archive *
+    
+            READ.ME         - This file
+            CATALOG         - Catalog of available software
+            MC.DOC          - MICRO-C Technical Documentation
+            LIBRARY.DOC     - MICRO-C Library Reference
+            MC-VS-SC.DOC    - Comparison of MICRO-C and SMALL-C
+            CINTRO.DOC      - Introduction to 'C'
+            CC.COM          - Command Co-ordinator
+            MCP.COM         - Preprocessor
+            MCC.COM         - PC/80x86 Compiler
+            MCO.COM         - PC/80x86 Optimizer
+            EXE2BIN.COM     - Executable to Binary convertor
+            LC.BAT          - Batch file to link multiple objects
+            PC86RL_T.OBJ    - Tiny model runtime library
+            PC86RL_S.OBJ    - Small model runtime library
+            MCLIB.LIB       - MICRO-C Function Library
+            *.h             - Header files as described in the documentation
+            CC.C            - Source code to CC command
+    
+       All of the source and header files  ('.c',  and  '.h')  were  written
+    using tab stops every 4 characters, which is much  more  convenient  for
+    'C' development than the usual MS-DOS tab stops of every  8  characters.
+    Source for a program called  "type4.c"  is  provided  in  the  companion
+    EXAMPLES archive, which reads a file and displays  it  using  spaces  to
+    simulate the tabs at 4 character intervals.  To  compile  this  program,
+    use:
+    
+                                    cc type4
+    
+       The resulting "type4.com" file may be used to view/print  the  source
+    files with proper spacing.
+                        * Limited Distribution License *
+    
+       Permission is granted to copy and distribute this "demo" archive  via
+    electronic "Bulletin Board Systems" (BBS), and  disk  copying  services,
+    subject to the following restrictions:
+    
+    - The archive must be presented in its original form, without modification.
+    
+    - The archive may not be distributed as part of or in assocation with any
+      other product.
+    
+    - Only one version of this archive may be offered at any given time, IE:
+      if you post a new version of one of my archives, any older versions of
+      that archive, which were previously available must be removed and no
+      longer offered for distribution.
+    
+    - I reserve the right to request of anyone distributing this archive that
+      they upgrade to the current release (which I will provide).

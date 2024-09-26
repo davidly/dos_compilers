@@ -1,0 +1,2533 @@
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+                                      An
+                                 Introduction
+                                      to
+   
+   
+                                     CCC
+                                    CC CC
+                                   CC   CC
+                                   CC
+                                   CC   CC
+                                    CC CC
+                                     CCC
+   
+   
+                                    Using
+                           The DDS MICRO-C Compiler
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+                              Revised: 03-Jan-94
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+                      Copyright 1989-1994 Dave Dunfield
+                             All rights reserved
+   Intro to DDS MICRO-C                                             Page: 1
+
+
+   1. INTRODUCTION
+   
+         Since releasing my MICRO-C compiler in 1988, I have received  many
+      requests to include information on the 'C' language as part  of  that
+      package.
+   
+         This manual is intended as a companion to  the  MICRO-C  compiler,
+      and presents an introduction to the 'C' language for  those  who  are
+      not already familiar  with  it.  The  language  represented  is  that
+      portion of 'C' which is implemented by the  MICRO-C  compiler.  Since
+      MICRO-C implements a  subset  of  the  'C'  programming  language  as
+      described by Kernighan and Ritchie (the original  developers  of  the
+      language), you should have little difficulty  using  and  learning  a
+      full 'C' compiler once you have mastered it.
+   
+         You should also refer to the  MICRO-C  technical  manual  entitled
+      "MICRO-C a compact 'C' compiler for small systems" for details on the
+      MICRO-C implementation.
+   
+         'C' has many inter-relationships between  its  various  constructs
+      and features. I have attempted to introduce them  in  a  logical  and
+      "building" manner,  however  it  is  not  always  possible  to  fully
+      describe each feature before it is mentioned in  the  description  of
+      some other construct. For this reason, I suggest that you  read  this
+      text "lightly from cover to cover" at least once before  you  try  to
+      fully understand each point.
+   
+         This is a first draft of this document. In its present form, it is
+      not very easy reading, but does contain much  useful  information.  I
+      will be improving and adding to it as I find the time.
+   
+         Presented herein is a brief summary of the major features  of  the
+      'C' language as implemented in MICRO-C.
+   
+         NOTE: If you are using  a  version  of  MICRO-C  for  an  embedded
+      processor, some of the library functions and  features  described  in
+      this document may be  different  or  unavailable.  For  example,  the
+      "file" functions do not exist for any system which does not  have  an
+      operating system or disk drives.
+   Intro to DDS MICRO-C                                             Page: 2
+
+
+   2. BACKGROUND INFORMATION
+   
+         This section provides some detailed background information for the
+      novice, and may be skipped if  you  are  already  familier  with  the
+      basics of  computer  architecture  and  programming  languages.  This
+      information is presented  here  because  'C'  is  a  very  low  level
+      language, and an understanding of these basic  principals  will  help
+      you more easily understand how and why certain  constructs  work  the
+      way they do.
+   
+         If you really  don't  want  to  be  bothered  with  learning  "How
+      Computers Work", and just want to be able to write simple programs in
+      'C',  you  may  skip  this  section   and   proceed   directly   with
+      "Introduction To 'C'".
+   
+      2.1 Computer Architecture
+   
+            The basis of any computer system is its Central Processor  Unit
+         (CPU) which controls the operation  of  all  other  parts  of  the
+         computer, by following a set of "instructions"  which  make  up  a
+         software "program". The program is stored in "memory" and  directs
+         the CPU to read and write data  to  various  "peripheral"  devices
+         (Such as terminals, disks and printers), and  to  manipulate  that
+         data in a matter which accomplishes  the  goals  set  out  by  the
+         author of the program.
+   
+            Although there are a wide variety of CPUs available  in  modern
+         computers, they are all very similar, and  feature  the  following
+         characteristics:
+   
+            All data accessed by the CPU is represented by  circuits  which
+         may be either OFF or ON. This is represented by the digits  0  and
+         1. Since there are only two states (0 and 1), the computer may  be
+         thought of as operating in a BASE 2 (Binary)  number  system,  and
+         each individual data element is called a  Binary  digIT,  or  BIT.
+         This BASE 2 number system is used because it  is  much  easier  to
+         build and interface to electrical circuits  which  have  only  two
+         states (OFF and ON) than ones which have many states.
+   
+            Since  single   BITs   cannot   represent   much   information,
+         manipulating large amounts of data at the BIT  level  would  be  a
+         very tedious chore. For this reason, modern CPUs  access  data  as
+         groups of BITs. Usually the smallest group of data  which  can  be
+         manipulated by a computer consists of 8  BITs,  and  is  called  a
+         BinarY TErm (BYTE).
+   Intro to DDS MICRO-C                                             Page: 3
+
+
+            Very small computers can often only access data a BYTE (8 bits)
+         at a time, while  larger  machines  may  be  able  to  access  and
+         manipulate data in larger groups called WORDS.  The  size  of  the
+         data group usually manipulated by a CPU is  called  its  WORDSIZE,
+         and is expressed in a number of bits.  This  is  almost  always  a
+         multiple of 8 bits, resulting in an even number of bytes. Thus, if
+         you hear a CPU or computer called a "16  bit"  machine,  you  know
+         that it can access and manipulate 16 bits (2 bytes) of data  at  a
+         time. A "32 bit" machine would operate on 32  bits  (4  bytes)  of
+         data. In general, the larger the WORDSIZE of a CPU, the more  data
+         it manipulates at one time, resulting in faster  completion  of  a
+         given task.
+   
+            The CPU has access to external "memory", which consists of many
+         thousands (and often  millions)  of  WORDS  of  data.  Up  to  one
+         complete word of data may  be  transferred  between  the  CPU  and
+         memory in one memory access.
+   
+            Often it is known that each data element stored in memory  will
+         not take up an entire word, and is it desirable to  access  memory
+         in smaller groups, to reduce the number of memory  words  required
+         to accomplish a particular task. For this reason, most modern CPUs
+         can access any single BYTE (8 bits) from a memory word. It  should
+         be understood however, that accessing a single byte causes a  full
+         memory access, and takes just as much time as accessing an  entire
+         word.
+   
+            In order to provide the programmer  with  a  simple  method  of
+         specifying memory locations, each BYTE of memory  is  assigned  an
+         ADDRESS, which is simply the number of BYTES from the beginning of
+         memory to the desired byte. Therefore, the first  byte  in  memory
+         has address 0, the second byte byte in memory has address  1,  the
+         third byte has address 2 etc. Thus, memory from the  viewpoint  of
+         the programmer may be considered  as  a  simple  array  of  BYTES,
+         beginning with an address of 0,  and  continuing  with  sequential
+         addresses up the memory size (in bytes) of the computer.
+   
+            In addition to the external memory, a CPU has a small amount of
+         very fast internal memory which is  organized  into  words  called
+         "registers". Registers act as holding places  to  store  the  data
+         words which are to be manipulated. At least some of the  registers
+         are internally connected to an Arithmetic Logic Unit (ALU),  which
+         has the necessary electronics to perform basic operations such  as
+         addition and subtraction on  the  data  in  those  registers.  The
+         result of the operation is also placed in a register, often one of
+         the registers which contained the original data.
+   Intro to DDS MICRO-C                                             Page: 4
+
+
+            One special register called the Program Counter (PC) is used by
+         the CPU to follow the software program. It contains the address of
+         the next INSTRUCTION to  be  executed.  At  the  beginning  of  an
+         INSTRUCTION CYCLE, the CPU reads the word of memory at the address
+         which is contained in the PC, and interprets the  value  contained
+         there as an operation to be performed, such as loading a  register
+         from memory, storing a register  into  memory,  or  performing  an
+         arithmetic operation  on  the  registers.  After  performing  that
+         operation, the CPU advances the PC to the next memory word  before
+         beginning another instruction cycle. In this manner,  all  of  the
+         instructions in a program are read, and the programmed  operations
+         are carried out.
+   
+            The CPU may also read from and  increment  the  PC  during  the
+         execution of an instruction, in order to access data  bytes  which
+         are OPERANDS to the particular instruction  being  executed.  Such
+         would be the case if you  were  instructing  the  CPU  to  load  a
+         register with the contents of a  particular  memory  address.  The
+         data bytes following the  instruction  would  contain  the  memory
+         address to be used.
+   
+            There are a few instructions which direct the CPU  to  store  a
+         new value in the PC, rather than  advance  it.  These  are  called
+         JUMPS,  and  are  used  to  make  the  program   begin   executing
+         instuctions at a different address. This can  be  used  to  create
+         LOOPS in the program where a sequence of instructions is  executed
+         over and over again.
+   
+            Some of the "jump" instructions will only store the  new  value
+         in the PC if certain conditions are met,  such  as  the  last  ALU
+         operation resulted in zero, or did not result in zero. This allows
+         the program to alter  its  pattern  of  execution  based  on  data
+         values.
+   
+            For example, here is a program to count to 10 on a very  simple
+         imaginary computer. It shows the  use  of  IMMEDIATE  operands  to
+         instructions, which are shown by [PC+], and indicate  that  during
+         the execution of the instruction, the CPU  reads  the  next  value
+         from the address in the PC. The PC is advanced so that that  value
+         will not  be  executed  as  another  instruction  when  the  first
+         instruction is finished:
+   
+             Address   Interpretation of instruction value
+             ------------------------------------------------------
+               [0]     Load [PC+] data byte into register1
+               [1]     Data: 0
+               [2]     Add [PC+] data byte to register1
+               [3]     Data: 1
+               [4]     Load [PC+] data byte into register2
+               [5]     Data: 10
+               [6]     Subtract register1 from register2
+               [7]     Jump if result not zero to address in [PC+]
+               [8]     Data: 2
+               [9]     Halt CPU
+   Intro to DDS MICRO-C                                             Page: 5
+
+
+      2.2 Assembly Language
+   
+            In the preceeding section, you have learned how a CPU  executes
+         a program, and how a program may be coded in memory as a series of
+         instruction and data values. It should  be  obvious  to  you  that
+         although you can create programs in this way, it would be  a  long
+         and tedious job to write a program of any size using only  numeric
+         values.
+   
+            Not  only  is  it  very  hard  to  remember  the  hundreds   of
+         instruction  values  which  may  be  used   to   perform   certain
+         operations, but managing the memory address  which  are  coded  as
+         operands to the instructions becomes  a  real  headache.  This  is
+         particularily true when you  change  a  portion  of  the  program,
+         causing a change in the number of bytes of  memory  used  by  that
+         portion, and therefore  changes  all  of  the  memory  address  of
+         instructions and data which follow.
+   
+            To help ease the programming job, each of the CPU manufacturers
+         have defined an ASSEMBLY LANGUAGE for their CPU, which  represents
+         each of the machine operations with a more meaningful name  called
+         a MNEMONIC. Similar instructions may be  grouped  under  the  same
+         mnemonic with the individual instruction values determined by  the
+         operands.  For  example,  it  might  be  a  completely   different
+         instruction value which loads Register1 with  a  value  than  that
+         which loads register2. In assembly language you would use  similar
+         statements such as:
+   
+               LOAD R1,10
+               LOAD R2,10
+   
+            The  translation  from  mnemonics  to  instruction  values   is
+         performed by  a  program  called  an  ASSEMBLER.  In  addition  to
+         performing this translation, the assembler also allows LABEL names
+         to be assigned to addresses. The labels may be  referred  to  from
+         within other assembly  language  statements  instead  of  absolute
+         addresses.
+   
+            When written in assembly language, our "count  to  10"  program
+         would look something line this:
+   
+                   LOAD    R1,0
+           LOOP:   ADD     R1,1
+                   LOAD    R2,10
+                   SUB     R2,R1
+                   JMPNZ   LOOP
+                   HALT
+   
+            As  you  can  see,  the  above  program  would  be  much   more
+         understandable than a series of  numbers,  but  it  is  still  not
+         obvious to someone other that the author what the  intent  of  the
+         program is until he has followed through the loop, and  determined
+         what is accomplished by each instruction.
+   Intro to DDS MICRO-C                                             Page: 6
+
+
+            Imagine that you have just started a  new  job  as  a  computer
+         programmer, and your  manager  hands  you  a  listing  of  several
+         hundred pages, each of which is full of  assembly  language  lines
+         looking like the example  above,  and  says  "The  'SCAN'  command
+         causes corruption of the database search parameters. This is  VERY
+         important, could you stay and fix it tonight". You would have many
+         hours  (days?)  ahead  of  you  trying  to   determine   what   is
+         accomplished by each portion of the program. Now, imagine that the
+         assembly language looked more like this:
+   
+           ;
+           ; Simple demonstration program to show a counting loop
+           ;
+                   LOAD    R1,0        ; Begin with count of zero
+           ; Execute this loop once for each count
+           COUNT:  ADD     R1,1        ; Increment count
+                   LOAD    R2,10       ; Loop termination value
+                   SUB     R2,R1       ; Test R1, (result destroys R2)
+                   JMPNZ   COUNT       ; Repeat until we reach 10
+           ; We have reached 10 - All done
+                   HALT                ; Stop processing
+   
+            The text statements following the ';' characters in  the  above
+         example are called COMMENTS. They are completely  ignored  by  the
+         assembler, but are very useful to anyone attempting to  understand
+         the program.
+   
+      2.3 High Level Languages
+   
+            As you can see in the  preceeding  section,  assembly  language
+         programming offers much of  an  improvement  over  programming  by
+         direct instruction  values,  while  retaining  the  capability  to
+         control  EXACTLY  the  individual  operations  the  program   will
+         instruct the CPU to perform. Also, since the assembly language for
+         a particular CPU is defined by the manufacturer, you can  be  sure
+         that using it will allow you to take advantage  of  EVERY  feature
+         and capability that has been designed  into  that  particular  CPU
+         architecture.
+   
+            A good assembly language programmer can produce highly efficent
+         and compact programs because of this power. For  this  reason  you
+         will often see assembly  language  used  for  very  time  or  size
+         intensive applications.
+   Intro to DDS MICRO-C                                             Page: 7
+
+
+            It would seem that assembly language would be the ideal  method
+         of  doing  all  your  programming.  There  are  however,   several
+         drawbacks to using assembly language:
+   
+         1) Efficent use of assembly language often requires a  "different"
+            way of  looking  at  a  problem  and  strong  "logical"  mental
+            dicipline.
+            ** Not everyone is a good assembly language programmer **
+   
+         2) Assembly language source files are big.
+            ** It takes much codeing to perform even simple operations **
+            ** Significant time is spent entering source text **
+            ** Greater chance of error during design and entry **
+   
+         3) Poorly documented assembly language is undecipherable.
+            ** It is hard to maintain **
+   
+         4) Each assembly language is different and incompatible.
+            ** Programs will run on only one type of CPU **
+            ** Programmers have difficulty working on other CPUs **
+   
+            To help solve these problems,  there  are  a  number  of  "high
+         level"  programming  languages  available.  The  main   difference
+         between  assembly  and  high  level  languages  is  that  assembly
+         language produces only  one  CPU  instruction  for  each  language
+         "statement",  while  high  level  languages   can   produce   many
+         instructions for each "statement".
+   
+            High level languages attempt to provide a method of programming
+         by expressing ideas, rather than by directing the CPU  to  perform
+         each individual operation. When using a high level  language,  you
+         are freed from the task of keeping track of  register  and  memory
+         usage, and can concentrate  on  expressing  the  algorithms  which
+         accomplish the goal of the program.
+   
+            Here are some "high  level"  versions  of  our  "count  to  10"
+         program:
+   
+   
+       Basic:      100 FOR I=0 TO 10:NEXT I
+   
+       Fortran:        DO 100 i=0,10
+                   100 CONTINUE
+   
+       Forth:      11 0 DO LOOP
+   
+       'C':        for(i=0; i < 10; ++i);
+   Intro to DDS MICRO-C                                             Page: 8
+
+
+      2.4 Interpreters VS Compilers
+   
+            There  are   two   basic   types   of   high   level   language
+         implementations, INTERPRETERS and COMPILERS.
+   
+            An INTERPRETER is a program which reads  your  source  program,
+         and performs the actions indicated by  its  statements.  The  main
+         advantages to this approach are:
+   
+         1) FAST DEVELOPMENT:  Interpreters  often  include  complete  text
+            editors, which make it easy to  edit  and  debug  your  program
+            without leaving the interpreter. Also,  since  the  program  is
+            interpreted  directly,  there  is  no  waiting  to  compile  or
+            assemble it before you can try out a new change.
+   
+         2) EASY DEBUGGING:  Since  the  interpreter  is  actually  another
+            program, it will usually allow you to stop your program in  the
+            middle of execution, examine/modify  variables,  trace  program
+            flow, display callback stacks, etc. This makes  for  very  easy
+            debugging. Also, a good interpreter will perform  very  through
+            checking of your program as it interpretes,  thus  finding  and
+            reporting design errors which might otherwise show up  only  as
+            erratic and inconsistant program operation.
+   
+            And of course, there are drawbacks to interpreting:
+   
+         1) SLOW EXECUTION: The interpreter has to process  each  statement
+            in your program and determine what action is  to  be  performed
+            every time it encounters that statement. Many hundreds or  even
+            thousands of instructions are executed to accomplish  this  FOR
+            EACH STATEMENT.
+   
+         2) USES MEMORY: A good interpreter is a  fairly  complex  program,
+            and therefore occupies a substantial portion of system  memory,
+            meaning that less is available for your program & variables.
+   
+         3) DIFFICULTY OF USE: Once you are finished debugging,  you  would
+            like to  make  your  program,  as  easy  to  use  as  possible.
+            Unfortunatly, when using an interpreter,  you  always  have  to
+            load and execute the interpreter before loading  and  executing
+            your program.
+   
+            These disadvantages are so severe that interpreters are  rarely
+         used for serious programs which are to be  used  frequently  by  a
+         number of people. They are however, excellent learning  tools  for
+         the novice computer user.
+   Intro to DDS MICRO-C                                             Page: 9
+
+
+            A COMPILER is a program which reads your  source  program,  and
+         translates its statements into CPU INSTRUCTIONS which perform  the
+         specified function. Instead of actually executing your program, it
+         converts it to a form which can later be directly executed by  the
+         CPU. Its main advantages are:
+   
+         1) FAST EXECUTION: Since the program will be executed directly  by
+            the CPU, it will run much faster that  the  equivalent  program
+            being translated by an interpreter.
+   
+         2) LESS MEMORY: Although a compiler is a very complex program, and
+            uses lots of memory when it runs,  it  only  runs  once,  after
+            which your program is executed by itself directly by  the  CPU.
+            This means that the amount of memory required by  the  compiler
+            does not affect the amount of memory which is available for use
+            by your program when it runs.
+   
+         3) EASE OF USE: Since your program executes  by  itself,  you  can
+            load and execute it directly from the operating system  command
+            prompt.
+   
+            The main disadvantages of compilers over interpreters are:
+   
+         1) LONGER DEVELOPMENT: Many "traditional" compilers  require  that
+            you prepare your source program using a  separate  editor,  and
+            then save it to a disk  file,  and  submit  that  file  to  the
+            compiler. Every time you do this, you  have  to  wait  for  the
+            compiler to finish before you can even try your program.  NOTE:
+            some compiler vendors are  now  providing  integrated  editors,
+            eliminating the "save and exit" step, however you may not  like
+            the editor they have chosen for you.
+   
+         2) MORE  DIFFICULT  DEBUGGING:  Since  your  program  executes  by
+            itself, you have to run a standard system debugger  to  monitor
+            its execution. This will usually  be  somewhat  less  intuitive
+            than an interpreters built in debugging  features.  NOTE:  some
+            compiler  vendors  provide  a  "debug"  option  which  includes
+            debugging information in the program, and  a  special  debugger
+            which provides debugging facilities equal  to  or  better  than
+            those available from most interpreters.
+   
+      2.5 Object Modules & Linking
+   
+            Most assemblers and compilers available today support  the  use
+         of a LINKER. The linker is a program which  will  combine  several
+         previously compiled (or assembled) programs called OBJECT  MODULES
+         into a single larger executable  program.  This  helps  speed  the
+         development process by eliminating  the  need  to  re-compile  the
+         entire program when you have changed only one module.
+   Intro to DDS MICRO-C                                             Page: 10
+
+
+      2.6 Compiler Libraries
+   
+            Modern compilers promote  the  use  of  STRUCTURED  PROGRAMMING
+         techniques, which make programs easier to debug and maintain. I do
+         not propose to get into a  discussion  of  structured  programming
+         methods, but the main idea is to divide the  program  into  simple
+         parts, each of which performs a clearly defined function.
+   
+            Such functions often perform common algorithms required by many
+         programs, and  hence  are  made  into  compiler  LIBRARIES.  These
+         libraries are simply collections of small  useful  programs  which
+         may be used from within your programs without you having to  write
+         them. Most compiler manufacturers  provide  such  a  "library"  of
+         functions which they  believe  to  be  commonly  needed,  and  the
+         development tools necessary to link them with your programs.
+   
+      2.7 Portability
+   
+            One BIG advantage of high level languages is the fact that once
+         a program is written and running on one CPU, you can  usually  get
+         it  running  on  another  completely  different  CPU  with  little
+         difficulty. This is because although the CPUs are  different,  the
+         HIGH LEVEL LANGUAGE IS NOT CPU DEPENDANT AND REMAINS THE SAME. All
+         you have to do is to re-compile your  program,  using  a  compiler
+         which produces code for the new CPU.
+   
+            Actually, it usually takes a bit more effort than that, because
+         the language or library functions may  differ  slightly  from  one
+         implementation to another.
+   
+            This concept of PORTABILITY is one of the strong points of  the
+         'C' language, and you will see it  mentioned  from  time  to  time
+         throughout  this  manual.  In  addition  to  consistant   compiler
+         language implementation, 'C' benefits from very "standard" library
+         function definitions which are followed by most vendors.
+   Intro to DDS MICRO-C                                             Page: 11
+
+
+   3. INTRODUCTION TO 'C'
+   
+         'C' is a "high level" computer language,  which  has  become  very
+      popular in recent years. It has proven suitable for a  large  variety
+      of programming tasks, and unlike most other high level languages,  is
+      quite good for "low  level"  and  "system"  type  functions.  A  good
+      example of this capability is the popular  "UNIX"  operating  system,
+      which is  written  almost  entirely  in  'C'.  Before  UNIX,  it  was
+      generally thought that only assembly language was efficent enough for
+      writing an operating system.
+   
+         Programs in 'C' are divided into two main parts, VARIABLES,  which
+      are blocks of memory reserved for storing data, and FUNCTIONS,  which
+      are blocks of memory containing executable CPU instructions. They are
+      created using a DECLARATION STATEMENT, which is basically  a  command
+      to the compiler telling it what type of variable or function you wish
+      to create, and what values or instructions to place in it.
+   
+         There are several 'C' KEYWORDS which serve to inform the  compiler
+      of the size and type of a variable or function. This  information  is
+      used by the compiler to determine how to interpret the  value  STORED
+      in a VARIABLE, or RETURNED by a FUNCTION.
+   
+       Size:   int         - 16 bit value (default)
+               char        - 8 bit value
+       type:   unsigned    - Positive only (0-2**bits)
+                           + Default is signed (positive & negative)
+   
+       Examples:   int a;              /* 16 bit signed variable */
+                   char b;             /* 8 bit signed variable */
+                   unsigned int c;     /* 16 bit unsigned variable */
+                   unsigned d;         /* Also 16 bit unsigned variable */
+                   unsigned char e;    /* 8 bit unsigned variable */
+   
+         Normally, when you define a function or global variable, its  name
+      is made accessable to all object modules which will  be  linked  with
+      the program. You may access a  name  which  is  declared  in  another
+      module by  declaring  it  in  this  module  with  with  the  "extern"
+      modifier:
+   
+          extern int a;       /* external variable of type int    */
+          extern char b();    /* external function returning char */
+   
+         If you want to make sure that a function or global  variable  that
+      you are declaring is not accessable to  another  module  (To  prevent
+      conflicts with names in other modules etc), you can declare  it  with
+      the "static" modifier. This causes the name to be accessable only  by
+      functions within the module containing the "static" declaration:
+   
+                                static int a;
+   Intro to DDS MICRO-C                                             Page: 12
+
+
+      3.1 Functions
+   
+            FUNCTIONS in 'C' are  collections  of  C  language  STATEMENTS,
+         which are grouped together under a name. Each statement represents
+         an operation which is to be performed by the CPU. For example, the
+         statement:
+   
+                                  A = A + 1;
+   
+         directs the CPU to read the variable called 'A', add a value of  1
+         to it, and to store the result back into the variable  'A'  (we'll
+         discuss variables in the next section). Note the  SEMICOLON  (';')
+         at the end  of  the  statement.  The  'C'  compiler  uses  ';'  to
+         determine when the statement ends. It does not care about lines or
+         spaces. For example, the above statement could also be written:
+   
+                                      A
+                                      =
+                                      A
+                                      +
+                                      1
+                                      ;
+   
+         and would still compile without error. Thus, you can have  a  VERY
+         long statement in 'C', which spans several lines. You must  always
+         however, be very careful to include the terminating ';'.
+   
+            Each function within a 'C' program can be "called" by using its
+         name in any statement, may accept "argument" values which  can  be
+         accessed by the statements contained within it, and may  return  a
+         value back to the caller. This allows functions in 'C' to be  used
+         as "building blocks", providing extensions to the language,  which
+         may be used from any other function.
+   
+            Below is a sample 'C' function,  which  performs  an  operation
+         (addition) on two argument values. The text between '/*' and  '*/'
+         is COMMENTS, and is ignored by the compiler.
+   
+           /* Sample 'C' function to add two numbers */
+           int add(num1, num2)     /* Declaration for function */
+               int num1, num2;     /* Declaration for arguments */
+           {
+               return num1+num2;   /* Send back sum of num1 and num2 */
+           }
+   
+            The names located within the  round  brackets  '()'  after  the
+         function name "add" tells the compiler what names you want to  use
+         to refer to the ARGUMENT VALUES. The "return" statement  tell  the
+         compiler that you want to terminate the execution of the function,
+         and return the value of  the  following  expression  back  to  the
+         caller. (We'll discuss "return" in more detail later).
+   Intro to DDS MICRO-C                                             Page: 13
+
+
+            Now that you have defined the function "add", you could use  it
+         in any other statement, in any function in your program, simply by
+         calling it with its name and argument values:
+   
+                                a = add(1, 2);
+   
+            The above statement would call "add", and pass  it  the  values
+         '1' and '2' as arguments. "add" evaluates 1  +  2  to  be  3,  and
+         returns that value back, which is then stored in the variable 'a'.
+   
+            Note that 'C' uses the  round  brackets  following  a  name  to
+         determine that you wish to call the function, therefore, even if a
+         function has no argument values, you must include '()':
+   
+                               a = function();
+   
+            Also note, that if a function does not return a value,  or  you
+         do not want to  use  the  returned  value,  you  simply  code  the
+         function name by itself:
+   
+                                 function();
+   
+      3.2 Variables
+   
+            VARIABLES in 'C' are reserved areas of memory  where  the  data
+         manipulated by the program is stored. Each variable is assigned  a
+         name by which it  is  referenced  by  other  'C'  statements.  ALL
+         VARIABLES IN 'C' MUST BE DECLARED.
+   
+            Variables in 'C' may be single values as shown eariler, or they
+         may be declared as an ARRAY, which reserves  memory  space  for  a
+         number of data elements, each  with  the  type  declared  for  the
+         variable.
+   
+                                int array[4];
+   
+            The above statement reserves memory  for  four  16  bit  signed
+         values, under the name "array". It is important to know  that  'C'
+         considers the elements of an array to be numbered from  zero  (0),
+         so the four locations in the above array are referenced by using:
+   
+                                   array[0]
+                                   array[1]
+                                   array[2]
+                                   array[3]
+   
+            There are two basic types  of  variables  in  'C',  GLOBAL  and
+         LOCAL.
+   Intro to DDS MICRO-C                                             Page: 14
+
+
+         3.2.1 GLOBAL Variables
+   
+               GLOBAL variables are set up permanently in memory, and exist
+            for the duration of the entire programs execution. The names of
+            global variables may be referenced by  any  statement,  in  any
+            function, at any time. Global variables are declared in 'C'  by
+            placing the declaration statement OUTSIDE of any function.  For
+            example:
+   
+               int a;      /* Declare GLOBAL variable */
+   
+               inita()     /* Function to initialize 'a' with 1 */
+               {
+                   a = 1;
+               }
+   
+               Note that the declaration statement for 'a' is NOT contained
+            within the definition of "inita".
+   
+               Since global variables are permanent blocks of memory, it is
+            possible to INITIALIZE them in the declaration statement.  This
+            causes the variable to be assigned a  value  at  COMPILE  time,
+            which will be loaded into memory at  the  same  time  that  the
+            program is loaded to be executed. This means that your  program
+            will not have to explicitly store a value in a.
+   
+                                  int a = 1;
+   
+               Array variables may also be initialized in  the  declaration
+            statement, by using the  curly  brackets  '{}'  to  inform  the
+            compiler that you have multiple values:
+   
+                          int a[4] = { 1, 2, 3, 4 };
+   
+               In MICRO-C, the initial values for an array are expressed as
+            a single string of values  REGUARDLESS  of  the  shape  of  the
+            array:
+   
+                        int a[2][2] = { 1, 2, 3, 4 };
+   
+               If an array has only one dimension (set of  '[]'s),  you  do
+            not have to specify the  size  of  initialized  variables.  The
+            compiler will automatically set  the  size  to  the  number  of
+            initial values given:
+   
+                        int array[] = { 1, 2, 3, 4 };
+   Intro to DDS MICRO-C                                             Page: 15
+
+
+         3.2.2 LOCAL Variables
+   
+               Variables  which  are  declared  WITHIN   a   function   are
+            determined by the compiler to be  LOCAL.  The  memory  used  by
+            these variables is automatically  reserved  when  the  function
+            begins to execute, and is released when it terminates. Names of
+            LOCAL variables are only accessable from  within  the  function
+            where they are defined:
+   
+               inita()     /* Function to initialize 'a' with 1 */
+               {
+                   int a;  /* Declare LOCAL variable */
+   
+                   a = 1;
+               }
+   
+               The  above  function  shows  the  declaration  of  a   local
+            variable, but is not very useful since the local variable  will
+            cease to exist when  the  function  returns.  Once  a  function
+            terminates, the content of its local variables is  lost.  Local
+            variables  are  used  as  temporary   locations   for   holding
+            intermediate values during a functions execution, which are not
+            required by any other part of the program.
+   
+               Each function may have its own local  variables,  but  since
+            memory is  only  used  by  the  functions  which  are  actually
+            executing, the total amount of memory reserved is usually  less
+            that the total size of all local variables in the program.
+   
+               Since local variables are allocated and released during  the
+            execution of your program, it is  not  possible  to  initialize
+            them at compile time, and therefore MICRO-C does not allow them
+            to be initialized in the declaration. Some compilers  do  allow
+            this, however,  the  code  generated  is  equivalent  to  using
+            assignment statements to initialize them at  the  beginning  of
+            the function.
+   
+               The ARGUMENTS to a function  (See  Functions)  are  actually
+            local variables for that function which are  created  when  the
+            function is called. For this reason,  the  argument  names  are
+            also un-available outside of the function  in  which  they  are
+            defined.
+   
+               NOTE: Local variables declared with  the  "static"  modifier
+            are a special case, and are  allocated  permanently  in  memory
+            like global  variables,  NOT  upon  entry  and  exit  from  the
+            function. This has several effects:
+   
+               - The variable may be initialized at compile time.
+               - The variable retains its  content  (and  occupies  memory)
+                 between calls to the function.
+               - If the function is called recursively  (see  later),  each
+                 instance of the function will access the same variable.
+   Intro to DDS MICRO-C                                             Page: 16
+
+
+      3.3 Pointers
+   
+            A POINTER in 'C' is a memory address,  which  can  be  used  to
+         access another data item in memory. All pointers in MICRO-C are 16
+         bit values, which allows access to a maximum  of  65536  bytes  of
+         memory through it.
+   
+            Any variable or function  may  be  declared  as  a  pointer  by
+         preceeding its name with the '*' character in the declaration:
+   
+           int *a;                 /* a = 16 bit pointer to int value */
+           char *b;                /* b = 16 bit pointer to char */
+           extern char *fgets();   /* Returns 16 bit pointer to char */
+   
+            Later on, I will show you how you can use  a  special  operator
+         called INDIRECTION to access data items at the  address  contained
+         in the pointer.
+   
+      3.4 A complete 'C' program
+   
+            With all of the preceeding  information  under  you  belt,  you
+         should be able to understand most  of  this  simple  but  complete
+         program:
+   
+           #include stdio.h
+   
+           /* Main program */
+           main()
+           {
+               int a, b, c;
+   
+               a = 1;
+               b = 2;
+               c = add(a, b);
+               printf("The result of (1+2)=%d\n", c);
+           }
+   
+           /* Our old familiar "add" function */
+           int add(num1, num2)
+               int num1, num2;
+           {
+               return num1+num2;
+           }
+   
+            Well... OK, perhaps you weren't quite ready for it. There are a
+         few new things  presented  in  this  program,  which  I  will  now
+         explain.
+   
+            First of all, you should know that the function name "main"  is
+         a special name which will be called at the  very  beginning,  when
+         the program is first run. It provides a starting  point  for  your
+         programmed functions. All 'C' programs have a "main" function.
+   Intro to DDS MICRO-C                                             Page: 17
+
+
+            You may also be wondering about those "#include"  and  "printf"
+         statements. This all comes back to the concept of PORTABILITY, and
+         has to do with the programs ability to perform  INPUT  and  OUTPUT
+         (I/O). Methods of performing  I/O  may  differ  greatly  from  one
+         operating system to another, and hence make it difficult to  write
+         "portable" programs. If you don't know  what  portability  is,  go
+         back and read the "Background Information" section.
+   
+            In order to insure that 'C' compilers could be  easily  adapted
+         to nearly any operating system,  the  designers  of  the  language
+         decided not to  include  ANY  I/O  capabilities  in  the  compiler
+         itself. By not implementing it, they didn't have  to  worry  about
+         it. All such activity is performed by a set of  functions  in  the
+         'C' STANDARD LIBRARY, which is provided for each operating system.
+   
+            These library functions are used in nearly all programs,  since
+         a program which can't read or  write  any  data  doesn't  do  much
+         useful work.
+   
+            Many of the library functions must be  declared  as  a  certain
+         type, which may be specific  to  the  compiler  implementation  or
+         operating system. (For example  the  "printf"  functions  must  be
+         declared as "register" in MICRO-C). The file "stdio.h" is provided
+         with  all  "standard  libraries",   and   contains   any   special
+         declarations required by the library functions.
+   
+            The "#include"  statement  causes  the  compiler  to  read  the
+         "stdio.h"  file,  and  to  process  the   declaration   statements
+         contained within it. This is equivalent to incorporating the  full
+         text of "stdio.h" at the beginning of your program.
+   
+            NOTE: If you are using a version of  MICRO-C  for  an  embedded
+         processor, this file is called "<cpu>io.h". For  example,  in  the
+         8051 developers kit, it is called "8051io.h".
+   
+            The "printf" statement is actually a call to a STANDARD LIBRARY
+         FUNCTION. It is available in almost all 'C'  implementations,  and
+         in the above example, displays the prompt "The result of  (1+2)=",
+         followed by the decimal value of the passed argument 'c'. For more
+         information about "printf" and other library functions,  refer  to
+         the MICRO-C Technical manual.
+   
+            At his point you may wish to enter  the  demonstration  program
+         into a file called "DEMO1.C", and  compile  it  with  the  MICRO-C
+         compiler. Remember that 'C' IS CASE SENSITIVE, so be sure to enter
+         the program EXACTLY as it is shown. Also, make sure that  you  are
+         positioned in the MICRO-C directory before you  create  the  file.
+         After entering and saving the file with your favorite text editor,
+         compile the program using the command:
+   
+                                   CC DEMO1
+   
+            You can  run  the  resultant  "DEMO1.COM"  program,  by  simply
+         typeing "DEMO1", at the DOS command prompt.
+   Intro to DDS MICRO-C                                             Page: 18
+
+
+      3.5 'C' memory organization
+   
+            Now that you have seen a complete 'C'  program,  and  know  the
+         basic concepts of functions and variables, you may  want  to  know
+         how MICRO-C organizes the computer memory  when  these  constructs
+         are used. Knowing this  may  help  you  understand  functions  and
+         variables more precicely.
+   
+            The information in this section is  not  really  necessary  for
+         casual use of the language, if you feel  that  such  detail  would
+         only confuse you, feel free to skip it until later.
+   
+            The MICRO-C compiler builds your program to occupy a  block  of
+         memory. In the case of small 8 bit computers, this block of memory
+         will usually be the entire free ram in the machine. In the case of
+         larger machines, it will usually be 64K (65536 bytes), but may  be
+         larger or smaller depending on the implementation.
+   
+            The exact size of the memory block  is  unimportant,  since  it
+         affects only the maximum size of a MICRO-C program. The methods of
+         memory allocation remain the same.
+   
+         3.5.1 Static memory
+   
+               MICRO-C places all of the executable code from the  compiled
+            functions at the very  beginning  of  the  memory  block.  This
+            includes all  CPU  instructions  which  are  generated  by  the
+            compiler. MICRO-C places all initialized  global  and  "static"
+            local variables in this area as well, and also something called
+            the LITERAL POOL.
+   
+               The "literal pool" consists of all string data which is used
+            in statements or initializations in the program. An example  of
+            this is the string used in the preceeding demonstration program
+            ("Result of (1+2)=%d\n"), which is  a  series  of  data  bytes,
+            which are passed to the "printf" function.
+   
+               This collection of CPU  instructions,  Initialized  variable
+            data, and literal pool data is the complete program image which
+            must be loaded into memory every time the program is executed.
+   
+               The next section of memory allocated by  MICRO-C  holds  the
+            global  and  static  local  variables  which  have   not   been
+            initialized. Since they have no initial  values,  they  do  not
+            have to be loaded every time the program runs. This also  means
+            that until the program stores a value in  a  particular  memory
+            location its contents will be some random value which  happened
+            to be at that location in memory before the program was loaded.
+   
+               All of this memory is called "STATIC" memory, because it  is
+            reserved for code and data at COMPILE time. Once the program is
+            compiled, the above mentioned items are fixed  in  memory,  and
+            cannot be moved or changed in size.
+   Intro to DDS MICRO-C                                             Page: 19
+
+
+         3.5.2 Dynamic memory
+   
+               When your program begins execution, one of the first  things
+            that happems, is that a STACK is set up at the very top of  the
+            memory block. This  stack  is  always  referenced  by  a  STACK
+            POINTER register which always points to the lowest  address  of
+            memory used on the stack. All memory in  the  block  above  the
+            stack pointer is deemed to be in use. This is usually  a  built
+            in feature of the CPU.
+   
+               At the beginning of every function,  the  code  produced  by
+            MICRO-C contains instructions to reduce the value of the  stack
+            pointer by the number of bytes of memory required by the  local
+            variables in that function.  When  the  function  "returns"  or
+            terminates, the stack pointer is increased by the same amount.
+   
+               This allows the function to use the memory immediatly  above
+            the new stack pointer for its local variables without fear that
+            another function will also try to use it. When another function
+            is called, it will reserve its memory BELOW the memory  already
+            in use by the calling  function,  and  will  return  the  stack
+            pointer when it is finished. Thus, all local variables  may  be
+            accessed as constant offsets from the stack pointer set  up  at
+            the beginning of the function.
+   
+               ARGUMENTS to a function are passed by  reserving  memory  on
+            the stack, and setting it to the argument values, just PRIOR to
+            calling the function. When the  called  function  returns,  the
+            stack reserved for its arguments is  removed  by  the  function
+            performing the call. In this way, the arguments are  just  more
+            local variables, and may also be accessed as  constant  offsets
+            from the stack pointer.
+   
+         3.5.3 Heap memory
+   
+               Some programs need temporary memory which will not disappear
+            when the function terminates, or they may not  know  the  exact
+            amount of memory they need for a certain operations until  some
+            calculations have been performed.
+   
+               To resolve these problems,  'C'  provides  another  type  of
+            dynamic memory which is called "HEAP" memory. To  make  use  of
+            this memory, the program uses the "malloc" function  (from  the
+            standard library)  which  allocates  a  block  of  memory,  and
+            returns a pointer value to its address. The  program  may  then
+            access and manipulate this memory through the pointer.
+   
+               When the program is finished with the memory,  it  may  then
+            use the "free" library function to  release  it,  and  make  it
+            available for use by other calls to "malloc".
+   
+               A program may continue allocating  memory  via  "malloc"  as
+            long as there is available free memory to allocate. The library
+            functions will  keep  track  of  which  blocks  of  memory  are
+            allocated, and which blocks are available for allocation.
+   Intro to DDS MICRO-C                                             Page: 20
+
+
+            A typical memory layout for a 'C'  program  in  the  middle  of
+         execution might look something like this:
+   
+               +----------------------------------------+
+               |            CPU Instructions            |
+               |         which make up program          |  *1
+               |                "code"                  |
+               +----------------------------------------+
+               |      Initialized GLOBAL variables      |
+               |                 and                    |  *1
+               |  Initialized "static" LOCAL variables  |
+               +----------------------------------------+
+               |           LITERAL POOL data            |  *1
+               +----------------------------------------+
+               |     Uninitialized GLOBAL variables     |
+               |                 and                    |      
+               | Uninitialized "static" LOCAL variables |
+               +----------------------------------------+
+               |      Memory allocated to the heap      |
+               +----------------------------------------+
+               |          (Heap grows upward)           |
+               |                   |                    |
+               |  Free memory, available for growth of  |
+               |           the heap and stack.          |
+               |                   |                    |
+               |         (Stack grows downward)         |
+               +----------------------------------------+
+               | Local variables of innermost function  |  *2
+               +----------------------------------------+
+               |  Return address of innermost function  |
+               +----------------------------------------+
+               |     Arguments of innermost function    |
+               +----------------------------------------+
+               |   Local variables of middle function   |  *2
+               +----------------------------------------+
+               |   Return address of middle function    |
+               +----------------------------------------+
+               |      Arguments of middle function      |
+               +----------------------------------------+
+               |    Local variables of main function    |  *2
+               +----------------------------------------+
+               |    Return address of main function     |
+               +----------------------------------------+
+   
+           *1 = Only these blocks of memory need to be loaded from disk
+                when the program is started.
+   
+           *2 = Other than "static" local variables.
+   
+            For those not familiar with computer architecture,  the  RETURN
+         ADDRESS is placed on the stack by a CALL INSTRUCTION, and  is  the
+         memory address immediately  following  that  instruction.  When  a
+         RETURN INSTRUCTION is later executed, the CPU removes  the  return
+         address from the stack, and places it in the PROGRAM COUNTER, thus
+         causing  program  execution  to  resume   with   the   instruction
+         immediately following the original call instruction.
+   Intro to DDS MICRO-C                                             Page: 21
+
+
+   4. EXPRESSIONS
+   
+         An expression in 'C' consists of one or more values, and OPERATORS
+      which cause those values to be modified in  a  calculation.  Anywhere
+      that you would use a simple  value  in  'C',  you  can  also  use  an
+      expression. We have already seen that with the "return" statement  in
+      the "add" function in our example program. Knowing that  we  can  use
+      expressions and values interchangably, we could shorten  the  example
+      "main" function to:
+   
+           main()
+           {
+               int a, b;
+   
+               a = 1;
+               b = 2;
+               printf("The result of (1+2)=%d\n", add(a,b));
+           }
+   
+       or even:
+   
+           main()
+           {
+               int a, b;
+   
+               a = 1;
+               b = 2;
+               printf("The result of (1+2)=%d\n", a+b);
+           }
+   
+       or even:
+   
+           main()
+           {
+               printf("The result of (1+2)=%d\n", 1 + 2);
+           }
+   
+       Or, if we wanted the 'a, b & c' variables set anyway:
+   
+           /* Note the use or round brackets '()' to incorporate
+              a SUB-EXPRESSION into the main expression */
+           main()
+           {
+               int a, b, c;
+   
+               printf("The result of (1+2)=%d\n", c = (a = 1) + (b = 2));
+           }
+   
+         You can see that an entire expression, including three ASSIGNMENTS
+      was included in a place where only a simple value is  used.  This  is
+      one of the great powers of 'C', and can result  in  very  small  fast
+      efficent code (at the expense of readability). Numerous  examples  of
+      this type of programming may by found in  the  source  code  for  the
+      MICRO-C compiler.
+   Intro to DDS MICRO-C                                             Page: 22
+
+
+      4.1 Unary operators
+   
+            Unary (single operand)  operators  are  those  operators  which
+         perform a computation on only a single value. In most  cases,  the
+         operator must be placed immediatly BEFORE the value to be operated
+         on.
+   
+         4.1.1 Negate: -
+   
+               The NEGATE operator causes the value  to  its  right  to  be
+            changed in sign. Thus, a positive value will be converted to  a
+            negative value (of the same magnitude) and vice  versa.  It  is
+            most often used to enter negative numbers, but it is  perfectly
+            legal to apply this operator to a variable or expression.
+   
+           eg:     a = -5;         /* a = negative 5 */
+                   b = 10;         /* b = positive 10 */
+                   c = -b;         /* c = -10 */
+                   d = -(b+5);     /* d = -15 */
+                   e = -b+5;       /* e = -5  *
+                   f = -a;         /* f = 5   */
+   
+         4.1.2 Bitwise Complement: ~
+   
+               The BITWISE COMPLEMENT operator reverses the value (0 or  1)
+            of each individual BIT in the value to its right. This is  very
+            useful when used with the other BITWISE operators (AND, OR  and
+            XOR), to perform test on combinations of bits in a byte  (char)
+            or word (int).
+   
+           eg:     a = 5;          /* a = 00000101 */
+                   b = ~a;         /* b = 11111010 */
+   
+         4.1.3 Logical Complement: !
+   
+               The LOGICAL COMPLEMENT operator reverse the "logical  sense"
+            (TRUE or FALSE) of the value to its right. In 'C'  a  value  is
+            considered to be logically TRUE if it contains any value  other
+            than zero. A value of zero is considered to be logically FALSE.
+            The logical complement gives a value of  zero  (FALSE)  if  the
+            original value was non-zero, and a value of one (TRUE)  if  the
+            original value was zero. You will  see  later  that  there  are
+            CONDITIONAL statements in 'C', which perform certain operations
+            only if values are TRUE. This operator provides a simple method
+            of reversing those conditions to occur when the value is FALSE.
+   
+           eg:     if(a) b = 10;   /* Set b to 10 if a is TRUE */
+                   if(!a) b = 10;  /* Set b to 10 if a is FALSE */
+   Intro to DDS MICRO-C                                             Page: 23
+
+
+         4.1.4 Increment: ++
+   
+               The INCREMENT operator must be used on a value that  can  be
+            ASSIGNED (such as a variable or array element). It  causes  the
+            value to be INCREASED by one (except for a  special  case  with
+            POINTERS which are advanced by the size of the  type  to  which
+            they point).
+   
+               Unlike most other unary operators,  the  increment  operator
+            may be placed either BEFORE or AFTER  the  value,  and  behaves
+            slightly differently  depending  on  its  position.  If  placed
+            BEFORE the value, the variable  is  incremented,  and  the  new
+            value is passed on as the result. If placed  AFTER  the  value,
+            the original value is passed on as the result, and the variable
+            is then incremented.
+   
+           eg:     a = b = 10;     /* Set a & b to 10 */
+                   c = ++a;        /* c = 11 (a = 11) */
+                   d = b++;        /* d = 10 (b = 11) */
+   
+         4.1.5 Decrement: --
+   
+               The  DECREMENT  operator  behaves  exactly   the   same   as
+            increment,  except  that  the  value  is  REDUCED  instead   of
+            increased.
+   
+           eg:     a = b = 10;     /* Set a & b to 10 */
+                   c = --a;        /* c = 9  (a=9) */
+                   d = b--;        /* d = 10 (b=9) */
+   
+         4.1.6 Indirection: *
+   
+               The INDIRECTION operator may only be applied to POINTERS, or
+            expressions which result in a  POINTER  VALUE.  It  causes  the
+            memory contents at the address contained in the pointer  to  be
+            accessed, instead of the pointer value itself.
+   
+           eg:     char *ptr;      /* Declare a pointer to character */
+                   ptr = 10;       /* Set pointer variable to 10 */
+                   *ptr = 5;       /* Set 'char' at address 10 to 5 */
+                   a = ptr;        /* a = 10 (pointer value) */
+                   b = *ptr;       /* b = 5 (Indirect through address 10) */
+   
+         4.1.7 Address: &
+   
+               The ADDRESS operator may only be used on a value  which  can
+            be ASSIGNED (such as a variable or array element).  It  returns
+            the memory address of the value, instead of the value itself.
+   
+           eg:     a = 10;         /* Set variable a to 10 */
+                   ptr = &a;       /* Get address of 'a' */
+                   b = *ptr;       /* b = 10 (contents of 'a') */
+                   *ptr = 15;      /* Store 15 at address of 'a' */
+                   c = a;          /* c = 15 */
+   Intro to DDS MICRO-C                                             Page: 24
+
+
+      4.2 Binary Operators
+   
+            In additon to the "unary" operators presented above, 'C' has  a
+         large complement of BINARY (two  operand)  operators.  The  binary
+         operators take two values, presented on the left and right side of
+         the operator, and combine them into some form of computed value.
+   
+         4.2.1 Addition: +
+   
+               The ADDITION operator computes the SUM of two values.
+   
+           eg:     a = b + 5;      /* a = sum of b and 5 */
+   
+         4.2.2 Subtraction: -
+   
+               The SUBTRACTION operator  computes  the  DIFFERENCE  of  two
+            values.
+   
+           eg:     a = b - 5;      /* a = difference of b and 5 */
+   
+         4.2.3 Multiplication: *
+   
+               The MULTIPLICATION operator  computes  the  PRODUCT  of  two
+            values.
+   
+           eg:     a = b * 5;      /* a = b multiplied by 5 */
+   
+         4.2.4 Division: /
+   
+               The DIVISION operator computes the QUOTIENT  resulting  from
+            the division of the left value by the right value.
+   
+   
+           eg:     a = b / 5;      /* a = b divided by 5 */
+   
+         4.2.5 Modulus: %
+   
+               The MODULUS operator computes the REMAINDER  resulting  from
+            the division of the left value by the right value.
+   
+           eg:     a = b % 5;      /* a = remainer of b divided by 5 */
+   
+         4.2.6 Bitwise And: &
+   
+               The BITWISE AND operator performs an AND  function  on  each
+            pair of bits between the values. Bit positions which have a one
+            (1) bit in BOTH values will receive a one in  the  result.  All
+            other bit positions will receive zero (0).
+   
+           eg      a = 5;          /* a = 00000101 */
+                   b = 6;          /* b = 00000110 */
+                   c = a & b;      /* c = 00000100 (4) */
+   Intro to DDS MICRO-C                                             Page: 25
+
+
+         4.2.7 Bitwise Or: |
+   
+               The BITWISE OR operator performs an OR function on each pair
+            of bits between the values. Bit positions which have a one  (1)
+            in EITHER value will receive a one in the result. All other bit
+            positions will receive zero (0).
+   
+           eg      a = 5;          /* a = 00000101 */
+                   b = 6;          /* b = 00000110 */
+                   c = a | b;      /* c = 00000111 (7) */
+   
+         4.2.8 Bitwise Exclusive Or: ^
+   
+               The BITWISE EXCLUSIVE OR operator performs an  EXCLUSIVE  OR
+            function on each pair of bits between the values. Bit positions
+            which have a one (1) in EITHER value, but NOT  IN  BOTH  values
+            will receive a one in the result. All other bit positions  will
+            receive zero (0).
+   
+           eg      a = 5;          /* a = 00000101 */
+                   b = 6;          /* b = 00000110 */
+                   c = a ^ b;      /* c = 00000011 (3) */
+   
+         4.2.9 Logical And: &&
+   
+               The LOGICAL AND operator returns  TRUE  (non-zero)  only  if
+            BOTH values are TRUE. If either value is FALSE, FALSE (zero) is
+            returned.
+   
+               MICRO-C accomplishes this by evaluating the left value,  and
+            returning zero (FALSE) if it is equal to  zero,  otherwise  the
+            right value is evaluated and returned. Some 'C' compilers force
+            the returned value to be either zero (0) or one (1).
+   
+           eg:     if(a && b)
+                       printf("Both 'a' AND 'b' are TRUE");
+   
+         4.2.10 Logical Or: ||
+   
+               The LOGICAL OR operator returns TRUE  (non-zero)  if  EITHER
+            value is true, if  both  values  are  FALSE,  FALSE  (zero)  is
+            returned.
+   
+               MICRO-C accomplishes this by evaluating the left value,  and
+            returning its value if it is not  zero  (TRUE),  otherwise  the
+            right value is evaluated and returned. Some 'C' compilers force
+            the returned value to be either zero (0) or one (1).
+   
+           eg:     if(a || b)
+                       printf("Either 'a' OR 'b' is TRUE");
+   Intro to DDS MICRO-C                                             Page: 26
+
+
+         4.2.11 Shift Left: <<
+   
+               The SHIFT LEFT operator returns a value which  is  equal  to
+            the left value shifted left by a number of bits  equal  to  the
+            right value.
+   
+           eg:     a = 10;         /* a = 00001010 */
+                   b = a << 3;     /* b = 01010000 (80) */
+   
+         4.2.12 Shift Right: >>
+   
+               The SHIFT RIGHT operator returns a value which is  equal  to
+            the left value shifted right by a number of bits equal  to  the
+            right value.
+   
+           eg:     a = 80;         /* a = 01010000 */
+                   b = a >> 3;     /* b = 00001010 (10) */
+   
+         4.2.13 Equals: ==
+   
+               The EQUALS operator performs  a  test  of  the  values,  and
+            returns a one (1) of they are identical. If they do not  match,
+            a zero (0). is returned. NOTE a common  difficulty  encountered
+            when learning 'C' is to confuse the EQUALS (==) and  ASSIGNMENT
+            (=) operators.
+   
+           eg:     if(a == 10)
+                       printf("a is equal to 10");
+   
+         4.2.14 Not Equals: !=
+   
+               The NOT EQUALS operator perform a test of  the  two  values,
+            and returns a one (1) if they are NOT identical. If the  values
+            match, a zero (0) is returned.
+   
+           eg:     if(a != 10)
+                       printf("a is not equal to 10");
+   Intro to DDS MICRO-C                                             Page: 27
+
+
+         4.2.15 Greater Than: >
+   
+               The GREATER THAN operator performs a test of the two values,
+            and returns a one (1) is the left  value  is  higher  than  the
+            right value. If the left value is equal to  or  less  than  the
+            right value, zero (0) is returned.
+   
+           eg:     if(a > 10)
+                       printf("a is bigger than 10");
+   
+         4.2.16 Less Than: <
+   
+               The LESS THAN operator performs a test of  the  two  values,
+            and returns a one (1) is the left value is lower than the right
+            value. If the left value is equal to or greater than the  right
+            value, zero (0) is returned.
+   
+           eg:     if(a < 10)
+                       printf("a is smaller than 10");
+   
+         4.2.17 Greater Than or Equals: >=
+   
+               The GREATER THAN OR EQUALS operator performs a test  of  the
+            two values, and returns a one (1) is the left value  is  higher
+            than OR equal to the right value. If the  left  value  is  less
+            than the right value, zero (0) is returned.
+   
+           eg:     if(a >= 10)
+                       printf("a is bigger than or equal to 10");
+   
+         4.2.18 Less Than or Equals: <=
+   
+               The LESS THAN OR EQUALS operator performs a test of the  two
+            values, and returns a one (1) is the left value is  lower  than
+            OR equal to the right value. If the left value is greater  than
+            the right value, zero (0) is returned.
+   
+           eg:     if(a <= 10)
+                       printf("a is smaller than or equal to 10");
+   Intro to DDS MICRO-C                                             Page: 28
+
+
+         4.2.19 Assignment: =
+   
+               The ASSIGNMENT operator takes the value to  the  right,  and
+            STORES it in the left value. The left value must be ASSIGNABLE.
+   
+           eg:     a = 10;     /* Store 10 in variable a */
+   
+         4.2.20 Self Assignment Operators
+   
+               'C' provides special operators which implement  a  shorthand
+            method of performing an operation on two values when the result
+            is stored back into the left value. These operators are  called
+            SELF ASSIGNMENT operators.
+   
+                      Shorthand:          Equivalent to:
+                   --------------------------------------
+                       a += 1;             a = a + 1;
+                       b -= 2;             b = b - 2;
+                       c *= 3;             c = c * 3;
+                       d /= 4;             d = d / 4;
+                       e %= 5;             e = e % 5;
+                       f &= 6;             f = f & 6;
+                       g |= 7;             g = g | 7;
+                       h ^= 8;             h = h ^ 8;
+                       i <<= 9;            i = i << 9;
+                       j >>= 10;           j = j >> 10;
+   
+               With most compilers, the self assignment  operators  do  not
+            produce any better  code  when  using  simple  variables.  They
+            simply allow you to state what you want done in  a  more  clear
+            and concise manner.
+   
+               With MICRO-C, and most non-optimizing compilers, there is an
+            advantage  to  using  the  self   assignment   operators   when
+            referencing a CALCULATED ADDRESS (Such  as  when  accessing  an
+            indexed array).
+   
+                                array[a] += b;
+   
+                         Is often more efficent than:
+   
+                           array[a] = array[a] + b;
+   Intro to DDS MICRO-C                                             Page: 29
+
+
+      4.3 Other Operators
+   
+            There are a few 'C' operators which do not fall into one of the
+         above clearly defined classes. Those operators are presented here:
+   
+         4.3.1 Statement terminator: ;
+   
+               We have already seen the ';' STATEMENT TERMINATOR,  this  is
+            just a reminder of how important it is. Leaving out the ';'  at
+            the end of a statement is a good way to convince  the  compiler
+            to produce lots of error messages.
+   
+         4.3.2 Comma Operator: ,
+   
+               The function performed by the COMMA operator ',' depends  on
+            where it occurs in the 'C' source file.
+   
+               When used within the  arguments  to  a  function  call,  its
+            function is to separate each argument that is passed:
+   
+           eg:     function(a, b, c);
+   
+               When used in a DECLARATION statement,  its  function  is  to
+            separate each variable name to be defined:
+   
+               eg: int a, b, c;
+   
+               When used in a global variable initialization, its  function
+            is to separate the initial elements:
+   
+           eg:     int array[] = { 1, 2, 3 };
+   
+               When used in  any  expression  other  than  those  mentioned
+            above, a comma allows several expressions to be used in a place
+            where only one expression is expected. The  value  returned  in
+            that of the RIGHTMOST expression:
+   
+           eg:     return a=4, 10;     /* Set a = 4, and return 10 */
+   Intro to DDS MICRO-C                                             Page: 30
+
+
+         4.3.3 Conditional Operator: ?
+   
+               The CONDITIONAL operator  allows  you  to  create  a  single
+            expression which evaluates one of two SUB-EXPRESSIONS depending
+            on a logical condition. It is coded in the 'C'  source  program
+            in the form:
+   
+             <condition> ? <TRUE expression> : <FALSE expression>
+   
+               Consider, the standard  library  function  "toupper",  which
+            converts any  lower  case  character  to  upper  case.  If  the
+            original character was lower case, no conversion is  made,  and
+            the character is returned unchanged.
+   
+               Knowing that in ASCII, lower case characters  have  a  value
+            equal to the equivalent upper case character  +  64,  we  could
+            code the following function:
+   
+               /* Function to convert lower case to upper case */
+               char toupper(chr)
+                   char chr;
+               {
+                   if((chr >= 'a') && (chr <= 'z'))    /* lower case ? */
+                       return chr - 64;                /* Convert */
+                   else
+                       return chr;                     /* Leave alone */
+               }
+   
+               The same function coded using a conditional expression is:
+   
+               /* Function to convert lower case to upper case */
+               char toupper(chr)
+                   char chr;
+               {
+                   return (chr >= 'a') && (chr <= 'z') ? chr - 64 : chr;
+               }
+   
+               Although the difference between the above two functions  may
+            seem  trivial,  remember  that  you  can  use  ANY   expression
+            (including a CONDITIONAL expression) anywhere  that  you  could
+            place a simple value. Once you get the hang of that,  you  will
+            find that conditional expressions are a very  powerful  feature
+            of the 'C' language.
+   Intro to DDS MICRO-C                                             Page: 31
+
+
+         4.3.4 Round Brackets: ( )
+   
+               The ROUND BRACKETS are used by 'C' to perform two functions.
+            First, as already mentioned, they identify function calls,  and
+            hold any arguments which are being passed:
+   
+           eg:     function1();
+                   function2(a);
+                   function3(a, b);
+   
+               The round brackets are also used to set up a SUB EXPRESSION,
+            which can be used within another expression as a simple value:
+   
+           For example:
+   
+                   b = a + 5;
+                   c = b / 2;
+   
+           Can be replaced by:
+   
+                   c = (a + 5) / 2;
+   
+           Or, if you want 'b' assigned:
+   
+                   c = (b = a + 5) / 2;
+   
+         4.3.5 Square Brackets: [ ]
+   
+               The SQUARE BRACKETS are used to perform indexing.  Variables
+            which  have  been  declared   as   ARRAYS   may   be   indexed.
+            MULTIDIMENSIONAL arrays may be  indexed  by  using  a  pair  of
+            square brackets for each dimension:
+   
+           eg:     int array1[4], array2[2][2];
+   
+                   array1[0] = 10;
+                   a = array1[1];
+                   b = array2[1][0];
+   
+               If a multidimensional array is  indexed  with  a  number  of
+            square  bracket  pairs  which  is  less  that  the  number   of
+            dimsnsions of the array, the value returned is a POINTER  VALUE
+            to the beginning address of the next dimension. A  pointer  may
+            be indexed as it they were single dimension array,  the  memory
+            offsets added to the pointer will be calculated  based  on  the
+            size of the data type to which it has been declared to point:
+   
+           eg:     int array[3][3], *ptr;
+   
+                   array[2][1] = 10;
+                   ptr = array[2];
+                   a = ptr[1];         /* a = 10 */
+   Intro to DDS MICRO-C                                             Page: 32
+
+
+   5. CONTROL STATEMENTS
+   
+         There are a number of statements in 'C', which  serve  to  control
+      the flow of program execution.
+   
+      5.1 The IF statement
+   
+            The IF statement controls the execution of one other statement,
+         based of  the  logical  value  (TRUE  or  FALSE)  of  a  CONDITION
+         EXPRESSION:
+   
+           if(condition)
+               statement;
+   
+            The "statement" in the above example would only be executed  if
+         "condition" evaluated to a logically TRUE (non zero) value.
+   
+            An optional "else" clause may be added to the IF statement.  In
+         this example, "statement-1" is executed if  "condition"  evaluates
+         to TRUE, and "statement-2" is executed if "condition" evaluates to
+         FALSE.
+   
+           if(condition)
+               statement-1;
+           else
+               statement-2;
+   
+      5.2 The WHILE Loop
+   
+            The WHILE  statement  is  similar  to  the  first  form  of  IF
+         statement (without  an  else),  except  that  the  "statement"  is
+         repeated until the condition becomes  FALSE.  If  the  "statement"
+         does not effect the condition, the statement will be executed over
+         and over forever (ie: infinite loop).
+   
+           while(condition)
+               statement;
+   
+            Try entering, compiling and executing the following program:
+   
+           #include stdio.h
+           /* Our old familiar "count to 10" program, with a few
+              improvements to let us see the numbers */
+           main()
+           {
+               int a;
+   
+               a = 0;
+               while(a < 10)
+                   printf("A=%d\n", a++);
+           }
+   Intro to DDS MICRO-C                                             Page: 33
+
+
+            Note the '\n' at the end of the prompt in the call to "printf".
+         'C' operates on a concept called STREAM I/O, which means that  all
+         input and  output  is  considered  to  occur  in  a  never  ending
+         "stream", like a stream of water. There  are  no  "lines"  in  the
+         stream unless we cause them. The '\n' sequence at the end  of  the
+         prompt is a NEWLINE character, which tells the compiler to  insert
+         the necessary code into the string to cause the output to go to  a
+         NEW LINE on a terminal or printer when the  string  is  displayed.
+         Try removing the '\n' from the prompt and see what happens.
+   
+      5.3 The DO/WHILE Loop
+   
+            The DO/WHILE statement  is  similar  to  the  WHILE  statement,
+         except that  the  condition  is  tested  AFTER  the  statement  is
+         executed, not BEFORE. Note  that  when  using  DO/WHILE,  you  are
+         guarenteed that the statement will always  be  executed  at  least
+         ONCE.
+   
+           do
+               statement;
+           while(conditon);
+   
+            Here is another example of our "count" program, which uses  our
+         own function to output the number in decimal:
+   
+           #include stdio.h
+   
+           /* Main "count" program */
+           main()
+           {
+               int a;
+   
+               a = 0;
+               do
+                   outnum(a);
+               while(++a < 10);
+           }
+   
+           /* Function to output a number in decimal */
+           outnum(value)
+               unsigned value;
+           {
+               char stack[6];      /* Small stack to hold digits */
+               unsigned sp;        /* Our own stack pointer */
+   
+           /* calculate each digit of the number (in reverse order) */
+               sp = 0;
+               do
+                   stack[sp++] = (value % 10) + '0';
+               while(value /= 10);
+           /* Display the stack of calculated digits */
+               while(sp)
+                   putc(stack[--sp], stdout);
+               putc('\n', stdout);     /* move to new line */
+           }
+   Intro to DDS MICRO-C                                             Page: 34
+
+
+            The "putc" function  is  another  function  from  the  STANDARD
+         LIBRARY. The name "stdout" is defined in the "stdio.h"  file,  and
+         tells "putc" that the character should  be  written  to  "standard
+         output" (The PC console).
+   
+            The DO/WHILE loop in the "outnum" function demonstrates a  case
+         where a simple  WHILE  would  not  suffice.  Try  to  re-code  the
+         function using only WHILE loops. You might try:
+   
+           sp = 0;
+           while(value)
+               stack[sp++] = (value % 10) + '0', value /= 10;
+   
+         This appears to work, however, try executing "outnum(0)". The loop
+         is never executed,  "sp"  is  never  incremented  from  zero,  and
+         NOTHING is output. Not even a single '0'.
+   
+      5.4 The FOR Loop
+   
+            Notice that in the example above, we have to  initialize  "sp",
+         test "value", and perform an operation on value at the end of  the
+         loop. 'C' provides a special loop construct, just for  doing  such
+         operations. It is called a FOR loop:
+   
+           for(initialization; condition; operation)
+               statement;
+   
+            Using the FOR loop, we can rewrite the above example as:
+   
+           for(sp = 0; value; value /= 10)
+               stack[sp++] = (value % 10) + '0';
+   
+            Actually, the FOR loop is more often used to  implement  simple
+         loops which execute a predetermined number of times:
+   
+           /* A count loop, which executes 10 times */
+           for(a=0; a < 10; ++a)
+               printf("A=%d\n", a);
+   
+            Sometimes, it is possible to do all the computations  that  are
+         required in  the  "initialization",  "condition"  and  "operation"
+         expressions to the FOR loop. In  this  case,  you  could  use  the
+         SEMICOLON ';' as the entire "statement" to tell FOR that  and  you
+         don't want it to perform any other operations:
+   
+           for(a=0; a < 10; printf("A=%d\n", a++))
+               ;       /* This is a NULL statement */
+   Intro to DDS MICRO-C                                             Page: 35
+
+
+            This semicolon by itself is called a NULL statement, and can be
+         used anywhere that any other statement would be used.
+   
+           a = 0;
+           while(a++ < 100)
+               ;
+   
+           if(a == b)
+               ;
+           else
+               printf("a is not equal to b");
+   
+            Note that the expressions in a FOR statement end with ';'. This
+         means that they are also optional, and could be replaced  by  NULL
+         statements.
+   
+           for(; a < 10; ++a) ;    /* No initialization */
+           for(a = 0;; ++a) ;      /* No condition (infinite loop) */
+           for(a = 0; ++a < 10;) ; /* No operation at end of loop */
+           for(;;) ;               /* Standard way to do infinite loop */
+   
+      5.5 Compound Statements
+   
+            This is all well and good you say, but IF, WHILE, DO/WHILE  and
+         FOR seem quite limited in that the "condition" or  "loop"  applies
+         only to a single statement. What if I want to perform more complex
+         calculations in my loop?
+   
+            Another very powerful feature of the 'C' language, is that  any
+         number of ordinary statements may be placed together  in  a  group
+         and treated as a single large statement. All you have to do is  to
+         enclose them in CURLY BRACKETS '{ }'. For example:
+   
+           if(a == 10) {       /* '{' begins compound statement */
+               printf("A was equal to 10... ");
+               a = 99;
+               printf("But its not anymore"); }    /* '}' ends */
+           else
+               printf("A was never equal to 10");
+   
+            You have already seen an example of compound statements, in the
+         curly brackets which surround the body of functions.  Technically,
+         each function consists of only one statement, but thanks  to  'C's
+         compounding capability, you can actually use as many statements as
+         you wish.
+   Intro to DDS MICRO-C                                             Page: 36
+
+
+      5.6 BREAK and CONTINUE
+   
+            Two more  'C'  statements  are  available  which  are  designed
+         specially for extending the capabilities of loops.
+   
+            The BREAK statement causes the program to  skip  any  remaining
+         statements in the loop, and to break out of  the  loop.  Execution
+         will proceed with the first statement which follows the loop, just
+         as if the loop had terminated in its normal fashion:
+   
+           for(a=0; a < 10; ++a) {
+               if(a == 5)
+                   break;
+               printf("A=%d\n", a); }
+   
+            The above loop will never  reach  its  terminal  count  of  10,
+         because the "break" statement will be executed  when  'a'  reaches
+         five. Thus, the BREAK statement allows you to sprinkle  additional
+         exit conditions throughout the body of the loop.
+   
+            The CONTINUE statement causes the loop to  skip  any  remaining
+         statements in the loop, but to continue  looping.  Execution  will
+         proceed as  if  all  the  statements  in  the  loop  had  executed
+         normally:
+   
+           for(a=0; a < 10; ++a) {
+               if(a != 5)
+                   continue;
+               printf("A=%d\n", a); }
+   
+            The above example will execute all 10 interations of the  loop,
+         but the "printf" statement will only be executed for the  loop  in
+         which 'a' is equal to 5.
+   
+      5.7 The SWITCH Statement
+   
+            Sometimes, you have a large number of conditions, which are  to
+         be executed depending on the value of a certain variable. One  way
+         that you could do this is with a series of "IF" statements,  using
+         a popular "else if" construct:
+   
+           if(a == 1)
+               statement-1;        /* Executed if a == 1 */
+           else if(a == 2)
+               statement-2;        /* Executed if a == 2 */
+           else if(a == 3)
+               statement-3;        /* Executed if a == 3 */
+           else if(a == 4) {       /* Note compound statement */
+               statement-4;        /* Executed if a == 4 */
+               statement-5; }      /* Executed if a == 4 */
+           else
+               statement-6;        /* Executed if a == anything else */
+   Intro to DDS MICRO-C                                             Page: 37
+
+
+            'C' has  a  built  in  statement  to  implement  this  kind  of
+         structure.  It  is  more  readable,  and  usually  generates  more
+         efficent code than such a series of "IF" statements. It is  called
+         a SWITCH statement:
+   
+           switch(a) {
+               case 1 :
+                   statement-1;        /* Executed if a == 1 */
+                   break;
+               case 2 ;
+                   statement-2;        /* Executed if a == 2 */
+                   break;
+               case 3 :
+                   statement-3;        /* Executed if a == 3 */
+                   break;
+               case 4 :
+                   statement-4;        /* Executed if a == 4 */
+                   statement-5;        /* Executed if a == 4 */
+                   break;
+               default:
+                   statement-6; }      /* Executed of a == anything else */
+   
+            The "BREAK" statement at the  end  of  every  CASE  causes  the
+         program to proceed to the statement immediately following the  end
+         of the entire switch  construct.  If  it  were  not  present,  the
+         statements in  a  case  would  "fall  through",  and  execute  the
+         statements in the following case as well. Since the case values do
+         not have to be presented in any particular  order,  this  behavior
+         can often be used to your advantage by careful placing of the case
+         statements relative to each other. Note also that the code in  the
+         last case ("Default") does not need a "break" since it is  already
+         at the end of the switch construct.
+   
+      5.8 Labels and GOTO
+   
+            If none of the above constructs does exactly what you  need  to
+         structure a particular program. 'C' also  has  available  the  old
+         familiar GOTO command. Although the use of "GOTO" is often frowned
+         upon, it can save you much programming effort in  some  cases.  In
+         order to use goto, you must have a LABEL.  Any  statement  may  be
+         labeled by preceeding it with a name, followed immediatly by  ':'.
+         For example:
+   
+           #include stdio.h
+           /* Our "count to 10" program using goto looping */
+           main()
+           {
+               int a;
+   
+               a = 0;
+           count: printf("A=%d\n", a);     /* Labeled "count" */
+               if(++a < 10)
+                   goto count;
+           }
+   Intro to DDS MICRO-C                                             Page: 38
+
+
+   6. RECURSION
+   
+         RECURSION is the ability of a function to call itself,  and  is  a
+      powerful capability of the 'C' language.
+   
+         In a previous section, I explained how memory is allocated on  the
+      stack to a function  when  it  begins  execution.  This  allows  each
+      function to have its own local variables. It also  means  that  if  a
+      function calls itself (by referencing its own name in  an  expression
+      contained within it), the function will begin executing with its  own
+      local memory, which is distinct from the local memory of the  calling
+      function (which  is  itself!).  This  means  that  when  the  "lower"
+      instance of the function terminates, it will not  have  affected  the
+      memory or execution state of the "higher" version of the function.
+   
+         The classic example of a recursive  algorithm  is  the  FACTORIAL,
+      which may be defined as: factorial(n) is equal  the  product  of  all
+      numbers from one to n.
+   
+         Thus:
+                   factorial(1) == 1       /* 1         */
+                   factorial(2) == 2       /* 1*2       */
+                   factorial(3) == 6       /* 1*2*3     */
+                   factorial(4) == 24      /* 1*2*3*4   */
+                   factorial(5) == 120     /* 1*2*3*4*5 */
+   
+         Using this algorithm, we can define an  ITERATIVE  (non-recursive)
+      function to calculate the factorial of a passed value:
+   
+               /*
+                * ITERATIVE factorial function
+                */
+               unsigned factorial(value)
+                   unsigned value;
+               {
+                   unsigned result;
+   
+                   result = 1;             /* Begin with one */
+                   while(value > 1)        /* For each value */
+                       result *= value--;  /* Include in product & reduce */
+   
+                   return result;          /* Send back result */
+               }
+   
+         You can see that in this above example, the function simply  loops
+      the required number of times to perform  the  appropriate  number  of
+      multiply operations to calculate the factorial. (The factorial  of  0
+      is defined as 1, NOT 0, so the above function will return the correct
+      result in this case).
+   Intro to DDS MICRO-C                                             Page: 39
+
+
+         Another way to define factorial is: factorial(n) = the product  of
+      n and factorial(n-1). (Remember that the factorial of zero is defined
+      as 1).
+   
+         Thus:
+                   factorial(1) == 1       /* 1*1  */
+                   factorial(2) == 2       /* 2*1  */
+                   factorial(3) == 6       /* 3*2  */
+                   factorial(4) == 24      /* 4*6  */
+                   factorial(5) == 120     /* 5*24 */
+   
+         Using this algorithim, we  can  define  a  RECURSIVE  function  to
+      calculate the factorial of a passed value:
+   
+               /*
+                * RECURSIVE factorial function
+                */
+               unsigned factorial(value)
+                   unsigned value;
+               {
+                   if(value == 0)  /* Factorial 0 is 1 */
+                       return 1;
+   
+                   return value * factorial(value - 1);
+               }
+   
+         In this example, you can see that the function will  call  itself,
+      each  time  passing  a  reduced  value  until  a  value  of  zero  is
+      encountered. When the zero value is passed, "factorial"  returns  the
+      pre-defined result of one, and  all  other  called  versions  of  the
+      function will perform a  single  multiplication,  and  pass  the  new
+      result on. The value returned by the "highest" version of "factorial"
+      will be the factorial of the originally passed value.
+   
+         This is the "classic" example of recursion, and it is a poor  one.
+      Although it demonstrates the concept,  it  does  not  show  a  useful
+      application. In fact, the recursive factorial function  will  execute
+      slower and require much more memory  than  the  interative  function.
+      (Remember each "version" of the function gets its own local memory).
+   
+         The MICRO-C compiler  itself  relies  heavily  on  recursion,  and
+      provides much better examples of this programming technique since  it
+      is used to accomplish feats which are not  easily  possible  using  a
+      non-recursive algorithm.
+   
+         One such use of recursion in the compiler is  to  accomplish  'C's
+      COMPOUND STATEMENT capability. Recall that multiple statements in 'C'
+      may be  grouped  together  and  treated  as  a  single  statement  by
+      enclosing them in CURLY BRACKETS  '{}'.  Any  statement  within  this
+      "group" may also be a  compound  statement,  and  this  "nesting"  of
+      compound statement blocks may continue to ANY LEVEL.
+   Intro to DDS MICRO-C                                             Page: 40
+
+
+         The compiler contains a  function  called  "statement",  which  is
+      passed the first token from  a  'C'  statement,  and  processes  that
+      statement.  This  function  contains  a  "switch"   statement   which
+      processes the token, and decides the action to be performed for  that
+      statement.  Note:  "tokens"  are  numeric  representations   of   the
+      individual entities which may occur  in  the  source  file  (such  as
+      keywords, symbol names, operators etc.).
+   
+         The "statement" function contains a  fragment  of  code  which  is
+      similar to this:
+   
+               /*
+                * Evaluate a language statement
+                */
+               statement(token)
+                   unsigned token;
+               {
+                   /* ... Not shown ... */
+                   switch(token) {     /* act upon the token */
+                       case OCB:       /* '{' - begin a block */
+                           while((token = get_token()) != CCB)
+                               statement(token);
+                           break;
+                       case WHILE:
+                           /* ... Not shown ... */
+                           eval(CRB);
+                           cond_jump(FALSE, b, -1);
+                           statement(get_token());
+                           test_jump(a);
+                           /* ... Not shown ... */
+                           break;
+                       /* Other cases ... Not shown ... */ }
+               }
+   
+         In  this  function,  a  "while"  keyword  causes   the   following
+      expression to be evaluated, followed by  a  conditional  jump,  after
+      which  a  single  statement  is  compiled  (by  recursive   call   to
+      "statement"), followed by  a  jump  back  to  the  beginning  of  the
+      expression evaluation.
+   
+         If "statement" finds an  Opening  Curly  Bracket  (OCB),  it  will
+      accept and compile more statements (recursivly) until a Closing Curly
+      Bracket (CCB) is found. Therefore, if the statement compiled  in  the
+      "while" loop  begins  with  OCB,  that  version  of  the  "statement"
+      function will compile all subsequent statements up to CCB. When  that
+      version of  "statement"  terminates,  the  original  version  of  the
+      function (handling the "while") will then compile the  closing  jump.
+      This has the effect that all statements between OCB and CCB ('{'  and
+      '}') will be included in the body of the "while" loop.
+   
+         Another case where recursion is used within the MICRO-C  compiler,
+      is to evaluate sub-expressions (contained  in  round  brackets  '()')
+      which are inside another expression. In  this  case,  the  expression
+      evaluation function calls itself (recursivly) when an  Opening  Round
+      Bracket (ORB) is encountered.
+   Intro to DDS MICRO-C                                             Page: 41
+
+
+   7. COMMAND LINE ARGUMENTS
+   
+         When a 'C' program is invoked  by  typing  its  name  at  the  DOS
+      command prompt, the remainder of the command line is broken down into
+      distinct "words" (based on separating spaces or tabs), and passed  as
+      standard 'C' arguments to the main function.
+   
+         Two values are passed to "main", the first is an integer count  of
+      the number of command line arguments which were found, and the second
+      is an array of pointers to character strings which  contain  each  of
+      the arguments. In order that the program  may  identify  itself,  the
+      first (zero'th) argument is always the name of  the  file  containing
+      the programs executable image.
+   
+         For example, consider this program, compiled and saved in  a  file
+      called "TEST.COM":
+   
+           #include stdio.h        /* Standard I/O definitions */
+   
+           /*
+            * Command line arguments - DEMO program
+            */
+           main(argc, argv)
+               int argc;       /* Count of arguments */
+               char *argv[]    /* Array of pointers to char strings */
+           {
+               int i;          /* Temporary counter variable */
+   
+               for(i=0; i < argc; ++i)
+                   printf("argv[%d] = '%s'\n", i, argv[i]);
+           }
+   
+         When executed with the following command line:
+   
+                           TEST the quick brown fox
+   
+         The program will display the following output:
+   
+           argv[0] = 'TEST.COM'
+           argv[1] = 'the'
+           argv[2] = 'quick'
+           argv[3] = 'brown'
+           argv[4] = 'fox'
+   
+         NOTE1: The 'argc' value includes argv[0]  (program  name)  in  its
+      argument count.
+   
+         NOTE2: Like any other  'C'  function,  "main"  does  not  have  to
+      declare its arguments unless it is going to use them.
+   Intro to DDS MICRO-C                                             Page: 42
+
+
+   8. FILE ACCESS
+   
+         As mentioned before, all I/O  in  'C'  is  performed  by  STANDARD
+      LIBRARY FUNCTIONS. Before any  file  access  can  be  performed,  the
+      header file "stdio.h" must be included in the  source  (Via  #include
+      pre-processor directive), in order to  properly  define  the  various
+      functions and types which are used on your particular system.
+   
+         For  detailed  information  on  the  standard  library   functions
+      mentioned below, see the MICRO-C technical manual.  NOTE  that  cross
+      compilers for embedded systems (or any other environment  which  does
+      not have an general "operating system") do not usually  provide  file
+      I/O functions. Refer to the library documentation for your compiler.
+   
+      8.1 File Pointers
+   
+            All files in 'C' are identified by a FILE POINTER, which  is  a
+         value returned by the operating system when the  file  is  OPENED.
+         Since the type of value used to identify files may vary  from  one
+         operating system to another, the "stdio.h" header file  defines  a
+         data type called "FILE" which contains the correct definition  for
+         your particular operating system. This allows the  declaration  of
+         the file pointers to  be  portable  from  one  system  to  another
+         without changing the program source code.
+   
+      8.2 File I/O Functions
+   
+            The standard library function "fopen" is used to open a file by
+         name, and obtain the file pointer value.
+   
+            The functions "getc", "fread", "fgets" and "fscanf" may be used
+         to read information from an open file.
+   
+            The functions "putc", "fwrite", "fputs" and  "fprintf"  may  be
+         used to write information to an open file.
+   
+            The function "fclose" is used to close the file, which  informs
+         the operating system that you are finished with it.
+   Intro to DDS MICRO-C                                             Page: 43
+
+
+               /*
+                * Sample program to copy a file called "input"
+                * To a file called "output". Note: To keep this
+                * example simple, no error checking is perormed.
+                */
+               main()
+               {
+                   char buffer[1000];  /* Declare a copy buffer */
+                   int nbytes;         /* Records # bytes read */
+                   FILE *ifp, *ofp     /* Declare file pointers */
+   
+               /* Open the files */
+                   ifp = fopen("input","r");   /* Open for Read access */
+                   ofp = fopen("output", "w"); /* Open for Write access */
+   
+               /* Copy data in 1000 byte blocks */
+                   do {
+                       nbytes = fread(buffer, 1000, fp);   /* Read data */
+                       fwrite(buffer, nbytes, fp); }       /* Write data */
+                   while(nbytes == 1000);
+   
+                   fclose(ifp);            /* Close the input file */
+                   fclose(ofp);            /* Close the output file */
+               }
+   
+      8.3 Standard I/O
+   
+            Whenever a 'C' program is executed,  three  file  pointers  are
+         automatically  established  which  allow  access  to  the  console
+         keyboard and display:
+   
+           stdin   - Reads input from the console keyboard. Note that stdin
+                     may be REDIRECTED (using '<filename'). For example:
+                              program <input.dat
+                     executes "program", and causes it to read its standard
+                     input from "input.dat" instead of the keyboard.
+   
+           stdout  - Writes to the console display. Note that stdout may be
+                     REDIRECTED (using '>filename). For example:
+                             program >output.dat
+                     executes "program", and causes  it to  write  standard
+                     output to "output.dat" instead of the display.
+   
+           stderr  - Also writes to  the  console display,  but  CANNOT  BE
+                     REDIRECTED, usually used to insure that error messages
+                     will be displayed on the console even  if  the  output
+                     has been redirected.
+   
+            The stdin, stdout and stderr file pointers are defined  in  the
+         "stdio.h" header file, and are always available. They do not  have
+         to be opened or closed.
+   
+            Since "stdin" and "stdout"  are  used  very  often  within  'C'
+         programs, the functions "scanf" and "printf" are available.  These
+         behave exactly the same as  the  general  "fscanf"  and  "fprintf"
+         functions, except that they do not accept a file pointer argument,
+         and always access stdin and stdout.
+   Intro to DDS MICRO-C                                             Page: 44
+
+
+   9. SAMPLE FUNCTIONS
+   
+         Here are some sample 'C' functions, demonstrating features of  'C'
+      which we have discussed:
+   
+         Any function used in an example  but  not  defined  therein  is  a
+      Library Function.  Refer  to  the  MICRO-C  Technical  Manual  for  a
+      description.
+   
+      9.1 Prime Number Generator
+   
+           #include stdio.h        /* Standard I/O definitions */
+   
+           /*
+            * This program tests a range of numbers, and prints out any
+            * values which it finds to be prime. Each value is divided
+            * by increasing values from 2 to (num/2). The "modulus" ('%')
+            * operator is used, resulting in a zero result (no remainder)
+            * if a factor is found. The main loop is incremented by two,
+            * to skip even numbers which are never prime (except for 2
+            * which is not shown by this program).
+            */
+           main()
+           {
+               int num, test, limit;
+               char flag;
+   
+               for(num=1; num < 1000; num += 2) {      /* Test range */
+                   limit = num/2;                      /* Only test to 1/2 */
+                   flag = 1;                           /* Assume prime */
+                   for(test = 2; test < limit; ++test) { /* Test factors */
+                       if(!(num%test)) {               /* No remain: factor */
+                           flag = 0;                   /* Not prime */
+                           break; } }                  /* Waste no more time */ 
+                   if(flag)                            /* Prime, display */
+                       printf("%d\n", num); }
+           }
+   Intro to DDS MICRO-C                                             Page: 45
+
+
+      9.2 A Simple Sort
+   
+           #include stdio.h        /* Standard I/O definitions */
+   
+           /*
+            * This is an array of unsorted numbers
+            */
+           int numbers[10] = { 13, 25, 22, 7, 16, 91, 11, 41, 18, 0 };
+   
+           /*
+            * This main program calls a function "sort" which re-arranges
+            * the elements of an integer array to place them in ascending
+            * order. It then prints out the resultant array using a simple
+            * loop.
+            */
+           main()
+           {
+               int i;
+   
+               sort(numbers, 10);      /* Perform the sort */
+   
+               for(i=0; i < 10; ++i)   /* Display contents of array */
+                   printf("[%d]=%d\n", i, numbers[i]);
+           }
+   
+           /*
+            * Function to sort an array of numbers. It is passed the
+            * address of an integer array, and the size (in elements).
+            *
+            * Note: The declaration 'int array[]' identifies "array" as a
+            * single dimension integer array of unspecified size. Since
+            * arrays in 'C' are passed as a pointer value to the array
+            * address, accesses to "array" will access the actual contents
+            * of the passed array variable, allowing that variable to be
+            * modified directly by this function.
+            */
+           sort(array, size)
+               int array[], size;
+           {
+               int i, j, lowest;
+   
+               for(i=0; i < size; ++i) {           /* For each element */
+                   lowest = i;
+                   for(j=i+1; j < size; ++j)       /* Search higher elems */
+                       if(array[j] < array[lowest])
+                           lowest = j;             /* And remember lowest */
+                   j = array[lowest];              /* Swap with original */
+                   array[lowest] = array[i];
+                   array[i] = j; }
+           }
+   Intro to DDS MICRO-C                                             Page: 46
+
+
+      9.3 Text Display of Value
+   
+            This program accepts any  number  of  command  line  arguments,
+         which it evaluates as unsigned numbers, and  displays  the  result
+         for each argument using english text.
+   
+            For example, if this  program  were  saved  in  a  file  called
+         "TEXTNUM.COM", and the following command is executed:
+   
+               TEXTNUM 1000 1100 1111 31415 9265 358
+   
+            The program will display the following output:
+   
+               One Thousand
+               One Thousand, One Hundred
+               One Thousand, One Hundred and Eleven
+               Thirty One Thousand, Four Hundred and Fifteen
+               Nine Thousand, Two Hundred and Sixty Five
+               Three Hundred and Fifty Eight
+   
+            Here is a listing of the program:
+   
+           #include stdio.h
+   
+           /*
+            * Main program which processes all of its arguments,
+            * interpreting each one as a numeric value, and
+            * displaying that value as english text.
+            */
+           main(argc, argv)
+               int argc;
+               char *argv[];
+           {
+               int i;
+   
+               if(argc < 2)                /* No arguments given */
+                   abort("\nUse: textnum <value> ...\n");
+   
+               for(i=1; i < argc; ++i) {   /* Display all arguments */
+                   textnum(atoi(argv[i]));
+                   putc('\n', stdout); }
+           }
+   
+           /* >>> Continued on Next Page >>> */
+   Intro to DDS MICRO-C                                             Page: 47
+
+
+           /*
+            * Text tables and associated function to display an
+            * unsigned integer value as a string of words.
+            * Note the use of RECURSION to display the number
+            * of thousands and hundreds.
+            */
+   
+           /* Table of single digits and teens */
+           char *digits[] = {
+               "Zero", "One", "Two", "Three", "Four", "Five", "Six",
+               "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve",
+               "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+               "Seventeen", "Eighteen", "Nineteen" };
+   
+           /* Table of tens prefix's */
+           char *tens[] = {
+               "Ten", "Twenty", "Thirty", "Fourty", "Fifty",
+               "Sixty", "Seventy", "Eighty", "Ninety" };
+   
+           /* Function to display number as string */
+           textnum(value)
+               unsigned value;
+           {
+               char join_flag;
+   
+               join_flag = 0;
+   
+               if(value >= 1000) {             /* Display thousands */
+                   textnum(value/1000);
+                   fputs(" Thousand", stdout);
+                   if(!(value %= 1000))
+                       return;
+                   join_flag = 1; }
+   
+               if(value >= 100) {              /* Display hundreds */
+                   if(join_flag)
+                       fputs(", ", stdout);
+                   textnum(value/100);
+                   fputs(" Hundred", stdout);
+                   if(!(value %= 100))
+                       return;
+                   join_flag = 1; }
+   
+               if(join_flag)                   /* Separator if required */
+                   fputs(" and ", stdout);
+   
+               if(value > 19) {                /* Display tens */
+                   fputs(tens[(value/10)-1], stdout);
+                   if(!(value %= 10))
+                       return;
+                   putc(' ', stdout); }
+   
+               fputs(digits[value], stdout);   /* Display digits */
+           }
+
+
+
+                             Intro to DDS MICRO-C
+
+                              TABLE OF CONTENTS
+
+
+                                                                        Page
+
+    1. INTRODUCTION                                                        1
+
+
+    2. BACKGROUND INFORMATION                                              2
+
+       2.1 Computer Architecture                                           2
+       2.2 Assembly Language                                               5
+       2.3 High Level Languages                                            6
+       2.4 Interpreters VS Compilers                                       8
+       2.5 Object Modules & Linking                                        9
+       2.6 Compiler Libraries                                             10
+       2.7 Portability                                                    10
+
+    3. INTRODUCTION TO 'C'                                                11
+
+       3.1 Functions                                                      12
+       3.2 Variables                                                      13
+       3.3 Pointers                                                       16
+       3.4 A complete 'C' program                                         16
+       3.5 'C' memory organization                                        18
+
+    4. EXPRESSIONS                                                        21
+
+       4.1 Unary operators                                                22
+       4.2 Binary Operators                                               24
+       4.3 Other Operators                                                29
+
+    5. CONTROL STATEMENTS                                                 32
+
+       5.1 The IF statement                                               32
+       5.2 The WHILE Loop                                                 32
+       5.3 The DO/WHILE Loop                                              33
+       5.4 The FOR Loop                                                   34
+       5.5 Compound Statements                                            35
+       5.6 BREAK and CONTINUE                                             36
+       5.7 The SWITCH Statement                                           36
+       5.8 Labels and GOTO                                                37
+
+    6. RECURSION                                                          38
+
+
+    7. COMMAND LINE ARGUMENTS                                             41
+
+
+    8. FILE ACCESS                                                        42
+
+       8.1 File Pointers                                                  42
+
+   Intro to DDS MICRO-C                                   Table of Contents
+
+                                                                        Page
+       8.2 File I/O Functions                                             42
+       8.3 Standard I/O                                                   43
+
+    9. SAMPLE FUNCTIONS                                                   44
+
+       9.1 Prime Number Generator                                         44
+       9.2 A Simple Sort                                                  45
+       9.3 Text Display of Value                                          46

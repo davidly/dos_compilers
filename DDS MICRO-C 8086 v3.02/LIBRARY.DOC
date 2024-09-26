@@ -1,0 +1,6493 @@
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          ===========================================================
+                DDDDD           DDDDD               SSSS
+                 D   Dunfield    D   D             S
+                 D   D           D   Development    SSSS 
+                 D   D           D   D                  Systems
+                DDDDD           DDDDD               SSSS
+          ===========================================================
+          MM   MM  IIIIIII    CCCC   RRRRRR     OOO             CCCC
+          M M M M     I      C    C  R     R   O   O           C    C
+          M  M  M     I     C        R     R  O     O         C
+          M     M     I     C        RRRRRR   O     O  -----  C
+          M     M     I     C        R   R    O     O         C
+          M     M     I      C    C  R    R    O   O           C    C
+          M     M  IIIIIII    CCCC   R     R    OOO             CCCC
+          ===========================================================
+    
+    
+    
+    
+    
+                             A compact 'C' compiler
+                                      for
+                                 Small Systems.
+    
+    
+                               Library Reference
+    
+    
+    
+    
+    
+                                  Release 3.02
+    
+                               Revised 03-Jan-94
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                       Copyright 1988-1994 Dave Dunfield
+                              All rights reserved
+    MICRO-C Library                                                  Page: 1
+
+
+    1. THE MICRO-C LIBRARIES
+    
+          The MICRO-C distribution disk includes the 'C'  and  'ASM'  source
+       code for a very complete function library which is configured for use
+       on an IBM/PC under the MS-DOS operating system. These routines may be
+       also be used as "example" programs, providing  insight  into  MICRO-C
+       programming techniques.
+    
+          All functions except for the lowest level I/O routines  are  coded
+       in 'C', and should compile on any MICRO-C system. Note that some  low
+       level functions in the library are written in 'C' using  still  lower
+       level routines. Although this makes the library highly  portable  and
+       reduces the number of routines you have to re-write  for  a  specific
+       system, the resultant function will be less efficent than  one  which
+       directly uses the operating system services.
+    
+          If you are implementing MICRO-C an a small system  and  intend  to
+       use it for serious programming, I strongly recommend that you re-code
+       all of the low level library functions in assembly language.
+    
+          Note that since library routines are often  used  in  applications
+       where code size and execution speed are of primary importance, it may
+       be desirable to recode some or all of the other library  routines  in
+       assembly language as well.
+    
+          For those who intend to make only casual use of  MICRO-C,  or  who
+       wish to experiment with it simply for the  learning  experience,  the
+       'C' versions of the low level library functions should be  more  than
+       sufficient.
+    
+          NOTE: If you purchased MICRO-C as  part  of  a  "developers  kit",
+       refer to the documentation included with the CPU  support  files  for
+       details on the pre-configured library for that CPU, and the functions
+       available therein.
+    MICRO-C Library                                                  Page: 2
+
+
+    
+                         +----------------------------+
+                         |                            |
+                         |  ************************  |
+                         |  * The STANDARD library *  |
+                         |  ************************  |
+                         |                            |
+                         +----------------------------+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       1.1 STANDARD Library
+    
+             The library functions described  on  the  following  pages  are
+          currently available in the IBM/PC MICRO-C  library  as  "standard"
+          functions which are of a general nature, and should be portable to
+          most implementations of MICRO-C.
+    
+             The exact syntax and capabilities of the  system  or  processor
+          dependant functions may vary  in  different  implementations,  see
+          your  implementation  notes  (READ.ME)  for   details.   Different
+          possible forms of such functions are shown using (1), (2), ...  In
+          these cases, the form (1) of the function is the one used  in  the
+          MS-DOS library.
+    ABORT                                                             ABORT
+    
+    
+    
+    PROTOTYPE:
+    
+        abort(char *message)
+    
+    
+    ARGUMENTS:
+    
+        message - Pointer to message to display
+    
+    
+    RETURN VALUE:
+    
+        N/A - Function never returns
+    
+    
+    DESCRIPTION:
+    
+          This function writes the string passed as an argument to  standard
+       error, and then terminates the program with a  return  code  of  '-1'
+       (Indicating general  failure).  This  provides  a  simple  method  of
+       terminating a program on an error condition with a message explaining
+       why.
+    
+    
+    EXAMPLES:
+    
+        abort("Invalid operand\n");
+    ABS                                                                 ABS
+    
+    
+    
+    PROTOTYPE:
+    
+        int abs(int number)
+    
+    
+    ARGUMENTS:
+    
+        number  - Any integer value
+    
+    
+    RETURN VALUE:
+    
+        The absolute value of "number"
+    
+    
+    DESCRIPTION:
+    
+          The "abs" function returns the absolute value of the argument.  If
+       "number" is a positive value, it is returned unchanged. If  negative,
+       the negate of that value is returned (giving a positive result).
+    
+    
+    EXAMPLES:
+    
+        difference = abs(value1 - value2);
+    ATOI                                                               ATOI
+    
+    
+    
+    PROTOTYPE:
+    
+        int atoi(char *string)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to a string containing a decimal number
+    
+    
+    RETURN VALUE:
+    
+        16 bit integer value
+    
+    
+    DESCRIPTION:
+    
+          The "atoi" function converts an ASCII string containing  a  signed
+       decimal number (-32768 to 32767) to a 16 bit value which is returned.
+       An unsigned number of the range (0 to 65535) may also  be  used,  and
+       the result if assigned to an "unsigned" variable will be correct.
+    
+    
+    EXAMPLES:
+    
+        value = atoi("1234");
+        value = atoi("-1");
+    CD                                                                   CD
+    
+    
+    
+    PROTOTYPE:
+    
+        int cd(char *pathname)
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of directory to make current
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function sets the "current" directory, causing all subsequent
+       file references which do not explicitly indicate a directory path  to
+       access the path specified by "pathname".
+    
+    
+    EXAMPLES:
+    
+        cd("/mc/c_source");     /* UNIX */
+        cd("\\mc\\l_source");   /* MS-DOS */
+    CLOSE                                                             CLOSE
+    
+    
+    
+    PROTOTYPE:
+    
+        close(HANDLE fh);
+    
+    
+    ARGUMENTS:
+    
+        fh      - File handle of an open file
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function closes a file  which  was  previously  opened  using
+       "open".
+    
+    
+    EXAMPLES:
+    
+        close(fh);
+    CONCAT                                                           CONCAT
+    
+    
+    
+    PROTOTYPE:
+    
+        register concat(char *dest, char *source, ...)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to destination string
+        source  - Pointer to source string
+        ...     - Additional sources may be given
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "concat" function concatinates the given source  strings  into
+       one destination string. The destination string must be  large  enough
+       to hold all of the source strings plus the string  terminator  (zero)
+       byte. No value is returned.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "stdio.h").
+    
+    
+    EXAMPLES:
+    
+        concat(filename,"/tmp/", input_name);
+    CREATE                                                           CREATE
+    
+    
+    
+    PROTOTYPE:
+    
+        int create(char *pathname, int attrs)
+    
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of file to create
+        attrs   - Attributes for new file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The "create" function creates a new file with the specified system
+       attributes.
+    
+          The meaning of the individual bits in the "attrs" value is  system
+       dependant, and is defined in the "file.h" header file.
+    
+    
+    EXAMPLES:
+    
+        create("temp", HIDDEN);
+    DELETE                                                           DELETE
+    
+    
+    
+    PROTOTYPE:
+    
+        int delete(char *pathname)
+    
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of file to delete
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The "delete" function removes an existing file from the disk.  Any
+       disk space occupied by the file is released.
+    
+    
+    EXAMPLES:
+    
+        delete("temp");
+    EXIT                                                               EXIT
+    
+    
+    
+    PROTOTYPE:
+    
+        exit(int rc)
+    
+    
+    ARGUMENTS:
+    
+        rc      - Termination return code
+    
+    
+    RETURN VALUE:
+    
+        N/A - Function never returns
+    
+    
+    DESCRIPTION:
+    
+          This function terminates the execution of the program and passes a
+       specific return code back to the  operating  system.  A  return  code
+       value of zero is used  to  indicate  successful  program  completion.
+       Non-zero return code values may be used to indicate a particular type
+       of failure. A value of '-1' is often used to indicate a  non-specific
+       failure. Note that  the  "rc"  value  is  very  system  specific,  in
+       particular, some systems support only 8 bit return codes,  so  values
+       which are greater than 255 should be avoided.
+    
+    
+    EXAMPLES:
+    
+        exit(0);        /* success */
+        exit(-1);       /* failure */
+    FCLOSE                                                           FCLOSE
+    
+    
+    
+    PROTOTYPE:
+    
+        fclose(FILE *fp);
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an open file
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function closes a file  which  was  previously  opened  using
+       "fopen". The I/O buffer space used by the file is  released.  In  the
+       case of a file open for write ('w'), the last disk buffer is  flushed
+       and written to disk.
+    
+    
+    EXAMPLES:
+    
+        fclose(fp);
+    FFLUSH                                                           FFLUSH
+    
+    
+    
+    PROTOTYPE:
+    
+        fflush(FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        fp       File pointer to an open file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The "fflush" function flushes the I/O buffers for the  given  open
+       file. If the file is opened for WRITE, this causes any data remaining
+       in a partially filled output buffer to be written.  If  the  file  is
+       opened for READ, this has the effect of throwing away any data  which
+       is pending in the input buffer.
+    
+    
+    EXAMPLES:
+    
+        fputs("Enter you name?", stdout);
+        fflush(stdout);         /* Make sure prompt is output */
+        fgets(name, 80, stdin);
+    FGETS                                                             FGETS
+    
+    
+    
+    PROTOTYPE:
+    
+        char *fgets(char *buffer, int size, FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        buffer  - Pointer to string to receive line
+        size    - Maximum size of line to read
+        fp      - File pointer to an input file
+    
+    
+    RETURN VALUE:
+    
+        Pointer to "buffer", or 0 if end of file
+    
+    
+    DESCRIPTION:
+    
+          The "fgets" function reads characters  from  the  specified  input
+       file, and places them in the character  buffer  until  one  of  three
+       things happens:
+    
+          1) A NEWLINE character is encountered.
+    
+          2) The END of the file is encountered.
+    
+          3) The limit of "size" character is read.
+    
+          The string is terminated with the standard  NULL  (00)  character.
+       The trailing NEWLINE '\n' character is NOT  included  in  the  output
+       buffer.
+    
+    
+    EXAMPLES:
+    
+        fgets(input_line, 80, input_file);
+    FIND_FIRST                                                   FIND_FIRST
+    
+    
+    
+    PROTOTYPE:
+    
+        int find_first(char *pattern, int mattrs, char name[], int &sizeh,
+                       int &sizel, int &attrs, int &time, int &date)
+    
+    
+    ARGUMENTS:
+    
+        pattern - File name pattern to match
+        mattrs  - File attributes to match
+        name    - Address of string to receive file name
+        &sizeh  - Address of int to receive high word of size
+        &sizel  - Address of int to receive low word of size
+        &attrs  - Address of int to receive attributes
+        &time   - Address of int to receive time stamp
+        &date   - Address of int to receive date stamp
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function locates the first file on the disk which matches the
+       given pattern. The "mattrs" field specifies  any  special  attributes
+       the files must have  in  order  to  be  matched,  use  0  for  normal
+       directory searches.
+    
+          Subsequent files may be located using the "find_next" function.
+    
+          The above function prototype describes the  MS-DOS  implementation
+       of the function. With other operating systems, the function may  have
+       slightly  different  parameters,   due   to   differing   information
+       available. See your implementation notes.
+    
+    
+    EXAMPLES:
+    
+        if(find_first(pattern, 0, name, &sh, &sl, &a, &t, &d))
+            abort("No matching files found\n");
+    FIND_NEXT                                                     FIND_NEXT
+    
+    
+    
+    PROTOTYPE:
+    
+        int find_next(char name[], int &sizeh, int &sizel, int &attrs,
+                      int &time, int &date)
+    
+    
+    ARGUMENTS:
+    
+        name    - Address of string to receive file name
+        &sizeh  - Address of int to receive high word of size
+        &sizel  - Address of int to receive low word of size
+        &attrs  - Address of int to receive attributes
+        &time   - Address of int to receive time stamp
+        &date   - Address of int to receive date stamp
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The function must be preceeded by a call to "find_first", and will
+       locate the next file on  the  disk  which  matches  the  pattern  and
+       attributes given to that function call.
+    
+          The above function prototype describes the  MS-DOS  implementation
+       of the function. With other operating systems, the function may  have
+       slightly  different  parameters,   due   to   differing   information
+       available. See your implementation notes.
+    
+    
+    EXAMPLES:
+    
+        do
+            printf("%s\n", name);
+        while(!find_next(name, &sh, &sl, &a, &t, &d));
+    FOPEN                                                             FOPEN
+    
+    
+    
+    PROTOTYPE:
+    
+        FILE *fopen(char *filename, char *options)
+    
+    
+    ARGUMENTS:
+    
+        filename- Name of the file to open
+        options - String containing open options:
+                    'a' - Append to file (must use with 'w')
+                    'b' - Binary mode (default is text)
+                    'q' - Quit { exit(-1) } on failure
+                    'r' - Open file for read
+                    'v' - Issue error message on failure
+                    'w' - Open file for write
+    
+    
+    RETURN VALUE:
+    
+        File pointer to the file buffer for the open file
+        Zero (0) if file could not be opened
+    
+    
+    DESCRIPTION:
+    
+          This function opens a file for  buffered  input  ('r')  or  output
+       ('w'), allowing subsequent I/O operations to read or write the  file.
+       If the 'b' option is NOT included, the file is assumed to be  a  TEXT
+       file, and appropriate translations  are  made  for  NEWLINE  and  EOF
+       interpretation.
+    
+          The size of the I/O buffer used is established by "fopen" from the
+       external variable 'IOB_size',  which  has  a  default  value  of  256
+       (bytes). This variable is defined in the 'file.h'  header  file,  and
+       may be modified prior to calling this function if you wish to  use  a
+       different buffer size.
+    
+          One I/O buffer is allocated from the heap for each open file. When
+       using a large IOB_size value, you must be careful not to consume more
+       memory than is available.
+    
+    
+    EXAMPLES:
+    
+        fp = fopen("input_file", "r");
+        fp = fopen("input_file", "rvq");
+        IOB_size = 1024*10;         /* Set up a 10K buffer */
+        fp = fopen("output_file", "wb");
+    FPRINTF                                                         FPRINTF
+    
+    
+    
+    PROTOTYPE:
+    
+        register fprintf(FILE *fp, char *format, arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an output file
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This routine performs a formatted print to  a  file  specified  by
+       'fp'. The 'format' string is written to the file with  the  arguments
+       substituted for special "conversion  characters".  These  "conversion
+       characters" are identified by a preceeding '%', and may be one of the
+       following:
+    
+                    b       - Binary number
+                    c       - Character
+                    d       - Decimal (signed) number
+                    o       - Octal number
+                    s       - String
+                    u       - Unsigned decimal number
+                    x       - Hexidecimal number
+                    %       - A single percent sign (No argument used)
+    
+          A numeric "field width" specifier may be placed in between the '%'
+       and the conversion character, in which case the value will be  output
+       in a field of that width. If the "field width" is a negative  number,
+       the output will be left justified in the field, otherwise it is right
+       justified. If the field width contains a leading '0', then the output
+       field will be padded with zero's, otherwise spaces are used.
+    
+          If no "field width" is given, the output  is  free  format,  using
+       only as much space as required.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "stdio.h").
+    
+    
+    EXAMPLES:
+    
+        fprintf(stderr,"Filename='%s'\n", filename);
+        fprintf(stdout,"Address=%04x\n", address);
+        fprintf(outfile,"Amount: $%3u.%02u\n", amount / 100, amount % 100);
+    FPUTS                                                             FPUTS
+    
+    
+    
+    PROTOTYPE:
+    
+        fputs(char *string, FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to a character string
+        fp      - FIle pointer to output file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The "fputs" function writes the specified string to the  indicated
+       output file. The zero terminating the string is NOT written.
+    
+    
+    EXAMPLES:
+    
+        fputs("Text message", output_file);
+    FREAD                                                             FREAD
+    
+    
+    
+    PROTOTYPE:
+    
+        int fread(char *buffer, int size, FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        buffer  - Pointer to buffer to receive data
+        size    - Number of bytes to read
+        fp      - File pointer to an input file
+    
+    
+    RETURN VALUE:
+    
+        Number of bytes read from file
+    
+    
+    DESCRIPTION:
+    
+          This function reads a block of data from a file and places  it  in
+       memory at the address of "buffer". Data will be read in  either  TEXT
+       or BINARY form, depending on how the file was opened. If  the  number
+       of bytes returned is less than the number of bytes requested,  either
+       the end of the file was encountered or an error condition occured (in
+       which case the value will be zero).
+    
+    
+    EXAMPLES:
+    
+        fread(block, 512, input_fp);
+    FREE                                                               FREE
+    
+    
+    
+    PROTOTYPE:
+    
+        free(char *ptr)
+    
+    
+    ARGUMENTS:
+    
+        ptr     - Pointer to a previously allocated memory block
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "free" function releases (de-allocates) a block of memory that
+       was obtained via a call to "malloc", and returns it to the heap. This
+       makes it available for use by other memory allocations.
+    
+    
+    EXAMPLES:
+    
+        if(!(ptr = malloc(BUFSIZ)))     /* Allocate a temporary buffer */
+            abort("Not enough memory");
+        do {                            /* Copy the file over */
+            size = fread(ptr, BUFSIZ, in_fp);
+            fwrite(ptr, size, out_fp); }
+        while(size == BUFSIZ);
+        free(ptr);                      /* Release temporary buffer */
+    FSCANF                                                           FSCANF
+    
+    
+    
+    PROTOTYPE:
+    
+        register int fscanf(FILE *fp, char *format, &arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an input file
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        The number of successful matches
+        EOF (-1) if end of file or an error condition occurs
+    
+    
+    DESCRIPTION:
+    
+          This routine reads a line from the specified file and scans it for
+       specific values which  are  then  assigned  to  the  passed  argument
+       addresses. The types of values  scanned  are  determined  by  special
+       "conversion characters" within the "format" string. These "conversion
+       characters" are identified by a preceeding '%', and may be one of the
+       following:
+    
+                    b       - Binary number
+                    c       - Character
+                    d       - Decimal (signed) number
+                    o       - Octal number
+                    s       - String
+                    u       - Unsigned decimal number
+                    x       - Hexidecimal number
+                    %       - A single percent sign (No argument used)
+    
+          Before scanning for any value other than '%c', any leading "space"
+       or "tab" characters in the input line are automatically flushed.
+    
+          Scanning of a particular value type will terminate when either the
+       end of  the  line  or  a  non-applicible  character  is  encountered.
+       Scanning of strings (%s) stops with a "space" or "tab" character, and
+       the stored string will be zero terminated.
+    
+          A numeric "field width" specifier may be placed in between the '%'
+       and the conversion character, in which case  scanning  of  the  value
+       will  also  terminate  if  that  many  input  characters  have   been
+       processed.
+    
+          Scanning  for  characters  (%c)  assumes  a  "field  width"  of  1
+       character unless otherwise specified. If a field width is  specified,
+       the output is assumed to be  a  string,  and  a  zero  terminator  is
+       appended.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+          Any other (non-conversion) characters in the  format  string  will
+       cause the next character in the input string which is not  a  "space"
+       or "tab" to be skipped if it matches that character.
+    
+          Any variable values from the input line  which  are  not  required
+       must be cleared by scanning them into a "dummy" variable.
+    
+          The most common mistake when using "fscanf" is forgetting  to  use
+       the '&'  operator  with  a  simple  variable  argument.  This  causes
+       "fscanf" to store the value INDIRECTLY at the  address  contained  in
+       that variable (Similar to  using  '*'  with  a  pointer)  instead  of
+       storing the value into the actual variable  itself.  Arguments  which
+       are array names do not require the '&' operator, since the address of
+       the array is already generated by reference to its name.
+    
+          Unlike "fscanf" in most  other  compiler  libraries,  the  MICRO-C
+       function always reads and scans a single line from the input file.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register".
+    
+    
+    EXAMPLES:
+    
+        if(fscanf(infile,"%s %s %u", first_name, last_name, &age) != 3)
+            abort("Error in user record\n");
+    FSEEK                                                             FSEEK
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) int fseek(FILE *fp, int h_offset, unsigned l_offset, int mode)
+        (2) int fseek(FILE *fp, int offset, mode)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an open file
+        h_offset- Highest 16 bits of offset value
+        l_offset- Lowest 16 bits of offset value
+        offset  - 16 bit offset value
+        mode    - Type of seek
+                    0 = Absolute from start of file
+                    1 = Signed offset from current position
+                    2 = Signed offset from end of file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function positions the operating system internal pointer into
+       a file so that any read or write will take  place  at  the  specified
+       position in the file.
+    
+          Most operating systems which support files of > 64K bytes in  size
+       will support form (1) of the function, using both high and low offset
+       values.
+    
+          Smaller operating  systems  may  only  support  form  (2)  of  the
+       function, allowing seeking of only +/- 32K bytes.
+    
+          Also, some implementations may not support  all  "modes",  or  may
+       only allow unsigned (positive) offsets.
+    
+    
+    EXAMPLES:
+    
+        fseek(in_file, 0, 2);   /* Advance to end of file */
+    FTELL                                                             FTELL
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) int ftell(FILE *fp, int &h_offset, unsigned &l_offset)
+        (2) int ftell(FILE *fp, int &offset)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an open file
+        h_offset- Address of int to receive high word of offset
+        l_offset- Address of int to receive low word of offset
+        offset  - Address of int to receive offset
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function gets the current read/write position within a  file.
+       The position returned indicates the absolute character (byte)  offset
+       from the start of the file where the next read  or  write  will  take
+       place.
+    
+          Most operating systems which support files of > 64K bytes in  size
+       will support form (1) of the function, returning both  high  and  low
+       offset values.
+    
+          Smaller operating  systems  may  only  support  form  (2)  of  the
+       function,  allowing  access  to  only  the  first   65535   character
+       positions.
+    
+    
+    EXAMPLES:
+    
+        ftell(fp, &oldh, &oldl);    /* Save file position */
+            . . .                   /* Perform some operations on the file */
+        fseek(fp, oldh, oldl, 0);   /* Return to previous position */
+    FWRITE                                                           FWRITE
+    
+    
+    
+    PROTOTYPE:
+    
+        int fwrite(char *block, int size, FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        block   - Pointer to a block of data to write
+        size    - Number of bytes to write
+        fp      - File pointer to an output file
+    
+    
+    RETURN VALUE:
+    
+        The number of bytes written to the file
+    
+    
+    DESCRIPTION:
+    
+          This function writes a block of data to the  indicated  file  from
+       memory at the specified address. Data is written in  either  TEXT  or
+       BINARY mode, depending on how the  file  was  opened.  If  the  value
+       returned is less than the value of the "size" parameter,  some  error
+       condition has occured (Such as disk full).
+    
+    
+    EXAMPLES:
+    
+        if(fwrite(buffer, 100, fp) < 100)
+            abort("File write error\n");
+    GETC                                                               GETC
+    
+    
+    
+    PROTOTYPE:
+    
+        int getc(FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an input file
+    
+    
+    RETURN VALUE:
+    
+        Value of a character read from the file (0-255)
+        EOF (-1) if end of file or an error condition occurs
+    
+    
+    DESCRIPTION:
+    
+          This function reads a single character from  an  input  file,  and
+       returns it as a positive value in the range of 0 to 255.  A  full  16
+       bit value is returned, allowing the  end  of  file  condition  to  be
+       distinct from the character value 255.
+    
+    
+    EXAMPLES:
+    
+        if((c = getc(input_file)) == EOF)
+            abort("End of file encountered\n");
+    GETDIR                                                           GETDIR
+    
+    
+    
+    PROTOTYPE:
+    
+        int getdir(char pathname[])
+    
+    
+    ARGUMENTS:
+    
+        pathname- Address of string to receive directory path
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function retreives from the system the name of the  "current"
+       directory path.
+    
+          The "pathname" string must be long  enough  to  hold  the  largest
+       pathname supported by the system, as  indicated  by  the  "PATH_SIZE"
+       definition in the "file.h" header file.
+    
+    
+    EXAMPLES:
+    
+        getdir(&current_dir);
+    GETENV                                                           GETENV
+    
+    
+    
+    PROTOTYPE:
+    
+        int getenv(char *ename, char *dest)
+    
+    
+    ARGUMENTS:
+    
+        ename   - String containing name of environment variable
+        dest    - Buffer to receive variable string value
+    
+    
+    RETURN VALUE:
+    
+        1 if environment variable was found, 0 if not.
+    
+    
+    DESCRIPTION:
+    
+          The GETENV function gets the value of a variable in  the  programs
+       environment, and returns it as a string. If the environment  variable
+       is not found, zero is returned, and the destination buffer is set  to
+       a null (zero length) string.
+    
+          Use of this  function  allows  a  programs  fixed  parameters  and
+       options to be specified once in environment variables, which may then
+       be extracted by the program, eliminating the need  to  specify  those
+       values every time the program is executed.
+    
+          When operating  MICRO-C  under  operating  systems  which  do  not
+       support environment variables, this function will not be available.
+    
+    
+    EXAMPLES:
+    
+        if(!getenv("COMSPEC", command))
+            abort("No command processor defined\n");
+    IN                                                                   IN
+    
+    
+    
+    PROTOTYPE:
+    
+        int in(unsigned port)
+    
+    
+    ARGUMENTS:
+    
+        port    - I/O port address
+    
+    
+    RETURN VALUE:
+    
+        The 8 bit value read from the given I/O port address
+    
+    
+    DESCRIPTION:
+    
+          The "in" function reads and returns a byte (8 bits)  from  an  I/O
+       port as an integer value between 0 and 255.
+    
+          The valid range of values for "port" depends on  the  I/O  address
+       space of the processor.
+    
+          This function is not provided for processors which do not  support
+       a separate I/O address space.
+    
+    
+    EXAMPLES:
+    
+        while(in(0));   /* Wait for flag to clear */
+    INW                                                                 INW
+    
+    
+    
+    PROTOTYPE:
+    
+        int inw(unsigned port)
+    
+    
+    ARGUMENTS:
+    
+        port    - I/O port address
+    
+    
+    RETURN VALUE:
+    
+        The 16 bit value read from the given I/O port address
+    
+    
+    DESCRIPTION:
+    
+          The "inw" function reads and returns a word (16 bits) from an  I/O
+       port as an integer value between 0 and 65535 (-1).
+    
+          The valid range of values for "port" depends on  the  I/O  address
+       space of the processor.
+    
+          This function is not provided for processors which do not  support
+       a separate I/O address space.
+    
+    
+    EXAMPLES:
+    
+        var = inw(0);
+    ISASCII                                                         ISASCII
+    
+    
+    
+    PROTOTYPE:
+    
+        int isascii(int c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is an ASCII character
+        0 if 'c' is not an ASCII character
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) if the passed character  'c'  is  a  valid  ASCII
+       character (0x00-0xFF), otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        if(!isascii(*ptr))
+            abort("Invalid character data");
+    ISALNUM                                                         ISALNUM
+    
+    
+    
+    PROTOTYPE:
+    
+        int isalnum(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is alphabetic or numeric
+        0 if 'c' is not alphabetic or numeric
+    
+    
+    DESCRIPTION:
+    
+          Returns  TRUE  (1)  if  the  passed  character  'c'  is  an  ASCII
+       alphabetic letter in either upper or  lower  case  or  if  'c'  is  a
+       numeric digit, otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        while(isalnum(*ptr))        /* Copy over symbol name */
+            *name++ = *ptr++;
+    ISALPHA                                                         ISALPHA
+    
+    
+    
+    PROTOTYPE:
+    
+        int isalpha(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is alphabetic
+        0 if 'c' is not alphabetic
+    
+    
+    DESCRIPTION:
+    
+          Returns  TRUE  (1)  if  the  passed  character  'c'  is  an  ASCII
+       alphabetic letter in either upper or lower case, otherwise FALSE  (0)
+       is returned.
+    
+    
+    EXAMPLES:
+    
+        flag = isalpha(input_char);
+    ISCNTRL                                                         ISCNTRL
+    
+    
+    
+    PROTOTYPE:
+    
+        int iscntrl(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is a "control" character
+        0 if 'c' is not a "control" character
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) is the passed character 'c' is an ASCII "control"
+       character (0x00-0x1F or 0x7F), otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        putc(iscntrl(c) ? '.' : c, stdout); /* Display controls as '.' */
+    ISDIGIT                                                         ISDIGIT
+    
+    
+    
+    PROTOTYPE:
+    
+        int isdigit(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is numeric
+        0 if 'c' is not numeric
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) is the passed character 'c'  is  an  ASCII  digit
+       ('0'-'9'), otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        value = 0;
+        while(isdigit(*ptr))
+            value = (value * 10) + (*ptr++ - '0');
+    ISGRAPH                                                         ISGRAPH
+    
+    
+    
+    PROTOTYPE:
+    
+        int isgraph(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is a non-space printable character
+        0 if 'c' is a space or not printable
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) if the passed character 'c' is a printable  ASCII
+       character other than  a  space  character,  otherwise  FALSE  (0)  is
+       returned.
+    
+    
+    EXAMPLES:
+    
+        putc(isgraph(c) ? c : '.', stdout);
+    ISLOWER                                                         ISLOWER
+    
+    
+    
+    PROTOTYPE:
+    
+        int islower(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is lower case alphabetic
+        0 if 'c' is not lower case alphabetic
+    
+    
+    DESCRIPTION:
+    
+          Returns  TRUE  (1)  if  the  passed  character  'c'  is  an  ASCII
+       alphabetic letter of lower case, otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        flag = islower(input_char);
+    ISPRINT                                                         ISPRINT
+    
+    
+    
+    PROTOTYPE:
+    
+        int isprint(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is a printable character
+        0 if 'c' is not printable
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) if the passed character 'c' is a printable  ASCII
+       character (0x20-0xFE), otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        putc(isprint(c) ? c : '.', stdout);
+    ISPUNCT                                                         ISPUNCT
+    
+    
+    
+    PROTOTYPE:
+    
+        int ispunct(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is a printable non-alphanumeric character
+        0 if 'c' is not printable or alphanumeric
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) if the passed character 'c' is a printable  ASCII
+       character which is not a letter of the alphabet or a  numeric  digit,
+       otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        while(ispunct(*ptr))
+            ++ptr;
+    ISSPACE                                                         ISSPACE
+    
+    
+    
+    PROTOTYPE:
+    
+        int isspace(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is a space character (space, tab or newline)
+        0 if 'c' is not a space character
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) if the passed character 'c' is one  of  a  space,
+       tab or newline, otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        while(isspace(*ptr))
+            ++ptr;
+    ISUPPER                                                         ISUPPER
+    
+    
+    
+    PROTOTYPE:
+    
+        int isupper(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is upper case alphabetic
+        0 if 'c' is not upper case alphabetic
+    
+    
+    DESCRIPTION:
+    
+          Returns  TRUE  (1)  if  the  passed  character  'c'  is  an  ASCII
+       alphabetic letter of upper case, otherwise FALSE (0) is returned.
+    
+    
+    EXAMPLES:
+    
+        flag = isupper(input_char);
+    ISXDIGIT                                                       ISXDIGIT
+    
+    
+    
+    PROTOTYPE:
+    
+        int isxdigit(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+    
+    
+    RETURN VALUE:
+    
+        1 if 'c' is a hexidecimal digit
+        0 if 'c' is not a hexidecimal digit
+    
+    
+    DESCRIPTION:
+    
+          Returns TRUE (1) is the passed character 'c'  is  an  valid  ASCII
+       hexidecimal digit ('0'-'9', 'A'-'F', 'a'-'f'), otherwise FALSE (0) is
+       returned.
+    
+    
+    EXAMPLES:
+    
+        value = 0;
+        while(isxdigit(*ptr))
+            value = (value * 16) +
+                (isdigit(*ptr) ? *ptr++ - '0' : toupper(*ptr++) - ('A'-10));
+    LGETC                                                             LGETC
+    
+    
+    
+    PROTOTYPE:
+    
+        int lgetc(HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        fh      - File handle for an input file
+    
+    
+    RETURN VALUE:
+    
+        Value of a character read from the file (0-255)
+        EOF (-1) if end of file or an error condition occurs
+    
+    
+    DESCRIPTION:
+    
+          This function reads a single character from an  input  file  using
+       LOW LEVEL (unbuffered) I/O, and returns it as a positive value in the
+       range of 0 to 255. A full 16 bit value is returned, allowing the  end
+       of file condition to be distinct from the character value 255.
+    
+    
+    EXAMPLES:
+    
+        if((c = lgetc(input_file)) == EOF)
+            abort("End of file encountered\n");
+    LGETS                                                             LGETS
+    
+    
+    
+    PROTOTYPE:
+    
+        char *lgets(char *buffer, int size, HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        buffer  - Pointer to string to receive line
+        size    - Maximum size of line to read
+        fh      - File handle of an input file
+    
+    
+    RETURN VALUE:
+    
+        Pointer to "buffer", or 0 if end of file
+    
+    
+    DESCRIPTION:
+    
+          The "lgets" function reads characters  from  the  specified  input
+       file using LOW  LEVEL  (unbuffered)  I/O,  and  places  them  in  the
+       character buffer until one of three things happens:
+    
+          1) A NEWLINE character is encountered.
+    
+          2) The END of the file is encountered.
+    
+          3) The limit of "size" characters are read.
+    
+          The string is terminated with the standard  NULL  (00)  character.
+       The trailing NEWLINE '\n' character is NOT  included  in  the  output
+       buffer.
+    
+    
+    EXAMPLES:
+    
+        lgets(input_line, 80, L_stdin);
+    LONGJMP                                                         LONGJMP
+    
+    
+    
+    PROTOTYPE:
+    
+        longjmp(int savenv[3], int rvalue)
+    
+    
+    ARGUMENTS:
+    
+        savenv  - Save area for program context
+        rvalue  - Value to be returned by "setjmp"
+    
+    
+    RETURN VALUE:
+    
+        N/A - Function never returns
+    
+    
+    DESCRIPTION:
+    
+          The  "longjmp"  function  causes  execution  to  transfer  to  the
+       "setjmp" call which  set  up  the  "savenv"  variable.  The  "setjmp"
+       function will appear to return the value of "rvalue".
+    
+          NOTE-1: "longjmp" may  only  be  used  from  within  the  function
+       calling "setjmp" or a function which has been called  "beneath"  that
+       function. IT MUST NOT BE USED AFTER THE FUNCTION CALLING "SETJMP" HAS
+       TERMINATED.
+    
+          NOTE-2: If "rvalue" is zero, the function  calling  "setjmp"  will
+       assume that it is returning from initialization. Unless you want this
+       unusual behavior, you should not pass  a  return  value  of  zero  to
+       "longjmp".
+    
+          See also SETJMP.
+    
+    
+    EXAMPLES:
+    
+        if(getc(stdin) == ('C'-'@'))    /* If Control-C entered... */
+            longjmp(savearea, 1);       /* Return to main function */
+    LONGMATH                                                       LONGMATH
+    
+    
+    
+    PROTOTYPES:
+    
+        int longadd(char *num1, char *num2);
+        int longsub(char *num1, char *num2);
+        longmul(char *num1, char *num2);
+        longdiv(char *num1, char *num2);
+        int longshr(char *num1);
+        int longshl(char *num1);
+        longcpy(char *num1, char *num2);
+        longset(char *num1, unsigned value);
+        int longtst(char *num1);
+        int longcmp(char *num1, char *num2);
+        extern char Longreg[];
+    
+    ARGUMENTS:
+    
+        num1    - First LONG operand, receives result if generated
+        num2    - Second LONG operand, is not altered
+        value   - 16 bit value to initialize LONG number with
+    
+    
+    RETURN VALUE:
+    
+        longadd - 0 = Ok, 1 = addition overflowed
+        longsub - 0 = Ok, 1 = subtraction underflowed
+        longshr - Carry out of shift (1/0)
+        longshl - Carry out of shift (1/0)
+        longtst - 0 = Number is zero, !0 = Number is not zero
+        longcmp - 0 = (num1 == num2), 1 = (num1 > num2), -1 = (num1 < num2)
+    
+    
+    DESCRIPTION:
+    
+          This set of functions performs basic arithmetic functions on  LONG
+       numbers:
+    
+        longadd(num1, num2)     ->  num1 += num2
+        longsub(num1, num2)     ->  num1 -= num2
+        longmul(num1, num2)     ->  num1 *= num2 , Longreg = num1 * num2
+        longdiv(num1, num2)     ->  num1 /= num2 , Longreg = num1 % num2
+        longshr(num1)           ->  num1 >>= 1
+        longshl(num1)           ->  num1 <<= 1
+        longcpy(num1, num2)     ->  num1 = num2
+        longset(num1, value)    ->  num1 = (long) value
+        longtst(num1)           ->  Test (num1 != 0)
+        longcmp(num1, num2)     ->  Compare num1 and num2
+    
+          As shipped, a LONG number is 32 bits (4 bytes)  in  size,  however
+       this can be changed by altering the LONGMATH.ASM in the library.
+    
+          For a complete example of using  these  functions,  refer  to  the
+       LONGCALC.C example program included with the package.
+    LPRINTF                                                         LPRINTF
+    
+    
+    
+    PROTOTYPE:
+    
+        register lprintf(int handle, char *format, arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        handle  - DOS file handle of output file
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This routine performs a formatted print to  a  file  specified  by
+       'fh', using LOW LEVEL (unbuffered) I/O.
+    
+          The 'format' string is written to  the  file  with  the  arguments
+       substituted for special "conversion characters".  See  "fprintf"  for
+       more information on format strings and conversions.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "stdio.h").
+    
+    
+    EXAMPLES:
+    
+        lprintf(fh, "Total errors=%u", error_count);
+    LPUTC                                                             LPUTC
+    
+    
+    
+    PROTOTYPE:
+    
+        lputc(char c, HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+        fh      - File handle of an output file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DECRIPTION:
+    
+          This function writes the character 'c' to the  file  indicated  by
+       'fh' using LOW LEVEL (unbuffered) I/O. The "newline"  (\n)  character
+       will be translated into whatever character(s)  are  required  by  the
+       operating system to separate records in the file.
+    
+    
+    EXAMPLES:
+    
+        lputc('*', fh);
+        lputc('\n', L_stderr);
+    LPUTS                                                             LPUTS
+    
+    
+    
+    PROTOTYPE:
+    
+        lputs(char *string, HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to a character string
+        fh      - File handle of an output file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The "lputs" function writes the specified string to the  indicated
+       output file using LOW LEVEL (unbuffered) I/O.  The  zero  terminating
+       the string is NOT written.
+    
+    
+    EXAMPLES:
+    
+        lputs("Text message", output_fh);
+    LREWIND                                                         LREWIND
+    
+    
+    
+    PROTOTYPE:
+    
+        int lrewind(HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        fh      - File handle of an open file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function resets the operating system internal file handle  so
+       than any subsequent read or writes will be at the  beginning  of  the
+       file. For use with LOW LEVEL (unbuffered) file I/O only.
+    
+    
+    EXAMPLES:
+    
+        lrewind(input_fh);
+    LSCANF                                                           LSCANF
+    
+    
+    
+    PROTOTYPE:
+    
+        register int lscanf(int fh, char *format, &arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        fh      - DOS file handle of input file
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        The number of successful matches
+        EOF (-1) if end of file or an error condition occurs
+    
+    
+    DESCRIPTION:
+    
+          This routine reads a line from the specified file using LOW  LEVEL
+       (unbuffered) I/O, and scans it for specific  values  which  are  then
+       assigned to the  passed  argument  addresses.  The  types  of  values
+       scanned are determined by special "conversion characters" within  the
+       "format" string.
+    
+          See "fscanf" for more information on format strings.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register".
+    
+    
+    EXAMPLES:
+    
+        if(lscanf(infile,"%s %s %u", first_name, last_name, &age) != 3)
+            abort("Error in user record\n");
+    LSEEK                                                             LSEEK
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) int lseek(HANDLE fh, int h_offset, unsigned l_offset, int mode)
+        (2) int lseek(HANDLE fh, int offset, mode)
+    
+    
+    ARGUMENTS:
+    
+        fh  - File handle of an open file
+        h_offset- Highest 16 bits of offset value
+        l_offset- Lowest 16 bits of offset value
+        offset  - 16 bit offset value
+        mode    - Type of seek
+                    0 = Absolute from start of file
+                    1 = Signed offset from current position
+                    2 = Signed offset from end of file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function positions the operating system internal pointer into
+       a file so that any read or write will take  place  at  the  specified
+       position in the file.
+    
+          Most operating systems which support files of > 64K bytes in  size
+       will support form (1) of the function, using both high and low offset
+       values.
+    
+          Smaller operating  systems  may  only  support  form  (2)  of  the
+       function, allowing seeking of only +/- 32K bytes.
+    
+          Also, some implementations may not support  all  "modes",  or  may
+       only allow unsigned (positive) offsets.
+    
+          For use with LOW LEVEL (unbuffered I/O only).
+    
+    
+    EXAMPLES:
+    
+        lseek(input_fh, 0, 2);  /* Advance to end of file */
+    LTELL                                                             LTELL
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) int ltell(HANDLE fh, int &h_offset, unsigned &l_offset)
+        (2) int ltell(HANDLE fh, int &offset)
+    
+    
+    ARGUMENTS:
+    
+        fh      - File handle of an open file
+        h_offset- Address of int to receive high word of offset
+        l_offset- Address of int to receive low word of offset
+        offset  - Address of int to receive offset
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function gets the current read/write position within a  file.
+       The position returned indicates the absolute character (byte)  offset
+       from the start of the file where the next read  or  write  will  take
+       place.
+    
+          Most operating systems which support files of > 64K bytes in  size
+       will support form (1) of the function, returning both  high  and  low
+       offset values.
+    
+          Smaller operating  systems  may  only  support  form  (2)  of  the
+       function,  allowing  access  to  only  the  first   65535   character
+       positions.
+    
+          For use with LOW LEVEL (unbuffered I/O only).
+    
+    
+    EXAMPLES:
+    
+        ltell(fp, &oldh, &oldl);    /* Save file position */
+            . . .                   /* Perform some operations on the file */
+        lseek(fp, oldh, oldl, 0);   /* Return to previous position */
+    MALLOC                                                           MALLOC
+    
+    
+    
+    PROTOTYPE:
+    
+        char *malloc(int size)
+    
+    
+    ARGUMENTS:
+    
+        size    - Size of memory block to allocate (in bytes).
+    
+    
+    RETURN VALUE:
+    
+        0       - Memory allocation failed
+        !0      - Pointer to allocated memory block
+    
+    
+    DESCRIPTION:
+    
+          The "malloc" function allocates a block of memory of the specified
+       size from the heap, and returns a pointer to  it.  This  memory  will
+       remain allocated until it is  explicitly  released  with  the  "free"
+       function.
+    
+    
+    EXAMPLES:
+    
+        if(!(ptr = malloc(BUFSIZ)))     /* Allocate a temporary buffer */
+            abort("Not enough memory");
+        do {                            /* Copy the file over */
+            size = fread(ptr, BUFSIZ, in_fp);
+            fwrite(ptr, size, out_fp); }
+        while(size == BUFSIZ);
+        free(ptr);                      /* Release temporary buffer */
+    MAX                                                                 MAX
+    
+    
+    
+    PROTOTYPE:
+    
+        int max(int value1, int value2)
+    
+    
+    ARGUMENTS:
+    
+        value1  - Any integer value
+        value2  - Any integer value
+    
+    
+    RETURN VALUE:
+    
+        The greater of "value1" or "value2"
+    
+    
+    DESCRIPTION:
+    
+          The "max" function returns the higher of its two argument values.
+    
+    
+    EXAMPLES:
+    
+        biggest = max(a, b);
+    MEMCPY                                                           MEMCPY
+    
+    
+    
+    PROTOTYPE:
+    
+        memcpy(char *dest, char *source, unsigned size)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to the destination
+        source  - Pointer to the souce
+        size    - Number of bytes to copy
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "memcpy" function will copy the specified number of bytes from
+       the source to the destination. If the source and  destination  blocks
+       overlap, the function may not copy the entire block correctly.
+    
+    
+    EXAMPLES:
+    
+        memcpy(buffer1, buffer2, 256);
+    MEMMOVE                                                         MEMMOVE
+    
+    
+    
+    PROTOTYPE:
+    
+        memmove(char *dest, char *source, unsigned size)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to the destination
+        source  - Pointer to the souce
+        size    - Number of bytes to copy
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function is similar to "memcpy", with the exception  that  it
+       will copy overlapping blocks  of  memory  correctly.  It  is  however
+       slightly larger than memcpy().
+    
+    
+    EXAMPLES:
+    
+        memmove(buffer1, buffer2, 256);
+    MEMSET                                                           MEMSET
+    
+    
+    
+    PROTOTYPE:
+    
+        memset(char *block, char value, unsigned size)
+    
+    
+    ARGUMENTS:
+    
+        block   - Pointer to a block of memory
+        value   - Value to initialize memory with
+        size    - Number of bytes to initialize
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          Sets a block of memory  beginning  at  the  pointer  "block",  for
+       "size" bytes to the byte value "value".
+    
+    
+    EXAMPLES:
+    
+        memset(buffer, 0, 100);
+    MIN                                                                 MIN
+    
+    
+    
+    PROTOTYPE:
+    
+        int min(int value1, int value2)
+    
+    
+    ARGUMENTS:
+    
+        value1  - Any integer value
+        value2  - Any integer value
+    
+    
+    RETURN VALUE:
+    
+        The smaller of "value1" or "value2"
+    
+    
+    DESCRIPTION:
+    
+          The "min" function returns the lower of its two argument values.
+    
+    
+    EXAMPLES:
+    
+        least = min(a, b);
+    MKDIR                                                             MKDIR
+    
+    
+    
+    PROTOTYPE:
+    
+        int mkdir(char *pathname)
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of directory to create
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The "mkdir" function create a new directory on the disk under  the
+       specified path name.
+    
+    
+    EXAMPLES:
+    
+        mkdir("subdir");
+    NARGS                                                             NARGS
+    
+    
+    
+    PROTOTYPE:
+    
+        int nargs()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        The number of arguments passed to the calling function
+    
+    
+    DESCRIPTION:
+    
+          Returns the number of arguments passed to a "register" function.
+    
+          NOTE: When  calling  a  "register"  function,  MICRO-C  loads  the
+       accumulator with the number of arguments just prior  to  calling  the
+       function. This "nargs" routine is  simply  a  null  definition  which
+       returns with the same value in the accumulator as was there  when  it
+       was called. Therefore "nargs" MUST BE  THE  FIRST  ARITHMETIC  ENTITY
+       EVALUATED WITHIN  THE  REGISTER  FUNCTION  or  the  contents  of  the
+       accumulator will be lost. Some examples of "register" definitions and
+       the use of "nargs" may be found in the library source code.
+    
+    
+    EXAMPLES:
+    
+        first_arg = nargs() * 2 + &arguments;
+    OPEN                                                               OPEN
+    
+    
+    
+    PROTOTYPE:
+    
+        HANDLE open(char *filename, int options)
+    
+    
+    ARGUMENTS:
+    
+        filename- Name of the file to open
+        options - Open options (defined in file.h)
+    
+    
+    RETURN VALUE:
+    
+        File handle for the open file
+        Zero (0) if file could not be opened
+    
+    
+    DESCRIPTION:
+    
+          This function  open  a  file  for  direct  access  via  LOW  LEVEL
+       (unbuffered) I/O.
+    
+    
+    EXAMPLES:
+    
+        if(fh = open("data.img", F_READ)) {
+            read(data_buf, 100, fh);
+            close(fh); }
+        else
+            abort("Unable to read data file");
+    OUT                                                                 OUT
+    
+    
+    
+    PROTOTYPE:
+    
+        out(unsigned port, int value)
+    
+    
+    ARGUMENTS:
+    
+        port    - I/O port address
+        value   - Value to write to I/O port
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "out" function writes a byte (8 bit) value to an I/O port.
+    
+          The valid range of values for "port" depends on  the  I/O  address
+       space of the processor.
+    
+          This function is not provided for processors which do not  support
+       a separate I/O address space.
+    
+    
+    EXAMPLES:
+    
+        out(0, 0);      /* Output 0 to I/O port 0 */
+    OUTW                                                               OUTW
+    
+    
+    
+    PROTOTYPE:
+    
+        outw(unsigned port, int value)
+    
+    
+    ARGUMENTS:
+    
+        port    - I/O port address
+        value   - Value to write to I/O port
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "outw" function writes a word (16 bit) value to an I/O port.
+    
+          The valid range of values for "port" depends on  the  I/O  address
+       space of the processor.
+    
+          This function is not provided for processors which do not  support
+       a separate I/O address space.
+    
+    
+    EXAMPLES:
+    
+        outw(0, 0);     /* Write 0 to I/O ports 0 and 1 */
+    PEEK                                                               PEEK
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) int peek(unsigned address)
+        (2) int peek(unsigned h_addr, unsigned l_addr)
+        (3) int peek(unsigned segment, unsigned offset)
+    
+    
+    ARGUMENTS:
+    
+        segment - Memory segment
+        offset  - Offset into segment
+        h_addr  - High word of memory address
+        l_addr  - Low word of memory address
+        address - 16 bit memory address
+    
+    
+    RETURN VALUE:
+    
+        The 8 bit value read from the given memory address
+    
+    
+    DESCRIPTION:
+    
+          The "peek" function reads and returns a byte (8 bits) from  memory
+       as an integer value between 0 and 255.
+    
+          Processors such as the 8080 or 6809 which address 64K of memory or
+       less use form (1) of the function.
+    
+          Non-segmented processors addressing more  than  64K  such  as  the
+       68000 use form (2) of the function.
+    
+          Processors employing a "segmented" architecture such as  the  8086
+       use form (3) of the function.
+    
+    
+    EXAMPLES:
+    
+        while(peek(0)); /* Wait for flag to clear */
+    PEEKW                                                             PEEKW
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) int peekw(unsigned address)
+        (2) int peekw(unsigned h_addr, unsigned l_addr)
+        (3) int peekw(unsigned segment, unsigned offset)
+    
+    
+    ARGUMENTS:
+    
+        segment - Memory segment
+        offset  - Offset into segment
+        h_addr  - High word of memory address
+        l_addr  - Low word of memory address
+        address - 16 bit memory address
+    
+    
+    RETURN VALUE:
+    
+        The 16 bit value read from the given memory address
+    
+    
+    DESCRIPTION:
+    
+          The "peekw" function reads and  returns  a  word  (16  bits)  from
+       memory as an integer value between 0 and 65535 (-1).
+    
+          Processors such as the 8080 or 6809 which address 64K of memory or
+       less use form (1) of the function.
+    
+          Non-segmented processors addressing more  than  64K  such  as  the
+       68000 use form (2) of the function.
+    
+          Processors employing a "segmented" architecture such as  the  8086
+       use form (3) of the function.
+    
+    
+    EXAMPLES:
+    
+        var = peekw(0));
+    POKE                                                               POKE
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) poke(unsigned address, int value)
+        (2) poke(unsigned h_addr, unsigned l_addr, int value)
+        (3) poke(unsigned segment, unsigned offset, int value)
+    
+    
+    ARGUMENTS:
+    
+        segment - Memory segment
+        offset  - Offset into segment
+        h_addr  - High word of memory address
+        l_addr  - Low word of memory address
+        address - 16 bit memory address
+        value   - Value to be written to memory
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "poke" function writes a byte (8 bit) value to memory.
+    
+          Processors such as the 8080 or 6809 which address 64K of memory or
+       less use form (1) of the function.
+    
+          Non-segmented processors addressing more  than  64K  such  as  the
+       68000 use form (2) of the function.
+    
+          Processors employing a "segmented" architecture such as  the  8086
+       use form (3) of the function.
+    
+    
+    EXAMPLES:
+    
+        poke(0, 0);     /* Write 0 to location 0 */
+    POKEW                                                             POKEW
+    
+    
+    
+    PROTOTYPE:
+    
+        (1) pokew(unsigned address, int value)
+        (2) pokew(unsigned h_addr, unsigned l_addr, int value)
+        (3) pokew(unsigned segment, unsigned offset, int value)
+    
+    
+    ARGUMENTS:
+    
+        segment - Memory segment
+        offset  - Offset into segment
+        h_addr  - High word of memory address
+        l_addr  - Low word of memory address
+        address - 16 bit memory address
+        value   - Value to be written to memory
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "pokew" function writes a word (16 bit) value to memory.
+    
+          Processors such as the 8080 or 6809 which address 64K of memory or
+       less use form (1) of the function.
+    
+          Non-segmented processors addressing more  than  64K  such  as  the
+       68000 use form (2) of the function.
+    
+          Processors employing a "segmented" architecture such as  the  8086
+       use form (3) of the function.
+    
+    
+    EXAMPLES:
+    
+        pokew(0, 0);    /* Write 0 to locations 0 and 1 */
+    PRINTF                                                           PRINTF
+    
+    
+    
+    PROTOTYPE:
+    
+        register printf(char *format, arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "printf" routine performs a formatted print  to  the  standard
+       output device  (usually  system  console).  The  "format"  string  is
+       written  with  the  arguments  substituted  for  special  "conversion
+       characters".
+    
+          See "fprintf" for more information on format strings.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "stdio.h").
+    
+    
+    EXAMPLES:
+    
+        printf("Hello world!!!\n");
+        printf("File '%s', has %u lines\n", filename, num_lines);
+    PUTC                                                               PUTC
+    
+    
+    
+    PROTOTYPE:
+    
+        putc(char c, FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        c       - Any character value
+        fp      - File pointer to an output file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DECRIPTION:
+    
+          This function writes the character 'c' to the  file  indicated  by
+       the file pointer 'fp'.
+    
+    
+    EXAMPLES:
+    
+        putc('*', fp);
+        putc('\n', stderr);
+    RAND                                                               RAND
+    
+    
+    
+    PROTOTYPE:
+    
+        unsigned rand(unsigned limit)
+    
+    
+    ARGUMENTS:
+    
+        limit   - Maximum value to return
+    
+    
+    RETURN VALUE:
+    
+        A pseudo-random number in the range of 0 to (limit-1)
+    
+    
+    DESCRIPTION:
+    
+          The "rand" function calculates the next value of  a  pseudo-random
+       sequence, based on a 16 bit unsigned "seed" value, which it maintains
+       in the global variable "RAND_SEED". The new value is  stored  as  the
+       new seed value, and is then divided  by  the  "limit"  parameter,  to
+       obtain the remainder, which is returned. This  results  in  a  random
+       number in the range of zero (0) to (limit - 1).
+    
+          Any  particular  sequence  may  be  repeated,  by   reseting   the
+       "RAND_SEED" value.
+    
+    
+    EXAMPLES:
+    
+        value = rand(52);
+    READ                                                               READ
+    
+    
+    
+    PROTOTYPE:
+    
+        int read(char *buffer, int size, HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        buffer  - Pointer to buffer to receive data
+        size    - Number of bytes to read
+        fh      - File handle of an input file
+    
+    
+    RETURN VALUE:
+    
+        Number of bytes read from file
+    
+    
+    DESCRIPTION:
+    
+          This function reads a block of data from a file  using  LOW  LEVEL
+       (unbuffered) I/O, and places it in memory at the address of "buffer".
+       Data is read in "raw"  form,  with  no  interpretation  of  "newline"
+       characters etc. If the number of bytes  returned  is  less  than  the
+       number of bytes requested, either the end of the file was encountered
+       or an error condition occured (in which case the value will be zero).
+    
+    
+    EXAMPLES:
+    
+        read(block, 512, input_fh);
+    RENAME                                                           RENAME
+    
+    
+    
+    PROTOTYPE:
+    
+        int rename(char *pathname, char *newname)
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of file to rename
+        newname - New name for file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function changes the name of an existing file  to  the  ASCII
+       string specified by newname.
+    
+    
+    EXAMPLES:
+    
+        rename("output.dat", "output.bak");
+    REWIND                                                           REWIND
+    
+    
+    
+    PROTOTYPE:
+    
+        int rewind(FILE *fp)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an open file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function resets the operating system internal file pointer so
+       than any subsequent read or writes will be at the  beginning  of  the
+       file.
+    
+    
+    EXAMPLES:
+    
+        rewind(input_file);
+    RMDIR                                                             RMDIR
+    
+    
+    
+    PROTOTYPE:
+    
+        int rmdir(char *pathname)
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of directory to delete
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function removes a directory from the disk. On most  systems,
+       the directory  must  be  empty  (contains  no  files)  otherwise  the
+       function will fail.
+    
+    
+    EXAMPLES:
+    
+        rmdir("subdir");
+    SCANF                                                             SCANF
+    
+    
+    
+    PROTOTYPE:
+    
+        register int scanf(char *format, arg1, arg2, ...)
+    
+    
+    ARGUMENTS:
+    
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        The number of successful matches
+        EOF (-1) if end of file or an error condition occurs
+    
+    
+    DESCRIPTION:
+    
+          The "scanf" function reads and scans  a  line  from  the  standard
+       input device (usually system console) for specific values. Values are
+       read and assigned to  the  passed  argument  addresses  according  to
+       special "conversion characters" in the "format" string.
+    
+          See "fscanf" for more information on format strings.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register".
+    
+    
+    EXAMPLES:
+    
+        do
+            printf("Please enter your First & Last names, and your age?");
+        while(scanf("%s %s %u", first_name, last_name, &age) != 3);
+    SETBUF                                                           SETBUF
+    
+    
+    
+    PROTOTYPE:
+    
+        FILE *setbuf(FILE *fp, int size)
+    
+    
+    ARGUMENTS:
+    
+        fp      - File pointer to an open file
+        size    - Size of new I/O buffer
+    
+    
+    RETURN VALUE:
+    
+        If successful, a new file pointer is returned, and the old one
+        is released. On failure the old file pointer is returned.
+    
+    
+    DESCRIPTION:
+    
+          The "setbuf" function will adjust the size of the buffer used  for
+       I/O operations on the indicated open file.
+    
+          This is the ONLY way to set the buffer size for  the  "stdin"  and
+       "stdout" streams. If you change the size of the "stdout" buffer,  you
+       must remember to "fflush(stdout)" before terminating,  otherwise  the
+       last buffer contents may not be written.
+    
+          For file opened by "fopen",  the  buffer  size  may  be  set  more
+       efficently by setting the value of the external  variable  "IOB_size"
+       prior to calling "fopen".
+    
+          If "setbuf" is unable to allocate space for  the  new  buffer,  it
+       will return the old file pointer unchanged.
+    
+    
+    EXAMPLES:
+    
+        stdout = setbuf(stdout, 512);   /* Set stdout to 512 byte buffer */
+    SETJMP                                                           SETJMP
+    
+    
+    
+    PROTOTYPE:
+    
+        int setjmp(int savenv[3])
+    
+    
+    ARGUMENTS:
+    
+        savenv  - Save area for program context
+    
+    
+    RETURN VALUE:
+    
+        0 is returned when actually called
+        Value passed to "longjmp" is returned otherwise
+    
+    
+    DESCRIPTION:
+    
+          When called, the "setjmp" function stores  the  current  execution
+       state of the program into the passed integer array, and  returns  the
+       value zero.
+    
+          The "longjmp" function may then be used to return the  program  to
+       the "setjmp" call. In this case, the value returned by "setjmp"  will
+       be the value which was passed to "longjmp". This allows the  function
+       containing "setjmp" to determine which call to  "longjmp"  transfered
+       execution to it.
+    
+          See also LONGJMP.
+    
+    
+    EXAMPLES:
+    
+        switch(setjmp(savearea)) {
+            case 0 : printf("Longjmp has been set up"); break;
+            case 1 : printf("Control-C Interrupt");     break;
+            case 2 : printf("Reset command executed");  break;
+            default: printf("Software error trap");     break; }
+    SPRINTF                                                         SPRINTF
+    
+    
+    
+    PROTOTYPE:
+    
+        register sprintf(char *dest, char *format, arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to destination string
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "sprintf" routine performs a formatted print to  a  string  in
+       memory. The "format" string is written to the destination string with
+       the arguments substituted for special "conversion characters".
+    
+          See "fprintf" for more information on format strings.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "stdio.h").
+    
+    
+    EXAMPLES:
+    
+        sprintf(header_file, "/lib/%s.h", header_name);
+    SQRT                                                               SQRT
+    
+    
+    
+    PROTOTYPE:
+    
+        int sqrt(unsigned value)
+    
+    
+    ARGUMENTS:
+    
+        value   - Number for which to calculate square root
+    
+    
+    RETURN VALUE:
+    
+        The integer square root (rounded up) of the argument value
+    
+    
+    DESCRIPTION:
+    
+          The  SQRT  function  returns  the  smallest  number   which   when
+       multiplied by itself will give a number equal to or larger  that  the
+       argument value.
+    
+    
+    EXAMPLES:
+    
+    /*
+     * Draw a circle about point (x, y) of radus (r)
+     */
+    circle(x, y, r)
+        int x, y, r;
+    {
+        int i, j, k, rs, lj;
+    
+        rs = (lj = r)*r;
+        for(i=0; i <= r; ++i) {
+            j = k = sqrt(rs - (i*i));
+            do {
+                plot_xy(x+i, y+j);
+                plot_xy(x+i, y-j);
+                plot_xy(x-i, y+j);
+                plot_xy(x-i, y-j); }
+            while(++j < lj);
+            lj = k; }
+    }
+    SSCANF                                                           SSCANF
+    
+    
+    
+    PROTOTYPE:
+    
+        register int sscanf(char *input, char *format, arg1, arg2, ...)
+    
+    
+    ARGUMENTS:
+    
+        input   - Pointer to input string
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        The number of successful matches
+    
+    
+    DESCRIPTION:
+    
+          The "sscanf" function  scans  a  string  in  memory  for  specific
+       values. Values are read and assigned to the passed argument addresses
+       according to special "conversion characters" in the "format" string.
+    
+          See "fscanf" for more information on format strings.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register".
+    
+    
+    EXAMPLES:
+    
+        sscanf(pathname,"/%s/%s", directory, filename);
+    STRBEG                                                           STRBEG
+    
+    
+    
+    PROTOTYPE:
+    
+        int strbeg(char *string1, char *string2)
+    
+    
+    ARGUMENTS:
+    
+        string1 - Pointer to character string to test
+        string2 - Pointer to character string to check for
+    
+    
+    RETURN VALUE:
+    
+        0   - String1 does not begin with string2
+        1   - String1 begins with string2
+    
+    
+    DECRIPTION:
+    
+          Tests the passed "string1" to determine if it begins with the same
+       data as is contained within "string2".
+    
+    
+    EXAMPLES:
+    
+        if(strbeg(command, "delete"))
+            delete_file(&command[6]);
+    STRCAT                                                           STRCAT
+    
+    
+    
+    PROTOTYPE:
+    
+        char *strcat(char *dest, *source)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to destination string
+        source  - Pointer to source string
+    
+    
+    RETURN VALUE:
+    
+        Pointer to zero terminating destination string
+    
+    
+    DESCRIPTION:
+    
+          This function concatinates the source string onto the tail of  the
+       destination string. The destination string must be  large  enough  to
+       hold the entire contents of both strings.
+    
+    
+    EXAMPLES:
+    
+        strcat(program_name, ".c");
+    STRCHR                                                           STRCHR
+    
+    
+    
+    PROTOTYPE:
+    
+        char *strchr(char *string, char chr)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to a character string
+        chr     - Character to look for
+    
+    
+    RETURN VALUE:
+    
+        Pointer to the first occurance of 'chr' in 'string'
+        Zero (0) if character was not found
+    
+    
+    DECRIPTION:
+    
+          Searches  the  passed  string  got  the  first  occurance  of  the
+       specified character. If the character is  found,  a  pointer  to  its
+       position in the string is returned. If the character is not found,  a
+       null pointer is returned.
+    
+          The null (0) character is treated as valid data by this  function,
+       thus:
+          strchr(string, 0);
+    
+       would return the position of the null terminator of the string.
+    
+    
+    EXAMPLES:
+    
+        comma = strchr(buffer, ',');
+    STRCMP                                                           STRCMP
+    
+    
+    
+    PROTOTYPE:
+    
+        int strcmp(char *string1, char *string2)
+    
+    
+    ARGUMENTS:
+    
+        string1 - Pointer to first string
+        string2 - Pointer to second string
+    
+    
+    RETURN VALUE:
+    
+        0   - Strings match exactly
+        1   - String1 is greater than string2
+        -1  - String2 is greater than string1
+    
+    
+    DESCRIPTION:
+    
+          This function compares two strings character by character. If  the
+       two strings are identical, a zero  (0)  is  returned.  If  the  first
+       string is greater than the second (as far as ASCII is  concerned),  a
+       one (1) is returned. If the second string is greater, a negative  one
+       (-1) is returned.
+    
+    
+    EXAMPLES:
+    
+        if(!strcmp(command, "quit"))
+            exit(0);
+    STRCPY                                                           STRCPY
+    
+    
+    
+    PROTOTYPE:
+    
+        char *strcpy(char *dest, char *source)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to destination string
+        souce   - Pointer to source string
+    
+    
+    RETURN VALUE:
+    
+        Pointer to zero terminating destination string
+    
+    
+    DESCRIPTION:
+    
+          This function copies the source string to the destination  string.
+       All data is copied up to and including the zero byte which terminates
+       the string. The destination string must be large enough to  hold  the
+       entire source.
+    
+    
+    EXAMPLES:
+    
+        strcpy(filename, argv[1]);
+    STRLEN                                                           STRLEN
+    
+    
+    
+    PROTOTYPE:
+    
+        int strlen(char *string)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to a character string
+    
+    
+    RETURN VALUE:
+    
+        The length of the string
+    
+    
+    DECRIPTION:
+    
+          Returns the length in character of the passed string.  The  length
+       does not include the zero byte which terminates the string.
+    
+    
+    EXAMPLES:
+    
+        length = strlen(command);
+    STRNCAT                                                         STRNCAT
+    
+    
+    
+    PROTOTYPE:
+    
+        char *strncat(char *dest, *source, unsigned length)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to destination string
+        source  - Pointer to source string
+        length  - Maximum number of characters to copy
+    
+    
+    RETURN VALUE:
+    
+        Pointer to zero terminating destination string
+    
+    
+    DESCRIPTION:
+    
+          This function concatinates the source string onto the tail of  the
+       destination string. If the source string exceeds  "length"  bytes  in
+       size, only that many characters are copied.
+    
+    
+    EXAMPLES:
+    
+        strncat(path, filename, 64);
+    STRNCMP                                                         STRNCMP
+    
+    
+    
+    PROTOTYPE:
+    
+        int strncmp(char *string1, char *string2, unsigned length)
+    
+    
+    ARGUMENTS:
+    
+        string1 - Pointer to first string
+        string2 - Pointer to second string
+        length  - Number of bytes to compare
+    
+    
+    RETURN VALUE:
+    
+        0   - Strings match exactly
+        1   - String1 is greater than string2
+        -1  - String2 is greater than string1
+    
+    
+    DESCRIPTION:
+    
+          This function compares two strings character  by  character  until
+       either a difference is detected, or  "length"  characters  have  been
+       compared. If the two string portions are identical,  a  zero  (0)  is
+       returned. If the first string is greater than the second (as  far  as
+       ASCII is concerned), a one (1) is returned. If the second  string  is
+       greater, a negative one (-1) is returned.
+    
+    
+    EXAMPLES:
+    
+        len = strlen(buffer) - 3;
+        for(i=1; i < len; ++i)
+            if(strncmp(&buffer[i], "***", 3)
+                abort("Found three stars\n");
+    STRNCPY                                                         STRNCPY
+    
+    
+    
+    PROTOTYPE:
+    
+        strncpy(char *dest, char *source, unsigned length)
+    
+    
+    ARGUMENTS:
+    
+        dest    - Pointer to destination string
+        souce   - Pointer to source string
+        length  - Number of bytes to copy
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function copies "length" characters from the source string to
+       the  destination  string.  If  the  source  string  is  shorter  than
+       "length", the destination string is padded with nulls. If the  source
+       string is longer than "length", only that many characters are copied,
+       and the destination string is NOT zero terminated.
+    
+    
+    EXAMPLES:
+    
+        strncpy(filename, argv[1], 64);
+    STRSTR                                                           STRSTR
+    
+    
+    
+    PROTOTYPE:
+    
+        char *strstr(char *string1, char *string2)
+    
+    
+    ARGUMENTS:
+    
+        string1 - Pointer to character string to test
+        string2 - Pointer to substring to search for
+    
+    
+    RETURN VALUE:
+    
+        Pointer to substring, or 0 if not found
+    
+    
+    DECRIPTION:
+    
+          Searches the passed "string1"  for  the  first  occurance  of  the
+       passed "string2". If found,  a  pointer  to  the  beginning  of  that
+       substring within "string1" is returned.
+    
+    
+    EXAMPLES:
+    
+        if(ptr = strstr(command, "delete"))
+            delete_file(&ptr[6]);
+    SYSTEM                                                           SYSTEM
+    
+    
+    
+    PROTOTYPE:
+    
+        int system(char *command)
+    
+    
+    ARGUMENTS:
+    
+        command - A system command to be executed
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          The SYSTEM function accepts any  operating  system  command  as  a
+       string parameter, and passes that command to the operating system  to
+       be executed.
+    
+          When the command has terminated,  execution  will  resume  in  the
+       MICRO-C program, with the statement following the call to SYSTEM.
+    
+    
+    EXAMPLES:
+    
+        system("DEL *.TMP");
+    TOLOWER                                                         TOLOWER
+    
+    
+    
+    PROTOTYPE:
+    
+        char tolower(char c)
+    
+    
+    ARGUMENTS:
+    
+        c   - Any character value
+    
+    
+    RETURN VALUE:
+    
+        The value of 'c', converted to lower case
+    
+    
+    DESCRIPTION:
+    
+          Returns the value of 'c' converted to lower case. If 'c' is not  a
+       letter of upper case, no change is made, and the  original  value  of
+       'c' is returned.
+    
+    
+    EXAMPLES:
+    
+        input_char = tolower(getc(stdin));
+    TOUPPER                                                         TOUPPER
+    
+    
+    
+    PROTOTYPE:
+    
+        char toupper(char c)
+    
+    
+    ARGUMENTS:
+    
+        c   - Any character value
+    
+    
+    RETURN VALUE:
+    
+        The value of 'c', converted to upper case
+    
+    
+    DESCRIPTION:
+    
+          Returns the value of 'c' converted to upper case. If 'c' is not  a
+       letter of lower case, no change is made, and the  original  value  of
+       'c' is returned.
+    
+    
+    EXAMPLES:
+    
+        putc(toupper(output_char), stdout);
+    WRITE                                                             WRITE
+    
+    
+    
+    PROTOTYPE:
+    
+        int write(char *block, int size, HANDLE fh)
+    
+    
+    ARGUMENTS:
+    
+        block   - Pointer to a block of data to write
+        size    - Number of bytes to write
+        fh      - File handle of an output file
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function writes a block of data to the indicated  file  using
+       low level (unbuffered) I/O from memory at the specified address. Data
+       is  written  in  "raw"  form,  with  no  translations  of   "newline"
+       characters etc. If the value returned is less than the value  of  the
+       "size" parameter, some error condition  has  occured  (Such  as  disk
+       full).
+    
+    
+    EXAMPLES:
+    
+        if(write(buffer, 100, fh) < 100)
+            abort("File write error\n");
+    MICRO-C Library                                                  Page: 3
+
+
+    
+                      +---------------------------------+
+                      |                                 |
+                      |  *****************************  |
+                      |  * The IBM-PC/MS-DOS library *  |
+                      |  *****************************  |
+                      |                                 |
+                      +---------------------------------+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       1.2 IBM-PC/MS-DOS Library
+    
+             The library functions described  on  the  following  pages  are
+          available only under the MS-DOS operating  system,  on  IBM-PC  or
+          compatible systems.
+    
+             These routines perform operations which are closely tied to the
+          8086 family of processors, the  IBM-PC  hardware,  or  the  MS-DOS
+          operating system, and are therefore impractical to implement on  a
+          "general" basis.
+    ALLOCA                                                           ALLOCA
+    
+    
+    
+    PROTOTYPE:
+    
+        char *alloca(int size)
+    
+    
+    ARGUMENTS:
+    
+        size    - Size of memory block to allocate (in bytes).
+    
+    
+    RETURN VALUE:
+    
+        0       - Memory allocation failed
+        !0      - Pointer to allocated memory
+    
+    
+    DESCRIPTION:
+    
+          The "alloca" function  allocates  a  block  of  automatic  (stack)
+       memory, which exists only only until the  function  calling  "alloca"
+       returns. When that function returns, all stack memory  including  any
+       allocated by "alloca" is released.
+    
+       NOTE: THE FOLLOWING RESTRICTIONS APPLY TO THE USE OF ALLOCA:
+    
+          The function calling 'alloca' MUST have  at  least  one  automatic
+       (local) variable, otherwise MICRO-C will not  restore  the  stack  on
+       exit.
+    
+          The 'alloca' function must be used within a simple expression,  at
+       a point where there will be no partial results stored on the stack.
+    
+          The above conditions can best be met by declaring a local  pointer
+       which will hold the memory address, and assigning it the value of the
+       'alloca' call in a single statement. The address returned by 'alloca'
+       should NOT be assigned to a calculated  address  (such  as  an  array
+       element or indirect reference via a pointer), since this  may  result
+       in stack activity.
+    
+          NOTE: The size operand to 'alloca' can be  a  complex  expression,
+       since any stack operations it causes will have dissipated by the time
+       'alloca' gets called.
+    
+    
+    EXAMPLES:
+    
+    func(string)
+        char *string;
+    {
+        char *local_memory;
+    
+        if(!(local_memory = alloca(strlen(string)+1)))
+            abort("Not enough memory for alloca");
+        /* ... */
+    }
+    ALLOC_SEG                                                     ALLOC_SEG
+    
+    
+    
+    PROTOTYPE:
+    
+        int alloc_seg(int size)
+    
+    
+    ARGUMENTS:
+    
+        size    - Number of 16 byte paragraphs to allocate
+    
+    
+    RETURN VALUE:
+    
+    
+        0       - Not enough free memory available
+        !0      - The segment address of the allocated memory
+    
+    
+    DESCRIPTION:
+    
+          The "alloc_seg" function allocates a 'segment' of memory from DOS.
+       The size is given in 16 byte "paragraphs". The allocated memory  will
+       be outside of the data memory available to the MICRO-C  program,  and
+       therefore must be accessed via assembly lenguage functions,  or  with
+       the "peek" and "poke" library functions.
+    
+    
+    EXAMPLES:
+    
+        if(!(aseg = alloc(4096)))   /* Get a 64K data segment */
+            abort("Not enough memory!!!");
+        set_es(aseg);               /* Set up extra segment */
+        asm_func();                 /* Invoke assembler function */
+    BREAK                                                             BREAK
+    
+    
+    
+    PROTOTYPE:
+    
+        break(int allow)
+    
+    
+    ARGUMENTS:
+    
+        allow   - 0 = disallow break, !0 = allow breaks
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          Controls the setting of the DOS "break" flag. When set  on  (allow
+       != 0), the keyboard is tested for CONTROL-BREAK on any  DOS  function
+       call. If set off (allow == 0), CONTROL-C is  only  recognized  during
+       I/O to the keyboard and video display.
+    
+    
+    EXAMPLES:
+    
+        break(1);   /* Disable keyboard interrupts */
+    CCLOSE                                                           CCLOSE
+    
+    
+    
+    PROTOTYPE:
+    
+        Cclose()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function closes the  communications  port  previously  opened
+       using "Copen". The system interrupt vectors and all  other  hooks  to
+       the comm port are restored.
+    
+          This function must be called  before  any  program  using  "Copen"
+       terminates, otherwise the communications port  will  be  left  in  an
+       indeterminate state. If this is not done, there will be a possibility
+       of system crash if an interrupt is received from the port  after  the
+       program has terminated.
+    
+    
+    EXAMPLES:
+    
+        Cclose();       /* Close comm port */
+        exit(0);        /* And terminate */
+    CGETC                                                             CGETC
+    
+    
+    
+    PROTOTYPE:
+    
+        int Cgetc()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        Character read from the communications port
+    
+    
+    DESCRIPTION:
+    
+          This function reads a single  character  from  the  communications
+       port previously opened with "Copen". If no  character  is  available,
+       "Cgetc" will wait for one.
+    
+    
+    EXAMPLES:
+    
+        /* Get a string from the comm port */
+        while((c = cgetc()) != '\r')
+            *ptr++ = c;
+        *ptr = 0;
+    COPEN                                                             COPEN
+    
+    
+    
+    PROTOTYPE:
+    
+        int Copen(int port, int speed, int mode, int modem)
+    
+    
+    ARGUMENTS:
+    
+        port    - Comm port to use (1, 2, 3 or 4)
+        speed   - Baudrate divisor to set
+        mode    - Communications parameters to set
+        modem   - Modem control lines to set
+    
+    RETURN VALUE:
+    
+        0       - Successful open
+        !0      - Requested comm port is not available
+    
+    
+    DESCRIPTION:
+    
+          The "Copen" function opens a serial communications port on the IBM
+       PC for access. An independant interrupt handler and I/O  drivers  are
+       installed, which allow high speed full duplex operation of the serial
+       port with optional XON/XOFF flow control of both receive and transmit
+       streams.
+    
+          Only one serial port  may  be  accessed  at  a  time  using  these
+       functions, If "Copen" is called more than once, it will automatically
+       close the last port before opening the new one.
+    
+          The meaning of the "speed",  "mode",  and  "modem"  parameters  if
+       documented in the "comm.h" header file.
+    
+          An external "char" variable "Cflags" may be accessed to enable  or
+       disable transparency of the serial  channel.  When  "transparent"  is
+       selected, XON/XOFF flow control is disabled, and all data is sent and
+       received with no changes. When  operating  in  this  mode,  you  must
+       insure that "Cgetc" is called frequently enough  that  the  256  byte
+       internal receive buffer will not overflow.
+    
+          Since "Cflags" is  used  by  the  interrupt  handler,  you  should
+       disable and enable interrupts around any accesses to it.
+    
+    
+    
+    EXAMPLES:
+    
+        #include comm.h     /* Get comm port defintions */
+    
+            extern char Cflags;
+    
+        /*
+         * Program to read & echo characters on the serial port
+         * in transparent mode. (Until ESCAPE char is received)
+         */
+        main()
+        {
+            char c;
+    
+            if(Copen(1, _2400, PAR_NO|DATA_8|STOP_1, SET_RTS|SET_DTR))
+                abort("Cannot access COM1");
+    
+            disable();                  /* Disable interrupts */
+            Cflags |= TRANSPARENT;      /* Set transparency */
+            enable();                   /* Re-enable interrupts */
+    
+            while((c = Cgetc()) != 0x1B)    /* Do until ESCAPE */
+                Cputc(c);
+    
+            Cclose();                   /* Close the serial port */
+        }
+    COPY_SEG                                                       COPY_SEG
+    
+    
+    
+    PROTOTYPE:
+    
+        copy_seg(int dseg, int doffset, int sseg, int soffset, int size)
+    
+    
+    ARGUMENTS:
+    
+        dseg    - Destination segment
+        doffset - Destination offset
+        sseg    - Source segment
+        soffset - Source offset
+        size    - Number of bytes to copy
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function  perform  a  copy  between  80X86  processor  memory
+       segments. A number of bytes equal to "size" is copied from the source
+       segment and offset to the destination segment and offset.
+    
+    
+    EXAMPLES:
+    
+        /* Save the video display contents */
+        copy_seg(get_ds(), buffer, _V_BASE, 0, (25*80)*2);
+    CPU                                                                 CPU
+    
+    
+    
+    PROTOTYPE:
+    
+        int cpu()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        0       - CPU is 8088 or 8086
+        1       - CPU is 80188 or 80186
+        2       - CPU is 80286
+        3       - CPU is 80386 or 80486
+    
+    
+    DESCRIPTION:
+    
+          This function  returns  a  simple  integer  which  identifies  the
+       processor type on which the program is currently executing.
+    
+    
+    EXAMPLES:
+    
+        if(cpu() < 2)
+            abort("This program requires at least an 80286");
+    CPUTC                                                             CPUTC
+    
+    
+    
+    PROTOTYPE:
+    
+        Cputc(char c)
+    
+    
+    ARGUMENTS:
+    
+        c       - Character to write to communciation port
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The  "Cputc"  function  writes  the   given   character   to   the
+       communcinations port previously opened by "Copen".
+    
+    
+    EXAMPLES:
+    
+        while(*ptr)         /* Write a string to comm port */
+            Cputc(*ptr++);
+    CSIGNALS                                                       CSIGNALS
+    
+    
+    
+    PROTOTYPE:
+    
+        int Csignals()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        The modem input signals read from the open comm port
+    
+    
+    DESCRIPTION:
+    
+          This function reads the modem input signals (DSR, CD, RI etc) from
+       the serial communication  port  previously  opened  by  "Copen",  and
+       returns them as an integer value.
+    
+          The meaning of the  individual  bits  in  the  value  returned  by
+       "Csignals" is documented in the "comm.h" header file.
+    
+    
+    EXAMPLES:
+    
+        if(!(Csignals() & DSR)) {
+            Cclose();
+            abort("Modem not ready"); }
+    CTESTC                                                           CTESTC
+    
+    
+    
+    PROTOTYPE:
+    
+        int Ctestc()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        0-255   - Character read from comm port
+        -1      - No character available
+    
+    
+    DESCRIPTION:
+    
+          This function tests for a character from the  communications  port
+       previously opened with "Copen", and returns that character if one  if
+       found. If no character is available, "Ctestc" returns -1.
+    
+    
+    EXAMPLES:
+    
+        if((c = Ctestc()) == -1) {
+            Cclose();
+            abort("No character available"); }
+    DELAY                                                             DELAY
+    
+    
+    
+    PROTOTYPE:
+    
+        delay(int msec)
+    
+    
+    ARGUMENTS:
+    
+        msec    - Number of milliseconds to wait
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          Pauses for the specified number of milliseconds. This function  is
+       limited to the accuracy of the BIOS clock,  which  operates  at  18.2
+       ticks per second.
+    
+    
+    EXAMPLES:
+    
+        delay(1000);        /* Wait one second */
+    DISABLE                                                         DISABLE
+    
+    
+    
+    PROTOTYPE:
+    
+        disable()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The  "disable"  function  disables  the  8086  interrupt   system,
+       preventing the  processor  from  servicing  interrupts.  It  is  used
+       whenever the execution of an interrupt handler may interfere  with  a
+       particular operation.
+    
+          When this function is used, the "enable" function should be called
+       as soon as possible after "disable". Failure to do this may result in
+       loss  of  system  functions  performed  under  interrupts,  such   as
+       timekeeping, and serial communications (Via MICRO-C serial drivers).
+    
+    
+    EXAMPLES:
+    
+        disable();                  /* Disallow interrupts */
+        Cflags &= ~TRANSPARENT;     /* Remove transparency */
+        enable();                   /* Re-allow interrupts */
+    ENABLE                                                           ENABLE
+    
+    
+    
+    PROTOTYPE:
+    
+        enable()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "enable" function enables the 8086 interrupt system,  allowing
+       the processor to service interrupts. It should be called as  soon  as
+       possible following the use of the "disable" function.
+    
+    
+    EXAMPLES:
+    
+        disable();                  /* Disallow interrupts */
+        Cflags |= TRANSPARENT;      /* Force  transparency */
+        enable();                   /* Re-allow interrupts */
+    EXEC                                                               EXEC
+    
+    
+    
+    PROTOTYPE:
+    
+        int exec(char *exefile, char *args)
+    
+    
+    ARGUMENTS:
+    
+        exefile - Full pathname of a '.COM' or '.EXE' file
+        args    - Command tail containing arguments
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an MS-DOS error code
+    
+    
+    DESCRIPTION:
+    
+          The "exec" function causes MS-DOS to suspend the execution of  the
+       MICRO-C program, and then to execute the indicated '.EXE'  or  '.COM'
+       program file. When that program terminates, execution of the  MICRO-C
+       program will resume.
+    
+          This is a low level interface to the MS-DOS 'EXEC'  function,  and
+       as such, it does not search your PATH, does not process '.BAT' files,
+       nor provide any I/O redirection facilities. If you want to  make  use
+       of these features (which are  provided  by  'COMMAND.COM'),  use  the
+       higher level 'SYSTEM' function.
+    
+    
+    EXAMPLES:
+    
+        printf("Type 'EXIT' to return to the MICRO-C program\n");
+        exec("C:\\COMMAND.COM", "");    /* Start up a sub-shell */
+    FREE_SEG                                                       FREE_SEG
+    
+    
+    
+    PROTOTYPE:
+    
+        int free_seg(int segment)
+    
+    
+    ARGUMENTS:
+    
+        segment - A previously allocated segment of memory
+    
+    
+    RETURN VALUE:
+    
+        0       - The segment was released
+        !0      - DOS error code
+    
+    
+    DESCRIPTION:
+    
+          The "free_seg" function releases a segment  of  memory  previously
+       allocated by "alloc_seg", and returns it  to  the  operating  system.
+       This should be used whenever your program has finished with a segment
+       of extra memory which it has allocated.
+    
+    
+    EXAMPLES:
+    
+        aseg = alloc_seg(4096);         /* Allocate a 64K segment */
+        set_es(aseg);                   /* Set up extra segment */
+        asm_func();                     /* Call assembler function */
+        free_seg(aseg);                 /* Releas the memory */
+    GET_ATTR                                                       GET_ATTR
+    
+    
+    
+    PROTOTYPE:
+    
+        int get_attr(char *pathname, int &attrs)
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of file to get attributes of
+        attrs   - Integer to receive attributes
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function retreives the attributes of the specified file.
+    
+          The meaning of the individual bits in the "attrs" value is defined
+       in the "file.h" header file.
+    
+    
+    EXAMPLES:
+    
+        get_attr("tempfile", &attributes);
+    GET_CS                                                           GET_CS
+    
+    
+    
+    PROTOTYPE:
+    
+        int get_cs()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        The current processor CODE segment
+    
+    
+    DESCRIPTION:
+    
+          This function is available only on the 8086 family of  processors,
+       and returns the current processor CODE segment.
+    
+    
+    EXAMPLES:
+    
+        code_seg = get_cs();
+    GET_DATE                                                       GET_DATE
+    
+    
+    
+    PROTOTYPE:
+    
+        get_date(int &day, int &month, int &year)
+    
+    
+    ARGUMENTS:
+    
+        &day    - Address of integer to receive day (1-31)
+        &month  - Address of integer to receive month (1-12)
+        &year   - Address of integer to receive year (1980-2099)
+    
+    
+    RETURN VALUE:
+    
+        Day of week (0=Sun ... 6=Sat)
+    
+    
+    DESCRIPTION:
+    
+          This function gets the current system  date  in  day,  month,  and
+       year.
+    
+    
+    EXAMPLES:
+    
+        get_date(&day, &month, &year);
+        printf("%s %u, %u", months[month], day, year);
+    GET_DRIVE                                                     GET_DRIVE
+    
+    
+    
+    PROTOTYPE:
+    
+        int get_drive()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        The currently active (default) disk drive (0=A, 1=B, 2=C, ...)
+    
+    
+    DESCRIPTION:
+    
+          The "get_drive" function returns the  drive  index  (0-n)  of  the
+       currently active or "default" MS-DOS disk drive.
+    
+    
+    EXAMPLES:
+    
+        old_drive = get_drive();
+        set_drive(new_drive);
+    GET_DS                                                           GET_DS
+    
+    
+    
+    PROTOTYPE:
+    
+        int get_ds()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        The current processor DATA segment
+    
+    
+    DESCRIPTION:
+    
+          This function is available only on the 8086 family of  processors,
+       and returns the current processor DATA segment.
+    
+    
+    EXAMPLES:
+    
+        data_seg = get_ds();
+    GET_ES                                                           GET_ES
+    
+    
+    
+    PROTOTYPE:
+    
+        int get_es()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        The current processor EXTRA segment
+    
+    
+    DESCRIPTION:
+    
+          This function is available only on the 8086 family of  processors,
+       and returns the current processor EXTRA segment.
+    
+    
+    EXAMPLES:
+    
+        code_seg = get_es();
+    GET_TIME                                                       GET_TIME
+    
+    
+    
+    PROTOTYPE:
+    
+        get_time(int &hour, int &minite, int &second)
+    
+    
+    ARGUMENTS:
+    
+        &hour   - Address of integer to receive hour (0-23)
+        &minite - Address of integer to receive minite (0-59)
+        &second - Address of integer to receive second (0-59)
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function gets the current system time in hours,  minites  and
+       seconds.
+    
+    
+    EXAMPLES:
+    
+        get_time(&hour, &minite, &second);
+        printf("%02:%02:%02", hour, minite, second);
+    INT86                                                             INT86
+    
+    
+    
+    PROTOTYPE:
+    
+        int int86(int inum)
+    
+    
+    ARGUMENTS:
+    
+        inum    - The 8086 software interrupt to execute
+    
+    
+    RETURN VALUE:
+    
+        8086 FLAGS register after interrupt executes.
+    
+    
+    DESCRIPTION:
+    
+          This  function  performs  an  8086  software   interrupt.   Before
+       executing the interrupt, the processor registers are loaded from  the
+       external "int" variables: _AX_, _BX_, _CX_, _DX_, _SI_ and _DI_.  The
+       DS, ES and SS segment registers are all set  to  point  to  MICRO-C's
+       data segment.
+    
+          After the interrupt  completes,  the  contents  of  the  processor
+       registers are copied to the above named variables.
+    
+    
+    EXAMPLES:
+    
+        extern int _AX_, _DX_;
+        main() {
+            _AX_ = 0x0200;  /* MSDOS function 2 - Output character */
+            _DX_ = '$';     /* Character to output */
+            int86(0x21);    /* Call MSDOS */
+        }
+    RESIZE_SEG                                                   RESIZE_SEG
+    
+    
+    
+    PROTOTYPE:
+    
+        int resize_seg(int segment, int size)
+    
+    
+    ARGUMENTS:
+    
+        segment - A previously allocated segment of memory
+        size    - Desired size (in 16 byte paragraphs)
+    
+    
+    RETURN VALUE:
+    
+        0       - The segments size has been adjusted
+        !0      - DOS error code
+    
+    
+    DESCRIPTION:
+    
+          The "resize_seg" function provides a method of changing  the  size
+       of a segment of memory previously allocated via "alloc_seg".  If  not
+       enough memory is available, the function will fail  with  a  ono-zero
+       return value.
+    
+          This function may also be used to adjust the memoey allocation  of
+       the programs image, by passing it the segment address of the programs
+       own PSP. This value is available in the external variable "PSP".
+    
+          MICRO-C normally allocates 64K for programs compiled in  the  TINY
+       model, and (64K + (256 byte PSP) + (size  of  executable  code))  for
+       programs compiled in the SMALL model. This allocation should NEVER be
+       reduced, however you may enlarge it if your program wishes to  access
+       additional data immediately following its own DATA/STACK segment.
+    
+    
+    EXAMPLES:
+    
+        extern int PSP;
+    
+        main()
+        {
+            if(resize_seg(PSP, 8192))   /* Append 64K buffer */
+                abort("Not enough memory!!!");
+            ...     /* Remainder of program */
+        }
+    RESTORE_VIDEO                                             RESTORE_VIDEO
+    
+    
+    
+    PROTOTYPE:
+    
+        restore_video(char buffer[4006]);
+    
+    
+    ARGUMENTS:
+    
+        buffer  - Video save area.
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The RESTORE_VIDEO function restores the contents and state of  the
+       IBM P.C. video display to the state it was in when  "SAVE_VIDEO"  was
+       executed. At the present time, the function  is  effective  only  for
+       text modes. Graphics screens will not be restored, due  to  the  high
+       memory requirements.
+    
+          Although this function is useful in ANY program  (to  restore  the
+       DOS screen before termination), it is most  useful  in  "POP-UP"  ram
+       resident programs (See "TSR" function), to save  the  screen  of  any
+       application which may be running when you pop up.
+    
+          The video state is restored from  the  passed  "buffer"  argument,
+       which is 4006 bytes  in  size,  and  must  have  been  filled  in  by
+       "SAVE_VIDEO". It has the following format:
+    
+                  buffer[0]         - Video mode
+                    "   [1]         - Video page
+                    "   [2]         - 'X' cursor position
+                    "   [3]         - 'Y' cursor position
+                    "   [4]         - Ending line for cursor
+                    "   [5]         - Starting line for cursor
+                    "   [6-4005]    - Saved video screen contents
+    
+    
+    EXAMPLES:
+    
+        popup_func()
+        {
+            save_video();
+            perform_function();
+            restore_video();
+        }
+    SAVE_VIDEO                                                   SAVE_VIDEO
+    
+    
+    
+    PROTOTYPE:
+    
+        save_video(char buffer[4006]);
+    
+    
+    ARGUMENTS:
+    
+        buffer  - Video save area.
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The SAVE_VIDEO function saves the current contents  and  state  of
+       the IBM P.C. video display. The screen may be restored  at  any  time
+       using "RESTORE_VIDEO". At the present time, the function is effective
+       only for text modes. Graphics screens will not be saved, due  to  the
+       high memory requirements.
+    
+          Although this function is useful in ANY program  (to  restore  the
+       DOS screen before termination), it is most  useful  in  "POP-UP"  ram
+       resident programs (See "TSR" function), to save  the  screen  of  any
+       application which may be running when you pop up.
+    
+          The video state is saved in the passed "buffer" argument, which is
+       4006 bytes in size, and has the following format:
+    
+                  buffer[0]         - Video mode
+                    "   [1]         - Video page
+                    "   [2]         - 'X' cursor position
+                    "   [3]         - 'Y' cursor position
+                    "   [4]         - Ending line for cursor
+                    "   [5]         - Starting line for cursor
+                    "   [6-4005]    - Saved video screen contents
+    
+    
+    EXAMPLES:
+    
+        popup_func()
+        {
+            save_video();
+            perform_function();
+            restore_video();
+        }
+    SET_ATTR                                                       SET_ATTR
+    
+    
+    
+    PROTOTYPE:
+    
+        int set_attr(char *pathname, int attrs)
+    
+    
+    ARGUMENTS:
+    
+        pathname- Name of file to get attributes of
+        attrs   - New attributes
+    
+    
+    RETURN VALUE:
+    
+        0 if successful, otherwise an operating system error code
+    
+    
+    DESCRIPTION:
+    
+          This function sets the system attributes of the specified file.
+    
+          The meaning of the individual bits in the "attrs" value is defined
+       in the "file.h" header file.
+    
+    
+    EXAMPLES:
+    
+        set_attr("tempfile", READONLY|HIDDEN);
+    SET_DATE                                                       SET_DATE
+    
+    
+    
+    PROTOTYPE:
+    
+        set_date(int day, int month, int year)
+    
+    
+    ARGUMENTS:
+    
+        day     - New day (1-31)
+        month   - New month (1-12)
+        year    - New year (1980-2099)
+    
+    
+    RETURN VALUE:
+    
+        0       - Success
+        -1      - Invalid date given
+    
+    
+    DESCRIPTION:
+    
+          This function sets the current system  date  to  day,  month,  and
+       year.
+    
+    
+    EXAMPLES:
+    
+        set_date(1, 1, 1980);   /* Set to Jan 1, 1980 */
+    SET_DRIVE                                                     SET_DRIVE
+    
+    
+    
+    PROTOTYPE:
+    
+        int set_drive(int drive)
+    
+    
+    ARGUMENTS:
+    
+        Drive   - New drive index (0=A, 1=B, 2=C ...)
+    
+    
+    RETURN VALUE:
+    
+        The total number of "logical" disk drives in the system
+    
+    
+    DESCRIPTION:
+    
+          The "set_drive" function sets the  disk  drive  indicated  by  the
+       "drive" index (0-x) to be the currently active  or  "default"  MS-DOS
+       disk drive.
+    
+    
+    EXAMPLES:
+    
+        old_drive = get_drive();
+        set_drive(new_drive);
+    SET_ES                                                           SET_ES
+    
+    
+    
+    PROTOTYPE:
+    
+        int set_es(int segment)
+    
+    
+    ARGUMENTS:
+    
+        segment - The 16 bit new segment value
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function is available only on the 8086 family of  processors,
+       and sets the processors EXTRA segment to the indicated value.
+    
+    
+    EXAMPLES:
+    
+        set_es(get_ds());       /* Copy DATA to EXTRA segments */
+    SET_TIME                                                       SET_TIME
+    
+    
+    
+    PROTOTYPE:
+    
+        set_time(int hour, int minite, int second)
+    
+    
+    ARGUMENTS:
+    
+        hour    - New hour (0-23)
+        minite  - New minite (0-59)
+        second  - New second (0-59)
+    
+    
+    RETURN VALUE:
+    
+        0       - Success
+        -1      - Invalid time given
+    
+    
+    DESCRIPTION:
+    
+          This function sets the current system time to "hour", "minite" and
+       "second".
+    
+    
+    EXAMPLES:
+    
+        set_time(0, 0, 0);  /* Set to 00:00:00 (midnight) */
+    TSR                                                                 TSR
+    
+    
+    
+    PROTOTYPE:
+    
+        tsr(&func, int hotkey, int alloc)
+    
+    
+    ARGUMENTS:
+    
+        func    - Address of function to execute
+        hotkey  - POP-UP activation hotkeys
+        alloc   - Memory allocation
+    
+    
+    RETURN VALUE:
+    
+        Function normally never returns, but if it does, an
+        operating system error code is passed back.
+    
+    
+    DESCRIPTION:
+    
+          The TSR function terminates the MICRO-C  program,  but  leaves  it
+       resident in memory. When the specified "HOT KEYS" are detected on the
+       IBM PC keyboard, the context of whatever program is running is saved,
+       and the specified MICRO-C function  is  called.  When  that  function
+       returns, the interrupted program is resumed.
+    
+          When activated this way, THE "func" FUNCTION  MUST  NOT  TERMINATE
+       WITH "exit" or one of its related functions (abort  etc.).  THE  ONLY
+       WAY IT MAY TERMINATE IS TO "return" NORMALLY.
+    
+          The meaning of "hotkey" is defined in the "tsr.h" header file.
+    
+          The "alloc" paremeter specifies how much extra  memory  is  to  be
+       retained in the TSR image for use  by  the  MICRO-C  stack  and  heap
+       memory allocation functions. The "func" function(s) must insure  that
+       the total amount of memory used by the stack and  calls  to  "malloc"
+       does not exceed this value.
+    
+          NOTE: "malloc" will fail if the heap grows to  within  1K  of  the
+       stack pointer.
+    
+          All memory used by  code,  global  variables,  string  space,  and
+       "malloc" calls prior to the use of "tsr" is  automatically  retained,
+       and should not be included in the "alloc" value.
+    
+          TSR programs which perform screen I/O should take care to save and
+       restore the screen contents when popping up and down.
+    
+    
+    EXAMPLES:
+    
+        tsr(&popup_func, ALT+L_SHIFT, 1024);
+    VCLEAR_BOX                                                   VCLEAR_BOX
+    
+    
+    
+    PROTOTYPE:
+    
+        vclear_box(int x, int y, int w, int h)
+    
+    
+    ARGUMENTS:
+    
+        x       - COLUMN of top left corner of box
+        y       - ROW of top left corner of box
+        w       - Width of box (columns)
+        h       - Height of box (rows)
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function clears a box of the specified height and  width,  at
+       the indicated 'X' and 'Y' coordinates, on  the  IBM-PC  video  screen
+       using the block graphics characters. The entire  box  is  cleared  to
+       spaces.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vclear_box(21, 11, 8, 3);   /* Clear a BOX */
+    VCLEOL                                                           VCLEOL
+    
+    
+    
+    PROTOTYPE:
+    
+        vcleol()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function clears the IBM PC  video  screen  from  the  current
+       cursor position to the end of a line.
+    
+          You must "#include video.h", and execute "VOPEN"  prior  to  using
+       this function.
+    
+    
+    EXAMPLES:
+    
+        vprintf("Input> ");     /* Display a prompt */
+        vcleol();               /* Clear remainder of input line */
+    VCLEOS                                                           VCLEOS
+    
+    
+    
+    PROTOTYPE:
+    
+        vcleos()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function clears the IBM PC  video  screen  from  the  current
+       cursor position to the end of a screen.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vgotoxy(0, 10);         /* position at line 11 */
+        vcleos();               /* Clear lower part of screen */
+    VCLSCR                                                           VCLSCR
+    
+    
+    
+    PROTOTYPE:
+    
+        vclscr()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function clears the entire IBM PC video screen and resets the
+       cursor position to the top left hand corner.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        if(c = 0x1b) {          /* Escape command */
+            vclscr();       /* Clear the screen */
+            vprintf("%s has terminated\n", argv[0]);
+            exit(-1); }
+    VCURSOR_BLOCK                                             VCURSOR_BLOCK
+    
+    
+    
+    PROTOTYPE:
+    
+        vcursor_block()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function enables (turns on) display of the cursor on the  IBM
+       PC video display. The cursor is shown as  flashing  block,  occupying
+       the entire character window.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        if(insert)              /* Test insert mode flag */
+            vcursor_block();    /* Indicate inserting with block cursor */
+        else
+            vcursor_line();     /* Indicate overwrite with line cursor */
+    VCURSOR_LINE                                               VCURSOR_LINE
+    
+    
+    
+    PROTOTYPE:
+    
+        vcursor_line()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function enables (turns on) display of the cursor on the  IBM
+       PC video display. The cursor is shown as a single flashing  line,  at
+       the bottom of the character window.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vcursor_line();     /* Re-enable the cursor */
+        exit(0);            /* And terminate */
+    VCURSOR_OFF                                                 VCURSOR_OFF
+    
+    
+    
+    PROTOTYPE:
+    
+        vcursor_off()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function inhibits (turns off) display of the  cursor  on  the
+       IBM PC video display. This affects the cursor  display  only,  screen
+       output will continue to be displayed at the correct cursor position.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vclscr();           /* Clear screen */
+        vcursor_off();      /* Inhibit cursor */
+        vmenu(10, 10, main_menu, 0, &index);    /* Present main menu */
+    VDRAW_BOX                                                     VDRAW_BOX
+    
+    
+    
+    PROTOTYPE:
+    
+        vdraw_box(int x, int y, int w, int h)
+    
+    
+    ARGUMENTS:
+    
+        x       - COLUMN of top left corner of box
+        y       - ROW of top left corner of box
+        w       - Width of box (columns)
+        h       - Height of box (rows)
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function draws a box of the specified height  and  width,  at
+       the indicated 'X' and 'Y' coordinates, on  the  IBM-PC  video  screen
+       using the block graphics characters.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vdraw_box(20, 10, 10, 5);   /* Draw a BOX */
+    VERSION                                                         VERSION
+    
+    
+    
+    PROTOTYPE:
+    
+        int version()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        MS-DOS operating system version number
+    
+    
+    DESCRIPTION:
+    
+          The "version" function is available only under MS-DOS, and returns
+       the version number of the operating system.
+    
+          The higher 8 bits  of  the  returned  value  indicates  the  MAJOR
+       version number ('3' in DOS 3.1)
+    
+          The lower 8 bits of the returned value indicates the MINOR version
+       nuber ('1' in DOS 3.1).
+    
+    
+    EXAMPLES:
+    
+        if(version() < 0x031E)
+            abort("Requires DOS 3.30 or higher\n");
+    VGETC                                                             VGETC
+    
+    
+    
+    PROTOTYPE:
+    
+        int vgetc()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        0-127   - ASCII value of key pressed
+        < 0     - Special function key as defined in "video.h"
+    
+    
+    DESCRIPTION:
+    
+          The "vgetc" function waits until a key is pressed  on  the  system
+       console, and returns its value.
+    
+          Note that due to the  buffering  of  the  IBM-PC  keyboard,  every
+       keypress will be reported, even if the VGETC function is called after
+       a key is pressed and released.
+    
+    
+    EXAMPLES:
+    
+        switch(vgetc()) {       /* Handle input keys
+                . . .
+        }
+    VGETS                                                             VGETS
+    
+    
+    
+    PROTOTYPE:
+    
+        int vgets(int x, int y, char *prompt, char *field, int width)
+    
+    
+    ARGUMENTS:
+    
+        x       - COLUMN of top left corner of input box
+        y       - ROW of top left corner of input box
+        prompt  - String to prompt with
+        field   - String to receive the data
+        width   - Width in characters of input field
+    
+    
+    RETURN VALUE:
+    
+        0   - Selection was made and ENTER pressed.
+        !0  - Input was aborted via ESCAPE key.
+    
+    
+    DESCRIPTION:
+    
+          The "vgets" function draws a  box  on  the  video  screen  at  the
+       specified X and Y coordinates, then prompts for and receives an input
+       string in the box. The box is  drawn  large  enough  to  contain  the
+       prompt and  the  specified  width  of  input  field.  The  prompt  is
+       displayed at the left hand  side  of  the  box,  and  the  cursor  is
+       positioned immediatly following it, at the start of the input field.
+    
+          The "field" parameter is the  address  of  a  character  array  to
+       receive the input string. The previous value of the "field" array  is
+       inserted into the input box when VGETS is invoked. If you do not want
+       to display an old value, you should set the first  character  pointed
+       to by field to zero, before calling VGETS.
+    
+          When entering the string, the user may use the  following  special
+       keys to edit the input field:
+    
+                Right Arrow - Move forward one character
+                Left  Arrow - Move backward one character
+                Delete      - Delete the character under the cursor
+                Backspace   - Move backward one character and delete.
+                Home        - Move to beginning of string
+                End         - Move to end of string
+                PgUp        - Clear (erase) entire string
+                PgDn        - Clear from cursor to end of string
+                Enter       - Accept (enter) the string
+                ESC         - Abort the input request
+    
+          All data entered in the input box is inserted into any data  which
+       is already present.
+    
+    
+    
+    EXAMPLES:
+    
+        name[0] = 0;
+        if(vgets(10, 10, "Your name?", name, 30))
+            return;     /* Aborted, exit to higher level */
+    VGOTOXY                                                         VGOTOXY
+    
+    
+    
+    PROTOTYPE:
+    
+        vgotoxy(int x, int y)
+    
+    
+    ARGUMENTS:
+    
+        x       - New COLUMN (0-79)
+        y       - New ROW    (0-24)
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "vgotoxy" function positions the cursor on  the  IBM-PC  video
+       screen. Any further display output will occur  at  the  new  ROW  and
+       COLUMN on the screen.
+    
+          The extern "int" variable "V_XY" may be referenced to read or  set
+       the  current  X/Y  position.  The  higher  8  bits  contain  the  'Y'
+       coordinate, and the lower 8 bits contain the 'X' coordinate. If  this
+       variable is used to set (restore) the  cursor  position,  "vupdatexy"
+       must then be called to position the physical cursor.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        for(i=0; i<24; ++i) {   /* Draw a diagonal line of 'X's */
+            vgotoxy(i, i);
+            vputc('X'); }
+    VMENU                                                             VMENU
+    
+    
+    
+    PROTOTYPE:
+    
+        vmenu(int x, int y, char *names[], char erase, int &index)
+    
+    
+    ARGUMENTS:
+    
+        x       - COLUMN of top left corner of menu box
+        y       - ROW of top left corner of menu box
+        names   - Array to menu selection text (last entry = 0)
+        erase   - 1=Erase BOX after selection is made
+        index   - Address of message selection index variable
+    
+    
+    RETURN VALUE:
+    
+        0   - Selection was made and ENTER pressed.
+        !0  - Menu was aborted via ESCAPE key.
+    
+    
+    DESCRIPTION:
+    
+          The "vmenu" function displays a list of menu items enclosed  in  a
+       box on the IBM-PC video  screen  at  the  specified  ROW  and  COLUMN
+       address. The user may use the UP, DOWN, HOME and END keys  to  select
+       an entry by moving the INVERSE VIDEO selection cursor.
+    
+          When the desired selection is under the cursor, the  selection  is
+       made by pressing the ENTER key.
+    
+          At any time the menu selection may be  canceled  by  pressing  the
+       ESCAPE key.
+    
+          The "names" argument must be a pointer to an  array  of  character
+       strings which are the selections to display. This array MUST end with
+       a zero (0) element to indicate the end of the list.
+    
+          The "erase" flag indicates that the menu box should be cleared  to
+       blanks when the selection is made. If "erase=0", the menu box is left
+       on the screen, WITHOUT the selection cursor, with the selected  entry
+       marked by '>' and '<'. The menu box is always erased when the menu is
+       aborted with the ESCAPE key.
+    
+          The "index" argument is the address of  an  "int"  variable  which
+       contains the position of the selection cursor. It controls where  the
+       selection cursor will appear when the function is first invoked (0  =
+       first entry), and also is assigned  the  position  of  the  selection
+       cursor when the selection is made.
+    
+    
+    
+    EXAMPLES:
+    
+        char *names[] = { "One", "Two", "Three", "Four", "Five", 0 };
+            . . .
+        index = 0;
+        if(vmenu(10, 10, names, 0, &index))
+            return;         /* Aborted, exit to higher level */
+        switch(index) {     /* Handle selection */
+            . . .
+        }
+    VMESSAGE                                                       VMESSAGE
+    
+    
+    
+    PROTOTYPE:
+    
+        vmessage(int x, int y, char *string)
+    
+    
+    ARGUMENTS:
+    
+        x       - COLUMN of top left corner of message box
+        y       - ROW of top left corner of message box
+        string  - Message to display
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "vmessage" function displays a text  string  surrounded  by  a
+       BOX, on the IBM-PC video screen, at  the  specified  ROW  and  COLUMN
+       address.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vmessage(20, 20, "Press any KEY to continue");
+        get_key();
+        vclear_box(20, 20, 26, 2);
+    VOPEN                                                             VOPEN
+    
+    
+    
+    PROTOTYPE:
+    
+        vopen()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function initializes the IBM-PC video display adapter for use
+       with the MICRO-C video library functions. It determines  the  adapter
+       type  (COLOR  ot  MONOCHROME),  sets  up  internal   variables   with
+       information required by the other video  functions,  and  clears  the
+       video screen.
+    
+          This function MUST  be  called  before  any  of  the  other  video
+       functions in the library are used.
+    
+          After "vopen" is called, the extern "int" variable "V_BASE" may be
+       referenced to determine the memory segment of the video display (B000
+       for monochrome, B800 for color).
+    
+          Any program using the video library  functions  must  include  the
+       "video.h" header file.
+    
+    
+    EXAMPLES:
+    
+        vopen();
+    VPRINTF                                                         VPRINTF
+    
+    
+    
+    PROTOTYPE:
+    
+        register vprintf(char *format, arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function performs exactly as the  "PRINTF"  function  in  the
+       standard function library, except that it  outputs  directly  to  the
+       video screen using the video interface library routines.
+    
+          This function should be used in preference to "PRINTF" when  using
+       the video function library since "PRINTF" will  not  move  the  video
+       librarys cursor.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "video.h").
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vgotoxy(0, 0);
+        vprintf("Screen %u", screen);
+    VPUTC                                                             VPUTC
+    
+    
+    
+    PROTOTYPE:
+    
+        vputc(char chr)
+    
+    
+    ARGUMENTS:
+    
+        chr     - Character to display
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function displays a character on  the  video  screen  at  the
+       current cursor position.
+    
+          Characters are output in "tty" fashion, with  proper  handling  of
+       control codes such as CARRIAGE-RETURN, LINE-FEED and BELL. The screen
+       will scroll upwards when a NEWLINE is printed on the bottom  line  of
+       the screen, or when the bottom line wraps around to the next.
+    
+          Although only the lower 8 bits of a passed value are used, "vputc"
+       will not perform ANY output translations if any of the upper  8  bits
+       are set. This provides a method of displaying  the  video  characters
+       represented by control codes such as NEWLINE, and BACKSPACE.
+    
+          The external "char" variable "V_ATTR" may be used to set the video
+       attribute used by "VPUTC" to display the  character.  This  value  is
+       written to the attribute location associated with  the  character  on
+       the video display hardware. Its effect  is  dependant  on  the  video
+       adapter in use. The "video.h" header file contains definitions of the
+       attribute bits for use on "standard" monochrome and color displays.
+    
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vputc(0x0A);            /* Line-feed, advance cursor */
+        vputc(0x0A | 0xff00);   /* Display 0x0A character code */
+    VPUTF                                                             VPUTF
+    
+    
+    
+    PROTOTYPE:
+    
+        vputf(char *string, int width)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to character string
+        width   - Width of output field
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "vputf" function outputs a  character  string  to  the  IBM-PC
+       video screen using the video library functions.
+    
+          The string is left justified in a field of the specified width. If
+       the string is shorter than "width", the field is padded with  blanks.
+       If the string is longer than "width", the output is truncated.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vputf(message, 10); 
+    VPUTS                                                             VPUTS
+    
+    
+    
+    PROTOTYPE:
+    
+        vputs(char *string)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to character string
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "vputs" function outputs a  character  string  to  the  IBM-PC
+       video screen using the video library functions.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vputs(message);
+    VTSTC                                                             VTSTC
+    
+    
+    
+    PROTOTYPE:
+    
+        int vtstc()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        0       - No key pressed
+        1-127   - ASCII value of key pressed
+        < 0     - Special function key as defined in "video.h"
+    
+    
+    DESCRIPTION:
+    
+          The "vtstc" function  tests  for  a  key  pressed  on  the  system
+       console, and  returns  its  value.  A  returned  value  of  zero  (0)
+       indicates that no key was found to be pressed.
+    
+          Note that due to the  buffering  of  the  IBM-PC  keyboard,  every
+       keypress will be reported, even if the VTSTC function is called after
+       a key is pressed and released.
+    
+    
+    EXAMPLES:
+    
+        if(vtstc() == 0x1B) /* exit loop on ESCAPE key */
+            break;
+    VUPDATEXY                                                     VUPDATEXY
+    
+    
+    
+    PROTOTYPE:
+    
+        vupdatexy()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function updates the real X/Y cursor position  on  the  video
+       screen to reflect the "logical" position  where  the  next  character
+       will be output.
+    
+          The MICRO-C video library  uses  a  BIOS  interrupt  (INT  10)  to
+       position the cursor, which is quite slow, compared to  the  speed  of
+       the library video routines. To prevent this  from  slowing  down  the
+       video output, the cursor is  only  physically  re-positioned  when  a
+       "vgotoxy" or a "vgetc" is executed.
+    
+          This allows the library routines to run at full speed,  and  still
+       put the cursor in the right place when  output  stops  and  an  input
+       request is made.
+    
+          A side effect of this is that the cursor on the  screen  will  not
+       appear to move unless  you  call  "vgotoxy"  or  "vgetc".  This  only
+       affects the physical cursor on the screen, MICRO-C maintains its  own
+       internal cursor location which it uses  to  determine  where  on  the
+       screen the next write will occur.
+    
+          Some applications which run in  real  time  (Such  as  a  terminal
+       emulator) do not call "vgetc", but use "vtstc" to poll  the  keyboard
+       on a regular basis. In this case, the "vupdatexy" routine  should  be
+       called any time that the visual position of the cursor is important.
+    
+          "VOPEN" MUST be called prior to using this function.
+    
+    
+    EXAMPLES:
+    
+        vupdatexy();        /* position the cursor *
+        c = vtstc();        /* Test for a character */
+    MICRO-C Library                                                  Page: 4
+
+
+    
+                     +------------------------------------+
+                     |                                    |
+                     |  ********************************  |
+                     |  * The IBM-PC WINDOWING library *  |
+                     |  ********************************  |
+                     |                                    |
+                     +------------------------------------+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       1.3 IBM-PC WINDOWING Library
+    
+             The MICRO-C WINDOWING LIBRARY is a set of powerful, very  fast,
+          compact, text based windowing functions for use with  the  MICRO-C
+          compiler, on the IBM Personal Computer. Features  of  the  library
+          include multiple open windows,  overlaid  windows  with  automatic
+          save/restore  of  screen  underneath,  scrolling  within  windows,
+          optional window borders, menu and form entry functions, and more.
+    
+             The library is organized into two parts, the first is a set  of
+          assembly language routines which provides the  basic  "low  level"
+          functions to open/close windows, and to output data in  them.  The
+          second part of the library provides a set of 'C'  functions  which
+          provide "high level"  functions  such  as  menu  and  form  entry,
+          formatted printing, etc.
+    MICRO-C Library                                                  Page: 5
+
+
+          1.3.1 Window Control Block
+    
+                Whenever a new window is opened, the windowing library  sets
+             up a WINDOW CONTROL  BLOCK  (WCB)  which  contains  information
+             needed to access and control the window. The format of the  WCB
+             is:
+    
+        Offset: 0   - Current video attribute *
+                1   - Window flags (High 8 bits of w_open attrs) **
+                2   - Absolute 'X' position of top left corner of
+                      active region. ***
+                3   - Absolute 'Y' position of top left corner of
+                      active region. ***
+                4   - Width in characters of active region ***
+                5   - Height in characters of active region ***
+                6   - Current 'X' cursor coordinate
+                7   - Current 'Y' cursor coordinate
+                8,9 - Pointer to previous window buffer
+                10  - Previous cursor ENDING line
+                11  - Previous cursor STARTING line
+                12  - Previous cursor absolute 'X' position ****
+                13  - Previous cursor absolute 'Y' position ****
+                14..- Save area for SAVE/RESTORE function
+    
+        *       You may dynamically alter the video attribute of data
+                written to the window by writing to this byte.
+    
+        **      You may dynamically alter the properties of the window by
+                setting or clearing the flag bits with these exceptions:
+                -DO NOT enable SAVE/RESTORE unless opened with it
+                (It is Ok to disable SAVE/RESTORE).
+                -DO NOT change the state of the BORDER bits.
+    
+        ***     For windows opened with a BORDER, this reflects the size
+                of the active region (not including the border). Otherwise,
+                this is the size of the entire window.
+    
+        ****    For full screen window which does not SAVE/RESTORE, you can
+                set these values to zero to home cursor on exit.
+    MICRO-C Library                                                  Page: 6
+
+
+          1.3.2 External Variables
+    
+                In addition to  the  functions  decribed  on  the  following
+             pages, the windowing library provides  the  following  external
+             variables which may be accessed from within your 'C' program:
+    
+             1.3.2.1 W_BASE
+    
+                               extern int W_BASE;
+    
+                   This variable contains the  base  address  of  the  video
+                screen, which may be used to determine the type  of  display
+                present:
+    
+                        B000 = Monochrome
+                        B800 = Color
+    
+    
+             1.3.2.2 W_OPEN
+    
+                              extern char *W_OPEN;
+    
+                   This variable contains a  pointer  to  the  WCB  for  the
+                "active" window, and controls which window is manipulated by
+                certain library functions.  This  automatically  set  up  by
+                "wopen" to point to the  last  window  opened,  but  may  be
+                changed at any time with:
+    
+                                W_OPEN = window;
+    
+                   NOTE, when the active window is closed, W_OPEN  is  reset
+                to point to the window which was active at the time that  it
+                (the active window) was opened. If  windows  are  closed  in
+                other than the reverse order  of  which  they  were  opened,
+                W_OPEN may be left pointing to a window  which  has  already
+                been closed. If this happens, YOU MUST NOT USE THE  "ACTIVE"
+                WINDOW FUNCTIONS WITHOUT RESETTING W_OPEN  TO  POINT  TO  AN
+                OPEN WINDOW. It is your (the programmer's) responsibility to
+                insure that you know what window will  be  accessed  through
+                W_OPEN at all times throughout your program.
+    
+          1.3.3 Window Library Functions
+    
+                The following pages contain a description of  each  function
+             available in the IBM-PC windowing library.
+    WCLEOL                                                           WCLEOL
+    W_CLEOL                                                         W_CLEOL
+    
+    
+    
+    PROTOTYPE:
+    
+        wcleol()
+        w_cleol(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wcleol" function clears the active window  from  the  current
+       cursor position to the end of a line.
+    
+          The "w_cleol" function  clears  the  specified  window  fromt  the
+       current position to the end of the line.
+    
+    
+    EXAMPLES:
+    
+        wputs("Input> ");       /* Display a prompt */
+        wcleol();               /* Clear remainder of input line */
+    WCLEOW                                                           WCLEOW
+    W_CLEOW                                                         W_CLEOW
+    
+    
+    
+    PROTOTYPE:
+    
+        wcleow()
+        w_cleow(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wcleow" function clears the active window  from  the  current
+       position to the end of the window.
+    
+          The "w_cleow"  function  clears  the  specified  window  from  the
+       current position to the end of the window.
+    
+    
+    EXAMPLES:
+    
+        wgotoxy(0, 10);         /* position at line 11 */
+        wcleos();               /* Clear lower part of screen */
+    WCLOSE                                                           WCLOSE
+    W_CLOSE                                                         W_CLOSE
+    
+    
+    
+    PROTOTYPE:
+    
+        wclose()
+        w_close(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wclose" function closes the "active" window, and de-activates
+       it.
+    
+          The  "w_close"  function  closes   the   specified   window,   and
+       de-activates it.
+    
+          If the window being closed is the "active"  window,  the  "active"
+       window will revert to the window which was "active" at the time  that
+       the window being closed was opened.
+    
+    
+    EXAMPLES:
+    
+        wclose();       /* Close active window */
+        w_close(title); /* Close the title window */
+    WCLWIN                                                           WCLWIN
+    W_CLWIN                                                         W_CLWIN
+    
+    
+    
+    PROTOTYPE:
+    
+        wclwin()
+        w_clwin(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wclwin" function clears the entire active window  and  resets
+       the cursor position to the top left hand corner.
+    
+          The "w_clwin" function clears the  entire  specified  window,  and
+       resets the cursor position to the top left hand corner.
+    
+    
+    EXAMPLES:
+    
+        if(c = 0x1b) {          /* Escape command */
+            wclwin();           /* Clear the screen */
+            wputs("Exiting back to main menu");
+            return; }
+    WCURSOR_BLOCK                                             WCURSOR_BLOCK
+    
+    
+    
+    PROTOTYPE:
+    
+        wcursor_block()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function enables (turns on) display of the cursor on the  IBM
+       PC video display. The cursor is shown as  flashing  block,  occupying
+       the entire character window.
+    
+    
+    EXAMPLES:
+    
+        if(insert)              /* Test insert mode flag */
+            wcursor_block();    /* Indicate inserting with block cursor */
+        else
+            wcursor_line();     /* Indicate overwrite with line cursor */
+    WCURSOR_LINE                                               WCURSOR_LINE
+    
+    
+    
+    PROTOTYPE:
+    
+        wcursor_line()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function enables (turns on) display of the cursor on the  IBM
+       PC video display. The cursor is shown as a single flashing  line,  at
+       the bottom of the character window.
+    
+    
+    EXAMPLES:
+    
+        wcursor_line();     /* Re-enable the cursor */
+        exit(0);            /* And terminate */
+    WCURSOR_OFF                                                 WCURSOR_OFF
+    
+    
+    
+    PROTOTYPE:
+    
+        wcursor_off()
+    
+    
+    ARGUMENTS:
+    
+        None
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This function inhibits (turns off) display of the  cursor  on  the
+       IBM PC video display. This affects the cursor  display  only,  screen
+       output will continue to be displayed at the correct cursor position.
+    
+    
+    EXAMPLES:
+    
+        wclscr();           /* Clear screen */
+        wcursor_off();      /* Inhibit cursor */
+        wmenu(10, 10, 0x6007, main_menu, &index); /* Present main menu */
+    WFORM                                                             WFORM
+    
+    
+    
+    PROTOTYPE:
+    
+        register wform(int x, int y, int attrs, char *prompts[],
+                       char *strings,  ...)
+    
+    
+    ARGUMENTS:
+    
+        x       - Absolute COLUMN of upper left corner of form window
+        y       - Absolute ROW    of upper left corner of form window
+        attrs   - Attributes for form window (See WOPEN)
+        prompts - Prompt string for form entries
+        strings - Destination string to receive form data
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wform" function opens  a  window,  which  contains  a  "form"
+       consisting of prompts and data areas. Each data area is shown  beside
+       its corresponding prompt, and may be edited using the keys  supported
+       by WGETS. the UP and DOWN ARROW keys may be used to move the  editing
+       cursor between the various fields in the input form.*
+    
+          The "attrs" argument contains the open attributes (see WOPEN)  for
+       the menu window, and may  be  used  to  control  the  color,  border,
+       clearing, etc.
+    
+          The "prompts" argument is an array of pointers to  strings,  which
+       define the prompts and input  fields  in  the  form.  The  first  two
+       characters of each string define the 'X' and 'Y'  coordinates  within
+       the window of the prompt string. The  third  character  contains  the
+       length of the destination string, and the  remainder  of  the  string
+       contains the text prompt. The destination string is positioned in the
+       window directly following the prompt string.  This  list  of  prompts
+       must end with a NULL (0) element.
+    
+          The first (0) element of "prompts" does not actually point  to  an
+       input definition, but contains the X and Y sizes for the window to be
+       opened (High byte = X, Low byte = Y).
+    
+          Following the "prompts" argument, there must  be  one  destination
+       "string" argument for each prompt defined. The strings must  be  long
+       enough to contain the number of characters  specified  in  the  third
+       byte of the coresponding "prompt" string.
+          Only the lower seven bits of the field length are used  (length  =
+       1-127), the high bit indicates that the field is to  contain  numbers
+       only. In this case, the corresponding argument is NOT a pointer to  a
+       string, but must be a pointer to an "int" variable.
+    
+          The form is exited by pressing the ESCAPE key.
+    
+    
+    
+    EXAMPLES:
+    
+        /* Sample input form */
+            char *form[] = {
+                50<<8|6,        /* Place in 50 by 6 window */
+                "\x01\x00\x20Software  :",
+                "\x01\x01\x20Author    :",
+                "\x01\x02\x20Directory :",
+                "\x01\x03\x20Filename  :",
+                0 };
+    
+        /* Data areas for input form */
+            char software[0x21] = "MICRO-C",
+                author[0x21]    = "Dave Dunfield",
+                direct[0x21]    = "C:\\MC",
+                filename[0x21]  = "MC*.*";
+    
+        /* Simple main program to display the form */
+        main()
+        {
+            wform(15, 9, 0xE007, form, software, author, direct, filename);
+        }
+    WGETC                                                             WGETC
+    W_GETC                                                           W_GETC
+    
+    
+    
+    PROTOTYPE:
+    
+        int wgetc()
+        int w_getc(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        0-127   - ASCII value of key pressed
+        < 0     - Special function key as defined in "video.h"
+    
+    
+    DESCRIPTION:
+    
+          The "wgetc" function waits until a key is pressed  on  the  system
+       console, and returns its value. The cursor is updated to be placed at
+       the current cursor position in the active window.
+    
+          The "w_getc" function waits until a key is pressed on  the  system
+       console, and returns its value. The cursor is updated to be placed at
+       the current cursor position in the specified window.
+    
+          Note that due to the  buffering  of  the  IBM-PC  keyboard,  every
+       keypress will be reported, even if the WGETC or  W_GETC  function  is
+       called after a key is pressed and released.
+    
+    
+    EXAMPLES:
+    
+        switch(wgetc()) {       /* Handle input keys
+                . . .
+        }
+    WGETS                                                             WGETS
+    
+    
+    
+    PROTOTYPE:
+    
+        int wgets(int x, int y, char *string, int length)
+    
+    
+    ARGUMENTS:
+    
+        x       - COLUMN position for input
+        y       - ROW    position for input
+        string  - Destination string
+        length  - Length of string (High bit set = Numbers only)
+    
+    
+    RETURN VALUE:
+    
+        Character causing exit
+    
+    
+    DESCRIPTION:
+    
+          The "wgets" function positions the cursor at the specified X and Y
+       coordinates, and displays the contents of "string"  (in  a  field  of
+       "length" characters), and waits for input, which may be used to  edit
+       the string.
+    
+          Any normal ASCII characters which are input will be  entered  into
+       the string, The following function keys are recognized:
+    
+            LEFT ARROW          - Position cursor one space to the left
+            RIGHT ARROW         - Position cursor one space to the right
+            BACKSPACE           - Backup cursor & delete previous character
+            DELETE              - Delete character under cursor
+            INSERT              - Toggle between INSERT/OVERWRITE
+            HOME                - Position cursor at start of string
+            END                 - Position cursor at end of scring
+            PAGE UP             - Clear entire field
+            PAGE DOWN           - Clear from cursor to end of field
+    
+          Any other special function keys will cause "wgets"  to  terminate,
+       and return the value of the offending key. (See  "window.h"  for  key
+       definitions).
+    
+          When INSERT mode is enabled, all entered  text  will  be  inserted
+       into the string, with the remainder of the  string  shifting  to  the
+       right. This mode is indicated by a flashing BLOCK cursor.
+    
+          When OVERWRITE mode is enabled, all entered  text  will  overwrite
+       the existing string. This  mode  is  indicated  by  a  flashing  LINE
+       cursor.
+    
+    
+    EXAMPLES:
+    
+        wgets(2, 5, name, 25);
+    WGOTOXY                                                         WGOTOXY
+    W_GOTOXY                                                       W_GOTOXY
+    
+    
+    
+    PROTOTYPE:
+    
+        wgotoxy(int x, int y)
+        w_gotoxy(int x, int y, char *window)
+    
+    
+    ARGUMENTS:
+    
+        x       - New COLUMN
+        y       - New ROW
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wgotoxy" function positions  the  cursor  within  the  active
+       window. Any further display output to that window will occur  at  the
+       new ROW and COLUMN positions.
+    
+          The "w_gotoxy" function positions the cursor within the  specified
+       window. Any further display output to that window will occur  at  the
+       new ROW and COLUMN positions.
+    
+    
+    EXAMPLES:
+    
+        for(i=0; i<10; ++i) {   /* Draw a diagonal line of 'X's */
+            wgotoxy(i, i);
+            wputc('X'); }
+    WMENU                                                             WMENU
+    
+    
+    
+    PROTOTYPE:
+    
+        wmenu(int x, int y, int attrs, char *names[], int &index)
+    
+    
+    ARGUMENTS:
+    
+        x       - Absolute COLUMN of top left corner of menu window
+        y       - Absolute ROW    of top left corner of menu window
+        attrs   - Attributes for menu window (see WOPEN)
+        names   - Array to menu selection text (last entry = 0)
+        index   - Address of message selection index variable
+    
+    
+    RETURN VALUE:
+    
+        0   - Selection was made and ENTER pressed.
+        !0  - Menu was aborted via ESCAPE key.
+    
+    
+    DESCRIPTION:
+    
+          The "wmenu" function opens a window  containing  a  list  of  menu
+       items at the specified ROW and COLUMN address. The user may  use  the
+       UP, DOWN, HOME and END keys to select an entry by moving the  INVERSE
+       VIDEO selection cursor. Pressing an alpha-numeric key  will  position
+       the  selection  bar  to  the  first  entry  which  begins  with  that
+       character.
+    
+          When the desired selection is under the cursor, the  selection  is
+       made by pressing the ENTER key.
+    
+          At any time the menu selection may be  canceled  by  pressing  the
+       ESCAPE key.
+    
+          The "attrs" argument contains the open attributes (see WOPEN)  for
+       the menu window, and may  be  used  to  control  the  color,  border,
+       clearing, etc.
+    
+          The "names" argument must be a pointer to an  array  of  character
+       strings which are the selections to display. This array MUST end with
+       a NULL (0) element to indicate the end of the list.
+    
+          The "index" argument is the address of  an  "int"  variable  which
+       contains the position of the selection cursor. It controls where  the
+       selection cursor will appear when the function is first invoked (0  =
+       first entry), and also is assigned  the  position  of  the  selection
+       cursor when the selection is made.
+    
+          Once a selection is made, the first character  of  that  selection
+       will be hilighted in reverse video.
+    
+    
+    
+    
+    EXAMPLES:
+    
+        char *names[] = { "One", "Two", "Three", "Four", "Five", 0 };
+            . . .
+        index = 0;
+        if(wmenu(10, 10, 0xE007, names, &index))
+            return;         /* Aborted, exit to higher level */
+        switch(index) {     /* Handle selection */
+            . . .
+        }
+    WOPEN                                                             WOPEN
+    
+    
+    
+    PROTOTYPE:
+    
+        char *wopen(int x, int y, int width, int height, int attrs)
+    
+    
+    ARGUMENTS:
+    
+        x       - Absolute COLUMN of top left corner of window
+        y       - Absolute ROW    of top left corner of window
+        width   - The width of the window in characters
+        height  - The height of the window in characters
+        attrs   - The window attributes, BIT definitions:
+                    15 - Enable SAVE/RESTORE screen under window
+                *   14 - Enable SINGLE line BORDER
+                *   13 - Enable DOUBLE line BORDER
+                    12 - Enable CLEAR on OPEN
+                **  11 - Enable CLEAR on CLOSE
+                *** 10 - Disable NEWLINE (LF only)
+                     9 - Enable SCROLLING in window
+                     8 - Enable LINE WRAP in window
+                   7-0 - Video attributes for window
+    
+            *   When BORDER is selected, window will include an enclosing
+                BOX. In this case, the effective height and width of the
+                active region (where text data can be written) will be
+                reduced by 2.
+    
+            **  Has no visual effect when SAVE/RESTORE is enabled.
+    
+            *** If this BIT is set, CTRL-J will behave as LINEFEED only,
+                and will not return the cursor to the left margin.
+    
+    RETURN VALUE:
+    
+        A pointer to the WCB for the newly opened window
+        0 if the window could not be opened
+    
+    
+    DESCRIPTION:
+    
+          The "wopen" function creates a new window on the PC video  screen.
+       This newly created window is also made the "active" window, which  is
+       automatically accessed by many of the windowing functions.
+    
+          If "wopen" is unable to allocate  enough  memory  for  the  window
+       control block (WCB), it will fail and return a value of zero (0).
+    
+    
+    EXAMPLES:
+    
+        /* Create a title window at top of screen */
+        titlewin = wopen(0, 0, 80, 3, 0x6047);
+    WPRINTF                                                         WPRINTF
+    W_PRINTF                                                       W_PRINTF
+    
+    
+    
+    PROTOTYPE:
+    
+        register wprintf(char *format, arg, ...)
+        register w_printf(char *window, char *format, arg, ...)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+        format  - Pointer to format string
+        arg     - Argument as determined by format string
+        ...     - Additional arguments may be required
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wprintf" function performs exactly as the  "PRINTF"  function
+       in the standard function library, except that it outputs directly  to
+       the active window using the low level windowing library functions.
+    
+          The "w_printf" function behaves similar to "wprintf", except  that
+       the window to receive the output is specified as the first parameter.
+    
+          These functions should be used  in  preference  to  "PRINTF"  when
+       using the windowing function library since "PRINTF" will not move the
+       windowing librarys cursor, will not use the attributes from the  WCB,
+       and will not respect the boundarys of the window.
+    
+          NOTE: This function uses a variable number of arguments, and  must
+       be declared as "register" (See "window.h").
+    
+    
+    EXAMPLES:
+    
+        wgotoxy(0, 0);
+        wprintf("Window %u", screen);
+    WPUTC                                                             WPUTC
+    W_PUTC                                                           W_PUTC
+    
+    
+    
+    PROTOTYPE:
+    
+        wputc(int c)
+        wputc(int c, char *window)
+    
+    
+    ARGUMENTS:
+    
+        c       - Character to be written to window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          This "wputc" function displays a character in the active window at
+       the current cursor position.
+    
+          The "w_putc" functino displays a character in the specified window
+       at the current cursor position.
+    
+          Characters are output in "tty" fashion, with  proper  handling  of
+       control codes such as CARRIAGE-RETURN, LINE-FEED and BELL. The screen
+       will scroll upwards when a NEWLINE is printed on the bottom  line  of
+       the screen, or  when  the  bottom  line  wraps  around  to  the  next
+       (Assuming those options are enabled in the window).
+    
+          Although only the lower 8 bits of a passed value are used, "vputc"
+       will not perform ANY output translations if any of the upper  8  bits
+       are set. This provides a method of displaying  the  video  characters
+       represented by control codes such as NEWLINE, and BACKSPACE.
+    
+          The first byte of the window control block (WCB)  for  the  window
+       contains the attributes which will be used to display the  character.
+       This value is written to the attribute location associated  with  the
+       character on the video display hardware. Its effect is  dependant  on
+       the video  adapter  in  use.  The  "window.h"  header  file  contains
+       definitions of the attribute bits for use  on  "standard"  monochrome
+       and color displays.
+    
+    
+    EXAMPLES:
+    
+        w_putc(0x0A, window1);      /* Line-feed, advance cursor */
+        wputc(0x0A | 0xff00);       /* Display 0x0A character code */
+    WPUTF                                                             WPUTF
+    
+    
+    
+    PROTOTYPE:
+    
+        wputf(char *string, int width)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to character string
+        width   - Width of output field
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wputf" function outputs a  character  string  to  the  active
+       window screen using the video library functions.
+    
+          The string is left justified in a field of the specified width. If
+       the string is shorter than "width", the field is padded with  blanks.
+       If the string is longer than "width", the output is truncated.
+    
+    
+    EXAMPLES:
+    
+        wputf(message, 10); 
+    WPUTS                                                             WPUTS
+    W_PUTS                                                           W_PUTS
+    
+    
+    
+    PROTOTYPE:
+    
+        wputs(char *string)
+        w_puts(char *string, char *window)
+    
+    
+    ARGUMENTS:
+    
+        string  - Pointer to character string
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wputs" function outputs a  character  string  to  the  active
+       window.
+    
+          The "w_puts" function output a character string to  the  specified
+       window.
+    
+    
+    EXAMPLES:
+    
+        wputs(message);
+        w_puts(message, window1);
+    WTSTC                                                             WTSTC
+    W_TSTC                                                           W_TSTC
+    
+    
+    
+    PROTOTYPE:
+    
+        int wtstc()
+        int w_tstc(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        0       - No key pressed
+        1-127   - ASCII value of key pressed
+        < 0     - Special function key as defined in "video.h"
+    
+    
+    DESCRIPTION:
+    
+          The "wtstc" function  tests  for  a  key  pressed  on  the  system
+       console, and returns its value. If a character is found,  the  cursor
+       is updated in the active window.
+    
+          The "w_tstc" function tests  for  a  key  pressed  on  the  system
+       console, and returns its value. If a character is found,  the  cursor
+       is updated in the specified window.
+    
+          A returned value of zero (0) indicates that no key was found to be
+       pressed.
+    
+          Note that due to the  buffering  of  the  IBM-PC  keyboard,  every
+       keypress will be reported, even if the WTSTC or  W_TSTC  function  is
+       called after a key is pressed and released.
+    
+    
+    EXAMPLES:
+    
+        if(wtstc() == 0x1B) /* exit loop on ESCAPE key */
+            break;
+    WUPDATEXY                                                     WUPDATEXY
+    W_UPDATEXY                                                   W_UPDATEXY
+    
+    
+    
+    PROTOTYPE:
+    
+        wupdatexy()
+        w_updatexy(char *window)
+    
+    
+    ARGUMENTS:
+    
+        window  - Pointer to WCB for an open window
+    
+    
+    RETURN VALUE:
+    
+        None
+    
+    
+    DESCRIPTION:
+    
+          The "wupdatexy" function updates the real X/Y cursor  position  on
+       the video screen to reflect the "logical"  position  where  the  next
+       character will be output in the active window.
+    
+          The "w_updatexy" function updates the real X/Y cursor position  on
+       the video screen to reflect the "logical"  position  where  the  next
+       character will be output in the specified window.
+    
+          The MICRO-C Windowing library uses a BIOS interrupt  (INT  10)  to
+       position the cursor, which is quite slow, compared to  the  speed  of
+       the library video routines. To prevent this  from  slowing  down  the
+       video output, the cursor is  only  physically  re-positioned  when  a
+       "wgotoxy" or a "wgetc" is executed.
+    
+          This allows the library routines to run at full speed,  and  still
+       put the cursor in the right place when  output  stops  and  an  input
+       request is made.
+    
+          A side effect of this is that the cursor on the  screen  will  not
+       appear to move unless  you  call  "wgotoxy"  or  "wgetc".  This  only
+       affects the physical cursor on the screen, MICRO-C maintains its  own
+       internal cursor location which it uses  to  determine  where  on  the
+       screen the next write will occur.
+    
+          Some applications which run in  real  time  (Such  as  a  terminal
+       emulator) do not call "wgetc", but use "wtstc" to poll  the  keyboard
+       on a regular basis. In this case, the "wupdatexy" routine  should  be
+       called any time that the visual position of the cursor is important.
+    
+    
+    EXAMPLES:
+    
+        wupdatexy();        /* position the cursor *
+        c = wtstc();        /* Test for a character */
+
+
+
+                                MICRO-C Library
+
+                               TABLE OF CONTENTS
+
+
+                                                                         Page
+
+     1. THE MICRO-C LIBRARIES                                               1
+
+        1.1 STANDARD Library                                                2
+        1.2 IBM-PC/MS-DOS Library                                           3
+        1.3 IBM-PC WINDOWING Library                                        4

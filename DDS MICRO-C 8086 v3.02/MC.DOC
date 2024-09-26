@@ -1,0 +1,3622 @@
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          ===========================================================
+                DDDDD           DDDDD               SSSS
+                 D   Dunfield    D   D             S
+                 D   D           D   Development    SSSS 
+                 D   D           D   D                  Systems
+                DDDDD           DDDDD               SSSS
+          ===========================================================
+          MM   MM  IIIIIII    CCCC   RRRRRR     OOO             CCCC
+          M M M M     I      C    C  R     R   O   O           C    C
+          M  M  M     I     C        R     R  O     O         C
+          M     M     I     C        RRRRRR   O     O  -----  C
+          M     M     I     C        R   R    O     O         C
+          M     M     I      C    C  R    R    O   O           C    C
+          M     M  IIIIIII    CCCC   R     R    OOO             CCCC
+          ===========================================================
+    
+    
+    
+    
+    
+                             A compact 'C' compiler
+                                      for
+                                 Small Systems.
+    
+    
+                                Technical Manual
+    
+    
+    
+    
+    
+                                  Release 3.02
+    
+                               Revised 09-Feb-94
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                       Copyright 1988-1994 Dave Dunfield
+                              All rights reserved
+    MICRO-C                                                          Page: 1
+
+
+    1. INTRODUCTION
+    
+          DDS MICRO-C is a compact, portable compiler for the  'C'  language
+       which is suitable for implementation on small 8 or  16  bit  computer
+       systems. It may be used as a  resident  or  cross  compiler,  and  is
+       capable of generating ROMable code. It is distributed in source form,
+       and thus provides a learning tool for those wishing  to  examine  the
+       internals of a working compiler.
+    
+          The main goal in the development of MICRO-C, has been to provide a
+       reasonably powerful language  which  will  be  portable  with  little
+       difficulty to many  target  systems.  The  'C'  language  was  chosen
+       because  it  was  designed  to  be  portable,  and   provides   ample
+       programming power. MICRO-C provides  an  alternative  to  interpreted
+       BASIC or assembly language  programming  which  are  often  the  only
+       languages available on small 8 bit systems.
+    
+          With today's focus on larger computers and workstations,  software
+       support for small  systems  and  micro-controller  sized  devices  is
+       getting both hard to find, and expensive.  MICRO-C  helps  fill  that
+       gap, because all files necessary to port and  maintain  the  compiler
+       are included on the distribution disks, allowing it to  be  moved  to
+       ANY system without dependance on a software vendor.
+    
+          Included in this package is a complete  IBM/PC  implementation  of
+       MICRO-C, with a comprehensive  library,  which  you  may  use  as  an
+       example installation. This implementation of  the  compiler  requires
+       the Microsoft MASM (or compatible) assembler.
+    
+          The MICRO-C "package" (software and documentation) is copyrighted,
+       and may  not  be  re-distributed  in  any  form  without  my  written
+       permission. If you have received the  "DEMO"  archive,  and  wish  to
+       obtain the entire MICRO-C package complete with source code, fill out
+       and send the order form contained in the "READ.ME" file,  along  with
+       the required payment to:
+    
+                           Dunfield Development Systems
+                           P.O. Box 31044
+                           Nepean, Ontario (Canada)
+                           K2B 8S8
+    
+          Please make your  cheque  or  money  order  payable  to  "Dunfield
+       Development Systems".
+    
+          MICRO-C is provided on an "as is" basis, with no warranty  of  any
+       kind. In no event shall the author be liable for any damages  arising
+       from its use or distribution.
+    MICRO-C                                                          Page: 2
+
+
+       1.1 Compiler Portability
+    
+             MICRO-C is written in standard 'C', and is capable of compiling
+          itself. This allows any system  with  a  'C'  compiler  (including
+          MICRO-C) to be used to port MICRO-C to another processor.
+    
+             The  parser  makes  very  few  assumptions  about  the   target
+          processor  or  operating  system  architecture,  allowing  a  code
+          generator  to  be  written  for  virtually   any   processor   and
+          environment.
+    
+             With the exception of required I/O routines (described  later),
+          the MICRO-C compiler uses no library functions, and relies  on  no
+          system services.
+    
+             Assuming that the code generator is fairly efficent,  and  that
+          the I/O routines and code generator are not unreasonably large,  a
+          full MICRO-C compiler may be implemented on systems with as little
+          as 32K of free ram and a single floppy disk.
+    
+       1.2 Code Portability
+    
+             With few exceptions, this compiler follows the  syntax  of  the
+          "standard" UNIX compiler (within  its  subset  of  the  language).
+          Programs written in MICRO-C should compile with few changes  under
+          other "standard" compilers.
+    
+          1.2.1 Unsupported Features:
+    
+                MICRO-C does not currently support the following features of
+             standard 'C':
+    
+                    Long / Double / Float / Enumerated data types,
+                    Typedef and Bit fields.
+    
+          1.2.2 Additional Features
+    
+                MICRO-C provides a few additional  features  which  are  not
+             always included in "standard" 'C' compilers:
+    
+                    Unsigned character variables, Nested comments, 16 bit
+                    character constants, Inline assembly code capability.
+    MICRO-C                                                          Page: 3
+
+
+       1.3 The compiling process
+    
+             There are five  programs  which  work  together  to  completely
+          compile a MICRO-C program:
+    
+             The PREPROCESSOR (MCP) takes  the  original  'C'  source  file,
+          performs MACRO expansion and incorporates the contents of  INCLUDE
+          files  to  get  a  "pure"  'C'  output  file.  A   less   powerful
+          pre-processor is also contained inside the COMPILER, which  allows
+          this step to  be  skipped  for  programs  which  use  only  simple
+          pre-processor functions.
+    
+             The COMPILER  (MCC)  reads  a  file  containing  a  'C'  source
+          program, and translates it into an  equivalent  assembly  language
+          program.
+    
+             The OPTIMIZER (MCO) reads the assembly language output from the
+          compiler identifying and replacing "general" code produced by  the
+          compiler with more efficent code which is equivalent  in  specific
+          cases. This step is  optional,  allowing  you  to  choose  between
+          faster compile time and greater program efficency.
+    
+             The ASSEMBLER takes  the  assembly  language  produced  by  the
+          COMPILER or OPTIMIZER, and produces an OBJECT FILE which  contains
+          the executable code and external reference map for the program.
+    
+             The LINKER combines the executable code from  the  OBJECT  FILE
+          with code from  other  programs  which  it  calls  (including  any
+          LIBRARY functions), to produce a complete  stand-alone  executable
+          program.
+    
+             The ASSEMBLER and LINKER  are  NOT  included  as  part  of  the
+          MICRO-C package. These programs are  specific  to  the  particular
+          system, and must be obtained from the system vendor.
+    
+             Some cross ASSEMBLER's do  not  produce  an  object  file,  but
+          generate the executable program directly  instead.  These  systems
+          assume that the ENTIRE program is completely contained in a SINGLE
+          assembly language file. This type  of  system  prevents  you  from
+          using a object LIBRARY which is  an  integral  feature  of  any  C
+          programming system.
+    
+             To  accomodate  this  type  of  development   system,   without
+          sacrificing the ability to use a LIBRARY,  a  program  called  the
+          SOURCE LINKER (SLINK)  is  included  with  MICRO-C.  This  program
+          combines your program  with  library  functions  at  the  ASSEMBLY
+          LANGUAGE level, allowing the entire program code to  be  presented
+          to the assembler in a single file. See the section  entitled  "THE
+          SOURCE LINKER" for additional information.
+    MICRO-C                                                          Page: 4
+
+
+    2. THE COMMAND CO-ORDINATOR
+    
+          'CC' is a utility which co-ordinates  the  execution  of  programs
+       required for each step of the compilation process to provide a simple
+       "one step" compilation  command.  This  MICRO-C  package  includes  a
+       version of  the  command  co-ordinator  which  handles  the  commands
+       necessary to compile for the 8086 processor  (MCP,  MCC,  MCO,  MASM,
+       LINK and EXE2BIN). This program  can  be  modified  as  necessary  to
+       handle other processors.
+    
+       2.1 The CC command
+    
+             The format of the 'CC' command is:
+    
+                              CC <name> [options]
+    
+          2.1.1 Command line options
+    
+                -A      - produce ASSEMBLER (.ASM) output file
+                -C      - Include 'C' source as comments in ASM files
+                -F      - Fold identical string constants.
+                -K      - KEEP all temporary files (do not delete)
+                -L      - produce LINKABLE  (.OBJ) output file
+                -O      - OPTIMIZE the output code (using MCO)
+                -P      - use the extended PRE-PROCESSOR (MCP)
+                -Q      - QUIET mode (suppress informational messages)
+                -S      - produce SMALL-MODEL (.EXE) output file
+                H=mcdir - specify MICRO-C home directory
+                T=mctmp - specify prefix for TEMPORARY files
+    
+                name=xx - Predefine macro symbol (use with -P only)
+    
+                When executing the sub-commands, CC will search the  MICRO-C
+             home directory, as well as any  directories  specified  in  the
+             'PATH' environment variable. Libraries are  accessed  from  the
+             MICRO-C home directory only.
+    
+                The environment variable 'MCDIR' is  examined  to  determine
+             the path to  the  MICRO-C  home  directory.  If  MCDIR  is  not
+             defined, CC will assume the string '\MC'. You may override this
+             directory by using the 'h=' option on the command line.
+    
+                Intermediate  results  from  each  command  are  stored   in
+             "temporary" files, which are fed as input to the next  command.
+             Temporary files will be deleted once they are no longer needed,
+             except in the case where a command fails.  When  this  happens,
+             any temporary file which  was  being  used  as  input  to  that
+             command will not be deleted, allowing you to examine it for the
+             cause of the error.
+    MICRO-C                                                          Page: 5
+
+
+                The environment variable 'MCTMP' is examined to determine  a
+             prefix to prepend to temporary file  names.  If  MCTMP  is  not
+             defined, CC assumes the default prefix of '$'. You may override
+             this prefix by using the 't=' option on the command line.
+    
+                Here are example 'SET' commands suitable  for  inclusion  in
+             the AUTOEXEC.BAT file, of an IBM/PC based MICRO-C system  which
+             has the home directory in 'C:\MC', and a TEMP  directory  on  a
+             RAMDISK as drive 'D':
+    
+                    SET MCDIR=C:\MC
+                    SET MCTMP=D:\TEMP\      (Note trailing '\')
+    
+                The '-A' option  causes  CC  to  bypass  the  assembler  and
+             linker, and produce an assembly source file (<name>.ASM) as the
+             output file. If the '-C' option is also used,  this  file  will
+             contain the 'C' source code in the form of comments. NOTE:  The
+             source code inserted by '-C' will  restrict  the  optimizer  to
+             operate only on sections of code produced by a single 'C' line.
+    
+                The '-F' option causes the compiler to  "fold"  its  literal
+             pool (the area of memory where string  constants  are  stored).
+             This means that identical strings  not  contained  in  explicit
+             variables, will occur only once in memory. Since most  programs
+             never modify such strings, it is usually safe to do this.  Note
+             however that this is a violation of the 'C' standard ("The  'C'
+             Programming Language"  page  181  -  "All  strings,  even  when
+             written identically, are distinct"),  and  it  is  possible  to
+             write programs which will not work properly when this option is
+             used.
+    
+                The '-L' option causes CC to  bypass  the  link  stage,  and
+             produce a linkable object module  (<name>.OBJ)  as  the  output
+             file.
+    
+                The '-S' option causes CC to  link  the  program  using  the
+             SMALL  memory  model,   and   produce   an   executable   image
+             (<name>.EXE) as the output file. This option  applies  only  to
+             those  processors  which  have  a  segmented  architecture  and
+             multiple memory models such as the 8086.
+    
+                If none of '-A', '-L' or '-S' is specified, CC will link the
+             program using the TINY memory  model,  and  produce  a  command
+             image (<name>.COM) as the output file.
+    
+                If any of the programs  executed  by  CC  fail  to  complete
+             properly, CC will show the message "PGM failed (RC)", where PGM
+             is the name of the offending program, and RC is the DOS  return
+             code value. Common RC values under MSDOS are:
+    
+                2   - Command not found (Check MCDIR and PATH setup)
+                3   - Path not found    (Check MCDIR and PATH setup)
+                254 - Program found errors during processing
+                255 - Program was invoked with incorrect arguments
+    MICRO-C                                                          Page: 6
+
+
+       2.2 Using multiple object modules
+    
+             The 'LC' command takes one or more object modules  produced  by
+          'CC' with the '-L' option, and links them with  the  libraries  to
+          produce an executable module. This module will be given  the  name
+          of the first file specified in the argument list.
+    
+             When compiling large programs which have more than  one  source
+          file, you must first compile all modules using 'CC' with the  '-L'
+          option, and the use 'LC' to link the resultant object  files  into
+          the final executable program.
+    
+             The '-S' option may be used as the FIRST argument, to cause  LC
+          to link in the SMALL model.
+                eg: CC FIRST -L
+                    CC SECOND -L
+                    LC FIRST SECOND         <-- TINY  Model
+                    LC -S FIRST SECOND      <-- SMALL Model
+    
+             The exact syntax  and  options  available  for  'CC'  and  'LC'
+          commands may differ in specific implementations of  the  compiler.
+          See the 'READ.ME' file and any additional technical  documentation
+          on your distribution disk(s) for details.
+    MICRO-C                                                          Page: 7
+
+
+    3. THE MICRO-C PROGRAMMING LANGUAGE
+    
+          The following pages contain a brief summary of  the  features  and
+       constructs implemented in MICRO-C.
+    
+          This document does not  attempt  to  teach  'C'  programming,  and
+       assumes that the reader is familiar with the language.
+    
+       3.1 Constants
+    
+             The following forms of constants are supported by the compiler:
+    
+                <num>       - Decimal number        (0 - 65535)
+                0<num>      - Octal number          (0 - 0177777)
+                0x<num>     - Hexidecimal number    (0x0 - 0xffff)
+                '<char>'    - Character             (1 or 2 chars)
+                "<string>"  - Address of literal string.
+    
+             The following "special" characters may be used within character
+          constants or strings:
+    
+                \n          - Newline (line-feed)   (0x0a)
+                \r          - Carriage Return       (0x0d)
+                \t          - Tab                   (0x09)
+                \f          - Formfeed              (0x0c)
+                \b          - Backspace             (0x08)
+                \<num>      - Octal value <num>     (Max. three digits)
+                \x<num>     - Hex value <num>       (Max. two digits)
+                \<char>     - Protect character <char> from input scanner.
+    
+       3.2 Symbols
+    
+             Symbol names  may  include  the  characters  'a'-'z',  'A'-'Z',
+          '0'-'9', and '_'. The characters '0'-'9' may not be  used  as  the
+          first character in the  symbol  name.  Symbol  names  may  be  any
+          length, however, only the first 15 characters are significant.
+    
+             The "char" modifier may be used to declare a symbol as an 8 bit
+          wide value, otherwise it is assumed to be 16 bits.
+    
+                              eg: char input_char;
+    
+             The "int" modifier may be used to declare a symbol as a 16  bit
+          wide value. This is assumed if neither "int" or "char" is given.
+    
+                                  eg: int abc;
+    
+             The "unsigned" modifier may be used to declare a symbol  as  an
+          unsigned positive only value. Note that unlike some 'C' compilers,
+          this modifier may be applied to a character (8 bit) variable.
+    
+                            eg: unsigned char count;
+    MICRO-C                                                          Page: 8
+
+
+             The "extern" modifier causes the compiler to be  aware  of  the
+          existance and  type  of  a  global  symbol,  but  not  generate  a
+          definition for that symbol. This allows the module being  compiled
+          to reference a symbol which is defined  in  another  module.  This
+          modifier may not be used with local symbols.
+    
+                            eg: extern char getc();
+    
+             A  symbol  declared  as  external  may  be  re-declared  as   a
+          non-external at a later  point  in  the  code,  in  which  case  a
+          definition for it will be generated. This allows  "extern"  to  be
+          used to inform the compiler of a function or variable type so that
+          it can be referenced  properly  before  that  symbol  is  actually
+          defined.
+    
+             The "static" modifier causes global  symbols  to  be  available
+          only in the file where they are defined.  Variables  or  functions
+          declared  as  "static"  will  not  be   accessable   as   "extern"
+          declarations in other object files, nor will they cause  conflicts
+          with duplicate names in those files.
+    
+                         eg: static int variable_name;
+    
+             When applied to local symbols,  the  "static"  modifier  causes
+          those variables to be allocated in  a  reserved  area  of  memory,
+          instead of on the processor stack. This has the  effect  that  the
+          contents of the variable will be retained  between  calls  to  the
+          function. It also means that the variable  may  be  initialzed  at
+          compile time.
+    
+             The "register" modifier indicates to the  code  generator  that
+          this is a high priority variable, and should be kept where  it  is
+          easy to get at. Since  its  interpretation  depends  on  the  code
+          generator, it is often  ignored  in  simple  implementations.  See
+          "Functions" for a  special  use  of  "register"  when  defining  a
+          function.
+    
+                          eg: register unsigned count;
+    
+             Symbols declared with a preceeding '*' are assumed to be 16 bit
+          pointers to the declared type.
+    
+                             eg: int *pointer_name;
+    
+             Symbol names declared followed by square brackets  are  assumed
+          to be arrays with a number of dimensions equal to  the  number  of
+          '[]' pairs that follow. The size of each dimension  is  identified
+          by a constant value  contained  within  the  corresponding  square
+          brackets.
+    
+                          eg: char array_name[5][10];
+    MICRO-C                                                          Page: 9
+
+
+          3.2.1 Global Symbols
+    
+                Symbols  declared  outside  of  a  function  definition  are
+             considered to  be  global  and  will  have  memory  permanently
+             reserved for them. Global symbols are defined by  name  in  the
+             output file, allowing other modules to access them.
+    
+                Note that the compiler IS case  sensitive,  however  if  the
+             assembler you are using is NOT, you  must  be  careful  not  to
+             declare any global symbols with names that differ only in case.
+    
+                All non-initialized global variables are  generated  at  the
+             very end of the output file, after the literal pool is  dumped.
+             Since non-initialized globals do not generate object code, this
+             allows them to be excluded from the image file when it is saved
+             to disk.
+    
+                Global variables may be initialized with one or more values,
+             which are expressed as a single array of  integers  REGUARDLESS
+             of the size and shape of the variable. If more than  one  value
+             is expressed, '{' and '}' must be used.
+    
+                   eg: int i = 10, j[2][2] = { 1, 2, 3, 4 };
+    
+                When arrays are declared, a null dimension may  be  used  as
+             the dimension size, in which case the size of  the  array  will
+             default to the number of initialized values.
+    
+                         eg: int array[] = { 1, 2, 3 };
+    
+                Initialized global variables are automatically saved  within
+             the code image,  insuring  that  the  initial  values  will  be
+             available at run time. Any non-initialized elements of an array
+             which has been partly initialized will be set to zero.
+    
+                Non-initialized global variables are not preset in any  way,
+             and will be undefined at the beginning of program execution.
+    
+          3.2.2 Local Symbols
+    
+                Symbols declared within a function definition are  allocated
+             on the stack, and  exist  only  during  the  execution  of  the
+             function.
+    
+                To simplify the allocation and de-allocation of stack space,
+             all local symbols must be declared  at  the  beginning  of  the
+             function before any code producing statements are encountered.
+    
+                MICRO-C does not support initialization of non-static  local
+             variables in the declaration statement. Since  local  variables
+             have to be initialized every time the function is entered,  you
+             can get the same effect  using  assignment  statements  at  the
+             beginning of the function.
+    
+                No type is assumed for  arguments  to  functions.  Arguments
+             must be explicitly declared, otherwise they will  be  undefined
+             within the scope of the function definition.
+    MICRO-C                                                          Page: 10
+
+
+          3.2.3 More Symbol Examples
+    
+            /* Global variables are defined outside of any function */
+            char a;                     /* 8 bit signed */
+            unsigned char b;            /* 8 bit unsigned */
+            int c;                      /* 16 bit signed */
+            unsigned int d;             /* 16 bit unsigned */
+            unsigned e;                 /* also 16 bit unsigned */
+            extern char f();            /* external function returning char */
+            static int g;               /* 16 bit signed, local to file */
+            int h[2] = { 1, 2 };        /* initialized array (2 ints) */
+    
+            main(a, b)                  /* "int" function containing code */
+            /* Function arguments are defined between function name and body */
+                int a;                  /* 16 bit signed */
+                unsigned char *b;       /* pointer to 8 bit unsigned */
+            {
+            /* Local variables are defined inside the function body */
+            /* Note that in MICRO-C, only "static" locals can be initialized */
+                unsigned c;             /* 16 bit unsigned */
+                static char d[5];       /* 8 bit signed, reserved in memory */
+                static int e = 1;       /* 16 bit signed, initial value is 1 */
+            /* Function code goes here ... */
+                c = 0;                  /* Initialize 'c' to zero */
+                strcpy(d, "Name");      /* Initialize 'd' to "name" */
+            }
+    MICRO-C                                                          Page: 11
+
+
+       3.3 Arrays & Pointers
+    
+             When MICRO-C passes an array to a function, it actually  passes
+          a POINTER to the array. References to arrays which  are  arguments
+          are automatically performed through the pointer.
+    
+             This allows the use of pointers and arrays to be interchangable
+          through the context of a function call. Ie: An array passed  to  a
+          function may be declared and used as  a  pointer,  and  a  pointer
+          passed to a function may be declared and used as an array.
+    
+       3.4 Functions
+    
+             Functions are  essentially  initialized  global  symbols  which
+          contain executable code.
+    
+             MICRO-C accepts  any  valid  value  as  a  function  reference,
+          allowing  some  rather  unique  (although  non-standard)  function
+          calls.
+    
+          For example:
+    
+                function();     /* call function */
+                variable();     /* call contents of a variable */
+                (*var)();       /* call indirect through variable */
+                (*var[x])();    /* call indirect through indexed array */
+                0x5000();       /* call address 0x5000 */
+    
+             Since this is a single pass compiler, operands to functions are
+          evaluated and pushed on the stack in the order in which  they  are
+          encountered, leaving the last operand closest to the  top  of  the
+          stack. This is the opposite order from which  many  'C'  compilers
+          push operands.
+    
+             For functions with a fixed number of arguments,  the  order  of
+          which operands  are  passed  is  of  no  importance,  because  the
+          compiler looks after generating  the  proper  stack  addresses  to
+          reference variables.  HOWEVER,  functions  which  use  a  variable
+          number of arguments are affected for two reasons:
+    
+          1) The location of the LAST arguments are known (as fixed  offsets
+             from the stack pointer) instead of the FIRST.
+    
+          2) The symbols defined as arguments  in  the  function  definition
+             represent the LAST arguments instead of the FIRST.
+    
+             If a function is declared as "register", it  serves  a  special
+          purpose and causes the accumulator to be loaded with the number of
+          arguments passed whenever the function is called. This allows  the
+          function to know how many  arguments  were  passed  and  therefore
+          determine the location of the first argument.
+    MICRO-C                                                          Page: 12
+
+
+       3.5 Structures & Unions
+    
+             Combinations of other variable  types  can  be  organized  into
+          STRUCTURES or UNIONS, which allow them  to  be  manipulated  as  a
+          single entity.
+    
+             In a structure, the  individual  items  occur  sequentially  in
+          memory, and the total size of the structure  is  the  sum  of  its
+          elements. Structures are usually  used  to  create  "records",  in
+          which related items are grouped together. An array  of  structures
+          is the common method of implementing an "in-memory" database.
+    
+             A union is similar to a structure, except that  the  individual
+          items are overlaid in memory, and the total size of the  union  is
+          the size of its largest element. Unions are usually used to  allow
+          a single block of memory to be accessed as different 'C'  variable
+          types. An example of this would be in handling a message  received
+          in memory, in which a "type" byte indicates how the  remainder  of
+          the message data should be interpreted.
+    
+             Here are some example of how structures are  defined  and  used
+          (unions are defined and used in an identical manner,  except  that
+          the word 'union' is substituted for 'struct'):
+    
+            /* Create structure named 'data' with 'a,b,c & d' as members */
+            struct {
+                int a;
+                int b;
+                char c;
+                char d; } data;
+    
+            /* Create structure template named 'mystruc'... */
+            /* No actual structure variable is defined */
+            struct mystruc {
+                int a;
+                int b;
+                char c;
+                char d; };
+    
+            /* Create structure named 'data' using above template */
+            struct mystruc data;
+    
+            /* Create structure template 'mystruc', AND define a */
+            /* structure variable named 'data' */
+            struct mystruc {
+                int a;
+                int b;
+                char c;
+                char d; } data;
+    MICRO-C                                                          Page: 13
+
+
+            /* Create an array of structures, a pointer to a structure */
+            /* and an array of pointers to a structure *
+            struct mystruct array[10], *pointer, *parray[10];
+    
+            /* To set value in structure variable/members */
+            data.a = 10;            /* Direct access */
+            array[1].b = 10;        /* Direct array access */
+            pointer->c = 'a';       /* Pointer access */
+            parray[2]->d = 'b';     /* Pointer array access */
+    
+            /* To read value in structure variable/members */
+            value = data.a;         /* Direct access */
+            value = data[1].b;      /* Direct array access */
+            value = pointer->c;     /* Pointer access */
+            value = parray[2]->d;   /* Pointer array access */
+    
+          3.5.1 Notes on MICRO-C structure implementation:
+    
+                Structures and Unions as implemented in MICRO-C are  similar
+             to the implementation of the original UNIX  'C'  compiler,  and
+             are bound by similar limitations, as  well  as  a  few  MICRO-C
+             specific ones.  Here  is  a  list  of  major  differences  when
+             compared to a modern ANSI compiler:
+    
+                All structure and member names MUST  be  unique  within  the
+             scope of the definition. A special case  exists,  where  common
+             member names may be used in  multiple  structure  templates  if
+             they have EXACTLY the same type and offset into the  structure.
+             This also saves symbol table memory, since only one copy of the
+             member definition is actually kept.
+    
+                MICRO-C does NOT pass entire structures to functions on  the
+             stack. Like  arrays,  MICRO-C  passes  structures  by  ADDRESS.
+             Structure variables which are function arguments  are  accessed
+             through pointers. For source code compatibility with  compilers
+             which do pass the entire structure, if you declare the argument
+             as a direct (non-pointer) structure, the direct ('.')  operator
+             is used to dereference it, even though it is actually a pointer
+             reference.
+    
+                If you  MUST  have  a  local  copy  of  the  structure,  use
+             something like:
+    
+                func(sptr)
+                    struct mystruc *sptr;
+                {
+                    struct mystruc data;
+                    memcpy(data, sptr, sizeof(data));
+                    ...
+                }
+    MICRO-C                                                          Page: 14
+
+
+                To obtain the size of a structure from  its  template  name,
+             use the 'struct'  keyword  in  conjunction  with  the  'sizeof'
+             operator.   In   the   above   example,   you   could   replace
+             'sizeof(data)' with 'sizeof(struct mystruc)'.
+    
+                To obtain the size of a structure member, you  must  specify
+             it in the context of a structure reference with another symbol:
+    
+              sizeof(variable.member) or sizeof(variable->member)
+    
+                NOTE: The current compiler allows almost any symbol  to  the
+             left of the '.' or '->' operator in a 'sizeof', however  future
+             versions of the compiler may insist on a structure variable  or
+             a pointer to structure variable.
+    
+                Pointers to structures are internally stored as pointers  to
+             'char', and therefore will only increment/decrement by  1  when
+             ++/-- is used. To advance a pointer by the size of a structure,
+             use:
+    
+                         ptr += sizeof(struct mystruc)
+    
+                The 'struct' and 'union' keywords  are  not  accepted  in  a
+             TYPECAST. This is most commonly used to setup a  pointer  to  a
+             structure. Since MICRO-C stores its pointers to  structures  as
+             pointers to char, you can use (char*) as the typecast, and  get
+             the same functionality.
+    
+                A structure name by itself (without  '.member')  acts  in  a
+             manner similar to a character array name.  With  no  operation,
+             the address of the structure is returned. You can also use '[]'
+             to access  individual  bytes  in  the  structure  by  indexing,
+             although doing so is highly non-portable.
+    
+                MICRO-C allows static or global structures to be initialized
+             in the declaration, however the initial values are read  as  an
+             array of bytes, and are assigned directly to  structure  memory
+             without regard for the type or size of its members:
+    
+                struct mystruc data = { 0, 1, 0, 2, 3, 4 };
+                /* A=0:1, B=0:2, C=3, D=4 */
+    
+                You can use INT and CHAR to switch back  and  forth  between
+             word/byte initialization within the value list:
+    
+                struct mystruct data = { int 0, 1, char 2, 3 };
+                /* A=0, B=1, C=2, D=3 */
+    
+                MICRO-C does not WORD ALIGN structure elements. When using a
+             processor which requires word alignment, it is the  programmers
+             responsibility to maintain alignment, using filler  bytes  etc.
+             when necessary.
+    MICRO-C                                                          Page: 15
+
+
+       3.6 Control Statements
+    
+             The following control statements are implemented in MICRO-C:
+    
+                if(expression)
+                    statement;
+    
+                if(expression)
+                    statement;
+                else
+                    statement;
+    
+                while(expression)
+                    statement;
+    
+                do
+                    statement;
+                while expression;
+    
+                for(expression; expression; expression)
+                    statement;
+    
+                return;
+    
+                return expression;
+    
+                break;
+    
+                continue;
+    
+                switch(expression) {
+                    case constant_expression :
+                        statement;
+                        ...
+                        break;
+                    case constant_expression :
+                        statement;
+                        ...
+                        break;
+                        .
+                        .
+                        .
+                    default:
+                        statement; }
+    
+                label: statement;
+    
+                goto label;
+    
+                asm "...";
+    
+                asm {
+                    ...
+                    }
+    MICRO-C                                                          Page: 16
+
+
+    3.6.1 Notes on Control Structures
+    
+        1)  Any "statement" may be a single statement or a compound
+            statement enclosed within '{' and '}'.
+    
+        2)  All three "expression"s in the "for" command are optional.
+    
+        3)  If a "case" selection does not end with "break;", it will
+            "fall through" and execute the following case as well.
+    
+        4)  Expressions following 'return' and 'do/while' do not have
+            to be contained in brackets (although this is permitted).
+    
+        5)  Label names may preceed any statement, and must be any
+            valid symbol name, followed IMMEDIATELY by ':' (No spaces
+            are allowed). Labels are considered LOCAL to a function
+            definition and will only be accessable within the scope
+            of that function.
+    
+        6)  The 'asm' statement used to implement the inline assembly
+            language capability of MICRO-C accepts two forms:
+                asm "...";      <- Assemble single line.
+                asm {           <- Assemble multiple lines.
+                    ...
+                    }
+    MICRO-C                                                          Page: 17
+
+
+       3.7 Expression Operators
+    
+             The following expression operators are implemented in MICRO-C:
+    
+    3.7.1 Unary Operators
+    
+        -           - Negate
+        ~           - Bitwise Complement
+        !           - Logical complement
+        ++          - Pre or Post increment
+        --          - Pre or post decrement
+        *           - Indirection
+        &           - Address of
+        sizeof      - Size of a object or type
+        (type)      - Typecast
+    
+    3.7.2 Binary Operators
+    
+        +           - Addition
+        -           - Subtraction
+        *           - Multiplication
+        /           - Division
+        %           - Modulus
+        &           - Bitwise AND
+        |           - Bitwise OR
+        ^           - Bitwise EXCLUSIVE OR
+        <<          - Shift left
+        >>          - Shift right
+        ==          - Test for equality
+        !=          - Test for inequality
+        >           - Test for greater than
+        <           - Test for less than
+        >=          - Test for greater than or equal to
+        <=          - Test for less than or equal to
+        &&          - Logical AND
+        ||          - Logical OR
+        =           - Assignment
+        +=          - Add to self assignment
+        -=          - Subtract from self assignment
+        *=          - Multiply by self assignment
+        /=          - Divide by and reassign assignment
+        %=          - Modular self assignment
+        &=          - AND with self assignment
+        |=          - OR with self assignment
+        ^=          - EXCLUSIVE OR with self assignment
+        <<=         - Shift left self assignment
+        >>=         - Shift right self assignment
+    MICRO-C                                                          Page: 18
+
+
+    NOTES:
+    
+        1)  The expression "a && b" returns 0 if "a" is zero, otherwise the
+            value of "b" is returned. The "b" operand is NOT evaluated if
+            "a" is zero.
+    
+        2)  The expression "a || b" returns the value of "a" if it is not 0,
+            otherwise the value of "b" is returned. The "b" operand is NOT
+            evaluated if "a" is non-zero.
+    
+    3.7.3 Other Operators
+    
+        ;           - Ends a statement.
+        ,           - Allows several expressions in one statement.
+                    + Separates symbol names in multiple declarations.
+                    + Separates constants in multi-value initialization.
+                    + Separates operands in function calls.
+        ?           - Conditional expression (ternary operator).
+        :           - Delimits labels, ends CASE and separates conditionals.
+        .           - Access a structure member directly.
+        ->          - Access a structure member through a pointer.
+        { }         - Defines a BLOCK of statements.
+        ( )         - Forces priority in expression, indicates function calls.
+        [ ]         - Indexes arrays. If fewer index values are given than the
+                      number of dimensions which are defined for the array,
+                      the value returned will be a pointer to the appropriate
+                      address.
+    
+                    Eg:
+                        char a[5][2];
+    
+                        a[3] returns address of forth row of two characters.
+                        (remember index's start from zero)
+    
+                        a[3][0] returns the character at index [3][0];
+    MICRO-C                                                          Page: 19
+
+
+       3.8 Inline Assembly Language
+    
+             Although 'C' is a powerful and  flexible  language,  there  are
+          sometimes instances where a particular operation must be  peformed
+          at the assembly language level. This most  often  involves  either
+          some processor feature for which there  is  no  corresponding  'C'
+          operation, or a section of very time critical code.
+    
+             MICRO-C provides access to assembly  language  with  the  'asm'
+          statement, which has two basic forms. The first is:
+    
+                                  asm "..." ;
+    
+             In this form, the entire  text  contained  between  the  double
+          quote characters (") is output as a single line to the  assembler.
+          Note that a  semicolon  is  required,  just  like  any  other  'C'
+          statement.
+    
+             Since this is a standard 'C' string, you can  use  any  of  the
+          "special" characters, and thus you could output multiple lines  by
+          using '\n' within the string. Another important characteristic  of
+          it being a string is that it will be protected from  pre-processor
+          substitution.
+    
+             The second form of the 'asm' statement is:
+    
+                                     asm {
+                                      ...
+                                       }
+    
+             In this form, all lines between '{' and '}' are output  to  the
+          assembler. Any text following the opening '{' (on the  same  line)
+          is ignored. Due to  the  unknown  characteristics  of  the  inline
+          assembly code, the closing '}' will only be recognized when it  is
+          the first non-whitespace character on a line.
+    
+             The integral pre-processor will not perform substitution on the
+          inline assembly code, however  the  external  pre-processor  (MCP)
+          will substitute in this form. This allows you to  create  assembly
+          language "macros" using MCP, and have parameters substituted  into
+          them when they are expanded:
+    
+            /*
+             * This macro issues a 'SETB' instruction for its parameter
+             */
+            #define setbit(bit) asm {\
+                SETB bit\
+            }
+    
+            /*
+             * This macro WILL NOT WORK, since the 'bit' operand to the SETB
+             * instruction is contained within a string and is therefore
+             * protected from substitution by the pre-processor
+             */
+            #define setbit(bit) asm " SETB bit";
+    MICRO-C                                                          Page: 20
+
+
+       3.9 Preprocessor Commands
+    
+             The  MICRO-C  compiler  supports  the  following  pre-processor
+          commands. These commands are recognized only if they occur at  the
+          beginning of the input line.
+    
+             NOTE:  This  describes  the  limited  pre-processor  which   is
+          integral to the  compiler,  see  also  the  section  on  the  more
+          powerful external processor (MCP).
+    
+          3.9.1 #define <name> <replacement_text>
+    
+                The "#define" command allows a global name  to  be  defined,
+             which will be replaced with the indicated text whenever  it  is
+             encountered in the input file. This occurs prior to  processing
+             by the compiler.
+    
+          3.9.2 #file <filename>
+    
+                Sets the filename of the currently  procssing  file  to  the
+             given  string.  This  command   is   used   by   the   external
+             pre-processor (MCP) to insure that error messages indicate  the
+             original source file.
+    
+          3.9.3 #include <filename>
+    
+                This command causes the indicated file to be opened and read
+             in as the source  text.  When  the  end  of  the  new  file  is
+             encountered, processing will continue with the  line  following
+             "#include" in the original file.
+    
+          3.9.4 #ifdef <name>
+    
+                Processes the following lines (up to #else or  #endif)  only
+             if the given name is defined.
+    
+          3.9.5 #ifndef <name>
+    
+                Processes the following lines (up to #else or  #endif)  only
+             if the given name is NOT defined.
+    
+          3.9.6 #else
+    
+                Processes the following lines (up to  #endif)  only  if  the
+             preceeding #ifdef or #ifndef was false.
+    
+          3.9.7 #endif
+    
+                Terminates #ifdef and #ifndef
+    
+                NOTE: The integral pre-processor does not support nesting of
+             the #ifdef and #idndef constructs. If you wish  to  nest  these
+             conditionals, you must use the external pre-processor (MCP).
+    MICRO-C                                                          Page: 21
+
+
+       3.10 Error Messages
+    
+             When MICRO-C detects an  error,  it  outputs  an  informational
+          message indicating the type of problem encountered.
+    
+             The error message is preceeded by the filename and line  number
+          where the error occured:
+    
+                           program.c(5): Syntax error
+    
+             In the above example, the error occured in the file "program.c"
+          at line 5.
+    
+             The following error messages are produced by the compiler:
+    
+          3.10.1 Compilation aborted
+    
+                The preceeding error was so severe than the compiler  cannot
+             proceed.
+    
+          3.10.2 Constant expression required
+    
+                The compiler requires a constant  expression  which  can  be
+             evaluated at compile time (ie: no variables).
+    
+          3.10.3 Declaration must preceed code.
+    
+                All local variables must be defined at the beginning of  the
+             function, before any code producing statements are processed.
+    
+          3.10.4 Dimension table exhausted
+    
+                The compiler has encountered more  active  array  dimensions
+             than it can handle.
+    
+          3.10.5 Duplicate local: 'name'
+    
+                You have declared the named  local  symbol  more  than  once
+             within the same function definition.
+    
+          3.10.6 Duplicate global: 'name'
+    
+                You have declared the named global symbol more than once.
+    
+          3.10.7 Expected '<token>'
+    
+                The compiler  was  expecting  the  given  token,  but  found
+             something else.
+    
+          3.10.8 Expression stack overflow
+    
+                The compiler has found a more complicated expression than it
+             can handle. Check that it is of  correct  syntax,  and  if  so,
+             break it up into two simpler expressions.
+    MICRO-C                                                          Page: 22
+
+
+          3.10.9 Expression stack underflow
+    
+                The compiler has made an error in  parsing  the  expression.
+             Check that it is of correct syntax.
+    
+          3.10.10 Illegal indirection
+    
+                You have attempted to perform an indirect operation ('*'  or
+             '[]') on an entity which is not a pointer or array. This  error
+             will also result if you attempt to index  an  array  with  more
+             indices than it has dimensions.
+    
+          3.10.11 Illegal initialization
+    
+                Local variables may not be initialized  in  the  declaration
+             statement. Use assignments at the  beginning  of  the  function
+             code to perform the initialization.
+    
+          3.10.12 Illegal nested function
+    
+                You may not declare a  function  within  the  definition  of
+             another function.
+    
+          3.10.13 Improper type of symbol: 'name'
+    
+                The named  symbol  is  not  of  the  correct  type  for  the
+             operation that you are attempting. Eg: 'goto' where the  symbol
+             is not a label.
+    
+          3.10.14 Improper #else/#endif
+    
+                A #else or #endif statement is out of place.
+    
+          3.10.15 Inconsistant member offset: 'name'
+    
+                The named structure member is multiply defined,  and  has  a
+             different offset from its first definition.
+    
+          3.10.16 Inconsistant member type: 'name'
+    
+                The named structure member is multiply defined,  and  has  a
+             different type from its first definition.
+    
+          3.10.17 Inconsistant re-declaration: 'name'
+    
+                You have attempted to redefine  the  named  external  symbol
+             with a type which does not match its previously declared type.
+    
+          3.10.18 Incorrect declaration
+    
+                A statement occuring outside of a function definition is not
+             a valid declaration for a function or global variable.
+    MICRO-C                                                          Page: 23
+
+
+          3.10.19 Invalid '&' operation
+    
+                You have attempted to reference  the  address  of  something
+             that has no address. This error also occurs when you attempt to
+             take the address of an array without giving it a  full  set  of
+             indicies. Since the address is already returned in  this  case,
+             simply drop the '&'. (The error occurs because you  are  trying
+             to take the address of an address).
+    
+          3.10.20 Macro expansion too deep
+    
+                The compiler has encountered a nested macro reference  which
+             is too deep to be resolved.
+    
+          3.10.21 Macro space exhausted
+    
+                The compiler has encountered  more  macro  ("#define")  text
+             than it has room to store.
+    
+          3.10.22 No active loop
+    
+                A "continue" or "break" statement was  encountered  when  no
+             loop is active.
+    
+          3.10.23 No active switch
+    
+                A "case" or "default"  statement  was  encountered  when  no
+             "switch" statement is active.
+    
+          3.10.24 Not an argument: 'name'
+    
+                You have declared the named variable as an argument, but  it
+             does not appear in the argument list.
+    
+          3.10.25 Non-assignable
+    
+                You have attempted an operation which results in  assignment
+             of a value to an entity which cannot be assigned. (eg: 1 = 2);
+    
+          3.10.26 Numeric constant required
+    
+                The compiler requires a constant expression which returns  a
+             simple numeric value.
+    
+          3.10.27 String space exhausted
+    
+                The compiler has encountered more literal  strings  than  it
+             has room store.
+    
+          3.10.28 Symbol table full
+    
+                The compiler has encountered more symbol definitions than it
+             can handle.
+    MICRO-C                                                          Page: 24
+
+
+          3.10.29 Syntax error
+    
+                The statement shown does not follow syntax rules and  cannot
+             be parsed.
+    
+          3.10.30 Too many active cases
+    
+                The compiler has run out of space  for  storing  switch/case
+             tables. Reduce the number of active "cases".
+    
+          3.10.31 Too many defines
+    
+                The compiler has encountered more '#define' statements  than
+             it can handle. Reduce the number of #defines.
+    
+          3.10.32 Too many errors
+    
+                The compiler is aborting because of excessive errors.
+    
+          3.10.33 Too many includes
+    
+                The compiler has encountered more  nested  "#include"  files
+             than it can handle.
+    
+          3.10.34 Too many initializers
+    
+                You have specified more initialization values than there are
+             locations in the global variable.
+    
+          3.10.35 Type clash
+    
+                You have attempted to use a  value  in  a  manner  which  is
+             inconsistant with its typing information.
+    
+          3.10.36 Unable to open: 'name'
+    
+                A "#include" command specified the named file,  which  could
+             not be opened.
+    
+          3.10.37 Undefined: 'name'
+    
+                You have referenced a name which is not defined as  a  local
+             or global symbol.
+    
+          3.10.38 Unknown structure/member: 'name'
+    
+                You have referenced a  structure  template  or  member  name
+             which is not defined.
+    
+          3.10.39 Unreferenced: 'name'
+    
+                The named  symbol  was  defined  as  a  local  symbol  in  a
+             function, but was never used in that function. This error  will
+             occur at the end of  the  function  definition  containing  the
+             symbol declaration. It is only a warning, and  will  not  cause
+             the compile to abort.
+    MICRO-C                                                          Page: 25
+
+
+          3.10.40 Unresolved: 'name'
+    
+                The named symbol was forward  referenced  (Such  as  a  GOTO
+             label), and was never defined. This error will occur at the end
+             of the function definition containing the reference.
+    
+          3.10.41 Unterminated conditional
+    
+                The end of file was encountered  when  a  "#if"  or  "#else"
+             conditional block was being processed.
+    
+          3.10.42 Unterminated function
+    
+                The  end  of  the  file  was  encountered  when  a  function
+             definition was still open.
+    MICRO-C                                                          Page: 26
+
+
+       3.11 Quirks
+    
+             Due  to  its  background  as  a  highly  compact  and  portable
+          compiler, and its target application in embedded systems,  MICRO-C
+          deviates from standard 'C' in  some  areas.  The  following  is  a
+          summary of the major infractions and quirks:
+    
+             When using the INTERNAL  pre-processor,  the  operands  to  '#'
+          commands are parsed based on separating spaces, and any portion of
+          the line not required is ignored.  In  particular,  the  '#define'
+          command only accepts a definition up to  the  next  space  or  tab
+          character.
+    
+            eg: #define APLUSONE A+1        <-- uses "A+1"
+                #define APLUSONE A +1       <-- uses "A"
+    
+             Comments are stripped by the token scanner, which occurs  AFTER
+          the '#' commands are processed.
+    
+            eg: #define NULL    /* comment */   <-- uses "/*"
+    
+             Note that since comments can therefore be included in "#define"
+          symbols, you can use "/**/" to simulate spaces between tokens.
+    
+            eg: #define BYTE unsigned/**/char
+    
+             Include filenames are not delimited by '""'  or  '<>'  and  are
+          passed to the operating system exactly as entered.
+    
+            eg: #include \mc\stdio.h
+    
+             NOTE:  The  above  quirks  DO  NOT  APPLY  when  the   EXTERNAL
+          pre-processor (MCP) is used.
+    
+             The appearance of a variable name in the argument  list  for  a
+          function  declaration  serves  only  to  identify  that  variables
+          location on the stack. MICRO-C will not define the variable unless
+          it is explicitly declared (between the argument list and the  main
+          function body). In other words, all arguments to a  function  must
+          be explicitly declared.
+    
+             MICRO-C is more  strict  about  its  handling  of  the  ADDRESS
+          operator ('&') than most other compilers. It will produce an error
+          message if you attempt to take the address of  a  value  which  is
+          already a fixed address (such as an array name without a full  set
+          of indicies). Since an address is already produced in such  cases,
+          simply drop the '&'.
+    
+             The 'x' in '0x' and '\x' is accepted in lower case only.
+    MICRO-C                                                          Page: 27
+
+
+             When operating on pointers, MICRO-C only scales  the  increment
+          (++), decrement (--) and index ([]) operations to account for  the
+          size of the pointer:
+    
+            eg: char *cptr;     /* pointer to character */
+                int  *iptr;     /* pointer to integer */
+                ++cptr;         /* Advance one character */
+                ++iptr;         /* Advance one integer */
+                cptr[10];       /* Access the tenth character */
+                iptr[10];       /* Access the tenth integer */
+                cptr += 10;     /* Advance 10 characters */
+                iptr += 10;     /* Advance ONLY FIVE integers */
+    
+            NOTE: A portable way to advance "iptr" by integers is:
+    
+                iptr = &iptr[10];   /* Advance 10 integers */
+    
+             Since  structures  are  internally  represented  as  arrays  of
+          "char", incrementing a pointer to a structure  will  advance  only
+          one (1) byte in memory. To advance to the "next" instance  of  the
+          structure, use:
+    
+                        ptr += sizeof(struct template);
+    
+             The INDEXING operator '[]' is not commutative  in  MICRO-C.  In
+          other words 'array[index]' cannot be expressed as 'index[array]'.
+    
+             MICRO-C does  not  support  "complex"  declarations  which  use
+          brackets '()' for other than function parameters. These  are  most
+          often used in establishing pointers to functions:
+                    int (*a)();     /* Pointer to function returning INT */
+                    (*a)();         /* Call address in 'a' */
+    
+             Since MICRO-C allows you to call any value by following it with
+          '()', you can get  the  desired  effect  in  the  above  case,  by
+          declaring 'a' as a simple pointer to int, and calling it with  the
+          same syntax:
+                    int *a;         /* Pointer to INT */
+                    (*a)();         /* Call address in 'a' */
+    
+             MICRO-C will not output external  declarations  to  the  output
+          file  for  any  variables  or  functions  which  are  declared  as
+          "extern", unless that symbol is actually  referenced  in  the  'C'
+          source code. This prevents "extern" declarations in system  header
+          files (such as "stdio.h") which are used as  prototypes  for  some
+          library functions from causing those functions to be  loaded  into
+          the  object  file.  Therefore,  any  "extern"  symbols  which  are
+          referenced only by inline assembly code must be  declared  in  the
+          assembly code, not by the MICRO-C "extern" statement.
+    MICRO-C                                                          Page: 28
+
+
+             Unlike some  'C'  compilers,  MICRO-C  will  process  character
+          expressions using only  BYTE  values.  Character  values  are  not
+          promoted to INT unless there is  an  INT  value  involved  in  the
+          expression. This results in much more efficent code  when  dealing
+          with characters, particularily  on  small  processors  which  have
+          limited 16 bit instructions. Consider the statement:
+    
+                                 return c + 1;
+    
+             On some compilers, this will sign extend the character variable
+          'c' into an integer value, and then ADD an integer  1  and  return
+          the  result.  MICRO-C  will  ADD  the  character  variable  and  a
+          character 1, and then promote the result to INT  before  returning
+          it (results of expressions as  operands  to  'return'  are  always
+          promoted to int).
+    
+             Unfortunately, programs have been written  which  rely  on  the
+          automatic promotion of characters to INTs to  work  properly.  The
+          most common source of problems is code  which  attempts  to  treat
+          CHAR variables as UNSIGNED values (many older  compilers  did  not
+          support UNSIGNED CHAR). For example:
+    
+                                return c & 255;
+    
+             In a compiler which always evaluates character  expressions  as
+          INT, the above statement will extract the value of 'c' as positive
+          integer ranging from 0 to 255.
+    
+             In MICRO-C, ANDing a character with 255  results  in  the  same
+          character, which gets promoted to an integer  value  ranging  from
+          -128 to 127. To force the promotion  within  the  expression,  you
+          could CAST the variable to an INT:
+    
+                              return (int)c & 255;
+    
+             The same objective can be achieved  in  a  more  efficent  (and
+          correct) manner by declaring the variable 'c' as UNSIGNED CHAR, or
+          by CASTing the variable to an UNSIGNED value:
+    
+                              return (unsigned)c;
+    
+             Note that this is not only more clearly shows the intent of the
+          programmer, but also results is more efficent code generated.
+    MICRO-C                                                          Page: 29
+
+
+             A related quirk arises because most processors do not support a
+          simple efficent method for adding or subtracting a  SIGNED  8  bit
+          quantity and a 16 bit quantity. The code generators supplied  with
+          MICRO-C make the assumption that character values being  added  or
+          subtracted to/from integers will contain only POSITIVE values, and
+          thus use UNSIGNED  addition/subtraction.  This  allows  much  more
+          efficent code to be generated, as the carry/borrow  from  the  low
+          order byte of the operation is simply propagated to the high order
+          byte of the result (an operation  supported  in  hardware  by  the
+          CPU).
+    
+             For those rare instances where you do wish  to  add/subtract  a
+          potentially negative character value to/from an int, you can force
+          the expression to be performed  in  less  efficent  fully  16  bit
+          arithmetic by casting the character to an int.
+    
+                int i;
+                char c;
+                ...
+                i += c;         /* Very efficent... C should be positive */
+                i += (int)c;    /* Less efficent... C can be negative */
+    
+             Read the notes at the end of the section  entitled  "Structures
+          and Unions" for information on  limitations  or  differences  from
+          standard 'C' in MICRO-C's implementation of structures and unions.
+    MICRO-C                                                          Page: 30
+
+
+    4. ADVANCED TOPICS
+    
+          This section provides information on the more advanced aspects  of
+       MICRO-C, which  is  generally  not  needed  for  casual  use  of  the
+       language.
+    
+       4.1 Conversion Rules
+    
+             MICRO-C keep track of the "type" of  each  value  used  in  all
+          expressions. This type identifies certain characteristics  of  the
+          value,  such  as   size   range   (8/16   bits),   numeric   scope
+          (signed/unsigned), reference (value/pointer) etc.
+    
+             When an  operation  is  performed  on  two  values  which  have
+          identical "types", MICRO-C assigns that same "type" to the result.
+    
+             When the  two  value  "types"  involved  in  an  operation  are
+          different, MICRO-C calculates the "type" of the result  using  the
+          following rules:
+    
+          4.1.1 Size range
+    
+                If both values are  direct  (not  pointer)  references,  the
+             result will be 8 bits only if  both  values  were  8  bits.  If
+             either value was 16 bits, the result will be 16 bits.
+    
+                If one value is a pointer, and  the  other  is  direct,  the
+             result will be a pointer to the same size value as the original
+             pointer.
+    
+                If both values were pointers, the result will be  a  pointer
+             to 16 bits only if both original  pointers  referenced  16  bit
+             values. If either pointer referenced an 8 bit value, the result
+             will reference an 8 bit value.
+    
+          4.1.2 Numeric Scope
+    
+                The result of an expression is considered to be signed  only
+             if both original values were signed. If  either  value  was  an
+             unsigned value, the result is unsigned.
+    
+          4.1.3 Reference
+    
+                If either of the original values was a pointer,  the  result
+             will be a pointer.
+    
+             Note that this "calculated" result type  is  used  for  partial
+          results within an expression. Whenever a symbol such as a variable
+          or function is referenced, the type of that symbol is  taken  from
+          its declaration, no matter what "type" of value  was  last  stored
+          (variable) or returned (function).
+    
+             The TYPECAST  operation  may  be  used  to  override  the  type
+          calculated for the result of an expression if necessary.
+    MICRO-C                                                          Page: 31
+
+
+       4.2 Assembly Language Interface
+    
+             Assembly language programs may be called from 'C' functions and
+          vice versa. These programs may be in the form of  inline  assembly
+          language statements in the 'C' source code, or  separately  linked
+          modules.
+    
+             When MICRO-C calls any routine ('C'  or  assembler),  it  first
+          pushes all arguments to the routine onto the processor  stack,  in
+          the order in  which  they  occur  in  the  argument  list  to  the
+          function. This means that the LAST argument  to  the  function  is
+          LOWEST on the processor stack.
+    
+             Arguments are always pushed as 16 bit values. Character  values
+          are extended to 16 bits, and arrays are passed as 16 bit  pointers
+          to the array. (MICRO-C knows that arrays which are  arguments  are
+          actually  pointers,  and  automatically  references  through   the
+          pointer).
+    
+             After pushing the arguments, MICRO-C then generates  a  machine
+          language subroutine  call,  thereby  executing  the  code  of  the
+          routine.
+    
+             Since the compiler uses the ACCUMULATOR and INDEX REGISTER,  it
+          will automatically save them (if necessary) during  processing  of
+          the arguments to the function (even if no arguments are  present),
+          and therefore these registers do not have to be preserved  by  the
+          called routine.
+    
+             NOTE that any other  registers  used  by  the  code  generation
+          routines (register variables etc) will not be  saved  by  MICRO-C,
+          and should be preserved by called functions if their content is to
+          be relied on between function calls.
+    
+             Once the called routine returns, the arguments are removed from
+          the stack by the calling program. This usually consists of  simply
+          adding the number of  bytes  pushed  as  arguments  to  the  stack
+          pointer.
+    
+             When the called function executes, the first thing usually done
+          is to push any registers which must be preserved, and  to  reserve
+          space on the stack for any local variables which are required.  In
+          some implementations, a "base" register may also be established to
+          provide a stable reference to the local variables and arguments.
+    
+             It is the responsibility of the called function to  remove  any
+          saved registers and local variable space from the stack before  it
+          returns. If a value is to be returned to the calling  program,  it
+          is expected to be in the ACCUMULATOR register.
+    MICRO-C                                                          Page: 32
+
+
+             Local variables in a  function  may  be  referenced  as  direct
+          offsets from the "base" register or stack pointer.  Note  that  if
+          the stack pointer is used, offsets must be adjusted for the number
+          of bytes which are pushed and  popped  on  the  stack  during  the
+          execution of the function.
+    
+             The address of a particular local variable is calculated as:
+    
+                                "base register"
+                                       -
+                     (Size of all local variables in bytes)
+                                       + 
+               (size of all preceeding local variables in bytes)
+    
+                                    -- OR --
+    
+                                "stack pointer"
+                                       +
+                   (# bytes pushed during function execution)
+                                       +
+               (size of all preceeding local variables in bytes)
+    
+             Arguments to a  function  may  also  be  referenced  as  direct
+          offsets from the "base" register or stack  pointer,  in  much  the
+          same way as local variables are.
+    
+             The address of a particular argument is calculated as:
+    
+                                "base register"
+                                       +
+        (# bytes pushed at entry of function to preserve registers etc.)
+                                       +
+                 (Size of return address on stack (usually 2))
+                                       +
+                      (# arguments from LAST argument) * 2
+    
+                                    -- OR --
+    
+                                "stack pointer"
+                                       +
+                   (# bytes pushed during function execution)
+                                       +
+                     (size of all local variables in bytes)
+                                       +
+        (# bytes pushed at entry of function to preserve registers etc.)
+                                       +
+                 (Size of return address on stack (usually 2))
+                                       +
+                      (# arguments from LAST argument) * 2
+    
+             NOTE: The (number of bytes pushed at entry of  function)  is  a
+          function of the code generator,  and  depends  on  the  particular
+          MICRO-C implementation. Examine  some  assembly  output  from  the
+          compiler to determine the actual number on your system.
+    MICRO-C                                                          Page: 33
+
+
+             If a function has been declared  as  "register",  MICRO-C  will
+          load the accumulator with  the  number  of  arguments  which  were
+          passed, each time the function is called. This allows the function
+          to determine the location of the first argument.
+    
+             The address of  the  first  argument  passed  to  a  "register"
+          function may be calculated as:
+    
+                           (accumulator contents) * 2
+                                       + 
+                                "base register"
+                                       +
+        (# bytes pushed at entry of function to preserve registers etc.)
+                                       +
+                 (Size of return address on stack (usually 2))
+    
+                                    -- OR --
+    
+                           (accumulator contents) * 2
+                                       +
+                                "stack pointer"
+                                       +
+                   (# bytes pushed during function execution)
+                                       +
+                     (size of all local variables in bytes)
+                                       +
+        (# bytes pushed at entry of function to preserve registers etc.)
+                                       +
+                 (Size of return address on stack (usually 2))
+    
+             Global  variables  exist  at  absolute  addresses  and  may  be
+          referenced directly by name from within assembler  programs.  Keep
+          in mind however, that MICRO-C uses only the first 15 characters of
+          a symbol's name. Also, many code generators will reduce  the  size
+          of names even further, often using an algorithm  to  compress  the
+          name rather than simply truncating it. For this reason,  it  is  a
+          good idea to avoid using global symbol names which are longer than
+          8 characters if they are to be  referenced  from  within  assembly
+          language programs.
+    MICRO-C                                                          Page: 34
+
+
+       4.3 Compiling for ROM
+    
+             Assuming  the  code  generator   does   not   employ   "tricky"
+          programming techniques such as self  modifying  code,  the  output
+          from the compiler is entirely "clean", and may be placed  in  Read
+          Only Memory (ROM).
+    
+             The compiler places all initialized  global  variables  in  the
+          output file as part of the code image. When the program is  stored
+          in ROM, those variables are also stored in ROM, and  will  not  be
+          modifiable.
+    
+             When the program is to be placed in ROM, you may not initialize
+          any variables which you intend to modify  later.  Those  variables
+          must be explicitly initialized by code executed at  the  beginning
+          of the program.
+    
+             Initialized variables which you do not intend to  modify  (such
+          as tables etc.) may be initialized in the declaration, and will be
+          permanently saved in the ROM as part of the static code image.
+    
+             The  processor  stack  pointer  must  be  set  up  before   any
+          expressions are evaluated, or any function  calls  are  performed.
+          One way to do this is with inline assembly statements at  the  top
+          of the file.
+    
+             All non-initialized global variables must be  located  in  RAM.
+          The compiler usually outputs all such variables at the very end of
+          the compilation, just after dumping the literal pool.  The  global
+          variables may be moved to RAM by  editing  the  output  file,  and
+          placing an appropriate "ORG" statement at  the  beginning  of  the
+          globals.
+    
+             You must also be sure to relocate the temporary location  which
+          is defined in the startup code and runtime library  ("?temp"),  as
+          well  as  any  global  variables  used  in  the  standard  library
+          functions.
+    MICRO-C                                                          Page: 35
+
+
+    5. THE MICRO-C COMPILER
+    
+          The heart of the MICRO-C programming environment is the  COMPILER.
+       This program reads a  file  containing  a  'C'  source  program,  and
+       translates it into an equivalent assembly language program.
+    
+          The compiler includes its  own  limited  pre-processor,  which  is
+       suitable for  compiling  programs  requiring  only  non-parameterized
+       MACRO substitution, simple INCLUDE file capability, and  single-level
+       CONDITIONAL processing.
+    
+       5.1 The MCC command
+    
+             When  created  using  the  'io'  routines   supplied   on   the
+          distribution disk, the format of the MICRO-C Compiler command line
+          is:
+    
+                    MCC [input_file] [output_file] [options]
+    
+             [input_file] is the name of  the  source  file  containing  'C'
+          statements to read. If no filenames are given, MCC will read  from
+          standard input.
+    
+             [output_file] is the name of the file to  which  the  generated
+          assembly language code is written. If less than two filenames  are
+          specified, MCC will write to standard output.
+    
+          5.1.1 Command Line Options
+    
+                -c      - Includes the 'C' source code in the output file
+                          as assembly language comments.
+    
+                -f      - Causes the compiler to "Fold" its literal pool.
+                          (Identical strings not contained in explicit
+                          variables only once in memory).
+    
+                -l      - Enables MCC to accept line numbers.
+                          (At beginning of line, followed by ':').
+    
+                -q      - Instructs MCC to be quiet, and not display the
+                          startup message when it is executed.
+    MICRO-C                                                          Page: 36
+
+
+    6. PORTING THE COMPILER
+    
+          There are two major goals to accomplish when porting  the  MICRO-C
+       compiler to a new machine. The first is to make the compiler  run  in
+       the new environment, and the second is to make it  produce  code  for
+       that environment.
+    
+          These two goals do not always go hand in hand. For example, it may
+       be desirable to implement a CROSS COMPILER which generates code for a
+       different system from that on which it runs.
+    
+          The usual method of porting a compiler to system A when a  version
+       of the compiler is already running on system B, is to first create  a
+       compiler which runs on system B, producing code for  system  A.  This
+       "new" compiler may then be used to create a compiler  which  runs  on
+       system A.
+    
+          The compiler consists of a module "compile"  which  contains,  the
+       main compiler, input scanner, regular expression parser,  and  symbol
+       table management routines.  This  is  the  "static"  portion  of  the
+       compiler which does not change in different implementations.
+    
+          To create a working compiler, the above module  must  be  compiled
+       and linked with an "io" module and "code"  module.  The  "io"  module
+       performs the necessary initialization and I/O to allow  the  compiler
+       to run in a particular  environment  (goal  #1).  The  "code"  module
+       generates  the  assembly  language  output  code  for  a   particular
+       environment (goal #2).
+    
+          The compiler uses NO system library functions, and  relies  on  NO
+       system services (other  than  those  used  by  the  "io"  and  "code"
+       modules). This allows the compiler to  be  ported  to  virtually  any
+       system.
+    
+          All fixed compiler  parameters  (such  as  table  sizes  etc)  are
+       contained in the header file "compile.h".  When  porting  to  systems
+       with very limited RAM (less than 64k), you may have to reduce some of
+       these sizes in order to get it to fit.
+    
+       6.1 The "io" module
+    
+             The "io" module required  by  the  compiler  must  contain  the
+          following function definitions:
+    
+             The function "main()" is called by the  operating  system  when
+          the MICRO-C compiler is executed. It is  responsable  for  parsing
+          any parmeters and command qualifiers, opening the input and output
+          files,  performing  any  other  initializations  that   might   be
+          required, and then  invoking  the  function  "compile()"  with  no
+          arguments. The program filename should also  be  copied  into  the
+          array 'file_names' found in compile.c. The "compile"  function  is
+          internal to the "compile.c" module, and  will  never  return.  For
+          UNIX and other systems which support I/O redirection, "stdin"  and
+          "stdout" are often used for the input and output files.
+    MICRO-C                                                          Page: 37
+
+
+             The function "terminate(rc)" is called when  the  compiler  has
+          finished all processing and wishes to terminate. The value "rc" is
+          a return code: 0 = Success, program compiled without error,  -1  =
+          Compile was aborted due to severe errors, n  =  Compile  finished,
+          but had 'n' errors.
+    
+             The function "put_chr(chr, flag)"  is  passed  a  character  to
+          output, as well as a flag. The flag will always be zero  when  the
+          character is being sent to the console terminal, or non-zero  when
+          the character is to be written to the output file.
+    
+             The function "put_str(*ptr, flag)" is passed  a  pointer  to  a
+          zero terminated string, which is to be written to the  console  or
+          output file as determined by "flag".
+    
+             The function "put_num(number, flag)" is passed a 16 bit number,
+          which is to be written in printable form to the console or  output
+          file as determined by "flag".
+    
+             The function "get_lin(*ptr)" is passed a pointer to a character
+          array, and should read a single line from the currently open input
+          file into that array. The manifest definition  "LINE_SIZE",  found
+          in "compile.h" may be used to determine the  maximum  line  length
+          acceptable to the compiler. Return of a non-zero  value  indicates
+          the end of file condition.
+    
+             The function "f_open(*ptr)" is passed a pointer to a  filename.
+          The new file should be opened, and if successful,  the  old  input
+          file should remain open and be "stacked", so that it can be  later
+          returned to, and a non-zero value returned. A zero value indicates
+          to the compiler that the file could not be opened.
+    
+             The  function  "f_close()"  is  responsible  for  closing   the
+          currently  open  input  file,  and  returning  to  the   "stacked"
+          previously open one. It receives  no  parameters.  Note:  multiple
+          "opens"  may  be  stacked  -  see  the  manifest   definition   of
+          "INCL_DEPTH" in the "compile.h" file.
+    
+          6.1.1 Notes on I/O module
+    
+             1) It is the responsibility of the "put" routines to  translate
+                the  NEWLINE  '\n'  (0x0a)  character  into  whatever   line
+                termination  character(s)  are  required   by   the   target
+                operating system.
+    
+             2) If unix "stdin"  and  "stdout"  are  not  used,  it  is  the
+                responsibility  of  "main"  to  display  appropriate   error
+                messages if the input or output files could not be opened.
+    
+                Refer to  the  sample  "io"  modules  distributed  with  the
+             compiler.
+    MICRO-C                                                          Page: 38
+
+
+       6.2 The "code" module
+    
+             In order to insure that MICRO-C is portable  to  virtually  any
+          environment,  the  compiler  makes  few  assumptions   about   the
+          processor or system software of  the  target  system.  The  "code"
+          module is relied  on  to  produce  all  machine  instructions  and
+          assembler directives written to the output file.
+    
+             The only two real "assumptions" made about the target processor
+          are:
+    
+          1) It is assumed that the target processor  has  an  "accumulator"
+             register in which all math operations are performed,  and  that
+             the  lower  8  bits  of   this   register   may   be   accessed
+             independantly.
+    
+          2) It is  assumed  that  the  target  processor  has  one  "index"
+             register which may be loaded with a  16  bit  value,  and  that
+             memory references may be made indirectly through this register.
+    
+             If the target processor does not support the above features, it
+          may be possible to write a code generator for it using some  other
+          features of the processor.
+    
+             For example, if an "index" register  does  not  exist,  it  may
+          often be implemented using two bytes of reserved memory.
+    
+             The code  generation  module  required  by  the  compiler  must
+          contain the following function definitions:
+    
+             The function  "do_comment(*ptr)"  is  passed  a  pointer  to  a
+          character string, which is should write to the output  file  as  a
+          single line COMMENT (used by '-c' option). This function  is  also
+          called with a NULL (0)  pointer  anytime  the  compiler  wants  to
+          insure that the code generator is reset to begin  a  new  line  of
+          output.
+    
+             The function "do_asm(*ptr)" is passed a pointer to a  character
+          string, which it should write to the output file as a single  line
+          STATEMENT (used for inline assembly language).
+    
+             The function "def_module()"  is  called  at  the  beginning  of
+          compilation, before any other code generator functions are called.
+          It is used to output any pre-amble needed by the assembler.
+    
+             The function "end_module()"  is  called  at  the  very  end  of
+          compilation, and is the last code generator function called. It is
+          used to output any post-amble needed by the assembler.
+    MICRO-C                                                          Page: 39
+
+
+             The function "def_static(symbol, ssize)"  is  passed  am  index
+          into the compiler symbol tables for a global  variable,  which  is
+          about to be initialized  as  static  storage.  The  call  to  this
+          function will be immediately followed by a call  to  "init_static"
+          or "end_static". The "ssize" parameter will  be  non-zero  if  the
+          variable is a structure or union.
+    
+             The "init_static(token, value,  word)"  function  is  passed  a
+          token and value, with which it should initialize a single  element
+          of static storage. The "word" flag will be non-zero if  the  value
+          is a 16 bit element. Only the "constant" tokens  (NUMBER,  STRING,
+          LABEL) and SYMBOL need be handled by this routine. When SYMBOL  is
+          used,  the  constant  ADDRESS  of  the  passed  symbol  should  be
+          generated.
+    
+             The  "end_static()"  function  is  called  to   terminate   the
+          definition of static storage.
+    
+             NOTE: "init_static"  should  not  rely  on  "def_static"  being
+          called first,  since  it  is  also  called  immediately  following
+          "def_label" to define "switch" tables (See "do_switch"). After the
+          table  is  defined,  the  compiler  will  call  "end_static()"  to
+          terminate the initialization and set up for the next.
+    
+             The function "def_global(symbol, size)" is called at the end of
+          the compile, once for each non-static global  variable  which  was
+          defined. The "size" paremeter indicates the  number  of  BYTES  of
+          memory to be reserved for that variable.
+    
+             The function "def_extern(symbol)" is called at the end  of  the
+          compile, once  for  each  unresolved  external  symbol  which  was
+          defined. This routine should examine the type of  the  symbol  and
+          output the appropriate assembler directives  to  allow  it  to  be
+          referenced in another module.
+    
+             The "def_func(symbol, size)"  routine  is  called  to  start  a
+          function definition. The "symbol" parameter is an index  into  the
+          compiler symbol tables for the function entry being  defined.  The
+          "size" parameter indicates how many  bytes  of  memory  should  be
+          allocated  on  the  stack  for  local  variables.  When   defining
+          "register" functions, care must  be  taken  that  the  entry  code
+          preserves the contents of the accumulator.
+    
+             The "end_func()" routine is  called  to  terminate  a  function
+          definition.  It  should  remove  anything  placed  on  the   stack
+          (including the local variable space allocated by "def_func"),  and
+          terminate the function with a "return" instruction.
+    
+             The "def_label(label)" function is called whenever the compiler
+          wants to generate a label in the output file. Each label generated
+          by the compiler is identified by a 16 bit unsigned number.  It  is
+          up to the code generator to generate a unique label  suitable  for
+          the target assembler.
+    MICRO-C                                                          Page: 40
+
+
+             The "def_literal(*ptr, size)" function is called at the end  of
+          the  compile,  just  before  non-initialized  global  symbols  are
+          generated. This routine is  given  a  pointer  to  the  compiler's
+          "literal pool", which contains all the character strings  occuring
+          during the compilation. The "size" parameter  indicates  how  many
+          characters are in the pool. This pool must  be  generated  in  the
+          output file as a string of byte constants.
+    
+             The "call(token, value,  type,  clean)"  function  is  used  to
+          generate  a  machine  language  subroutine  call  to  the   entity
+          indicated by the "token, value & type" parameters (See later). The
+          "clean" parameter indicates how many entries were pushed onto  the
+          stack as arguments, which should be removed following the function
+          call.  Note:  Since  stack  entries  are   TWO   bytes   in   most
+          implementations, the "clean" value must be multiplied  by  two  to
+          get the actual number of bytes to be removed from the stack.
+    
+             The function "jump(label,  ljmp)"  is  called  to  generate  an
+          unconditional jump instruction to the indicated compiler generated
+          label. The "ljmp" flag will be set to zero if the jump  references
+          code within the same expression from which it  is  generated,  and
+          non-zero if one or more statements may occur between the jump  and
+          the destination label. This allows  the  code  generator  to  take
+          advantage of "short" jumps if they are available on the target.
+    
+             The function "jump_if(cond, label, ljmp) is called to  generate
+          a conditional jump to a compiler generated label. The "cond" value
+          indicates the condition: FALSE = Jump if accumulator is zero, TRUE
+          = jump if accumulator is non-zero. Remaining  parameters  are  the
+          same as above.
+    
+             The function "do_switch(label)" is  passed  the  address  of  a
+          "switch" table, which contains 16  bit  entries,  and  is  of  the
+          following format:
+    
+                        label-1, value-1, label-2, value-2, ....
+                        label-n, value-n, 0, default_label
+    
+             This routine should search the table for the value currently in
+          the accumulator, and if found, it  should  proceed  to  the  label
+          associated with that value. If the value is not found  before  the
+          end of the table is encountered (identified by a  label  value  of
+          zero), execution should  proceed  at  the  address  identified  by
+          "default_label".
+    
+             The "index_ptr(token, value, type)"  routine  should  load  the
+          index register with the value  of  the  entity  indicated  by  the
+          "token, value & type" parameters. This will always  be  a  16  bit
+          wide quantity.
+    MICRO-C                                                          Page: 41
+
+
+             The "index_adr(token, value, type)"  routine  should  load  the
+          index register with the 16 bit address of the  object  represented
+          by "token, value & type". The only tokens passed to  this  routine
+          are SYMBOL and ION_STACK.
+    
+             The routine "expand(type)" is called following  the  evaluation
+          of expressions in "return" and "switch" statements, and is used to
+          insure that the result is a 16 bit value.
+    
+             The routine "accop(oper, type)" is  called  to  perform  a  "no
+          operand" operation on the accumulator. See "compile.h" for a  list
+          of these operations. The "type" passed indicates the type of value
+          expected as a result.
+    
+             The routine "accval(oper, rtype, token, value, type)" is called
+          to perform a "one  operand"  operation  on  the  accumulator.  See
+          "compile.h" for a list of these operations. "rtype" indicates  the
+          type of value expected as a result. "token",  "value"  and  "type"
+          indicate  the  location  and  type  of  operand  which  is   being
+          processed.
+    MICRO-C                                                          Page: 42
+
+
+          6.2.1 Notes on code generation
+    
+                The meaning of the individual bits  in  the  16  bit  "type"
+             value which is passed to many of the code generation  routines,
+             is documented in the "compile.h" file.
+    
+                The meaning of "token"  is  documented  in  the  "compile.h"
+             file. For  each  type  of  "token",  "value"  has  a  different
+             meaning:
+    
+                Token           Meaning of "value"
+                ----------------------------------------------------------
+                NUMBER          The numeric value of the constant.
+                STRING          The offset into the literal pool.
+                LABEL           The value of the compiler generated label.
+                SYMBOL          Index into global symbol tables.
+                All others      Undefined.
+    
+                When token is a SYMBOL, the "value" passed is used to  index
+             into the global symbol tables (contained within  the  "compile"
+             module) to  determine  information  about  the  variable.  When
+             "value" is  less  than  the  value  of  the  compiler  internal
+             variable 'global_top', the symbol is GLOBAL,  otherwise  it  is
+             LOCAL:
+    
+                s_name[value]   - Name of symbol (up to SYMBOL_SIZE chars)
+                s_type[value]   - Type of symbol (bits defined in "compile.h").
+                s_index[value]  - Variable index:
+                        Local (auto):   Stack offset from def_func.
+                        Argument:       Stack offset from last argument pushed.
+                        Static:         Unique variable number for symbol.
+    
+                When calculating the stack offset for  ARGUMENTs,  you  must
+             add the number of bytes placed on the stack when  the  function
+             was called. This  includes  the  local  variables,  the  return
+             address, and any other values that "def_func" might push.
+    
+                There are two popular ways of  providing  addressability  to
+             local variables:
+    
+                If the processor has many registers, you can reserve one  as
+             a "base" pointer, and point it at the top of the stack when the
+             function  is  entered.  This  allows  local  variables  to   be
+             referenced as negative offsets from that "base"  register,  and
+             arguments to be referenced as positive offsets  from  it.  This
+             approach also allows the stack to  be  restored  directly  from
+             this base  register  when  the  function  terminates.  See  the
+             section on assembly language interfacing.
+    
+                Another approach is to have the  code  generator  "remember"
+             exactly how many bytes have been pushed onto  the  stack  since
+             "def_func", and adjust the offsets it generates  based  on  the
+             stack contents. This has  the  advantage  of  not  tying  up  a
+             register.
+    MICRO-C                                                          Page: 43
+
+
+                If you intend to use the MICRO-C Source Linker (SLINK), then
+             you have to insure that whatever variable you use to  reference
+             the "literal pool" qualifies as a "compiler  generated"  label,
+             allowing SLINK to adjust it when processing the  source  files.
+             Compiler  generated  labels  normally  consist  of   a   single
+             character (such as '?'), followed by a  decimal  number.  Since
+             the compiler begins generating its labels with the  value  '1',
+             you may safely use '0' as the literal pool variable (Ie: '?0').
+    
+                It is the responsibility of the code generator to keep track
+             of the validity  of  the  upper  8  bits  of  the  accumulator.
+             Appropriate sign extension or clearing of  high  bits  must  be
+             performed as necessary to convert signed and unsigned character
+             values when 16 bit results when required.
+    
+                To improve the effiency of conditional statements, the  code
+             generator should keep track of the validity of the "zero"  flag
+             in  the  processor's  condition  code  register,  and  generate
+             appropriate  "test"  instructions  only  if  necessary  when  a
+             conditional jump is compiled.
+    
+                For  processors  not  supporting   operations   with   stack
+             contents, the "ON_STACK" and "ION_STACK" tokens may implemented
+             by first popping the top of the  stack  into  a  register.  The
+             "ISTACK_TOP" token is a special case, because  the  address  on
+             the top of the stack must  not  be  lost.  This  token  may  be
+             efficiently implemented, because "ISTACK_TOP" is only used  for
+             read/write operations to  a  stacked  calculated  address.  For
+             example:
+    
+                            array1[i] += array2[i];
+    
+                This statement calculates the address of "array1[i]" (in the
+             index register). Since the "index" register is  again  used  in
+             calculating the address of "array2[i]", the first "index"  will
+             be placed on the stack. Once the contents  of  "array2[i]"  are
+             retrieved, it  will  be  added  using  "ISTACK_TOP",  and  then
+             re-stored using "ION_STACK".
+    
+                The "ISTACK_TOP" token may  thus  pop  the  address  into  a
+             register, and set a flag indicating to the code generator  that
+             the next "ION_STACK" token  is  to  go  through  that  register
+             rather than the top of the stack. Note that since an arithmetic
+             operation may be performed between the two references, you must
+             not use a register which is  modified  in  code  generated  for
+             arithmetic operations.
+    
+                Refer to the sample code  generators  distributed  with  the
+             compiler.
+    MICRO-C                                                          Page: 44
+
+
+       6.3 The "compile" module
+    
+             The "compile" module  contains  the  main  statement  analyser,
+          input  scanner,  expression  parser  and  symbol  table  managment
+          routines for the MICRO-C compiler. This module is  common  to  all
+          implementations, and should NOT require changes in most cases. The
+          source code for this module is contained in the  "compile.c"  file
+          on your distribution diskette, and may  be  examined  for  insight
+          into the internal operation of the compiler.
+    
+             This module must be compiled and linked with your I/O and  code
+          generation routines to  generate  a  complete  executable  MICRO-C
+          compiler.
+    
+             To test your code generator,  the  file  "test.c"  is  provided
+          which when compiled using the new compiler, performs a  number  of
+          simple tests  to  verify  your  code  generator.  This  is  not  a
+          comprehensive analysis, as  it  makes  no  assumptions  about  the
+          processor, however, it provides a good indication that  your  code
+          generator is on the right track.
+    
+             A number of fixed parameters to the  compiler  (such  as  table
+          sizes etc.) are contained in the header file "compile.h". The most
+          common reason for changing  these  parameters  is  to  reduce  the
+          memory requirements, in order to get  MICRO-C  to  fit  into  very
+          small systems.
+    
+             If any of the parameters in "compile.h" are to be changed,  you
+          must  make  the  changes  BEFORE  compiling  any  of  the  modules
+          (compile, io or codegen).
+    
+             The file  "tokens.h"  contains  symbolic  definitions  for  the
+          tokens parsed by the  compiler,  the  text  of  which  is  in  the
+          character array variable "tokens". If you make any changes to this
+          token table, MAKE SURE that the contents of the "tokens"  variable
+          and the "tokens.h" file agree, otherwise, you will end up  with  a
+          compiler for a very strange language.
+    
+          6.3.1 **NOTE for 32 bit compiler users
+    
+                COMPILE.C has one potential portability  problem  if  it  is
+             compiled on a machine where  an  'int'  is  not  16  bits.  The
+             routine "skip_comment()" uses a 16 bit 'int' to hold  the  last
+             two characters from the source file, in order to test  for  the
+             "/*" and "*/" sequences.
+    
+                If an 'int' can contain more that TWO characters,  you  must
+             modify this function so that only the last two  characters  are
+             retained.
+    MICRO-C                                                          Page: 45
+
+
+       6.4 Porting without a linker
+    
+             It is possible to port MICRO-C using a system  which  does  not
+          support a linker. To do this, you must concatinate all the  source
+          files "compile.c", "code.c" and "io.c" into  one  large  file  (in
+          that order), and compile them all as one program.
+    
+             When this is done, the ".h" include files need only be included
+          once, and external definitions  of  variables  occuring  in  other
+          source files should not  be  used.  The  source  programs  on  the
+          distribution disk all contain conditional  compilation  statements
+          (#ifndef), which only perform the necessary #include and  external
+          definition statements when compiling as a single file.
+    
+       6.5 Optimization Techniques
+    
+             The MICRO-C compiler performs the following machine independant
+          optimizations of the output file:
+    
+          1) All constant expressions are evaluated  at  compile  time,  and
+             expressed as a single constant value in the output code.
+    
+          2) Commutative operations may be reversed  to  take  advantage  of
+             partial results  already  in  the  accumulator.  This  includes
+             operations which have an equivalent reverse (ie: "a>(b-1)"  may
+             become "(b-1)<a").
+    
+          3) Redundant jumps as a result of "return" or  "break"  statements
+             are suppressed.
+    
+          4) The sense of jumps in conditional statements are  reversed  for
+             logically negated expressions, code for '!' is  only  generated
+             if the value returned by that operator is actually used.
+    
+          5) Jumps between code generated within  a  single  expression  are
+             flagged as "short".
+    
+             Although the MICRO-C compiler produces fairly  reasonable  code
+          for the  processor  model  it  uses,  that  model  is  necessarily
+          limited, in order that it might fit a  large  number  of  physical
+          targets. There are  several  simple  optimizations  which  may  be
+          performed to further enhance the code generated by the compiler in
+          a specific implementation.
+    MICRO-C                                                          Page: 46
+
+
+          6.5.1 Register Usage
+    
+                MICRO-C assumes a single accumulator,  and  a  single  index
+             register.  Additional  terms  in  complicated  expressions  are
+             handled by placing temporary results on  the  processor  stack,
+             and re-using those registers. All data placed on the  stack  is
+             accessed on a "last in - first out" basis.
+    
+                If the target processor has a  full  compliment  of  general
+             purpose registers, an optimization may be performed  by  simply
+             selecting another general purpose register as  the  accumulator
+             or index register instead of placing the value  on  the  stack.
+             The code generator must  keep  track  of  the  order  in  which
+             registers are selected, and which register represents the "top"
+             of the stack. If the number  of  values  "pushed"  exceeds  the
+             number of available registers, the "oldest" register should  be
+             placed on the stack, thereby allowing it to be re-used.
+    
+          6.5.2 Jump Optimization
+    
+                Although MICRO-C identifies jumps to instructions which span
+             more than one expression as "long",  often  the  addresses  are
+             close enough together that short jumps may  actually  be  used.
+             This optimization is particularily useful for  processors  such
+             as the 8086, which does not support "long"  conditional  jumps,
+             and therefore must simulate them with a short conditional  jump
+             of the opposite sense around a long unconditional jump.
+    
+          6.5.3 Redundant Load Elimination
+    
+                Since  MICRO-C  evaluates  and  processes   each   statement
+             individually, it  does  not  carry  partial  results  from  one
+             statement to another.
+    
+                Consider the following statements:
+    
+                                 a = x;
+                                 b = a + 1;
+    
+                MICRO-C generates the code:
+    
+                                 LOAD x
+                                 STORE a
+                                 LOAD a
+                                 ADD 1
+                                 STORE b
+    
+                An optimization may be performed  by  recognizing  that  the
+             second "load" instruction is redundant, and can be  eliminated.
+             Note: A more efficent (but less readable)  way  of  coding  the
+             above statements which would result in the latter code  without
+             optimization is:
+    
+                                 b = (a = x) + 1;
+    MICRO-C                                                          Page: 47
+
+
+          6.5.4 Peephole Optimization
+    
+                Consider the statement:
+    
+                                 a = *++ptr;
+    
+                MICRO-C generates the code:
+    
+                                 LOAD ptr
+                                 INCREMENT
+                                 STORE ptr
+                                 MOVE ACCUMULATOR TO INDEX
+                                 LOAD [INDEX]
+                                 STORE a
+    
+                For a processor supporting  a  rich  set  of  direct  memory
+             addressing modes, the above sequence can be shortened to:
+    
+                                 INCREMENT_MEMORY ptr
+                                 LOAD [ptr]
+                                 STORE a
+    
+                One of the most  successful  techniques  of  optimizing  the
+             output code is also one of the simplest.  Known  as  "peephole"
+             optimization, the method consists of keeping a  window  of  the
+             last few instructions generated,  and  scanning  the  list  for
+             known patterns every time a new instruction is added to it.
+    
+                As long as the instructions in the list at  least  partially
+             match one or more  of  the  "predefined"  patterns,  additional
+             instructions are collected  until  either  a  complete  pattern
+             match occurs, or all known patterns are eliminated.
+    
+                If no matches occur, the "oldest" instruction is written  to
+             the output file, and the next one  becomes  the  first  in  the
+             "window".
+    
+                Whenever a pattern is discovered, it is replaced  by  a  new
+             series of instructions which perform the same function, but  in
+             a more efficent manner.
+    
+                The new instruction sequences  are  replaced  on  the  list,
+             which may then be  again  scanned,  allowing  further  possible
+             reductions to be discovered.
+    
+                Handling of labels in the "window" and  their  corresponding
+             placement in the output file must be carefully done,  in  order
+             to preserve the "logical" context of the original code.
+    MICRO-C                                                          Page: 48
+
+
+    7. THE MICRO-C PREPROCESSOR
+    
+          The MICRO-C Preprocessor is a source code filter,  which  provides
+       greater capabilities than the preprocessor which is integral  to  the
+       MICRO-C compiler. It has been implemented as a  stand  alone  utility
+       program which processes the source code before it is compiled.
+    
+          Due to the higher complexity of  this  preprocessor,  it  operates
+       slightly slower than the the integral MICRO-C preprocessor.  This  is
+       mainly due to the fact that it reads each line from the file and then
+       copies it to a new line while performing the macro substitution. This
+       is necessary since each macro may contain parameters  which  must  be
+       replaced "on the fly" when it is referenced.
+    
+          The integral MICRO-C preprocessor is very FAST,  because  it  does
+       not copy the input line. When it encounters a '#define'd  symbol,  it
+       simply adjusts the input scanner pointer to point to  the  definition
+       of that symbol.
+    
+          Keeping the extended preprocessor as a stand alone utility  allows
+       you  to  choose  between  greater   MACRO   capability   and   faster
+       compilation. It also allows the system to continue  to  run  on  very
+       small hardware platforms.
+    
+          The additional capabilities of the extended preprocessor are:
+    
+            - Parameterized MACROs.
+    
+            - Multiple line MACRO's.
+    
+            - Nested conditionals.
+    
+            - Ability to undefine MACRO symbols.
+    
+            - Library reference in include file names.
+    MICRO-C                                                          Page: 49
+
+
+       7.1 The MCP command
+    
+             The format of the MICRO-C Preprocessor command line is:
+    
+                    MCP [input_file] [output_file] [options]
+    
+             [input_file] is the name of  the  source  file  containing  'C'
+          statements to read. If no filenames are given, MCP will read  from
+          standard input.
+    
+             [output_file] is the name of the file to  which  the  processed
+          source code is written. If less than two filenames are  specified,
+          MCP will write to standard output.
+    
+          7.1.1 Command Line Options
+    
+                MCP accepts the following command line [options]:
+    
+                -c      - Instructs MCP to keep comments from  the input
+                          file (except for those in '#' statements which
+                          are always removed). Normally, MCP will remove
+                          all comments.
+    
+                -l      - Causes the output file to contain line numbers.
+                          Each line in the output file will be  prefixed
+                          with the line number of the  originating  line
+                          from the input file.
+    
+                l=path  - Defines the directory path which will be taken
+                          to reference  "library"  files when  '<>'  are
+                          used around an  '#include'  file name.  Unless
+                          otherwise specified, the path defaults to:
+                                        '\mc'
+    
+                -q      - Instructs MCP to be quiet, and not display the
+                          startup message when it is executed.
+    
+          <name>=<text> - Pre-defines a non-parameterized macro  of  the
+                          specified <name> with the string value <text>.
+    MICRO-C                                                          Page: 50
+
+
+       7.2 Preprocesor Commands
+    
+             The following commands are recognized by the MCP utility,  only
+          if they occur at the beginning of the source file line:
+    
+          7.2.1 #define <name>(parameters) <replacement text>
+    
+                Defines a global macro name which will be replaced with  the
+             indicated <replacement text> wherever it occurs in  the  source
+             file.
+    
+                Macro  names  may  be  any  length,  and  may  contain   the
+             characters 'a'-'z', 'A'-'Z', '0'-'9' and '_'.  Names  must  not
+             begin with the characters '0'-'9'.
+    
+                If the macro name is IMMEDIATELY followed by a list of up to
+             10 parameter names contained in brackets, those parameter names
+             will be substituted with parameters passed to the macro when it
+             is referenced. Parameter names follow the same rules  as  macro
+             names.
+    
+                     eg: #define min(a, b) (a < b ? a : b)
+    
+                If any spaces exist between the macro name and  the  opening
+             '(', the macro will not be  parameterized,  and  all  following
+             text (including '(' and ')') will be  entered  into  the  macro
+             definition.
+    
+                If the very last character of a  macro  definition  line  is
+             '\', MCP will continue the definition with the next  line  (The
+             '\' is not included). Pre-processor statements included as part
+             of a macro definition will not be processed by MCP, but will be
+             passed on and handled by the integral MICRO-C preprocessor.
+    
+          7.2.2 #undef <symbol>
+    
+                Undefines the named macro symbol. further references to this
+             symbol will not be replaced.
+    
+                NOTE: With MCP, macro definitions operate on a STACK. IE: If
+             you define a macro  symbol,  and  then  re-define  it  (without
+             '#undef'ing it first), subsequently '#undef'ing it  will  cause
+             it to revert to its  previous  definition.  A  second  '#undef'
+             would then cause it to be completely undefined.
+    MICRO-C                                                          Page: 51
+
+
+          7.2.3 #forget <symbol>
+    
+                Similar  to  '#undef',  except  that  the  symbol  and   ALL
+             SUBSEQUENTLY DEFINED SYMBOLS will be undefined.
+    
+                Useful for releasing any local symbols (used only  within  a
+             single include file).
+    
+                For example:
+    
+                        #define GLOBAL "xxx"    /* first global symbol */
+                            ...                 /* more globals */
+                        #define LOCAL   "xxx"   /* first local symbol */
+                            ...                 /* more locals */
+                        /* body of include file goes here */
+                        #forget LOCAL           /* release locals */
+    
+          7.2.4 #ifdef <symbol>
+    
+                Causes the following lines (up to '#else' of '#endif') to be
+             processed and included in the source file  only  if  the  named
+             symbol is defined as a macro.
+    
+          7.2.5 #ifndef <symbol>
+    
+                Causes the following lines (up to '#else' of '#endif') to be
+             processed and included in the source file  only  if  the  named
+             symbol is NOT defined as a macro.
+    
+                NOTE: '#ifdef/#ifndef#else/#endif' may be nested.
+    
+          7.2.6 #else
+    
+                Toggles the state of the "if_flag", controlling  conditional
+             processing. Only has effect in the highest level  of  suspended
+             processing. IE: Nested conditionals will work properly.
+    
+                If the previous  '#ifdef/#ifndef'  failed,  processing  will
+             begin again following the '#else'.
+    
+                If the previous '#ifdef/#ifndef' passed, processing will  be
+             suspended until the '#endif' is encountered.
+    
+                NOTE: Since '#else' acts as a toggle, it may be used outside
+             of any '#ifdef/#ifndef' to unconditionally  suspend  processing
+             up to '#endif'. You can also use multiple '#else's in a  single
+             conditional,  to  swap  back  and  forth   between   true/false
+             processing without re-testing the condition.
+    
+          7.2.7 #endif
+    
+                Resets  the  "if_flag"  controlling  conditionals,   causing
+             processing to resume. Only has effect in the highest  level  of
+             suspended  processing.  IE:  Nested  conditionals   will   work
+             properly.
+    MICRO-C                                                          Page: 52
+
+
+          7.2.8 #include <filename>
+    
+                Causes MCP to open the named file and include  its  contents
+             as part of the input source.
+    
+                If the filename is contained within '"' characters, it  will
+             be opened exactly as  specified,  and  (unless  it  contains  a
+             directory path) will reference a file in the current directory.
+    
+                If the filename is contained within the characters  '<'  and
+             '>', it will be  prefixed  with  the  library  path  (See  'l='
+             option), and will therefore reference a file  in  that  library
+             directory. The default  library  directory  is  assumed  to  be
+             '\mc'.
+    
+                For example:
+    
+                        #include "header.h"     /* from current directory */
+                        #include <stdio.h>      /* from library directory */
+    MICRO-C                                                          Page: 53
+
+
+       7.3 Error messages
+    
+             When MCP detects an error during processing of an include file,
+          it displays an error message, which is preceeded by  the  filename
+          and line number where the error occurs. If more than 10 errors are
+          encountered, MCP will terminate.
+    
+             The following error messages are reported by MCP:
+    
+          7.3.1 Cannot open include file
+    
+                A '#include' statement on the  indicated  line  specified  a
+             file which could not be opened for reading.
+    
+          7.3.2 Invalid include file name
+    
+                A '#include' statement on the  indicated  line  specified  a
+             file  name  which  was  not  contained  within  '"'   or   '<>'
+             characters.
+    
+          7.3.3 Invalid macro name
+    
+                A '#define' statement on the indicated line contains a macro
+             name which does not follow the name rules.
+    
+          7.3.4 Invalid macro parameter
+    
+                A '#define' statement on the indicated line contains a macro
+             parameter name which does not follow the name rules.
+    
+                A reference to a macro does not have a proper ')'  character
+             to terminate the parameter list.
+    
+          7.3.5 Too many errors
+    
+                More  than  10  errors  has  been  encountered  and  MCP  is
+             terminating.
+    
+          7.3.6 Too many macro definitions
+    
+                MCP has encountered more '#define' statements  than  it  can
+             handle.
+    
+          7.3.7 Too many macro parameters
+    
+                A '#define' statement on the indicated line  specifies  more
+             parameters to the macro than MCP can handle.
+    
+          7.3.8 Too many include files
+    
+                MCP has encountered more nested '#include'  statements  than
+             it can handle.
+    MICRO-C                                                          Page: 54
+
+
+          7.3.9 Undefined macro
+    
+                A '#undef' or '#forget'  statement  on  the  indicated  line
+             references a macro name which has not been defined.
+    
+          7.3.10 Unterminated comment
+    
+                The END OF FILE has  been  encountered  while  processing  a
+             comment.
+    
+          7.3.11 Unterminated string
+    
+                A quoted string  on  the  indicated  line  has  no  end.  To
+             continue a string to  the  next  line,  use  '\'  as  the  last
+             character on the line. The '\' will  not  be  included  in  the
+             string.
+    MICRO-C                                                          Page: 55
+
+
+    8. THE MICRO-C OPTIMIZER
+    
+          The MICRO-C optimizer is an output code filter which examines  the
+       assembly code produced by the compiler, recognizing known patterns of
+       inefficent code (using the "peephole" technique), and  replaces  them
+       with more optimal code  which  performs  the  same  function.  It  is
+       entirely table driven, allowing it to be modified for  virtually  any
+       processor.
+    
+          Due its many table lookup operations, the  optimizer  may  perform
+       quite slowly when processing a large  file.  For  this  reason,  most
+       people prefer not to optimize during the debugging of a program,  and
+       utilize the optimizer only when creating the final copy.
+    
+       8.1 The MCO command
+    
+             The format of the MICRO-C Optimizer command line is:
+    
+                    MCO [input_file] [output_file] [options]
+    
+             [input_file] is the name of the source file containing assembly
+          statements to read. If no filenames are given, MCO will read  from
+          standard input.
+    
+             [output_file] is the name of the file to  which  the  optimized
+          assembly  code  is  written.  If  less  than  two  filenames   are
+          specified, MCO will write to standard output.
+    
+          8.1.1 Command Line Options
+    
+                MCO accepts the following command line [options]:
+    
+                -d      - Instructs MCO to produce a 'debug' display on
+                          standard output showing the  source code  which
+                          it is removing and replacing in the input file.
+                          NOTE: If you do not specify an  explict  output
+                                file, you will get the  debug  statements
+                                intermixed with  the  optimized  code  on
+                                standard output.
+    
+                -q      - Instructs  MCO  to be quiet,  and not display
+                          the startup message when it is executed.
+    MICRO-C                                                          Page: 56
+
+
+       8.2 Porting MCO to a new processor
+    
+             The MICRO-C Optimizer is completely table driven, and is fairly
+          easy to port to new processors.
+    
+             The peephole optimization table  is  called  'peep_table',  and
+          consists of two  sequential  character  string  entries  for  each
+          optimization, and is terminated by single NULL pointer.
+    
+             The first is the "take" entry, and  represents  an  instruction
+          sequence which (if found) is to be removed from the  output  file.
+          The second  is  the  "give"  entry,  and  defines  a  sequence  of
+          instructions to be placed in the output file at that  point.  NOTE
+          that due to the way the optimizer removes and replaces instruction
+          in the circular "peephole" buffer, the instructions in the  "give"
+          entry ARE CODED IN REVERSE ORDER.
+    
+             Characters in the "take" entry with the high  bit  set  ('\200'
+          and higher) are special characters which  represent  any  variable
+          string which may occur in the instruction sequence,  and  will  be
+          replaced with the same string wherever that  character  occurs  in
+          the "give" entry. If  the  same  special  character  (eg:  '\200')
+          occurs more than once  in  the  "take"  entry,  the  corresponding
+          strings must be exactly the same or else the entire sequence  will
+          not be matched.
+    
+             There may be up to 8 different  such  variable  strings  within
+          each entry, the lower three bits  ('\201'-\'207')  indicate  which
+          variable is referenced.
+    
+             The 4'th bit ('\21x') when used in a  "take"  entry,  allows  a
+          match only if the variable string contains only the numeric digits
+          ('0'-'9'). If any other character occurs, the instruction sequence
+          will not be matched. This bit has no effect when used in a  "give"
+          entry.
+    
+             The 5'th bit ('\22x') causes  the  variable  string  to  access
+          through the "complement" table (see later). When used in a  "take"
+          entry, this bit allows a match only if the variable string  occurs
+          in  that  table.  When  used  in  a  "give"  entry,   causes   the
+          complementary string to be output from the table.
+    
+             The processor will stop scanning  a  variable  string  when  it
+          encounters the character which  immediately  follows  the  special
+          character in the "take" entry, or at the end of the input line.
+    MICRO-C                                                          Page: 57
+
+
+             There are cases in which you may  not  want  the  optimizer  to
+          further reduce code substitued for a particular  optimization.  In
+          this case, simply include a single characer comment  in  the  GIVE
+          entry, in such  a  position  as  to  prevent  the  optimizer  from
+          recognizing that with any further TAKE entries.
+    
+             The optimzer also includes a "complement" table, which provides
+          the ability to define and use "opposites" within an  optimization.
+          The most common use for this  feature  is  in  the  processing  of
+          conditional jumps, in cases  when  an  optimization  reverses  the
+          logcal sense of a jump.
+    
+             The complement table is called  "not_table",  and  contains  an
+          even number of character string entries. The table  is  terminated
+          by a single NULL pointer. Each even/odd pair of  entries  in  this
+          table are considered to be complementary strings.  When  a  "give"
+          entry specifies that the complement of a variable string should be
+          output, this table is scanned,  and  if  the  original  string  is
+          found, the corresponding complementary entry is output instead. If
+          the string is not found, it is output without modification.
+    
+             Note that you do not have to access the complementary table  in
+          both the "give" and "take" optimization entries. For example,  you
+          could specify a "special character" of '\221' in the "take" entry,
+          indicating that you are using variable location 1,  and  that  the
+          string must occur in the complement  table.  You  could  then  use
+          "\201" in the "give" entry  to  output  the  original  string,  or
+          "\221" to output the complement.
+    MICRO-C                                                          Page: 58
+
+
+    9. THE SOURCE LINKER
+    
+          Many small development environments have assemblers which  do  not
+       directly support an object linker. This causes  a  problem  with  'C'
+       development, because the library functions must be  included  in  the
+       source code, with several drawbacks:
+    
+        1)  There is no way to automatically tell which library functions
+            to include, therefore, you must do it manually.
+    
+        2)  'C' library functions must be  re-compiled every  time,  in
+            order to avoid conflict between compiler generated labels.
+    
+          The MICRO-C Source Linker (SLINK) helps overcome  these  problems,
+       by automatically  joining  previously  compiled  (assembly  language)
+       source code from the library  to  your  programs.  Only  those  files
+       containing functions which you  reference  are  joined  (Taking  into
+       consideration functions called  by  the  included  library  functions
+       etc...). As the files  are  joined,  compiler  generated  labels  are
+       adjusted to be unique within each file.
+    
+       9.1 The SLINK Command
+    
+             The format of the SLINK command line is:
+    
+                   SLINK input_file... output_file [options]
+    
+             "input_file" is the name of  the  source  file  containing  the
+          compiler output from your program.  Several  input  files  may  be
+          specified, in which case they will all be processed into a  single
+          output file.
+    
+             "output_file" is the name of  the  file  to  which  the  linked
+          source code is written.
+    MICRO-C                                                          Page: 59
+
+
+          9.1.1 Command line options
+    
+                SLINK accepts the following command line [options]:
+    
+                ?       - Display command line help summary.
+    
+                i=name  - Specify name of the External Index File.
+    
+                -l      - Instructs SLINK to list each library used.
+    
+                l=path  - Identifies the directory path which will be
+                          taken to reference "library" files. If not
+                          specified, it defaults to: '\mc\slib'
+    
+                p=char  - Identifies the PREFIX character of compiler
+                          generated symbols. Defaults is '?'.
+    
+                -q      - Inhibit display of the startup message.
+    
+                t=string- Prefix to prepend to temporary filenames.
+                          If not specified, default is "$".
+    
+                -w      - Sort WORD data to beginning of allocated bulk
+                          unitialized storage (See $DD: directive).
+    
+       9.2 Multiple Input Files
+    
+             SLINK accepts multiple input files on  the  command  line,  and
+          processes each file to build the output file. This allows  you  to
+          "link" together several previously compiled (or assembly language)
+          modules into one final program.
+    
+             Any external references  which  are  not  resolvable  from  the
+          library are assumed to be resolved by  one  of  the  input  source
+          files. Since SLINK does not have knowledge of the  public  symbols
+          defined  in  the  input  files,  the  absence  of  an   externally
+          referenced symbol will not be detected  until  the  assembly  step
+          (where it will cause an undefined symbol error).
+    MICRO-C                                                          Page: 60
+
+
+       9.3 The External Index File
+    
+             SLINK uses a special file from the library to  determine  which
+          symbols are in which files. This  files  is  called  the  EXTERNAL
+          INDEX FILE, and is  found  in  the  library  directory  (see  'l='
+          option), under the name "EXTINDEX.LIB".
+    
+             This  file  contains  entries  which  cross-reference  external
+          symbols to files. Each entry is as follows:
+    
+            1)  Any lines beginning with '<' contain the names of files
+                which are to be processed and included at the BEGINNING
+                of the program (Before your source file). This the best
+                way to include the startup code and any runtime library
+                routines which are required  at  all  times,  and  also
+                provides a method of initializing any segments used.
+                    eg: <6809rl.asm
+    
+            2)  Any lines beginning with '^' contain the names of files
+                which are to be processed AFTER the program and library
+                source files, but BEFORE any  uninitialized  data areas
+                are output. This is the best way to set up the location
+                and storage class of the uninitialized data  if it does
+                not immediately follow the executable program code, and
+                also providing any postamble needed by the segments.
+    
+            3)  Any lines beginning with '>' contain the names of files
+                which are to be processed at the END  of  the  program,
+                after all other information is output. This is the best
+                way to define heap memory storage,  and  to provide any
+                post-amble needed by the assembler.
+    
+            4)  Any lines beginning with '-' contain the names of files
+                which are to  be  included  if  any  of  the  following
+                symbols  (Up to another '<', '^', '>', '-' or '$')  are
+                referenced.
+                    eg: -printf.asm format.asm fgets.asm fget.asm
+    
+                NOTE: In most cases, the library functions will contain
+                indications of any external references that they do, in
+                which case SLINK will automatically include those files
+                even of the names are not mentioned on the '-' line. In
+                the example above, the following would suffice:
+                        -printf.asm
+    
+            5)  The names  of  each  symbol  which  may  be  referenced
+                externally must follow the '<', '^', '>' or  '-' entry.
+                Symbols must occur one per line,  with  no  leading  or
+                trailing spaces.
+                    eg: printf
+                        fprintf
+                        sprintf
+    MICRO-C                                                          Page: 61
+
+
+            6)  A line beginning with '$' is used to define the pseudo-
+                opcode used by SLINK to reserve uninitialized  data  at
+                the end of the output file.  Only  one  line  beginning
+                with '$' should be entered into the EXTINDEX.LIB  file.
+                The remainder of this line, including all  spaces  etc.
+                is entered between each symbol name,  and  the  decimal
+                size (in bytes) which is written to the output file.
+                    eg: '$ RMB '    <- Quotes are for clarity
+    
+            A complete example:
+    
+                    -printf.asm
+                    printf
+                    fprintf
+                    sprintf
+                    -scanf.asm
+                    scanf
+                    fscanf
+                    sscanf
+                    <PREFIX.asm
+                    ^MIDDLE.ASM
+                    >SUFFIX.ASM
+                    $ RMB
+    
+            In summary, the output file is written from:
+    
+                1 - The '<' (prefix) files              *
+                2 - The program source files            *\
+                3 - Library files referenced (if any)   * > See note
+                4 - Segments 1-9 from above ...         */
+                5 - The '^' (middle) files
+                6 - Segments 1-9 from middle files      * See note
+                7 - Uninitialized data definitions      (if any)
+                8 - The '>' (suffix) files
+                9 - Segments 1-9 from sufix file(s)     * See note
+    
+            * NOTE: If these files contain multiple segments (see later),
+                    all segments are grouped and written  in  seguential
+                    order. IE: Seg 0 from all files is written, followed
+                    by Seg 1, etc.
+    MICRO-C                                                          Page: 62
+
+
+       9.4 Source file information
+    
+          9.4.1 SLINK Directives
+    
+                SLINK interpretes several "directives" which may be inserted
+             in the  input  source  files  to  control  the  source  linking
+             process. These directives must be on a separate line, beginning
+             in column 1, and must be in  uppercase.  They  are  removed  by
+             SLINK during processing, and thus will not cause conflict  with
+             the normal syntax used by the assembler.
+    
+                                   $SE:<0-9>
+    
+                The '$SE' directive is used  by  SLINK  to  define  multiple
+             output segments. Up to 10 segments are allowed, with segment  0
+             being the default which  is  selected  when  a  file  is  first
+             encountered.  Other  segments  (1-9)  when  selected  via  this
+             directive are written to temporary files, and re-joined at  the
+             end of processing in  sequential  order.  this  allows  you  to
+             separate sections of the source file (such as initialized data,
+             literal pool etc.) into distinct areas of memory.
+    
+                              $DD:<symbol> <size>
+    
+                The '$DD' directive is used  to  define  uninitialized  data
+             storage areas, which will be allocated by SLINK between the '^'
+             (middle) and '>' (suffix) files. This allows  you  to  allocate
+             unitialized data outside of the bounds of the executable image,
+             and thus exclude it from being saved to disk. This  action  may
+             be thought  of  as  an  additional  (11'th)  segment  which  is
+             available for uninitialized data only,  and  which  avoids  the
+             temporary file read/write overhead associated with use  of  the
+             other segments. This directive  is  normally  placed  into  the
+             source file by the "def_global" routine  in  the  MICRO-C  code
+             generator.
+    
+                                  $EX:<symbol>
+    
+                The '$EX' directuve is used by SLINK to identify any symbols
+             which are externally referenced. Whenever a '$EX' directive  is
+             found, SLINK  searches  the  EXTINDX.LIB  file  for  the  named
+             symbol, and marks the corresponding files for inclusion in  the
+             program. This directive is normally placed into the source file
+             by the "def_extern" routine in the MICRO-C code generator.
+    
+                If you  are  writing  assembly  language  programs  for  the
+             library, be sure to  include  "$SE:<0-9>"  directives  for  any
+             segments you wish to access, "$DD:<symbol>  <size>"  directives
+             for  any  uninitialized  data  you  wish   to   allocate,   and
+             "$EX:<symbol>" directives for any symbols which you  externally
+             reference. If you wish to place an assembly language comment on
+             the same line, make sure it is separated from the remainder  of
+             the directive by at least one space or tab character.
+    MICRO-C                                                          Page: 63
+
+
+                Also, note that '<' (prefix) files may contain "$SE",  "$DD"
+             and "$EX" directives, '^' (middle) files may contain "$SE"  and
+             "$DD" but not "$EX", and '>' (suffix) files may  only  contains
+             "$SE" directives. Basically, the rule is that "$EX"  cannot  be
+             used after the libraries are included and "$DD" cannot be  used
+             after the uninitialized data is output. Since  the  middle  and
+             suffix files  are  ALWAYS  included,  simply  insure  that  all
+             external references and data declarations needed by any of them
+             are performed in the '<' (prefix) file.
+    
+          9.4.2 Compiler generated labels
+    
+                As it processes each source file, SLINK scans each line  for
+             symbols which consist of the '?' character (See  'p='  option),
+             followed by a number. If it finds such as symbol, it inserts  a
+             two character sequence ranging from 'AA' to  'ZZ'  between  the
+             '?', and the number. This sequence will be incremented for each
+             source file processed,  and  thus  insures  that  the  compiler
+             generated symbols will be unique for each file.
+    
+                If you  are  writing  assembly  language  programs  for  the
+             library, you must be careful to  avoid  using  identical  local
+             symbols in any of the library files, one way to do this  is  to
+             use symbols which meet the above criteria.
+    
+       9.5 The SCONVERT command
+    
+             SCONVERT is a utility  which  assists  in  converting  existing
+          assembly language  source  files  into  a  format  which  is  more
+          suitable for use by the SLINK. Two main functions are performed:
+    
+          1) All comments are removed, and  all  spacing  is  reduced  to  a
+             single space. This minimizes the size of the  file,  and  helps
+             decrease linkage time.
+    
+          2) All symbols defined in the file which  are  not  identified  as
+             "keep" symbols are converted to resemble the  MICRO-C  compiler
+             generated symbols. This allows  SLINK  to  adjust  them  to  be
+             unique within each source file.
+    
+             The format of the SCONVERT command line is:
+    
+    
+                 SCONVERT [input_file] [output_file] [options]
+    
+             [input_file] is the name of  the  source  file  containing  the
+          original assembly language program.  If  no  filenames  is  given,
+          SCONVERT will read from standard input.
+    
+             [output_file] is the name of the file to  which  the  converted
+          source code is written. If less  that  two  filenames  are  given,
+          SCONVERT will write to standard output.
+    MICRO-C                                                          Page: 64
+
+
+          9.5.1 Command line options
+    
+                SCONVERT accepts the following command line [options]:
+    
+                ?       - Display command line help summary.
+    
+                c=char  - Identifies the character used to begin a comment
+                          at the trailing end of a source line. If no 'c='
+                          is defined, SCONVERT will terminate processing at
+                          the first blank or tab which follows the operand
+                          field.
+    
+                C=char  - Identifies the charcter which indicates a comment
+                          line in the source code. Defaults to '*'.
+    
+                k=name  - Identifies a symbol name to KEEP. This symbol will
+                          not be converted. Multiple 'k=' are permitted.
+    
+                K=file  - Identifies a file containing the names of symbols
+                          to KEEP, one per line. Multiple 'K=' are permitted.
+    
+                p=char  - Identifies the PREFIX character which is to be used
+                          for the converted symbols. Defaults to '?'.
+    
+                -q      - Instructs SCONVERT to be quiet, and not issue its
+                          startup message.
+    
+                SCONVERT identifies symbols in the input source file as  any
+             string beginning with 'A-Z', 'a-z', '_' or '?', and  containing
+             these charcters plus the digits '0-9'. If your assembler source
+             files uses any other characters in its symbols, you  must  edit
+             your sources and change the symbols.
+    
+       9.6 The SRENUM command
+    
+             SRENUM  is  a  small  utility  which  re-numbers  the  compiler
+          generated symbols within a assembly language source file. This  is
+          useful if you have made added symbols to the  file  by  hand,  and
+          wish to make it "pretty" before adding it to the library etc.
+    
+             The format of the SRENUM command is:
+    
+                  SRENUM [input_file] [output_file] [options]
+    
+          9.6.1 Command line options
+    
+                SRENUM accepts the following command line [options]:
+    
+                ?       - Display command line help summary.
+    
+                p=char  - Identifies the PREFIX character which is to be used
+                          to recognize compiler generated symbols.
+    
+                -q      - Instructs SRENUM to be quiet, and not issue its
+                          startup message.
+    MICRO-C                                                          Page: 65
+
+
+       9.7 The SINDEX command
+    
+             SINDEX is a utility  which  assists  in  the  creation  of  the
+          EXTINDEX.LIB file used by SLINK. When you run SINDEX, it  examines
+          all of the '.ASM' files in the current  directory,  and  writes  a
+          EXTINDEX.LIB file which contains a '-' type entry for  each  file,
+          and  external  symbol  entries  for  any  labels  which  it  finds
+          conforming to the 'C' naming conventions (Starts with 'a-z', 'A-Z'
+          or '_', and contains only 'a-z', 'A-Z', '0-9' or '_').
+    
+             Once  you  have  run  SINDEX,  you  must  manually   edit   the
+          EXTINDEX.LIB file, and remove any file or symbol entries which you
+          do not wish to have available as external references, as  well  as
+          insert any necessary entries for '<', '^', '>' and '$' commands.
+    
+          9.7.1 Command line options
+    
+                SINDEX accepts the following command line options:
+    
+                ?       - Display command line help summary.
+    
+                i=name  - Specify name for index file to be written.
+                          Dafault is "EXTINDEX.LIB".
+    
+                You may also instruct SINDEX to search for  a  file  pattern
+             other than '*.ASM' by passing it as a command line parameter.
+    
+                                 eg: SINDEX *.A
+    
+       9.8 The SLIB command
+    
+             Once you have constructed your source  library,  you  may  from
+          time to time want to make minor changes to it, either  adding  new
+          functions, or removing old ones ones.
+    
+             You could make such changes simply by editing the  EXTINDEX.LIB
+          file, however you would have to be very  careful  not  to  add  or
+          delete the wrong entry, and you would have to  manually  determine
+          if adding or removing the file would adversly affect the remainder
+          of the library. For example, you could accidently add a  duplicate
+          of another symbol name, or remove a symbol which is referred to by
+          another file.
+    
+             To simplify maintenance of source libraries, you can  make  use
+          of the "Source Librarian", a utility program which  automates  the
+          addition and removal of source files, and automatically reports of
+          any inconsistancies occuring in the source library.
+    
+             To use SLIB, you must first position yourself to the  directory
+          containing the source library. And then  execute  SLIB  using  the
+          command options described later to indicate the action to be taken
+          on the library. If you do  not  specify  any  actions,  SLIB  will
+          simply examine the library and report its size and content.
+    MICRO-C                                                          Page: 66
+
+
+             You may use multiple command options in a single  SLIB  command
+          if you wish to add and/or remove more than one file at a time.
+    
+             After  executing  any  command,  SLIB  will   report   on   any
+          inconsistancies which it finds in the library. If any  are  found,
+          and you have used a command which caused changes, SLIB will prompt
+          for permission before writing the updated library file.
+    
+          9.8.1 Command line options
+    
+                The following options control the action(s)  which  will  be
+             performed by SLIB on the source library index file.
+    
+                ?       - Display command line help summary.
+    
+                ?=file  - Display information about named source file.
+    
+                a=file  - Add specified file as standard functions.
+    
+                i=index - Use the specified INDEX file, if not specified,
+                          the filename 'EXTINDEX.LIB' is assumed.
+    
+                m=file  - Add named source file as a MIDDLE file.
+    
+                p=file  - Add named source file as a PREFIX file.
+    
+                -q      - Quiet mode: SLIB will not display informational
+                          messages or ask for permission to update index.
+    
+                r=file  - Remove the named file from the index.
+    
+                s=file  - Add named source file as a SUFFIX file.
+    
+                -w      - Write inhibit:  SLIB will not write the updated
+                          library index.  This is useful if you just want
+                          to see what would happen if you add or remove a
+                          file.
+    MICRO-C                                                          Page: 67
+
+
+       9.9 Making a source library
+    
+             To make a complete source linkable library, follow these  basic
+          steps:
+    
+          1) If you have assembly language library functions, run the SINDEX
+             utility to create an index file with the names of  any  symbols
+             defined in them. Edit this file and remove all names which  are
+             LOCAL to the files. Only the global function and variable names
+             should remain. NOTE: Also leave in any other symbols  or  names
+             which you don't want changed by SCONVERT.
+    
+          2) Use SCONVERT to convert  the  assembly  language  sources  into
+             library format, using the index file created above as your KEEP
+             file (K=EXTINDEX.LIB). You may send the output  files  directly
+             to your source library directory.
+    
+          3) Edit the converted assembly  language  sources  to  change  any
+             declarations for uninitialized data into '$DD' directives,  and
+             to add any '$SE' and '$EX' directives which may be needed.
+    
+          4) Compile all of your 'C' library functions to assembly language,
+             using a code generator which outputs the appropriate directives
+             for SLINK. Send the ASM output files  to  your  source  library
+             directory.
+    
+          5) From within your library  directory,  run  the  SINDEX  utility
+             again. This will create  an  index  file  (EXTINDEX.LIB)  which
+             contains the names of all global symbols.
+    
+          6) Edit the index file and remove any non-public symbol names. You
+             should also change the headers for the '<', '^' and '>'  files,
+             and add the '$' record for reserved memory information.
+    
+          7) Run the SLIB utility, to check the new  library  for  duplicate
+             symbols,  unresolved  external   references   and   any   other
+             inconsistancies.
+    MICRO-C                                                          Page: 68
+
+
+    10. THE MAKE UTILITY
+    
+          The MAKE utility provides a method of automating the  building  of
+       larger programs consisting of more that one module. The main  benefit
+       of MAKE is that it keeps track of  the  files  that  each  module  is
+       dependant on, and will rebuild a module if any of  those  files  have
+       been modified since  the  module  was  last  built.  This  frees  the
+       programmer from  the  task  of  remembering  which  files  have  been
+       changed, and the commands needed to rebuild the dependant modules.
+    
+       10.1 MAKEfiles
+    
+             To use MAKE, you must first create a MAKEFILE, which is a  text
+          file containing entries for each module in the program. Each entry
+          consists of a DEPENDANCY list, and a series of COMMANDS.
+    
+          10.1.1 MAKEfile Entries
+    
+                A dependency list in MAKE is a line which contains the  name
+             of the module, followed by a ':', followed by the names of  any
+             files on which it depends. The module name MUST begin in column
+             1.
+    
+                When MAKE is invoked, it will process each dependancy  list,
+             and  will  execute  any  following  commands  (up  to   another
+             dependancy list) if (1) the module does not exist,  or  (2)  if
+             any of the files to the right of the ':' have a timestamp which
+             is later than that of the module. For example:
+    
+                main.obj : main.c main.h \\mc\\stdio.h
+                    \\mc\\mcc main.c main.asm
+                    masm/ml main;
+                    -del main.asm
+    
+                In the above example, the 'main.obj' would  be  rebuilt  (by
+             compiling and assembling 'main.c') if either it did not already
+             exist, or any of 'main.c', 'main.h' or '\mc\stdio.h' was  found
+             to have a later timestamp.
+    
+                The '-' preceeding the 'del' command prevents it from  being
+             displayed. Unless the '-q' option is enabled, MAKE will display
+             any commands not preceeded by '-' as they are executed.
+    
+                NOTE: To enter a single '\' in the MAKEFILE,  you  must  use
+             '\\', this is because like 'C',  MAKE  uses  '\'  to  "protect"
+             special  characters  which  otherwise  are  used  for   special
+             functions (such as '\', '$' and '#'). The first '\'  "protects"
+             the second one, allowing it to pass through as source text.
+    MICRO-C                                                          Page: 69
+
+
+          10.1.2 Macro Substitutions
+    
+                Sometimes in a MAKEFILE, you have a single file or directory
+             path that you use  over  and  over  again.  If  it  is  a  long
+             directory path, this may  involve  a  lot  of  typing,  and  it
+             becomes inconvenient to change that name (if you want to use  a
+             different directory etc.) because it is repeated many times.
+    
+                MAKE includes a MACRO facility, which allows you  to  define
+             variable names which will be replaced with a text  string  when
+             used in subsequent MAKEfile lines. Names are defined by placing
+             them in the MAKEfile, followed by '=',  and  the  text  string.
+             Macro names being defined MUST begin in  column  one,  and  may
+             consist of the characters ('a'-'z', 'A'-'Z', '0'-'9', and '_').
+    
+                Whenever MAKE encounters a '$' in the  file,  it  takes  the
+             name immediately following, and performs the macro replacement:
+    
+                mcdir = \\mc
+                main.obj : main.c main.h $mcdir\\stdio.h
+                    $mcdir\\mcc main.c main.asm
+                    masm/ml main;
+                    del main.asm
+    
+    
+                When a macro name is immediately  followed  by  alphanumeric
+             text, use a single '\' to  separate  it  from  the  text.  This
+             "protects"  the  first  character  of  the  text   from   being
+             interpreted as part of the macro name:
+    
+                mcdir = \\mc\\
+                main.obj : main.c main.h $mcdir\stdio.h
+                    $mcdir\mcc main.c main.asm
+                    masm/ml main;
+                    del main.asm
+    
+                There  are  several  predefined  macro  symbols  which   are
+             available:
+    
+    
+                $*      = The full name of the dependant module (name.type).
+                $@      = The name only of the dependant module.
+                $.      = The full name of each file in the dependancy list,
+                          separated from each other by a single space.
+                $,      = The full name of each file in the dependancy list,
+                          separated from each other by a single comma.
+                $:      = The name only of each file in the dependancy list,
+                          separated from each other by a single space.
+                $;      = The name only of each file in the dependancy list,
+                          separated from each other by a single comma.
+    MICRO-C                                                          Page: 70
+
+
+                File names in the dependancy list which are preceeded by '-'
+             will not be included in the '$. $, $: $;' macro expansions:
+    
+                mcdir = \\mc
+                main.obj : main.c -main.h -$mcdir\\stdio.h
+                    $mcdir\\mcc $. $@.ASM
+                    masm/ml $@;
+                    del $@.ASM
+    
+          10.1.3 MAKEfile Comments
+    
+                Whenever MAKE encounters the '#' character in the  MAKEFILE,
+             it treats the remainder of the line as a comment, and does  not
+             process it:
+    
+                # Define Directories
+                mcdir = \\mc
+    
+                # Build the MAIN module
+                main.obj : main.c -main.h -$mcdir\\stdio.h  # Dependants
+                    $mcdir\\mcc $. $@.ASM                   # Compile
+                    masm/ml $@;                             # Assemble
+                    del $@.ASM                              # Delete tmp
+    
+          10.1.4 Ordering the MAKEfile
+    
+                MAKE processes the MAKEfile is sequential fashion, with  the
+             entries near the top being processed before  the  entries  near
+             the bottom. To insure that each module is built  properly,  any
+             files appearing in the dependancy list for a module  which  are
+             themselves dependant  on  other  files,  should  have  MAKEfile
+             entries which occur BEFORE the entries for  the  modules  which
+             are dependant on them:
+    
+                # Define Directories
+                mcdir = \\mc
+                # Build the MAIN module
+                main.obj : main.c -main.h -$mcdir\\stdio.h
+                    $mcdir\\mcc $. $@.ASM
+                    masm/ml $@;
+                    del $@.ASM
+                # Build the SUB module
+                sub.obj : sub.c -sub.h
+                    $mcdir\\mcc $. $@.ASM
+                    masm/ml $@;
+                    del $@.ASM
+                # Bind the executable file
+                # NOTE: If either of the above modules is rebuilt,
+                #       this entry will be guarenteed to execute.
+                main.exe : main.obj sub.obj
+                    LINK $:;
+    MICRO-C                                                          Page: 71
+
+
+       10.2 Directives
+    
+             Like 'C', MAKE recognizes several "directives" in the MAKEfile.
+          These  directives  are  only  recognized  if  they  occur  at  the
+          beginning of the input line:
+    
+          10.2.1 @include <filename>
+    
+                This command causes the indicated file to be opened and read
+             in as the source  text.  When  the  end  of  the  new  file  is
+             encountered, processing will continue with the  line  following
+             "@include" in the original MAKEfile.
+    
+          10.2.2 @ifdef <name> [name...]
+    
+                Processes the following lines (up to @else of  @endif)  only
+             if one of the given MACRO names is defined. NOTE: <name> should
+             not be preceeded by '$', otherwise its CONTENTS will be tested.
+    
+          10.2.3 @ifndef <name> [name...]
+    
+                Processes the following lines (up to @else of  @endif)  only
+             if one of the given MACRO name is NOT defined.
+    
+          10.2.4 @ifeq <word1> <word2> [word3...]
+    
+                Processes the following lines (up to @else of  @endif)  only
+             if the first word matches one of the remaining  words  exactly.
+             This is useful for testing the value of a defined MACRO symbol.
+    
+          10.2.5 @ifne <word1> <word2>
+    
+                Processes the following lines (up to @else or  @endif)  only
+             if the first word does not match any of the following words.
+    
+          10.2.6 @else
+    
+                Processes the following lines (up to  @endif)  only  if  the
+             preceeding @ifdef, @ifndef, @ifeq or @ifne was false.
+    
+          10.2.7 @endif
+    
+                Terminates @ifdef, @ifndef, @ifeq and @ifne.
+    
+          10.2.8 @type <text>
+    
+                Displays the following text.
+    
+          10.2.9 @abort [text]
+    
+                Terminates MAKE with an 'Aborted!' message. Any text on  the
+             remainder of the line will be appended to the message.
+    MICRO-C                                                          Page: 72
+
+
+       10.3 The MAKE command
+    
+             The format of the MAKE command line is:
+    
+                           MAKE [makefile] [options]
+    
+             [makefile] is the name of the MAKEfile to process. If  no  name
+          is given, MAKE assumes the default name 'MAKEFILE'.
+    
+          10.3.1 Command Line Options
+    
+                MAKE accepts the following command line [options]:
+    
+                ?       - Causes MAKE to output a short summary  of  the
+                          available command line options.
+    
+                -d      - Instructs MAKE to operate in "debug" mode, and
+                          display the commands which it  would  execute,
+                          without actually executing them. This provides
+                          a method of quickly testing the MAKEFILE.
+    
+                -q      - Instructs MAKE to be quiet, and not display the
+                          informational messages and commands executed as
+                          it progresses.
+    
+        <name>=<text>   - Pre-defines a macro  of  the  specified  <name>
+                          with the string value  <text>.  This  OVERRIDES
+                          any definition within the MAKEfile,  which  may
+                          be used to establish a "default" value.
+    MICRO-C                                                          Page: 73
+
+
+       10.4 The TOUCH command
+    
+             TOUCH is a small utility program which sets  the  timestamp  of
+          one or more files to the current or  specified  time/date.  It  is
+          useful as a  method  of  forcing  MAKE  to  recognize  a  file  as
+          "changed", even when it has not.
+    
+             For example, if  you  had  decided  to  "undo"  several  recent
+          changes by restoring a backup of 'main.c', the restored file  will
+          probably have a timestamp which is  older  than  the  last  module
+          which was built. In this case, MAKE would be unaware that the file
+          has changed, and would therefore not rebuild the module.
+    
+             The TOUCH command could then be used to "update" the  timestamp
+          of 'main.c' to the current time, causing MAKE to recognize it as a
+          changed file.
+    
+                                  TOUCH main.c
+    
+             You could also use TOUCH to force rebuilding of several files:
+    
+                           TOUCH main.c sub1.c sub2.c
+    
+             Or even ALL '.C' files:
+    
+                                   TOUCH *.c
+    
+             TOUCH can also be used to set the timestamp of  a  file  to  an
+          arbritrary value, this may be useful  to  PREVENT  a  change  from
+          causing an update:
+    
+                         TOUCH main.c t=0:00 d=31/10/80
+    
+             NOTE: Use of the 't=' or 'd=' parameters to  TOUCH  allows  the
+          possibility that a changed file  will  go  unnoticed.  CAUTION  is
+          advised.
+    
+             The MSDOS  implementation  of  TOUCH  supports  '-h'  and  '-s'
+          options, which cause it to set  the  timestamp  of  HIDDEN  and/or
+          SYSTEM files. If these options are not used, TOUCH will not affect
+          those types of files.
+
+
+
+                                    MICRO-C
+
+                               TABLE OF CONTENTS
+
+
+                                                                         Page
+
+     1. INTRODUCTION                                                        1
+
+        1.1 Compiler Portability                                            2
+        1.2 Code Portability                                                2
+        1.3 The compiling process                                           3
+
+     2. THE COMMAND CO-ORDINATOR                                            4
+
+        2.1 The CC command                                                  4
+        2.2 Using multiple object modules                                   6
+
+     3. THE MICRO-C PROGRAMMING LANGUAGE                                    7
+
+        3.1 Constants                                                       7
+        3.2 Symbols                                                         7
+        3.3 Arrays & Pointers                                              11
+        3.4 Functions                                                      11
+        3.5 Structures & Unions                                            12
+        3.6 Control Statements                                             15
+        3.7 Expression Operators                                           17
+        3.8 Inline Assembly Language                                       19
+        3.9 Preprocessor Commands                                          20
+        3.10 Error Messages                                                21
+        3.11 Quirks                                                        26
+
+     4. ADVANCED TOPICS                                                    30
+
+        4.1 Conversion Rules                                               30
+        4.2 Assembly Language Interface                                    31
+        4.3 Compiling for ROM                                              34
+
+     5. THE MICRO-C COMPILER                                               35
+
+        5.1 The MCC command                                                35
+
+     6. PORTING THE COMPILER                                               36
+
+        6.1 The "io" module                                                36
+        6.2 The "code" module                                              38
+        6.3 The "compile" module                                           44
+        6.4 Porting without a linker                                       45
+        6.5 Optimization Techniques                                        45
+
+     7. THE MICRO-C PREPROCESSOR                                           48
+
+        7.1 The MCP command                                                49
+        7.2 Preprocesor Commands                                           50
+
+    MICRO-C                                                Table of Contents
+
+                                                                         Page
+        7.3 Error messages                                                 53
+
+     8. THE MICRO-C OPTIMIZER                                              55
+
+        8.1 The MCO command                                                55
+        8.2 Porting MCO to a new processor                                 56
+
+     9. THE SOURCE LINKER                                                  58
+
+        9.1 The SLINK Command                                              58
+        9.2 Multiple Input Files                                           59
+        9.3 The External Index File                                        60
+        9.4 Source file information                                        62
+        9.5 The SCONVERT command                                           63
+        9.6 The SRENUM command                                             64
+        9.7 The SINDEX command                                             65
+        9.8 The SLIB command                                               65
+        9.9 Making a source library                                        67
+
+     10. THE MAKE UTILITY                                                  68
+
+        10.1 MAKEfiles                                                     68
+        10.2 Directives                                                    71
+        10.3 The MAKE command                                              72
+        10.4 The TOUCH command                                             73
