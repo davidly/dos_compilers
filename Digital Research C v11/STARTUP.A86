@@ -1,0 +1,1930 @@
+; This startup file is actually several files edited together:
+; clear.a86, startup.a86, minitsta.a86, minitcmd.a86, minitrel.a86,
+; minithea.a86, miniterr.a86.  The include statements and public/extrn
+; statements that connect the separate files have been commented out.
+;
+; The first file, clear.a86, provides the definitions that make model
+; independent coding possible.
+;
+; Booleans for model dependent assembly: SMALL CP/M
+;
+C32	equ	0	; ?Large Code Pointers?
+D32	equ	0	; ?Large Data Pointers?
+CPM	equ	1	; ?CPM specific?
+PCDOS	equ	0	; ?PC-DOS specific?
+	nolist
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Dec-22	Craig Franklin	Added em8087
+;	83-Dec-14	Bill Fitler	Fix UNFRAME for medium model
+;	83-Nov-30 Wed	Bill Haygood	Fix SYS Reg bug.
+;
+;	This is a file of definitions written by Craig Franklin and
+;	Bill Haygood and used throughout CLEAR.
+;
+;	Memory model determined by C32 and D32 defined above.
+;
+;	Model		C32	D32
+;	-----		---	---
+;	Small		0	0	; Small code, small data
+;	Compact		0	1	; Small code, large data
+;	Medium		1	0	; Large code, small data
+;	Large		1	1	; Large code, large data
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                   s t a c k   f r a m e   o f f s e t s		      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+     if	C32	;--------------------------------------------------------------
+     if	D32	;------------------------------------------------------------ ;
+ARG1	equ	8	; Offset from [BP] of caller argument #1	    ; ;
+RAseg	equ	6	; Offset from [BP] of caller return address segment ; ;
+RAoff	equ	4	; Offset from [BP] of caller return address offset  ; ;
+SAVEDS	equ	2	; Offset from [BP] of caller DS slot		    ; ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ; ;
+ARG1	equ	6	; Offset from [BP] of caller argument #1	    ; ;
+RAseg	equ	4	; Offset from [BP] of caller return address segment ; ;
+RAoff	equ	2	; Offset from [BP] of caller return address offset  ; ;
+     endif	;------------------------------------------------------------ ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+     if	D32	;------------------------------------------------------------ ;
+ARG1	equ	6	; Offset from [BP] of caller argument #1	    ; ;
+RAoff	equ	4	; Offset from [BP] of caller return address offset  ; ;
+SAVEDS	equ	2	; Offset from [BP] of caller DS slot		    ; ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ; ;
+ARG1	equ	4	; Offset from [BP] of caller argument #1	    ; ;
+RAoff	equ	2	; Offset from [BP] of caller return address offset  ; ;
+     endif	;-----------------------------------------------------------; ;
+     endif	;--------------------------------------------------------------
+SAVEBP	equ	0	; Offset from [BP] of caller BP slot
+SAVESP	equ	-2	; Offset from [BP] of my own SP slot
+OVRAseg	equ	-4	; Offset from [BP] of my own true return address segment
+OVRAoff	equ	-6	; Offset from [BP] of my own true return address offset
+OVIDoff	equ	-8	; Offset from [BP] of my own overlay index
+DISPLAY equ	-10	; Offset from [BP] of my lexical father frame
+ONLINK	equ	-12	; Offset from [BP] of the previous on-frame
+ONHEAD	equ	-14	; Offset from [BP] of the first on-unit for this frame
+;
+;	O/S Capability Definitions
+;
+multiuser	equ	8000h		; Multi-user capability bit
+multitasking	equ	4000h		; Multi-tasking capability bit.
+multisector	equ	2000h		; Multi-sector I/O capability bit.
+date..time	equ	1000h		; Date/time capability bit.
+networking	equ	0800h		; Networking capability bit.
+cmdname		equ	0400h		; Capability to find .CMD file name
+is8087		equ	0200h		; 8087 chip is present.
+em8087		equ	0100h		; 8087 emulator is present & used.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                             m o v e b y t e s			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	MOVEBYTES is a codemacro which generates code to move a string.
+;	MOVEBYTES logically replaces REP MOVSB except for altering the flags.
+;	MOVEBYTES takes 5 more bytes and is much faster for large CX.
+;	Breakeven is about CX = 3, depending on the particular chip.
+;
+;	MOVEBYTES first moves an integral number of words and then moves the
+;	(odd) last byte, if there is one.  Thus MOVEBYTES will run even faster
+;	if either or both the source and target start on a word boundary.
+;
+;	Assumptions:
+;
+;		CX	=	number of bytes to be moved
+;		DS:SI	->	source text address
+;		ES:DI	->	destination text address
+;
+codemacro	MOVEBYTES
+	db	0d1h			;	shr	cx,1
+	db	0e9h
+	db	0f3h			;	rep	movsw
+	db	0a5h
+	db	073h			;	jnc	even
+	db	001h
+	db	0a4h			;	movsb
+	endm				; even:
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                              p a d b y t e s			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	PADBYTES stores the contents of the AX register into the destination.
+;	PADBYTES exactly replaces REP STOSB except for altering the flags,
+;	under the assumption that register AH = register AL.
+;	PADBYTES takes 5 more bytes, and is much faster for large CX.
+;	Breakeven is about CX = 3, depending on the particular chip.
+;
+;	PADBYTES first stores an integral number of words, and then stores
+;	the (odd) last byte, if there is one.  Thus PADBYTES will run even
+;	faster if the target is on a word boundary.
+;	
+;	Assumptions:
+;
+;		CX	=	number of copies of (AL) to store.
+;		ES:DI	->	destination text address
+;
+codemacro	PADBYTES
+	db	0d1h			;	shr	cx,1
+	db	0e9h
+	db	0f3h			;	rep	stosw
+	db	0abh
+	db	073h			;	jnc	even
+	db	001h
+	db	0aah			;	stosb
+	endm				; even:
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                              p u s h r e g s			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	PUSHREGS pushes the registers DS,BP,AX,BX,CX,DX,SI,DI,ES in that order.
+;
+codemacro	PUSHREGS
+	db	01eh			;	push	ds
+	db	055h			;	push	bp
+	db	08bh			;	mov	bp,sp
+	db	0ech
+	db	050h			;	push	ax
+	db	053h			;	push	bx
+	db	051h			;	push	cx
+	db	052h			;	push	dx
+	db	056h			;	push	si
+	db	057h			;	push	di
+	db	006h			;	push	es
+	endm
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                               p o p r e g s				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	POPREGS pops the registers ES,DI,SI,DX,CX,BX,AX,BP,DS in that order.
+;
+codemacro	POPREGS
+	db	007h			;	pop	es
+	db	05fh			;	pop	di
+	db	05eh			;	pop	si
+	db	05ah			;	pop	dx
+	db	059h			;	pop	cx
+	db	05bh			;	pop	bx
+	db	058h			;	pop	ax
+	db	05dh			;	pop	bp
+	db	01fh			;	pop	ds
+	endm
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                   n i l				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	The NIL macro generates no code and accepts any argument types.
+;
+codemacro	NIL	dst:Ew
+	endm
+codemacro	NIL	dst:S(ES)
+	endm
+codemacro	NIL	dst:S(SS,DS)
+	endm
+codemacro	NIL	dst:Rw
+	endm
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                   p o p c   /   p u s h c   /   r e t c		      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	For large code model (C32 = 1), POPC, PUSHC, RETC generate POP, PUSH,
+;	and RET.  For small code model (C32 = 0), they generate nothing.
+;
+     if	C32	;--------------------------------------------------------------
+CALLC	equ	CALLF			; For medium and large models.	      ;
+JMPC	equ	JMPF							      ;
+POPC	equ	POP							      ;
+PUSHC	equ	PUSH							      ;
+RETC	equ	RETF							      ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+CALLC	equ	CALL							      ;
+JMPC	equ	JMP							      ;
+POPC	equ	NIL							      ;
+PUSHC	equ	NIL							      ;
+RETC	equ	RET							      ;
+     endif	;--------------------------------------------------------------
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                 l d x  /  l e x  /  p o p d  /  p u s h d		      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	For large data model (D32 = 1), LDX and LEX generate LDS and LES.
+;	For small data model (D32 = 0), LDX and LEX generate MOV.
+;
+;	For large data model (D32 = 1), POPD and PUSHD generate POP and PUSH.
+;	For small data model (D32 = 0), POPD and PUSHD generate nothing.
+;
+     if	D32	;--------------------------------------------------------------
+LDX	equ	LDS			; For compact and large models.	      ;
+LEX	equ	LES							      ;
+POPD	equ	POP							      ;
+PUSHD	equ	PUSH							      ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+LDX	equ	MOV			; For small and medium models	      ;
+LEX	equ	MOV							      ;
+POPD	equ	NIL							      ;
+PUSHD	equ	NIL							      ;
+     endif	;--------------------------------------------------------------
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                 f r a m e				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	FRAME creates a stack frame in accordance with the memory model in use.
+;	For small data model (D32 = 0), it does not "PUSH DS".
+;	For large data model (D32 = 1), it does.
+;
+codemacro	FRAME
+     if	D32	;--------------------------------------------------------------
+	db	01eh			;	push	ds		      ;
+     endif	;--------------------------------------------------------------
+	db	055h			;	push	bp
+	db	08bh			;	mov	bp,sp
+	db	0ech
+	endm
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                               u n f r a m e				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	UNFRAME release the stack frame created by FRAME above.
+; 	For small data model (D32 = 0), it does not do a POP DS before it does
+;	a near return (RET).  
+;	For large data model (D32 = 1), it does a POP DS.
+;	For large code model (C32 = 1), it does a far return (RETF).
+;
+codemacro	UNFRAME
+	db	05dh			;	pop	bp
+     if	D32	;--------------------------------------------------------------
+	db	01fh			;	pop	ds		      ;
+     endif	;--------------------------------------------------------------
+
+     if	C32	;--------------------------------------------------------------
+	db	0cbh			;	retf			      ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+	db	0c3h			;	ret			      ;
+     endif	;--------------------------------------------------------------
+	endm
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                   s y s				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	SYS loads the CL register (for CP/M) or AH register (for PCDOS) with
+;	the system call number specified as an argument and generates a call
+;	to the operating system.  The argument may be an immediate byte value,
+;	a byte register, or a byte memory address.  The ES register is
+;	preserved for small data model under CP/M.  (PCDOS does not alter it.)
+;
+codemacro	SYS	src:Db
+     if	CPM	;--------------------------------------------------------------
+	db	0b1h			;	mov	cl,---		      ;
+	db	src							      ;
+     if	D32 eq 0;--------------------------------------------------------     ;
+	db	06			;	push	es		;     ;
+     endif	;--------------------------------------------------------     ;
+	db	0cdh			;	call	cpm		      ;
+	db	0e0h							      ;
+     if	D32 eq 0;--------------------------------------------------------     ;
+	db	07			;	pop	es		;     ;
+     endif	;--------------------------------------------------------     ;
+     endif	;--------------------------------------------------------------
+     if PCDOS	;--------------------------------------------------------------
+	db	0b4h			;	mov	ah,---		      ;
+	db	src							      ;
+	db	0cdh			;	call	pcdos		      ;
+	db	021h							      ;
+     endif	;--------------------------------------------------------------
+	endm
+;
+codemacro	SYS	src:Rb
+	db	08ah			;	mov	[ah/cl],R
+     if	CPM	;--------------------------------------------------------------
+	dbit	5(19h),3(src(0))	;	mov	cl,R		      ;
+     if	D32 eq 0;--------------------------------------------------------     ;
+	db	06h			;	push	es		;     ;
+     endif	;--------------------------------------------------------     ;
+	db	0cdh			;	call	cpm		      ;
+	db	0e0h							      ;
+     if	D32 eq 0;--------------------------------------------------------     ;
+	db	07h			;	pop	es		;     ;
+     endif	;--------------------------------------------------------     ;
+     endif	;--------------------------------------------------------------
+     if PCDOS	;--------------------------------------------------------------
+	dbit	5(1ch),3(src(0))	;	mov	ah,R		      ;
+	db	0cdh			;	call	pcdos		      ;
+	db	021h							      ;
+     endif	;--------------------------------------------------------------
+	endm
+;
+codemacro	SYS	src:Eb
+	segfix	src
+	db	8ah			;	mov	---,q[bp]
+     if	CPM	;--------------------------------------------------------------
+	modrm	1,src			;	mov	cl,q[bp]	      ;
+     if	D32 eq 0;--------------------------------------------------------     ;
+	db	06h			;	push	es		;     ;
+     endif	;--------------------------------------------------------     ;
+	db	0cdh			;	call	cpm		      ;
+	db	0e0h							      ;
+     if	D32 eq 0;--------------------------------------------------------     ;
+	db	07h			;	pop	es		;     ;
+     endif	;--------------------------------------------------------     ;
+     endif	;--------------------------------------------------------------
+     if PCDOS	;--------------------------------------------------------------
+	modrm	4,src			;	mov	ah,q[bp]	      ;
+	db	0cdh			;	call	pcdos		      ;
+	db	021h							      ;
+     endif	;--------------------------------------------------------------
+	endm
+;
+	list
+	Name			'STARTUP'
+	Title			'STARTUP'
+	Pagesize		75
+;
+;	File name:		STARTUP.A86
+;
+;	Module name:		STARTUP
+;
+;	Entry parameters:	None.
+;
+;	Return value:		None.
+;
+;	Entry point		Arguments	Function
+;	-----------		---------	--------
+;	m.init			None.		Initialize the Common Lanugage
+;						Environment And Runtime (CLEAR).
+;
+;	Algorithm:		Initialize the stack.
+;				Initialize the command name drive.
+;				Relocate the segment references if O/S has not.
+;				Initialize the 8087 or 8087 emulator.
+;				Initialize the heap.
+;				Address the command tail and call _main.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-86 processor.
+;
+;	Authors:		Mike Lehman
+;				Herbert Yuen
+;				Bill Haygood
+;				Craig Franklin
+;				Bill Fitler
+;
+;	Date:			83-Apr-25 Monday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Jul-20	Haygood		Small model conditional assembly code.
+;	83-Oct-09	Craig Franklin	Fix bug in medium model.
+;	83-Oct-11	Haygood		Use stack. sseg for new LINK86 V1.2.
+;	83-Oct-15	Craig Franklin	Use CLI/STI instead of slower PUSHF/POPF.
+;	83-Oct-25	Craig Franklin	Initialize zero divide handler.
+;	83-Nov-04	Craig Franklin	Add call to m.init.8087
+;	83-Nov-07	Craig Franklin	Fix bug in m.error
+;	83-Nov-29	Craig Franklin	Modify for PCDOS.
+;	83-Dec-14	Craig Franklin	Change ss:.0 to ss:.9
+	eject
+;
+; Notes to the user.
+;
+; Only the most sophisticated user, with a thorough knowledge of the 8086,
+; CP/M, RASM86, LINK86, the .CMD file format, and the C calling conventions,
+; should attempt to write a startup routine.  These notes will explain how
+; this one was written, and why certain things are done in certain ways.
+;
+; First of all, DRI has a new policy for assembly language routines:  public
+; names in them should not conflict with user public names, whether from a
+; high level language or assembly language.  This is accomplished by having
+; a special in-house version of RASM86 which permits '.' (period) in an
+; identifier as any but the first character.  This startup routine uses that
+; convention.  When CLEAR, the Common Language Environment And Runtime is
+; extended to all DRI languages, all internal (compiler referenced) runtime
+; routines will contain a period, to avoid any conflict with a user name.
+;
+; This being the case, if you try to assemble this startup routine, you will
+; get assembly errors.  So you must alter your RASM86 by patching it.  This
+; is our way to insure that you really are a sophisticated user who knows what
+; you are doing, otherwise you would not go to all this trouble.  Using SID86,
+; read in RASM86.CMD.  The, using the SR (search) command, search for "$_?@".
+; The byte before these four characters should be a hex 04, and the byte after
+; should be a hex 00.  Change the hex 04 to a hex 05.  Change the hex 00 to a
+; hex 2E (ASCII period).  Now write RASM86.CMD back out to the disk.  Period is
+; now valid for the second and subsequent characters of an identifier.
+;
+; Now you can assemble this routine, or modify it.
+;
+; Note that the cseg is named 'cinit.' in lower case with a period in it.
+; LINK86 puts this particular cseg FIRST in the .CMD file.  This means that
+; if the compiler does not emit a MOD END (module end) record with a starting
+; address, and if no assembly routine contains END START, where START is a
+; label, then LINK86 will NOT put five bytes of JMPF (or JMP/NOP/NOP) in the
+; file to jump to the START address, and control will come to the initializer.
+; LINK86 also puts the dseg 'dinit.' first in the data area of the .CMD file.
+; You must use the RASM86 $nc option to assemble;  otherwise the names will be
+; CINIT. and DINIT., which LINK86 does not treat as special.
+;
+; This startup routine has been made modular for easy modification.
+; There are several calls:  initialize the stack, initialize the .CMD drive,
+; perform the segment relocation (could be a dummy routine in small model),
+; initialize the heap, initialize the zerodivide handler, and call _main which
+; parses the command line passed to it, opens the standard files (performing
+; I/O redirection), and calls main.
+;
+; This one startup routine is the common source for all memory models.  For
+; example, 'retc' assembles to 'ret' in small model and to 'retf' in large model.
+;	include	CLEAR			; Include CLEAR definitions.
+;
+     if C32 eq 0;--------------------------------------------------------------
+CGROUP	GROUP	cinit.							      ;
+     endif	;--------------------------------------------------------------
+;
+cinit.   cseg
+;
+;	extrn	m.init.stack:	near
+;	extrn	m.init.cmd:	near
+;	extrn	m.init.reloc:	near
+;	extrn	m.init.heap:	near
+;	extrn	m.init.hardware.error:near
+;	extrn	m.init.os:	near
+;	extrn	m.init.8087:	near
+	extrn	_main:		far
+	extrn	main:		far
+;
+	public  m.init
+	public	_exit
+	public	m.init.error
+	public	m.error
+	public	m.init.run	; Dummy entry point
+;
+m.init: call	m.init.stack	; Initialize the stack.
+	call	m.init.cmd	; Find .CMD drive for overlay manager.
+	call	m.init.reloc	; Eliminate the R command.
+	call	m.init.heap	; Initialize the heap.
+	call	m.init.hardware.error	; Initialize the zero divide handler.
+	call	m.init.os	; Find out which operating system.
+	call	m.init.8087	; Initialize the 8087 or 8087 emulator.
+				; Note: must do them in the above order.
+				; heap must follow reloc, some versions of
+				; reloc must follow os, and stack must be first.
+				; Calls are short, because segment relocation
+				; may not be done until m.init.reloc finishes.
+				; Calls can be short because all call targets
+				; use cinit. cseg in them.
+				;
+        mov     si,80h          ; Offset of command line
+        lodsb			; AL = length of command line.
+        xor     ah,ah
+        push    ax
+	pushd	ds		; Push DS if D32 (large data model)
+        push    si
+        callc   _main		; Call the C initializer
+;
+_exit:
+;
+if CPM	;----------------------------------------------------------------------
+	SYS	0		; Exit to O/S.
+endif	;----------------------------------------------------------------------
+;
+if PCDOS;----------------------------------------------------------------------
+	mov	ds,ss:.9	; DS = original DS from O/S.
+	push	word ptr .40h	; Push CS for INT 20
+	sub	ax,ax
+	push	ax		; Push IP (= 0) for INT 20
+	retf			; Return to PCDOS INT 20 instruction
+;
+endif	;----------------------------------------------------------------------
+	jmpc	main		; For debugging.
+;
+     if	D32	;--------------------------------------------------------------
+;
+m.init.error:			; Near call followed by fatal error message.
+	pop	dx
+	push	cs
+	push	dx
+;
+m.error:			; Far call followed by fatal error message.
+	pop	dx		; DS:DX -> error message text.
+	pop	ds
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+;
+m.init.error:			; Near call followed by fatal error message.
+;
+m.error:			; Near call followed by fatal error message.
+	pop	dx		; DS:DX -> error message text.
+	push	cs
+	pop	ds
+     endif	;--------------------------------------------------------------
+;
+	SYS	9		; BDOS function 9 prints the error message.
+	jmps	_exit		; Return to O/S.
+;
+m.init.run:			; Dummy entry point.  Remove to use old LINK86.
+	ret
+;
+;	Name			'MINITSTACK'
+;	Title			'M.INIT.STACK'
+;	Pagesize		75
+;
+;	File name:		MINITSTA.A86
+;
+;	Module name:		M.INIT.STACK
+;
+;	Entry parameters:	None.
+;
+;	Return value:		None.
+;
+;	Entry point		Arguments	Function
+;	-----------		---------	--------
+;
+;	m.init.stack		None.		Initialize the CLEAR stack.
+;
+;	_salloc			int n		Allocate n bytes on the stack.
+;
+;	Algorithm:		With interrupts disabled (to allow for the
+;				defective versions of the 8088), set SS:SP, SL.
+;
+;				Small model:	Set SS = DS.  Set SP from .6,
+;						the top of the DGROUP.
+;						SL. = HP. in minithea.a86.
+;
+;				Large model:	Set SS:SP from the base page.
+;						SL. is assembled in.
+;				
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Author:			Bill Haygood
+;
+;	Date:			83-Apr-25 Monday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-May-05	Craig Franklin	Allow RETF from .CMD to OS.
+;	83-May-05	Craig Franklin	Ignore stack size in BX.
+;	83-Jun-14	Craig Franklin	Delete reference to m.term.
+;	83-Jul-20	Haygood		Small model conditional assembly code.
+;	83-Oct-09	Craig Franklin	Fix bug in medium model.
+;	83-Oct-11	Haygood		Use stack. sseg for new LINK86 V1.2.
+;	83-Oct-15	Craig Franklin	Use CLI/STI instead of slower PUSHF/POPF.
+;	83-Oct-22	Craig Franklin	Add _salloc.
+;	83-Nov-15	Herbert Yuen	Use current status instead of sti.
+;	83-Dec-13	Craig Franklin	Set ss:.9 with DS for new convention.
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+     if C32 eq 0;--------------------------------------------------------------
+CGROUP	GROUP	cinit.							      ;
+     endif	;--------------------------------------------------------------
+;
+cinit.	cseg
+;
+;	extrn	m.init.error: near
+;
+	public	m.init.stack, _salloc
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                          M . I N I T . S T A C K			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+m.init.stack:
+	pop	ax			; Pop m.init return address.
+	pop	cx			; Pop system return address (this is a
+	pop	dx			; 32-bit address even in small model!).
+;
+;	Disable interrupts to set SS:SP.
+;
+	sub	bx,bx			; BX = 0
+     if	D32	;--------------------------------------------------------------
+	pushf
+	pop	si			; Save current status and flags.
+	cli				; Disable interrupts.
+	mov	ss,15h[bx]		; Setup stack segment register.
+	mov	sp,12h[bx]		; Set stack offset.
+					; SL. is already set by assembly.
+	push	si
+	popf				; Restore status and flags
+     else
+	push	ds			; SS = DS
+	pushf
+	pop	si			; Save current status and flags.
+	cli				; Disable interrupts.
+	pop	ss
+	mov	sp,6[bx]		; Initialize SP from base page.
+					; SL. is defined equ HP. (minithea.a86)
+	push	si
+	popf				; Restore status and flags
+     endif	;--------------------------------------------------------------
+	inc	sp			; Use all available allocated memory.
+	and	sp,0fffeh		; Align for iAPX-286 speed.
+	eject
+;
+;	Now construct the first stack frame.
+;
+	push	dx			; Push system return address (this is a
+	push	cx			; 32-bit address even in small model!).
+	push	bx			; No previous stack frame.
+	mov	bp,sp			; Establish the first stack frame.
+	lea	dx,-8[bp]		; First stack frame is 8 words long.
+	push	dx			; Set SAVESP
+	push	bx			; Set ENLINK = 0 (no previous environment)
+	push	bx			; Set ONLINK = 0 (no previous on frame)
+	push	bx			; Set ONFRAME = 0 (no on units in frame)
+	push	ax			; Push m.init return address
+     if	D32	;--------------------------------------------------------------
+	mov	ss:.0,ds		; For large model to load for big model
+     endif	;--------------------------------------------------------------
+	mov	ss:.9,ds		; All memory models can now use ss:.9!
+	ret				; Return.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                         _ s a l l o c				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+_salloc:				; Allocate N bytes on the stack.
+	pop	bx			; Pop return address.
+	popc	cx
+	pop	dx			; Pop N.
+	inc	dx			; Round N to even.
+	and	dl,0feh
+     if	D32	;--------------------------------------------------------------
+	mov	ax,seg SL.
+	mov	es,ax
+	mov	ax,dx			; AX = N.
+	add	ax,es:SL.		; AX = SL. + N
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+	mov	ax,dx			; AX = N.
+	add	ax,SL.			; AX = SL. + N
+     endif	;--------------------------------------------------------------
+	cmp	ax,sp			; Would stack overflow?
+	jbe	stackok			; No.
+	call	m.init.error		; Yes, fatal error.
+	db	'Stack overflow$'
+;
+stackok:
+	sub	sp,dx			; Allocate N bytes.
+	mov	ax,sp			; SS:AX -> N bytes on stack.
+	push	dx			; Push N.
+	pushc	cx			; Push return address
+	push	bx
+     if	D32	;--------------------------------------------------------------
+	mov	bx,ss			; BX = SS for large model return value.
+     endif	;--------------------------------------------------------------
+	retc				; Return BX:AX -> N bytes on stack.
+	eject
+     if	D32	;--------------------------------------------------------------
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  D A T A				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+DGROUP	GROUP	DATA
+;
+DATA	dseg
+;
+	public	SL.
+;
+SL.		dw	14		; Stack limit. Bias of 14 is for string routines.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *               S T A C K   S T O R A G E   A L L O C A T I O N	      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;
+stack.	sseg	word							      ;
+;									      ;
+	dw	0			; Old OSDS -- TEMPORARY.	      ;
+	rb	7							      ;
+OSDS	dw	0			; DS value from O/S.		      ;
+					; Large model -- ss:.9 is here.	      ;
+					; Small model -- ss:.9 is base page   ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+	dseg
+;	extrn	SL.:word
+     endif	;--------------------------------------------------------------
+;
+;	Name			'MINITCMD'
+;	Title			'M.INIT.CMD'
+;	Pagesize 75
+;
+;	File name:		MINITCMD.A86
+;
+;	Module name:		MINITCMD
+;
+;	Arguments:		None.
+;
+;	Return value:		_cmd_drive_bin		.CMD drive in binary
+;				_cmd_drive_asc		.CMD drive in ASCII
+;
+;	Function:		To determine the .CMD file drive.
+;
+;	Algorithm:		Look at location 50h in the base page.
+;				If it is non-zero, it is the binary .CMD drive.
+;				If it is zero, get the current drive from BDOS.
+;				In either case, add 'A' to get the ASCII drive.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Author:			Craig Franklin
+;
+;	Date:			83-Oct-16 Sunday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Nov-15	Herbert Yuen	Use SYS instead of int 224.
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+curdrive	equ	25		; BDOS call to return current drive.
+;
+     if C32 eq 0;--------------------------------------------------------------
+CGROUP	GROUP	cinit.							      ;
+     endif	;--------------------------------------------------------------
+;
+cinit.	cseg
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                             m . i n i t . c m d			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+	public	m.init.cmd
+;
+m.init.cmd:
+;
+	mov	al,.50h			; AL = CMD drive number (1 to 20)
+	dec	al			; AL = 0 to 19.
+	jns	m.init.cmd.drive	; CMD drive was 0 (current drive)
+	SYS	curdrive
+;
+m.init.cmd.drive:
+	mov	_cmd_drive_bin,al	; Store drive in binary.
+	add	al,'A'			; Convert it to ASCII.
+	mov	_cmd_drive_asc,al	; Store drive in ASCII.
+	ret				; Return.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  D A T A				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+DGROUP		GROUP	_CMD_DRIVE_BIN,_CMD_DRIVE_ASC
+;
+_CMD_DRIVE_BIN	dseg	common
+		public	_cmd_drive_bin
+_cmd_drive_bin	db	0
+;
+_CMD_DRIVE_ASC	dseg	common
+		public	_cmd_drive_asc
+_cmd_drive_asc	db	0
+;
+;	Name			'MINITRELOC'
+;	Title			'M.INIT.RELOC'
+;	Pagesize 		75
+;
+;	File name:		MINITREL.A86
+;
+;	Module name:		MINITRELOC
+;
+;	Entry parameters:	Stack exists.  DS:0 -> base page.
+;
+;	Return value:		None.
+;
+;	Errors:			Must use R command or LINK86 V1.2 with this O/S
+;
+;	Entry point		Arguments
+;	-----------		---------
+;	m.init.reloc		None.
+;
+;	m.init.reloc.buffer	Pointer to null terminated relocation buffer.
+;
+;	_v_reloc_segs		Pointer to null terminated relocation buffer.
+;				Pointer to array of 8 overlay segment bases.
+;				Byte containing valid target relocation groups.
+;
+;	Function:		Relocate segment references in a program/overlay.
+;				WARNING: program must be linked by LINK86 V1.2.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Author:			Bill Haygood
+;
+;	Date:			83-Apr-21 Thursday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Jul-19	Haygood		Small model conditional assembly code.
+;	83-Jul-30	Craig Franklin	Emit warning if unable to relocate.
+;	83-Aug-11	Craig Franklin	Add C callable entry point for vcode.
+;	83-Aug-30	Craig Franklin	Correctly relocate within an overlay.
+;	83-Sep-3	Craig Franklin	Use new Link86 Aux Group 4 relocation.
+;	83-Sep-13	Craig Franklin	Repackage for C runtime.
+;	83-Sep-23	Craig Franklin	Optimize, compensate for LINK86 bug.
+;	83-Sep-28	Craig Franklin	Add medium model to small and large.
+;	83-Sep-29	Craig Franklin	Save SI and DI for caller REG variables.
+;	83-Oct-15	Craig Franklin	Relocate only when loading a segment.
+;	83-Oct-18	Craig Franklin	Add entry point for m.init.run to call.
+;	83-Nov-4	Craig Franklin	Relocate even in small model (8087.sim)
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+cinit.	cseg
+;
+	public	m.init.reloc
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                       O F F S E T S   F R O M   B P			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+sidi		equ	-4		; Space to save SI and DI.
+loadsegs	equ	-6		; Mask of segments to relocate.
+overbases	equ	loadsegs -16	; 8 group bases from overlay header.
+reloc.return	equ	overbases-2	; Return address for reloc.buffer
+rootbases	equ	reloc.return-16	; 8 group bases from program base page.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                          m . i n i t . r e l o c			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+	public	m.init.reloc.buffer	; Called only by m.init.run
+;	extrn	m.init.run:	near
+;	extrn	m.init.error:	near
+;
+m.init.reloc:
+	mov	cx,seg m.init.reloc	; Get a relocatable segment reference.
+	jcxz	need_relocation		; Relocation done already ?
+	ret				; Yes, return to caller.
+;
+need_relocation:
+	mov	cx,.45			; CX = Aux Group 4 base address.
+	jcxz	old_LINK86		; If 0, must be LINK86 before V1.2
+;
+;	Relocate the root using Aux Group 4
+;
+	push	ds			; Save caller DS.
+	mov	ds,.45			; DS:SI-> AUX GROUP 4
+	sub	si,si
+	call	m.init.reloc.buffer	; Relocate the root.
+	pop	ds			; Restore caller DS.
+	ret				; Return to caller.
+;
+old_LINK86:
+	call	m.init.run		; Last resort: try to open .CMD file
+	ret
+;
+;	Apply a relocation buffer to the root
+;
+m.init.reloc.buffer:
+	push	bp			; Save caller BP.
+	mov	bp,sp			; Create new stack frame.
+	mov	ax,-1			; AX = ffffh = relocate all segments.
+	push	ax			; Pretend to save SI and DI
+	push	ax			; to synchronize with _v_reloc_segs.
+	push	ax			; Push loadsegs.
+	call	pushbase		; Push the group start addresses.
+	call	reloc.buffer		; Do it all in only one call.
+	mov	sp,bp			; Reset SP.
+	pop	bp			; Restore caller BP.
+	ret
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                               _ v_ r e l o c			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+BUFFER		equ	ARG1		; Offset from [BP] of buffer address.
+OVERBASE	equ	BUFFER  +2+2*D32; Offset from [BP] of overlay bases.
+LOADSEGS	equ	OVERBASE+2+2*D32; Offset from [BP] of valid targets.
+;
+	public	_v_reloc_segs
+;
+_v_reloc_segs:
+	pushd	ds			; Save caller DS
+	push	bp			; Save caller BP
+	mov	bp,sp			; Address argument.
+	push	si			; Save caller SI.
+	push	di			; Save caller DI.
+	push	word ptr LOADSEGS[bp]	; Push loadsegs for reloc.buffer.
+;
+;	Push the overlay group start addresses
+;
+	ldx	si,OVERBASE[bp]		; DS:SI -> overlay bases from caller.
+; TEMPORARY -- must always do this for large model.  Must TEMPORARILY do it
+; for small model until ES is always = SS.  Uncomment if/endif when true.
+;if	D32	;--------------------------------------------------------------
+	push	ss			; ES:DI -> stack frame overlay bases.
+	pop	es
+;endif	;--------------------------------------------------------------
+	lea	di,overbases[bp]
+	mov	sp,di			; Allocate space
+	mov	cx,8			; 8 groups
+	rep	movsw
+;
+;	Relocate the buffer
+;
+	ldx	si,BUFFER[bp]		; DS:SI -> relocation buffer
+	call	reloc.buffer		; Process the relocation buffer
+	lea	sp,0-4[bp]		; Reset SP.
+	pop	di			; Restore caller DI.
+	pop	si			; Restore caller SI.
+	pop	bp			; Restore caller BP.
+	popd	ds			; Restore caller DS.
+	retc
+	eject
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *	Subroutine to push the base page group start addresses		      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+pushbase:
+	pop	bx			; BX = return address.
+	mov	dx,ds			; DX = caller DS.
+	mov	ds,ss:.9		; DS from O/S, points to base page.
+	push	word ptr .45
+	push	word ptr .39
+	push	word ptr .33
+	push	word ptr .27
+	push	word ptr .21
+	push	word ptr .15
+	push	word ptr .09
+	push	word ptr .03
+;
+	mov	ds,dx			; DS = caller DS.
+	push	bx
+	ret				; Return
+	eject
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *         P R O C E S S   O N E   R E L O C A T I O N   B U F F E R	      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	Register usage:
+;
+;	(AX)	Temporary.
+;	(BX)	Byte offset in paragraph.
+;	(CX)	Shift count.
+;	(DX)	Segment base to add to memory.
+;	(DI)	Temporáry.
+;	(BP)	Frame pointer to address loadsegs byte and two base tables
+;	(DS:SI)	Relocation buffer entry.
+;	(ES:BX)	Memory word to relocate.
+;
+reloc.buffer:
+	call	pushbase		; Push the root base addresses.
+	push	si			; Save caller SI.
+	sub	ax,ax			; AX = 0 (for first LODSB).
+	sub	cx,cx			; CX = 0.
+	jmps	reloc.element.into	; Jump into loop.
+;
+reloc.element.loop:
+;
+;	Set DX = source group base
+;
+	sub	al,11h			; Convert 1-8/1-8 to 0-7/0-7.
+	mov	di,ax			; DI = AX.
+	and	di,0007h		; DI = source group number (0-7).
+	add	di,di			; DI = source group number * 2.
+	mov	dx,rootbases[di+bp]	; DX = source group base.
+;
+;	Set DI = target group base
+;
+	and	al,70h			; AX = target group number * 16.
+	shr	al,1			; AX = target group number *  8.
+	shr	al,1			; AX = target group number *  4.
+	shr	al,1			; AX = target group number *  2.
+	mov	di,ax			; DI = target group number *  2.
+	mov	di,overbases[di+bp]	; DI = target group base.
+;
+;	Set BL = byte with a 1 bit in it for the target group
+;
+	shr	al,1			; AX = target group number *  1.
+	mov	cl,al			; CX = target group number.
+	mov	bl,1			; BL = 1 for shift
+	shl	bl,cl			; BL = mask with 1 for target segment
+;
+;	Compute address of memory word to add DX to
+;
+	lodsw				; AX = paragraph offset of memory word
+	add	di,ax			; DI = segment base of memory word
+	mov	es,di			; ES = DI
+	sub	ax,ax			; Clear AX for LODSB.
+	lodsb				; AL = byte offset of memory word
+	test	bl,loadsegs[bp]		; OK to relocate target segment?
+	jz	reloc.element.into	; No.
+	mov	bx,ax			; BX = byte offset
+	add	es:[bx],dx		; Relocate memory word.
+;
+reloc.element.into:
+	lodsb				; AL = group number
+	test	al,0f0h			; End of buffer or fixup list ?
+	jnz	reloc.element.loop	; No.
+;
+	sub	ax,ax			; Assume return false (done).
+	pop	bx			; BX = input SI
+	sub	si,bx			; SI = number of bytes processed.
+	sub	si,129			; Full buffer processed?
+	jnz	reloc.element.return	; No,  return 0 (last buffer).
+	inc	ax			; Yes, return 1 (more to come).
+;
+reloc.element.return:
+if	D32 eq 0;--------------------------------------------------------------
+	push	ss			; Reset ES = SS for small model.
+	pop	es
+endif		;--------------------------------------------------------------
+	lea	sp,reloc.return[bp]	; Prepare to return.
+	ret				; Return.
+;
+;	Name			'MINITHEAP'
+;	Title			'M.INIT.HEAP'
+;	Pagesize 75
+;
+;	File name:		MINITHEA.A86
+;
+;	Module name:		MINITHEAP
+;
+;	Entry point		Arguments		Function
+;	-----------		---------		--------
+;
+;	m.init.heap		None.			Initialize the heap.
+;
+;	nbrk			None			Return the remaining
+;							heap size in bytes.
+;							Return (long)(HL.-HP.)
+;
+;	sbrk			int n			Extend the heap n bytes.
+;							If HP. + n <= HL.,
+;							set HP. = HP. + n
+;
+;	brk			char *p			If HP. <= p <= HL.,
+;							set HP. = p
+;
+;	Algorithm:	
+;
+;		m.init.heap:
+;
+;			Large:	Set HP. to point to ESEG.
+;				Set HL. to point to HP. + size of ESEG.
+;
+;			Small:	Set HP. to point to the heap at the bottom of
+;			the free area.  The stack is located at the top of the
+;			free area.  Equivalence HL. and SL., the stack limit.
+;
+;		nbrk:	Set R = HP. - HL., if D32 set R *= 16, return R.
+;
+;		sbrk:	Round request r to bytes or paragraphs, set R = P = HP.,
+;			set P = P+r, if P <= HL., set HP. = R and return R.
+;
+;		brk:	Compare pointer argument P to HP. and HL.
+;			If P >= HP. and P <= HL., set HP. = P, and
+;			return 0 (success), else return -1 (failure).
+;
+;		In all of the above routines, HP. and HL. are one word
+;		pointers into the heap whose units are paragraphs.
+;		When sbrk returns the old HP., it is converted to a
+;		pointer with offset 0 in the large model.
+;		This is so the caller can use a full 64K byte offset with it.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Author:			Herbert Yuen and Bill Haygood
+;
+;	Date:			83-Apr-11 Monday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	06-Jul-83	Craig Franklin	Add sbrk, brk entry points
+;					to correct 3 bugs in C versions.
+;	83-Jul-19	Haygood		Small model conditional assembly code.
+;	83-Oct-11	Haygood		Use heap. eseg for new LINK86 V1.2.
+;	83-Oct-11	Craig Franklin	Change retc to ret for C.  Add nbrk.
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+     if	D32 eq 0;--------------------------------------------------------------
+slack	equ	256			; Allow for additional stack.
+     endif	;--------------------------------------------------------------
+;
+cinit.	cseg
+;
+	public	m.init.heap, nbrk, sbrk, brk
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                           m . i n i t . h e a p			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+m.init.heap:
+     if	D32	;--------------------------------------------------------------
+	mov	ax,.0ch			; AX = low word  of Extra Segment offset
+	mov	dh,.0eh			; DH = high byte of Extra Segment offset.
+	add	ax,15			; Convert offset to paragraphs.
+	jnc	m.init.heap.nc		; Jump if not 64K boundary.
+	inc	dh			; 64K boundary.  Increment high order.
+;
+m.init.heap.nc:
+	and	al,0f0h			; Round bytes to paragraphs.
+	mov	cl,4			; CL = 4
+	shr	ax,cl			; Convert to paragraph number.
+	shl	dh,cl			; Convert to paragraph number.
+	add	ah,dh			; AX = paragraph number of heap size
+	add	ax,HP.			; AX = paragraph number of heap limit
+	mov	HL.,ax			; Set heap limit
+     else
+	push	ds			; ES = DS
+	pop	es
+	mov	ax,?MEMRY		; Set up heap for brk().
+	mov	HP.,ax
+     endif	;--------------------------------------------------------------
+	ret
+	eject
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  n b r k				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;LONG	nbrk()					/* CLEAR FUNCTION ***********/
+nbrk:
+     if	D32	;--------------------------------------------------------------
+	mov	ax,seg HP.		; AX = seg HP.
+	mov	es,ax			; Set ES = seg HP.
+	mov	ax,es:HL.		; AX = heap limit.
+	sub	ax,es:HP.		; AX = heap size = heap limit - heap base.
+	mov	bx,16
+	mul	bx			; Convert paragraphs to long int bytes.
+	mov	bx,dx			; In AX/BX.
+	retc				; Return.
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+	mov	ax,sp			; AX = heap limit.
+	sub	ax,slack		; Allow for additional stack.
+	sub	ax,HP.
+	sub	bx,bx			; Return long int bytes.
+	retc				; Return.
+     endif	;--------------------------------------------------------------
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  s b r k				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;BYTE *	sbrk(Num)				/* CLEAR FUNCTION ***********/
+sbrk:
+     if	D32	;--------------------------------------------------------------
+	mov	bx,sp			; Address argument
+	mov	dx,ss:2+2*C32[bx]	; Get allocation size in bytes.
+	add	dx,15			; Round up to next paragraph.
+	and	dl,0f0h
+	mov	cl,4			; CL = 4
+	shr	dx,cl			; Convert bytes to paragraphs
+	push	ds			; Save caller DS (large model)
+	mov	bx,seg HP.		; BX = DS of HP.
+	mov	ds,bx			; Set DS
+	mov	bx,HP.			; BX = old heap pointer (in paragraphs)
+	sub	ax,ax			; BX:AX = old HP.:0 = pointer to area
+	add	dx,bx			; DX = new heap pointer (in paragraphs)
+	cmp	dx,HL.			; Will it fit ?
+	ja	xbrk.fail		; No.  Fail.
+	mov	HP.,dx			; Update HP.
+	pop	ds			; Restore original DS.
+	retc				; Return BX:AX = old HP.:0.
+;
+xbrk.fail:				; Set AX = -1 (failure) and return.
+	mov	ax,-1			; AX = -1
+	mov	bx,ax
+	pop	ds			; Restore original DS.
+	retc				; Return.
+;
+     else
+	mov	bx,sp			; BX = SP
+	mov	bx,ss:2+2*C32[bx]	; Get argument.
+	inc	bx			; Round up to even byte boundary.
+	and	bl,0feh
+	mov	ax,HP.			; Get current heap pointer.
+	add	bx,ax			; Did wrap around occur ?
+	jc	xbrk.fail		; Yes.
+	jmps	xbrk
+;
+xbrk.fail:				; Set AX = -1 (failure) and return.
+	mov	ax,-1			; AX = -1
+	ret				; Return.
+     endif	;--------------------------------------------------------------
+	eject
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *				     b r k				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;BYTE *	brk(HeapPtr)				/* CLEAR FUNCTION ***********/
+brk:
+     if	D32	;--------------------------------------------------------------
+	mov	bx,sp			; BX = SP
+	push	ds			; Save caller DS (large model)
+	mov	ax,ss:2+2*C32[bx]	; AX = pointer offset
+	mov	bx,ss:4+2*C32[bx]	; BX = pointer segment
+	add	ax,15			; Round AX from bytes to paragraphs
+	jnc	brk.ok			; Carry ?
+	add	bx,1000h		; Yes, add 64K bytes to segment.
+;
+brk.ok:
+	mov	cl,4			; CL = 4
+	shr	ax,cl
+	add	ax,bx			; And add in segment
+	cmp	ax,HP.			; Below current heap pointer?
+	jb	xbrk.fail		; Yes.  Fail.
+	cmp	ax,HL.			; Above heap limit?
+	ja	xbrk.fail		; Yes.  Fail.
+	mov	HP.,ax			; Reset heap pointer
+	sub	ax,ax			; Succeed.
+	pop	ds			; Restore caller DS
+     else
+	mov	bx,sp
+	mov	bx,ss:2+2*C32[bx]	; Get parameter - brk address.
+	sub	ax,ax			; AX = 0 for success
+;
+xbrk:
+	mov	cx,sp			; CX = SP
+	sub	cx,slack		; Allow for additional stack.
+	cmp	bx,cx			; Below stack pointer ?
+	jae	xbrk.fail		; No.
+	cmp	bx,HP.			; Above heap pointer ?
+	jb	xbrk.fail		; No.
+	mov	HP.,bx			; Set new heap pointer.
+     endif	;--------------------------------------------------------------
+	retc				; Return.
+	eject
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  D A T A				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+	dseg
+;
+     if	D32	;--------------------------------------------------------------
+HP.	dw	seg ES.			; Heap pointer in paragraphs.	      ;
+HL.	dw	0			; Heap limit in paragraphs.	      ;
+;					; (Set by m.init.heap.)		      ;
+heap.	eseg								      ;
+;									      ;
+ES.	rw	0							      ;
+     else	; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ;
+	public	?MEMRY, HP., SL.					      ;
+?MEMRY	rw	1			; Initialized by LINK86.	      ;
+HP.	rw	1			; Heap pointer in bytes.	      ;
+SL.	equ	HP.			; Is also stack limit in bytes.	      ;
+     endif	;--------------------------------------------------------------
+;
+;	Name			'MINITERROR'
+;	Title			'M.INIT.ERROR'
+;	Pagesize 75
+;
+;	File name:		MINITER.A86
+;
+;	Module name:		MINITERROR
+;
+;	Entry parameters:	None.
+;
+;	Return value:		None.
+;
+;	Entry point		Arguments
+;	-----------		---------
+;
+;	m.init.hardware.error	None.
+;
+;	Function:		To initialize the runtime system integer zero
+;				divide error handler.
+;
+;	Algorithm:		Place the vector to the integer zero divide
+;				handler in absolute location 0:0.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Author:			Bill Haygood
+;
+;	Date:			83-Apr-07 Thursday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Jul-20	Haygood		Small model conditional assembly code.
+;	83-Oct-25	Craig Franklin	Abort with error message.
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+     if C32 eq 0;--------------------------------------------------------------
+CGROUP	GROUP	cinit.							      ;
+     endif	;--------------------------------------------------------------
+;
+cinit.	cseg
+;
+;	extrn	m.init.error: near
+;
+	public	m.init.hardware.error
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                   m . i n i t . h a r d w a r e . e r r o r		      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	Initialize the zero divide vector.
+;
+m.init.hardware.error:
+	push	ds			; Save original DS.
+	sub	bx,bx			; BX -> offset 0
+	mov	ds,bx			; DS = 0
+	mov	[bx],offset zerodiv	; Store the zero divide handler pointer
+	mov	2[bx],cs		;	at hardware locations 0 and 2.
+	pop	ds			; Restore original DS.
+	ret				; Return.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                               z e r o d i v				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+;	Integer zero divide handler.
+;
+zerodiv:
+	call	m.init.error		; Fatal error
+	db	'Zero divide error$'
+;
+;	Name			'M.INIT.OS'
+;	Title			'M.INIT.OS'
+;	Pagesize 75
+;
+;	File name:		MINITOS.A86
+;
+;	Module name:		M.INIT.OS
+;
+;	Arguments:		None.
+;
+;	Return value:		_os_version	= 0 (unrecognized OS)
+;						= 1 - 21h (non-CP/M OS's)
+;						= 22h (CP/M-86 v. 2.2)
+;						= 23h (MP/M-86 v. 3.0)
+;						= 24h (CCP/M-86 v. 3.0)
+;
+;				_os_ability	= inclusive OR of:
+;						8000h (multi-user)
+;						4000h (multi-tasking)
+;						2000h (multi-sect I/O)
+;						1000h (date/time)
+;						0800h (networking)
+;						0400h (cmd name available)
+;						0200h (8087 is present)
+;
+;	Entry Point		Arguments
+;	-----------		---------
+;	m.init.os		None
+;
+;	Function:		To determine the OS version and capabilities.
+;
+;	Algorithm:		Call the operating to obtain the OS
+;				type/version and the date/time, if present.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Attributes:		OSIF (O/S interface routine)
+;
+;	Author:			Bill Haygood
+;
+;	Date:			83-Apr-22 Friday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Jul-20	Haygood		Small model conditional assembly code.
+;	83-Jul-30	Craig Franklin	Always small model code for minitrel.
+;	83-Nov-29	Craig Franklin	Modify for PC-DOS.
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+version		equ	12		; BDOS call to return version.
+date.time	equ	105		; BDOS call to return date/time.
+;
+     if C32 eq 0;--------------------------------------------------------------
+CGROUP	GROUP	cinit.							      ;
+     endif	;--------------------------------------------------------------
+;
+cinit.	cseg
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                             m . i n i t . o s			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+	public	m.init.os
+;
+m.init.os:
+	if PCDOS;--------------------------------------------------------------
+	ret		; Proper attributes are assembled in.		      ;
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  D A T A				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+DGROUP		GROUP	_OS_ABILITY,_OS_VERSION
+;
+_OS_ABILITY	dseg	common
+		public	_os_ability
+_os_ability	dw	multisector+date..time
+;
+_OS_VERSION	dseg	common
+		public	_os_version
+_os_version	db	0
+;
+	endif	;--------------------------------------------------------------
+;
+	if CPM	;--------------------------------------------------------------
+;
+;	Determine whether the operating system supports date/time.
+;
+	pushd	ds			; Save caller DS.
+	pushd	ss
+	popd	ds
+	sub	sp,4			; Allocate space for date/time.
+	mov	dx,sp
+	SYS	date.time
+	add	sp,4			; Free date/time space.
+	popd	ds			; Restore caller DS.
+	inc	ax			; AX = -1? (No date/time).
+	jz	m.init.os.notime	; Yes.
+	sub	ax,ax			; AX = 0.
+	or	ax,date..time		; Set the date/time capability bit.
+;
+m.init.os.notime:
+;
+;	Get the O/S version
+;
+	push	ax
+	SYS	version			; Get the O/S version in BX
+	pop	ax
+	cmp	bx,22h			; Is the version less than 22h ?
+	jb	m.init.os.found		; Yes.
+;
+;	Determine whether the operating system supports networking.
+;
+	test	bh,2			; Is networking available ?
+	jz	m.init.os.nonet		; No.
+	or	ax,networking		; Yes, set its capability bit.
+	xor	bh,2			; Turn networking bit off.
+;
+m.init.os.nonet:
+	mov	cx,0022h		; Start with CP/M-86 BDOS version 2.2
+	or	ax,cmdname		; CP/M has cmdname capability
+	test	bh,bh			; CP/M-86 ?
+	jz	m.init.os.found		; Yes.
+	xor	ax,cmdname		; But MP/M and CCP/M do not.
+	inc	cl			; No, try for MP/M-86.
+	or	ax,multiuser+multitasking+multisector	; Yes, set MP/M-86 capabilities.
+	cmp	bh,1			; MP/M-86 ?
+	je	m.init.os.found		; Yes.
+	inc	cl			; Try for CCP/M-86 (CX = 24h).
+	xor	ax,multiuser		; CCP/M-86 lacks multiuser of MP/M.
+	cmp	bh,14h			; CCP/M-86 ?
+	je	m.init.os.found		; Yes.
+	sub	cx,cx			; Unrecognized operating system.
+;	jmps	m.init.os.found		; Join common code.
+;
+m.init.os.found:
+	mov	_os_version,cl		; Store O/S version byte.
+	mov	_os_ability,ax		; Store O/S ability word.
+	ret				; Return.
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  D A T A				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+DGROUP		GROUP	_OS_ABILITY,_OS_VERSION
+;
+_OS_ABILITY	dseg	common
+		public	_os_ability
+_os_ability	dw	0
+;
+_OS_VERSION	dseg	common
+		public	_os_version
+_os_version	db	0
+;
+	endif	;--------------------------------------------------------------
+;	Name			'M.INIT.8087'
+;	Title			'M.INIT.8087'
+;	Pagesize 75
+;
+;	File name:		MINIT87.A86
+;
+;	Module name:		M.INIT.8087
+;
+;	Entry parameters:	None.
+;
+;	Return value:		None.
+;
+;	Entry point		Arguments		Function
+;	-----------		---------		--------
+;
+;	m.init.8087		None.			Initialize 8087.
+;							Apply 8087 fixups.
+;
+;	m.term.8087		None.			Release 8087 emulator.
+;
+;	_v_reloc_8087		Overlay Code base.	Apply 8087 fixups
+;				Address of 384 byte	to overlay code.
+;				buffer of 8087 overlay
+;				code fixups, followed
+;				by a 385th byte of 0.
+;
+;	Function:		If the 8087 is present, initialize it.
+;				If the 8087 is not present, initialize the
+;				8087 simulator.
+;
+;	Algorithm:		Execute FNINIT to initialize the 8087.
+;				Execute FNSTCW to store the 8087 control word.
+;				If it equals 3ffh, the 8087 is present.
+;
+;			HARD	If Aux Group 3 base = 0, return.
+;				(No 8087 fixups, no 8087 emulator.)
+;
+;			HARD	Let N = bytes 0/1 of Aux Group 3.
+;				If N = 0, return.
+;				(No 8087 fixups, no 8087 emulator.)
+;
+;			SOFT	If byte 2 of Aux Group 3 is 0,
+;				initialize the 8087 emulator and return.
+;				(No 8087 fixups, 8087 emulator present.)
+;
+;			AUTO	Not HARD8087 or SOFT8087.  Must be AUTO8087.
+;		      ->HARD	If an 8087 is present, return.
+;
+;			AUTO	Otherwise, apply the 8087 fixups to change the
+;		      ->SOFT	8087 opcodes to the 8087 emulator interrupts,
+;				initialize the 8087 emulator, and return.
+;
+;	Source language:	DRI RASM-86
+;
+;	Target environment:	Intel iAPX-286 processor.
+;
+;	Author:			Bill Haygood, Craig Franklin, Paul Kimelman
+;
+;	Date:			83-May-03 Tuesday
+;
+;	Revision history:
+;
+;	When		Who		Why and what
+;	----		---		------------
+;	83-Jul-20	Haygood		Small model conditional assembly code.
+;	83-Oct-12	Craig Franklin	Apply auto8087 fixups from Aux Group 3.
+;	83-Oct-13	Craig Franklin	Apply auto8087 fixups for overlays.
+;			Paul Kimelman
+;	83-Oct-31	Craig Franklin	Debug AUTO8087.
+;	83-Dec-20	Craig Franklin	Add reentrant data area for 8087.SIM.
+	eject
+;	include	clear			; Get CLEAR definitions.
+;
+     if C32 eq 0;--------------------------------------------------------------
+CGROUP	GROUP	cinit.							      ;
+     endif	;--------------------------------------------------------------
+;
+cinit.	cseg
+;
+	public	m.init.8087, m.term.8087, _v_reloc_8087
+;
+;	extrn	m.init.error: near
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                           m . i n i t . 8 0 8 7			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+m.init.8087:
+;
+;	8087 Initialization
+;
+	HARD8087			; Force real 8087 op codes.
+;
+	fninit				; Initialize the 8087.
+	push	ds			; Save caller DS.
+	push	bp			; Save caller BP.
+	mov	bp,sp			; Create new stack frame.
+	sub	ax,ax			; AX = 0.
+	push	ax			; Allocate space for 8087 control word.
+	fnstcw	word ptr 0-2[bp]	; Store the 8087 control word.
+	mov	cx,3			; Need  24 cycles for fnstcw.
+loop1:	loop	loop1			; Takes 17 cycles per iteration.
+	pop	bx			; BX = 8087 control word.
+	or	bh,10h			; Set affine bit (+- INFINITY)
+					; IEEE standard chip would init affine.
+	cmp	bx,13ffh		; Control = 03ffh if 8087 is present.
+					; Preserve BX for 8087_present test.
+	jne	m.init.8087.not.here	; 8087 is not present.
+	or	_os_ability,is8087	; Remember that 8087 is present.
+	push	bx			; Prepare to load 8087 control word.
+	fldcw	word ptr 0-2[bp]	; Set affine mode.
+					; Other modes are already set: 03ffh = 
+					; 00 -- Round to nearest or even
+					; 11 -- 64 bits of precision
+					; ff -- all exceptions masked
+	pop	bx			; Release allocated stack word.
+;
+m.init.8087.not.here:
+	eject
+;
+;	HARD 8087 ?
+;
+	mov	dx,.3			; DX = Code Group base.
+	mov	cx,.39			; Does Aux Group 3 exist?
+	jcxz	m.init.8087.return	; No.  HARD8087 (or old LINK86).
+;
+;	SOFT 8087 ?
+;
+	mov	ds,cx			; DS:0 -> Aux Group 3.
+	sub	si,si			; DS:SI-> Aux Group 3.
+	lodsw				; AX = N = bytes 0/1 of Aux Group 3.
+	or	ax,ax			; Test N.
+	jz	m.init.8087.return	; N = 0.  No 8087 fixups, no 8087 emulator.
+	test	byte ptr [si],-1	; Byte 2 = 0?
+	jz	m.init.8087.soft	; Yes.  SOFT8087.
+					; No.   AUTO8087.
+;
+;	AUTO 8087
+;
+	cmp	bx,13ffh		; Was 8087 present?
+	jz	m.init.8087.return	; Yes.  AUTO8087 -> HARD8087.
+					; No.   AUTO8087 -> SOFT8087.
+;
+;	Convert HARD8087 to SOFT8087 by applying 8087 fixups.
+;
+	call	m.init.8087.fixup	; Apply 8087 fixups.
+					; DS:SI -> 8087 fixups
+					; DX = Code Group base.
+;
+;	SOFT 8087
+;
+m.init.8087.soft:
+;
+;	Test 8087 emulator lock
+;
+	sub	si,si			; DS:SI -> N.
+	mov	es,2[bp]		; ES -> base page (caller DS).
+	test	es:_os_ability,multitasking; Can other tasks interfere?
+	mov	es,si			; ES = 0 -> 8086 interrupt vector.
+	mov	di,200h			; ES:DI -> 14 interrupts for 8087 emulator.
+	jz	m.init.8087.stateok	; No.
+	test	es: word ptr [di],-1	; Is flag interrupt = 0?
+	jz	m.init.8087.error	; Yes, another 8087 emulator is active.
+;
+m.init.8087.stateok:
+	mov	ax,ds
+	add	ax,[si]			; AX = Aux Group 3 base + N paragraphs.
+	mov	ds,ax			; DS:SI -> 14 offsets.
+	add	ax,2+8			; AX = 8087 emulator code base.
+;					; (Allow 2 paragraphs for 14 offsets.)
+;					; (Allow 8 paragraphs for 80h initial bytes.)
+	mov	cx,14			; 14 8087 emulator interrupts.
+					; (1 flag + 1 error + 12 emulator)
+;
+m.init.8087.int.loop:
+	movsw				; Move offset at start of 8087 emulator.
+	stosw				; Store base of 8087 emulator.
+	loop	m.init.8087.int.loop	; Continue.
+	add	si,4			; SI -> 8087 emulator initial data.
+					; (14*2 = 28, 28+4 = 32 = 2 paragraphs.)
+	or	_os_ability,em8087	; Remember that 8087 emulator was used.
+
+;
+;	Now allocate the 8087.SIM global reentrant data area on the stack.
+;
+	push	ss			; ES = SS for small model.
+	pop	es
+	pop	bp			; Restore caller BP.
+	pop	ds			; Restore caller DS.
+	pop	bx			; BX = caller return address.
+	and	sp,0fff0h		; On a paragraph boundary.
+	sub	sp,80h			; Allocate area.
+	mov	di,sp			; ES:DI -> global reentrant data area.
+	mov	cx,40h			; CX = 80 bytes, in words.
+	rep	movsw			; Copy initial data.
+	mov	ax,sp			; Convert sp to paragraphs.
+	mov	cl,4
+	shr	ax,cl
+	mov	dx,ss			; And add to SS.
+	add	ax,dx			; AX = absolute paragraph of area.
+	mov	offset87,ax		; Tell 8087.SIM about it.
+	push	bx			; Push caller return address.
+	ret				; Return.
+;
+m.init.8087.return:
+     if	D32 eq 0;--------------------------------------------------------------
+	push	ss			; ES = SS for small model.
+	pop	es
+     endif	;--------------------------------------------------------------
+	pop	bp			; Restore caller BP.
+	pop	ds			; Restore caller DS.
+	ret				; Return.	
+;
+m.init.8087.error:
+	call	m.init.error		; Fatal error.  Do not return.
+	db	'Another 8087 emulator is active.  Program aborted.  '
+	db	'Run CLEAR87 to clear the lock.',0ah,0dh,'$'
+	eject
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                           m . t e r m . 8 0 8 7			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+m.term.8087:
+	test	_os_ability,em8087	; Was 8087 emulator used?
+	jz	m.term.return		; No.
+	sub	ax,ax			; AX = 0.
+	mov	es,ax			; ES = 0.  Address 8086 interrupts.
+	mov	es:word ptr .204h,-1	; Release 8087 emulator flag interrupt.
+;
+m.term.return:
+	retc				; Return.
+	eject
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                   _ v _ r e l o c _ 8 0 8 7    			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+_v_reloc_8087:
+	push	ds			; Save caller DS.
+	push	bp			; Save caller BP.
+	mov	bp,sp			; Create new stack frame.
+     if	D32	;--------------------------------------------------------------
+	mov	ax,seg _os_ability	; DS = segment of _os_ability.
+	mov	ds,ax
+     endif	;--------------------------------------------------------------
+	sub	ax,ax			; Return false if 8087 present.
+	test	_os_ability,is8087	; 8087 present?
+	jnz	_v_reloc_8087.return	; Yes, all done.
+	mov	dx,10+2*C32[bp]		; DX = Code Group base in overlay.
+	ldx	si,06+2*C32[bp]		; DS:SI -> 8087 fixups.
+	call	m.init.8087.fixup	; Do 8087 fixups.
+	sub	ax,ax			; Assume return false.
+	sub	si,8+2*C32[bp]		; SI = fixup bytes processed.
+	sub	si,385			; Full buffer processed?
+	jnz	_v_reloc_8087.return	; No, return false (last buffer).
+	inc	ax			; Yes, return true (more to come).
+;
+_v_reloc_8087.return:
+     if	D32 eq 0;--------------------------------------------------------------
+	push	ss			; ES = SS for small model.
+	pop	es
+     endif	;--------------------------------------------------------------
+	pop	bp			; Restore caller BP.
+	pop	ds			; Restore caller DS.
+	retc				; Return.
+	eject
+;
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                           8 0 8 7   f i x u p  			      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+m.init.8087.fixup:
+;
+;	Push 8087 fixups onto stack to create fixup table
+;
+;					; Flag	Name
+;					; ----	----
+	mov	ax,0+0000bh ! push ax	; B	wt	; 1 byte fixup (lo).
+	mov	ax,0-0aa32h ! push ax	; A	wst
+	mov	ax,0-05632h ! push ax	; 9	wss
+	mov	ax,0-06432h ! push ax	; 8	wes
+	mov	ax,0-04f32h ! push ax	; 7	wds
+	mov	ax,0-05d32h ! push ax	; 6	wcs
+	mov	ax,0-0aa3dh ! push ax	; 5	nst
+	mov	ax,0-0563dh ! push ax	; 4	nss
+	mov	ax,0-0643dh ! push ax	; 3	nes
+	mov	ax,0-04f3dh ! push ax	; 2	nds
+	mov	ax,0-05d3dh ! push ax	; 1	ncs
+;
+fixup	equ	-22-2-2			; 11 words + 1 word for 1 ret addr + 1
+;					; word for 1 base.
+	mov	cl,3			; Shift count.
+m.init.8087.loop:
+	lodsb				; AL = flag/byte in 2 hexits.
+	mov	bx,ax
+	and	bx,000fh		; ES:BX = code word to fix.	
+	mov	di,ax
+	and	di,00f0h
+	jz	m.init.8087.done	; Flag = 0, all done.
+	shr	di,cl			; DI = word offset into fixup table.
+	lodsw				; AX = relative code paragraph to fix.
+	add	ax,dx			; AX = absolute code paragraph to fix.
+	mov	es,ax			; ES = code paragraph to fix.
+	mov	ax,fixup[di+bp]		; AX = fixup value.
+	sub	es:[bx],ax		; Fix byte and words.
+	jmps	m.init.8087.loop	; Continue.
+;
+m.init.8087.done:
+	add	sp,-fixup-2-2		; Pop fixup table.
+	ret				; Return.
+	eject
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+; *									      *
+; *                                  D A T A				      *
+; *									      *
+; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+;
+DGROUP	GROUP	dinit.
+;
+dinit.	dseg
+;
+offset87 dw	0		; Offset from SS: of 8087 reentrant data area.
+;
+	dseg
+;
+;	extrn	_os_ability:word
+;
+	end
+

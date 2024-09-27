@@ -1,0 +1,122 @@
+1   Out of memory.  An allocate function returns NULL.
+2   Identifier not specified in type or storage class declaration.
+3   A public function definition is declared external.
+4   Parentheses () missing in function declaration.
+5   <identifier> ... not declared as a function.
+6   Two functions have the same name.
+7   Conflicting data type specified for a function.
+8   Data type not specified in variable declaration.
+9   Global variable declared with "register" storage class.
+10  Conflicting data type specified for a function.
+11  Conflicting storage class keywords in declaration.
+12  Conflicting data type keywords in declaration.
+13  Use the keywords "unsigned/long/short" with int only.
+14  Do not use the "unsigned long" type declaration.
+15  Conflicting type qualifiers "short/long" in declaration.
+16  Conflicting definitions for structure tag identifier.
+17  Identifier or left brace { missing in struct or union declaration.
+18  Storage class specified in struct or union declaration.
+19  Data type not specified in struct or union declaration.
+20  Use integer constants to define bit field width.
+21  Conflicting offsets or data type declared for <identifier>
+22  A comma or semicolon is missing.
+23  Internal compiler error.
+24  Do not use "static" or "extern" to declare parameters.
+25  Data type not specified in parameter declaration.
+26  Do not use abstract declarator in parameter declaration.
+27  <identifier> ... not specified as a parameter.
+28  <identifier> ... must be pointer or scalar.
+29  Identifier not specified in parameter declaration.
+30  A function body is specified as a parameter.
+31  Use integer constant expression to specify array bounds.
+32  <identifier> ... undefined for "goto" statement.
+33  <identifier> is declared, but not referenced.
+34  <identifier> ... struct or union referenced before declaration.
+35  Cannot initialize a function, local array or structure.
+36  Do not initialize variables with "extern".
+37  Array dimensions are extended automatically.
+38  Switch expression cannot be floating-point.
+39  Cannot read switch statement.  "case <const>" ignored.
+40  Constant in "case" construct cannot be floating-point.
+41  Cannot read switch statement.  "default:" ignored.
+42  Break location undefined.  No loop or switch.
+43  Continue location undefined.  No loop or switch.
+44  Identifier not specified in "goto" statement.
+45  Same statement label used more than once.
+46  <identifier> ... defined more than once.
+47  <identifier> ... Undefined identifier.
+48  Unexpected end-of-file (EOF) on input file.
+49  Comma or semicolon is missing.
+50  Right brace } is missing.
+51  Left brace { is missing.
+52  Right parenthesis ) is missing.
+53  Right square bracket ] is missing in array declaration.
+54  Function parameters cannot have parameters.
+55  Right parenthesis ) is missing.
+56  Do not list parameters in the function declaration.
+57  Comma or semicolon is missing.
+58  Right brace } is missing.
+59  Comma or semicolon is missing.
+60  Semicolon is missing.
+61  Too many initializers.  Right brace } is missing.
+62  Left parenthesis ( is missing.
+63  Keyword "while" is missing in "do...while" construct.
+64  Colon is missing.
+65  Internal compiler error.  Bad constant load.
+66  Internal compiler error.  Unknown pointer size.
+67  Use operators ++ and -- on "int/char/long/short" only.
+68  MESSAGE SPACE RESERVED
+69  MESSAGE SPACE RESERVED
+70  MESSAGE SPACE RESERVED
+71  Cannot return certain types of expressions.
+72  Internal compiler error.
+73  Use constant expression to initialize static and extern variables.
+74  MESSAGE SPACE RESERVED
+75  MESSAGE SPACE RESERVED
+76  Variable is not large enough to hold a pointer.
+77  Variable too large to hold initial value.
+78  Offsets into other segments not implemented.
+79  With pointers, only use operators:  +  -  ++  --
+80  MESSAGE SPACE RESERVED
+81  Invalid parameter expression.
+82  MESSAGE SPACE RESERVED
+83  Indirection for non-pointers is not portable.
+84  Cannot add arrays or structures.  Do not use + operator with arrays.
+85  MESSAGE SPACE RESERVED
+86  Use only += or -= operators wirh pointers.
+87  Colon is missing.
+88  Cannot add pointers.  Do not use + operator with pointers.
+89  Incorrect expression syntax.
+90  Comma or right parenthesis expected in parameter list.
+91  Expression is missing before [ operator.
+92  An lvalue is required before [ operator.
+93  Array or pointer required on left of [ operator.
+94  Array or pointer required.  Cannot subscript.
+95  Subscript is truncated to short int.
+96  Right square bracket ] is missing.
+97  Identifier missing on right of . operator.
+98  Expression missing on left of . operator.
+99  Left operand for . operator must be a struct.
+100 Non-local structure field assumed.
+101 Identifier missing on right of -> operator.
+102 Expression missing on left of -> operator.
+103 Left operand of -> operator must be a pointer.
+104 Non-local structure field assumed.
+105 Division by the constant 0.
+106 Operand types do not match.  Cannot coerce to compatible types.
+107 Cannot coerce operand type to double.
+108 Cannot coerce operand type to long.
+109 Cannot coerce operand type to unsigned.
+110 Indirection for non-pointers is not portable.
+111 & operator (address of) used redundantly.
+112 The & operator (address of) requires an lvalue.
+113 An lvalue is required with ++ or -- operator.
+114 Incorrect operand type for ++ or -- operator.
+115 Data type not specified for expression after sizeof operator.
+116 An lvalue is required with ++ or -- operator.
+117 Incorrect operand type for ++ or -- operator.
+118 Cannot apply & operator (address of) to register variables.
+119 Output file write error.  Disk is probably full.
+120 Not enough registers available for variables.
+121 Additional registers available for variables.
+
