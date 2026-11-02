@@ -4,6 +4,8 @@
 (  board: 0 1 2 )
 (         3 4 5 )
 (         6 7 8 )
+( Each search owns a DO loop; I survives recursive calls. )
+( Pass the last move explicitly; LEAVE ends only this search loop. )
 
 ( true global variables )
 VARIABLE board 9 ALLOT
@@ -15,8 +17,6 @@ VARIABLE alpha
 VARIABLE beta
 VARIABLE pieceMove
 VARIABLE val
-VARIABLE boardIndex
-VARIABLE score
 
 6 CONSTANT scoreWin
 5 CONSTANT scoreTie
@@ -39,32 +39,59 @@ board 6 + CONSTANT B6
 board 7 + CONSTANT B7
 board 8 + CONSTANT B8
 
-: LOOKFORWINNER
-    B4 C@
-    DUP pieceBlank <> IF
-        DUP B0 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
-        DUP B1 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
-        DUP B2 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
-        DUP B3 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
-    THEN
-    DROP
-
-    B0 C@
-    DUP pieceBlank <> IF
-        DUP B1 C@ = IF DUP B2 C@ = IF EXIT THEN THEN
-        DUP B3 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
-    THEN
-    DROP
-
-    B8 C@
-    DUP pieceBlank <> IF
-        DUP B2 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
-        DUP B6 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
-    THEN
-    DROP
-
-    pieceBlank
-    ;
+: WIN0 ( piece -- winner )
+  DUP B1 C@ = IF DUP B2 C@ = IF EXIT THEN THEN
+  DUP B3 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
+  DUP B4 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN1 ( piece -- winner )
+  DUP B0 C@ = IF DUP B2 C@ = IF EXIT THEN THEN
+  DUP B4 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN2 ( piece -- winner )
+  DUP B0 C@ = IF DUP B1 C@ = IF EXIT THEN THEN
+  DUP B5 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+  DUP B4 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN3 ( piece -- winner )
+  DUP B4 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
+  DUP B0 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN4 ( piece -- winner )
+  DUP B3 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
+  DUP B1 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
+  DUP B0 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+  DUP B2 C@ = IF DUP B6 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN5 ( piece -- winner )
+  DUP B3 C@ = IF DUP B4 C@ = IF EXIT THEN THEN
+  DUP B2 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN6 ( piece -- winner )
+  DUP B7 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+  DUP B0 C@ = IF DUP B3 C@ = IF EXIT THEN THEN
+  DUP B2 C@ = IF DUP B4 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN7 ( piece -- winner )
+  DUP B6 C@ = IF DUP B8 C@ = IF EXIT THEN THEN
+  DUP B1 C@ = IF DUP B4 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: WIN8 ( piece -- winner )
+  DUP B6 C@ = IF DUP B7 C@ = IF EXIT THEN THEN
+  DUP B2 C@ = IF DUP B5 C@ = IF EXIT THEN THEN
+  DUP B0 C@ = IF DUP B4 C@ = IF EXIT THEN THEN
+  DROP pieceBlank ;
+: LOOKFORWINNER ( lastMove -- winner )
+    DUP board + C@ SWAP
+    DUP 0 = IF DROP WIN0 EXIT THEN
+    DUP 1 = IF DROP WIN1 EXIT THEN
+    DUP 2 = IF DROP WIN2 EXIT THEN
+    DUP 3 = IF DROP WIN3 EXIT THEN
+    DUP 4 = IF DROP WIN4 EXIT THEN
+    DUP 5 = IF DROP WIN5 EXIT THEN
+    DUP 6 = IF DROP WIN6 EXIT THEN
+    DUP 7 = IF DROP WIN7 EXIT THEN
+    DROP WIN8 ;
 
 : dumpboard
     ." board: "
@@ -74,7 +101,7 @@ board 8 + CONSTANT B8
     CR
     ;
 
-: MINMAX ( stack: alpha beta )
+: MINMAX ( alpha beta lastMove -- alpha beta score )
     1 moves +!
     0 val !
 
@@ -87,6 +114,8 @@ board 8 + CONSTANT B8
             DROP
             recursionDepth @ 8 = IF scoreTie val ! THEN
         THEN
+    ELSE
+        DROP
     THEN
 
     0 val @ = IF
@@ -98,47 +127,46 @@ board 8 + CONSTANT B8
             pieceO pieceMove !
         THEN
 
-        beta !
-        alpha !
-        alpha @
-        beta @
-        0 boardIndex !
+        2DUP beta ! alpha !
 
-        BEGIN boardIndex @ 9 < WHILE
-            boardIndex @ board + C@ 0 = IF
-                pieceMove @ board boardIndex @ + C!
-                boardIndex @ pieceMove @ val @
+        9 0 DO
+            I board + DUP C@ 0 = IF
+                pieceMove @ OVER C!
+                pieceMove @ val @
                 1 recursionDepth +!
 
-                alpha @ beta @ RECURSE
+                alpha @ beta @ I RECURSE
 
                 -1 recursionDepth +!
-                score !
-                beta ! alpha ! val ! pieceMove ! boardIndex !
-                pieceBlank boardIndex @ board + C!
+                >R
+                beta ! alpha ! val ! pieceMove !
+                pieceBlank SWAP C!
+                R>
 
                 pieceX pieceMove @ = IF
-                    score @ val @ > IF
-                        score @ val !
-                        scoreWin val @ = val @ beta @ >= OR IF
-                            10 boardIndex !
+                    DUP val @ > IF
+                        DUP val !
+                        DUP scoreWin = OVER beta @ < 0= OR IF
+                            DROP LEAVE
                         ELSE
-                            val @ alpha @ > IF val @ alpha ! THEN
+                            DUP alpha @ > IF DUP alpha ! THEN
                         THEN
                     THEN
                 ELSE
-                    score @ val @ < IF
-                        score @ val !
-                        scoreLose val @ = val @ alpha @ <= OR IF
-                            10 boardIndex !
+                    DUP val @ < IF
+                        DUP val !
+                        DUP scoreLose = OVER alpha @ > 0= OR IF
+                            DROP LEAVE
                         ELSE
-                            val @ beta @ < IF val @ beta ! THEN
+                            DUP beta @ < IF DUP beta ! THEN
                         THEN
                     THEN
                 THEN
+                DROP
+            ELSE
+                DROP
             THEN
-            1 boardIndex +!
-        REPEAT
+        LOOP
     THEN
 
     val @
@@ -148,7 +176,8 @@ board 8 + CONSTANT B8
     pieceX
     OVER board + C!       ( make the move )
     0 recursionDepth !
-    scoreMin scoreMax MINMAX
+    DUP >R
+    scoreMin scoreMax R> MINMAX
 
     scoreTie <> IF ." there's a bug somewhere" THEN
     DROP DROP             ( remove alpha and beta )
@@ -173,6 +202,4 @@ board 8 + CONSTANT B8
 ;
 
 TTT
-
 BYE
-

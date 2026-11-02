@@ -2,26 +2,26 @@
 VARIABLE FLAGS SIZE ALLOT
 
 : SIEVE
+    0                           ( retain only the final pass count )
     10 0 DO
         FLAGS SIZE -1 FILL
-        0
+        DROP 0                  ( reset count for this pass )
         SIZE 0 DO
             I FLAGS + C@ IF
-                I I + 3 +
-                DUP I +
-                BEGIN DUP SIZE < WHILE
-                    DUP FLAGS + 0 SWAP C!
-                    OVER +
-                REPEAT
-                DROP DROP
-                1 +
+                I DUP + 3 + DUP I +  ( prime first-multiple )
+                DUP SIZE < IF
+                    SIZE SWAP DO
+                        0 I FLAGS + C!
+                        DUP
+                    +LOOP
+                ELSE
+                    DROP
                 THEN
+                DROP 1+
+            THEN
         LOOP
     LOOP
-    ." count of primes: " .
-    ;
+    ." count of primes: " . CR ;
 
 SIEVE
-
 BYE
-

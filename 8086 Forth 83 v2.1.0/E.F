@@ -1,37 +1,25 @@
 200 CONSTANT DIGITS
 VARIABLE ARRAY DIGITS ALLOT
-VARIABLE X
 
 : E
-    0 X !
     ARRAY DIGITS 1 FILL
     0 ARRAY C!
-    2 1 ARRAY + C!
+    2 ARRAY 1+ C!
 
-    DIGITS
-    BEGIN DUP 9 > WHILE
-        1 -
-        DUP
-        BEGIN DUP 0 <> WHILE
-            X @ OVER /MOD
-            ROT
-            ROT
-            OVER ARRAY + C!
-
-            SWAP
-            OVER 1 - ARRAY + C@
-            10 * +
-            X !
-            1 -
+    DIGITS 0                    ( high x )
+    BEGIN OVER 9 > WHILE
+        SWAP 1- SWAP OVER       ( high x n )
+        BEGIN DUP WHILE
+            DUP >R /MOD         ( high remainder quotient; save n )
+            SWAP R> SWAP OVER ARRAY + C!
+            1- DUP ARRAY + C@ 10 * ROT + SWAP
+                                ( high new-x n-1 )
         REPEAT
-        DROP
-        X ?
+        DROP                    ( high x )
+        DUP .                   ( retain x for the next outer iteration )
     REPEAT
-    CR
-    ." done" CR
-    ;
+    2DROP CR
+    ." done" CR ;
 
 E
-
 BYE
-
