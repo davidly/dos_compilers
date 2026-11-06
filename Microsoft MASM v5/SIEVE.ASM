@@ -48,18 +48,18 @@ true       equ 1
 false      equ 0
 loops      equ 10
 arraysize  equ 8190
+lastmarker equ 2729         ; i + prime > SIZE for larger i, so later primes mark nothing
 
 sieve_dataseg segment para public 'sievedata'
     assume ds: sieve_dataseg
 
+    ; flags must be at offset 0 so a flag's offset is its index i and prime - 1 is just 2 * ( i + 1 ).
+    ; allocate 8192 bytes even though 8191 will actually be used by the sieve algorithm
+    flags         db      arraysize + 1 dup( ? )
+    afterflags    db      0
     crlfmsg       db      13,10,0
     primesmsg     db      ' primes.',13,10,0
     ITER          dw      0
-    PKFLAGS       dd      0
-    
-    align 16	  ; allocate 8192 bytes even though 8191 will actually be used by the sieve algorithm
-    flags         db      arraysize + 1 dup( ? )
-    afterflags    db      0
 sieve_dataseg ends
 
 .code
@@ -67,67 +67,108 @@ sieve_dataseg ends
 start:
         mov      ax, sieve_dataseg
         mov      ds, ax
+        mov      es, ax
         cld                         ; good for the duration of this app
 
   iteragain:                        ; for ( iter = 1; iter <= 10; iter++ )
-        xor      dx, dx             ; count of primes found. count = 0;
 
         ; set all array entries to true:  for (i = 0; i <= SIZE; i++) flags[i] = TRUE;
 
-        mov      ax, ds
-        mov      es, ax
         mov      ax, 0101h
-        mov      di, offset flags
+        xor      di, di             ; offset flags
         mov      cx, ( arraysize + 2 ) / 2 ; 4096
         rep stosw
 
-        ; iterate through array entries and count primes
+        xor      ax, ax             ; al is 0 for both scanning and marking
+        mov      bp, ax             ; bp is the count of primes found. count = 0;
+        mov      dx, ax             ; dx is the offset of the next flag to examine
+        mov      si, offset afterflags ; end of the flags array
 
-        xor      bx, bx             ; bx is "i" in the outer for loop
+        ; iterate through the array entries that can mark multiples
 
   nextprime:                        ; for (i = 0; i <= SIZE; i++) {
+        mov      di, dx
+        mov      cx, lastmarker + 1
+        sub      cx, di             ; cx is the count of array entries to search (at most)
+        repe     scasb              ; scan the array for a non-zero flag
+        je       countrest          ; if one wasn't found, count the flags that can't mark anything
+
+        inc      bp                 ; count++
+        mov      dx, di             ; continue the scan after this prime
+        mov      bx, di
+        shl      bx, 1              ; bx = prime - 1 = 2 * ( i + 1 ). stosb adds the other 1
+        add      di, bx             ; di = offset of flags[ i + prime ], which is <= SIZE
         mov      cx, arraysize
-        sub      cx, bx             ; cx is the count of array entries to search (at most)
-        mov      si, cx             ; save for later
-        mov      di, offset flags
-        add      di, bx             ; where to start searching; offset bx in the array
-        mov      al, 1
-        repnz    scasb              ; scan the array for a 1
-        jnz      checknextiter      ; if a 1 wasn't found we're done with this iteration
-        sub      si, cx             ; si - cx == starting count - remaining count
-        add      bx, si             ; update bx with the offset of the 1 in the array
-        dec      bx                 ; cx is always decremented even when a 1 is found
+        sub      cx, bx             ; cx = afterflags - prime. both of a pair of marks fit if di < cx
+        jmp      short markcheck
 
-        mov      ax, 3              ; ax == prime = i + i + 3
-        add      ax, bx
-        add      ax, bx
-        mov      si, offset flags
-        add      si, bx             ; for (k = i + prime; k <= SIZE; k += prime)
+  markloop:                         ; for (k = i + prime; k <= SIZE; k += prime) flags[ k ] = false;
+        stosb
+        add      di, bx
+        stosb
+        add      di, bx
+        cmp      di, cx
+        jae      marktail
+        stosb
+        add      di, bx
+        stosb
+        add      di, bx
+        cmp      di, cx
+        jae      marktail
+        stosb
+        add      di, bx
+        stosb
+        add      di, bx
+        cmp      di, cx
+        jae      marktail
+        stosb
+        add      di, bx
+        stosb
+        add      di, bx
+  markcheck:
+        cmp      di, cx
+        jb       markloop
 
-        add      si, ax             ; k += prime
-        mov      di, offset afterFlags   ; handy place for this constant
-        cmp      si, di             ; is si >= offset afterFlags? (i.e. k <= size)
-        jge      inccount           ; redundant check to the one in the loop below but it saves a jump instruction in the loop
-        xor      cl, cl
+  marktail:                         ; at most one more multiple fits
+        cmp      di, si
+        jae      nextprime
+        stosb
+        jmp      nextprime
 
-  kloop:                        
-        mov      [ si ], cl         ; flags[ k ] = false. use cl for 0 because it's faster than an immediate
-        add      si, ax             ; k += prime
-        cmp      si, di             ; is si >= offset afterFlags? (i.e. k <= size)
-        jl       kloop
+  countrest:                        ; add up the remaining flags, which are each 0 or 1
+        mov      si, lastmarker + 1 ; even, so words are aligned. 13 * 21 * 10 words end at SIZE - 1
+        mov      dx, 13
 
-  inccount:
-        inc      dx                 ; count++
-        inc      bx		    ; i++
-        cmp      bx, arraysize	    ; check if i < SIZE
-        jnz      nextprime
+  countchunk:                       ; sum at most 210 words so neither byte of the total overflows
+        xor      bx, bx
+        mov      cx, 21
+
+  countloop:
+        rept     10
+        lodsw
+        add      bx, ax
+        endm
+        loop     countloop
+
+        xor      ah, ah
+        mov      al, bh
+        add      bp, ax
+        mov      bh, ah
+        add      bp, bx
+        dec      dx
+        jnz      countchunk
+
+        mov      al, [ si ]         ; flags[ SIZE ]
+        add      bp, ax
 
   checknextiter:                    ; are we done iterating loops times?
         inc      word ptr [ ITER ]
         cmp      word ptr [ ITER ], loops
-        jnz      iteragain	    ; really checking for 0..9, not 1..10
+        jz       showresult
+        jmp      iteragain          ; really checking for 0..9, not 1..10
 
-        mov      ax, dx
+  showresult:
+        mov      ax, bp
         call     printint
 
         call     printcrlf

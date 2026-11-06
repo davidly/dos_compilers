@@ -62,11 +62,10 @@ digits equ 200
 e_dataseg segment para public 'data'
     assume ds: e_dataseg
 
+    array         db      digits dup( ? ) ; at offset 0 so di is n in the inner loop
     crlfmsg       db      13,10,0
     donemsg       db      'done',13,10,0
-    
-    align 16
-    array         db      digits dup( ? )
+    highval       dw      digits
 e_dataseg ends
 
 .code
@@ -74,16 +73,14 @@ e_dataseg ends
 start:
         mov      ax, e_dataseg
         mov      ds, ax
+        mov      es, ax
 
         ; while n > 0 do begin
         ;     a[ n ] := 1;
         ;     n := n - 1;
         ; end;
 
-        mov      al, 1
-        mov      ah, 1
-        push     ds
-        pop      es
+        mov      ax, 0101h
         mov      di, offset array
         mov      cx, ( digits / 2 )
         cld
@@ -96,40 +93,114 @@ start:
         mov      byte ptr[ di + 1 ], 2
         mov      byte ptr[ di ], 0
 
-        ; register bx is n. register si is high. register di is x at the start of each inner loop
+        ; in the inner loop ax is x, bx is n - 1, cx is a multiple of n, dl collects the quotient,
+        ; bp is a mask, di points to a[ n ] (and is n) and si points to a[ n - 1 ]. dh is always 0.
+        ; There is no div: for n >= 2, x < 10n because a[ n - 1 ] < n - 1 and x DIV ( n + 1 ) < 10,
+        ; so the quotient and remainder come from 4 branchless subtract steps (60 cycles vs. 95 for div).
+        ; n = 1 is handled after the loop: x MOD 1 is 0 and x DIV 1 is x.
 
-        mov      si, DIGITS
+        xor      dx, dx
 
   outerloop:
-        dec      si               ; high := high - 1;
-        mov      bx, si           ; n := high;
-        xor      di, di           ; x := 0;
+        mov      di, [ highval ]
+        dec      di               ; high := high - 1;
+        mov      [ highval ], di  ; n := high;  di is also n since the array is at offset 0
+        lea      si, [ di - 1 ]
+        mov      bx, si           ; bx counts down n - 1 for the iterations for n = high down to 2
+        xor      ax, ax           ; x := 0;
+        std                       ; stosb and lodsb walk down the array
 
   innerloop:
-        mov      ax, di
-        div      bl               ; computes both x MOD n and x DIV n. ah has remainder, al has quotient
-
-        mov      byte ptr[ offset array + bx ], ah  ; a[ n ] := x MOD n;
-        xor      ah, ah
-        mov      di, ax           ; save the quotient in di.
-
-        mov      al, byte ptr [ offset array + bx - 1 ] ; load a[ n - 1 ]
-
-        add      ax, ax		  ; multiply ax by 10 via adding itself once + itself thrice
-        add      di, ax
-        add      ax, ax		  ; ax is now 4x
-        add      ax, ax		  ; ax is now 8x
-        add      di, ax		  ; x := 10 * a[ n - 1 ] + x DIV n;
-
+        mov      cx, di           ; x < 10n, so the quotient fits in 4 bits. compute it from 8n down to n
+        shl      cx, 1
+        shl      cx, 1
+        shl      cx, 1
+        mov      dl, dh           ; dh is always 0
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        shr      cx, 1
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        shr      cx, 1
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        shr      cx, 1
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        stosb                     ; a[ n ] := x MOD n;  the remainder is in al and ah is 0
+        lodsb                     ; load a[ n - 1 ]
+        shl      ax, 1            ; x := 10 * a[ n - 1 ] + x DIV n;
+        mov      cx, ax
+        shl      ax, 1
+        shl      ax, 1
+        add      ax, cx
+        add      ax, 15           ; dl has 15 - x DIV n
+        sub      ax, dx
         dec      bx               ; n := n - 1;
-        jnz      innerloop        ; if n isn't 0 then loop again
+        jz       innerdone        ; if n is 1 the loop is done
+        mov      cx, di           ; x < 10n, so the quotient fits in 4 bits. compute it from 8n down to n
+        shl      cx, 1
+        shl      cx, 1
+        shl      cx, 1
+        mov      dl, dh           ; dh is always 0
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        shr      cx, 1
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        shr      cx, 1
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        shr      cx, 1
+        sub      ax, cx           ; try to subtract this multiple of n
+        sbb      bp, bp           ; bp = -1 if it didn't fit, else 0
+        adc      dl, dl           ; collect the inverted quotient bit
+        and      bp, cx
+        add      ax, bp           ; add it back if it didn't fit
+        stosb                     ; a[ n ] := x MOD n;  the remainder is in al and ah is 0
+        lodsb                     ; load a[ n - 1 ]
+        shl      ax, 1            ; x := 10 * a[ n - 1 ] + x DIV n;
+        mov      cx, ax
+        shl      ax, 1
+        shl      ax, 1
+        add      ax, cx
+        add      ax, 15           ; dl has 15 - x DIV n
+        sub      ax, dx
+        dec      bx               ; n := n - 1;
+        jz       innerdone        ; if n is 1 the loop is done
+        jmp      innerloop        ; too far for a short conditional jump
 
-        mov      ax, di
+  innerdone:
+        cld
+        mov      byte ptr [ array + 1 ], 0 ; a[ 1 ] := x MOD 1;  x := 10 * a[ 0 ] + x DIV 1 is just x
         call     printint         ; show the next digit(s) of e
-        
-        cmp      si, 9            ; while high > 9 do begin (re-written as a do until loop)
-        jnz      outerloop
 
+        cmp      word ptr [ highval ], 9 ; while high > 9 do begin (re-written as a do until loop)
+        jz       alldone
+        jmp      outerloop
+
+  alldone:
         call     printcrlf
         mov      dx, offset donemsg
         call     printstring

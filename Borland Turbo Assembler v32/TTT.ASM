@@ -7,6 +7,22 @@
 ;   0 1 2
 ;   3 4 5
 ;   6 7 8
+;
+; The board is kept in registers as bitmasks where bit n is board position n:
+;   bx  the complement of the X positions. X has a winning line L when ( bx AND L ) is 0
+;   di  the empty positions. O has a winning line L when ( ( di OR NOT bx ) AND L ) is 0
+; Each position has its own entry point for min (after X moved there) and max (after O moved
+; there) that checks just the lines through that position for a win, then jumps to the shared
+; loop. The loops over the 9 possible moves are unrolled.
+;
+; other registers:
+;   cl  alpha. changed by max, so max saves and restores cx
+;   ch  max's value
+;   dl  beta. changed by min, so min saves and restores dx
+;   dh  min's value
+;   si  global move count
+;   bp  the bit for the move being made or unmade
+;   al  score returned by min and max
 
 dosseg
 .model small
@@ -24,17 +40,6 @@ min_score           equ     2    ; minimum score
 win_score           equ     6    ; winning score
 tie_score           equ     5    ; tie score
 lose_score          equ     4    ; losing score
-x_piece             equ     1    
-o_piece             equ     2    
-blank_piece         equ     0
-
-; arguments to minmax relative to bp/sp
-; space between locals and arguments:
-; 0-1  2 or 4 bytes for return pc if minmax is near or far (it's near here)
-; 2-3  2 bytes to save BP
-
-alpha_offset   equ   4
-beta_offset    equ   6
 
 dataseg segment para public 'data'
     assume ds: dataseg
@@ -45,22 +50,142 @@ dataseg segment para public 'data'
     zeroitersmsg  db      'iterations argument must be 1..32767',13,10,0
     movesmsg      db      'moves: ',0
     commaspmsg    db      ', ',0
-    
-    align 16
-    board         db      0,0,0,0,0,0,0,0,0
-    
+
     align 2
     iters         dw      0        ; iterations of running the app so far
     totaliters    dw      0        ; # of iterations to run in total
-    
+
     align 4
     scratchpad    dd      0
     starttime     dd      0
     result        dd      0
-    
-    align 2
-    winprocs      dw      proc0, proc1, proc2, proc3, proc4, proc5, proc6, proc7, proc8
 dataseg ends
+
+; MASM wants one blank-separated list, so these are the winning lines as bitmasks
+
+row0    equ     007h
+row1    equ     038h
+row2    equ     1c0h
+col0    equ     049h
+col1    equ     092h
+col2    equ     124h
+diag0   equ     111h
+diag2   equ     054h
+
+
+; X makes the first move at position sq, then O's best reply is found
+
+runmm macro sq
+        mov       bx, not ( 1 shl sq )     ; X is only at sq
+        mov       di, 1ffh xor ( 1 shl sq ) ; everything else is empty
+        mov       cl, min_score             ; alpha
+        mov       dl, max_score             ; beta
+        call      min_&sq
+endm
+
+; min is called after X moved at sq. If X won, return win_score. Otherwise find O's best move.
+
+minentry macro sq, l1, l2, l3, l4
+        local    xwins
+min_&sq:
+        inc      si                 ; increment global move count
+        irp      line, <l1, l2, l3, l4>
+        ifnb     <line>
+        test     bx, line
+        jz       xwins
+        endif
+        endm
+        jmp      min_loop
+  xwins:
+        mov      al, win_score
+        ret
+endm
+
+; max is called after O moved at sq. If O won, return lose_score. Otherwise find X's best move.
+
+maxentry macro sq, l1, l2, l3, l4
+        local    owins
+max_&sq:
+        inc      si                 ; increment global move count
+        mov      ax, bx
+        not      ax
+        or       ax, di             ; ax has a 0 bit for each O
+        irp      line, <l1, l2, l3, l4>
+        ifnb     <line>
+        test     ax, line
+        jz       owins
+        endif
+        endm
+        jmp      max_loop
+  owins:
+        mov      al, lose_score
+        ret
+endm
+
+; try O at position sq if it's empty. retlabel pops dx and returns al.
+; if stublabel is given, a retlabel stub is placed after this move's code.
+
+minmove macro sq, retlabel, stublabel
+        local    next
+        test     di, 1 shl sq
+        jz       next
+        mov      bp, 1 shl sq
+        xor      di, bp             ; O moves at sq
+        call     max_&sq
+        mov      bp, 1 shl sq
+        xor      di, bp             ; restore the board
+
+        cmp      al, lose_score     ; can't do better than losing
+        je       retlabel
+        cmp      al, dh             ; compare score with value
+        jge      next
+        cmp      al, cl             ; compare score with alpha
+        jle      retlabel           ; alpha pruning
+        mov      dh, al             ; update value with score
+        cmp      al, dl             ; compare value with beta
+        jge      next
+        mov      dl, al             ; update beta with value
+        ifnb     <stublabel>
+        jmp      short next
+  stublabel:
+        pop      dx
+        ret
+        endif
+  next:
+endm
+
+; try X at position sq if it's empty. retlabel pops cx and returns al.
+
+maxmove macro sq, retlabel, stublabel
+        local    next
+        test     di, 1 shl sq
+        jz       next
+        mov      bp, 1 shl sq
+        xor      di, bp             ; X moves at sq
+        xor      bx, bp
+        call     min_&sq
+        mov      bp, 1 shl sq
+        xor      di, bp             ; restore the board
+        xor      bx, bp
+
+        cmp      al, win_score      ; can't do better than winning
+        je       retlabel
+        cmp      al, ch             ; compare score with value
+        jle      next
+        cmp      al, dl             ; compare score with beta
+        jge      retlabel           ; beta pruning
+        mov      ch, al             ; update value with score
+        cmp      al, cl             ; compare value with alpha
+        jle      next
+        mov      cl, al             ; update alpha with value
+        ifnb     <stublabel>
+        jmp      short next
+  stublabel:
+        pop      cx
+        ret
+        endif
+  next:
+endm
 
 .code
 
@@ -96,21 +221,14 @@ done_with_arguments:
         mov      word ptr [ starttime ], dx
         mov      word ptr [ starttime + 2 ], cx
 
-        lea      bx, [ board ]      ; global board pointer
-        xor      ax, ax             ; make sure ah is 0
-        mov      dx, ax             ; make sure dh is 0
-
 again:
         xor      si, si             ; zero the global move count so it doesn't overflow
 
         ; run for the 3 unique first moves
 
-        mov      ax, 0
-        call     runmm
-        mov      ax, 1
-        call     runmm
-        mov      ax, 4
-        call     runmm
+        runmm    0
+        runmm    1
+        runmm    4
 
         inc      word ptr [ iters ]
         mov      ax, [ totaliters ]
@@ -142,271 +260,67 @@ again:
         int      21h
 ;start endp
 
-runmm proc near
-        ; make the first move
-        mov       di, ax
-        push      di
-        mov       byte ptr [ bx + di ], x_piece
+minmax proc near
+        minentry 0, row0, col0, diag0
+        minentry 1, row0, col1
+        minentry 2, row0, col2, diag2
+        minentry 3, row1, col0
+        minentry 4, row1, col1, diag0, diag2
+        minentry 5, row1, col2
+        minentry 6, row2, col0, diag2
+        minentry 7, row2, col1
+        minentry 8, row2, col2, diag0
 
-        ; alpha and beta passed on the stack
-        ; current move in di
-        ; current value in dl
-        ; current depth in cx
-        ; global move count in si
-        ; global board pointer in bx
-        ; always 0 in ah and dh
-
-        xor       cx, cx            ; depth in cx
-        mov       al, max_score     ; pushing constants didn't start until the 80186
-        push      ax                ; beta
-        mov       al, min_score
-        push      ax                ; alpha
-
-        call      minmax_min
-
-        ; restore the board at the first move position
-
-        pop       di
-        mov       byte ptr [ bx + di ], blank_piece
-
-        ret
-runmm endp
-
-minmax_max proc near
-        inc      si                 ; increment global move count
-
-        cmp      cl, 4
-        jl       short _max_no_winner_check
-
-        shl      di, 1
-        mov      al, o_piece
-        call     word ptr [ offset winprocs + di ]
-
-        cmp      al, o_piece
-        mov      al, lose_score
-        je       short _max_just_return_al
-
-  _max_no_winner_check:
-        push     bp
-        mov      bp, sp             ; set bp to the stack location
-
-        push     dx                 ; save caller's value
-        mov      dl, min_score      ; dx has value
-        mov      di, -1             ; di has the move 0..8
-        inc      cx                 ; increment global depth
-
-  _max_loop:
-        cmp      di, 8
-        je       short _max_load_value_return
-        inc      di
-
-        cmp      byte ptr [ bx + di ], 0
-        jnz      short _max_loop
-
-        push     di
-        mov      byte ptr [ bx + di ], x_piece
-
-        push     [ bp + beta_offset ]
-        push     [ bp + alpha_offset ]
-
-        call     minmax_min
-
-        pop      di
-        mov      byte ptr [ bx + di ], 0
-
-        cmp      al, win_score                       ; can't do better than winning
-        je       short _max_restore_value
-
-        cmp      ax, dx                              ; compare score with value
-        jle      short _max_loop
-
-        cmp      al, [ bp + beta_offset ]            ; compare value with beta
-        jge      short _max_restore_value            ; beta pruning
-
-        mov      dx, ax                              ; update value with score
-        cmp      al, [ bp + alpha_offset ]           ; compare value with alpha
-        jle      short _max_loop
-
-        mov      [ bp + alpha_offset ], al           ; update alpha with value
-        jmp      short _max_loop
-
-  _max_load_value_return:
-        mov      ax, dx
-
-  _max_restore_value:
-        dec      cx
-        pop      dx                 ; restore caller's value
-        pop      bp
-
-  _max_just_return_al:
-        ret      4                  ; cleanup stack space used for arguments
-minmax_max endp
-
-minmax_min proc near
-        inc      si                 ; increment global move count
-
-        cmp      cl, 4
-        jl       short _min_no_winner_check
-
-        shl      di, 1
-        mov      al, x_piece
-        call     word ptr [ offset winprocs + di ]
-
-        cmp      al, x_piece
-        mov      al, win_score
-        je       short _min_just_return_al
-
-        cmp      cl, 8
+  min_tie:
         mov      al, tie_score
-        je       short _min_just_return_al
-
-  _min_no_winner_check:
-        push     bp
-        mov      bp, sp             ; set bp to the stack location
-
-        push     dx                 ; save caller's value
-        mov      dl, max_score      ; dx has value
-        mov      di, -1             ; di has the move 0..8 
-        inc      cx                 ; increment global depth
-
-  _min_loop:
-        cmp      di, 8
-        je       short _min_load_value_return
-        inc      di
-
-        cmp      byte ptr [ bx + di ], 0
-        jne      short _min_loop
-
-        push     di
-        mov      byte ptr [ bx + di ], o_piece
-
-        push     [ bp + beta_offset ]
-        push     [ bp + alpha_offset ]
-
-        call     minmax_max
-
-        pop      di
-        mov      byte ptr [ bx + di ], 0
-
-        cmp      al, lose_score                      ; can't do better than losing
-        je       short _min_restore_value
-
-        cmp      al, dl                              ; compare score with value
-        jge      short _min_loop
-
-        cmp      al, [ bp + alpha_offset ]           ; compare value with alpha
-        jle      short _min_restore_value            ; alpha pruning
-
-        mov      dx, ax                              ; update value with score
-        cmp      al, [ bp + beta_offset ]            ; compare value with beta
-        jge      short _min_loop
-
-        mov      [ bp + beta_offset ], al            ; update beta with value
-        jmp      short _min_loop
-
-  _min_load_value_return:
-        mov      ax, dx
-
-  _min_restore_value:
-        dec      cx
-        pop      dx                 ; restore caller's value
-        pop      bp
-
-  _min_just_return_al:
-        ret      4                  ; cleanup stack space used for arguments
-minmax_min endp
-
-IFDEF WinnerProc
-
-; winner is no longer used since function pointers with the most recent move in ax are much faster
-
-winner proc near
-        xor      al, al
-        mov      al, [ bx ]
-        cmp      al, 0
-        je       _win_check_3
-
-        cmp      al, [ bx + 1 ]
-        jne      _win_check_0_b
-        cmp      al, [ bx + 2 ]
-        jne      _win_check_0_b
         ret
 
-  _win_check_0_b:
-        cmp      al, [ bx + 3 ]
-        jne      _win_check_3
-        cmp      al, [ bx + 6 ]
-        jne      _win_check_3
+  min_loop:
+        test     di, di             ; if the board is full it's a tie
+        jz       min_tie
+        push     dx                 ; save caller's beta and value
+        mov      dh, max_score      ; dh has value
+        minmove  0, min_ret_a
+        minmove  1, min_ret_a, min_ret_a
+        minmove  2, min_ret_a
+        minmove  3, min_ret_b
+        minmove  4, min_ret_b, min_ret_b
+        minmove  5, min_ret_b
+        minmove  6, min_ret_c
+        minmove  7, min_ret_c
+        minmove  8, min_ret_c
+        mov      al, dh             ; return value
+  min_ret_c:
+        pop      dx
         ret
 
-  _win_check_3:
-        mov      al, [ bx + 3 ]
-        cmp      al, 0
-        je       _win_check_6
+        maxentry 0, row0, col0, diag0
+        maxentry 1, row0, col1
+        maxentry 2, row0, col2, diag2
+        maxentry 3, row1, col0
+        maxentry 4, row1, col1, diag0, diag2
+        maxentry 5, row1, col2
+        maxentry 6, row2, col0, diag2
+        maxentry 7, row2, col1
+        maxentry 8, row2, col2, diag0
 
-        cmp      al, [ bx + 4 ]
-        jne      _win_check_6
-        cmp      al, [ bx + 5 ]
-        jne      _win_check_6
+  max_loop:
+        push     cx                 ; save caller's alpha and value
+        mov      ch, min_score      ; ch has value
+        maxmove  0, max_ret_a
+        maxmove  1, max_ret_a, max_ret_a
+        maxmove  2, max_ret_a
+        maxmove  3, max_ret_b
+        maxmove  4, max_ret_b, max_ret_b
+        maxmove  5, max_ret_b
+        maxmove  6, max_ret_c
+        maxmove  7, max_ret_c
+        maxmove  8, max_ret_c
+        mov      al, ch             ; return value
+  max_ret_c:
+        pop      cx
         ret
-
-  _win_check_6:
-        mov      al, [ bx + 6 ]
-        cmp      al, 0
-        je       _win_check_1
-
-        cmp      al, [ bx + 7 ]
-        jne      _win_check_1
-        cmp      al, [ bx + 8 ]
-        jne      _win_check_1
-        ret
-
-  _win_check_1:
-        mov      al, [ bx + 1 ]
-        cmp      al, 0
-        je       _win_check_2
-
-        cmp      al, [ bx + 4 ]
-        jne      _win_check_2
-        cmp      al, [ bx + 7 ]
-        jne      _win_check_2
-        ret
-        
-  _win_check_2:
-        mov      al, [ bx + 2 ]
-        cmp      al, 0
-        je       _win_check_4
-
-        cmp      al, [ bx + 5 ]
-        jne      _win_check_4
-        cmp      al, [ bx + 8 ]
-        jne      _win_check_4
-        ret
-
-  _win_check_4:
-        mov     al, [ bx + 4 ]
-        cmp     al, 0
-        je      _win_return
-
-        cmp     al, [ bx ]
-        jne     _win_check_4_b
-        cmp     al, [ bx  + 8 ]
-        jne     _win_check_4_b
-        ret
-
-  _win_check_4_b:
-        cmp     al, [ bx + 2 ]
-        jne     _win_return_blank
-        cmp     al, [ bx + 6 ]
-        je      _win_return
-
-  _win_return_blank:
-        xor     al, al
-  _win_return:
-        ret
-winner endp
-
-ENDIF ; WinnerProc
+minmax endp
 
 atou proc near ; string input in cx. unsigned 16-bit integer result in ax
         push    di
@@ -631,220 +545,5 @@ printstring proc near
         ret
 printstring endp
 
-align 2
-proc0 proc near
-    cmp     al, [bx + 1]
-    jne     short proc0_next_win
-    cmp     al, [bx + 2]
-    je      short proc0_yes
-
-  proc0_next_win:
-    cmp     al, [bx + 3]
-    jne     short proc0_next_win2
-    cmp     al, [bx + 6]
-    je      short proc0_yes
-
-  proc0_next_win2:
-    cmp     al, [bx + 4]
-    jne     short proc0_no
-    cmp     al, [bx + 8]
-    je      short proc0_yes
-
-  proc0_no:
-    mov     al, ah       ; ah is always 0. mov al, ah is 2 cycles. xor ax and xor al are both 3 cycles.
-
-  proc0_yes:
-    ret
-proc0 endp
-
-align 2
-proc1 proc near
-    cmp     al, [bx + 0]
-    jne     short proc1_next_win
-    cmp     al, [bx + 2]
-    je      short proc1_yes
-
-  proc1_next_win:
-    cmp     al, [bx + 4]
-    jne     short proc1_no
-    cmp     al, [bx + 7]
-    je      short proc1_yes
-
-  proc1_no:
-    mov     al, ah
-
-  proc1_yes:
-    ret
-proc1 endp
-
-align 2
-proc2 proc near
-    cmp     al, [bx + 0]
-    jne     short proc2_next_win
-    cmp     al, [bx + 1]
-    je      short proc2_yes
-
-  proc2_next_win:
-    cmp     al, [bx + 5]
-    jne     short proc2_next_win2
-    cmp     al, [bx + 8]
-    je      short proc2_yes
-
-  proc2_next_win2:
-    cmp     al, [bx + 4]
-    jne     short proc2_no
-    cmp     al, [bx + 6]
-    je      short proc2_yes
-
-  proc2_no:
-    mov     al, ah
-
-  proc2_yes:
-    ret
-proc2 endp
-
-align 2
-proc3 proc near
-    cmp     al, [bx + 0]
-    jne     short proc3_next_win
-    cmp     al, [bx + 6]
-    je      short proc3_yes
-
-  proc3_next_win:
-    cmp     al, [bx + 4]
-    jne     short proc3_no
-    cmp     al, [bx + 5]
-    je      short proc3_yes
-
-  proc3_no:
-    mov     al, ah
-
-  proc3_yes:
-    ret
-proc3 endp
-
-align 2
-proc4 proc near
-    cmp     al, [bx + 0]
-    jne     short proc4_next_win
-    cmp     al, [bx + 8]
-    je      short proc4_yes
-
-  proc4_next_win:
-    cmp     al, [bx + 2]
-    jne     short proc4_next_win2
-    cmp     al, [bx + 6]
-    je      short proc4_yes
-
-  proc4_next_win2:
-    cmp     al, [bx + 1]
-    jne     short proc4_next_win3
-    cmp     al, [bx + 7]
-    je      short proc4_yes
-
-  proc4_next_win3:
-    cmp     al, [bx + 3]
-    jne     short proc4_no
-    cmp     al, [bx + 5]
-    je      short proc4_yes
-
-  proc4_no:
-    mov     al, ah
-
-  proc4_yes:
-    ret
-proc4 endp
-
-align 2
-proc5 proc near
-    cmp     al, [bx + 3]
-    jne     short proc5_next_win
-    cmp     al, [bx + 4]
-    je      short proc5_yes
-
-  proc5_next_win:
-    cmp     al, [bx + 2]
-    jne     short proc5_no
-    cmp     al, [bx + 8]
-    je      short proc5_yes
-
-  proc5_no:
-    mov     al, ah
-
-  proc5_yes:
-    ret
-proc5 endp
-
-align 2
-proc6 proc near
-    cmp     al, [bx + 2]
-    jne     short proc6_next_win
-    cmp     al, [bx + 4]
-    je      short proc6_yes
-
-  proc6_next_win:
-    cmp     al, [bx + 0]
-    jne     short proc6_next_win2
-    cmp     al, [bx + 3]
-    je      short proc6_yes
-
-  proc6_next_win2:
-    cmp     al, [bx + 7]
-    jne     short proc6_no
-    cmp     al, [bx + 8]
-    je      short proc6_yes
-
-  proc6_no:
-    mov     al, ah
-
-  proc6_yes:
-    ret
-proc6 endp
-
-align 2
-proc7 proc near
-    cmp     al, [bx + 1]
-    jne     short proc7_next_win
-    cmp     al, [bx + 4]
-    je      short proc7_yes
-
-  proc7_next_win:
-    cmp     al, [bx + 6]
-    jne     short proc7_no
-    cmp     al, [bx + 8]
-    je      short proc7_yes
-
-  proc7_no:
-    mov     al, ah
-
-  proc7_yes:
-    ret
-proc7 endp
-
-align 2
-proc8 proc near
-    cmp     al, [bx + 0]
-    jne     short proc8_next_win
-    cmp     al, [bx + 4]
-    je      short proc8_yes
-
-  proc8_next_win:
-    cmp     al, [bx + 2]
-    jne     short proc8_next_win2
-    cmp     al, [bx + 5]
-    je      short proc8_yes
-
-  proc8_next_win2:
-    cmp     al, [bx + 6]
-    jne     short proc8_no
-    cmp     al, [bx + 7]
-    je      short proc8_yes
-
-  proc8_no:
-    mov     al, ah
-
-  proc8_yes:
-    ret
-proc8 endp
 
 end
