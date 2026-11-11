@@ -1,3 +1,4 @@
+; ADD1 avoids general addition in the recursive search loop.
 ; Prove you can't win at tic-tac-toe if the opponent is competent.
 ; Tested with PC-LISP V3.00. Likely won't work with more modern LISP implementations.
 ; This takes roughly 20 minutes to run on a 4.77Mhz 8086.
@@ -101,7 +102,7 @@
 )
 
 (defun mmMax (alpha beta depth move) (prog (i value nextDepth) ; this is how local variables are declared
-    (setq moves (+ 1 moves))
+    (setq moves (add1 moves))
     ;(princ "max: ") (princ board) (princ " ") (princ alpha) (princ " ") (princ beta) (princ " ") (princ move) (princ " ") (princ depth) (princ "\n")
 
     (cond ((> depth 3)
@@ -112,7 +113,7 @@
     )
 
     (setq value score-min)
-    (setq nextDepth (+ 1 depth))
+    (setq nextDepth (add1 depth))
     (setq i 0)
     _nexti_
     (cond ((= (cxr i board) piece-blank)
@@ -132,7 +133,7 @@
     )
 
     (cond ((< i 8)
-           (setq i (+ i 1))
+           (setq i (add1 i))
            (go _nexti_))
     )
 
@@ -140,7 +141,7 @@
 ))
 
 (defun mmMin (alpha beta depth move) (prog (i value nextDepth) ; this is how local variables are declared
-    (setq moves (+ 1 moves))
+    (setq moves (add1 moves))
     ;(princ "min: ") (princ board) (princ " ") (princ alpha) (princ " ") (princ beta) (princ " ") (princ move) (princ " ") (princ depth) (princ "\n")
 
     (cond ((> depth 3)
@@ -153,7 +154,7 @@
     )
 
     (setq value score-max)
-    (setq nextDepth (+ 1 depth))
+    (setq nextDepth (add1 depth))
     (setq i 0)
     _nexti_
     (cond ((= (cxr i board) piece-blank)
@@ -173,7 +174,7 @@
     )
 
     (cond ((< i 8)
-           (setq i (+ i 1))
+           (setq i (add1 i))
            (go _nexti_))
     )
 

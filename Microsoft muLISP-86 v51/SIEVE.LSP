@@ -1,50 +1,32 @@
-; BYTE magazine's Sieve benchmark
-
-(setq size 8190)
-(setq a (make-array (+ size 1) :initial-element 0 ))
-(setq count 0)
-
-(defun kloop(k prime)
+; Ten full 8190-flag passes. muLISP arrays are linked lists.
+; Keep list tails instead of walking from the head for every access.
+; Native LOOP avoids the interpreted PROG/GO compatibility layer.
+(setq a nil)
+(defun init-flags (n)
+    (setq n 8190)
+    (loop ((zerop n)) (setq a (cons t a) n (sub1 n))))
+(init-flags)
+(defun runsieve (tail mark i p count)
+    (setq tail a)
+    (loop ((null tail)) (rplaca tail t) (setq tail (cdr tail)))
+    (setq tail a i 0)
     (loop
-        (when (> k size) (return 0))
-        (setf (aref a k) nil)
-        (setq k (+ k prime))
-    )
-)
-
-(defun runsieve() (prog ()
-    (setq i 0)
-    (setq count 0)
-    _nexti_
-        (cond ((<= i size)
-               (setf (aref a i) t)
-               (setq i (add1 i))
-               (go _nexti_))
-        )
-
-    (setq i 0)
-    _nexti2_
-        (cond ((<= i size)
-               (cond ((aref a i)
-                      (setq prime (+ i i 3))
-                      (kloop (+ i prime) prime)
-                      (setq count (add1 count)))
-               )
-               (setq i (add1 i))
-               (go _nexti2_))
-        )
-))
-
-(defun main() (prog ()
-    (clear-screen)
-    (princ "running...")
-    (setq startTime (time))
-
-    (dotimes (z 10) (runsieve))
-    (princ "count: ") (princ count)
-    (princ "elapsed hundredths of a second: ") (- (time) startTime)
-))
-
+        ((= i 63))
+        (cond ((car tail)
+            (setq p (+ i i 3))
+            (setq mark (nthcdr (- (truncate (* p p) 2) 1) a))
+            (loop ((null mark))
+                (rplaca mark nil)
+                (setq mark (nthcdr p mark)))))
+        (setq tail (cdr tail) i (add1 i)))
+    (setq tail a count 0)
+    (loop ((null tail) count)
+        (cond ((car tail) (setq count (add1 count))))
+        (setq tail (cdr tail))))
+(defun main (pass count)
+    (setq pass 0)
+    (loop ((= pass 10))
+        (setq count (runsieve) pass (add1 pass)))
+    (princ "count: ") (princ count) (terpri))
 (main)
 (system)
-

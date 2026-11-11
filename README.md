@@ -40,6 +40,8 @@ The Borland Pascal (v1 through v3) products don't support command-line builds, s
 
 The Microsoft COBOL benchmarks use an explicit stack for ttt, including v1.12 and v2.1, which do not support recursive PERFORM. All sieve versions run ten passes over 8,190 flags; v1.12 and v2.1 use two 4,095-byte windows. The e benchmarks generate 192 digits in blocks, using packed decimal in the older versions and native binary arithmetic in v3.00A, v4.5, and v5.0. Native-code ttt versions retain ten iterations; the table reports the time for one iteration.
 
+The Lisp benchmarks use storage suited to each interpreter: native arrays and hunks in PC-LISP, and list-tail traversal with native LOOP control in muLISP. Sieve runs ten passes over 8,190 odd candidates; e uses integer digit blocks while retaining the original 200-cell factorial spigot. The timings include interpreter startup and, for muLISP, loading COMMON.LSP and STRUCTUR.LSP. The muLISP ttt runs ten repetitions, with the table reporting the time for one.
+
 The BA compiler is in the [tic-tac-toe and its applicability to nuclear war](https://github.com/davidly/ttt) repo. It generates code for 6502, 8080, 8086, 68000, x86, x64, arm32, arm64, and 64-bit RISC-V.
 
 If you're running Linux or MacOS and see perplexing compilation errors, it could be your source files don't have cr/lf line separators. Use unix2dos to add them; some of these compilers require them. Some compilers require a ^Z / 0x1a at the end of files; CB86 is an example. Again, if you see build errors this may be the problem.
