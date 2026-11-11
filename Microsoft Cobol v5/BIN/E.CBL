@@ -1,58 +1,66 @@
-         IDENTIFICATION DIVISION.
-         PROGRAM-ID.  E.
-      *  REMARKS. generate digits of e
-         ENVIRONMENT DIVISION.
-         CONFIGURATION SECTION.
-         DATA DIVISION.
-         WORKING-STORAGE SECTION.
-         01 ARRAYS.
-             02 A PIC 9(04) COMP OCCURS 200 TIMES.
-         01 X PIC 9(04) COMP VALUE 0.
-         01 TMOD PIC 9(04) COMP VALUE 0.
-         01 TM PIC 9(04) COMP VALUE 0.
-         01 TD PIC 9(04) COMP VALUE 0.
-         01 N PIC 9(04) COMP VALUE 0.
-         01 HV PIC 9(04) COMP VALUE 0.
-         01 NUM-DISP PIC 9999.
-
-         PROCEDURE DIVISION.
-         MAIN.
-             DISPLAY 'computing e'.
-             PERFORM INITA-ROUTINE.
-             PERFORM INITA-ROUTINE-B.
-             PERFORM INITA-ROUTINE-C.
-             PERFORM OUTER-LOOP.
-             STOP RUN.
-
-         INITA-ROUTINE.
-             MOVE 200 TO HV.
-             MOVE 0 TO X.
-             MOVE 199 TO N.
-
-         INITA-ROUTINE-B.
-             MOVE 1 TO A( N + 1 ).
-             SUBTRACT 1 FROM N.
-             IF N > 0 GO TO INITA-ROUTINE-B.
-
-         INITA-ROUTINE-C.
-             MOVE 2 TO A( 2 ).
-             MOVE 0 TO A( 1 ).
-          
-         OUTER-LOOP.
-             SUBTRACT 1 FROM HV.
-             MOVE HV TO N.
-             PERFORM INNER-LOOP.
-             IF HV > 9 GO TO OUTER-LOOP.
-
-         INNER-LOOP.
-             DIVIDE X BY N GIVING TD.
-             COMPUTE TMOD = ( X - ( TD * N ) )
-             IF 0 = X MOVE 0 TO TMOD.
-             MOVE TMOD TO A( N + 1 ).
-             MULTIPLY 10 BY A( N ) GIVING TM.
-             COMPUTE X = TM + TD.
-             SUBTRACT 1 FROM N.
-             IF N > 0 GO TO INNER-LOOP.
-             MOVE X TO NUM-DISP.
-             DISPLAY NUM-DISP.
-
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. E.
+      * 192 digits from the 200-cell factorial spigot.
+      * 7-digit blocks use native unsigned binary COMP-5 arithmetic.
+      * X and products stay below 2,000,000,000, within 32 bits.
+      * Keep all operands the same size and arithmetic in-place.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 REMAINDERS.
+          02 A PIC 9(9) COMP-5 OCCURS 200 TIMES.
+       01 X PIC 9(9) COMP-5.
+       01 Q PIC 9(9) COMP-5.
+       01 R PIC 9(9) COMP-5.
+       01 N-N PIC 9(9) COMP-5.
+       01 N-I PIC 9(4) COMP-5.
+       01 HIGH-I PIC 9(4) COMP-5.
+       01 CHUNK-I PIC 9(4) COMP-5.
+       01 OUT-I PIC 9(4) COMP-5.
+       01 CHUNK PIC 9(8).
+       01 CHUNK-VIEW REDEFINES CHUNK.
+          02 CHUNK-CHAR PIC X OCCURS 8 TIMES.
+       01 RESULT-TEXT PIC X(197).
+       01 RESULT-VIEW REDEFINES RESULT-TEXT.
+          02 OUT-CHAR PIC X OCCURS 197 TIMES.
+       01 RESULT-192 REDEFINES RESULT-TEXT PIC X(192).
+       PROCEDURE DIVISION.
+       MAIN.
+           DISPLAY 'computing e'.
+           MOVE 2 TO N-I.
+       INIT-A.
+           MOVE 1 TO A(N-I).
+           ADD 1 TO N-I.
+           IF N-I < 201 GO TO INIT-A.
+           MOVE 0 TO A(1).
+           MOVE 2 TO A(2).
+           MOVE 0 TO X.
+           MOVE 206 TO HIGH-I.
+           MOVE 1 TO OUT-I.
+       OUTER-STEP.
+           SUBTRACT 7 FROM HIGH-I.
+           MOVE HIGH-I TO N-I.
+       INNER-STEP.
+           MOVE N-I TO N-N.
+           MOVE X TO R.
+           DIVIDE N-N INTO X.
+           MOVE X TO Q.
+           MULTIPLY N-N BY X.
+           SUBTRACT X FROM R.
+           MOVE R TO A(N-I + 1).
+           MOVE A(N-I) TO X.
+           MULTIPLY 10000000 BY X.
+           ADD Q TO X.
+           SUBTRACT 1 FROM N-I.
+           IF N-I > 0 GO TO INNER-STEP.
+           MOVE X TO CHUNK.
+           MOVE 2 TO CHUNK-I.
+           IF OUT-I = 1 MOVE 1 TO CHUNK-I.
+       COPY-CHUNK.
+           MOVE CHUNK-CHAR(CHUNK-I) TO OUT-CHAR(OUT-I).
+           ADD 1 TO CHUNK-I.
+           ADD 1 TO OUT-I.
+           IF CHUNK-I < 9 GO TO COPY-CHUNK.
+           IF HIGH-I > 10 GO TO OUTER-STEP.
+           DISPLAY RESULT-192.
+           DISPLAY 'done'.
+           STOP RUN.
