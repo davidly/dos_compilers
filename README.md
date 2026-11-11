@@ -38,7 +38,7 @@ To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag
     
 The Borland Pascal (v1 through v3) products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for ZBasic and QuickBASIC v2 and v3. For QuickBASIC v2 you must use some emulator other than NTVDM on Linux and MacOS to build; that version directly accesses keyboard hardware in a way that's not emulated in NTVDM except on Windows. DOSBOX and [MSDOS](http://takeda-toshiya.my.coocan.jp/) work great.
 
-The ttt benchmark does not run with Microsoft COBOL v1 or v2 because they don't support recursive PERFORM statements.
+Microsoft COBOL v2.1 runs ttt with an explicit stack because recursive PERFORM is unsupported. Its sieve runs all ten passes over 8,190 flags in two 4,095-byte windows; e generates 192 digits in packed-decimal blocks using DIVIDE with REMAINDER. The v1 ttt implementation still uses recursion and does not run.
 
 The BA compiler is in the [tic-tac-toe and its applicability to nuclear war](https://github.com/davidly/ttt) repo. It generates code for 6502, 8080, 8086, 68000, x86, x64, arm32, arm64, and 64-bit RISC-V.
 
