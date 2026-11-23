@@ -1,8 +1,7 @@
-echo I can't figure out a way to compile from the command line.
-echo Enter this to build in ZBasic:
-echo    ntvdm zbasic sample.bas
-echo    run*
-echo    sample.com
-echo    system
-echo    ntvdm -c -p sample.com
-
+@echo off
+setlocal
+pushd "%~dp0" || exit /b 1
+ntvdm -c ZBASICCL.COM %* <nul
+set "result=%errorlevel%"
+popd
+exit /b %result%

@@ -1,2 +1,7 @@
-rem turbo basic doesn't support command-line build. Use the app to load and compile
-
+@echo off
+setlocal
+pushd "%~dp0" || exit /b 1
+ntvdm -c TBCL.EXE %* <nul
+set "result=%errorlevel%"
+popd
+exit /b %result%
