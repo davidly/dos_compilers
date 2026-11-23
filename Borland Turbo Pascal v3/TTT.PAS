@@ -1,8 +1,8 @@
 { App to prove you can't win at Tic-Tac-Toe }
 
 program ttt;
-{$I timeutil.pas}
-{$I dos_gt.pas }
+{$I TIMEUTIL.PAS}
+{$I DOS_GT.PAS }
 
 const
     scoreWin = 6;

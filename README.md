@@ -15,7 +15,7 @@ I can't vouch that any of these tools match their official distribution form. Ma
 
 In some cases I've included user manuals in PDF form that I've found online for the various compilers. They sometimes match the version and sometimes not, but they are always helpful.
 
-I can vouch that the m.bat/m.sh script in each folder builds working benchmark binaries using NTVDM on Windows, Linux, and MacOS. In the cases of tools that can't be invoked via the command-line (e.g. Turbo Pascal), those tools also produce working benchmark binaries in NTVDM.
+I can vouch that the m.bat/m.sh script in each folder builds working benchmark binaries using NTVDM on Windows, Linux, and MacOS. In the cases of tools that can't be invoked via the command-line (e.g. ZBasic), those tools also produce working benchmark binaries in NTVDM.
 
 It is my intention to show each tool in its best light with respect to the benchmarks. If you know of better optimization flags or ways to improve the benchmark source code for a given tool, please feel free to submit a pull request or open an issue. That said, I want to avoid cheap hacks like using peek/poke in BASIC instead of variables.
 
@@ -36,7 +36,7 @@ To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag
   * ntvdm -c -p e
   * ntvdm -c -p ttt
     
-The Borland Pascal (v1 through v3) products don't support command-line builds, so you have to run the apps, load the source file, and build manually. Same for ZBasic and QuickBASIC v2 and v3. For QuickBASIC v2 you must use some emulator other than NTVDM on Linux and MacOS to build; that version directly accesses keyboard hardware in a way that's not emulated in NTVDM except on Windows. DOSBOX and [MSDOS](http://takeda-toshiya.my.coocan.jp/) work great.
+The Borland Turbo Pascal v1 through v3 scripts use TURBOCL.COM for command-line builds. To regenerate it from the bundled TURBO.COM, run build_turbocl.py with Python 3 and GNU binutils with i386 support. ZBasic and QuickBASIC v2 and v3 require interactive builds. For QuickBASIC v2 you must use some emulator other than NTVDM on Linux and MacOS to build; that version directly accesses keyboard hardware in a way that's not emulated in NTVDM except on Windows. DOSBOX and [MSDOS](http://takeda-toshiya.my.coocan.jp/) work great.
 
 The Microsoft COBOL benchmarks use an explicit stack for ttt, including v1.12 and v2.1, which do not support recursive PERFORM. All sieve versions run ten passes over 8,190 flags; v1.12 and v2.1 use two 4,095-byte windows. The e benchmarks generate 192 digits in blocks, using packed decimal in the older versions and native binary arithmetic in v3.00A, v4.5, and v5.0. Native-code ttt versions retain ten iterations; the table reports the time for one iteration.
 
