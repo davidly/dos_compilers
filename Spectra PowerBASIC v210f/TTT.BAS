@@ -16,7 +16,7 @@
 19 REM Note: Can't use real recursion with GOSUB because stack is limited to roughly 5 deep
 20 REM       BASIC doesn't support goto/gosub using arrays for target line numbers
 23 li% = val( command$ )
-24 if 0 = li% then li% = 10
+24 if 0 = li% then li% = 1
 30 DIM b%(9)
 32 DIM sp%(10)
 34 DIM sv%(10)
@@ -41,7 +41,7 @@
 71 b%(4) = 1
 72 GOSUB 4000
 73 b%(4) = 0
-74 print "mc: "; mc%; "  l is "; l%
+74 REM print "mc: "; mc%; "  l is "; l%
 80 NEXT l%
 82 REM print elap$
 83 PRINT "end time: "; TIME$
