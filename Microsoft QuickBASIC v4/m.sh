@@ -1,17 +1,19 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# mi.sh / mi.bat run the benchmark in the QuickBASIC interpreter instead.
 
-rm $str.EXE 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:. -c bc $str.bas $str.obj $str.lst /O
-ntvdm -u -r:. -c link $str,,$str,,,;
+rm -f $str.EXE
+rm -f $str.LST
+rm -f $str.MAP
+rm -f $str.OBJ
 
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
+ntvdm -u -r:. -c bc $str.BAS $str.OBJ $str.LST /O
+ntvdm -u -r:. -c link "$str,,$str,,,;"
 
-ntvdm -u -r:. -c $str
+rm -f $str.LST
+rm -f $str.MAP
+rm -f $str.OBJ
 
-
+ntvdm -u -r:. -c -p $str.EXE

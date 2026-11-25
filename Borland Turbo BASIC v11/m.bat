@@ -1,7 +1,10 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
 setlocal
-pushd "%~dp0" || exit /b 1
-ntvdm -r:. -c TBCL.EXE %* <nul
-set "result=%errorlevel%"
-popd
-exit /b %result%
+rem Turbo BASIC apps write to video memory; -m shows it after the app ends.
+
+del %1.EXE 2>nul
+
+ntvdm -r:. -c TBCL.EXE %1
+
+ntvdm -r:. -c -m -p %1.EXE

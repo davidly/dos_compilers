@@ -1,13 +1,16 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.EXE 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:.. -e:path=c:\\bin ../bin/ztc $str.c -Ic:\\include -ms -c -DDOSTIME 
-ntvdm -u -r:.. -e:path=c:\\bin,lib=c:\\lib ../bin/blink ct+$str, $str, $str, ZLs.LIB /noi \;
+rm -f $str.EXE
+rm -f $str.MAP
+rm -f $str.OBJ
 
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
+ntvdm -u -r:.. "-e:path=c:\\bin" "..\\bin\\ztc" $str.C "-Ic:\\include" -ms -c -DDOSTIME
+ntvdm -u -r:.. "-e:path=c:\\bin,lib=c:\\lib" "..\\bin\\blink" ct+$str, $str, $str, ZLs.LIB /noi ";"
 
-ntvdm -r:. -u -c -p $str
+rm -f $str.MAP
+rm -f $str.OBJ
+
+ntvdm -u -r:. -c -p $str.EXE

@@ -1,12 +1,14 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.OBJ 2>/dev/null
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:.. -u ../ppc $str
-ntvdm -r:.. -u -e:lib=.. ../sblink $str
+rm -f $str.EXE
+rm -f $str.OBJ
 
-rm $str.OBJ 2>/dev/null
+ntvdm -u -r:.. "..\\PPC" $str
+ntvdm -u -r:.. -e:lib=.. "..\\SBLINK" $str
 
-#ntvdm -c -p $str
+rm -f $str.OBJ
 
+ntvdm -u -r:. -c -p $str.EXE

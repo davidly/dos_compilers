@@ -1,3 +1,6 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-ntvdm -r:. -u -c -p gwbasic $str.bas
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
+
+ntvdm -u -r:. -c -p gwbasic $str.BAS

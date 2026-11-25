@@ -1,17 +1,21 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
 setlocal
+rem Builds using the project file {B}.pr
 
-rem build using a project file
-ntvdm -r:. -e:path=c:\sys sys\tsc /m %1.pr
+del %1.EXE 2>nul
+del TERMINAL.OBJ 2>nul
+del ASCII.OBJ 2>nul
+del INOUT.OBJ 2>nul
+del %1.OBJ 2>nul
+del %1.MAP 2>nul
 
-del terminal.obj 1>nul 2>nul
-del ascii.obj 1>nul 2>nul
-del inout.obj 1>nul 2>nul
-del %1.obj 1>nul 2>nul
+ntvdm -r:. -e:PATH=c:\SYS SYS\TSC /m %1.pr
 
-rem NOT IN USE
-rem build using discrete comple and link steps
-rem ntvdm -e:path=c:\sys;LIB=C:\LIB;OBJ=C:\LIB -r:. sys\tsc /ms %1.mod
-rem link fails and I can't figure out how to fix it
-rem ntvdm -e:path=c:\sys;LIB=C:\LIB;OBJ=C:\LIB -r:. sys\tsc /ms %1 /l
+del TERMINAL.OBJ 2>nul
+del ASCII.OBJ 2>nul
+del INOUT.OBJ 2>nul
+del %1.OBJ 2>nul
+del %1.MAP 2>nul
 
+ntvdm -r:. -c -p %1.EXE

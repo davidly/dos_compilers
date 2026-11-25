@@ -1,11 +1,13 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.INT 2>/dev/null
-rm $str.LST 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:. -h -c -d COBOL $str,$str,$str/D\;
+rm -f $str.INT
+rm -f $str.LST
 
-rm $str.LST 2>/dev/null
+ntvdm -u -r:. -h -c -d COBOL "$str,$str,$str/D;"
 
-ntvdm -u -r:. -c RUNCOB $str
-echo 
+rm -f $str.LST
+
+ntvdm -u -r:. -c -p RUNCOB $str

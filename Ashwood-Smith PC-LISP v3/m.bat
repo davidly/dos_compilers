@@ -1,2 +1,5 @@
-ntvdm -r:. -p PC-LISP.exe %1.lsp
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
+ntvdm -r:. -c -p PC-LISP.EXE %1.LSP

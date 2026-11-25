@@ -1,9 +1,14 @@
-rem: this will crash because pc.exe trashes its own stack. but that's after it's done
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
+rem pc.exe crashes after it's done because it trashes its own stack; its output is discarded.
 
-ntvdm pc /c /ms /dpowerc /j /fi /q %1.c 1>nul 2>nul
+del %1.EXE 2>nul
+del %1.MIX 2>nul
 
-ntvdm pcl %1
+ntvdm -r:. pc /c /ms /dpowerc /j /fi /q %1.C 1>nul 2>nul
+ntvdm -r:. pcl %1
 
-del %1.mix 1>nul 2>nul
+del %1.MIX 2>nul
 
-
+ntvdm -r:. -c -p %1.EXE

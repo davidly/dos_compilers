@@ -1,18 +1,20 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.EXE 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.GRP 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
+
+rm -f $str.EXE
+rm -f $str.LST
+rm -f $str.MAP
+rm -f $str.OBJ
+rm -f $str.GRP
 
 ntvdm -u -r:. -h -c COBOL $str,$str,$str,$str
+ntvdm -u -r:. -h -c LINK $str,,$str,lcobol.lib,nul.def
 
-ntvdm -u -h -c -r:. LINK $str,,$str,lcobol.lib,nul.def
+rm -f $str.LST
+rm -f $str.MAP
+rm -f $str.OBJ
+rm -f $str.GRP
 
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.GRP 2>/dev/null
-
-ntvdm -u -c $str
+ntvdm -u -r:. -c -p $str.EXE

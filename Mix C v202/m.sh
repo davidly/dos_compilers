@@ -1,11 +1,14 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.COM 2>/dev/null
-rm $str.MIX 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u cc $str.c
-ntvdm -r:. -u linker $str
+rm -f $str.COM
+rm -f $str.MIX
 
-rm $str.MIX 2>/dev/null
+ntvdm -u -r:. cc $str.C
+ntvdm -u -r:. linker $str
 
-ntvdm -r:. -u -c $str
+rm -f $str.MIX
+
+ntvdm -u -r:. -c -p $str.COM

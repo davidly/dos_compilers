@@ -1,9 +1,13 @@
-del %1.o 2>nul
-del %1.exe 2>nul
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-ntvdm pcc %1
-ntvdm pccl %1
+del %1.EXE 2>nul
+del %1.O 2>nul
 
-del %1.o 2>nul
+ntvdm -r:. pcc %1
+ntvdm -r:. pccl %1
 
+del %1.O 2>nul
 
+ntvdm -r:. -c -p %1.EXE

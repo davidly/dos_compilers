@@ -1,11 +1,14 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.EXE 2>/dev/null
-rm $str.MIX 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:. pc -f /c /ms /dpowerc /dDOSTIME /j /fi /q $str.c 1>/dev/null 2>/dev/null
+rm -f $str.EXE
+rm -f $str.MIX
+
+ntvdm -u -r:. pc -f /c /ms /dpowerc /dDOSTIME /j /fi /q $str.C >/dev/null 2>&1
 ntvdm -u -r:. pcl $str
 
-rm $str.MIX 2>/dev/null
+rm -f $str.MIX
 
-ntvdm -u -r:. -c -p $str
+ntvdm -u -r:. -c -p $str.EXE

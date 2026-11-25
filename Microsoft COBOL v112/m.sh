@@ -1,16 +1,19 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# COBOL apps write to video memory; -m shows it after the app ends.
 
-rm $str.OBJ 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:. -h -c -d COBOL $str,$str,$str/D\;
-ntvdm -u -h -c -r:. LINK $str,$str,$str,C:\;
+rm -f $str.EXE
+rm -f $str.OBJ
+rm -f $str.LST
+rm -f $str.MAP
 
-rm $str.OBJ 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+ntvdm -u -r:. -h -c -d COBOL "$str,$str,$str/D;"
+ntvdm -u -r:. -h -c LINK "$str,$str,$str,C:;"
 
-ntvdm -u -r:. -c -m $str
+rm -f $str.OBJ
+rm -f $str.LST
+rm -f $str.MAP
 
+ntvdm -u -r:. -c -m -p $str.EXE

@@ -1,6 +1,21 @@
-ntvdm -c pas1 %1,%1,%1,%1
-ntvdm -c pas2
-ntvdm -c pas3
-ntvdm -c link %1 djldos,,,,
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-ntvdm -p %1
+del %1.EXE 2>nul
+del %1.COD 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
+
+ntvdm -r:. -c pas1 %1,%1,%1,%1
+ntvdm -r:. -c pas2
+ntvdm -r:. -c pas3
+ntvdm -r:. -c link %1 djldos,,,,
+
+del %1.COD 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
+
+ntvdm -r:. -c -p %1.EXE

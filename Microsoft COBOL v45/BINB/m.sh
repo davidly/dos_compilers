@@ -1,19 +1,21 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# COBOL apps write to video memory; -m shows it after the app ends.
 
-rm $str.EXE 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.GRP 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:.. -c -e:path=c:\\binb\;c:\\binr COBOL $str,$str,$str,$str
+rm -f $str.EXE
+rm -f $str.LST
+rm -f $str.GRP
+rm -f $str.MAP
+rm -f $str.OBJ
 
-ntvdm -u -h -c -r:.. -e:lib=c:\\lib LINK $str,,$str,,nul.def
+ntvdm -u -r:.. -c "-e:path=c:\\binb;c:\\binr" COBOL $str,$str,$str,$str
+ntvdm -u -r:.. -h -c "-e:lib=c:\\lib" LINK $str,,$str,,nul.def
 
-rm $str.LST 2>/dev/null
-rm $str.GRP 2>/dev/null
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
+rm -f $str.LST
+rm -f $str.GRP
+rm -f $str.MAP
+rm -f $str.OBJ
 
-ntvdm -u -c -m -r:.. -e:path=c:\\binb\;c:\\binr $str
-
+ntvdm -u -r:.. -c -m -p "-e:path=c:\\binb;c:\\binr" $str.EXE

@@ -1,9 +1,12 @@
-del %1.obj 2>nul
-del %1.exe 2>nul
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-ntvdm -r:. -h -c -d cobol %1,%1,%1/D;
+del %1.INT 2>nul
+del %1.LST 2>nul
 
-ntvdm -c runcob %1
-echo:
+ntvdm -r:. -h -c -d COBOL %1,%1,%1/D;
 
+del %1.LST 2>nul
 
+ntvdm -r:. -c -p RUNCOB %1

@@ -1,14 +1,21 @@
-del %1.rel 1>nul 2>nul
-del %1.com 1>nul 2>nul
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-rem compile
+del %1.EXE 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
+del %1.COD 2>nul
+
 ntvdm -r:. for1 %1,%1,%1,%1
-if %ERRORLEVEL% NEQ 0 goto eof
 ntvdm -r:. pas2
 ntvdm -r:. pas3
-
-rem link
 ntvdm -r:. -e:LIB=libs -f link %1,%1,%1,fortran.lib+cexec.lib
 
-:eof
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
+del %1.COD 2>nul
 
+ntvdm -r:. -c -p %1.EXE

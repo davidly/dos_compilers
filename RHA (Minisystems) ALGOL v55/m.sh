@@ -1,6 +1,10 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.OBJ 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u algol $str
-ntvdm -r:. -u -c -p arun $str.OBJ
+rm -f $str.OBJ
+
+ntvdm -u -r:. algol $str
+
+ntvdm -u -r:. -c -p arun $str.OBJ

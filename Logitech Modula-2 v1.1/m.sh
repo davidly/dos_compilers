@@ -1,14 +1,18 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.LOD 2>/dev/null
-rm $str.LNK 2>/dev/null
-rm $str.REF 2>/dev/null
-rm $str.MAP 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u m2 comp $str.mod /S- /R- /T-
-ntvdm -r:. -u m2 link $str
-ntvdm -r:. -u -p m2 $str.lod
+rm -f $str.LOD
+rm -f $str.LNK
+rm -f $str.REF
+rm -f $str.MAP
 
-rm $str.LNK 2>/dev/null
-rm $str.REF 2>/dev/null
-rm $str.MAP 2>/dev/null
+ntvdm -u -r:. m2 comp $str.MOD /S- /R- /T-
+ntvdm -u -r:. m2 link $str
+
+rm -f $str.LNK
+rm -f $str.REF
+rm -f $str.MAP
+
+ntvdm -u -r:. -c -p m2 $str.LOD

@@ -1,17 +1,17 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-del %1.exe 2>nul
-del %1.obj 2>nul
+del %1.EXE 2>nul
+del %1.COD 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
 
-rem use "ntvdm -h cl /help" to get command-line arguments
-ntvdm -r:. -h cl /Ox /DDOSTIME /AS /Gs /Ze -I inc -I inc\sys -L lib %1.c
-if %ERRORLEVEL% NEQ 0 goto alldone
+ntvdm -r:. -h cl /Ox /DDOSTIME /AS /Gs /Ze -I inc -I inc\sys -L lib %1.C
+ntvdm -r:. -e:lib=lib -h link %1,,%1,slibce
 
-rem use "ntvdm link /help" to get command-line arguments
-ntvdm -r:. -h -t link %1,,%1,lib\slibce
-if %ERRORLEVEL% NEQ 0 goto alldone
+del %1.COD 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
 
-ntvdm -p %1
-
-:alldone
-
+ntvdm -r:. -c -p %1.EXE

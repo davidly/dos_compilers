@@ -1,20 +1,23 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# link.exe that ships with COBOL requires a 286+ in protected mode, so Microsoft C v5's
+# linker (mcv5link) is used. QuickBASIC 7.1's link.exe executes code in a segment it just freed.
+# COBOL apps write to video memory; -m shows it after the app ends.
 
-rm $str.EXE 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.GRP 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
+
+rm -f $str.EXE
+rm -f $str.OBJ
+rm -f $str.GRP
+rm -f $str.LST
+rm -f $str.MAP
 
 ntvdm -u -r:.. -c -d cobol $str,$str,$str,$str
+ntvdm -u -r:.. -h -c "-e:lib=c:\\lib" mcv5link $str,,$str,,nul.def
 
-# link.exe that ships with cobol requires 286+ protected mode. use msvc v5's linker instead
-# qbx's link.exe executes code in a segment it just freed
-ntvdm -u -h -c -r:.. -e:lib=c:\\lib mcv5link $str,,$str,,nul.def
+rm -f $str.OBJ
+rm -f $str.GRP
+rm -f $str.LST
+rm -f $str.MAP
 
-rm $str.OBJ 2>/dev/null
-rm $str.GRP 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
-
-ntvdm -u -c -m -p $str
+ntvdm -u -r:. -c -m -p $str.EXE

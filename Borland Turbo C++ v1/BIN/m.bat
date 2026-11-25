@@ -1,7 +1,12 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-ntvdm -r:.. tcc  -DDOSTIME -ms -Z -O -G -I..\include -L..\lib -e%1.exe %1.c
+del %1.EXE 2>nul
+del %1.OBJ 2>nul
 
-rem ntvdm -r:.. tcc -DDOSTIME -ms -Z -O -G -I..\include -L..\lib -c %1.c
-rem ntvdm -r:.. tlink -L..\lib ..\lib\c0s.obj+%1.obj, %1.exe, /x, ..\lib\CS.LIB+..\lib\EMU.LIB+..\lib\maths.lib
+ntvdm -r:.. tcc -DDOSTIME -ms -Z -O -G -I..\include -L..\lib -e%1.EXE %1.C
 
+del %1.OBJ 2>nul
+
+ntvdm -r:. -c -p %1.EXE

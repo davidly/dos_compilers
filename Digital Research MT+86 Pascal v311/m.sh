@@ -1,14 +1,16 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.ERR 2>/dev/null
-rm $str.R86 2>/dev/null
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u mt86 $str
-ntvdm -r:. -u linkmt $str paslib.r86 fpreals.r86
+rm -f $str.EXE
+rm -f $str.ERR
+rm -f $str.R86
 
-rm $str.ERR 2>/dev/null
-rm $str.R86 2>/dev/null
+ntvdm -u -r:. mt86 $str
+ntvdm -u -r:. linkmt $str paslib.r86 fpreals.r86
 
-ntvdm -c -p $str
+rm -f $str.ERR
+rm -f $str.R86
 
+ntvdm -u -r:. -c -p $str.EXE

@@ -1,8 +1,16 @@
-rem errorlevel can't be used because all 3 apps use the value-less cp/m exit function
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
-ntvdm mc1 %1
+del %1.EXE 2>nul
+del %1.OBJ 2>nul
+del %1.MAP 2>nul
 
-ntvdm mc2 %1
+ntvdm -r:. mc1 %1
+ntvdm -r:. mc2 %1
+ntvdm -r:. link %1 + c + gettm,, %1.map, mc
 
-ntvdm link %1 + c + gettm,, %1.map, mc
+del %1.OBJ 2>nul
+del %1.MAP 2>nul
 
+ntvdm -r:. -c -p %1.EXE

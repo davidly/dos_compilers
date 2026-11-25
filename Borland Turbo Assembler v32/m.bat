@@ -1,3 +1,17 @@
-ntvdm -c tasm %1.asm -la
-ntvdm -c tlink %1.obj
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
+del %1.EXE 2>nul
+del %1.OBJ 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+
+ntvdm -r:. -c TASM %1.ASM -la
+ntvdm -r:. -c TLINK %1.OBJ
+
+del %1.OBJ 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+
+ntvdm -r:. -c -p %1.EXE

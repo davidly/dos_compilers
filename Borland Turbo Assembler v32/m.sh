@@ -1,13 +1,18 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.EXE 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u -c tasm $str.asm -la
-ntvdm -r:. -u -c tlink $str.obj
+rm -f $str.EXE
+rm -f $str.OBJ
+rm -f $str.LST
+rm -f $str.MAP
 
-rm $str.OBJ 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+ntvdm -u -r:. -c TASM $str.ASM -la
+ntvdm -u -r:. -c TLINK $str.OBJ
+
+rm -f $str.OBJ
+rm -f $str.LST
+rm -f $str.MAP
+
+ntvdm -u -r:. -c -p $str.EXE

@@ -1,7 +1,10 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -r:. qpl $str.pas
+rm -f $str.EXE
 
-ntvdm -r:. -u -p $str
+ntvdm -u -r:. qpl $str.PAS
+
+ntvdm -u -r:. -c -p $str.EXE

@@ -1,17 +1,21 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# /n removes array bounds checks and must be after the source file.
+# The compiler adds each unit to its program library, ADA.ALB; the original is restored after the build.
+# The first run is the interpreter on the .AXE file; the second is native code from a86.
+# a86 produces bad code for the stock ttt.ada so the board is passed as an argument,
+# and for the stock e.ada so more locals were added to reduce complexity.
 
-rm $str.AXE 2>/dev/null
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-# /n removes array bounds checks and must be after the source file
-ntvdm -r:. -u ada $str.ada /n
-ntvdm -r:. -u linklib $str
+rm -f $str.AXE
+rm -f $str.EXE
 
-# interpreter runs on the .AXE file
-ntvdm -r:. -u -c -p ai $str
+cp -p ADA.ALB ADA.ALB.SAV
+ntvdm -u -r:. ADA $str.ADA /n
+ntvdm -u -r:. LINKLIB $str
+ntvdm -u -r:. A86 $str.AXE /n
+mv -f ADA.ALB.SAV ADA.ALB
 
-# native code. I've found a86 to be buggy.
-#    note: a86 produces bad code for the stock ttt.ada so the board is passed as an argument.
-#    note2: a86 produces bad code for the stock e.ada so more locals were added to reduce complexity.
-ntvdm -r:. -u a86 $str.axe /n
-ntvdm -r:. -u -c -p $str.exe
+ntvdm -u -r:. -c -p AI $str
+ntvdm -u -r:. -c -p $str.EXE

@@ -1,6 +1,13 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-ntvdm -r:.. -u TPC.EXE $str.PAS -\$S- -GD
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-rm $str.MAP 2>/dev/null
+rm -f $str.EXE
+rm -f $str.MAP
 
+ntvdm -u -r:.. TPC.EXE $str.PAS "-\$S-" -GD
+
+rm -f $str.MAP
+
+ntvdm -u -r:. -c -p $str.EXE

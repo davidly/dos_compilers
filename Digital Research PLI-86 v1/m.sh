@@ -1,13 +1,16 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.EXE 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.SYM 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u pli.exe $str \$L \$I
-ntvdm -r:. -u link86 $str,plilib.l86,pcdio.obj,div2.obj,fdiv2.obj
+rm -f $str.EXE
+rm -f $str.OBJ
+rm -f $str.SYM
 
-rm $str.OBJ 2>/dev/null
-rm $str.SYM 2>/dev/null
+ntvdm -u -r:. pli.exe $str "\$L" "\$I"
+ntvdm -u -r:. link86 $str,plilib.l86,pcdio.obj,div2.obj,fdiv2.obj
 
-ntvdm -r:. -u -c -p $str
+rm -f $str.OBJ
+rm -f $str.SYM
+
+ntvdm -u -r:. -c -p $str.EXE

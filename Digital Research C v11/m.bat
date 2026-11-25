@@ -1,10 +1,15 @@
-del %1.obj 2>nul
-del %1.sym 2>nul
-del %1.exe 2>nul
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
+
+del %1.EXE 2>nul
+del %1.OBJ 2>nul
+del %1.SYM 2>nul
 
 ntvdm -r:. drc %1
 ntvdm -r:. link86 %1
 
-del %1.obj 2>nul
-del %1.sym 2>nul
+del %1.OBJ 2>nul
+del %1.SYM 2>nul
 
+ntvdm -r:. -c -p %1.EXE

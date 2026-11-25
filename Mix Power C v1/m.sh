@@ -1,14 +1,15 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# pc.exe crashes after it's done because it trashes its own stack; its output is discarded.
 
-rm $str.EXE 2>/dev/null
-rm $str.MIX 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-# this will crash because pc.exe trashes its own stack. but that's after it's done
-ntvdm -r:. -u pc /c /ms /dpowerc /j /fi /q $str.c 1>/dev/null 2>/dev/null
-ntvdm -r:. -u pcl $str
+rm -f $str.EXE
+rm -f $str.MIX
 
-rm $str.MIX 2>/dev/null
+ntvdm -u -r:. pc /c /ms /dpowerc /j /fi /q $str.C >/dev/null 2>&1
+ntvdm -u -r:. pcl $str
 
-ntvdm -u -r:. -c -p $str
+rm -f $str.MIX
 
-
+ntvdm -u -r:. -c -p $str.EXE

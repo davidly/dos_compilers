@@ -1,9 +1,20 @@
-del %1.obj
-del %1.exe
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
+rem COBOL apps write to video memory; -m shows it after the app ends.
 
-ntvdm -r:.. -c -e:path=c:\binb;c:\binr cobol %1,%1,%1,%1
+del %1.EXE 2>nul
+del %1.LST 2>nul
+del %1.GRP 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
 
-ntvdm -h -c -r:.. -e:lib=c:\lib link %1,,%1,,nul.def
+ntvdm -r:.. -c -e:path=c:\binb;c:\binr COBOL %1,%1,%1,%1
+ntvdm -r:.. -h -c -e:lib=c:\lib LINK %1,,%1,,nul.def
 
-ntvdm -c -m -r:.. -e:path=c:\binb;c:\binr %1
+del %1.LST 2>nul
+del %1.GRP 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
 
+ntvdm -r:.. -c -m -p -e:path=c:\binb;c:\binr %1.EXE

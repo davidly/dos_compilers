@@ -1,15 +1,12 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# muLISP loads COMMON.LSP and STRUCTUR.LSP ahead of the benchmark: they're combined into
+# LISPRUN.LSP without their ^Z end-of-file characters and (RDS) calls.
 
-cat COMMON.LSP STRUCTUR.LSP $str.LSP >FOO.LSP
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-# remove ^z end of file characters found in common.lsp and structur.lsp
-tr '\32' ' ' <FOO.LSP >BAR.LSP
+rm -f LISPRUN.LSP
+cat COMMON.LSP STRUCTUR.LSP $str.LSP | tr '\032' ' ' | sed -e '/(RDS)/d' > LISPRUN.LSP
 
-# remove (RDS) twice from the file
-sed -e '/(RDS)/d' BAR.LSP >BAZ.LSP
-
-ntvdm -r:. -u -p -c mulisp BAZ.LSP
-
-rm FOO.LSP 2>/dev/null
-rm BAR.LSP 2>/dev/null
-rm BAZ.LSP 2>/dev/null
+ntvdm -u -r:. -c -p mulisp LISPRUN.LSP
+rm -f LISPRUN.LSP

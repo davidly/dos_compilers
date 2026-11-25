@@ -1,21 +1,24 @@
-del %1.cod 2>nul
-del %1.obj 2>nul
-del %1.lst 2>nul
-del %1.map 2>nul
-del %1.exe 2>nul
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
+rem Some apps built by this compiler need to be loaded above 64k (ntvdm -h) or they
+rem crash with a stack error. The benchmarks don't.
 
-ntvdm pas1 %1,%1,%1,%1;
-ntvdm pas2
-ntvdm link %1,%1,,pascal.lib
+del %1.EXE 2>nul
+del CON.LST 2>nul
+del %1.OBJ 2>nul
+del %1.COD 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
 
-del con.lst 2>nul
-del %1.cod 2>nul
-del %1.obj 2>nul
-del %1.lst 2>nul
-del %1.map 2>nul
+ntvdm -r:. pas1 %1,%1,%1,%1;
+ntvdm -r:. pas2
+ntvdm -r:. link %1,%1,,pascal.lib
 
-rem Some binaries created by this compiler require being loaded above 64k or
-rem they crash with a stack error.
-rem Use ntvdm's -h switch to enable them to run, e.g.:
-rem ntvdm -h sieve.exe
+del CON.LST 2>nul
+del %1.OBJ 2>nul
+del %1.COD 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
 
+ntvdm -r:. -c -p %1.EXE

@@ -1,14 +1,19 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
 
-rm $str.JRL 2>/dev/null
-rm $str.PRN 2>/dev/null
-rm $str.SYM 2>/dev/null
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -r:. -u janus $str /L /O1
-ntvdm -r:. -u optimize $str
-ntvdm -r:. -u jlink $str /O1
+rm -f $str.EXE
+rm -f $str.JRL
+rm -f $str.PRN
+rm -f $str.SYM
 
-rm $str.JRL 2>/dev/null
-rm $str.PRN 2>/dev/null
-rm $str.SYM 2>/dev/null
+ntvdm -u -r:. janus $str /L /O1
+ntvdm -u -r:. optimize $str
+ntvdm -u -r:. jlink $str /O1
+
+rm -f $str.JRL
+rm -f $str.PRN
+rm -f $str.SYM
+
+ntvdm -u -r:. -c -p $str.EXE

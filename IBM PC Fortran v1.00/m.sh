@@ -1,22 +1,22 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# FOR1 and FOR2 have bugs that require -h so they load at >= 64k and < 640k
 
-rm $str.EXE 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.COD 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-# for1 and for2 have bugs that require -h so ntvdm loads the binary >= 64k and < 640k
+rm -f $str.EXE
+rm -f $str.OBJ
+rm -f $str.COD
+rm -f $str.LST
+rm -f $str.MAP
 
-ntvdm  -h -u -r:. FOR1 $str.FOR,,,\;
-ntvdm  -h -u -r:. FOR2
-ntvdm  -u -r:. link $str,,,\;
-echo 
+ntvdm -u -h -r:. FOR1 "$str.FOR,,,;"
+ntvdm -u -h -r:. FOR2
+ntvdm -u -r:. LINK "$str,,,;"
 
-rm $str.OBJ 2>/dev/null
-rm $str.COD 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+rm -f $str.OBJ
+rm -f $str.COD
+rm -f $str.LST
+rm -f $str.MAP
 
-ntvdm -c $str
-
+ntvdm -u -r:. -c -p $str.EXE

@@ -1,18 +1,17 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# The Modula-2 linker (m2exe\m2l) fails, so QuickBASIC 7.1's link.exe is used instead.
 
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.EXE 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm -u -f -r:. -e:m2sym=m2lib\\sym m2exe\\M2C.EXE $str
+rm -f $str.EXE
+rm -f $str.MAP
+rm -f $str.OBJ
 
-# the modula 2 linker fails
-# ntvdm -u -r:. -e:m2lib=m2lib\\lib m2exe\\m2l $str/o/p
+ntvdm -u -f -r:. "-e:m2sym=m2lib\\sym" "m2exe\\M2C.EXE" $str
+ntvdm -u -h -f -r:. "-e:lib=m2lib\\lib" link $str,,,m2lib "m2rts.lib;"
 
-# the qbx linker works fine
-ntvdm -u -h -f -r:. -e:lib=m2lib\\lib link $str,,,m2lib m2rts.lib;
+rm -f $str.MAP
+rm -f $str.OBJ
 
-rm $str.MAP 2>/dev/null
-rm $str.OBJ 2>/dev/null
-
-ntvdm $str
+ntvdm -u -r:. -c -p $str.EXE

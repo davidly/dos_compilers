@@ -1,25 +1,21 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
 setlocal
 
-del %1.exe 1>nul 2>nul
-del %1.lst 1>nul 2>nul
-del %1.map 1>nul 2>nul
-del %1.obj 1>nul 2>nul
-del %1.cod 1>nul 2>nul
+del %1.EXE 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
+del %1.COD 2>nul
 
-rem compile
-ntvdm -r:. for1 %1,%1,%1,%1
-if %ERRORLEVEL% NEQ 0 goto eof
-ntvdm -r:. pas2
-ntvdm -r:. pas3
+ntvdm -r:. FOR1 %1,%1,%1,%1
+ntvdm -r:. PAS2
+ntvdm -r:. PAS3
+ntvdm -r:. -f LINK %1,%1,%1,FORTRAN.LEM
 
-rem link
-ntvdm -r:. -f link %1,%1,%1,fortran.lem
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
+del %1.COD 2>nul
 
-del %1.lst 1>nul 2>nul
-del %1.map 1>nul 2>nul
-del %1.obj 1>nul 2>nul
-del %1.cod 1>nul 2>nul
-
-:eof
-
+ntvdm -r:. -c -p %1.EXE

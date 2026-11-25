@@ -1,22 +1,24 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
 setlocal
+rem -h is required for pas2 and the generated apps so the top of RAM is on a 64k-1 boundary;
+rem they have bugs that copy 64k-1 bytes of RAM and wrap.
 
-del %1.exe 2>nul
-del %1.lst 2>nul
-del %1.map 2>nul
-del %1.obj 2>nul
-del %1.cod 2>nul
+del %1.EXE 2>nul
+del CON.LST 2>nul
+del %1.COD 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
 
-ntvdm -c pas1 %1,%1,%1,%1
-ntvdm -c pas2
-ntvdm -c link %1 djldos,,,,
+ntvdm -r:. -c pas1 %1,%1,%1,%1
+ntvdm -r:. -h -c pas2
+ntvdm -r:. -c link %1 djldos,,,,
 
-del %1.lst
-del %1.map
-del %1.obj
-del %1.cod
+del CON.LST 2>nul
+del %1.COD 2>nul
+del %1.LST 2>nul
+del %1.MAP 2>nul
+del %1.OBJ 2>nul
 
-rem -h is required due to a bug in generated code that assumes the app is loaded on a 64k boundary
-
-ntvdm -h -p %1
-
+ntvdm -r:. -h -c -p %1.EXE

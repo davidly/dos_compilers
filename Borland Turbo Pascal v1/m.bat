@@ -1,7 +1,9 @@
 @echo off
+rem build and run a benchmark, e.g. m sieve
 setlocal
-pushd "%~dp0" || exit /b 1
-ntvdm -c TURBOCL.COM %* <nul
-set "result=%errorlevel%"
-popd
-exit /b %result%
+
+del %1.COM 2>nul
+
+ntvdm -r:. -c TURBOCL.COM %1
+
+ntvdm -r:. -c -p %1.COM

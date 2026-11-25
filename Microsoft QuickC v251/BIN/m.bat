@@ -1,5 +1,12 @@
-ntvdm -r:. -e:lib=..\lib /h /c qcl /DDOSTIME /I..\include /Fm%1.map /AS /Ox /Gs %1.c
-rem ntvdm -r:. /h /c qcl /DDOSTIME /I..\include /AS /Ox /Gs /c %1.c
-rem ntvdm -r:. /h qlink %1,,%1,..\lib\slibce+..\lib\em
+@echo off
+rem build and run a benchmark, e.g. m sieve
+setlocal
 
+del %1.EXE 2>nul
+del %1.OBJ 2>nul
 
+ntvdm -r:. -f -e:include=..\include,lib=..\lib qcl /Gs /Ox /DDOSTIME %1.C
+
+del %1.OBJ 2>nul
+
+ntvdm -r:. -c -p %1.EXE

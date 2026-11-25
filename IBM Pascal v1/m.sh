@@ -1,25 +1,25 @@
-str=$(tr '[a-z]' '[A-Z]' <<< $1)
+#!/bin/bash
+# build and run a benchmark, e.g. ./m.sh sieve
+# Some apps built by this compiler need to be loaded above 64k (ntvdm -h) or they
+# crash with a stack error. The benchmarks don't.
 
-rm $str.EXE 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.COD 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+str=$(tr '[a-z]' '[A-Z]' <<< "$1")
 
-ntvdm  -u -r:. pas1 $str,$str,$str,$str;
-ntvdm  -u -r:. pas2
-ntvdm  -u -r:. link $str,$str,,pascal.lib
+rm -f $str.EXE
+rm -f CON.LST
+rm -f $str.OBJ
+rm -f $str.COD
+rm -f $str.LST
+rm -f $str.MAP
 
-# Some binaries created by this compiler require being loaded above 64k or
-# they crash with a stack error.
-# Use ntvdm's -h switch to enable them to run, e.g.:
-# ntvdm -h sieve.exe
+ntvdm -u -r:. pas1 "$str,$str,$str,$str;"
+ntvdm -u -r:. pas2
+ntvdm -u -r:. link $str,$str,,pascal.lib
 
-rm CON.LST 2>/dev/null
-rm $str.OBJ 2>/dev/null
-rm $str.COD 2>/dev/null
-rm $str.LST 2>/dev/null
-rm $str.MAP 2>/dev/null
+rm -f CON.LST
+rm -f $str.OBJ
+rm -f $str.COD
+rm -f $str.LST
+rm -f $str.MAP
 
-ntvdm $str
-
+ntvdm -u -r:. -c -p $str.EXE
