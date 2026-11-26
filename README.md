@@ -1,7 +1,7 @@
 # dos_compilers
 MS-DOS compilers, assemblers, and interpreters
 
-The license for this repo applies to code I wrote for this repo including versions of the sieve, e, ttt, and tm benchmarks and the build scripts to invoke the tools. The various DOS tools and documentation each have their own respective license terms. In a few cases I used the sieve benchmark that shipped with the tools, so obviously those copies fall under the license of the respective tool.
+The license for this repo applies to code I wrote for this repo including versions of the sieve, e, ttt, tm, and mm benchmarks and the build scripts to invoke the tools. The various DOS tools and documentation each have their own respective license terms. In a few cases I used the sieve benchmark that shipped with the tools, so obviously those copies fall under the license of the respective tool.
 
 I do not own the copyright for any of these tools. This repo is simply an aggregation of the tools to ease testing of my NTVDM DOS 3.3 emulator.
 
@@ -24,17 +24,24 @@ The benchmarks include:
   * e: Computes the irrational number e to 192 digits. Measures integer multiply/divide along with array and loop performance.
   * ttt: proves you can't win at tic-tac-toe if the opponent is competent. Measures function call and stack access along with array and loop performance.
   * tm: test malloc. This calls malloc/calloc/free in the C runtime to measure performance. It's C-only and many C compilers can't run it.
+  * mm: matrix multiply. Jerry Pournelle's benchmark from the October 1982 BYTE Magazine multiplies two 20x20 matrices and sums the result. Measures floating point math and two-dimensional array indexing. A and B hold small whole numbers, so every floating point format computes the sum 465880 exactly (RHA ALGOL's 3-byte mantissa gets 465879.8). Tools without floating point, or whose floating point can't run under NTVDM, run the same arithmetic with integers; the table's notes column says "integer mm" for those, and their times aren't comparable to the floating point ones.
+
+The original BYTE listings of mm in BASIC and Pascal both have bugs, and not the same ones, that go unnoticed only because the benchmark's matrices are square. Both declare A as m x n, B as n x m, and C as m x m. In both, the multiply loop runs j to n and k to m when it should run j to m and k to n. The BASIC listing also fills B with the row and column bounds swapped, and fills and sums C with columns running to n instead of m; the Pascal listing gets those right. The code only works when all the dimensions are the same, like 20x20. The mm sources in this repo have those bugs fixed.
+
+NTVDM doesn't emulate an 8087, so the floating point times are for software floating point, as on a PC without one: runtimes that check for an 8087 find none and use their emulators. A few tools' floating point needs a real 8087, so their mm is integer: Logitech Modula-2 v1.0 and v1.1 (even x := 5.0; x = 5.0 is false) and Intel PL/M-86. Artek Ada's native code (the comp row) has no mm time: its a86 translator produces wrong code for every variation of the program tried, though the interpreter runs it correctly.
 
 To run the compilers on Windows, use the m.bat script in each folder. Sometimes m.bat is in a subfolder named "bin" or "code". On Linux or MacOS use m.sh. You may need to "chmod 777 m.sh" before you can invoke it. For example (on Windows):
   * m sieve
   * m e
   * m ttt
+  * m mm
     
 To run the resulting apps, use NTVDM's -c flag to force console mode and -p flag to show performance information. The interpreters have other modes for running; see their respective m.bat/m.sh files for details.
 
   * ntvdm -c -p sieve
   * ntvdm -c -p e
   * ntvdm -c -p ttt
+  * ntvdm -c -p mm
     
 The Borland Turbo Pascal v1 through v3 scripts use TURBOCL.COM for command-line builds. To regenerate it from the bundled TURBO.COM, run build_turbocl.py with Python 3 and GNU binutils with i386 support. The QuickBASIC 2.x and 3.00 scripts use the original QB.EXE separate-compilation mode and LINK.EXE. The QB.EXE in the v200 folder reports version 2.01. The ZBasic 4.02 scripts use ZBASICCL.COM, which can be regenerated from ZBASIC.COM with build_zbasiccl.py and the same tools. The Turbo BASIC 1.1 and PowerBASIC 2.10f scripts use TBCL.EXE and PBCL.EXE, respectively. Run build_basiccl.py in either folder to regenerate its executable with the same tools.
 

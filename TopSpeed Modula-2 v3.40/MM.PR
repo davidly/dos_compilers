@@ -1,0 +1,6 @@
+#system auto exe
+#model  small
+
+#compile %main
+#link %prjname
+

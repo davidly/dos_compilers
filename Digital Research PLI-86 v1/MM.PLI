@@ -1,0 +1,80 @@
+/* BYTE magazine October 1982. Jerry Pournelle. Matrix multiply. */
+/* various bugs not found because dimensions are square fixed by David Lee */
+/* A and B hold small whole numbers, so the sum is exactly 465880 */
+mm:
+    proc options( main );
+    %replace
+        L by 20,
+        M by 20,
+        N by 20;
+
+    dcl a( L, M ) float binary;
+    dcl b( M, N ) float binary;
+    dcl c( L, N ) float binary;
+    dcl summ float binary;
+
+    summ = 0;
+    call filla;
+    call fillb;
+    call fillc;
+    call matmult;
+    call summit;
+
+    put skip list( 'summ is : ', summ );
+    if summ = 465880 then
+        put skip list( 'summ is exactly 465880' );
+    put skip;
+
+filla:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to L;
+        do j = 1 to M;
+            a( i, j ) = i + j;
+        end;
+    end;
+end filla;
+
+fillb:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to M;
+        do j = 1 to N;
+            b( i, j ) = divide( i + j, j, 15 );
+        end;
+    end;
+end fillb;
+
+fillc:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to L;
+        do j = 1 to N;
+            c( i, j ) = 0;
+        end;
+    end;
+end fillc;
+
+matmult:
+    proc;
+    dcl ( i, j, k ) fixed;
+    do i = 1 to L;
+        do j = 1 to N;
+            do k = 1 to M;
+                c( i, j ) = c( i, j ) + a( i, k ) * b( k, j );
+            end;
+        end;
+    end;
+end matmult;
+
+summit:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to L;
+        do j = 1 to N;
+            summ = summ + c( i, j );
+        end;
+    end;
+end summit;
+
+end mm;

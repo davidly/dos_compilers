@@ -1,9 +1,7 @@
 /* BYTE magazine October 1982. Jerry Pournelle. */
 /* ported to C by David Lee */
-/* various bugs not found because dimensions are square fixed by David Lee */
-/* expected result: 4.65880E+05 */
-
-#define LINT_ARGS
+/* A and B hold small whole numbers, so every float format gets exactly 465880 */
+/* expected result: 465880 */
 
 #include <stdio.h>
 
@@ -11,60 +9,53 @@
 #define m 20 /* columns in A and rows in B (must be identical) */
 #define n 20 /* columns in B and resulting matrix C */
 
-#define ftype float
+float Summ;
+float A[ l ][ m ];
+float B[ m ][ n ];
+float C[ l ][ n ];
 
-ftype Summ;
-ftype A[ l + 1 ] [ m + 1 ];
-ftype B[ m + 1 ] [ n + 1 ];
-ftype C[ l + 1 ] [ n + 1 ];
-
-int filla()
+filla()
 {
     int i, j;
-    for ( i = 1; i <= l; i++ )
-        for ( j = 1; j <= m; j++ )
-            A[ i ] [ j ] = i + j;
-    return 0;
+    for ( i = 0; i < l; i++ )
+        for ( j = 0; j < m; j++ )
+            A[ i ][ j ] = i + j + 2;
 }
 
-int fillb()
+fillb()
 {
     int i, j;
-    for ( i = 1; i <= m; i++ )
-        for ( j = 1; j <= n; j++ )
-            B[ i ] [ j ] = (ftype) (int) ( ( i + j ) / j );
-    return 0;
+    for ( i = 0; i < m; i++ )
+        for ( j = 0; j < n; j++ )
+            B[ i ][ j ] = ( i + j + 2 ) / ( j + 1 );
 }
 
-int fillc()
+fillc()
 {
     int i, j;
-    for ( i = 1; i <= l; i++ )
-        for ( j = 1; j <= n; j++ )
-            C[ i ] [ j ] = 0;
-    return 0;
+    for ( i = 0; i < l; i++ )
+        for ( j = 0; j < n; j++ )
+            C[ i ][ j ] = 0;
 }
 
-int matmult()
+matmult()
 {
     int i, j, k;
-    for ( i = 1; i <= l; i++ )
-        for ( j = 1; j <= n; j++ )
-            for ( k = 1; k <= m; k++ )
-                C[ i ] [ j ] += A[ i ] [ k ] * B[ k ] [ j ];
-    return 0;
+    for ( i = 0; i < l; i++ )
+        for ( j = 0; j < n; j++ )
+            for ( k = 0; k < m; k++ )
+                C[ i ][ j ] += A[ i ][ k ] * B[ k ][ j ];
 }
 
-int summit()
+summit()
 {
     int i, j;
-    for ( i = 1; i <= l; i++ )
-        for ( j = 1; j <= n; j++ )
-            Summ += C[ i ] [ j ];
-    return 0;
+    for ( i = 0; i < l; i++ )
+        for ( j = 0; j < n; j++ )
+            Summ += C[ i ][ j ];
 }
 
-int main( argc, argv ) int argc; char * argv[];
+main()
 {
     Summ = 0;
 
@@ -74,9 +65,6 @@ int main( argc, argv ) int argc; char * argv[];
     matmult();
     summit();
 
-    printf( "summ is : %lf\n", Summ );
+    printf( "summ is : %f\n", Summ );
     return 0;
 }
-
-
-

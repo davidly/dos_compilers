@@ -1,13 +1,9 @@
 { BYTE magazine October 1982. Jerry Pournelle. }
 { various bugs not found because dimensions are square fixed by David Lee }
-{ expected result: 4.65880E+05 }
+{ A and B hold small whole numbers, so every real format gets exactly 465880 }
+{ expected result: 465880 }
 
-{ array range checking off }
-{$R- }
-{ runtime exception checking off }
-{$X- }
-
-program matrix( output );
+program matrix;
 
 const
     l = 20; { rows in A and resulting matrix C }
@@ -76,6 +72,5 @@ begin { matrix }
     matmult;
     summit;
 
-    Writeln( 'summ is :', Summ );
+    writeln( 'summ is : ', Summ:10:1 );
 end. { matrix }
-

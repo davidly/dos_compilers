@@ -8,7 +8,10 @@ rm -f $str.OBJ
 rm -f $str.MAP
 
 ntvdm -u -r:. -e:INCLUDE=. LC -ms -v -g $str.C
-ntvdm -u -r:. LINK "S\\C.OBJ" "$str.OBJ,$str,,S\\LC.LIB+LAPI.LIB"
+# floating point (MM) also needs the math library
+libs="S\\LC.LIB+LAPI.LIB"
+[ "$str" = "MM" ] && libs="S\\LCM.LIB+$libs"
+ntvdm -u -r:. LINK "S\\C.OBJ" "$str.OBJ,$str,,$libs"
 
 rm -f $str.OBJ
 rm -f $str.MAP

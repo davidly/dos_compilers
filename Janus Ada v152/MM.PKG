@@ -1,0 +1,93 @@
+Pragma RangeCheck(off); Pragma Debug(off); Pragma Arithcheck(off);
+
+-- Jerry Pournelle's Floating Point Benchmark
+-- October 1982 Byte, pages 254 - 270
+-- Translated from Pascal into Janus/Ada, 3/13/83
+-- A and B hold small whole numbers, so the sum is exactly 465880.
+-- There is no float output package here, so the program checks the sum itself.
+
+WITH Text_IO, Floatops;
+Use Text_IO;
+
+Procedure MM Is
+    M : Constant := 20;
+    N : Constant := 20;
+
+    Subtype Real Is Float;
+    Subtype Dim1 Is Integer Range 1..M;
+    Subtype Dim2 Is Integer Range 1..N;
+
+    -- Janus/Ada does not have multi-dimensional arrays, so these are arrays of arrays
+    Type Col1 Is Array (Dim2) Of Real;
+    Type Col2 Is Array (Dim1) Of Real;
+    Type Mat1 Is Array (Dim1) Of Col1;
+    Type Mat2 Is Array (Dim2) Of Col2;
+    Type Mat3 Is Array (Dim1) Of Col2;
+
+    A : Mat1;
+    B : Mat2;
+    C : Mat3;
+
+    Summ : Real;
+
+    Procedure Fill_A Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim2 Loop
+                A(i)(j) := Real(i + j);
+            End Loop;
+        End Loop;
+    End Fill_A;
+
+    Procedure Fill_B Is
+    Begin
+        For i In Dim2 Loop
+            For j In Dim1 Loop
+                B(i)(j) := Real((i + j) / j);
+            End Loop;
+        End Loop;
+    End Fill_B;
+
+    Procedure Fill_C Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                C(i)(j) := 0.0;
+            End Loop;
+        End Loop;
+    End Fill_C;
+
+    Procedure Matrix_Multiply Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                For k In Dim2 Loop
+                    C(i)(j) := C(i)(j) + A(i)(k) * B(k)(j);
+                End Loop;
+            End Loop;
+        End Loop;
+    End Matrix_Multiply;
+
+    Procedure Summit Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                Summ := Summ + C(i)(j);
+            End Loop;
+        End Loop;
+    End Summit;
+
+Begin
+    Summ := 0.0;
+    Fill_A;
+    Fill_B;
+    Fill_C;
+    Matrix_Multiply;
+    Summit;
+    If Summ = 465880.0 Then
+        Put("summ is exactly 465880");
+    Else
+        Put("summ is not 465880");
+    End If;
+    New_line;
+End MM;

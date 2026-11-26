@@ -1,0 +1,35 @@
+; BYTE magazine October 1982. Jerry Pournelle. Matrix multiply.
+; integer version: muLISP-86 has no floating point. Its numbers are exact
+; integers and rationals (1.0 reads as 1), so the arithmetic is integer.
+; muLISP has no arrays, so A is a list of rows and B a list of columns, and
+; each element of C is the dot product of a row of A and a column of B.
+; expected result: 465880
+(defun dot (x y s)
+    (setq s 0)
+    (loop ((null x))
+        (setq s (+ s (* (car x) (car y))) x (cdr x) y (cdr y)))
+    s)
+(defun arow (i j r)
+    (setq j 20 r nil)
+    (loop ((zerop j)) (setq r (cons (+ i j) r) j (sub1 j)))
+    r)
+(defun bcol (j k r)
+    (setq k 20 r nil)
+    (loop ((zerop k)) (setq r (cons (truncate (+ k j) j) r) k (sub1 k)))
+    r)
+(defun runmm (arows bcols i j s ra cb)
+    (setq i 20 arows nil)
+    (loop ((zerop i)) (setq arows (cons (arow i) arows) i (sub1 i)))
+    (setq j 20 bcols nil)
+    (loop ((zerop j)) (setq bcols (cons (bcol j) bcols) j (sub1 j)))
+    (setq s 0 ra arows)
+    (loop ((null ra))
+        (setq cb bcols)
+        (loop ((null cb)) (setq s (+ s (dot (car ra) (car cb))) cb (cdr cb)))
+        (setq ra (cdr ra)))
+    (princ "summ is : ")
+    (princ s)
+    (princ " ")
+    (terpri))
+(runmm)
+(system)
