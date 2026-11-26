@@ -1,0 +1,96 @@
+Pragma RangeCheck(off); Pragma Debug(off); Pragma Arithcheck(off);
+
+-- Jerry Pournelle's Floating Point Benchmark
+-- October 1982 Byte, pages 254 - 270
+-- Translated from Pascal into Janus/Ada, 3/13/83
+-- integer version: each element of C fits in 16 bits; the sum is kept in base 10000
+
+WITH Text_IO;
+Use Text_IO;
+
+Procedure MMI Is
+    M : Constant := 20;
+    N : Constant := 20;
+
+    Subtype Dim1 Is Integer Range 1..M;
+    Subtype Dim2 Is Integer Range 1..N;
+
+    -- Janus/Ada does not have multi-dimensional arrays, so these are arrays of arrays
+    Type Col1 Is Array (Dim2) Of Integer;
+    Type Col2 Is Array (Dim1) Of Integer;
+    Type Mat1 Is Array (Dim1) Of Col1;
+    Type Mat2 Is Array (Dim2) Of Col2;
+    Type Mat3 Is Array (Dim1) Of Col2;
+
+    A : Mat1;
+    B : Mat2;
+    C : Mat3;
+
+    SummHi, SummLo : Integer;
+
+    Procedure Fill_A Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim2 Loop
+                A(i)(j) := i + j;
+            End Loop;
+        End Loop;
+    End Fill_A;
+
+    Procedure Fill_B Is
+    Begin
+        For i In Dim2 Loop
+            For j In Dim1 Loop
+                B(i)(j) := (i + j) / j;
+            End Loop;
+        End Loop;
+    End Fill_B;
+
+    Procedure Fill_C Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                C(i)(j) := 0;
+            End Loop;
+        End Loop;
+    End Fill_C;
+
+    Procedure Matrix_Multiply Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                For k In Dim2 Loop
+                    C(i)(j) := C(i)(j) + A(i)(k) * B(k)(j);
+                End Loop;
+            End Loop;
+        End Loop;
+    End Matrix_Multiply;
+
+    Procedure Summit Is
+    Begin
+        For i In Dim1 Loop
+            For j In Dim1 Loop
+                SummLo := SummLo + C(i)(j);
+                While SummLo >= 10000 Loop
+                    SummLo := SummLo - 10000;
+                    SummHi := SummHi + 1;
+                End Loop;
+            End Loop;
+        End Loop;
+    End Summit;
+
+Begin
+    SummHi := 0;
+    SummLo := 0;
+    Fill_A;
+    Fill_B;
+    Fill_C;
+    Matrix_Multiply;
+    Summit;
+    If SummHi = 46 And SummLo = 5880 Then
+        Put("summ is exactly 465880");
+    Else
+        Put("summ is not 465880");
+    End If;
+    New_line;
+End MMI;

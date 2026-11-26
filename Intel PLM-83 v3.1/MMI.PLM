@@ -1,0 +1,120 @@
+/*
+   BYTE magazine October 1982. Jerry Pournelle. Matrix multiply.
+   integer version: PL/M-86's REAL needs an 8087 (or Intel's emulator, which
+   this build doesn't link), and ntvdm has no 8087. PL/M has only 1-D arrays,
+   so they're indexed by hand; they're ma, mb, mc. Each element of C fits in
+   16 bits; the sum is kept in base 10000. expected result: 465880
+*/
+
+mmi: do;
+
+$include(doslibs.inc)
+
+declare CR literally '13';
+declare LF literally '10';
+
+print_line: procedure;
+    call dos_direct_out( CR );
+    call dos_direct_out( LF );
+end print_line;
+
+print_word: procedure( n, digits, base, leading_zeros ) reentrant;
+    declare n word, digits integer, base word, leading_zeros byte;
+    declare ch byte;
+
+    if ( n < base ) then
+        do;
+            if leading_zeros then
+                ch = '0';
+            else
+                ch = ' ';
+            do while digits > 1;
+                call dos_std_out( ch );
+                digits = digits - 1;
+            end;
+            if n > 10 then
+                ch = 'A' + ( n - 10 );
+            else
+                ch = '0' + n;
+            call dos_std_out( ch );
+        end;
+    else
+        do;
+            call print_word( n / base, digits - 1, base, leading_zeros );
+            call print_word( n mod base, 1, base, leading_zeros );
+        end;
+end print_word;
+
+declare ma( 400 ) word;
+declare mb( 400 ) word;
+declare mc( 400 ) word;
+
+filla: procedure;
+    declare ( i, j ) word;
+    do i = 0 to 19;
+        do j = 0 to 19;
+            ma( i * 20 + j ) = i + j + 2;
+        end;
+    end;
+end filla;
+
+fillb: procedure;
+    declare ( i, j ) word;
+    do i = 0 to 19;
+        do j = 0 to 19;
+            mb( i * 20 + j ) = ( i + j + 2 ) / ( j + 1 );
+        end;
+    end;
+end fillb;
+
+fillc: procedure;
+    declare ( i, j ) word;
+    do i = 0 to 19;
+        do j = 0 to 19;
+            mc( i * 20 + j ) = 0;
+        end;
+    end;
+end fillc;
+
+matmult: procedure;
+    declare ( i, j, k ) word;
+    do i = 0 to 19;
+        do j = 0 to 19;
+            do k = 0 to 19;
+                mc( i * 20 + j ) = mc( i * 20 + j ) +
+                    ma( i * 20 + k ) * mb( k * 20 + j );
+            end;
+        end;
+    end;
+end matmult;
+
+summit: procedure;
+    declare ( i, hi, lo ) word;
+    hi = 0;
+    lo = 0;
+    do i = 0 to 399;
+        lo = lo + mc( i );
+        do while lo >= 10000;
+            lo = lo - 10000;
+            hi = hi + 1;
+        end;
+    end;
+
+    call dos_std_string_out( @( 'summ is : ', 24h ) );
+    call print_word( hi, 1, 10, 0 );
+    call print_word( lo, 4, 10, 1 );
+    call print_line;
+end summit;
+
+do;
+
+call filla;
+call fillb;
+call fillc;
+call matmult;
+call summit;
+call dos_exit( 0 );
+
+end;
+
+end;

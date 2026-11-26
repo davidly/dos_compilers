@@ -1,0 +1,87 @@
+/* BYTE magazine October 1982. Jerry Pournelle. Matrix multiply. */
+/* various bugs not found because dimensions are square fixed by David Lee */
+/* integer version: each element of C fits in 16 bits; the sum is kept in */
+/* base 10000. Each element is under 10000, so one carry per add is enough */
+mmi:
+    proc options( main );
+    %replace
+        L by 20,
+        M by 20,
+        N by 20;
+
+    dcl a( L, M ) fixed binary(15);
+    dcl b( M, N ) fixed binary(15);
+    dcl c( L, N ) fixed binary(15);
+    dcl ( summhi, summlo ) fixed binary(15);
+
+    summhi = 0;
+    summlo = 0;
+    call filla;
+    call fillb;
+    call fillc;
+    call matmult;
+    call summit;
+
+    put skip edit( 'summ is : ', summhi, divide( summlo, 1000, 15 ),
+                   mod( divide( summlo, 100, 15 ), 10 ), mod( divide( summlo, 10, 15 ), 10 ),
+                   mod( summlo, 10 ) )
+                 ( a, f(2), f(1), f(1), f(1), f(1) );
+    put skip;
+
+filla:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to L;
+        do j = 1 to M;
+            a( i, j ) = i + j;
+        end;
+    end;
+end filla;
+
+fillb:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to M;
+        do j = 1 to N;
+            b( i, j ) = divide( i + j, j, 15 );
+        end;
+    end;
+end fillb;
+
+fillc:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to L;
+        do j = 1 to N;
+            c( i, j ) = 0;
+        end;
+    end;
+end fillc;
+
+matmult:
+    proc;
+    dcl ( i, j, k ) fixed;
+    do i = 1 to L;
+        do j = 1 to N;
+            do k = 1 to M;
+                c( i, j ) = c( i, j ) + a( i, k ) * b( k, j );
+            end;
+        end;
+    end;
+end matmult;
+
+summit:
+    proc;
+    dcl ( i, j ) fixed;
+    do i = 1 to L;
+        do j = 1 to N;
+            summlo = summlo + c( i, j );
+            if summlo >= 10000 then do;
+                summlo = summlo - 10000;
+                summhi = summhi + 1;
+            end;
+        end;
+    end;
+end summit;
+
+end mmi;
